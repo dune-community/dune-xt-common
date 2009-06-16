@@ -130,5 +130,49 @@ void oneLinePrint(Stream& stream, const DiscFunc& func)
 }
 
 
+template <class GlobalMatrix, class Stream>
+class LocalMatrixPrintFunctor
+{
+public:
+  LocalMatrixPrintFunctor(const GlobalMatrix& m, Stream& stream, const std::string name)
+    : matrix_(m)
+    , stream_(stream)
+    , name_(name)
+  {
+  }
+
+  template <class Entity>
+  void operator()(const Entity& en, const Entity& ne, const int en_idx, const int ne_idx)
+  {
+    typename GlobalMatrix::LocalMatrixType localMatrix = matrix_.localMatrix(en, ne);
+    const int rows                                     = localMatrix.rows();
+    const int cols                                     = localMatrix.columns();
+    stream_ << "\nlocal_" << name_ << "_Matrix_" << en_idx << "_" << ne_idx << " = [" << std::endl;
+    for (int i = 0; i < rows; ++i) {
+      for (int j = 0; j < cols; ++j) {
+        stream_ << std::setw(8) << std::setprecision(2) << localMatrix.get(i, j);
+      }
+      stream_ << ";" << std::endl;
+    }
+    stream_ << "];" << std::endl;
+  }
+
+  void preWalk()
+  {
+    stream_ << "% printing local matrizes of " << name_ << std::endl;
+  }
+
+  void postWalk()
+  {
+    stream_ << "\n% done printing local matrizes of " << name_ << std::endl;
+  }
+
+private:
+  const GlobalMatrix& matrix_;
+  Stream& stream_;
+  const std::string name_;
+};
+
+
 } // end namespace
 #endif
