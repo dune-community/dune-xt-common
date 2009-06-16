@@ -1,6 +1,10 @@
 #ifndef DUNESTUFF_PRINTING_HH_INCLUDED
 #define DUNESTUFF_PRINTING_HH_INCLUDED
 
+#include <string>
+#include <iostream>
+#include <iomanip>
+
 namespace Stuff {
 
 /**

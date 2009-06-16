@@ -2,15 +2,20 @@
  *  \file   stuff.hh
  *  \brief  contains some stuff
  **/
-#ifndef STUFF_HH_INCLUDED
-#define STUFF_HH_INCLUDED
+#ifndef STUFF_MISC_HH_INCLUDED
+#define STUFF_MISC_HH_INCLUDED
 
 #define SEGFAULT                                                                                                       \
   {                                                                                                                    \
     int* J = 0;                                                                                                        \
     *J     = 9;                                                                                                        \
   }
-#define isnan(x) !(x == x)
+
+template <typename T>
+bool isnan(T x)
+{
+  return !(x == x);
+}
 
 #ifndef NDEBUG
 #ifndef LOGIC_ERROR
@@ -27,8 +32,10 @@
 #define LOGIC_ERROR
 #endif
 
-#include <iomanip>
+#include <fstream>
+#include <ostream>
 #include <vector>
+#include <assert.h>
 #include <cmath>
 
 namespace Stuff {
@@ -102,7 +109,7 @@ public:
   {
     current_h_    = info_.grid_width;
     double factor = prevh_ / current_h_;
-    double eoc    = log(prevError_ / error_) / log(factor);
+    double eoc    = std::log(prevError_ / error_) / log(factor);
     outputFile_ << " & " << error_ << " & " << eoc;
   }
 
