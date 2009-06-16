@@ -1,0 +1,10 @@
+
+#dune module information file#
+##############################
+
+#Name of the module
+Module:dune-stuff
+Version:0.1
+Maintainer:rene.milk@uni-muenster.de
+#depending on 
+Depends:dune-common dune-grid dune-fem
