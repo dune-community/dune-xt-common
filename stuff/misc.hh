@@ -320,12 +320,14 @@ public:
     f.preWalk();
     EntityIteratorType entityItEndLog = space_.end();
     for (EntityIteratorType it = space_.begin(); it != entityItEndLog; ++it) {
-      int ent_idx = getIdx(entityIdxMap_, it);
-      f(*it, *it);
+      const int ent_idx = getIdx(entityIdxMap_, it);
+      f(*it, *it, ent_idx, ent_idx);
       IntersectionIteratorType intItEnd = gridPart_.iend(*it);
       for (IntersectionIteratorType intIt = gridPart_.ibegin(*it); intIt != intItEnd; ++intIt) {
-        int neigh_idx = getIdx(entityIdxMap_, intIt.outside());
-        f(*it, *intIt.outside());
+        const int neigh_idx = getIdx(entityIdxMap_, intIt.outside());
+        if (intIt.neighbor()) {
+          f(*it, *intIt.outside(), ent_idx, neigh_idx);
+        }
       }
     }
     f.postWalk();
@@ -342,29 +344,43 @@ template <class GlobalMatrix, class Stream>
 class LocalMatrixPrintFunctor
 {
 public:
-  LocalMatrixPrintFunctor(const GlobalMatrix& m, Stream& stream)
+  LocalMatrixPrintFunctor(const GlobalMatrix& m, Stream& stream, const std::string name)
     : matrix_(m)
     , stream_(stream)
+    , name_(name)
   {
   }
 
   template <class Entity>
-  void operator()(const Entity& en, const Entity& ne)
+  void operator()(const Entity& en, const Entity& ne, const int en_idx, const int ne_idx)
   {
     typename GlobalMatrix::LocalMatrixType localMatrix = matrix_.localMatrix(en, ne);
+    const int rows                                     = localMatrix.rows();
+    const int cols                                     = localMatrix.columns();
+    stream_ << "\nlocal_" << name_ << "_Matrix_" << en_idx << "_" << ne_idx << " = [" << std::endl;
+    for (int i = 0; i < rows; ++i) {
+      for (int j = 0; j < cols; ++j) {
+        stream_ << std::setw(8) << std::setprecision(2) << localMatrix.get(i, j);
+      }
+      stream_ << ";" << std::endl;
+    }
+    stream_ << "];" << std::endl;
   }
 
   void preWalk()
   {
+    stream_ << "% printing local matrizes of " << name_ << std::endl;
   }
 
   void postWalk()
   {
+    stream_ << "\n% done printing local matrizes of " << name_ << std::endl;
   }
 
 private:
   const GlobalMatrix& matrix_;
   Stream& stream_;
+  const std::string name_;
 };
 
 } // end namepspace stuff
