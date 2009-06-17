@@ -34,6 +34,7 @@ bool isnan(T x)
 
 #include <fstream>
 #include <ostream>
+#include <sstream>
 #include <vector>
 #include <assert.h>
 #include <cmath>
