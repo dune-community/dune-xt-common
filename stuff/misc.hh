@@ -119,13 +119,16 @@ public:
     const unsigned int dynColSize  = 2;
     const unsigned int statColSize = headers_.size() - 2;
     outputFile_ << "\\begin{longtable}{";
+
     for (unsigned int i = 0; i < statColSize; i++) {
       outputFile_ << "|c|";
     }
     for (unsigned int i = 0; i < dynColSize; i++) {
       outputFile_ << "|cc|";
     }
-    outputFile_ << "}\n"
+    outputFile_ << "}\n \\caption{ Polorder: " << info_.polorder
+                << " BFG: " << (info_.bfg ? std::string("yes") : std::string("no")) << " GRID: " << info_.gridname
+                << " } \\\\ \n"
                 << "\\hline \n";
     for (unsigned int i = 0; i < statColSize; i++) {
       outputFile_ << headers_[i];
