@@ -56,6 +56,12 @@ public:
     (m_timings[m_cur_run_num])[section_name].end = clock();
   }
 
+  inline long GetTiming(const std::string section_name)
+  {
+    clock_t diff = (m_timings[m_cur_run_num])[section_name].end - (m_timings[m_cur_run_num])[section_name].start;
+    return long(diff / double(CLOCKS_PER_SEC));
+  }
+
   /** output to currently pre-defined (csv) file
    * \param comm used to gather and average the runtime data over all processes
    * \tparam CollectiveCommunication should be Dune::CollectiveCommunication< MPI_Comm / double >
