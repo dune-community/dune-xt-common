@@ -128,7 +128,9 @@ public:
     outputFile_ << "}\n"
                 << "\\caption{"
                 << " Grid: " << info_.gridname << " BFG: " << (info_.bfg ? std::string("yes") : std::string("no"))
-                << " Polorder: " << info_.polorder << "}\\\\  \n"
+                << " Polorder (u,p,$\\sigma$): (" << info_.polorder_velocity << ", " << info_.polorder_pressure << ", "
+                << info_.polorder_sigma << " ) "
+                << "}\\\\  \n"
                 << "\\hline \n";
 
     for (unsigned int i = 0; i < statColSize; i++) {
