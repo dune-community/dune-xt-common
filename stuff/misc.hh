@@ -126,7 +126,11 @@ public:
       outputFile_ << "|cc|";
     }
     outputFile_ << "}\n"
+                << "\\caption{"
+                << "Grid: " << info_.gridname << "BFG: " << (info_.bfg ? std::string("yes") : std::string("no"))
+                << "Polorder: " << info_.polorder << "}\n"
                 << "\\hline \n";
+
     for (unsigned int i = 0; i < statColSize; i++) {
       outputFile_ << headers_[i];
       if (i < statColSize - 1)
