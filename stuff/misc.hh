@@ -119,9 +119,10 @@ public:
     const unsigned int dynColSize  = 2;
     const unsigned int statColSize = headers_.size() - 2;
     outputFile_ << "\\begin{longtable}{";
-    for (unsigned int i = 0; i < statColSize; i++) {
+    for (unsigned int i = 0; i < statColSize - 1; i++) {
       outputFile_ << "|c|";
     }
+    outputFile_ << "|r|"; // runtime col
     for (unsigned int i = 0; i < dynColSize; i++) {
       outputFile_ << "|cc|";
     }
@@ -148,7 +149,13 @@ public:
 
   void putStaticCols(std::ofstream& outputFile_)
   {
-    outputFile_ << std::setw(4) << info_.grid_width << " & " << info_.codim0 << " & " << info_.run_time << " & "
+    std::stringstream runtime;
+    if (info_.run_time > 59)
+      runtime << long(info_.run_time) / 60 << ":" << long(info_.run_time) % 60;
+    else
+      runtime << long(info_.run_time);
+
+    outputFile_ << std::setw(4) << info_.grid_width << " & " << info_.codim0 << " & " << runtime.str() << " & "
                 << info_.c11 << " & " << info_.d11 << " & " << info_.c12 << " & " << info_.d12;
   }
 
