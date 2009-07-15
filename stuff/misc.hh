@@ -119,10 +119,13 @@ public:
     const unsigned int dynColSize  = 2;
     const unsigned int statColSize = headers_.size() - 2;
     outputFile_ << "\\begin{longtable}{";
-    for (unsigned int i = 0; i < statColSize - 1; i++) {
-      outputFile_ << "|c|";
+    for (unsigned int i = 0; i < statColSize; i++) {
+      if (i == 2)
+        outputFile_ << "|r|"; // runtime col
+      else
+        outputFile_ << "|c|";
     }
-    outputFile_ << "|r|"; // runtime col
+
     for (unsigned int i = 0; i < dynColSize; i++) {
       outputFile_ << "|cc|";
     }
