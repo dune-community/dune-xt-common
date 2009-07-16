@@ -130,11 +130,12 @@ public:
       outputFile_ << "|cc|";
     }
     outputFile_ << "}\n"
-                << "\\caption{"
-                << " Grid: " << info_.gridname << " BFG: " << (info_.bfg ? std::string("yes") : std::string("no"))
+                << "\\caption{" << info_.gridname
+                << (info_.bfg ? std::string(", BFG ($\\tau = ") + toString(info_.bfg_tau) + std::string("$ ")
+                              : std::string(", no BFG"))
                 << " Polorder (u,p,$\\sigma$): (" << info_.polorder_velocity << ", " << info_.polorder_pressure << ", "
                 << info_.polorder_sigma << " ) "
-                << "}\\\\  \n"
+                << " Solver accuracy: " << info_.solver_accuracy << "}\\\\  \n"
                 << "\\hline \n";
 
     for (unsigned int i = 0; i < statColSize; i++) {
