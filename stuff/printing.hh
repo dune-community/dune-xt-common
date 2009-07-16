@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include <iomanip>
+#include <dune/stuff/functions.hh>
 
 namespace Stuff {
 
@@ -176,6 +177,17 @@ private:
   Stream& stream_;
   const std::string name_;
 };
+
+template <class Stream, class Function>
+void printFunctionMinMax(Stream& stream, const Function& func)
+{
+  double min = 0.0;
+  double max = 0.0;
+  Stuff::getMinMaxOfDiscreteFunction(func, min, max);
+  stream << "  - " << func.name() << std::endl
+         << "    min: " << std::sqrt(2.0) * min << std::endl
+         << "    max: " << std::sqrt(2.0) * max << std::endl;
+}
 
 
 } // end namespace

@@ -12,6 +12,7 @@
 #include <iomanip>
 #include <assert.h>
 #include "parametercontainer.hh"
+#include "misc.hh"
 
 
 /** \brief handles all logging
@@ -254,9 +255,17 @@ public:
   **/
   void Create(unsigned int logflags = LOG_FILE | LOG_CONSOLE | LOG_ERR, std::string logfile = "dune_stokes")
   {
-    logflags_       = logflags;
-    filename_       = logfile + "_time.log";
-    filenameWoTime_ = logfile + ".log";
+    logflags_ = logflags;
+
+    // if we get a logdir from parameters append path seperator, othwersie leave empty
+    // enables us to use logdir unconditionally further down
+    std::string logdir = Parameters().getParam("fem.io.logdir", std::string());
+    if (!logdir.empty())
+      logdir += "/";
+
+    filename_ = logdir + logfile + "_time.log";
+    Stuff::testCreateDirectory(filename_); // could assert this if i figure out why errno is != EEXIST
+    filenameWoTime_ = logdir + logfile + ".log";
     if ((logflags_ & LOG_FILE) != 0) {
       logfile_.open(filename_.c_str());
       assert(logfile_.is_open());
@@ -269,7 +278,8 @@ public:
       streammap_[*it] = new LogStream(*it, flagmap_[*it], logfile_, logfileWoTime_);
     }
     // create the MatlabLogStream
-    std::string matlabLogFileName = logfile + "_matlab.m";
+    std::string matlabLogFileName = logdir + logfile + "_matlab.m";
+    Stuff::testCreateDirectory(matlabLogFileName); // could assert this if i figure out why errno is != EEXIST
     matlabLogFile_.open(matlabLogFileName.c_str());
     assert(matlabLogFile_.is_open());
     matlabLogStreamPtr = new MatlabLogStream(LOG_FILE, logflags_, matlabLogFile_);
