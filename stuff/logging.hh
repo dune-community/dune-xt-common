@@ -221,6 +221,7 @@ public:
     }
   };
 
+protected:
   Logging()
   {
     streamIDs_.push_back(LOG_ERR);
@@ -248,7 +249,7 @@ public:
     Stuff::safe_delete(matlabLogStreamPtr);
   }
 
-
+public:
   /** \brief setup loglevel, logfilename
       \param logflags any OR'd combination of flags
       \param logfile filename for log, can contain paths, but creation will fail if dir is non-existant
@@ -464,6 +465,8 @@ private:
   IdVec streamIDs_;
   int logflags_;
   MatlabLogStream* matlabLogStreamPtr;
+
+  friend Logging& Logger();
 };
 
 /// global Logging instance
