@@ -167,6 +167,7 @@ public:
   void endTable(std::ofstream& outputFile_)
   {
     outputFile_ << "\\end{longtable}";
+    outputFile_ << info_.extra_info;
     outputFile_.flush();
   }
 
@@ -247,5 +248,15 @@ bool testCreateDirectory(std::string path)
 
 } // end namepspace stuff
 
+template <typename T>
+std::string getParameterString(const std::string& prefix, T min, T max, T inc)
+{
+  std::stringstream ss;
+  ss << prefix << " ";
+  for (; min < max; min += inc) {
+    ss << min << ",  ";
+  }
+  return ss.str();
+}
 
 #endif // end of stuff.hh
