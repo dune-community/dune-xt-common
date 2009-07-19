@@ -224,7 +224,6 @@ public:
     static bool col = true;
     col             = !col;
     current_h_      = info_.grid_width;
-    double factor   = current_h_ / prevh_;
     double diff     = std::abs(error_ - reference_.L2Errors[col]);
     outputFile_ << " & " << error_ << " & " << diff;
   }
