@@ -68,7 +68,7 @@ std::string toString(const ReturnType& s)
 }
 
 template <class Info>
-class TexOutput
+class EocOutput
 {
   typedef std::vector<std::string> Strings;
 
@@ -78,14 +78,14 @@ class TexOutput
 
 
 public:
-  TexOutput(const Info& info, Strings& headers)
+  EocOutput(const Info& info, Strings& headers)
     : info_(info)
     , current_h_(1.0)
     , headers_(headers)
   {
   }
 
-  TexOutput(Strings& headers)
+  EocOutput(Strings& headers)
     : info_(Info())
     , current_h_(1.0)
     , headers_(headers)
@@ -168,6 +168,120 @@ public:
   {
     outputFile_ << "\\end{longtable}";
     outputFile_ << info_.extra_info;
+    outputFile_.flush();
+  }
+
+  double get_h()
+  {
+    return current_h_;
+  }
+};
+
+template <class Info>
+class BfgOutput
+{
+  typedef std::vector<std::string> Strings;
+
+  Info info_;
+  Info reference_;
+  double current_h_;
+  Strings headers_;
+
+
+public:
+  BfgOutput(const Info& info, Strings& headers)
+    : info_(info)
+    , current_h_(1.0)
+    , headers_(headers)
+  {
+  }
+
+  BfgOutput(Strings& headers, RunInfo reference)
+    : info_(Info())
+    , reference_(reference)
+    , current_h_(1.0)
+    , headers_(headers)
+  {
+  }
+
+  void setInfo(const Info& info)
+  {
+    info_ = info;
+  }
+
+  void putLineEnd(std::ofstream& outputFile_)
+  {
+    outputFile_ << "\n"
+                << "\\tabularnewline\n"
+                << "\\hline \n";
+    outputFile_.flush();
+  }
+
+  void putErrorCol(std::ofstream& outputFile_, const double prevError_, const double error_, const double prevh_,
+                   const bool /*initial*/)
+  {
+    // some trickery to calc correct diff w/o further work on the fem stuff
+    static bool col = true;
+    col             = !col;
+    current_h_      = info_.grid_width;
+    double factor   = current_h_ / prevh_;
+    double diff     = std::abs(error_ - reference_.L2Errors[col]);
+    outputFile_ << " & " << error_ << " & " << diff;
+  }
+
+  void putHeader(std::ofstream& outputFile_)
+  {
+    const unsigned int dynColSize  = 2;
+    const unsigned int statColSize = headers_.size() - 2;
+    outputFile_ << "\\begin{longtable}{";
+
+    for (unsigned int i = 0; i < statColSize; i++) {
+      if (i == 2)
+        outputFile_ << "|r|"; // runtime col
+      else
+        outputFile_ << "|c|";
+    }
+
+    for (unsigned int i = 0; i < dynColSize; i++) {
+      outputFile_ << "|cc|";
+    }
+    outputFile_ << "}\n"
+                << "\\caption{" << info_.gridname << " Polorder (u,p,$\\sigma$): (" << info_.polorder_velocity << ", "
+                << info_.polorder_pressure << ", " << info_.polorder_sigma << " ) "
+                << " Solver accuracy: " << info_.solver_accuracy << "}\\\\  \n"
+                << "\\hline \n";
+
+    for (unsigned int i = 0; i < statColSize; i++) {
+      outputFile_ << headers_[i];
+      if (i < statColSize - 1)
+        outputFile_ << " & ";
+    }
+    for (unsigned int i = 0; i < dynColSize; i++) {
+      outputFile_ << " & " << headers_[i + statColSize] << " & Diff to ref ";
+    }
+    outputFile_ << "\n \\endhead\n"
+                << "\\hline\n"
+                << "\\hline\n";
+  }
+  // const std::string bfgheaders[] = { "h", "el't","runtime","$\tau$","avg inner","min inner","max inner","total
+  // outer","Velocity", "Pressure" };
+  void putStaticCols(std::ofstream& outputFile_)
+  {
+    std::stringstream runtime;
+    if (info_.run_time > 59)
+      runtime << long(info_.run_time) / 60 << ":" << long(info_.run_time) % 60;
+    else
+      runtime << long(info_.run_time);
+
+    outputFile_ << std::setw(4) << info_.grid_width << " & " << info_.codim0 << " & " << runtime.str() << " & "
+                << info_.bfg_tau << " & " << info_.iterations_inner_avg << " & " << info_.iterations_inner_min << " & "
+                << info_.iterations_inner_max << " & " << info_.iterations_outer_total << " & "
+                << info_.max_inner_accuracy;
+  }
+
+  void endTable(std::ofstream& outputFile_)
+  {
+    outputFile_ << "\\end{longtable}";
     outputFile_.flush();
   }
 
