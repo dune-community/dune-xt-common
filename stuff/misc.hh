@@ -51,7 +51,7 @@ struct RunInfo // define this beforepass is included so it's known in pass, i kn
   int polorder_velocity;
   int polorder_pressure;
   int polorder_sigma;
-  double c11, d11, c12, d12;
+  std::pair<int, double> c11, d11, c12, d12;
   bool bfg;
   std::string gridname;
   double solver_accuracy;
@@ -225,7 +225,9 @@ public:
       runtime << long(info_.run_time);
 
     outputFile_ << std::setw(4) << info_.grid_width << " & " << info_.codim0 << " & " << runtime.str() << " & "
-                << info_.c11 << " & " << info_.d11 << " & " << info_.c12 << " & " << info_.d12;
+                << info_.c11.first << " / " << info_.c11.second << " & " << info_.c12.first << " / " << info_.c12.second
+                << " & " << info_.d11.first << " / " << info_.d11.second << " & " << info_.d12.first << " / "
+                << info_.d12.second;
   }
 };
 
@@ -281,7 +283,7 @@ public:
     static bool col = true;
     col             = !col;
     current_h_      = info_.grid_width;
-    double diff     = std::abs(error_ - reference_.L2Errors[col]);
+    double diff     = error_ - reference_.L2Errors[col];
     outputFile_ << " & " << error_ << " & " << diff;
   }
 
