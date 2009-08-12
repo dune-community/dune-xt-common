@@ -25,9 +25,9 @@ struct TimingData
 typedef std::map<std::string, TimingData> DataMap;
 typedef std::vector<DataMap> MapVector;
 
-/** simple inline profiling class
+/** \brief simple inline profiling class
  *
- *  - User can set as many (even nested) named sections which total clock time will be computed across all program
+ *  - User can set as many (even nested) named sections whose total clock time will be computed across all program
  *instances.\n
  *  - Provides csv-conform output of process-averaged runtimes.
  **/

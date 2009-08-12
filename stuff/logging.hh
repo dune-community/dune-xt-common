@@ -11,7 +11,6 @@
 #include <ctime>
 #include <iomanip>
 #include <assert.h>
-#include "parametercontainer.hh"
 #include "misc.hh"
 
 
@@ -254,13 +253,13 @@ public:
       \param logflags any OR'd combination of flags
       \param logfile filename for log, can contain paths, but creation will fail if dir is non-existant
   **/
-  void Create(unsigned int logflags = LOG_FILE | LOG_CONSOLE | LOG_ERR, std::string logfile = "dune_stokes")
+  void Create(unsigned int logflags = LOG_FILE | LOG_CONSOLE | LOG_ERR, std::string logfile = "dune_stokes",
+              std::string logdir = std::string())
   {
     logflags_ = logflags;
 
     // if we get a logdir from parameters append path seperator, othwersie leave empty
     // enables us to use logdir unconditionally further down
-    std::string logdir = Parameters().getParam("fem.io.logdir", std::string());
     if (!logdir.empty())
       logdir += "/";
 
