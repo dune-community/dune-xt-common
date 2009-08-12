@@ -7,6 +7,8 @@
 #include <vector>
 #include <ctime>
 
+#include "misc.hh"
+
 struct TimingData
 {
   clock_t start;
@@ -76,8 +78,8 @@ public:
    * \param comm used to gather and average the runtime data over all processes
    * \tparam CollectiveCommunication should be Dune::CollectiveCommunication< MPI_Comm / double >
    **/
-  template <class CollectiveCommunication>
-  long Output(CollectiveCommunication& comm, const int refineLevel, const long numDofs);
+  template <class CollectiveCommunication, class InfoContainer>
+  long Output(CollectiveCommunication& comm, InfoContainer& run_infos);
 
   /** call this with correct numRuns <b> before </b> starting any profiling
    *  if you're planning on doing more than one iteration of your code
@@ -89,10 +91,7 @@ public:
     m_timings     = MapVector(numRuns, DataMap());
     m_total_runs  = numRuns;
     m_cur_run_num = 0;
-    //			DataMap td;
-    //            m_timings.push_back( td );
-    m_l2_error = 0;
-    init_time_ = clock();
+    init_time_    = clock();
   }
 
   //! simple counter, usable to count how often a single piece of code is called
@@ -103,19 +102,15 @@ public:
 
   //! call this after one iteration of your code has finished. increments current run number and puts new timing data
   //! into the vector
-  void NextRun(const double error)
+  void NextRun()
   {
-    m_cur_run_num++; // +=  m_cur_run_num < m_total_runs - 1 ?  1 : 0 ;
-    //            DataMap td;
-    //            m_timings.push_back( td );
-    m_l2_error += error;
+    m_cur_run_num++;
   }
 
 protected:
   MapVector m_timings;
   int m_cur_run_num;
   int m_total_runs;
-  double m_l2_error;
   // debug counter, only outputted in debug mode
   std::map<int, int> m_count;
   clock_t init_time_;
@@ -162,8 +157,7 @@ long Profiler::OutputAveraged(CollectiveCommunication& comm, const int refineLev
   csv << "Speedup (total); Speedup (ohne Solver)" << std::endl;
 
   // outputs column values
-  csv << refineLevel << "," << comm.size() << "," << numDofs << ","
-      << comm.sum(m_l2_error) / double(m_total_runs * numProce) << ",";
+  csv << refineLevel << "," << comm.size() << "," << numDofs << "," << 0 << ","; //! FIXME
   for (AvgMap::const_iterator it = averages.begin(); it != averages.end(); ++it) {
     long clock_count = it->second;
     clock_count = long(comm.sum(clock_count) / double(CLOCKS_PER_SEC * 0.001 * numProce));
@@ -178,13 +172,13 @@ long Profiler::OutputAveraged(CollectiveCommunication& comm, const int refineLev
   return long((clock() - init_time_) / double(CLOCKS_PER_SEC * 0.001));
 }
 
-template <class CollectiveCommunication>
-long Profiler::Output(CollectiveCommunication& comm, const int refineLevel, const long numDofs)
+template <class CollectiveCommunication, class InfoContainer>
+long Profiler::Output(CollectiveCommunication& comm, InfoContainer& run_infos)
 {
   const int numProce = comm.size();
 
   std::ostringstream filename;
-  filename << "p" << numProce << "_refinelvl_" << refineLevel << ".csv";
+  filename << "prof_p" << numProce << ".csv";
   filename.flush();
 
   if (comm.rank() == 0)
@@ -206,24 +200,92 @@ long Profiler::Output(CollectiveCommunication& comm, const int refineLevel, cons
   for (DataMap::const_iterator it = m_timings[0].begin(); it != m_timings[0].end(); ++it) {
     csv << it->first << ",";
   }
-  csv << "Speedup (total); Speedup (ohne Solver)" << std::endl;
+  csv << "Relative total time" << std::endl;
 
   // outputs column values
-  csv << refineLevel << "," << comm.size() << "," << numDofs << ","
-      << comm.sum(m_l2_error) / double(m_total_runs * numProce) << ",";
 
   MapVector::const_iterator ti_it = m_timings.begin();
+  int idx = 0;
   for (; ti_it != m_timings.end(); ++ti_it) {
+    RunInfo info = run_infos[idx];
+    csv << info.refine_level << "," << comm.size() << "," << info.codim0 << "," << info.L2Errors[0] << ",";
 
     const DataMap& data_map = *ti_it;
     for (DataMap::const_iterator it = data_map.begin(); it != data_map.end(); ++it) {
       TimingData data  = it->second;
       long clock_count = data.end - data.start;
-      clock_count = long(comm.sum(clock_count) / double(CLOCKS_PER_SEC * 0.001 * numProce));
-      csv << clock_count / double(m_total_runs) << ",";
+      clock_count      = long(comm.sum(clock_count) / double(CLOCKS_PER_SEC * 0.001 * numProce));
+      csv << clock_count << ",";
     }
-    csv << "=I$2/I2,"
-        << "=SUM(E$2:G$2)/SUM(E2:G2)" << std::endl;
+    csv << "=1/I$2*I" << Stuff::toString(idx + 2) << std::endl;
+
+    idx++;
+  }
+
+  csv << "\n Linear estimate \n";
+
+  {
+    RunInfo info = run_infos[0];
+    csv << info.refine_level << "," << comm.size() << "," << info.codim0 << "," << info.L2Errors[0] << ",";
+
+    const DataMap& data_map = m_timings[0];
+    for (DataMap::const_iterator it = data_map.begin(); it != data_map.end(); ++it) {
+      TimingData data  = it->second;
+      long clock_count = data.end - data.start;
+      clock_count      = long(comm.sum(clock_count) / double(CLOCKS_PER_SEC * 0.001 * numProce));
+      csv << clock_count << ",";
+    }
+    csv << 1 << std::endl;
+
+    double factor = 1;
+    for (int i = 1; i < run_infos.size(); ++i) {
+      RunInfo info      = run_infos[i];
+      RunInfo info_last = run_infos[i - 1];
+      factor *= info.codim0 / double(info_last.codim0);
+      csv << info.refine_level << "," << comm.size() << "," << info.codim0 << "," << info.L2Errors[0] / factor << ",";
+
+      const DataMap& data_map = m_timings[0];
+      for (DataMap::const_iterator it = data_map.begin(); it != data_map.end(); ++it) {
+        TimingData data  = it->second;
+        long clock_count = data.end - data.start;
+        clock_count      = factor * long(comm.sum(clock_count) / double(CLOCKS_PER_SEC * 0.001 * numProce));
+        csv << clock_count << ",";
+      }
+      csv << factor << std::endl;
+    }
+  }
+
+  csv << "\n Quadratic estimate \n";
+
+  {
+    RunInfo info = run_infos[0];
+    csv << info.refine_level << "," << comm.size() << "," << info.codim0 << "," << info.L2Errors[0] << ",";
+
+    const DataMap& data_map = m_timings[0];
+    for (DataMap::const_iterator it = data_map.begin(); it != data_map.end(); ++it) {
+      TimingData data  = it->second;
+      long clock_count = data.end - data.start;
+      clock_count      = long(comm.sum(clock_count) / double(CLOCKS_PER_SEC * 0.001 * numProce));
+      csv << clock_count << ",";
+    }
+    csv << 1 << std::endl;
+
+    double factor = 1;
+    for (int i = 1; i < run_infos.size(); ++i) {
+      RunInfo info      = run_infos[i];
+      RunInfo info_last = run_infos[i - 1];
+      factor *= std::pow(info.codim0 / double(info_last.codim0), 2);
+      csv << info.refine_level << "," << comm.size() << "," << info.codim0 << "," << info.L2Errors[0] / factor << ",";
+
+      const DataMap& data_map = m_timings[0];
+      for (DataMap::const_iterator it = data_map.begin(); it != data_map.end(); ++it) {
+        TimingData data  = it->second;
+        long clock_count = data.end - data.start;
+        clock_count      = factor * long(comm.sum(clock_count) / double(CLOCKS_PER_SEC * 0.001 * numProce));
+        csv << clock_count << ",";
+      }
+      csv << factor << std::endl;
+    }
   }
 
   csv.close();
