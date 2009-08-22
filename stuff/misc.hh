@@ -55,6 +55,7 @@ struct RunInfo // define this beforepass is included so it's known in pass, i kn
   bool bfg;
   std::string gridname;
   double solver_accuracy;
+  double inner_solver_accuracy;
   double bfg_tau;
   std::string extra_info;
   int iterations_inner_avg;
@@ -338,6 +339,76 @@ public:
                 << info_.max_inner_accuracy;
   }
 };
+
+class AccurracyOutput : public TexOutputBase<RunInfo>
+{
+  typedef TexOutputBase<RunInfo> BaseType;
+
+public:
+  AccurracyOutput(BaseType::Strings& headers)
+    : BaseType(RunInfo(), headers)
+  {
+  }
+
+  void putErrorCol(std::ofstream& outputFile_, const double prevError_, const double error_, const double prevh_,
+                   const bool /*initial*/)
+  {
+    // some trickery to calc correct diff w/o further work on the fem stuff
+    static bool col = true;
+    col             = !col;
+    current_h_      = info_.grid_width;
+    outputFile_ << " & " << error_;
+  }
+
+  void putHeader(std::ofstream& outputFile_)
+  {
+    const unsigned int dynColSize  = 2;
+    const unsigned int statColSize = headers_.size() - 2;
+    outputFile_ << "\\begin{longtable}{";
+
+    for (unsigned int i = 0; i < statColSize; i++) {
+      if (i == 2)
+        outputFile_ << "|r|"; // runtime col
+      else
+        outputFile_ << "|c|";
+    }
+
+    for (unsigned int i = 0; i < dynColSize; i++) {
+      outputFile_ << "|cc|";
+    }
+    outputFile_ << "}\n"
+                << "\\caption{" << info_.gridname << " Polorder (u,p,$\\sigma$): (" << info_.polorder_velocity << ", "
+                << info_.polorder_pressure << ", " << info_.polorder_sigma << " ) "
+                << "}\\\\  \n"
+                << "\\hline \n";
+
+    for (unsigned int i = 0; i < statColSize; i++) {
+      outputFile_ << headers_[i];
+      if (i < statColSize - 1)
+        outputFile_ << " & ";
+    }
+    for (unsigned int i = 0; i < dynColSize; i++) {
+      outputFile_ << " & " << headers_[i + statColSize];
+    }
+    outputFile_ << "\n \\endhead\n"
+                << "\\hline\n"
+                << "\\hline\n";
+  }
+
+  void putStaticCols(std::ofstream& outputFile_)
+  {
+    std::stringstream runtime;
+    if (info_.run_time > 59)
+      runtime << long(info_.run_time) / 60 << ":" << long(info_.run_time) % 60;
+    else
+      runtime << long(info_.run_time);
+
+    outputFile_ << std::setw(4) << info_.grid_width << " & " << info_.codim0 << " & " << runtime.str() << " & "
+                << info_.iterations_inner_avg << " & " << info_.inner_solver_accuracy << " & "
+                << info_.iterations_outer_total << " & " << info_.solver_accuracy;
+  }
+};
+
 
 /**
  *  \brief Only free mem pointed to by valid pointer, log warning otherwise
