@@ -174,8 +174,12 @@ public:
   {
     current_h_    = info_.grid_width;
     double factor = current_h_ / prevh_;
-    double eoc    = std::log(error_ / prevError_) / std::log(factor);
-    outputFile_ << " & " << error_ << " & " << eoc;
+    double eoc = std::log(error_ / prevError_) / std::log(factor);
+    if (isnan(eoc))
+      outputFile_ << " & " << error_ << " & "
+                  << "--";
+    else
+      outputFile_ << " & " << error_ << " & " << eoc;
   }
 
   void putHeader(std::ofstream& outputFile_)
