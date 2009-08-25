@@ -176,10 +176,10 @@ public:
     double factor = current_h_ / prevh_;
     double eoc = std::log(error_ / prevError_) / std::log(factor);
     if (isnan(eoc))
-      outputFile_ << " & " << error_ << " & "
+      outputFile_ << " & " << std::scientific << error_ << std::fixed << " & "
                   << "--";
     else
-      outputFile_ << " & " << error_ << " & " << eoc;
+      outputFile_ << " & " << std::scientific << error_ << std::fixed << " & " << eoc;
   }
 
   void putHeader(std::ofstream& outputFile_)
@@ -289,7 +289,7 @@ public:
     col             = !col;
     current_h_      = info_.grid_width;
     double diff     = error_ - reference_.L2Errors[col];
-    outputFile_ << " & " << error_ << " & " << diff;
+    outputFile_ << " & " << std::scientific << error_ << std::fixed << " & " << diff;
   }
 
   void putHeader(std::ofstream& outputFile_)
@@ -339,8 +339,8 @@ public:
                 << (info_.bfg ? toString(info_.bfg_tau) : std::string("--"))
                 << " & " // don't output a num in reference row
                 << info_.iterations_inner_avg << " & " << info_.iterations_inner_min << " & "
-                << info_.iterations_inner_max << " & " << info_.iterations_outer_total << " & "
-                << info_.max_inner_accuracy;
+                << info_.iterations_inner_max << " & " << info_.iterations_outer_total << " & " << std::scientific
+                << info_.max_inner_accuracy << std::fixed;
   }
 };
 
@@ -408,8 +408,9 @@ public:
       runtime << long(info_.run_time);
 
     outputFile_ << std::setw(4) << info_.grid_width << " & " << info_.codim0 << " & " << runtime.str() << " & "
-                << info_.iterations_inner_avg << " & " << info_.inner_solver_accuracy << " & "
-                << info_.iterations_outer_total << " & " << info_.solver_accuracy;
+                << info_.iterations_inner_avg << " & " << std::scientific << info_.inner_solver_accuracy << std::fixed
+                << " & " << info_.iterations_outer_total << " & " << std::scientific << info_.solver_accuracy
+                << std::fixed;
   }
 };
 
@@ -477,8 +478,8 @@ public:
       runtime << long(info_.run_time);
 
     outputFile_ << std::setw(4) << info_.grid_width << " & " << info_.codim0 << " & " << runtime.str() << " & "
-                << info_.iterations_inner_avg << " & " << info_.iterations_outer_total << " & "
-                << info_.solver_accuracy;
+                << info_.iterations_inner_avg << " & " << info_.iterations_outer_total << " & " << std::scientific
+                << info_.solver_accuracy << std::fixed;
   }
 };
 
