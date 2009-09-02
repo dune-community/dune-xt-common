@@ -239,7 +239,7 @@ long Profiler::Output(CollectiveCommunication& comm, InfoContainer& run_infos)
     csv << 1 << std::endl;
 
     double factor = 1;
-    for (int i = 1; i < run_infos.size(); ++i) {
+    for (size_t i = 1; i < run_infos.size(); ++i) {
       RunInfo info      = run_infos[i];
       RunInfo info_last = run_infos[i - 1];
       factor *= info.codim0 / double(info_last.codim0);
@@ -272,7 +272,7 @@ long Profiler::Output(CollectiveCommunication& comm, InfoContainer& run_infos)
     csv << 1 << std::endl;
 
     double factor = 1;
-    for (int i = 1; i < run_infos.size(); ++i) {
+    for (size_t i = 1; i < run_infos.size(); ++i) {
       RunInfo info      = run_infos[i];
       RunInfo info_last = run_infos[i - 1];
       factor *= std::pow(info.codim0 / double(info_last.codim0), 2);
