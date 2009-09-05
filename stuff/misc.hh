@@ -71,6 +71,52 @@ struct RunInfo // define this beforepass is included so it's known in pass, i kn
 namespace Stuff {
 
 /**
+ *  \todo   doc
+ **/
+template <class FieldMatrixImp>
+double colonProduct(const FieldMatrixImp& arg1, const FieldMatrixImp& arg2)
+{
+  assert(arg1.rowdim() == arg2.coldim());
+  double ret = 0.0;
+  // iterators
+  typedef typename FieldMatrixImp::ConstRowIterator ConstRowIteratorType;
+  typedef typename FieldMatrixImp::row_type::ConstIterator ConstIteratorType;
+  ConstRowIteratorType arg1RowItEnd = arg1.end();
+  ConstRowIteratorType arg2RowItEnd = arg2.end();
+  ConstRowIteratorType arg2RowIt = arg2.begin();
+  for (ConstRowIteratorType arg1RowIt = arg1.begin(); arg1RowIt != arg1RowItEnd, arg2RowIt != arg2RowItEnd;
+       ++arg1RowIt, ++arg2RowIt) {
+    ConstIteratorType row1ItEnd = arg1RowIt->end();
+    ConstIteratorType row2ItEnd = arg2RowIt->end();
+    ConstIteratorType row2It = arg2RowIt->begin();
+    for (ConstIteratorType row1It = arg1RowIt->begin(); row1It != row1ItEnd, row2It != row2ItEnd; ++row1It, ++row2It) {
+      ret += *row1It * *row2It;
+    }
+  }
+  return ret;
+}
+
+/**
+ *  \todo   doc
+ **/
+template <class FieldMatrixImp>
+FieldMatrixImp transposeMatrix(const FieldMatrixImp& matrix, const FieldMatrixImp& transpose)
+{
+  assert(matrix.rowdim() == transpose.coldim());
+  FieldMatrixImp ret(0.0);
+  typedef typename FieldMatrixImp::RowIterator RowIteratorType;
+  typedef typename FieldMatrixImp::ConstRowIterator ConstRowIteratorType;
+  ConstRowIteratorType itEnd = matrix.end();
+  RowIteratorType retIt = ret.begin();
+  for (ConstRowIteratorType it = matrix.begin(); it != itEnd; ++it) {
+    typename FieldMatrixImp::row_type retRow(0.0);
+    transpose.mv(*it, retRow);
+    *retIt = retRow;
+    ++retIt;
+  }
+}
+
+/**
  *  \todo doc me
  **/
 template <class ReturnType>
