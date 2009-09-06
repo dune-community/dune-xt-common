@@ -97,23 +97,32 @@ double colonProduct(const FieldMatrixImp& arg1, const FieldMatrixImp& arg2)
 }
 
 /**
+ *  \brief  multiplies rows of arg2 with arg1
  *  \todo   doc
  **/
 template <class FieldMatrixImp>
-FieldMatrixImp transposeMatrix(const FieldMatrixImp& matrix, const FieldMatrixImp& transpose)
+FieldMatrixImp rowWiseMatrixMultiplication(const FieldMatrixImp& arg1, const FieldMatrixImp& arg2)
 {
-  assert(matrix.rowdim() == transpose.coldim());
-  FieldMatrixImp ret(0.0);
-  typedef typename FieldMatrixImp::RowIterator RowIteratorType;
-  typedef typename FieldMatrixImp::ConstRowIterator ConstRowIteratorType;
-  ConstRowIteratorType itEnd = matrix.end();
-  RowIteratorType retIt = ret.begin();
-  for (ConstRowIteratorType it = matrix.begin(); it != itEnd; ++it) {
-    typename FieldMatrixImp::row_type retRow(0.0);
-    transpose.mv(*it, retRow);
-    *retIt = retRow;
-    ++retIt;
+  typedef FieldMatrixImp FieldMatrixType;
+  typedef typename FieldMatrixType::row_type RowType;
+  typedef typename FieldMatrixType::ConstRowIterator ConstRowIteratorType;
+  typedef typename FieldMatrixType::RowIterator RowIteratorType;
+
+  assert(arg2.rowdim() == arg1.coldim());
+
+  FieldMatrixType ret(0.0);
+
+  ConstRowIteratorType arg2RowItEnd = arg2.end();
+  RowIteratorType retRowItEnd       = ret.end();
+  RowIteratorType retRowIt = ret.begin();
+  for (ConstRowIteratorType arg2RowIt = arg2.begin(); arg2RowIt != arg2RowItEnd, retRowIt != retRowItEnd;
+       ++arg2RowIt, ++retRowIt) {
+    RowType row(0.0);
+    arg1.mv(*arg2RowIt, row);
+    *retRowIt = row;
   }
+
+  return ret;
 }
 
 /**
