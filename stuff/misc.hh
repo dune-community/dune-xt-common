@@ -71,6 +71,61 @@ struct RunInfo // define this beforepass is included so it's known in pass, i kn
 namespace Stuff {
 
 /**
+ *  \todo   doc
+ **/
+template <class FieldMatrixImp>
+double colonProduct(const FieldMatrixImp& arg1, const FieldMatrixImp& arg2)
+{
+  assert(arg1.rowdim() == arg2.coldim());
+  double ret = 0.0;
+  // iterators
+  typedef typename FieldMatrixImp::ConstRowIterator ConstRowIteratorType;
+  typedef typename FieldMatrixImp::row_type::ConstIterator ConstIteratorType;
+  ConstRowIteratorType arg1RowItEnd = arg1.end();
+  ConstRowIteratorType arg2RowItEnd = arg2.end();
+  ConstRowIteratorType arg2RowIt = arg2.begin();
+  for (ConstRowIteratorType arg1RowIt = arg1.begin(); arg1RowIt != arg1RowItEnd, arg2RowIt != arg2RowItEnd;
+       ++arg1RowIt, ++arg2RowIt) {
+    ConstIteratorType row1ItEnd = arg1RowIt->end();
+    ConstIteratorType row2ItEnd = arg2RowIt->end();
+    ConstIteratorType row2It = arg2RowIt->begin();
+    for (ConstIteratorType row1It = arg1RowIt->begin(); row1It != row1ItEnd, row2It != row2ItEnd; ++row1It, ++row2It) {
+      ret += *row1It * *row2It;
+    }
+  }
+  return ret;
+}
+
+/**
+ *  \brief  multiplies rows of arg2 with arg1
+ *  \todo   doc
+ **/
+template <class FieldMatrixImp>
+FieldMatrixImp rowWiseMatrixMultiplication(const FieldMatrixImp& arg1, const FieldMatrixImp& arg2)
+{
+  typedef FieldMatrixImp FieldMatrixType;
+  typedef typename FieldMatrixType::row_type RowType;
+  typedef typename FieldMatrixType::ConstRowIterator ConstRowIteratorType;
+  typedef typename FieldMatrixType::RowIterator RowIteratorType;
+
+  assert(arg2.rowdim() == arg1.coldim());
+
+  FieldMatrixType ret(0.0);
+
+  ConstRowIteratorType arg2RowItEnd = arg2.end();
+  RowIteratorType retRowItEnd       = ret.end();
+  RowIteratorType retRowIt = ret.begin();
+  for (ConstRowIteratorType arg2RowIt = arg2.begin(); arg2RowIt != arg2RowItEnd, retRowIt != retRowItEnd;
+       ++arg2RowIt, ++retRowIt) {
+    RowType row(0.0);
+    arg1.mv(*arg2RowIt, row);
+    *retRowIt = row;
+  }
+
+  return ret;
+}
+
+/**
  *  \todo doc me
  **/
 template <class ReturnType>
