@@ -10,6 +10,7 @@
 #include <sstream>
 #include <ctime>
 #include <iomanip>
+#include <map>
 #include <assert.h>
 #include "misc.hh"
 
