@@ -35,6 +35,7 @@ bool isnan(T x)
 #include <fstream>
 #include <ostream>
 #include <sstream>
+#include <iomanip>
 #include <vector>
 #include <assert.h>
 #include <cmath>
@@ -621,8 +622,6 @@ bool testCreateDirectory(std::string path)
   return true;
 }
 
-} // end namepspace stuff
-
 template <typename T>
 std::string getParameterString(const std::string& prefix, T min, T max, T inc)
 {
@@ -634,4 +633,57 @@ std::string getParameterString(const std::string& prefix, T min, T max, T inc)
   return ss.str();
 }
 
+template <class TokenType>
+class Tokenizer
+{
+
+protected:
+  typedef std::vector<TokenType> Tokens;
+  typedef typename Tokens::iterator TokenIterator;
+
+public:
+  Tokenizer(const std::string tokenstring, const std::string delimiters)
+  {
+    // code taken from http://oopweb.com/CPP/Documents/CPPHOWTO/Volume/C++Programming-HOWTO-7.html
+    // Skip delimiters at beginning.
+    std::string::size_type lastPos = tokenstring.find_first_not_of(delimiters, 0);
+    // Find first "non-delimiter".
+    std::string::size_type pos = tokenstring.find_first_of(delimiters, lastPos);
+
+    while (std::string::npos != pos || std::string::npos != lastPos) {
+      // Found a token, add it to the vector.
+      tokens_.push_back(fromString<TokenType>(tokenstring.substr(lastPos, pos - lastPos)));
+      // Skip delimiters.  Note the "not_of"
+      lastPos = tokenstring.find_first_not_of(delimiters, pos);
+      // Find next "non-delimiter"
+      pos = tokenstring.find_first_of(delimiters, lastPos);
+    }
+    currentToken_ = tokens_.begin();
+  }
+
+  Tokens getTokens()
+  {
+    return tokens_;
+  }
+
+  bool hasMoreTokens()
+  {
+    return currentToken_ != tokens_.end();
+  }
+
+  TokenType getNextToken()
+  {
+    TokenType ret = *currentToken_;
+    ++currentToken_;
+    return ret;
+  }
+
+protected:
+  TokenIterator currentToken_;
+  Tokens tokens_;
+};
+
+typedef Tokenizer<std::string> StringTokenizer;
+
+} // end namepspace stuff
 #endif // end of stuff.hh
