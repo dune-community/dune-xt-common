@@ -685,5 +685,68 @@ protected:
 
 typedef Tokenizer<std::string> StringTokenizer;
 
+template <class ElementType>
+class MinMaxAvg
+{
+protected:
+  typedef MinMaxAvg<ElementType> ThisType;
+  typedef std::vector<ElementType> ElementsVec;
+  typedef typename ElementsVec::const_iterator ElementsVecConstIterator;
+
+public:
+  MinMaxAvg()
+    : min_(std::numeric_limits<ElementType>::max())
+    , max_(std::numeric_limits<ElementType>::min())
+    , avg_((min_ + max_) / 2.0)
+  {
+  }
+
+  MinMaxAvg(const ElementsVec& elements)
+  {
+    for (ElementsVecConstIterator it = elements.begin(); it != elements.end(); ++it) {
+      push(*it);
+    }
+  }
+
+  ElementType min() const
+  {
+    return min_;
+  }
+  ElementType max() const
+  {
+    return max_;
+  }
+  ElementType average() const
+  {
+    return avg_;
+  }
+
+  void push(const ElementType& el)
+  {
+    size_t num = elements_.size();
+    elements_.push_back(el);
+    max_ = std::max(el, max_);
+    min_ = std::min(el, min_);
+    if (num > 0) {
+      avg_ *= (num / double(num + 1));
+      avg_ += (el / double(num + 1));
+    } else {
+      avg_ = el;
+    }
+  }
+
+  template <class Stream>
+  void output(Stream& stream)
+  {
+    stream << "min: " << min_ << " max: " << max_ << " avg: " << avg_ << std::endl;
+  }
+
+protected:
+  ElementsVec elements_;
+  ElementType min_, max_, avg_;
+
+  MinMaxAvg(const ThisType& other);
+};
+
 } // end namepspace stuff
 #endif // end of stuff.hh
