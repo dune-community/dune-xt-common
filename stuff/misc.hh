@@ -748,5 +748,16 @@ protected:
   MinMaxAvg(const ThisType& other);
 };
 
+void meminfo()
+{
+  std::cout << "Memory info: \n";
+  pid_t pid = getpid();
+  std::stringstream cmd;
+  cmd << "cat /proc/" << pid << "/status | grep Vm";
+  system(cmd.str().c_str());
+  system("cat /proc/meminfo | grep Mem");
+  std::cout << "------------ \n\n";
+}
+
 } // end namepspace stuff
 #endif // end of stuff.hh
