@@ -129,8 +129,10 @@ public:
       , is_suspended_(false)
     {
     }
+
     ~LogStream()
     {
+      Flush();
     }
 
     template <typename T>
