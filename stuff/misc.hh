@@ -43,6 +43,24 @@ bool isnan(T x)
 #include <sys/stat.h>
 #include <sys/types.h>
 
+class assert_exception : public std::runtime_error
+{
+public:
+  assert_exception(std::string msg)
+    : std::runtime_error(msg){};
+};
+
+#ifndef NDEBUG
+#define ASSERT_EXCEPTION(cond, msg)                                                                                    \
+  if (!(cond)) {                                                                                                       \
+    std::string rmsg(std::string(__FILE__) + std::string(":") + Stuff::toString(__LINE__) + std::string("\n")          \
+                     + std::string(msg));                                                                              \
+    throw assert_exception(rmsg);                                                                                      \
+  }
+#else
+#define ASSERT_EXCEPTION(cond, msg)
+#endif
+
 #define HAS_RUN_INFO
 
 struct RunInfo // define this beforepass is included so it's known in pass, i know it's ugly
@@ -748,15 +766,32 @@ protected:
   MinMaxAvg(const ThisType& other);
 };
 
-void meminfo()
+template <class Stream>
+void fileToStreamFiltered(Stream& stream, std::string filename, std::string filter)
 {
-  std::cout << "Memory info: \n";
+  std::ifstream file(filename.c_str(), std::ifstream::in);
+  ASSERT_EXCEPTION(file.good(), filename.c_str())
+  while (file.good()) {
+    std::string line;
+    std::getline(file, line);
+    if (line.find(filter) != std::string::npos)
+      stream << line << "\n";
+  }
+  file.close();
+}
+
+template <class Stream>
+void meminfo(Stream& stream)
+{
+  stream << "Memory info: \n";
+  stream.Resume();
   pid_t pid = getpid();
-  std::stringstream cmd;
-  cmd << "cat /proc/" << pid << "/status | grep Vm";
-  system(cmd.str().c_str());
-  system("cat /proc/meminfo | grep Mem");
-  std::cout << "------------ \n\n";
+  std::stringstream filename;
+  filename << "/proc/" << pid << "/status";
+
+  fileToStreamFiltered(stream, filename.str(), "Vm");
+  fileToStreamFiltered(stream, "/proc/meminfo", "Mem");
+  stream << "------------ \n\n" << std::endl;
 }
 
 } // end namepspace stuff
