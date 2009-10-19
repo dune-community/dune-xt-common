@@ -754,7 +754,8 @@ public:
     }
   }
 
-  void output(std::ostream& stream)
+  template <class Stream>
+  void output(Stream& stream)
   {
     stream << "min: " << min_ << " max: " << max_ << " avg: " << avg_ << std::endl;
   }
@@ -766,7 +767,8 @@ protected:
   MinMaxAvg(const ThisType& other);
 };
 
-void fileToStreamFiltered(std::ostream& stream, std::string filename, std::string filter)
+template <class Stream>
+void fileToStreamFiltered(Stream& stream, std::string filename, std::string filter)
 {
   std::ifstream file(filename.c_str(), std::ifstream::in);
   ASSERT_EXCEPTION(file.good(), filename.c_str())
@@ -779,10 +781,11 @@ void fileToStreamFiltered(std::ostream& stream, std::string filename, std::strin
   file.close();
 }
 
-void meminfo(std::ostream& stream)
+template <class Stream>
+void meminfo(Stream& stream)
 {
   stream << "Memory info: \n";
-  //    stream.Resume();
+  stream.Resume();
   pid_t pid = getpid();
   std::stringstream filename;
   filename << "/proc/" << pid << "/status";
