@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <cmath>
 #include <dune/stuff/functions.hh>
+#include <dune/stuff/parametercontainer.hh>
 
 namespace Stuff {
 
@@ -188,6 +189,32 @@ void printFunctionMinMax(Stream& stream, const Function& func)
   stream << "  - " << func.name() << std::endl
          << "    min: " << std::sqrt(2.0) * min << std::endl
          << "    max: " << std::sqrt(2.0) * max << std::endl;
+}
+
+template <class Matrix>
+void matrixToGnuplotFile(const Matrix& matrix, std::string filename)
+{
+  std::string dir(Parameters().getParam("fem.io.datadir", std::string("data")) + "/gnuplot/");
+  testCreateDirectory(dir);
+  std::ofstream file((dir + filename).c_str());
+  matrixToGnuplotStream(matrix, file);
+  file.flush();
+  file.close();
+}
+
+template <class Matrix, class Stream>
+void matrixToGnuplotStream(const Matrix& matrix, Stream& stream)
+{
+  unsigned long nz = 0;
+  for (int row = 0; row < matrix.rows(); ++row) {
+    for (int col = 0; col < matrix.cols(); ++col) {
+      if (matrix.find(row, col))
+        stream << row << "\t" << col << "\t" << matrix(row, col) << std::endl;
+    }
+    nz += matrix.numNonZeros(row);
+    stream << "#non zeros in row " << row << " " << matrix.numNonZeros(row) << " (of " << matrix.cols() << " cols)\n";
+  }
+  stream << "#total non zeros " << nz << " of " << matrix.rows() * matrix.cols() << " entries\n";
 }
 
 
