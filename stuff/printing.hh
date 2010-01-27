@@ -37,6 +37,7 @@ void printFieldVector(T& arg, std::string name, stream& out, std::string prefix 
   for (IteratorType it = arg.begin(); it != itEnd; ++it) {
     out << std::setw(10) << std::setprecision(6) << *it;
   }
+  out << '\n';
 }
 
 /**

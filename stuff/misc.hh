@@ -90,9 +90,10 @@ struct RunInfo // define this beforepass is included so it's known in pass, i kn
 
   RunInfo()
   {
-    grid_width = refine_level = run_time = codim0 = polorder_velocity = polorder_pressure = polorder_sigma = bfg =
-        solver_accuracy = inner_solver_accuracy = bfg_tau = iterations_inner_avg = iterations_inner_min =
-            iterations_inner_max = iterations_outer_total = max_inner_accuracy = -1;
+    refine_level = codim0 = polorder_velocity = polorder_sigma = polorder_pressure = iterations_inner_avg =
+        iterations_inner_min = iterations_inner_max = iterations_outer_total = -1;
+    bfg     = true;
+    bfg_tau = max_inner_accuracy = grid_width = solver_accuracy = run_time = inner_solver_accuracy = -1.0;
     gridname = problemIdentifier = "UNSET";
     extra_info = "";
   }
@@ -206,6 +207,10 @@ public:
     : info_(Info())
     , current_h_(1.0)
     , headers_(headers)
+  {
+  }
+
+  virtual ~TexOutputBase()
   {
   }
 
@@ -598,6 +603,11 @@ int getIdx(const Container& ct, Element e)
   return -1;
 }
 
+long sign(long x)
+{
+  return long(x != 0) | (long(x >= 0) - 1);
+}
+
 //! strip filename from \path if present, return empty string if only filename present
 std::string pathOnly(std::string path)
 {
@@ -793,6 +803,12 @@ void meminfo(Stream& stream)
   fileToStreamFiltered(stream, filename.str(), "Vm");
   fileToStreamFiltered(stream, "/proc/meminfo", "Mem");
   stream << "------------ \n\n" << std::endl;
+}
+
+template <class ContainerType>
+void MergeVector(ContainerType& target, const ContainerType& a)
+{
+  target.insert(target.end(), a.begin(), a.end());
 }
 
 } // end namepspace stuff

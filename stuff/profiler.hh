@@ -249,7 +249,7 @@ long Profiler::Output(CollectiveCommunication& comm, InfoContainer& run_infos)
       for (DataMap::const_iterator it = data_map.begin(); it != data_map.end(); ++it) {
         TimingData data  = it->second;
         long clock_count = data.end - data.start;
-        clock_count      = factor * long(comm.sum(clock_count) / double(CLOCKS_PER_SEC * 0.001 * numProce));
+        clock_count      = long(factor * long(comm.sum(clock_count) / double(CLOCKS_PER_SEC * 0.001 * numProce)));
         csv << clock_count << ",";
       }
       csv << factor << std::endl;
@@ -282,7 +282,7 @@ long Profiler::Output(CollectiveCommunication& comm, InfoContainer& run_infos)
       for (DataMap::const_iterator it = data_map.begin(); it != data_map.end(); ++it) {
         TimingData data  = it->second;
         long clock_count = data.end - data.start;
-        clock_count      = factor * long(comm.sum(clock_count) / double(CLOCKS_PER_SEC * 0.001 * numProce));
+        clock_count      = long(factor * long(comm.sum(clock_count) / double(CLOCKS_PER_SEC * 0.001 * numProce)));
         csv << clock_count << ",";
       }
       csv << factor << std::endl;

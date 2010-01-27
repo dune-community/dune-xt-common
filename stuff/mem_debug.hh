@@ -25,9 +25,9 @@ void* mynew(size_t sz) throw(std::bad_alloc)
 //}
 
 
-void* operator new(unsigned long size)
+void* operator new(unsigned long size, const char* file)
 {
-  std::cout << "operator new(" << size << "):\t";
+  std::cout << file << " operator new(" << size << "):\t";
 
   void* p = malloc(size);
   if (!p)
@@ -38,29 +38,31 @@ void* operator new(unsigned long size)
   return p;
 }
 
-void* operator new[](unsigned long size)
+void* operator new[](unsigned long size, const char* file)
 {
-  std::cout << "operator new[](" << size << "):\t";
+  std::cout << file << " operator new(" << size << "):\t";
 
   void* p = malloc(size);
   if (!p)
     throw "operator new() error";
 
-  std::cout << static_cast<void*>(p) << std::endl;
+  //    std::cout << static_cast<void*>(p) << std::endl;
 
   return p;
 }
 
 void operator delete(void* p)
 {
-  std::cout << "operator delete(" << p << ")" << std::endl;
+  //    std::cout << "operator delete(" << p << ")" << std::endl;
 
   free(p);
 }
 
 void operator delete[](void* p)
 {
-  std::cout << "operator delete[](" << p << ")" << std::endl;
+  //    std::cout << "operator delete[](" << p << ")" << std::endl;
 
   free(p);
 }
+
+#define new (a) new (a, __func__)
