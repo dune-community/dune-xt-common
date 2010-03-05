@@ -64,7 +64,10 @@ public:
 
 #define HAS_RUN_INFO
 
-struct RunInfo // define this beforepass is included so it's known in pass, i know it's ugly
+/** \brief wrap any info that might be remotely interesting about a single run
+  \note define this beforepass is included so it's known in pass. Yes, I know it's ugly.
+  **/
+struct RunInfo
 {
   std::vector<double> L2Errors;
   double grid_width;
@@ -156,9 +159,7 @@ FieldMatrixImp rowWiseMatrixMultiplication(const FieldMatrixImp& arg1, const Fie
   return ret;
 }
 
-/**
- *  \todo doc me
- **/
+//! simple and dumb std::string to anything conversion
 template <class ReturnType>
 ReturnType fromString(const std::string& s)
 {
@@ -169,9 +170,7 @@ ReturnType fromString(const std::string& s)
   return r;
 }
 
-/**
- *  \todo doc
- **/
+//! simple and dumb anything to std::string conversion
 template <class ReturnType>
 std::string toString(const ReturnType& s)
 {
@@ -182,6 +181,7 @@ std::string toString(const ReturnType& s)
   return r;
 }
 
+//! interface and base class for all out eoc tex output
 template <class Info>
 class TexOutputBase
 {
@@ -247,6 +247,7 @@ public:
   }
 };
 
+//! format RunInfo and error vetor into a latex table, performs actual eoc calculation
 class EocOutput : public TexOutputBase<RunInfo>
 {
   typedef TexOutputBase<RunInfo> BaseType;
@@ -262,6 +263,7 @@ public:
   {
   }
 
+  //! eoc calc happens here
   void putErrorCol(std::ofstream& outputFile_, const double prevError_, const double error_, const double prevh_,
                    const bool /*initial*/)
   {
@@ -329,6 +331,7 @@ public:
   }
 };
 
+//! basically the same as EocOutput, but with less columns (no stab coefficients)
 class RefineOutput : public EocOutput
 {
   typedef EocOutput BaseType;
@@ -356,6 +359,7 @@ public:
   }
 };
 
+//! tex output for bfg runs
 class BfgOutput : public TexOutputBase<RunInfo>
 {
   typedef TexOutputBase<RunInfo> BaseType;
@@ -437,6 +441,7 @@ public:
   }
 };
 
+//! tex output for accuracy runs(where both inner and outer accuracy are varied)
 class AccurracyOutput : public TexOutputBase<RunInfo>
 {
   typedef TexOutputBase<RunInfo> BaseType;
@@ -507,6 +512,7 @@ public:
   }
 };
 
+//! tex output for accuracy runs(where only outer accuracy is varied)
 class AccurracyOutputOuter : public TexOutputBase<RunInfo>
 {
   typedef TexOutputBase<RunInfo> BaseType;
@@ -576,6 +582,9 @@ public:
   }
 };
 
+/** stupid element-index-in-conatiner search
+  \todo stl implementation?
+  **/
 template <class Container, class Element>
 int getIdx(const Container& ct, Element e)
 {
@@ -646,6 +655,11 @@ std::string getParameterString(const std::string& prefix, T min, T max, T inc)
   return ss.str();
 }
 
+/** \brief string to AnyType tokenizer
+  A given string is split according to a list of delimiters. Each token is coerced into class parameter
+TokenType and saved in a vector which is exposed via iterator-like mechanism
+  \see StringTokenizer, a shorthand tyoedef for string to string tokenisation
+  **/
 template <class TokenType>
 class Tokenizer
 {
@@ -698,6 +712,9 @@ protected:
 
 typedef Tokenizer<std::string> StringTokenizer;
 
+/** \brief a vector wrapper for continiously updating min,max,avg of some element type vector
+  \todo find use? it's only used in minimal as testcase for itself...
+  **/
 template <class ElementType>
 class MinMaxAvg
 {
@@ -761,6 +778,7 @@ protected:
   MinMaxAvg(const ThisType& other);
 };
 
+//! read a file and output all lines containing filter string to a stream
 template <class Stream>
 void fileToStreamFiltered(Stream& stream, std::string filename, std::string filter)
 {
@@ -775,6 +793,7 @@ void fileToStreamFiltered(Stream& stream, std::string filename, std::string filt
   file.close();
 }
 
+//! output programs mem usage stats by reading from /proc
 template <class Stream>
 void meminfo(Stream& stream)
 {
@@ -789,6 +808,7 @@ void meminfo(Stream& stream)
   stream << "------------ \n\n" << std::endl;
 }
 
+//! useless and/or obsolete stl wrapper?
 template <class ContainerType>
 void MergeVector(ContainerType& target, const ContainerType& a)
 {
