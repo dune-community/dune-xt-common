@@ -75,6 +75,9 @@ void printFieldMatrix(T& arg, std::string name, stream& out, std::string prefix 
   }
 }
 
+/** \brief print a SparseRowMatrix (or any interface conforming object) to a given stream in matlab (laodable-) format
+  \ingroup Matlab
+  **/
 template <class T, class stream>
 void printSparseRowMatrixMatlabStyle(const T& arg, const std::string name, stream& out)
 {
@@ -88,6 +91,9 @@ void printSparseRowMatrixMatlabStyle(const T& arg, const std::string name, strea
   out << "];" << std::endl;
 }
 
+/** \brief print a discrete function (or any interface conforming object) to a given stream in matlab (laodable-) format
+  \ingroup Matlab
+  **/
 template <class T, class stream>
 void printDiscreteFunctionMatlabStyle(const T& arg, const std::string name, stream& out)
 {
@@ -101,6 +107,9 @@ void printDiscreteFunctionMatlabStyle(const T& arg, const std::string name, stre
   out << "];" << std::endl;
 }
 
+/** \brief print a double vector (or any interface conforming object) to a given stream in matlab (laodable-) format
+  \ingroup Matlab
+  **/
 template <class T, class stream>
 void printDoubleVectorMatlabStyle(const T* arg, const int size, const std::string name, stream& out)
 {
@@ -112,7 +121,7 @@ void printDoubleVectorMatlabStyle(const T* arg, const int size, const std::strin
   out << "];" << std::endl;
 }
 
-
+//! simple vector to stream print
 template <class Stream, class Type>
 void printDoubleVec(Stream& stream, const Type* vec, const unsigned int N)
 {
@@ -123,6 +132,7 @@ void printDoubleVec(Stream& stream, const Type* vec, const unsigned int N)
   stream << " ] " << std::endl;
 }
 
+//! simple discrete function to stream print
 template <class Stream, class DiscFunc>
 void oneLinePrint(Stream& stream, const DiscFunc& func)
 {
@@ -137,7 +147,14 @@ void oneLinePrint(Stream& stream, const DiscFunc& func)
   stream << " ] " << std::endl;
 }
 
-
+/** \brief localmatrix printing functor for use in Stuff::GridWalk
+  putting this into Stuff::GridWalk::operator() will result in a local matrix being printed for each gird entity\n
+  Example:\n
+  Stuff::GridWalk<GridPartType> gw( gridPart_ );\n
+  Stuff::LocalMatrixPrintFunctor< RmatrixType,FunctorStream> f_R ( Rmatrix, functorStream, "R" );\n
+  gw( f_R );
+  \see Stuff::GridWalk
+  **/
 template <class GlobalMatrix, class Stream>
 class LocalMatrixPrintFunctor
 {
@@ -181,6 +198,9 @@ private:
   const std::string name_;
 };
 
+/** print min/max of a given DiscreteFucntion obtained by Stuff::getMinMaxOfDiscreteFunction
+  \note hardcoded mult of values by sqrt(2)
+  **/
 template <class Stream, class Function>
 void printFunctionMinMax(Stream& stream, const Function& func)
 {
@@ -192,6 +212,7 @@ void printFunctionMinMax(Stream& stream, const Function& func)
          << "    max: " << std::sqrt(2.0) * max << std::endl;
 }
 
+//! proxy to Stuff::matrixToGnuplotStream that redirects its output to a file
 template <class Matrix>
 void matrixToGnuplotFile(const Matrix& matrix, std::string filename)
 {
@@ -203,6 +224,7 @@ void matrixToGnuplotFile(const Matrix& matrix, std::string filename)
   file.close();
 }
 
+//! useful for visualizing sparsity patterns of matrices
 template <class Matrix, class Stream>
 void matrixToGnuplotStream(const Matrix& matrix, Stream& stream)
 {
