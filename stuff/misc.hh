@@ -818,4 +818,5 @@ void MergeVector(ContainerType& target, const ContainerType& a)
 }
 
 } // end namepspace stuff
+
 #endif // end of stuff.hh
