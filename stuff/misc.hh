@@ -32,6 +32,17 @@ bool isnan(T x)
 #define LOGIC_ERROR
 #endif
 
+#ifndef NDEBUG
+#define NEEDS_IMPLEMENTATION                                                                                           \
+  {                                                                                                                    \
+    std::stringstream ss;                                                                                              \
+    ss << " implemenatation missing: " << __FILE__ << ":" << __LINE__;                                                 \
+    std::cerr << ss.str() << std::endl;                                                                                \
+  }
+#else
+#define NEEDS_IMPLEMENTATION
+#endif // NDEBUG
+
 #include <fstream>
 #include <ostream>
 #include <sstream>
