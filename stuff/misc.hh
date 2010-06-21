@@ -36,7 +36,7 @@ bool isnan(T x)
 #define NEEDS_IMPLEMENTATION                                                                                           \
   {                                                                                                                    \
     std::stringstream ss;                                                                                              \
-    ss << " implemenatation missing: " << __FILE__ << ":" << __LINE__;                                                 \
+    ss << " implementation missing: " << __FUNCTION__ << " -- " << __FILE__ << ":" << __LINE__;                        \
     std::cerr << ss.str() << std::endl;                                                                                \
   }
 #else
