@@ -32,11 +32,36 @@ bool isnan(T x)
 #define LOGIC_ERROR
 #endif
 
+char* copy(const char* s)
+{
+  int l   = strlen(s) + 1;
+  char* t = new char[l];
+  for (int i = 0; i < l; i++) {
+    t[i] = s[i];
+  }
+  return t;
+}
+#define __CLASS__ strtok(copy(__PRETTY_FUNCTION__), "<(")
+
+const char* pathStuff(const char* path, int depth = 2)
+{
+  char* c = new char[255];
+  strcpy(c, path);
+  const char* p = strtok(c, "/");
+  int i = 0;
+  while (p && i < depth) {
+    p = strtok(NULL, "/");
+  }
+  p = strtok(NULL, "\0");
+  return p;
+}
+
+
 #ifndef NDEBUG
 #define NEEDS_IMPLEMENTATION                                                                                           \
   {                                                                                                                    \
     std::stringstream ss;                                                                                              \
-    ss << " implementation missing: " << __FUNCTION__ << " -- " << __FILE__ << ":" << __LINE__;                        \
+    ss << " implementation missing: " << __CLASS__ << " -- " << pathStuff(__FILE__) << ":" << __LINE__;                \
     std::cerr << ss.str() << std::endl;                                                                                \
   }
 #else
