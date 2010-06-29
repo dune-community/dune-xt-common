@@ -142,17 +142,15 @@ struct RunInfo
 
 namespace Stuff {
 
-/**
- *  \todo   doc
- **/
-template <class FieldMatrixImp>
-double colonProduct(const FieldMatrixImp& arg1, const FieldMatrixImp& arg2)
+template <class SomeRangeType>
+static double colonProduct(const SomeRangeType& arg1, const SomeRangeType& arg2)
 {
-  assert(arg1.rowdim() == arg2.coldim());
+  Dune::CompileTimeChecker<SomeRangeType::cols == SomeRangeType::rows> SigmaRangeType_is_not_a_square_matrix;
+
   double ret = 0.0;
   // iterators
-  typedef typename FieldMatrixImp::ConstRowIterator ConstRowIteratorType;
-  typedef typename FieldMatrixImp::row_type::ConstIterator ConstIteratorType;
+  typedef typename SomeRangeType::ConstRowIterator ConstRowIteratorType;
+  typedef typename SomeRangeType::row_type::ConstIterator ConstIteratorType;
   ConstRowIteratorType arg1RowItEnd = arg1.end();
   ConstRowIteratorType arg2RowItEnd = arg2.end();
   ConstRowIteratorType arg2RowIt = arg2.begin();
@@ -167,7 +165,6 @@ double colonProduct(const FieldMatrixImp& arg1, const FieldMatrixImp& arg2)
   }
   return ret;
 }
-
 /**
  *  \brief  multiplies rows of arg2 with arg1
  *  \todo   doc
