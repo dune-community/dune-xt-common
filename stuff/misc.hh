@@ -165,6 +165,34 @@ static double colonProduct(const SomeRangeType& arg1, const SomeRangeType& arg2)
   }
   return ret;
 }
+
+/**
+ *  \brief  dyadic product
+ *
+ *          Implements \f$\left(arg_{1} \otimes arg_{2}\right)_{i,j}:={arg_{1}}_{i} {arg_{2}}_{j}\f$
+ *			RangeType1 should be fieldmatrix, RangeType2 fieldvector
+ **/
+template <class RangeType1, class RangeType2>
+static RangeType1 dyadicProduct(const RangeType2& arg1, const RangeType2& arg2)
+{
+  RangeType1 ret(0.0);
+  typedef typename RangeType1::RowIterator MatrixRowIteratorType;
+  typedef typename RangeType2::ConstIterator ConstVectorIteratorType;
+  typedef typename RangeType2::Iterator VectorIteratorType;
+  MatrixRowIteratorType rItEnd   = ret.end();
+  ConstVectorIteratorType arg1It = arg1.begin();
+  for (MatrixRowIteratorType rIt = ret.begin(); rIt != rItEnd; ++rIt) {
+    ConstVectorIteratorType arg2It = arg2.begin();
+    VectorIteratorType vItEnd = rIt->end();
+    for (VectorIteratorType vIt = rIt->begin(); vIt != vItEnd; ++vIt) {
+      *vIt = *arg1It * *arg2It;
+      ++arg2It;
+    }
+    ++arg1It;
+  }
+  return ret;
+}
+
 /**
  *  \brief  multiplies rows of arg2 with arg1
  *  \todo   doc
