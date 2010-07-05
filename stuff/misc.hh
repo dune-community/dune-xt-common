@@ -32,6 +32,8 @@ bool isnan(T x)
 #define LOGIC_ERROR
 #endif
 
+#include <cstring>
+
 char* copy(const char* s)
 {
   int l   = strlen(s) + 1;
@@ -139,6 +141,8 @@ struct RunInfo
     extra_info = "";
   }
 };
+
+#include <dune/common/misc.hh>
 
 namespace Stuff {
 
