@@ -110,6 +110,10 @@ public:
 
   class LogStream //: virtual public std::ostream
   {
+  public:
+    typedef int PriorityType;
+    static const PriorityType default_suspend_priority = 0;
+
   protected:
     LogFlags loglevel_;
     int& logflags_;
@@ -118,6 +122,7 @@ public:
     std::ofstream& logfile_;
     std::ofstream& logfileWoTime_;
     bool is_suspended_;
+    PriorityType suspend_priority_;
 
   public:
     LogStream(LogFlags loglevel, int& logflags, std::ofstream& file, std::ofstream& fileWoTime)
@@ -127,6 +132,7 @@ public:
       , logfile_(file)
       , logfileWoTime_(fileWoTime)
       , is_suspended_(false)
+      , suspend_priority_(default_suspend_priority)
     {
     }
 
@@ -145,21 +151,28 @@ public:
       return *this;
     }
 
-    void Suspend()
+    void Suspend(PriorityType priority = default_suspend_priority)
     {
-      // don't accidentally invalidate flags if already suspended
-      if (!is_suspended_) {
-        suspended_logflags_ = logflags_;
-        logflags_           = 1;
+      // the suspend_priority_ mechanism provides a way to silence streams from 'higher' modules
+      suspend_priority_ = std::max(priority, suspend_priority_);
+      {
+        // don't accidentally invalidate flags if already suspended
+        if (!is_suspended_) {
+          suspended_logflags_ = logflags_;
+          logflags_           = 1;
+        }
+        is_suspended_ = true;
       }
-      is_suspended_ = true;
     }
 
-    void Resume()
+    void Resume(PriorityType priority = default_suspend_priority)
     {
-      if (is_suspended_)
-        logflags_   = suspended_logflags_;
-      is_suspended_ = false;
+      if (priority >= suspend_priority_) {
+        if (is_suspended_)
+          logflags_       = suspended_logflags_;
+        is_suspended_     = false;
+        suspend_priority_ = default_suspend_priority;
+      }
     }
 
     void Flush()
@@ -454,6 +467,20 @@ public:
     flagmap_[streamID]   = flags | streamID;
     streammap_[streamID] = new LogStream(streamID, flagmap_[streamID], logfile_, logfileWoTime_);
     return streamID_int;
+  }
+
+  void Resume(LogStream::PriorityType prio = LogStream::default_suspend_priority)
+  {
+    for (StreamMap::iterator it = streammap_.begin(); it != streammap_.end(); ++it) {
+      it->second->Resume(prio);
+    }
+  }
+
+  void Suspend(LogStream::PriorityType prio = LogStream::default_suspend_priority)
+  {
+    for (StreamMap::iterator it = streammap_.begin(); it != streammap_.end(); ++it) {
+      it->second->Suspend(prio);
+    }
   }
 
 private:
