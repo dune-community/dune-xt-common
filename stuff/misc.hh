@@ -33,6 +33,7 @@ bool isnan(T x)
 #endif
 
 #include <cstring>
+#include <assert.h>
 
 char* copy(const char* s)
 {
@@ -75,7 +76,6 @@ const char* pathStuff(const char* path, int depth = 2)
 #include <sstream>
 #include <iomanip>
 #include <vector>
-#include <assert.h>
 #include <cmath>
 #include <cerrno>
 #include <limits>
@@ -156,10 +156,11 @@ typedef std::map<RunInfoVectorMapKeyType, RunInfoVector> RunInfoVectorMap;
 
 namespace Stuff {
 
-template <class SomeRangeType>
-static double colonProduct(const SomeRangeType& arg1, const SomeRangeType& arg2)
+template <class SomeRangeType, class OtherRangeType>
+static double colonProduct(const SomeRangeType& arg1, const OtherRangeType& arg2)
 {
-  Dune::CompileTimeChecker<SomeRangeType::cols == SomeRangeType::rows> SigmaRangeType_is_not_a_square_matrix;
+  Dune::CompileTimeChecker<SomeRangeType::cols == SomeRangeType::rows && OtherRangeType::cols == OtherRangeType::rows
+                           && OtherRangeType::cols == SomeRangeType::rows> RangeTypes_dont_fit;
 
   double ret = 0.0;
   // iterators
