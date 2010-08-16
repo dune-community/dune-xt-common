@@ -893,6 +893,12 @@ void MergeVector(ContainerType& target, const ContainerType& a)
   target.insert(target.end(), a.begin(), a.end());
 }
 
+template <typename T>
+T clamp(const T var, const T min, const T max)
+{
+  return ((var < min) ? min : (var > max) ? max : var);
+}
+
 } // end namepspace stuff
 
 #endif // end of stuff.hh
