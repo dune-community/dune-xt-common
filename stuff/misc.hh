@@ -130,7 +130,7 @@ struct RunInfo
   int iterations_outer_total;
   double max_inner_accuracy;
   std::string problemIdentifier;
-  double current_time, delta_t;
+  double current_time, delta_t, viscosity, reynolds;
 
   RunInfo()
   {
@@ -142,6 +142,7 @@ struct RunInfo
     extra_info   = "";
     delta_t      = 0.1;
     current_time = 0.0;
+    viscosity = reynolds = 1.0;
   }
 };
 
