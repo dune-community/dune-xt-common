@@ -234,6 +234,7 @@ FieldMatrixImp rowWiseMatrixMultiplication(const FieldMatrixImp& arg1, const Fie
     arg1.mv(*arg2RowIt, row);
     *retRowIt = row;
   }
+
   return ret;
 }
 
