@@ -887,11 +887,14 @@ void meminfo(Stream& stream)
 }
 
 template <class MatrixType>
-void addMatrix(MatrixType& dest, const MatrixType& arg)
+void addMatrix(MatrixType& dest, const MatrixType& arg, const double eps = 1e-14)
 {
   for (int i = 0; i < arg.rows(); ++i)
-    for (int j = 0; j < arg.cols(); ++j)
-      dest.add(i, j, arg(i, j));
+    for (int j = 0; j < arg.cols(); ++j) {
+      const double value = arg(i, j);
+      if (std::fabs(value) > eps)
+        dest.add(i, j, value);
+    }
 }
 
 //! useless and/or obsolete stl wrapper?
