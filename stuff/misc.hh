@@ -886,6 +886,14 @@ void meminfo(Stream& stream)
   stream << "------------ \n\n" << std::endl;
 }
 
+template <class MatrixType>
+void addMatrix(MatrixType& dest, const MatrixType& arg)
+{
+  for (int i = 0; i < arg.rows(); ++i)
+    for (int j = 0; j < arg.cols(); ++j)
+      dest.add(i, j, arg(i, j));
+}
+
 //! useless and/or obsolete stl wrapper?
 template <class ContainerType>
 void MergeVector(ContainerType& target, const ContainerType& a)
