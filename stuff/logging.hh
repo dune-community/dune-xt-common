@@ -14,6 +14,8 @@
 #include <assert.h>
 #include "misc.hh"
 
+class Logging;
+Logging& Logger();
 
 /** \brief handles all logging
 **/
@@ -482,6 +484,34 @@ public:
       it->second->Suspend(prio);
     }
   }
+
+  struct SuspendLocal
+  {
+    LogStream::PriorityType prio_;
+    SuspendLocal(LogStream::PriorityType prio = LogStream::default_suspend_priority)
+      : prio_(prio)
+    {
+      Logger().Suspend(prio_);
+    }
+    ~SuspendLocal()
+    {
+      Logger().Resume(prio_);
+    }
+  };
+
+  struct ResumeLocal
+  {
+    LogStream::PriorityType prio_;
+    ResumeLocal(LogStream::PriorityType prio = LogStream::default_suspend_priority)
+      : prio_(prio)
+    {
+      Logger().Resume(prio_);
+    }
+    ~ResumeLocal()
+    {
+      Logger().Suspend(prio_);
+    }
+  };
 
 private:
   std::string filename_;
