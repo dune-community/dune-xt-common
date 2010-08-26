@@ -45,6 +45,28 @@ public:
   }
 };
 
+template <class FieldMatrixType>
+class MatrixDiagonal : public FieldVector<typename FieldMatrixType::field_type, FieldMatrixType::rows>
+{
+public:
+  MatrixDiagonal(const FieldMatrixType& matrix)
+  {
+    CompileTimeChecker<FieldMatrixType::rows == FieldMatrixType::cols> matrix_must_be_square;
+    for (size_t i = 0; i < FieldMatrixType::rows; i++)
+      (*this)[i] = matrix[i][i];
+  }
+};
+
+template <class FieldMatrixType>
+typename FieldMatrixType::field_type matrixTrace(const FieldMatrixType& matrix)
+{
+  MatrixDiagonal<FieldMatrixType> diag(matrix);
+  typename FieldMatrixType::field_type trace = typename FieldMatrixType::field_type(0);
+  for (size_t i = 0; i < FieldMatrixType::rows; i++)
+    trace += diag[i];
+  return trace;
+}
+
 } // namespace Dune
 
 
