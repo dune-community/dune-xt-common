@@ -81,14 +81,14 @@ void printFieldMatrix(T& arg, std::string name, stream& out, std::string prefix 
 template <class T, class stream>
 void printSparseRowMatrixMatlabStyle(const T& arg, const std::string name, stream& out)
 {
-  out << "\n" << name << " = [ " << std::endl;
+  const int I = arg.rows();
+  const int J = arg.cols();
+  out << "\n" << name << " = sparse( " << I << ", " << J << ");" << std::endl;
   for (int row = 0; row < arg.rows(); row++) {
     for (int col = 0; col < arg.cols(); col++) {
-      out << std::setw(19) << std::setprecision(12) << arg(row, col);
+      out << name << "(" << row << "," << col << ")=" << arg(row, col) << ";";
     }
-    out << ";" << std::endl;
   }
-  out << "];" << std::endl;
 }
 
 /** \brief print a discrete function (or any interface conforming object) to a given stream in matlab (laodable-) format
