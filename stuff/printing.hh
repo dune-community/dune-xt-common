@@ -79,14 +79,16 @@ void printFieldMatrix(T& arg, std::string name, stream& out, std::string prefix 
   \ingroup Matlab
   **/
 template <class T, class stream>
-void printSparseRowMatrixMatlabStyle(const T& arg, const std::string name, stream& out)
+void printSparseRowMatrixMatlabStyle(const T& arg, const std::string name, stream& out,
+                                     const double eps = Parameters().getParam("eps", 1e-14))
 {
   const int I = arg.rows();
   const int J = arg.cols();
   out << "\n" << name << " = sparse( " << I << ", " << J << ");" << std::endl;
   for (int row = 0; row < arg.rows(); row++) {
     for (int col = 0; col < arg.cols(); col++) {
-      out << name << "(" << row << "," << col << ")=" << arg(row, col) << ";";
+      if (arg(row, col) > eps)
+        out << name << "(" << row + 1 << "," << col + 1 << ")=" << std::setprecision(12) << arg(row, col) << ";\n";
     }
   }
 }
