@@ -45,6 +45,10 @@ public:
   }
 };
 
+/** \brief get the diagonal of a fieldMatrix into a fieldvector
+  * \note While in principle this might do for SparseRowMatrix as well, don't do it! SparseRowMatrix has specialised
+  *functions for this (putting the diagonal into DiscreteFunctions tho
+  **/
 template <class FieldMatrixType>
 class MatrixDiagonal : public FieldVector<typename FieldMatrixType::field_type, FieldMatrixType::rows>
 {
@@ -57,6 +61,7 @@ public:
   }
 };
 
+//! YAYDDYA
 template <class FieldMatrixType>
 typename FieldMatrixType::field_type matrixTrace(const FieldMatrixType& matrix)
 {
@@ -67,6 +72,36 @@ typename FieldMatrixType::field_type matrixTrace(const FieldMatrixType& matrix)
   return trace;
 }
 
+//! produces a NxN Identity matrix compatible with parent type
+template <class MatrixType>
+class IdentityMatrix : public MatrixType
+{
+public:
+  IdentityMatrix(size_t N)
+    : MatrixType(N, N, 1)
+  {
+    for (size_t i = 1; i < N; ++i)
+      MatrixType::set(i, i, 1.0);
+  }
+};
+
+//! adds the missing setDiag fucntion to SparseRowMatrix
+template <class DiscFuncType, class MatrixType>
+void setMatrixDiag(MatrixType& matrix, DiscFuncType& diag)
+{
+  typedef typename DiscFuncType::DofIteratorType DofIteratorType;
+
+  //! we assume that the dimension of the functionspace of f is the same as
+  //! the size of the matrix
+  DofIteratorType it = diag.dbegin();
+
+  for (int row = 0; row < matrix.size(0); row++) {
+    if (*it != 0.0)
+      matrix.set(row, row, *it);
+    ++it;
+  }
+  return;
+}
 } // namespace Dune
 
 
