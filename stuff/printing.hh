@@ -5,6 +5,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include <boost/format.hpp>
 #include <dune/stuff/functions.hh>
 #include <dune/stuff/parametercontainer.hh>
 
@@ -84,7 +85,7 @@ void printSparseRowMatrixMatlabStyle(const T& arg, const std::string name, strea
 {
   const int I = arg.rows();
   const int J = arg.cols();
-  out << "\n" << name << " = sparse( " << I << ", " << J << ");" << std::endl;
+  out << boost::format("\n%s =sparse( %d, %d );") % name % I % J << std::endl;
   for (int row = 0; row < arg.rows(); row++) {
     for (int col = 0; col < arg.cols(); col++) {
       if (arg(row, col) > eps)
