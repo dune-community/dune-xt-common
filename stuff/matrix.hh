@@ -102,6 +102,20 @@ void setMatrixDiag(MatrixType& matrix, DiscFuncType& diag)
   }
   return;
 }
+
+template <class MatrixType>
+bool areTransposed(const MatrixType& a, const MatrixType& b, const double tolerance = 1e-8)
+{
+  if (a.rows() != b.cols() || b.rows() != a.cols())
+    return false;
+  for (int row = 0; row < a.rows(); ++row) {
+    for (int col = 0; col < a.cols(); ++col) {
+      if (std::abs(a(row, col) - b(col, row)) > tolerance)
+        return false;
+    }
+  }
+  return true;
+}
 } // namespace Dune
 
 
