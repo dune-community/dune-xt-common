@@ -4,6 +4,7 @@
 #include <dune/fem/operator/matrix/spmatrix.hh>
 
 namespace Dune {
+//! obsolete,dysfunctional Matrixoperator
 template <class MatrixType>
 class SaneSparseRowMatrixOperator
 {
@@ -61,7 +62,7 @@ public:
   }
 };
 
-//! YAYDDYA
+//! returns Sum of matrix' diagonal entries
 template <class FieldMatrixType>
 typename FieldMatrixType::field_type matrixTrace(const FieldMatrixType& matrix)
 {
@@ -103,6 +104,7 @@ void setMatrixDiag(MatrixType& matrix, DiscFuncType& diag)
   return;
 }
 
+//! return false if <pre>abs( a(row,col) - b(col,row) ) > tolerance<pre> for any col,row
 template <class MatrixType>
 bool areTransposed(const MatrixType& a, const MatrixType& b, const double tolerance = 1e-8)
 {
@@ -110,7 +112,7 @@ bool areTransposed(const MatrixType& a, const MatrixType& b, const double tolera
     return false;
   for (int row = 0; row < a.rows(); ++row) {
     for (int col = 0; col < a.cols(); ++col) {
-      if (std::abs(a(row, col) - b(col, row)) > tolerance)
+      if (std::fabs(a(row, col) - b(col, row)) > tolerance)
         return false;
     }
   }

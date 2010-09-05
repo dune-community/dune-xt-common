@@ -2,6 +2,10 @@
 #include <iostream>
 #include <string>
 
+/** super fun file indeed (read: include at your own risk)
+  *
+  */
+
 //#define new(a, rest...) mynew( a, atoi(__LINE__), __FILE__, rest )
 
 // void * mynew( size_t sz, int line, char* file) throw (std::bad_alloc)

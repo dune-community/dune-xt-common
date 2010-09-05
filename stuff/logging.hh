@@ -32,7 +32,7 @@ public:
     LOG_FILE    = 32
   };
 
-  //! only for logging to a single file which should then be executabla by matlab
+  //! only for logging to a single file which should then be executable by matlab
   class MatlabLogStream
   {
   public:
@@ -110,6 +110,7 @@ public:
     bool is_suspended_;
   };
 
+  //! ostream compatible class wrapping file and console output
   class LogStream //: virtual public std::ostream
   {
   public:
@@ -278,7 +279,7 @@ public:
   {
     logflags_ = logflags;
 
-    // if we get a logdir from parameters append path seperator, othwersie leave empty
+    // if we get a logdir from parameters append path seperator, otherwise leave empty
     // enables us to use logdir unconditionally further down
     if (!logdir.empty())
       logdir += "/";
