@@ -708,6 +708,13 @@ std::string pathOnly(std::string path)
   return std::string();
 }
 
+//! return everything after the last slash
+std::string filenameOnly(const std::string& path)
+{
+  size_t last_slash_position = path.find_last_of('/');
+  return path.substr(last_slash_position + 1);
+}
+
 //! may include filename, will be stripped
 bool testCreateDirectory(std::string path)
 {
