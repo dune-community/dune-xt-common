@@ -33,6 +33,7 @@ bool isnan(T x)
 #endif
 
 #include <cstring>
+#include <map>
 #include <assert.h>
 
 char* copy(const char* s)
