@@ -52,7 +52,7 @@ SET( UGGRID_BASE_PATH
 	"UGGRID_BASE_PATH" )
 
 SET( CXX_FLAGS
-	"-Wall -O3 -g -ggdb " CACHE STRING
+	-Wall -O3 -g -ggdb CACHE STRING
 	"")
 
 #needs to come first to include correct config.h
@@ -73,12 +73,8 @@ ADD_CXX_FLAGS(
 	-I${ALUGRID_BASE_PATH}/include/duneinterface -DENABLE_ALUGRID )
 
 INCLUDE_DIR(${Boost_INCLUDE_DIR})
-SET( MODULES common istl grid fem )
+ADD_DUNE_MODULES( common istl grid fem )
 
-FOREACH( MODULE ${MODULES} )
-    INCLUDE_DIR( ${dune-stuff_SOURCE_DIR}/../dune-${MODULE} )
-    LINK_DIRECTORIES(${dune-stuff_SOURCE_DIR}/../dune-${MODULE}/${MODULE}/.libs )
-ENDFOREACH(MODULE)
 LINK_DIRECTORIES( "/usr/lib" "${ALUGRID_BASE_PATH}/lib" "${GRAPE_PATH}" )
 ADD_CXX_FLAGS( ${CXX_FLAGS} )
 
