@@ -4,10 +4,12 @@ PROJECT(dune-stuff)
 cmake_minimum_required(VERSION 2.6)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
+include(DuneUtils)
 include(UseDoxygen)
+ENABLE_TESTING()
 
 FIND_PACKAGE(Boost 1.35.0 REQUIRED)
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
+INCLUDE_DIR(${Boost_INCLUDE_DIR})
 
 #----------------------------------------------------------------------------------------------------
 # General Settings
@@ -55,15 +57,15 @@ SET( CXX_FLAGS
 	"")
 
 IF( ${GRIDTYPE} STREQUAL "UGGRID" )
-	ADD_DEFINITIONS( -I${UGGRID_BASE_PATH}/include -DENABLE_UG )
+	ADD_CXX_FLAGS( -I${UGGRID_BASE_PATH}/include -DENABLE_UG )
 	LINK_DIRECTORIES( ${UGGRID_BASE_PATH}/lib/ )
 	SET( UGLIBS "ugS3" "ugS2" "devS")
 ENDIF( ${GRIDTYPE} STREQUAL "UGGRID" )
 
-ADD_DEFINITIONS(-DHAVE_CONFIG_H )
-ADD_DEFINITIONS(-DGRIDDIM=${GRIDDIM}  -DCOMMIT="${COMMIT}"  )
-ADD_DEFINITIONS(-DPOLORDER=${POLORDER}  -D${GRIDTYPE} )
-ADD_DEFINITIONS( 
+ADD_CXX_FLAGS(-DHAVE_CONFIG_H )
+ADD_CXX_FLAGS(-DGRIDDIM=${GRIDDIM}  -DCOMMIT="git_${COMMIT}"  )
+ADD_CXX_FLAGS(-DPOLORDER=${POLORDER}  -D${GRIDTYPE} )
+ADD_CXX_FLAGS( 
 	-I${ALUGRID_BASE_PATH}/include
 	-I${ALUGRID_BASE_PATH}/include/serial 
 	-I${ALUGRID_BASE_PATH}/include/duneinterface -DENABLE_ALUGRID )
@@ -71,20 +73,22 @@ ADD_DEFINITIONS(
 
 
 #needs to come first to include correct config.h
-INCLUDE_DIRECTORIES( ${dune-stuff_SOURCE_DIR} )
+INCLUDE_DIR( ${dune-stuff_SOURCE_DIR} )
 
 SET( MODULES common istl grid fem )
 
 FOREACH( MODULE ${MODULES} )
-    INCLUDE_DIRECTORIES( ${dune-stuff_SOURCE_DIR}/../dune-${MODULE} )
+    INCLUDE_DIR( ${dune-stuff_SOURCE_DIR}/../dune-${MODULE} )
     LINK_DIRECTORIES(${dune-stuff_SOURCE_DIR}/../dune-${MODULE}/${MODULE}/.libs )
 ENDFOREACH(MODULE)
 LINK_DIRECTORIES( "/usr/lib" "${ALUGRID_BASE_PATH}/lib" "${GRAPE_PATH}" )
-ADD_DEFINITIONS( ${CXX_FLAGS} )
+ADD_CXX_FLAGS( ${CXX_FLAGS} )
 
-FILE( GLOB stuff "stuff/*.hh" )
+FILE( GLOB_RECURSE stuff "stuff/*.hh" )
 
 set_source_files_properties( ${stuff} PROPERTIES HEADER_FILE_ONLY 1 )
 
 ADD_EXECUTABLE(function_test src/function_test.cc ${stokes} ${stuff} )
 TARGET_LINK_LIBRARIES(function_test "common" "fem" "grid" ${BLAS_LIB} "alugrid" ${UGLIBS}  "GL" ${ParaLIBS} )
+
+HEADERCHECK( ${stuff} )
