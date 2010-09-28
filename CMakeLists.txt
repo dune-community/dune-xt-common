@@ -9,7 +9,6 @@ include(UseDoxygen)
 ENABLE_TESTING()
 
 FIND_PACKAGE(Boost 1.35.0 REQUIRED)
-INCLUDE_DIR(${Boost_INCLUDE_DIR})
 
 #----------------------------------------------------------------------------------------------------
 # General Settings
@@ -56,6 +55,9 @@ SET( CXX_FLAGS
 	"-Wall -O3 -g -ggdb " CACHE STRING
 	"")
 
+#needs to come first to include correct config.h
+INCLUDE_DIR( ${dune-stuff_SOURCE_DIR} )
+
 IF( ${GRIDTYPE} STREQUAL "UGGRID" )
 	ADD_CXX_FLAGS( -I${UGGRID_BASE_PATH}/include -DENABLE_UG )
 	LINK_DIRECTORIES( ${UGGRID_BASE_PATH}/lib/ )
@@ -70,11 +72,7 @@ ADD_CXX_FLAGS(
 	-I${ALUGRID_BASE_PATH}/include/serial 
 	-I${ALUGRID_BASE_PATH}/include/duneinterface -DENABLE_ALUGRID )
 
-
-
-#needs to come first to include correct config.h
-INCLUDE_DIR( ${dune-stuff_SOURCE_DIR} )
-
+INCLUDE_DIR(${Boost_INCLUDE_DIR})
 SET( MODULES common istl grid fem )
 
 FOREACH( MODULE ${MODULES} )
