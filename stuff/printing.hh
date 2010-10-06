@@ -201,6 +201,47 @@ private:
   const std::string name_;
 };
 
+template <class DiscreteFunctionType, class Stream, class QuadratureType>
+class LocalFunctionPrintFunctor
+{
+public:
+  LocalFunctionPrintFunctor(const DiscreteFunctionType& discrete_function, Stream& stream)
+    : discrete_function_(discrete_function)
+    , stream_(stream)
+    , name_(discrete_function.name())
+  {
+  }
+
+  template <class Entity>
+  void operator()(const Entity& en, const Entity& /*ne*/, const int /*en_idx*/, const int /*ne_idx */)
+  {
+    typename DiscreteFunctionType::LocalFunctionType lf = discrete_function_.localFunction(en);
+    QuadratureType quad(en, 2 * discrete_function_.space().order() + 2);
+    for (size_t qp = 0; qp < quad.nop(); ++qp) {
+      typename DiscreteFunctionType::RangeType eval(0);
+      typename DiscreteFunctionType::DomainType xLocal = quad.point(qp);
+      typename DiscreteFunctionType::DomainType xWorld = en.geometry().global(xLocal);
+      lf.evaluate(xLocal, eval);
+      stream_ << boost::format("xWorld %f \t %s value %f\n") % xWorld % name_ % eval;
+    }
+  }
+
+  void preWalk()
+  {
+    stream_ << "% printing local function values of " << name_ << std::endl;
+  }
+
+  void postWalk()
+  {
+    stream_ << "\n% done printing function values of " << name_ << std::endl;
+  }
+
+private:
+  const DiscreteFunctionType& discrete_function_;
+  Stream& stream_;
+  const std::string name_;
+};
+
 /** print min/max of a given DiscreteFucntion obtained by Stuff::getMinMaxOfDiscreteFunction
   \note hardcoded mult of values by sqrt(2)
   **/
