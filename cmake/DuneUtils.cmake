@@ -29,3 +29,26 @@ MACRO( ADD_DUNE_MODULES )
 		LIST( APPEND DUNE_HEADERS ${tmp_header} )
 	ENDFOREACH(MODULE)
 ENDMACRO( ADD_DUNE_MODULES )
+
+MACRO( ADD_DUNE_EXECUTABLE target sources headers libs )
+	ADD_EXECUTABLE(${target} ${sources} ${headers} ${DUNE_HEADERS} )
+	#for some $@#&& reason these targets DO NOT inherit flags added via TARGET_LINK_LIBRARIES nor INCLUDE_DIRECTORIES
+	#so we need some magic to readd them
+	foreach(arg ${MY_CXX_FLAGS} )
+		set(bar "${bar} ${arg}")
+	endforeach(arg ${MY_CXX_FLAGS} )
+	set_target_properties( ${target} PROPERTIES COMPILE_FLAGS  ${bar} )
+# 	get_target_property(tmp_flags ${target} LINK_FLAGS  )
+# 	if( NOT ${tmp_flags} )
+# 		set( tmp_flags "" )
+# 	endif( NOT ${tmp_flags} )
+# 	message(STATUS ${tmp_flags} )
+# 	set( tmp_flags "${bar} ${tmp_flags}" )
+# 	set_target_properties( ${target} PROPERTIES LINK_FLAGS  ${tmp_flags} )
+	
+	add_dependencies( ${target} config_refresh )
+ENDMACRO( ADD_DUNE_EXECUTABLE )
+
+add_custom_target( config_refresh
+				${CMAKE_CURRENT_SOURCE_DIR}/cmake/regen_config_header.sh ${CMAKE_CURRENT_BINARY_DIR}/cmake_config.h
+				)
