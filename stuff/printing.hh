@@ -256,18 +256,6 @@ void printFunctionMinMax(Stream& stream, const Function& func)
          << "    max: " << std::sqrt(2.0) * max << std::endl;
 }
 
-//! proxy to Stuff::matrixToGnuplotStream that redirects its output to a file
-template <class Matrix>
-void matrixToGnuplotFile(const Matrix& matrix, std::string filename)
-{
-  std::string dir(Parameters().getParam("fem.io.datadir", std::string("data")) + "/gnuplot/");
-  testCreateDirectory(dir);
-  std::ofstream file((dir + filename).c_str());
-  matrixToGnuplotStream(matrix, file);
-  file.flush();
-  file.close();
-}
-
 //! useful for visualizing sparsity patterns of matrices
 template <class Matrix, class Stream>
 void matrixToGnuplotStream(const Matrix& matrix, Stream& stream)
@@ -282,6 +270,18 @@ void matrixToGnuplotStream(const Matrix& matrix, Stream& stream)
     stream << "#non zeros in row " << row << " " << matrix.numNonZeros(row) << " (of " << matrix.cols() << " cols)\n";
   }
   stream << "#total non zeros " << nz << " of " << matrix.rows() * matrix.cols() << " entries\n";
+}
+
+//! proxy to Stuff::matrixToGnuplotStream that redirects its output to a file
+template <class Matrix>
+void matrixToGnuplotFile(const Matrix& matrix, std::string filename)
+{
+  std::string dir(Parameters().getParam("fem.io.datadir", std::string("data")) + "/gnuplot/");
+  testCreateDirectory(dir);
+  std::ofstream file((dir + filename).c_str());
+  matrixToGnuplotStream(matrix, file);
+  file.flush();
+  file.close();
 }
 
 
