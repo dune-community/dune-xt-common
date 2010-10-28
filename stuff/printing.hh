@@ -289,10 +289,8 @@ std::string dimToAxisName(const unsigned int dim, const bool capitalize = false)
   char c = 'x';
   c += dim;
   if (capitalize)
-    c += 32;
-  std::stringstream s;
-  s << dim;
-  return s.str();
+    c -= 32;
+  return std::string() += c;
 }
 
 } // end namespace
