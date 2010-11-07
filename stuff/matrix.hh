@@ -96,7 +96,7 @@ void setMatrixDiag(MatrixType& matrix, DiscFuncType& diag)
   //! the size of the matrix
   DofIteratorType it = diag.dbegin();
 
-  for (int row = 0; row < matrix.size(0); row++) {
+  for (int row = 0; row < matrix.rows(); row++) {
     if (*it != 0.0)
       matrix.set(row, row, *it);
     ++it;

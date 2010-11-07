@@ -242,6 +242,44 @@ private:
   const std::string name_;
 };
 
+template <class DiscreteFunctionType, class Stream>
+class LocalFunctionVerbatimPrintFunctor
+{
+public:
+  LocalFunctionVerbatimPrintFunctor(const DiscreteFunctionType& discrete_function, Stream& stream)
+    : discrete_function_(discrete_function)
+    , stream_(stream)
+    , name_(discrete_function.name())
+  {
+  }
+
+  template <class Entity>
+  void operator()(const Entity& en, const Entity& /*ne*/, const int /*en_idx*/, const int /*ne_idx */)
+  {
+    typename DiscreteFunctionType::LocalFunctionType lf = discrete_function_.localFunction(en);
+
+    for (size_t qp = 0; qp < lf.numDofs(); ++qp) {
+
+      stream_ << boost::format("%s dof %d value value %f\n") % name_ % qp % lf[qp];
+    }
+  }
+
+  void preWalk()
+  {
+    stream_ << "% printing local function values of " << name_ << std::endl;
+  }
+
+  void postWalk()
+  {
+    stream_ << "\n% done printing function values of " << name_ << std::endl;
+  }
+
+private:
+  const DiscreteFunctionType& discrete_function_;
+  Stream& stream_;
+  const std::string name_;
+};
+
 /** print min/max of a given DiscreteFucntion obtained by Stuff::getMinMaxOfDiscreteFunction
   \note hardcoded mult of values by sqrt(2)
   **/
