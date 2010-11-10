@@ -86,7 +86,7 @@ public:
   }
 };
 
-//! adds the missing setDiag fucntion to SparseRowMatrix
+//! adds the missing setDiag function to SparseRowMatrix
 template <class DiscFuncType, class MatrixType>
 void setMatrixDiag(MatrixType& matrix, DiscFuncType& diag)
 {
