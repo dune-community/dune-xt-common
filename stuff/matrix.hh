@@ -121,4 +121,66 @@ bool areTransposed(const MatrixType& a, const MatrixType& b, const double tolera
 } // namespace Dune
 
 
+namespace Stuff {
+/** @brief Write sparse matrix to given outgoing stream
+*
+*  @param[in]  matrix The matrix to be written
+*  @param[in] out    The outgoing stream
+*/
+template <class SparseMatrixImpl, class Output>
+void writeSparseMatrix(const SparseMatrixImpl& matrix, Output& out)
+{
+  const unsigned int nRows = matrix.rows();
+  const unsigned int nCols = matrix.cols();
+  for (int i = 0; i != nRows; ++i) {
+    for (int j = 0; j != nCols; ++j) {
+      if (matrix.find(i, j)) {
+        out << i << "," << j << ",";
+        out.precision(12);
+        out.setf(std::ios::scientific);
+        out << matrix(i, j) << std::endl;
+      }
+    }
+  }
+  return;
+}
+
+/** @brief Read sparse matrix from given ingoing stream
+ *
+ *  @param[out] matrix The matrix to be read
+ *  @param[in]  in     The ingoing stream
+ */
+template <class SparseMatrixImpl, class Input>
+void readSparseMatrix(SparseMatrixImpl& matrix, Input& in)
+{
+  matrix.clear();
+  std::string row;
+  while (std::getline(in, row)) {
+    size_t last_found = 0;
+    size_t found      = row.find_first_of(",");
+    double temp;
+    std::vector<double> entryLine;
+    do {
+      if (found == std::string::npos)
+        found          = row.size();
+      std::string subs = row.substr(last_found, found - last_found);
+      last_found = found + 1;
+      std::istringstream in(subs);
+      if (entryLine.size() == 2) {
+        in.precision(12);
+        in.setf(std::ios::scientific);
+      } else {
+        in.precision(10);
+        in.setf(std::ios::fixed);
+      }
+      in >> temp;
+      entryLine.push_back(temp);
+      found = row.find_first_of(",", last_found);
+    } while (last_found != row.size() + 1);
+    assert(entryLine.size() == 3);
+    matrix.add(entryLine[0], entryLine[1], entryLine[2]);
+  }
+}
+} // namespace Stuff
+
 #endif // MATRIX_HH
