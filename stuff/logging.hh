@@ -178,6 +178,12 @@ public:
       }
     }
 
+    //! alias for ostream compat
+    void flush()
+    {
+      Flush();
+    }
+
     void Flush()
     {
       if (logflags_ & loglevel_) { // flush buffer into stream
