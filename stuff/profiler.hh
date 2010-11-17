@@ -6,6 +6,8 @@
 #include <map>
 #include <vector>
 #include <ctime>
+#include <boost/foreach.hpp>
+#include <boost/format.hpp>
 
 #include "misc.hh"
 
@@ -76,12 +78,20 @@ public:
   template <class CollectiveCommunication>
   long OutputAveraged(CollectiveCommunication& comm, const int refineLevel, const long numDofs);
 
-  /** output to currently pre-defined (csv) file
+  /** output to \param filename
    * \param comm used to gather and average the runtime data over all processes
    * \tparam CollectiveCommunication should be Dune::CollectiveCommunication< MPI_Comm / double >
    **/
   template <class CollectiveCommunication, class InfoContainer>
+  long OutputCommon(CollectiveCommunication& comm, InfoContainer& run_infos, std::string filename);
+
+  //! default proxy for output
+  template <class CollectiveCommunication, class InfoContainer>
   long Output(CollectiveCommunication& comm, InfoContainer& run_infos);
+
+  //! proxy for output of a map of runinfos
+  template <class CollectiveCommunication, class InfoContainerMap>
+  void OutputMap(CollectiveCommunication& comm, InfoContainerMap& run_infos_map);
 
   /** call this with correct numRuns <b> before </b> starting any profiling
    *  if you're planning on doing more than one iteration of your code
@@ -183,9 +193,24 @@ long Profiler::Output(CollectiveCommunication& comm, InfoContainer& run_infos)
   std::ostringstream filename;
   filename << "prof_p" << numProce << ".csv";
   filename.flush();
+  return OutputCommon(comm, run_infos, filename.str());
+}
+
+template <class CollectiveCommunication, class InfoContainerMap>
+void Profiler::OutputMap(CollectiveCommunication& comm, InfoContainerMap& run_infos_map)
+{
+  BOOST_FOREACH (typename InfoContainerMap::value_type el, run_infos_map) {
+    OutputCommon(comm, el.second, (boost::format("prof_p%d_ref%s") % comm.size() % el.first).str());
+  }
+}
+
+template <class CollectiveCommunication, class InfoContainer>
+long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_infos, std::string filename)
+{
+  const int numProce = comm.size();
 
   if (comm.rank() == 0)
-    std::cout << "Profiling info in: " << (filename.str()).c_str() << std::endl;
+    std::cout << "Profiling info in: " << filename.c_str() << std::endl;
 
 #ifndef NDEBUG
   for (std::map<int, int>::const_iterator it = m_count.begin(); it != m_count.end(); ++it) {
@@ -193,7 +218,7 @@ long Profiler::Output(CollectiveCommunication& comm, InfoContainer& run_infos)
   }
 #endif
 
-  std::ofstream csv((filename.str()).c_str());
+  std::ofstream csv(filename.c_str());
 
   // outputs column names
   csv << "refine,"
