@@ -140,7 +140,7 @@ struct RunInfo
     bfg     = true;
     bfg_tau = max_inner_accuracy = grid_width = solver_accuracy = run_time = alpha = inner_solver_accuracy = -1.0;
     gridname = problemIdentifier = "UNSET";
-    extra_info   = "";
+    extra_info   = "none";
     delta_t      = 0.1;
     current_time = 0.0;
     viscosity = reynolds = 1.0;
