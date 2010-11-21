@@ -150,7 +150,7 @@ struct RunInfo
 //! used in all runs to store L2 errors across runs
 typedef std::vector<RunInfo> RunInfoVector;
 
-typedef unsigned int RunInfoVectorMapKeyType;
+typedef int RunInfoVectorMapKeyType;
 
 typedef std::map<RunInfoVectorMapKeyType, RunInfoVector> RunInfoVectorMap;
 
