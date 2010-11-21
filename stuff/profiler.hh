@@ -54,18 +54,24 @@ public:
   void StartTiming(const std::string section_name)
   {
     TimingData td(section_name, clock());
+    if (m_cur_run_num >= m_timings.size()) {
+      m_timings.push_back(DataMap());
+      m_total_runs++;
+    }
     (m_timings[m_cur_run_num])[section_name] = td;
   }
 
   //! stop named section's counter
   void StopTiming(const std::string section_name)
   {
+    assert(m_cur_run_num < m_timings.size());
     (m_timings[m_cur_run_num])[section_name].end = clock();
   }
 
   //! get runtime of section in seconds
   long GetTiming(const std::string section_name)
   {
+    assert(m_cur_run_num < m_timings.size());
     clock_t diff = (m_timings[m_cur_run_num])[section_name].end - (m_timings[m_cur_run_num])[section_name].start;
     return long(diff / double(CLOCKS_PER_SEC));
   }
@@ -234,6 +240,7 @@ long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_in
 
   MapVector::const_iterator ti_it = m_timings.begin();
   int idx = 0;
+  assert(run_infos.size() >= m_timings.size());
   for (; ti_it != m_timings.end(); ++ti_it) {
     RunInfo info = run_infos[idx];
     csv << info.refine_level << "," << comm.size() << "," << info.codim0 << "," << info.L2Errors[0] << ",";
