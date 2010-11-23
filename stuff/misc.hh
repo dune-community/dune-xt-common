@@ -35,6 +35,7 @@ bool isnan(T x)
 #include <cstring>
 #include <map>
 #include <assert.h>
+#include "static_assert.hh"
 
 char* copy(const char* s)
 {
@@ -155,7 +156,7 @@ typedef int RunInfoVectorMapKeyType;
 typedef std::map<RunInfoVectorMapKeyType, RunInfoVector> RunInfoVectorMap;
 
 #include <cstdio>
-#include <dune/common/misc.hh>
+//#include <dune/common/misc.hh>
 
 namespace Stuff {
 
@@ -163,8 +164,9 @@ namespace Stuff {
 template <class SomeRangeType, class OtherRangeType>
 static double colonProduct(const SomeRangeType& arg1, const OtherRangeType& arg2)
 {
-  Dune::CompileTimeChecker<SomeRangeType::cols == SomeRangeType::rows && OtherRangeType::cols == OtherRangeType::rows
-                           && OtherRangeType::cols == SomeRangeType::rows> RangeTypes_dont_fit;
+  dune_static_assert(SomeRangeType::cols == SomeRangeType::rows && OtherRangeType::cols == OtherRangeType::rows
+                         && OtherRangeType::cols == SomeRangeType::rows,
+                     "RangeTypes_dont_fit");
 
   double ret = 0.0;
   // iterators
