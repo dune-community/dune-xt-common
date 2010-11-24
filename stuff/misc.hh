@@ -165,7 +165,7 @@ template <class SomeRangeType, class OtherRangeType>
 static double colonProduct(const SomeRangeType& arg1, const OtherRangeType& arg2)
 {
   dune_static_assert(SomeRangeType::cols == SomeRangeType::rows && OtherRangeType::cols == OtherRangeType::rows
-                         && OtherRangeType::cols == SomeRangeType::rows,
+                         && int(OtherRangeType::cols) == int(SomeRangeType::rows),
                      "RangeTypes_dont_fit");
 
   double ret = 0.0;
