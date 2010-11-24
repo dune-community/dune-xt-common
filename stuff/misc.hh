@@ -35,6 +35,7 @@ bool isnan(T x)
 #include <cstring>
 #include <map>
 #include <assert.h>
+#include <algorithm>
 
 char* copy(const char* s)
 {
@@ -934,6 +935,13 @@ struct TimeGuard
     std::cout << ctime(&delta) << std::endl;
   }
 };
+
+//! \todo seems borked, resutls in gigantic amount of compile errors?!
+template <class StlContainer, class T>
+void fill_entirely(StlContainer& c, const T& value)
+{
+  std::fill(c.begin(), c.end(), value);
+}
 
 } // end namepspace stuff
 
