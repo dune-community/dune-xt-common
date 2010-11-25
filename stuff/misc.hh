@@ -945,6 +945,9 @@ void fill_entirely(StlContainer& c, const T& value)
 }
 
 template <class T, int N>
+/** this allows subscription indices to wrap around
+  \example N=4: wraparound_array[4] == wraparound_array[0] && wraparound_array[-1] == wraparound_array[3]
+  **/
 struct wraparound_array : public Dune::array<T, N>
 {
   typedef Dune::array<T, N> BaseType;
