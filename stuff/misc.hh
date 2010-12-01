@@ -74,6 +74,7 @@ const char* pathStuff(const char* path, int depth = 2)
 #endif // NDEBUG
 
 #include <fstream>
+#include <iostream>
 #include <ostream>
 #include <sstream>
 #include <iomanip>
