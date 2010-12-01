@@ -51,12 +51,13 @@ SET( UGGRID_BASE_PATH
 	"/share/dune/Modules/modules_x86_64/ug" CACHE STRING
 	"UGGRID_BASE_PATH" )
 
-SET( CXX_FLAGS
-	-Wall -O3 -g -ggdb CACHE STRING
-	"")
+SET( CUSTOM_FLAGS
+	"-Wall -O3 -fno-strict-aliasing -std=c++0x -g -ggdb " CACHE LIST
+	"CUSTOM FLAGS")
 
+CONFIGURE_FILE( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/cmake_config.h )
 #needs to come first to include correct config.h
-INCLUDE_DIR( ${dune-stuff_SOURCE_DIR} )
+INCLUDE_DIR( ${dune-stuff_BINARY_DIR} ${dune-stuff_SOURCE_DIR} )
 
 IF( ${GRIDTYPE} STREQUAL "UGGRID" )
 	ADD_CXX_FLAGS( -I${UGGRID_BASE_PATH}/include -DENABLE_UG )
@@ -64,9 +65,7 @@ IF( ${GRIDTYPE} STREQUAL "UGGRID" )
 	SET( UGLIBS "ugS3" "ugS2" "devS")
 ENDIF( ${GRIDTYPE} STREQUAL "UGGRID" )
 
-ADD_CXX_FLAGS(-DHAVE_CONFIG_H )
-ADD_CXX_FLAGS(-DGRIDDIM=${GRIDDIM}  -DCOMMIT="git_${COMMIT}"  )
-ADD_CXX_FLAGS(-DPOLORDER=${POLORDER}  -D${GRIDTYPE} )
+ADD_CXX_FLAGS( ${CUSTOM_FLAGS} )
 ADD_CXX_FLAGS( 
 	-I${ALUGRID_BASE_PATH}/include
 	-I${ALUGRID_BASE_PATH}/include/serial 
