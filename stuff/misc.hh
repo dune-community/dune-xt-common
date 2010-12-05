@@ -110,7 +110,6 @@ public:
 #define HAS_RUN_INFO
 
 /** \brief wrap any info that might be remotely interesting about a single run
-  \note define this beforepass is included so it's known in pass. Yes, I know it's ugly.
   **/
 struct RunInfo
 {
