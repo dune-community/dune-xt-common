@@ -114,6 +114,7 @@ public:
 struct RunInfo
 {
   std::vector<double> L2Errors;
+  std::vector<double> H1Errors;
   double grid_width;
   int refine_level;
   double run_time;
