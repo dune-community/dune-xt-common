@@ -982,6 +982,27 @@ struct wraparound_array : public Dune::array<T, N>
   }
 };
 
+class MovingAverage
+{
+  double avg_;
+  size_t steps_;
+
+public:
+  MovingAverage()
+    : avg_(0.0)
+    , steps_(0)
+  {
+  }
+  MovingAverage& operator+=(double val)
+  {
+    avg_ += (val - avg_) / ++steps_;
+  }
+  operator double()
+  {
+    return avg_;
+  }
+};
+
 } // end namepspace stuff
 
 #endif // end of stuff.hh
