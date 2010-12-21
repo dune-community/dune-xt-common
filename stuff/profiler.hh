@@ -153,8 +153,8 @@ long Profiler::OutputAveraged(CollectiveCommunication& comm, const int refineLev
   }
 #endif
 
+  Stuff::testCreateDirectory(Stuff::pathOnly(filename.str()));
   std::ofstream csv((filename.str()).c_str());
-
 
   typedef std::map<std::string, long> AvgMap;
   AvgMap averages;
@@ -197,7 +197,7 @@ long Profiler::Output(CollectiveCommunication& comm, InfoContainer& run_infos)
   const int numProce = comm.size();
 
   std::ostringstream filename;
-  filename << "prof_p" << numProce << ".csv";
+  filename << Parameters().getParam("fem.io.datadir", std::string(".")) << "/prof_p" << numProce << ".csv";
   filename.flush();
   return OutputCommon(comm, run_infos, filename.str());
 }
@@ -205,8 +205,9 @@ long Profiler::Output(CollectiveCommunication& comm, InfoContainer& run_infos)
 template <class CollectiveCommunication, class InfoContainerMap>
 void Profiler::OutputMap(CollectiveCommunication& comm, InfoContainerMap& run_infos_map)
 {
+  std::string dir(Parameters().getParam("fem.io.datadir", std::string(".")));
   BOOST_FOREACH (typename InfoContainerMap::value_type el, run_infos_map) {
-    OutputCommon(comm, el.second, (boost::format("prof_p%d_ref%s") % comm.size() % el.first).str());
+    OutputCommon(comm, el.second, (boost::format("%s/prof_p%d_ref%s") % dir % comm.size() % el.first).str());
   }
 }
 
@@ -224,13 +225,14 @@ long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_in
   }
 #endif
 
+  Stuff::testCreateDirectory(Stuff::pathOnly(filename));
   std::ofstream csv(filename.c_str());
 
   // outputs column names
-  csv << "refine,"
-      << "processes,"
-      << "numDofs,"
-      << "L2 error,";
+  csv << "refine\t"
+      << "processes\t"
+      << "numDofs\t"
+      << "L2 error\t";
   for (DataMap::const_iterator it = m_timings[0].begin(); it != m_timings[0].end(); ++it) {
     csv << it->first << ",";
   }
@@ -243,14 +245,14 @@ long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_in
   assert(run_infos.size() >= m_timings.size());
   for (; ti_it != m_timings.end(); ++ti_it) {
     RunInfo info = run_infos[idx];
-    csv << info.refine_level << "," << comm.size() << "," << info.codim0 << "," << info.L2Errors[0] << ",";
+    csv << info.refine_level << "\t" << comm.size() << "\t" << info.codim0 << "\t" << -1 /*fake L2 error*/ << "\t";
 
     const DataMap& data_map = *ti_it;
     for (DataMap::const_iterator it = data_map.begin(); it != data_map.end(); ++it) {
       TimingData data  = it->second;
       long clock_count = data.end - data.start;
       clock_count      = long(comm.sum(clock_count) / double(CLOCKS_PER_SEC * 0.001 * numProce));
-      csv << clock_count << ",";
+      csv << clock_count << "\t";
     }
     csv << "=1/I$2*I" << Stuff::toString(idx + 2) << std::endl;
 
