@@ -996,6 +996,7 @@ public:
   MovingAverage& operator+=(double val)
   {
     avg_ += (val - avg_) / ++steps_;
+    return *this;
   }
   operator double()
   {
