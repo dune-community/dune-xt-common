@@ -138,6 +138,18 @@ bool areTransposed(const MatrixType& a, const MatrixType& b, const double tolera
 
 
 namespace Stuff {
+//! extern matrix addition that ignore 0 entries
+template <class MatrixType>
+void addMatrix(MatrixType& dest, const MatrixType& arg, const double eps = 1e-14)
+{
+  for (int i = 0; i < arg.rows(); ++i)
+    for (int j = 0; j < arg.cols(); ++j) {
+      const double value = arg(i, j);
+      if (std::fabs(value) > eps)
+        dest.add(i, j, value);
+    }
+}
+
 /** @brief Write sparse matrix to given outgoing stream
 *
 *  @param[in]  matrix The matrix to be written

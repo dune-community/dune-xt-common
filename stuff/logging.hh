@@ -13,6 +13,7 @@
 #include <map>
 #include <assert.h>
 #include "misc.hh"
+#include "filesystem.hh"
 
 class Logging;
 Logging& Logger();

@@ -1,0 +1,81 @@
+#ifndef DUNE_STUFF_DEBUG_HH
+#define DUNE_STUFF_DEBUG_HH
+
+#define SEGFAULT                                                                                                       \
+  {                                                                                                                    \
+    int* J = 0;                                                                                                        \
+    *J     = 9;                                                                                                        \
+  }
+
+//! from right/bottom limiter for file paths
+const char* rightPathLimiter(const char* path, int depth = 2)
+{
+  char* c = new char[255];
+  strcpy(c, path);
+  const char* p = strtok(c, "/");
+  int i = 0;
+  while (p && i < depth) {
+    p = strtok(NULL, "/");
+  }
+  p = strtok(NULL, "\0");
+  return p;
+}
+
+#ifndef NDEBUG
+#ifndef LOGIC_ERROR
+#include <stdexcept>
+#include <sstream>
+#define LOGIC_ERROR                                                                                                    \
+  {                                                                                                                    \
+    std::stringstream ss;                                                                                              \
+    ss << __FILE__ << ":" << __LINE__ << " should never be called";                                                    \
+    throw std::logic_error(ss.str());                                                                                  \
+  }
+#endif
+#else
+#define LOGIC_ERROR
+#endif
+
+char* copy(const char* s)
+{
+  int l   = strlen(s) + 1;
+  char* t = new char[l];
+  for (int i = 0; i < l; i++) {
+    t[i] = s[i];
+  }
+  return t;
+}
+#define __CLASS__ strtok(copy(__PRETTY_FUNCTION__), "<(")
+
+#ifndef NDEBUG
+#define NEEDS_IMPLEMENTATION                                                                                           \
+  {                                                                                                                    \
+    std::stringstream ss;                                                                                              \
+    ss << " implementation missing: " << __CLASS__ << " -- " << rightPathLimiter(__FILE__) << ":" << __LINE__;         \
+    std::cerr << ss.str() << std::endl;                                                                                \
+  }
+#else
+#define NEEDS_IMPLEMENTATION
+#endif // NDEBUG
+
+
+class assert_exception : public std::runtime_error
+{
+public:
+  assert_exception(std::string msg)
+    : std::runtime_error(msg){};
+};
+
+#ifndef NDEBUG
+#define ASSERT_EXCEPTION(cond, msg)                                                                                    \
+  if (!(cond)) {                                                                                                       \
+    std::string rmsg(std::string(__FILE__) + std::string(":") + Stuff::toString(__LINE__) + std::string("\n")          \
+                     + std::string(msg));                                                                              \
+    throw assert_exception(rmsg);                                                                                      \
+  }
+#else
+#define ASSERT_EXCEPTION(cond, msg)
+#endif
+
+
+#endif // DUNE_STUFF_DEBUG_HH
