@@ -86,6 +86,22 @@ public:
   }
 };
 
+//! produces a NxN Identity matrix object compatible with parent type
+template <class MatrixObjectType>
+class IdentityMatrixObject : public MatrixObjectType
+{
+public:
+  IdentityMatrixObject(const typename MatrixObjectType::DomainSpaceType& domain_space,
+                       const typename MatrixObjectType::RangeSpaceType& range_space)
+    : MatrixObjectType(domain_space, range_space)
+  {
+    MatrixObjectType::reserve();
+    //			dune_static_assert( true );
+    for (int i = 0; i < MatrixObjectType::matrix().rows(); ++i)
+      MatrixObjectType::matrix().set(i, i, 1.0);
+  }
+};
+
 //! adds the missing setDiag function to SparseRowMatrix
 template <class DiscFuncType, class MatrixType>
 void setMatrixDiag(MatrixType& matrix, DiscFuncType& diag)
