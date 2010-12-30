@@ -1004,6 +1004,13 @@ public:
   }
 };
 
+//! type safe (this will not compile for degraded-to-pointer arrays) way of getting array length
+template <class T, size_t N>
+size_t arrayLength(T(&/*array*/)[N])
+{
+  return N;
+}
+
 } // end namepspace stuff
 
 #endif // end of stuff.hh
