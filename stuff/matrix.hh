@@ -84,6 +84,11 @@ public:
     for (size_t i = 1; i < N; ++i)
       MatrixType::set(i, i, 1.0);
   }
+
+  const MatrixType& matrix() const
+  {
+    return *this;
+  }
 };
 
 //! produces a NxN Identity matrix object compatible with parent type
