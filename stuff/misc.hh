@@ -190,21 +190,6 @@ protected:
 
 typedef Tokenizer<std::string> StringTokenizer;
 
-//! output programs mem usage stats by reading from /proc
-template <class Stream>
-void meminfo(Stream& stream)
-{
-  stream << "Memory info: \n";
-  stream.Resume();
-  pid_t pid = getpid();
-  std::stringstream filename;
-  filename << "/proc/" << pid << "/status";
-
-  fileToStreamFiltered(stream, filename.str(), "Vm");
-  fileToStreamFiltered(stream, "/proc/meminfo", "Mem");
-  stream << "------------ \n\n" << std::endl;
-}
-
 //! for backward compat only
 template <class ContainerType>
 void MergeVector(ContainerType& target, const ContainerType& a)

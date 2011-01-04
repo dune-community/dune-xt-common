@@ -62,7 +62,7 @@ template <class Stream>
 void fileToStreamFiltered(Stream& stream, std::string filename, std::string filter)
 {
   std::ifstream file(filename.c_str(), std::ifstream::in);
-  ASSERT_EXCEPTION(file.good(), filename.c_str())
+  ASSERT_EXCEPTION(file.good(), filename.c_str());
   while (file.good()) {
     std::string line;
     std::getline(file, line);
@@ -70,6 +70,21 @@ void fileToStreamFiltered(Stream& stream, std::string filename, std::string filt
       stream << line << "\n";
   }
   file.close();
+}
+
+//! output programs mem usage stats by reading from /proc
+template <class Stream>
+void meminfo(Stream& stream)
+{
+  stream << "Memory info: \n";
+  stream.Resume();
+  pid_t pid = getpid();
+  std::stringstream filename;
+  filename << "/proc/" << pid << "/status";
+
+  fileToStreamFiltered(stream, filename.str(), "Vm");
+  fileToStreamFiltered(stream, "/proc/meminfo", "Mem");
+  stream << "------------ \n\n" << std::endl;
 }
 
 } // end namespace Stuff
