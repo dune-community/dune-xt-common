@@ -13,6 +13,8 @@
 
 #include "misc.hh"
 #include "debug.hh"
+#include "filesystem.hh"
+#include "parametercontainer.hh"
 
 //! wraps name, start- and end time for one timing section
 struct TimingData
@@ -129,7 +131,6 @@ public:
    **/
   void Reset(const int numRuns)
   {
-    Logger().Dbg() << "preparing profiler for " << numRuns << " runs" << std::endl;
     m_timings.clear();
     m_timings     = MapVector(numRuns, DataMap());
     m_total_runs  = numRuns;
@@ -293,7 +294,7 @@ long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_in
   assert(run_infos.size() >= m_timings.size());
   for (; ti_it != m_timings.end(); ++ti_it) {
     RunInfo info = run_infos[idx];
-    csv << info.refine_level << "\t" << comm.size() << "\t" << info.codim0 << "\t" << -1 /*fake L2 error*/ << "\t";
+    csv << info.refine_level << "\t" << comm.size() << "\t" << info.codim0 << "\t" << info.L2Errors[0] << "\t";
 
     const DataMap& data_map = *ti_it;
     for (DataMap::const_iterator it = data_map.begin(); it != data_map.end(); ++it) {
