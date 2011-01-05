@@ -85,10 +85,13 @@ public:
       ASSERT_EXCEPTION(false, "no timer found: " + section_name);
       return -1;
     }
-
-    TimingVector::const_iterator endIt = section->second.end();
-    TimingVector::const_iterator it    = section->second.begin();
-    clock_t diff = 0;
+    return GetTiming(section->second);
+  }
+  long GetTiming(const TimingVector& timing_vector) const
+  {
+    TimingVector::const_iterator endIt = timing_vector.end();
+    TimingVector::const_iterator it    = timing_vector.begin();
+    long diff = 0;
     for (; it != endIt; ++it) {
       diff += it->end - it->start;
     }
@@ -204,7 +207,7 @@ long Profiler::OutputAveraged(CollectiveCommunication& comm, const int refineLev
   AvgMap averages;
   for (MapVector::const_iterator vit = m_timings.begin(); vit != m_timings.end(); ++vit) {
     for (DataMap::const_iterator it = vit->begin(); it != vit->end(); ++it) {
-      averages[it->first] += GetTiming(it->first);
+      averages[it->first] += GetTiming(it->second);
     }
   }
 
@@ -222,7 +225,7 @@ long Profiler::OutputAveraged(CollectiveCommunication& comm, const int refineLev
   csv << refineLevel << "," << comm.size() << "," << numDofs << "," << 0 << ","; //! FIXME
   for (AvgMap::const_iterator it = averages.begin(); it != averages.end(); ++it) {
     long clock_count = it->second;
-    clock_count = long(comm.sum(clock_count) / double(CLOCKS_PER_SEC * scale_factor * numProce));
+    clock_count = long(comm.sum(clock_count) / double(scale_factor * numProce));
     csv << clock_count / double(m_total_runs) << ",";
   }
   csv << "=I$2/I2,"
@@ -294,9 +297,8 @@ long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_in
 
     const DataMap& data_map = *ti_it;
     for (DataMap::const_iterator it = data_map.begin(); it != data_map.end(); ++it) {
-      std::string section_name = it->first;
-      long clock_count         = GetTiming(section_name);
-      clock_count              = long(comm.sum(clock_count) / double(CLOCKS_PER_SEC * scale_factor * numProce));
+      long clock_count = GetTiming(it->second);
+      clock_count      = long(comm.sum(clock_count) / double(scale_factor * numProce));
       csv << clock_count << "\t";
     }
     csv << "=1/I$2*I" << Stuff::toString(idx + 2) << std::endl;
