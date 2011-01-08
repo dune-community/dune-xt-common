@@ -155,11 +155,11 @@ void addMatrix(MatrixType& dest, const MatrixType& arg, const double eps = 1e-14
     }
 }
 
-/** @brief Write sparse matrix to given outgoing stream
-*
-*  @param[in]  matrix The matrix to be written
-*  @param[in] out    The outgoing stream
-*/
+/** @brief Write sparse matrix to given output stream
+  *
+  *  @param[in]  matrix The matrix to be written
+  *  @param[in] out    The outgoing stream
+  */
 template <class SparseMatrixImpl, class Output>
 void writeSparseMatrix(const SparseMatrixImpl& matrix, Output& out)
 {
@@ -178,11 +178,11 @@ void writeSparseMatrix(const SparseMatrixImpl& matrix, Output& out)
   return;
 }
 
-/** @brief Read sparse matrix from given ingoing stream
- *
- *  @param[out] matrix The matrix to be read
- *  @param[in]  in     The ingoing stream
- */
+/** @brief Read sparse matrix from given inputstream
+   *
+   *  @param[out] matrix The matrix to be read
+   *  @param[in]  in     The ingoing stream
+   */
 template <class SparseMatrixImpl, class Input>
 void readSparseMatrix(SparseMatrixImpl& matrix, Input& in)
 {
@@ -216,12 +216,15 @@ void readSparseMatrix(SparseMatrixImpl& matrix, Input& in)
 }
 
 namespace Matrix {
+//! prints actual memusage of matrix in kB
 template <class MatrixType, class Stream>
 void printMemUsage(const MatrixType& matrix, Stream& stream, std::string name = "")
 {
   long size = matrix.numberOfValues() * sizeof(typename MatrixType::Ttype) / 1024.f;
   stream << "matrix size " << name << "\t\t" << size << std::endl;
 }
+
+//! prints actual memusage of matrixobject in kB
 template <class MatrixObjectType, class Stream>
 void printMemUsageObject(const MatrixObjectType& matrix_object, Stream& stream, std::string name = "")
 {
