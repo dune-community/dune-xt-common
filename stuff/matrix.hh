@@ -214,6 +214,20 @@ void readSparseMatrix(SparseMatrixImpl& matrix, Input& in)
     matrix.add(entryLine[0], entryLine[1], entryLine[2]);
   }
 }
+
+namespace Matrix {
+template <class MatrixType, class Stream>
+void printMemUsage(const MatrixType& matrix, Stream& stream, std::string name = "")
+{
+  long size = matrix.numberOfValues() * sizeof(typename MatrixType::Ttype) / 1024.f;
+  stream << "matrix size " << name << "\t\t" << size << std::endl;
+}
+template <class MatrixObjectType, class Stream>
+void printMemUsageObject(const MatrixObjectType& matrix_object, Stream& stream, std::string name = "")
+{
+  printMemUsage(matrix_object.matrix(), stream, name);
+}
+}
 } // namespace Stuff
 
 #endif // MATRIX_HH
