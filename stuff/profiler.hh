@@ -294,7 +294,8 @@ long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_in
   assert(run_infos.size() >= m_timings.size());
   for (; ti_it != m_timings.end(); ++ti_it) {
     RunInfo info = run_infos[idx];
-    csv << info.refine_level << "\t" << comm.size() << "\t" << info.codim0 << "\t" << info.L2Errors[0] << "\t";
+    csv << boost::format("%d\t%d\t%d\t%e\t") % info.refine_level % comm.size() % info.codim0
+               % (info.L2Errors.size() ? info.L2Errors[0] : double(-1));
 
     const DataMap& data_map = *ti_it;
     for (DataMap::const_iterator it = data_map.begin(); it != data_map.end(); ++it) {
