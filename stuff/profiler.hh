@@ -256,7 +256,7 @@ void Profiler::OutputMap(CollectiveCommunication& comm, InfoContainerMap& run_in
   std::string dir(Parameters().getParam("fem.io.datadir", std::string(".")));
   BOOST_FOREACH (typename InfoContainerMap::value_type el, run_infos_map) {
     OutputCommon(
-        comm, el.second, (boost::format("%s/prof_p%d_ref%s") % dir % comm.size() % el.first).str(), scale_factor);
+        comm, el.second, (boost::format("%s/prof_p%d_ref%s.csv") % dir % comm.size() % el.first).str(), scale_factor);
   }
 }
 
