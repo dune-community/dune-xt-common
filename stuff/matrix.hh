@@ -230,6 +230,47 @@ void printMemUsageObject(const MatrixObjectType& matrix_object, Stream& stream, 
 {
   printMemUsage(matrix_object.matrix(), stream, name);
 }
+
+//! a small proxy object that automagically prevents near-0 value fill-in
+template <class MatrixObjectType>
+class LocalMatrixProxy
+{
+  typedef typename MatrixObjectType::LocalMatrixType LocalMatrixType;
+  typedef typename MatrixObjectType::DomainSpaceType::GridType GridType;
+  typedef typename GridType::template Codim<0>::Entity EntityType;
+  typedef typename MatrixObjectType::MatrixType::Ttype FieldType;
+  LocalMatrixType local_matrix_;
+  const double eps_;
+  const int rows_;
+  const int cols_;
+  std::vector<FieldType> entries_;
+
+public:
+  LocalMatrixProxy(MatrixObjectType& object, const EntityType& self, const EntityType& neigh, const double eps)
+    : local_matrix_(object.localMatrix(self, neigh))
+    , eps_(eps)
+    , rows_(local_matrix_.rows())
+    , cols_(local_matrix_.columns())
+  {
+    entries_.resize(rows_ * cols_, 0.0);
+  }
+
+  void add(const int row, const int col, const FieldType val)
+  {
+    entries_[row * cols_ + col] += val;
+  }
+
+  ~LocalMatrixProxy()
+  {
+    for (int i = 0; i < rows_; ++i) {
+      for (int j = 0; j < cols_; ++j) {
+        const FieldType i_j = entries_[i * cols_ + j];
+        if (std::fabs(i_j) > eps_)
+          local_matrix_.add(i, j, i_j);
+      }
+    }
+  }
+};
 }
 } // namespace Stuff
 
