@@ -25,11 +25,19 @@ struct TimingData
   TimingData(const std::string _name, const clock_t _start)
     : start(_start)
     , end((clock_t)0.0)
-    , name(_name){};
+    , name(_name)
+  {
+  }
   TimingData()
     : start((clock_t)0.0)
     , end((clock_t)0.0)
-    , name("blank"){};
+    , name("blank")
+  {
+  }
+  long delta() const
+  {
+    return long(end - start);
+  }
 };
 
 /** \brief simple inline profiling class
@@ -51,53 +59,63 @@ protected:
   {
   }
 
-  typedef std::vector<TimingData> TimingVector;
-  typedef std::map<std::string, TimingVector> DataMap;
+  typedef std::map<std::string, std::pair<bool, TimingData>> KnownTimersMap;
+  typedef std::map<std::string, long> DataMap;
   typedef std::vector<DataMap> MapVector;
 
 public:
   //! set this to begin a named section
   void StartTiming(const std::string section_name)
   {
-    TimingData td(section_name, clock());
     if (m_cur_run_num >= m_timings.size()) {
       m_timings.push_back(DataMap());
       m_total_runs++;
     }
-    (m_timings[m_cur_run_num])[section_name].push_back(td);
+
+    KnownTimersMap::iterator section = known_timers_map_.find(section_name);
+    if (section != known_timers_map_.end()) {
+      if (section->second.first) // timer currently running
+        return;
+      section->second.first  = true; // set active, start with new
+      section->second.second = TimingData(section_name, clock());
+    } else {
+      // init new section
+      known_timers_map_[section_name] = std::make_pair(true, TimingData(section_name, clock()));
+    }
   }
 
   //! stop named section's counter
   void StopTiming(const std::string section_name)
   {
     assert(m_cur_run_num < m_timings.size());
-    if ((m_timings[m_cur_run_num])[section_name].size() < 1)
+    if (known_timers_map_.find(section_name) == known_timers_map_.end())
       DUNE_THROW(Dune::RangeError, "trying to stop timer " << section_name << " that wasn't started\n");
-    (m_timings[m_cur_run_num])[section_name].back().end = clock();
+
+    known_timers_map_[section_name].first      = false;
+    known_timers_map_[section_name].second.end = clock();
+    DataMap& current_data = m_timings[m_cur_run_num];
+    if (current_data.find(section_name) == current_data.end())
+      current_data[section_name] = known_timers_map_[section_name].second.delta();
+    else
+      current_data[section_name] += known_timers_map_[section_name].second.delta();
   }
 
   //! get runtime of section in seconds
   long GetTiming(const std::string section_name) const
   {
-    std::cerr << "SEC " << section_name << std::endl;
+    return GetTiming(section_name, m_cur_run_num);
+  }
+
+  long GetTiming(const std::string section_name, const int run_number) const
+  {
     assert(m_cur_run_num < m_timings.size());
-    const DataMap& data             = m_timings[m_cur_run_num];
+    const DataMap& data             = m_timings[run_number];
     DataMap::const_iterator section = data.find(section_name);
     if (section == data.end()) {
       ASSERT_EXCEPTION(false, "no timer found: " + section_name);
       return -1;
     }
-    return GetTiming(section->second);
-  }
-  long GetTiming(const TimingVector& timing_vector) const
-  {
-    TimingVector::const_iterator endIt = timing_vector.end();
-    TimingVector::const_iterator it    = timing_vector.begin();
-    long diff = 0;
-    for (; it != endIt; ++it) {
-      diff += it->end - it->start;
-    }
-    return long(diff / double(CLOCKS_PER_SEC));
+    return long(section->second / double(CLOCKS_PER_SEC));
   }
 
   /** output to currently pre-defined (csv) file, does not output individual run results, but average over all recorded
@@ -152,7 +170,7 @@ public:
   }
 
   //! a utility class to time a limited scope of code
-  class ScopedTiming
+  class ScopedTiming : public boost::noncopyable
   {
     const std::string section_name_;
 
@@ -175,6 +193,7 @@ protected:
   // debug counter, only outputted in debug mode
   std::map<int, int> m_count;
   clock_t init_time_;
+  KnownTimersMap known_timers_map_;
 
   static Profiler& instance()
   {
@@ -300,7 +319,7 @@ long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_in
 
     const DataMap& data_map = *ti_it;
     for (DataMap::const_iterator it = data_map.begin(); it != data_map.end(); ++it) {
-      long clock_count = GetTiming(it->second);
+      long clock_count = GetTiming(it->first, idx);
       clock_count      = long(comm.sum(clock_count) / double(scale_factor * numProce));
       csv << clock_count << "\t";
     }
