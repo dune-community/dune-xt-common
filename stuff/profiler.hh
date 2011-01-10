@@ -103,12 +103,13 @@ public:
   //! get runtime of section in seconds
   long GetTiming(const std::string section_name) const
   {
+    assert(m_cur_run_num < m_timings.size());
     return GetTiming(section_name, m_cur_run_num);
   }
 
   long GetTiming(const std::string section_name, const int run_number) const
   {
-    assert(m_cur_run_num < m_timings.size());
+    assert(run_number < m_timings.size());
     const DataMap& data             = m_timings[run_number];
     DataMap::const_iterator section = data.find(section_name);
     if (section == data.end()) {
