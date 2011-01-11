@@ -3,13 +3,17 @@
 
 
 #include <dune/common/exceptions.hh>
+#include <dune/fem/misc/femtimer.hh>
+
 #include <string>
 #include <iostream>
 #include <map>
 #include <vector>
 #include <ctime>
+
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "misc.hh"
 #include "debug.hh"
@@ -338,5 +342,48 @@ Profiler& profiler()
 {
   return Profiler::instance();
 }
+
+namespace Stuff {
+//! helper class to estimate time needed to complete a loop with given counter
+template <class CounterType, class OutputStreamType>
+class LoopTimer
+{
+  typedef LoopTimer<CounterType, OutputStreamType> ThisType;
+  CounterType& counter_;
+  const int iteration_count_;
+  int iteration_;
+  OutputStreamType& output_stream_;
+  MovingAverage avg_time_per_iteration_;
+  Dune::ExecutionTimer step_timer_;
+
+public:
+  LoopTimer(CounterType& counter, const int iteration_count, OutputStreamType& output_stream = std::cout)
+    : counter_(counter)
+    , iteration_count_(iteration_count)
+    , iteration_(0)
+    , output_stream_(output_stream)
+  {
+    step_timer_.start();
+  }
+
+  ThisType& operator++()
+  {
+    ++iteration_;
+    step_timer_.end();
+    avg_time_per_iteration_ += std::abs(step_timer_.read());
+    long remaining_steps     = iteration_count_ - iteration_;
+    double remaining_seconds = remaining_steps * double(avg_time_per_iteration_);
+    boost::posix_time::time_duration diff(0, 0, remaining_seconds, 0);
+    output_stream_ << boost::format("\n---\n Total Time remaining: %s (%f %%)\n---\n")
+                          % boost::posix_time::to_simple_string(diff)
+                          % (100 * (remaining_steps / double(iteration_count_)))
+                   << std::endl;
+    step_timer_.start();
+    ++counter_;
+    return *this;
+  }
+};
+
+} // namespace Stuff
 
 #endif // DUNE_STUFF_PROFILER_HH_INCLUDED
