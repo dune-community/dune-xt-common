@@ -5,6 +5,8 @@
 #include <string>
 #include <fstream>
 
+#include <dune/fem/io/file/iointerface.hh>
+
 namespace Stuff {
 
 //! strip filename from \path if present, return empty string if only filename present
@@ -42,19 +44,10 @@ std::string filenameOnly(const std::string& path)
 }
 
 //! may include filename, will be stripped
-bool testCreateDirectory(std::string path)
+void testCreateDirectory(const std::string path)
 {
   std::string pathonly = pathOnly(path);
-  if (pathonly.empty())
-    return true; // no dir to create
-
-  // maybe test if dir exists??
-  bool ok = (mkdir(pathonly.c_str(), 0755) == 0);
-  if (!ok) {
-    perror(pathonly.c_str());
-    return errno == EEXIST;
-  }
-  return true;
+  Dune::IOInterface::createPath(pathonly);
 }
 
 //! read a file and output all lines containing filter string to a stream
