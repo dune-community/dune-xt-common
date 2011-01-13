@@ -71,6 +71,14 @@ struct RunInfo
     viscosity = reynolds = 1.0;
     algo_id = "N.A.";
   }
+
+  static RunInfo dummy(const size_t error_vector_size = 3)
+  {
+    RunInfo info;
+    info.L2Errors.resize(error_vector_size, std::numeric_limits<double>::quiet_NaN());
+    info.H1Errors.resize(error_vector_size, std::numeric_limits<double>::quiet_NaN());
+    return info;
+  }
 };
 
 //! used in all runs to store L2 errors across runs
