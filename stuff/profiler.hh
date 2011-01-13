@@ -3,13 +3,17 @@
 
 
 #include <dune/common/exceptions.hh>
+#include <dune/fem/misc/femtimer.hh>
+
 #include <string>
 #include <iostream>
 #include <map>
 #include <vector>
 #include <ctime>
+
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 #include "misc.hh"
 #include "debug.hh"
@@ -339,5 +343,89 @@ Profiler& profiler()
 {
   return Profiler::instance();
 }
+
+namespace Stuff {
+
+struct IdentityWeights
+{
+  double apply(const double to_weigh, const int /*current*/, const int /*max*/)
+  {
+    return to_weigh;
+  }
+};
+
+struct LinearWeights
+{
+  double apply(const double to_weigh, const int current, const int max)
+  {
+    return to_weigh / (current / double(max));
+  }
+};
+struct QuadraticWeights
+{
+  double apply(const double to_weigh, const int current, const int max)
+  {
+    return to_weigh / std::pow(current / double(max), 2.0);
+  }
+};
+struct ProgressiveWeights
+{
+  const int prog_;
+  ProgressiveWeights(const int prog)
+    : prog_(prog)
+  {
+  }
+  double apply(const double to_weigh, const int /*current*/, const int /*max*/)
+  {
+    return to_weigh * prog_;
+  }
+};
+
+//! helper class to estimate time needed to complete a loop with given counter
+template <class CounterType, class OutputStreamType, class WeightType = IdentityWeights>
+class LoopTimer
+{
+  typedef LoopTimer<CounterType, OutputStreamType, WeightType> ThisType;
+  CounterType& counter_;
+  const int iteration_count_;
+  int iteration_;
+  OutputStreamType& output_stream_;
+  WeightType weight_;
+  MovingAverage avg_time_per_iteration_;
+  Dune::ExecutionTimer step_timer_;
+
+public:
+  LoopTimer(CounterType& counter, const int iteration_count, OutputStreamType& output_stream = std::cout,
+            WeightType weight = WeightType())
+    : counter_(counter)
+    , iteration_count_(iteration_count)
+    , iteration_(0)
+    , output_stream_(output_stream)
+    , weight_(weight)
+  {
+    step_timer_.start();
+  }
+
+  ThisType& operator++()
+  {
+    ++iteration_;
+    step_timer_.end();
+    avg_time_per_iteration_ += weight_.apply(std::abs(step_timer_.read()), iteration_, iteration_count_);
+    long remaining_steps     = iteration_count_ - iteration_;
+    double remaining_seconds = remaining_steps * double(avg_time_per_iteration_);
+    boost::posix_time::time_duration diff(0, 0, remaining_seconds, 0);
+    boost::posix_time::ptime target = boost::posix_time::second_clock::local_time();
+    target += diff;
+    output_stream_ << boost::format("\n---\n Total Time remaining: %s -- %s (%f %%)\n---\n")
+                          % boost::posix_time::to_simple_string(diff) % boost::posix_time::to_simple_string(target)
+                          % (100 * (remaining_steps / double(iteration_count_)))
+                   << std::endl;
+    step_timer_.start();
+    ++counter_;
+    return *this;
+  }
+};
+
+} // namespace Stuff
 
 #endif // DUNE_STUFF_PROFILER_HH_INCLUDED
