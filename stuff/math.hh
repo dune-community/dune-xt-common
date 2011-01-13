@@ -1,12 +1,6 @@
 #ifndef DUNE_STUFF_MATH_HH
 #define DUNE_STUFF_MATH_HH
 
-template <typename T>
-bool isnan(T x)
-{
-  return !(x == x);
-}
-
 namespace Stuff {
 
 /** \todo DOCME **/
