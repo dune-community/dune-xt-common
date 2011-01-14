@@ -88,7 +88,7 @@ void printSparseRowMatrixMatlabStyle(const T& arg, const std::string name, strea
   out << boost::format("\n%s =sparse( %d, %d );") % name % I % J << std::endl;
   for (int row = 0; row < arg.rows(); row++) {
     for (int col = 0; col < arg.cols(); col++) {
-      if (arg(row, col) > eps)
+      if (std::fabs(arg(row, col)) > eps)
         out << name << "(" << row + 1 << "," << col + 1 << ")=" << std::setprecision(12) << arg(row, col) << ";\n";
     }
   }
