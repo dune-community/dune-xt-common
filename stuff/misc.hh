@@ -119,7 +119,7 @@ std::string toString(const ReturnType& s)
   \todo stl implementation?
   **/
 template <class Container, class Element>
-int getIdx(const Container& ct, Element e)
+int getIdx(const Container& ct, const Element& e)
 {
   int idx = 0;
   for (typename Container::const_iterator it = ct.begin(); it != ct.end(); ++it, ++idx) {
