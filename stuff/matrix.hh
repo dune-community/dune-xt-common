@@ -2,6 +2,7 @@
 #define STUFF_MATRIX_HH
 
 #include <dune/fem/operator/matrix/spmatrix.hh>
+#include <dune/stuff/static_assert.hh>
 
 namespace Dune {
 //! obsolete,dysfunctional Matrixoperator
@@ -56,7 +57,9 @@ class MatrixDiagonal : public FieldVector<typename FieldMatrixType::field_type, 
 public:
   MatrixDiagonal(const FieldMatrixType& matrix)
   {
-    CompileTimeChecker<FieldMatrixType::rows == FieldMatrixType::cols> matrix_must_be_square;
+    dune_static_assert(FieldMatrixType::rows == FieldMatrixType::cols, "Matrix must be square!");
+    // CompileTimeChecker< FieldMatrixType::rows == FieldMatrixType::cols > matrix_must_be_square;
+
     for (size_t i = 0; i < FieldMatrixType::rows; i++)
       (*this)[i] = matrix[i][i];
   }
