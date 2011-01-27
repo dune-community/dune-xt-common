@@ -19,6 +19,8 @@
 #include "debug.hh"
 #include "filesystem.hh"
 #include "parametercontainer.hh"
+#include "math.hh"
+
 
 //! wraps name, start- and end time for one timing section
 struct TimingData
