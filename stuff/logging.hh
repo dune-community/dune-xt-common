@@ -282,17 +282,20 @@ public:
       \param logfile filename for log, can contain paths, but creation will fail if dir is non-existant
   **/
   void Create(unsigned int logflags = LOG_FILE | LOG_CONSOLE | LOG_ERR, std::string logfile = "dune_stokes",
-              std::string logdir = std::string())
+              std::string datadir = "data", std::string logdir = std::string(""))
   {
     logflags_ = logflags;
 
     // if we get a logdir from parameters append path seperator, otherwise leave empty
     // enables us to use logdir unconditionally further down
+    if (!datadir.empty())
+      datadir += "/";
     if (!logdir.empty())
       logdir += "/";
+    logdir = datadir + logdir;
 
     filename_ = logdir + logfile + "_time.log";
-    Stuff::testCreateDirectory(filename_); // could assert this if i figure out why errno is != EEXIST
+    Stuff::testCreateDirectory(logdir); // could assert this if i figure out why errno is != EEXIST
     filenameWoTime_ = logdir + logfile + ".log";
     if ((logflags_ & LOG_FILE) != 0) {
       logfile_.open(filename_.c_str());
