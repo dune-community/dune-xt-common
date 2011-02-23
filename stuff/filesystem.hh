@@ -6,49 +6,27 @@
 #include <fstream>
 
 #include <dune/fem/io/file/iointerface.hh>
+#include <boost/filesystem.hpp>
 
 namespace Stuff {
 
 //! strip filename from \path if present, return empty string if only filename present
 std::string pathOnly(std::string path)
 {
-  if (!path.empty()) {
-    char buf[1024]; // not _exactly_ sure this is max path length, but it's suggested in wx source
-
-    // Local copy
-    strcpy(buf, path.c_str());
-
-    int l = path.length();
-    int i = l - 1;
-
-    // Search backward for a backward or forward slash
-    while (i > -1) {
-      if ((path[i] == '/') || (path[i] == '\\')) {
-        // Don't return an empty string
-        if (i == 0)
-          i++;
-        buf[i] = 0;
-        return std::string(buf);
-      }
-      i--;
-    }
-  }
-  return std::string();
+  return boost::filesystem::path(path).parent_path().string();
 }
 
 //! return everything after the last slash
 std::string filenameOnly(const std::string& path)
 {
-  size_t last_slash_position = path.find_last_of('/');
-  return path.substr(last_slash_position + 1);
+  return boost::filesystem::path(path).filename();
 }
 
 //! may include filename, will be stripped
 void testCreateDirectory(const std::string path)
 {
   std::string pathonly = pathOnly(path);
-  if (!pathonly.empty())
-    Dune::IOInterface::createPath(pathonly);
+  boost::filesystem::create_directories(pathonly);
 }
 
 //! read a file and output all lines containing filter string to a stream
