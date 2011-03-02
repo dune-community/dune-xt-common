@@ -5,12 +5,14 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include <limits>
 #include <boost/format.hpp>
 #include <dune/stuff/functions.hh>
 #include <dune/stuff/parametercontainer.hh>
 
 namespace Stuff {
 
+static const unsigned int matlab_output_precision = std::numeric_limits<double>::digits10 + 1;
 /**
  *  \brief prints a Dune::FieldVector
  *
@@ -89,7 +91,8 @@ void printSparseRowMatrixMatlabStyle(const T& arg, const std::string name, strea
   for (int row = 0; row < arg.rows(); row++) {
     for (int col = 0; col < arg.cols(); col++) {
       if (std::fabs(arg(row, col)) > eps)
-        out << name << "(" << row + 1 << "," << col + 1 << ")=" << std::setprecision(12) << arg(row, col) << ";\n";
+        out << name << "(" << row + 1 << "," << col + 1 << ")=" << std::setprecision(matlab_output_precision)
+            << arg(row, col) << ";\n";
     }
   }
 }
@@ -104,7 +107,7 @@ void printDiscreteFunctionMatlabStyle(const T& arg, const std::string name, stre
   typedef typename T::ConstDofIteratorType ConstDofIteratorType;
   ConstDofIteratorType itEnd = arg.dend();
   for (ConstDofIteratorType it = arg.dbegin(); it != itEnd; ++it) {
-    out << std::setprecision(12) << *it;
+    out << std::setprecision(matlab_output_precision) << *it;
     out << ";" << std::endl;
   }
   out << "];" << std::endl;
@@ -118,7 +121,7 @@ void printDoubleVectorMatlabStyle(const T* arg, const int size, const std::strin
 {
   out << "\n" << name << " = [ " << std::endl;
   for (unsigned int i = 0; i < size; i++) {
-    out << std::setprecision(12) << arg[i];
+    out << std::setprecision(matlab_output_precision) << arg[i];
     out << ";" << std::endl;
   }
   out << "];" << std::endl;
