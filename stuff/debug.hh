@@ -63,7 +63,9 @@ class assert_exception : public std::runtime_error
 {
 public:
   assert_exception(std::string msg)
-    : std::runtime_error(msg){};
+    : std::runtime_error(msg)
+  {
+  }
 };
 
 namespace Stuff {
@@ -71,7 +73,9 @@ class singlerun_abort_exception : public std::runtime_error
 {
 public:
   singlerun_abort_exception(std::string msg)
-    : std::runtime_error(msg){};
+    : std::runtime_error(msg)
+  {
+  }
 };
 }
 
