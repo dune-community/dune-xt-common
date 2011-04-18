@@ -65,8 +65,5 @@ FILE( GLOB_RECURSE stuff "stuff/*.hh" )
 ADD_EXECUTABLE(function_test src/function_test.cc ${stuff} )
 TARGET_LINK_LIBRARIES(function_test ${COMMON_LIBS} )
 
-# ADD_CUSTOM_TARGET( headercheck 
-# 	ALL 
-# 	SOURCES ${stuff} )
-# HEADERCHECK( ${stuff} )
+HEADERCHECK( ${stuff} )
 ADD_DEFINITIONS( ${MY_CXX_FLAGS} )
