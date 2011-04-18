@@ -1,6 +1,8 @@
 #ifndef DUNE_STUFF_DEBUG_HH
 #define DUNE_STUFF_DEBUG_HH
 
+#include <cstring>
+
 #define SEGFAULT                                                                                                       \
   {                                                                                                                    \
     int* J = 0;                                                                                                        \

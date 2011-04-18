@@ -55,14 +55,14 @@ void* operator new[](unsigned long size, const char* file)
   return p;
 }
 
-void operator delete(void* p)
+void operator delete(void* p) throw()
 {
   //    std::cout << "operator delete(" << p << ")" << std::endl;
 
   free(p);
 }
 
-void operator delete[](void* p)
+void operator delete[](void* p) throw()
 {
   //    std::cout << "operator delete[](" << p << ")" << std::endl;
 

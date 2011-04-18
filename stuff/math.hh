@@ -1,6 +1,11 @@
 #ifndef DUNE_STUFF_MATH_HH
 #define DUNE_STUFF_MATH_HH
 
+#include <vector>
+#include <limits>
+#include <algorithm>
+#include <cstring>
+
 namespace Stuff {
 
 /** \todo DOCME **/
