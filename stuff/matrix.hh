@@ -283,11 +283,11 @@ public:
     , eps_(eps)
     , rows_(local_matrix_.rows())
     , cols_(local_matrix_.columns())
+    , entries_(rows_ * cols_, FieldType(0.0))
   {
-    entries_.resize(rows_ * cols_, 0.0);
   }
 
-  void add(const int row, const int col, const FieldType val)
+  inline void add(const int row, const int col, const FieldType val)
   {
     entries_[row * cols_ + col] += val;
   }
@@ -296,7 +296,7 @@ public:
   {
     for (int i = 0; i < rows_; ++i) {
       for (int j = 0; j < cols_; ++j) {
-        const FieldType i_j = entries_[i * cols_ + j];
+        const FieldType& i_j = entries_[i * cols_ + j];
         if (std::fabs(i_j) > eps_)
           local_matrix_.add(i, j, i_j);
       }
