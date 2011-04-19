@@ -5,6 +5,7 @@
 #include <limits>
 #include <algorithm>
 #include <cstring>
+#include <iostream>
 
 namespace Stuff {
 

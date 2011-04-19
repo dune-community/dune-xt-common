@@ -1,6 +1,11 @@
 #ifndef DUNE_STUFF_PROFILER_HH_INCLUDED
 #define DUNE_STUFF_PROFILER_HH_INCLUDED
 
+#include "misc.hh"
+#include "debug.hh"
+#include "filesystem.hh"
+#include "parametercontainer.hh"
+#include "math.hh"
 
 #include <dune/common/exceptions.hh>
 #include <dune/fem/misc/femtimer.hh>
@@ -14,12 +19,6 @@
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-
-#include "misc.hh"
-#include "debug.hh"
-#include "filesystem.hh"
-#include "parametercontainer.hh"
-#include "math.hh"
 
 
 //! wraps name, start- and end time for one timing section
