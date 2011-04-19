@@ -5,13 +5,6 @@ MACRO(ADD_CXX_FLAGS)
 	ENDFOREACH( ARG )
 ENDMACRO(ADD_CXX_FLAGS)
 
-MACRO( LISTTOSTRING listvar targetvar )
-	SET( targetvar "" )
-	FOREACH( item ${listvar} )
-		SET( targetvar "${targetvar} ${item}" )
-	ENDFOREACH( item )
-ENDMACRO( LISTTOSTRING )
-
 function(TO_LIST_SPACES _LIST_NAME OUTPUT_VAR)
   set(NEW_LIST_SPACE)
   foreach(ITEM ${${_LIST_NAME}})
@@ -40,7 +33,6 @@ MACRO( HEADERCHECK )
 	FOREACH( HEADER ${ARGN} )
 		GET_FILENAME_COMPONENT( fn ${HEADER} NAME )
 		SET( TEST_NAME "headercheck_${fn}")
-		#LISTTOSTRING( MY_CXX_FLAGS TEST_NAME_FLAGS )
 		TO_LIST_SPACES( MY_CXX_FLAGS TEST_NAME_FLAGS )
 		SET(XARGS ${TEST_NAME_FLAGS} -c ${HEADER} -o ${CMAKE_CURRENT_BINARY_DIR}/${TEST_NAME}.o )
 		ADD_CUSTOM_TARGET(  ${TEST_NAME} ${CMAKE_CXX_COMPILER} ${XARGS} )
@@ -95,7 +87,9 @@ ENDMACRO( ADD_DUNE_EXECUTABLE )
 add_custom_target( config_refresh
 				${CMAKE_CURRENT_SOURCE_DIR}/cmake/regen_config_header.sh ${CMAKE_CURRENT_BINARY_DIR}/cmake_config.h
 				)
-				
+
+ADD_CXX_FLAGS( "-DHAVE_CMAKE_CONFIG" )
+
 SET( CUSTOM_FLAGS
 	-Wall -Wextra -pedantic -O3 -DDNDEBUG -funroll-loops -g -ggdb -DENABLE_ADAPTIVE=1 -DADAPTIVE_SOLVER -DUSE_BFG_CG_SCHEME -fno-strict-aliasing -std=c++0x CACHE LIST  
 	"CUSTOM FLAGS")
