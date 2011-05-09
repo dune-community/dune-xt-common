@@ -6,6 +6,7 @@
 #include "filesystem.hh"
 #include "parametercontainer.hh"
 #include "math.hh"
+#include "runinfo.hh"
 
 #include <dune/common/exceptions.hh>
 #include <dune/fem/misc/femtimer.hh>
@@ -320,7 +321,7 @@ long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_in
   int idx = 0;
   assert(run_infos.size() >= m_timings.size());
   for (; ti_it != m_timings.end(); ++ti_it) {
-    RunInfo info = run_infos[idx];
+    Stuff::RunInfo info = run_infos[idx];
     csv << boost::format("%d\t%d\t%d\t%e\t") % info.refine_level % comm.size() % info.codim0
                % (info.L2Errors.size() ? info.L2Errors[0] : double(-1));
 
