@@ -306,12 +306,12 @@ long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_in
   std::ofstream csv(filename.c_str());
 
   // outputs column names
-  csv << "refine\t"
-      << "processes\t"
-      << "numDofs\t"
-      << "L2_error\t";
+  csv << "refine,"
+      << "processes,"
+      << "numDofs,"
+      << "L2_error,";
   for (DataMap::const_iterator it = m_timings[0].begin(); it != m_timings[0].end(); ++it) {
-    csv << it->first << "\t";
+    csv << it->first << ",";
   }
   csv << "Relative_total_time" << std::endl;
 
@@ -322,14 +322,14 @@ long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_in
   assert(run_infos.size() >= m_timings.size());
   for (; ti_it != m_timings.end(); ++ti_it) {
     Stuff::RunInfo info = run_infos[idx];
-    csv << boost::format("%d\t%d\t%d\t%e\t") % info.refine_level % comm.size() % info.codim0
+    csv << boost::format("%d,%d,%d,%e,") % info.refine_level % comm.size() % info.codim0
                % (info.L2Errors.size() ? info.L2Errors[0] : double(-1));
 
     const DataMap& data_map = *ti_it;
     for (DataMap::const_iterator it = data_map.begin(); it != data_map.end(); ++it) {
       long clock_count = GetTiming(it->first, idx);
       clock_count      = long(comm.sum(clock_count) / double(scale_factor * numProce));
-      csv << clock_count << "\t";
+      csv << clock_count << ",";
     }
     csv << "=1/I$2*I" << Stuff::toString(idx + 2) << std::endl;
 
