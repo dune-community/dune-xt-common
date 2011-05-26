@@ -170,6 +170,11 @@ template <class T, int N>
 struct wraparound_array : public Dune::array<T, N>
 {
   typedef Dune::array<T, N> BaseType;
+  wraparound_array(const BaseType other)
+  {
+    for (size_t i = 0; i < N; ++i)
+      this->operator[](i) = other[i];
+  }
   typename BaseType::reference operator[](std::size_t i)
   {
     return BaseType::operator[](i % N);
