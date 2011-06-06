@@ -90,6 +90,10 @@ add_custom_target( config_refresh
 
 ADD_CXX_FLAGS( "-DHAVE_CMAKE_CONFIG" )
 
+INCLUDE (CheckIncludeFileCXX)
+CHECK_INCLUDE_FILE_CXX("tr1/array" HAVE_TR1_ARRAY)
+CHECK_INCLUDE_FILE_CXX("malloc.h" HAVE_MALLOC_H)
+
 SET( CUSTOM_FLAGS
 	-Wall -Wextra -pedantic -O3 -DDNDEBUG -funroll-loops -g -ggdb -DENABLE_ADAPTIVE=1 -DADAPTIVE_SOLVER -DUSE_BFG_CG_SCHEME -fno-strict-aliasing -std=c++0x CACHE LIST  
 	"CUSTOM FLAGS")
