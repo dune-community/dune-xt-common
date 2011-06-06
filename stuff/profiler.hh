@@ -320,7 +320,7 @@ long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_in
   for (DataMap::const_iterator it = m_timings[0].begin(); it != m_timings[0].end(); ++it) {
     csv << it->first << ",";
   }
-  csv << "Relative_total_time" << std::endl;
+  csv << "Relative_total_time,compiler" << std::endl;
 
   // outputs column values
 
@@ -338,7 +338,7 @@ long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_in
       clock_count      = long(comm.sum(clock_count) / double(scale_factor * numProce));
       csv << clock_count << ",";
     }
-    csv << "=1/I$2*I" << Stuff::toString(idx + 2) << std::endl;
+    csv << boost::format("=1/I$2*I%d,%s\n") % (idx + 2) % BOOST_COMPILER;
 
     idx++;
   }
