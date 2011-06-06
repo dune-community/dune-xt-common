@@ -20,7 +20,14 @@
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/config.hpp>
 
+namespace Stuff {
+class Profiler;
+}
+Stuff::Profiler& profiler();
+
+namespace Stuff {
 
 //! wraps name, start- and end time for one timing section
 struct TimingData
@@ -54,7 +61,7 @@ struct TimingData
  **/
 class Profiler
 {
-  friend Profiler& profiler();
+  friend Profiler& ::profiler();
 
 protected:
   Profiler()
@@ -341,14 +348,6 @@ long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_in
   return long((clock() - init_time_) / double(CLOCKS_PER_SEC * scale_factor));
 }
 
-//! global profiler object (for legacy code compat this is outside NS Stuff)
-Profiler& profiler()
-{
-  return Profiler::instance();
-}
-
-namespace Stuff {
-
 struct IdentityWeights
 {
   double apply(const double to_weigh, const int /*current*/, const int /*max*/)
@@ -430,5 +429,11 @@ public:
 };
 
 } // namespace Stuff
+
+//! global profiler object (for legacy code compat this is outside NS Stuff)
+Stuff::Profiler& profiler()
+{
+  return Stuff::Profiler::instance();
+}
 
 #endif // DUNE_STUFF_PROFILER_HH_INCLUDED
