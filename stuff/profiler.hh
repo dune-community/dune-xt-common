@@ -20,7 +20,14 @@
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/config.hpp>
 
+namespace Stuff {
+class Profiler;
+}
+Stuff::Profiler& profiler();
+
+namespace Stuff {
 
 //! wraps name, start- and end time for one timing section
 struct TimingData
@@ -54,7 +61,7 @@ struct TimingData
  **/
 class Profiler
 {
-  friend Profiler& profiler();
+  friend Profiler& ::profiler();
 
 protected:
   Profiler()
@@ -313,7 +320,7 @@ long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_in
   for (DataMap::const_iterator it = m_timings[0].begin(); it != m_timings[0].end(); ++it) {
     csv << it->first << ",";
   }
-  csv << "Relative_total_time" << std::endl;
+  csv << "Relative_total_time,compiler" << std::endl;
 
   // outputs column values
 
@@ -331,7 +338,7 @@ long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_in
       clock_count      = long(comm.sum(clock_count) / double(scale_factor * numProce));
       csv << clock_count << ",";
     }
-    csv << "=1/I$2*I" << Stuff::toString(idx + 2) << std::endl;
+    csv << boost::format("=1/I$2*I%d,%s\n") % (idx + 2) % BOOST_COMPILER;
 
     idx++;
   }
@@ -340,14 +347,6 @@ long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_in
 
   return long((clock() - init_time_) / double(CLOCKS_PER_SEC * scale_factor));
 }
-
-//! global profiler object (for legacy code compat this is outside NS Stuff)
-Profiler& profiler()
-{
-  return Profiler::instance();
-}
-
-namespace Stuff {
 
 struct IdentityWeights
 {
@@ -430,5 +429,11 @@ public:
 };
 
 } // namespace Stuff
+
+//! global profiler object (for legacy code compat this is outside NS Stuff)
+Stuff::Profiler& profiler()
+{
+  return Stuff::Profiler::instance();
+}
 
 #endif // DUNE_STUFF_PROFILER_HH_INCLUDED

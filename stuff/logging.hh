@@ -15,9 +15,12 @@
 #include "misc.hh"
 #include "filesystem.hh"
 
+namespace Stuff {
 class Logging;
-Logging& Logger();
+}
+Stuff::Logging& Logger();
 
+namespace Stuff {
 /** \brief handles all logging
 **/
 class Logging
@@ -549,16 +552,17 @@ private:
   int logflags_;
   MatlabLogStream* matlabLogStreamPtr;
 
-  friend Logging& Logger();
+  friend Logging& ::Logger();
   // satisfy stricter warnings wrt copying
   Logging(const Logging&);
   Logging& operator=(const Logging&);
 };
+} // end namespace Stuff{
 
-/// global Logging instance
-Logging& Logger()
+//! global Logging instance
+Stuff::Logging& Logger()
 {
-  static Logging log;
+  static Stuff::Logging log;
   return log;
 }
 
