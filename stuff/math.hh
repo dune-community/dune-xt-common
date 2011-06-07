@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <cstring>
 #include <iostream>
+#include <boost/format.hpp>
 
 namespace Stuff {
 
@@ -119,7 +120,7 @@ public:
   template <class Stream>
   void output(Stream& stream)
   {
-    stream << "min: " << min_ << " max: " << max_ << " avg: " << avg_ << std::endl;
+    stream << boost::format("min: %e\tmax: %e\tavg: %e\n") % min_ % max_ % avg_;
   }
 
 protected:
