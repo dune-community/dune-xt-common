@@ -6,7 +6,15 @@
 #include <algorithm>
 #include <cstring>
 #include <iostream>
+#include "static_assert.hh"
 #include <boost/format.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/fusion/include/void.hpp>
+#include <boost/accumulators/accumulators.hpp>
+#include <boost/accumulators/statistics/stats.hpp>
+#include <boost/accumulators/statistics/max.hpp>
+#include <boost/accumulators/statistics/min.hpp>
+#include <boost/accumulators/statistics/mean.hpp>
 
 namespace Stuff {
 
@@ -77,55 +85,45 @@ protected:
 
 public:
   MinMaxAvg()
-    : min_(std::numeric_limits<ElementType>::max())
-    , max_(std::numeric_limits<ElementType>::min())
-    , avg_((min_ + max_) / 2.0)
   {
   }
 
-  MinMaxAvg(const ElementsVec& elements)
+  template <class stl_container_type>
+  MinMaxAvg(const stl_container_type& elements)
   {
-    for (ElementsVecConstIterator it = elements.begin(); it != elements.end(); ++it) {
-      push(*it);
-    }
+    dune_static_assert((boost::is_same<ElementType, typename stl_container_type::value_type>::value),
+                       "cannot assign mismatching types");
+    acc_ = std::for_each(elements.begin(), elements.end(), acc_);
   }
 
   ElementType min() const
   {
-    return min_;
+    return boost::accumulators::min(acc_);
   }
   ElementType max() const
   {
-    return max_;
+    return boost::accumulators::max(acc_);
   }
   ElementType average() const
   {
-    return avg_;
+    return boost::accumulators::mean(acc_);
   }
 
   void push(const ElementType& el)
   {
-    size_t num = elements_.size();
-    elements_.push_back(el);
-    max_ = std::max(el, max_);
-    min_ = std::min(el, min_);
-    if (num > 0) {
-      avg_ *= (num / double(num + 1));
-      avg_ += (el / double(num + 1));
-    } else {
-      avg_ = el;
-    }
+    acc_(el);
   }
 
   template <class Stream>
   void output(Stream& stream)
   {
-    stream << boost::format("min: %e\tmax: %e\tavg: %e\n") % min_ % max_ % avg_;
+    stream << boost::format("min: %e\tmax: %e\tavg: %e\n") % min() % max() % average();
   }
 
 protected:
-  ElementsVec elements_;
-  ElementType min_, max_, avg_;
+  typedef boost::accumulators::stats<boost::accumulators::tag::max, boost::accumulators::tag::min,
+                                     boost::accumulators::tag::mean> StatsType;
+  boost::accumulators::accumulator_set<ElementType, StatsType> acc_;
 
   MinMaxAvg(const ThisType& other);
 };
