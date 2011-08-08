@@ -9,7 +9,7 @@
 #include <map>
 #include <assert.h>
 #include <algorithm>
-#include <dune/common/fixedarray.hh>
+#include <dune/common/array.hh>
 #include "static_assert.hh"
 #include <cstddef>
 #include <fstream>
