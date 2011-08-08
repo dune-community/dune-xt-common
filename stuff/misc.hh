@@ -9,7 +9,18 @@
 #include <map>
 #include <assert.h>
 #include <algorithm>
+#ifdef HAVE_CMAKE_CONFIG
+#include "cmake_config.h"
+#else
+#include "config.h"
+#endif
+#include <dune/common/version.hh>
+#if DUNE_VERSION_NEWER_REV(DUNE_COMMON, 1, 3, 0) // ie >= 2.0
 #include <dune/common/array.hh>
+#else
+#include <dune/common/fixedarray.hh>
+#endif
+
 #include "static_assert.hh"
 #include <cstddef>
 #include <fstream>
