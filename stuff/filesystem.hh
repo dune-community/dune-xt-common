@@ -20,7 +20,7 @@ std::string pathOnly(std::string path)
 //! return everything after the last slash
 std::string filenameOnly(const std::string& path)
 {
-  return boost::filesystem::path(path).filename();
+  return boost::filesystem::path(path).filename().string();
 }
 
 //! may include filename, will be stripped
