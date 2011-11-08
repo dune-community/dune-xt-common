@@ -97,6 +97,28 @@ void printSparseRowMatrixMatlabStyle(const T& arg, const std::string name, strea
   }
 }
 
+
+/** \brief print a ISTLMatrix (or any interface conforming object) to a given stream in matlab (laodable-) format
+ \ingroup Matlab
+ **/
+template <class MatrixType, class stream>
+void printISTLMatrixMatlabStyle(const MatrixType& arg, const std::string name, stream& out)
+{
+  typedef typename MatrixType::ConstRowIterator ConstRowIteratorType;
+  typedef typename MatrixType::ConstColIterator ConstColIteratorType;
+
+  ConstRowIteratorType rowEnd = arg.end();
+  for (ConstRowIteratorType row = arg.begin(); row != rowEnd; ++row) {
+    ConstColIteratorType colEnd = row->end();
+    for (ConstColIteratorType col = row->begin(); col != colEnd; ++col) {
+      const int rowIndex = row.index() + 1;
+      const int colIndex = col.index() + 1;
+      out << name << "(" << rowIndex << "," << colIndex << ")=" << std::setprecision(matlab_output_precision) << (*col)
+          << ";\n";
+    }
+  }
+}
+
 /** \brief print a discrete function (or any interface conforming object) to a given stream in matlab (laodable-) format
   \ingroup Matlab
   **/
