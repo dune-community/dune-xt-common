@@ -133,7 +133,7 @@ FIND_PACKAGE(Boost 1.35.0 REQUIRED)
 INCLUDE_DIR(${Boost_INCLUDE_DIR})
 FIND_PACKAGE( PkgConfig )
 pkg_check_modules( CCGNU REQUIRED libccgnu2 )
-ADD_CXX_FLAGS( "${CCGNU_CFLAGS}" )
+ADD_CXX_FLAGS( "${CCGNU_CFLAGS}" "-DHAVE_GRIDTYPE" )
 INCLUDE_SYS_DIR(${Boost_INCLUDE_DIR})
 
 #try to enable link-time-optimisation

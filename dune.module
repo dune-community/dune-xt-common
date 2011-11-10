@@ -6,5 +6,4 @@
 Module:dune-stuff
 Version:0.2
 Maintainer:rene.milk@uni-muenster.de
-#depending on 
-Depends:dune-common dune-grid dune-fem
+Depends: dune-common (>= 2.1) dune-grid (>= 2.1) dune-fem (>= 1.2) 
