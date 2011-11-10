@@ -133,11 +133,12 @@ SET( BOOST_ROOT
 	"/opt/boost-1.48" CACHE STRING
 	"" )	
 	
-FIND_PACKAGE(Boost 1.48.0 REQUIRED)
+FIND_PACKAGE(Boost 1.42.0 REQUIRED)
 INCLUDE_DIR(${Boost_INCLUDE_DIR})
 FIND_PACKAGE( PkgConfig )
 pkg_check_modules( CCGNU REQUIRED libccgnu2 )
 ADD_CXX_FLAGS( "${CCGNU_CFLAGS}")
+ADD_CXX_FLAGS( "-DHAVE_GRIDTYPE" )
 INCLUDE_SYS_DIR(${Boost_INCLUDE_DIR})
 
 #try to enable link-time-optimisation
