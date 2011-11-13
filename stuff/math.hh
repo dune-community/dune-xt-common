@@ -7,9 +7,9 @@
 #include <cstring>
 #include <iostream>
 #include "static_assert.hh"
-#include <boost/format.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/fusion/include/void.hpp>
+#include <boost/format.hpp>
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/stats.hpp>
 #include <boost/accumulators/statistics/max.hpp>
