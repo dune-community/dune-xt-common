@@ -69,7 +69,7 @@ MACRO( ADD_DUNE_MODULES )
 	FOREACH( MODULE ${ARGN} )
 		INCLUDE_SYS_DIR( ${CMAKE_CURRENT_SOURCE_DIR}/../dune-${MODULE} )
 		LINK_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../dune-${MODULE}/lib/.libs )
-		FILE( GLOB_RECURSE tmp_header "${CMAKE_CURRENT_SOURCE_DIR}/../dune-${MODULE}/dune/${MODULE}/*.hh" )
+		FILE( GLOB_RECURSE tmp_header "${CMAKE_CURRENT_SOURCE_DIR}/../dune-${MODULE}/${MODULE}/*.hh" )
 		LIST( APPEND DUNE_HEADERS ${tmp_header} )
 	ENDFOREACH(MODULE)
 ENDMACRO( ADD_DUNE_MODULES )
@@ -138,7 +138,10 @@ INCLUDE_DIR(${Boost_INCLUDE_DIR})
 FIND_PACKAGE( PkgConfig )
 pkg_check_modules( CCGNU REQUIRED libccgnu2 )
 ADD_CXX_FLAGS( "${CCGNU_CFLAGS}")
+<<<<<<< HEAD
 ADD_CXX_FLAGS( "-DHAVE_GRIDTYPE" )
+=======
+>>>>>>> core module lib location change
 INCLUDE_SYS_DIR(${Boost_INCLUDE_DIR})
 
 #try to enable link-time-optimisation
