@@ -224,7 +224,8 @@ size_t arrayLength(T(&/*array*/)[N])
 
 void binaryInfo()
 {
-  std::cout << "-O " << __OPTIMIZE__ << "\n";
+  assert(false);
+  //    std::cout << "-O " << __OPTIMIZE__   << "\n";
 }
 
 } // end namepspace stuff
