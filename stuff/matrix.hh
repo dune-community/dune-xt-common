@@ -4,7 +4,36 @@
 #include <dune/fem/operator/matrix/spmatrix.hh>
 #include <dune/stuff/static_assert.hh>
 
+#if HAVE_DUNE_ISTL
+#include <dune/istl/operators.hh>
+#include <dune/fem/operator/matrix/istlmatrix.hh>
+#include <dune/fem/operator/matrix/preconditionerwrapper.hh>
+#endif
+
 namespace Dune {
+//! TODO
+template <class MatrixImp>
+struct PrecondionWrapperDummy : public Preconditioner<typename MatrixImp::RowDiscreteFunctionType::DofStorageType,
+                                                      typename MatrixImp::ColDiscreteFunctionType::DofStorageType>
+{
+  typedef Preconditioner<typename MatrixImp::RowDiscreteFunctionType::DofStorageType,
+                         typename MatrixImp::ColDiscreteFunctionType::DofStorageType> BaseType;
+  typedef typename MatrixImp::RowDiscreteFunctionType::DofStorageType X;
+  typedef typename MatrixImp::ColDiscreteFunctionType::DofStorageType Y;
+  void pre(X&, Y&)
+  {
+  }
+  void apply(X&, const Y&)
+  {
+  }
+  void post(X&)
+  {
+  }
+  enum
+  {
+    category = SolverCategory::sequential
+  };
+};
 //! obsolete,dysfunctional Matrixoperator
 template <class MatrixType>
 class SaneSparseRowMatrixOperator
