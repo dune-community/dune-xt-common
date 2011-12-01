@@ -137,7 +137,7 @@ public:
     //	      communicate( x );
 
     // apply vector to matrix
-    matrix_.mv(x, y);
+    matrix_.multOEM(x, y);
 
     // delete non-interior
     //	      scp_.deleteNonInterior( y );
@@ -150,6 +150,7 @@ public:
     //	      communicate( x );
 
     // apply matrix
+    //          matrix_.applyAdd(alpha,x,y);
     matrix_.usmv(alpha, x, y);
 
     // delete non-interior
@@ -159,11 +160,12 @@ public:
   template <class T, class O>
   double residuum(const T& rhs, O& x) const
   {
-    assert(false);
     // exchange data
-    //	      communicate( x );
-
-    double res = 0.0;
+    communicate(x);
+    T tmp(rhs);
+    apply(x, tmp);
+    tmp -= rhs;
+    double res = tmp.two_norm();
 
     res = rowSpace_.grid().comm().sum(res);
     // return global sum of residuum
