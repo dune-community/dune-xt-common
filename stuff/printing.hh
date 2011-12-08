@@ -324,17 +324,16 @@ template <class Matrix, class Stream>
 void matrixToGnuplotStream(const Matrix& matrix, Stream& stream)
 {
   assert(false);
-  //	unsigned long nz = 0;
+  unsigned long nz = 0;
   for (size_t row = 0; row < matrix.rows(); ++row) {
     for (size_t col = 0; col < matrix.cols(); ++col) {
       if (matrix.find(row, col))
         stream << row << "\t" << col << "\t" << matrix(row, col) << std::endl;
     }
-    //		nz += matrix.numNonZeros (row);
-    //		stream << "#non zeros in row " << row << " " << matrix.numNonZeros (row) <<  " (of " << matrix.cols() << "
-    // cols)\n";
+    nz += matrix.numNonZeros(row);
+    stream << "#non zeros in row " << row << " " << matrix.numNonZeros(row) << " (of " << matrix.cols() << " cols)\n";
   }
-  //	stream << "#total non zeros " << nz << " of " << matrix.rows() * matrix.cols() << " entries\n";
+  stream << "#total non zeros " << nz << " of " << matrix.rows() * matrix.cols() << " entries\n";
 }
 
 //! proxy to Stuff::matrixToGnuplotStream that redirects its output to a file

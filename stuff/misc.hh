@@ -15,13 +15,8 @@
 #include "config.h"
 #endif
 #include <dune/common/version.hh>
-#if DUNE_VERSION_NEWER_REV(DUNE_COMMON, 1, 3, 0) // ie >= 2.0
 #include <dune/common/array.hh>
-#else
-#include <dune/common/fixedarray.hh>
-#endif
-
-#include "static_assert.hh"
+#include <dune/common/static_assert.hh>
 #include <cstddef>
 #include <fstream>
 #include <iostream>
