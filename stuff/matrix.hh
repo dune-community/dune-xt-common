@@ -456,7 +456,7 @@ void printMemUsageObject(const MatrixObjectType& matrix_object, Stream& stream, 
 {
   printMemUsage(matrix_object.matrix(), stream, name);
 }
-
+#ifndef STOKES_USE_ISTL /// TODO
 //! a small proxy object that automagically prevents near-0 value fill-in
 template <class MatrixObjectType>
 class LocalMatrixProxy
@@ -499,7 +499,75 @@ public:
     }
   }
 };
+#else
+//! a small proxy object that automagically prevents near-0 value fill-in
+template <class MatrixPointerType>
+class LocalMatrixProxy
+{
+  typedef typename MatrixPointerType::element_type MatrixObjectType;
+  typedef typename MatrixObjectType::LocalMatrixType LocalMatrixType;
+  typedef typename MatrixObjectType::MatrixType::block_type block_type;
+  typedef typename GridType::template Codim<0>::Entity EntityType;
+  typedef typename MatrixObjectType::MatrixType::Ttype FieldType;
+  //			LocalMatrixType local_matrix_;
+  MatrixPointerType matrix_pointer_;
+  const EntityType& self_;
+  const EntityType& neigh_;
+  const double eps_;
+  const unsigned int rows_;
+  const unsigned int cols_;
+  std::vector<FieldType> entries_;
 
+
+public:
+  LocalMatrixProxy(MatrixPointerType& pointer, const EntityType& self, const EntityType& neigh, const double eps)
+    : // local_matrix_( object->localMatrix(self,neigh) ),
+    matrix_pointer_(pointer)
+    , self_(self)
+    , neigh_(neigh)
+    , eps_(eps)
+    , rows_(block_type::rows)
+    , cols_(block_type::cols)
+    , entries_(rows_ * cols_, FieldType(0.0))
+  {
+  }
+
+  inline void add(const unsigned int row, const unsigned int col, const FieldType val)
+  {
+    ASSERT_LT(row, rows_);
+    ASSERT_LT(col, cols_);
+    entries_[row * cols_ + col] += val;
+    //                    local_matrix_.add( row, col , val );
+  }
+
+  ~LocalMatrixProxy()
+  {
+    const int nbColIndex = matrix_pointer_->colSpace().blockMapper().mapToGlobal(neigh_, 0);
+    const int elRowIndex = matrix_pointer_->rowSpace().blockMapper().mapToGlobal(self_, 0);
+    const int elColIndex = matrix_pointer_->colSpace().blockMapper().mapToGlobal(self_, 0);
+
+
+    for (unsigned int i = 0; i < rows_; ++i) {
+      for (unsigned int j = 0; j < cols_; ++j) {
+        const FieldType& i_j = entries_[i * cols_ + j];
+        if (std::fabs(i_j) > eps_) {
+          //                                local_matrix_.add( i, j , i_j );
+          (matrix_pointer_->matrix()[elRowIndex][elColIndex])[i][j] += i_j;
+        }
+      }
+    }
+  }
+
+  const unsigned int rows() const
+  {
+    return rows_;
+  }
+  const unsigned int cols() const
+  {
+    return cols_;
+  }
+};
+#endif
 template <class M>
 void forceTranspose(const M& arg, M& dest)
 {
