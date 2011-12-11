@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <cstring>
 #include <iostream>
-#include "static_assert.hh"
+#include <dune/common/static_assert.hh>
 #include <boost/static_assert.hpp>
 #include <boost/fusion/include/void.hpp>
 #include <boost/format.hpp>

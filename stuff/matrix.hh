@@ -2,7 +2,7 @@
 #define STUFF_MATRIX_HH
 
 #include <dune/fem/operator/matrix/spmatrix.hh>
-#include <dune/stuff/static_assert.hh>
+#include <dune/common/static_assert.hh>
 
 #if HAVE_DUNE_ISTL
 #include <dune/istl/operators.hh>
