@@ -458,9 +458,10 @@ void printMemUsageObject(const MatrixObjectType& matrix_object, Stream& stream, 
 }
 #ifndef STOKES_USE_ISTL /// TODO
 //! a small proxy object that automagically prevents near-0 value fill-in
-template <class MatrixObjectType>
+template <class MatrixPointerType>
 class LocalMatrixProxy
 {
+  typedef typename MatrixPointerType::element_type MatrixObjectType;
   typedef typename MatrixObjectType::LocalMatrixType LocalMatrixType;
   typedef typename MatrixObjectType::DomainSpaceType::GridType GridType;
   typedef typename GridType::template Codim<0>::Entity EntityType;
@@ -472,8 +473,8 @@ class LocalMatrixProxy
   std::vector<FieldType> entries_;
 
 public:
-  LocalMatrixProxy(MatrixObjectType& object, const EntityType& self, const EntityType& neigh, const double eps)
-    : local_matrix_(object.localMatrix(self, neigh))
+  LocalMatrixProxy(MatrixPointerType& object, const EntityType& self, const EntityType& neigh, const double eps)
+    : local_matrix_(object->localMatrix(self, neigh))
     , eps_(eps)
     , rows_(local_matrix_.rows())
     , cols_(local_matrix_.columns())
@@ -497,6 +498,14 @@ public:
           local_matrix_.add(i, j, i_j);
       }
     }
+  }
+  const unsigned int rows() const
+  {
+    return rows_;
+  }
+  const unsigned int cols() const
+  {
+    return cols_;
   }
 };
 #else
