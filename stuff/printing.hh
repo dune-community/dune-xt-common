@@ -142,7 +142,7 @@ template <class T, class stream>
 void printDoubleVectorMatlabStyle(const T* arg, const int size, const std::string name, stream& out)
 {
   out << "\n" << name << " = [ " << std::endl;
-  for (unsigned int i = 0; i < size; i++) {
+  for (int i = 0; i < size; i++) {
     out << std::setprecision(matlab_output_precision) << arg[i];
     out << ";" << std::endl;
   }
