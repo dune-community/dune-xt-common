@@ -3,6 +3,7 @@
 
 #include <dune/fem/operator/matrix/spmatrix.hh>
 #include <dune/common/static_assert.hh>
+#include <dune/stuff/debug.hh>
 
 #if HAVE_DUNE_ISTL
 #include <dune/istl/operators.hh>
@@ -134,27 +135,26 @@ public:
   virtual void apply(const X& x, Y& y) const
   {
     // exchange data first
-    //	      communicate( x );
+    communicate(x);
 
     // apply vector to matrix
     matrix_.multOEM(x, y);
 
     // delete non-interior
-    //	      scp_.deleteNonInterior( y );
+    scp_.deleteNonInterior(y);
   }
 
   //! apply operator to x, scale and add:  \f$ y = y + \alpha A(x) \f$
   virtual void applyscaleadd(field_type alpha, const X& x, Y& y) const
   {
     // exchange data first
-    //	      communicate( x );
+    communicate(x);
 
     // apply matrix
-    //          matrix_.applyAdd(alpha,x,y);
     matrix_.usmv(alpha, x, y);
 
     // delete non-interior
-    //	      scp_.deleteNonInterior( y );
+    scp_.deleteNonInterior(y);
   }
 
   template <class T, class O>
@@ -179,20 +179,19 @@ public:
   }
 
 protected:
-  void communicate(const X& /*x*/) const
+  void communicate(const X& x) const
   {
-    assert(false);
+
     if (rowSpace_.grid().comm().size() <= 1)
       return;
 
     Timer commTime;
 
     // create temporary discretet function object
-    //	      RowDiscreteFunctionType tmp ("DGParallelMatrixAdapter::communicate",
-    //					   rowSpace_, x );
+    RowDiscreteFunctionType tmp("DGParallelMatrixAdapter::communicate", rowSpace_, x);
 
     // exchange data by copying
-    //	      rowSpace_.communicate( tmp );
+    rowSpace_.communicate(tmp);
 
     // accumulate communication time
     averageCommTime_ += commTime.elapsed();
@@ -442,6 +441,7 @@ FieldMatrixImp rowWiseMatrixMultiplication(const FieldMatrixImp& arg1, const Fie
 
 
 namespace Matrix {
+
 //! prints actual memusage of matrix in kB
 template <class MatrixType, class Stream>
 void printMemUsage(const MatrixType& matrix, Stream& stream, std::string name = "")
@@ -484,8 +484,8 @@ public:
 
   inline void add(const unsigned int row, const unsigned int col, const FieldType val)
   {
-    assert(row < rows_);
-    assert(col < cols_);
+    ASSERT_LT(row, rows_);
+    ASSERT_LT(col, cols_);
     entries_[row * cols_ + col] += val;
   }
 
@@ -526,6 +526,10 @@ class LocalMatrixProxy
   const unsigned int rows_;
   const unsigned int cols_;
   std::vector<FieldType> entries_;
+  //! global row numbers
+  std::vector<int> rowMap_;
+  //! global col numbers
+  std::vector<int> colMap_;
 
 
 public:
@@ -539,6 +543,21 @@ public:
     , cols_(block_type::cols)
     , entries_(rows_ * cols_, FieldType(0.0))
   {
+    const auto& domainSpace = matrix_pointer_->rowSpace();
+    const auto& rangeSpace = matrix_pointer_->colSpace();
+    rowMap_.resize(domainSpace.baseFunctionSet(self).numBaseFunctions());
+    colMap_.resize(rangeSpace.baseFunctionSet(neigh).numBaseFunctions());
+
+    const auto dmend = domainSpace.mapper().end(self);
+    for (auto dmit = domainSpace.mapper().begin(self); dmit != dmend; ++dmit) {
+      assert(dmit.global() == domainSpace.mapToGlobal(self, dmit.local()));
+      rowMap_[dmit.local()] = dmit.global();
+    }
+    const auto rmend = rangeSpace.mapper().end(neigh);
+    for (auto rmit = rangeSpace.mapper().begin(neigh); rmit != rmend; ++rmit) {
+      assert(rmit.global() == rangeSpace.mapToGlobal(neigh, rmit.local()));
+      colMap_[rmit.local()] = rmit.global();
+    }
   }
 
   inline void add(const unsigned int row, const unsigned int col, const FieldType val)
@@ -546,22 +565,15 @@ public:
     ASSERT_LT(row, rows_);
     ASSERT_LT(col, cols_);
     entries_[row * cols_ + col] += val;
-    //                    local_matrix_.add( row, col , val );
   }
 
   ~LocalMatrixProxy()
   {
-    const int nbColIndex = matrix_pointer_->colSpace().blockMapper().mapToGlobal(neigh_, 0);
-    const int elRowIndex = matrix_pointer_->rowSpace().blockMapper().mapToGlobal(self_, 0);
-    const int elColIndex = matrix_pointer_->colSpace().blockMapper().mapToGlobal(self_, 0);
-
-
     for (unsigned int i = 0; i < rows_; ++i) {
       for (unsigned int j = 0; j < cols_; ++j) {
         const FieldType& i_j = entries_[i * cols_ + j];
         if (std::fabs(i_j) > eps_) {
-          //                                local_matrix_.add( i, j , i_j );
-          (matrix_pointer_->matrix()[elRowIndex][elColIndex])[i][j] += i_j;
+          matrix_pointer_->add(rowMap_[i], colMap_[j], i_j);
         }
       }
     }
