@@ -9,6 +9,7 @@
 #include <boost/format.hpp>
 #include <dune/stuff/functions.hh>
 #include <dune/stuff/parametercontainer.hh>
+#include <dune/istl/bcrsmatrix.hh>
 
 namespace Stuff {
 
@@ -327,7 +328,8 @@ void matrixToGnuplotStream(const Matrix& matrix, Stream& stream)
   for (size_t row = 0; row < matrix.rows(); ++row) {
     for (size_t col = 0; col < matrix.cols(); ++col) {
       if (matrix.find(row, col))
-        stream << row << "\t" << col << "\t" << matrix(row, col) << std::endl;
+        assert(false);
+      //                stream << row << "\t" << col << "\t" << matrix( row, col ) << std::endl;
     }
     nz += matrix.numNonZeros(row);
     stream << "#non zeros in row " << row << " " << matrix.numNonZeros(row) << " (of " << matrix.cols() << " cols)\n";
