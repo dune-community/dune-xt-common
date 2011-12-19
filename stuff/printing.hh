@@ -105,17 +105,20 @@ void printSparseRowMatrixMatlabStyle(const T& arg, const std::string name, strea
 template <class MatrixType, class stream>
 void printISTLMatrixMatlabStyle(const MatrixType& arg, const std::string name, stream& out)
 {
-  typedef typename MatrixType::ConstRowIterator ConstRowIteratorType;
-  typedef typename MatrixType::ConstColIterator ConstColIteratorType;
+  const int I = arg.N();
+  const int J = arg.M();
+  typedef typename MatrixType::block_type BlockType;
 
-  ConstRowIteratorType rowEnd = arg.end();
-  for (ConstRowIteratorType row = arg.begin(); row != rowEnd; ++row) {
-    ConstColIteratorType colEnd = row->end();
-    for (ConstColIteratorType col = row->begin(); col != colEnd; ++col) {
-      const int rowIndex = row.index() + 1;
-      const int colIndex = col.index() + 1;
-      out << name << "(" << rowIndex << "," << colIndex << ")=" << std::setprecision(matlab_output_precision) << (*col)
-          << ";\n";
+  out << boost::format("\n%s =sparse( %d, %d );") % name % (I * BlockType::rows) % (J * BlockType::cols) << std::endl;
+  for (unsigned ii = 0; ii < I; ++ii) {
+    for (unsigned jj = 0; jj < J; ++jj) {
+      if (arg.exists(ii, jj)) {
+        const auto& block = arg[ii][jj];
+        for (int i = 0; i < block.N(); ++i)
+          for (int j = 0; j < block.M(); ++j)
+            out << name << "(" << i + 1 << "," << j + 1 << ")=" << std::setprecision(matlab_output_precision)
+                << block[i][j] << ";\n";
+      }
     }
   }
 }
