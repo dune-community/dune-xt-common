@@ -83,17 +83,19 @@ void printFieldMatrix(T& arg, std::string name, stream& out, std::string prefix 
   \ingroup Matlab
   **/
 template <class T, class stream>
-void printSparseRowMatrixMatlabStyle(const T& arg, const std::string name, stream& out,
+void printSparseRowMatrixMatlabStyle(const T& arg, std::string name, stream& out,
                                      const double eps = Parameters().getParam("eps", 1e-14))
 {
+  name        = std::string("fem.") + name;
   const int I = arg.rows();
   const int J = arg.cols();
   out << boost::format("\n%s =sparse( %d, %d );") % name % I % J << std::endl;
   for (size_t row = 0; row < arg.rows(); row++) {
     for (size_t col = 0; col < arg.cols(); col++) {
-      if (std::fabs(arg(row, col)) > eps)
-        out << name << "(" << row + 1 << "," << col + 1 << ")=" << std::setprecision(matlab_output_precision)
-            << arg(row, col) << ";\n";
+      const auto value = arg(row, col);
+      if (std::fabs(value) > eps)
+        out << name << "(" << row + 1 << "," << col + 1 << ")=" << std::setprecision(matlab_output_precision) << value
+            << ";\n";
     }
   }
 }
@@ -103,21 +105,29 @@ void printSparseRowMatrixMatlabStyle(const T& arg, const std::string name, strea
  \ingroup Matlab
  **/
 template <class MatrixType, class stream>
-void printISTLMatrixMatlabStyle(const MatrixType& arg, const std::string name, stream& out)
+void printISTLMatrixMatlabStyle(const MatrixType& arg, std::string name, stream& out,
+                                const double eps = Parameters().getParam("eps", 1e-14))
 {
+  name        = std::string("istl.") + name;
   const int I = arg.N();
   const int J = arg.M();
   typedef typename MatrixType::block_type BlockType;
-
   out << boost::format("\n%s =sparse( %d, %d );") % name % (I * BlockType::rows) % (J * BlockType::cols) << std::endl;
   for (unsigned ii = 0; ii < I; ++ii) {
     for (unsigned jj = 0; jj < J; ++jj) {
       if (arg.exists(ii, jj)) {
         const auto& block = arg[ii][jj];
-        for (int i = 0; i < block.N(); ++i)
-          for (int j = 0; j < block.M(); ++j)
-            out << name << "(" << i + 1 << "," << j + 1 << ")=" << std::setprecision(matlab_output_precision)
-                << block[i][j] << ";\n";
+        for (int i = 0; i < block.N(); ++i) {
+          for (int j = 0; j < block.M(); ++j) {
+            const auto value = block[i][j];
+            if (std::fabs(value) > eps) {
+              int real_row = BlockType::rows * ii + i + 1;
+              int real_col = BlockType::cols * jj + j + 1;
+              out << name << "(" << real_row << "," << real_col << ")=" << std::setprecision(matlab_output_precision)
+                  << value << ";\n";
+            }
+          }
+        }
       }
     }
   }
