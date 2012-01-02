@@ -556,20 +556,12 @@ public:
 
     const auto dmend = domainSpace.mapper().end(self);
     for (auto dmit = domainSpace.mapper().begin(self); dmit != dmend; ++dmit) {
-<<<<<<< HEAD
       //                      ASSERT_EQ( dmit.global() , domainSpace.mapToGlobal( self, dmit.local() ) );
-=======
-      assert(dmit.global() == domainSpace.mapToGlobal(self, dmit.local()));
->>>>>>> matrix local
       rowMap_[dmit.local()] = dmit.global();
     }
     const auto rmend = rangeSpace.mapper().end(neigh);
     for (auto rmit = rangeSpace.mapper().begin(neigh); rmit != rmend; ++rmit) {
-<<<<<<< HEAD
       //                      ASSERT_EQ( rmit.global() , rangeSpace.mapToGlobal( neigh, rmit.local() ) );
-=======
-      assert(rmit.global() == rangeSpace.mapToGlobal(neigh, rmit.local()));
->>>>>>> matrix local
       colMap_[rmit.local()] = rmit.global();
     }
   }
@@ -588,15 +580,11 @@ public:
       for (unsigned int j = 0; j < cols_; ++j) {
         const FieldType& i_j = entries_[i * cols_ + j];
         if (std::fabs(i_j) > eps_) {
-<<<<<<< HEAD
           assert(!std::isnan(i_j));
           assert(!std::isinf(i_j));
           matrix_pointer_->add(rowMap_[i], colMap_[j], i_j);
           assert(!std::isnan(matrix_pointer_->matrix()(rowMap_[i], colMap_[j])));
           assert(!std::isinf(matrix_pointer_->matrix()(rowMap_[i], colMap_[j])));
-=======
-          matrix_pointer_->add(rowMap_[i], colMap_[j], i_j);
->>>>>>> matrix local
         }
       }
     }
