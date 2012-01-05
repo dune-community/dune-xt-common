@@ -57,19 +57,16 @@ std::string toString(const ReturnType& s)
   return r;
 }
 
-/** stupid element-index-in-conatiner search
-  \todo stl implementation?
-  **/
-template <class Container, class Element>
-int getIdx(const Container& ct, const Element& e)
+//! element-index-in-container search
+template <class StlSequence>
+inline int getIdx(const StlSequence& ct, const typename StlSequence::value_type& val)
 {
-  int idx = 0;
-  for (typename Container::const_iterator it = ct.begin(); it != ct.end(); ++it, ++idx) {
-    if (*it == e)
-      return idx;
-  }
-  return -1;
+  typename StlSequence::const_iterator result = std::find(ct.begin(), ct.end(), val);
+  if (result == ct.end())
+    return -1;
+  return std::distance(ct.begin(), result);
 }
+
 
 //! no idea what this was for
 template <typename T>
@@ -163,8 +160,8 @@ struct TimeGuard
 };
 
 //! \todo seems borked, resutls in gigantic amount of compile errors?!
-template <class StlContainer, class T>
-void fill_entirely(StlContainer& c, const T& value)
+template <class StlSequence, class T>
+void fill_entirely(StlSequence& c, const T& value)
 {
   std::fill(c.begin(), c.end(), value);
 }
