@@ -70,7 +70,7 @@ inline int getIdx(const StlSequence& ct, const typename StlSequence::value_type&
 
 //! no idea what this was for
 template <typename T>
-std::string getParameterString(const std::string& prefix, T min, T max, T inc)
+std::string DUNE_DEPRECATED getParameterString(const std::string& prefix, T min, T max, T inc)
 {
   std::stringstream ss;
   ss << prefix << " ";
@@ -139,15 +139,18 @@ typedef Tokenizer<std::string> StringTokenizer;
 
 //! for backward compat only
 template <class ContainerType>
-void MergeVector(ContainerType& target, const ContainerType& a)
+void DUNE_DEPRECATED MergeVector(ContainerType& target, const ContainerType& a)
 {
   target.insert(target.end(), a.begin(), a.end());
 }
 
-//! stupid timing helper
+/** \brief stupid timing helper
+ * \deprecated in favor of boost automatic_timer (in boost >= 1.48)
+ **/
 struct TimeGuard
 {
   const time_t cur_time;
+  DUNE_DEPRECATED_MSG("use boost automatic timer instead")
   TimeGuard()
     : cur_time(time(NULL))
   {
@@ -166,10 +169,11 @@ void fill_entirely(StlSequence& c, const T& value)
   std::fill(c.begin(), c.end(), value);
 }
 
-template <class T, int N>
+
 /** this allows subscription indices to wrap around
   \example N=4: wraparound_array[4] == wraparound_array[0] && wraparound_array[-1] == wraparound_array[3]
   **/
+template <class T, int N>
 struct wraparound_array : public Dune::array<T, N>
 {
   typedef Dune::array<T, N> BaseType;
@@ -212,12 +216,6 @@ template <class T, size_t N>
 size_t arrayLength(T(&/*array*/)[N])
 {
   return N;
-}
-
-void binaryInfo()
-{
-  assert(false);
-  //    std::cout << "-O " << __OPTIMIZE__   << "\n";
 }
 
 } // end namepspace stuff

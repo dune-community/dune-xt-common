@@ -25,6 +25,7 @@
 namespace Stuff {
 class Profiler;
 }
+//! Stuff::Profiler global instance
 Stuff::Profiler& profiler();
 
 namespace Stuff {

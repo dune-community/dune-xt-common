@@ -13,7 +13,9 @@
 
 namespace Stuff {
 
+//! ensure matlab output is done with highest precision possible, otherwise weird effects are bound to happen
 static const unsigned int matlab_output_precision = std::numeric_limits<double>::digits10 + 1;
+
 /**
  *  \brief prints a Dune::FieldVector
  *
@@ -185,7 +187,6 @@ void oneLinePrint(Stream& stream, const DiscFunc& func)
     // double d = 0.10;// + *it; //stupid hack cause setw/prec ain't working for me
     stream << std::setw(6) << std::setprecision(3) << *it << "  ";
   }
-
   stream << " ] " << std::endl;
 }
 
@@ -196,6 +197,7 @@ void oneLinePrint(Stream& stream, const DiscFunc& func)
   Stuff::LocalMatrixPrintFunctor< RmatrixType,FunctorStream> f_R ( Rmatrix, functorStream, "R" );\n
   gw( f_R );
   \see Stuff::GridWalk
+  \ingroup GridWalk
   **/
 template <class GlobalMatrix, class Stream>
 class LocalMatrixPrintFunctor
@@ -240,6 +242,9 @@ private:
   const std::string name_;
 };
 
+/** GridWalk functor to print all localfunctions of a given DiscreteFunction
+ * \ingroup GridWalk
+ **/
 template <class DiscreteFunctionType, class Stream, class QuadratureType>
 class LocalFunctionPrintFunctor
 {
@@ -281,6 +286,9 @@ private:
   const std::string name_;
 };
 
+/** GridWalk functor to print, w/o transformation, all localfunctions of a given DiscreteFunction
+ * \ingroup GridWalk
+ **/
 template <class DiscreteFunctionType, class Stream>
 class LocalFunctionVerbatimPrintFunctor
 {
@@ -341,8 +349,7 @@ void matrixToGnuplotStream(const Matrix& matrix, Stream& stream)
   for (size_t row = 0; row < matrix.rows(); ++row) {
     for (size_t col = 0; col < matrix.cols(); ++col) {
       if (matrix.find(row, col))
-        assert(false);
-      //                stream << row << "\t" << col << "\t" << matrix( row, col ) << std::endl;
+        stream << row << "\t" << col << "\t" << matrix(row, col) << std::endl;
     }
     nz += matrix.numNonZeros(row);
     stream << "#non zeros in row " << row << " " << matrix.numNonZeros(row) << " (of " << matrix.cols() << " cols)\n";

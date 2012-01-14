@@ -6,7 +6,10 @@
 #include <algorithm>
 #include <cstring>
 #include <iostream>
+
+#include <dune/common/deprecated.hh>
 #include <dune/common/static_assert.hh>
+
 #include <boost/static_assert.hpp>
 #include <boost/fusion/include/void.hpp>
 #include <boost/format.hpp>
@@ -15,8 +18,22 @@
 #include <boost/accumulators/statistics/max.hpp>
 #include <boost/accumulators/statistics/min.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
+#include <boost/math/special_functions/fpclassify.hpp>
 
-#include <dune/common/deprecated.hh>
+namespace boost {
+namespace math {
+//! isinf specialization for Dune::StraightenBlockVector
+template <class BlockVectorImp, class DofImp>
+inline bool isinf(const Dune::StraightenBlockVector<BlockVectorImp, DofImp>& x)
+{
+  for (size_t i = 0; i < x.size(); ++i) {
+    if (std::isinf(x[i]))
+      return true;
+  }
+  return false;
+}
+}
+}
 
 namespace Stuff {
 
@@ -75,9 +92,7 @@ static RangeType1 dyadicProduct(const RangeType2& arg1, const RangeType2& arg2)
   return ret;
 }
 
-/** \brief a vector wrapper for continiously updating min,max,avg of some element type vector
-  \todo find use? it's only used in minimal as testcase for itself...
-  **/
+//! a vector wrapper for continiously updating min,max,avg of some element type vector
 template <class ElementType>
 class MinMaxAvg
 {
@@ -110,11 +125,6 @@ public:
   ElementType average() const
   {
     return boost::accumulators::mean(acc_);
-  }
-
-  void DUNE_DEPRECATED push(const ElementType& el)
-  {
-    acc_(el);
   }
 
   void operator()(const ElementType& el)
@@ -150,7 +160,10 @@ bool aboutEqual(const T& x, const T& y, T relative_tolerance = 1e-10, T absolute
   return (std::fabs(x - y) <= std::max(absolute_tolerance, relative_tolerance * std::max(std::fabs(x), std::fabs(y))));
 }
 
-//! docme
+/**
+ * \brief MovingAverage
+ * \deprecated in favor of MinMaxAvg<double>
+ **/
 class MovingAverage
 {
   double avg_;

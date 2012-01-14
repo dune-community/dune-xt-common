@@ -6,6 +6,7 @@
 #include <dune/stuff/logging.hh>
 
 namespace Stuff {
+//! POSIX signal management utils
 namespace Signals {
 
 //! reset given signal to default handler
