@@ -20,6 +20,8 @@
 #include <boost/accumulators/statistics/mean.hpp>
 #include <boost/math/special_functions/fpclassify.hpp>
 
+#if HAVE_DUNE_FEM
+#include <dune/fem/function/blockvectorfunction/blockvectorfunction.hh>
 namespace boost {
 namespace math {
 //! isinf specialization for Dune::StraightenBlockVector
@@ -34,6 +36,7 @@ inline bool isinf(const Dune::StraightenBlockVector<BlockVectorImp, DofImp>& x)
 }
 }
 }
+#endif
 
 namespace Stuff {
 
