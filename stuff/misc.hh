@@ -32,6 +32,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <cstdio>
+#include <dune/stuff/deprecated.hh>
 
 namespace Stuff {
 
