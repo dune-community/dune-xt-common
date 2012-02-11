@@ -135,8 +135,7 @@ SET( BOOST_ROOT
 	
 FIND_PACKAGE( PkgConfig )
 FIND_PACKAGE(Boost 1.42.0 REQUIRED)
-pkg_check_modules( CCGNU REQUIRED libccgnu2 )
-ADD_CXX_FLAGS( "${CCGNU_CFLAGS}" -DHAVE_BOOST=1)
+ADD_CXX_FLAGS( -DHAVE_BOOST=1)
 INCLUDE_SYS_DIR(${Boost_INCLUDE_DIRS})
 
 #try to enable link-time-optimisation
