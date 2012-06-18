@@ -120,14 +120,37 @@ add_custom_target( config_refresh
 				${CMAKE_CURRENT_SOURCE_DIR}/cmake/regen_config_header.sh ${CMAKE_CURRENT_BINARY_DIR}/cmake_config.h
 				)
 
-ADD_CXX_FLAGS( "-DHAVE_CMAKE_CONFIG -std=c++0x" )
-
 INCLUDE (CheckIncludeFileCXX)
 CHECK_INCLUDE_FILE_CXX("tr1/array" HAVE_TR1_ARRAY)
 CHECK_INCLUDE_FILE_CXX("malloc.h" HAVE_MALLOC_H)
 
+# try to use compiler flag -std=c++11
+include(TestCXXAcceptsFlag)
+CHECK_CXX_ACCEPTS_FLAG("-std=c++11" CXX_FLAG_CXX11)
+if(CXX_FLAG_CXX11)
+  set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -std=c++11")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ")
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++11 ")
+  set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} -std=c++11 ")
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++11 ")
+  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -std=c++11 ")
+  set(CXX_STD0X_FLAGS "-std=c++11")
+else()
+  # try to use compiler flag -std=c++0x for older compilers
+  CHECK_CXX_ACCEPTS_FLAG("-std=c++0x" CXX_FLAG_CXX0X)
+  if(CXX_FLAG_CXX0X)
+    set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -std=c++0x" )
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x ")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++0x ")
+    set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} -std=c++0x ")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++0x ")
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -std=c++0x ")
+  set(CXX_STD0X_FLAGS "-std=c++0x")
+  endif(CXX_FLAG_CXX0X)
+endif(CXX_FLAG_CXX11)
+
 SET( CUSTOM_FLAGS
-	"-Wall -Wextra -pedantic -O3 -DDNDEBUG -funroll-loops -g -ggdb -DENABLE_ADAPTIVE=1 -DADAPTIVE_SOLVER -DUSE_BFG_CG_SCHEME -fno-strict-aliasing" CACHE STRING  
+	"-Wall -Wextra -pedantic -DDNDEBUG -funroll-loops -g -ggdb -fno-strict-aliasing" CACHE STRING  
 	"CUSTOM FLAGS")
 SET( BOOST_ROOT
 	"/opt/boost-1.48" CACHE STRING
@@ -135,7 +158,7 @@ SET( BOOST_ROOT
 	
 FIND_PACKAGE( PkgConfig )
 FIND_PACKAGE(Boost 1.42.0 REQUIRED)
-ADD_CXX_FLAGS( -DHAVE_BOOST=1)
+ADD_CXX_FLAGS( -DHAVE_CMAKE_CONFIG -DHAVE_BOOST=1 ${CXX_STD0X_FLAGS})
 INCLUDE_SYS_DIR(${Boost_INCLUDE_DIRS})
 
 #try to enable link-time-optimisation
