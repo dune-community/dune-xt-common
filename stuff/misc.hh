@@ -33,6 +33,8 @@
 #include <sys/types.h>
 #include <cstdio>
 #include <dune/stuff/deprecated.hh>
+#include <boost/algorithm/string.hpp>
+
 
 namespace Stuff {
 // ! simple and dumb std::string to anything conversion
@@ -226,6 +228,22 @@ template <class T, size_t N>
 size_t arrayLength(T(&/*array*/)[N])
 {
   return N;
+}
+
+/** \brief convenience wrapper around boost::algorithm::split to split one string into a vector of strings
+ * \param msg the spring to be split
+ * \param seperators a list of seperaors, duh
+ * \param mode token_compress_off --> potentially empty strings in return,
+              token_compress_on --> empty tokens are discarded
+ * \return all tokens in a vector, if msg contains no seperators, this'll contain msg as its only element
+ **/
+static std::vector<std::string>
+stringTokenize(const std::string& msg, const std::string& seperators,
+               const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off)
+{
+  std::vector<std::string> strings;
+  boost::algorithm::split(strings, msg, boost::algorithm::is_any_of(seperators), mode);
+  return strings;
 }
 } // end namepspace stuff
 
