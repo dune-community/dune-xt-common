@@ -25,12 +25,11 @@
 namespace Stuff {
 class Profiler;
 }
-//! Stuff::Profiler global instance
+// ! Stuff::Profiler global instance
 Stuff::Profiler& profiler();
 
 namespace Stuff {
-
-//! wraps name, start- and end time for one timing section
+// ! wraps name, start- and end time for one timing section
 struct TimingData
 {
   clock_t start;
@@ -55,11 +54,11 @@ struct TimingData
 };
 
 /** \brief simple inline profiling class
- *
- *  - User can set as many (even nested) named sections whose total clock time will be computed across all program
- *instances.\n
- *  - Provides csv-conform output of process-averaged runtimes.
- **/
+   *
+   *  - User can set as many (even nested) named sections whose total clock time will be computed across all program
+   *instances.\n
+   *  - Provides csv-conform output of process-averaged runtimes.
+   **/
 class Profiler
 {
   friend Profiler& ::profiler();
@@ -78,7 +77,7 @@ protected:
   typedef std::vector<DataMap> MapVector;
 
 public:
-  //! set this to begin a named section
+  // ! set this to begin a named section
   void StartTiming(const std::string section_name)
   {
     if (m_cur_run_num >= m_timings.size()) {
@@ -90,15 +89,16 @@ public:
     if (section != known_timers_map_.end()) {
       if (section->second.first) // timer currently running
         return;
+
       section->second.first  = true; // set active, start with new
       section->second.second = TimingData(section_name, clock());
     } else {
       // init new section
       known_timers_map_[section_name] = std::make_pair(true, TimingData(section_name, clock()));
     }
-  }
+  } // StartTiming
 
-  //! stop named section's counter
+  // ! stop named section's counter
   void StopTiming(const std::string section_name)
   {
     assert(m_cur_run_num < m_timings.size());
@@ -112,9 +112,9 @@ public:
       current_data[section_name] = known_timers_map_[section_name].second.delta();
     else
       current_data[section_name] += known_timers_map_[section_name].second.delta();
-  }
+  } // StopTiming
 
-  //! get runtime of section in seconds
+  // ! get runtime of section in seconds
   long GetTiming(const std::string section_name) const
   {
     assert(m_cur_run_num < m_timings.size());
@@ -131,37 +131,37 @@ public:
       return -1;
     }
     return long(section->second / double(CLOCKS_PER_SEC));
-  }
+  } // GetTiming
 
   /** output to currently pre-defined (csv) file, does not output individual run results, but average over all recorded
-    *results
-       * \param comm used to gather and average the runtime data over all processes
-       * \tparam CollectiveCommunication should be Dune::CollectiveCommunication< MPI_Comm / double >
-       **/
+   * results
+     * \param comm used to gather and average the runtime data over all processes
+     * \tparam CollectiveCommunication should be Dune::CollectiveCommunication< MPI_Comm / double >
+     **/
   template <class CollectiveCommunication>
   long OutputAveraged(CollectiveCommunication& comm, const int refineLevel, const long numDofs,
                       const double scale_factor = 1.0);
 
   /** output to \param filename
-   * \param comm used to gather and average the runtime data over all processes
-   * \tparam CollectiveCommunication should be Dune::CollectiveCommunication< MPI_Comm / double >
-   **/
+     * \param comm used to gather and average the runtime data over all processes
+     * \tparam CollectiveCommunication should be Dune::CollectiveCommunication< MPI_Comm / double >
+     **/
   template <class CollectiveCommunication, class InfoContainer>
   long OutputCommon(CollectiveCommunication& comm, InfoContainer& run_infos, std::string filename,
                     const double scale_factor = 1.0);
 
-  //! default proxy for output
+  // ! default proxy for output
   template <class CollectiveCommunication, class InfoContainer>
   long Output(CollectiveCommunication& comm, InfoContainer& run_infos, const double scale_factor = 1.0);
 
-  //! proxy for output of a map of runinfos
+  // ! proxy for output of a map of runinfos
   template <class CollectiveCommunication, class InfoContainerMap>
   void OutputMap(CollectiveCommunication& comm, InfoContainerMap& run_infos_map, const double scale_factor = 1.0);
 
   /** call this with correct numRuns <b> before </b> starting any profiling
-   *  if you're planning on doing more than one iteration of your code
-   *  called once fromm ctor with numRuns=1
-   **/
+     *  if you're planning on doing more than one iteration of your code
+     *  called once fromm ctor with numRuns=1
+     **/
   void Reset(const int numRuns)
   {
     m_timings.clear();
@@ -169,22 +169,22 @@ public:
     m_total_runs  = numRuns;
     m_cur_run_num = 0;
     init_time_    = clock();
-  }
+  } // Reset
 
-  //! simple counter, usable to count how often a single piece of code is called
+  // ! simple counter, usable to count how often a single piece of code is called
   void AddCount(const int num)
   {
     m_count[num] += 1;
   }
 
-  //! call this after one iteration of your code has finished. increments current run number and puts new timing data
-  //! into the vector
+  // ! call this after one iteration of your code has finished. increments current run number and puts new timing data
+  // into the vector
   void NextRun()
   {
     m_cur_run_num++;
   }
 
-  //! a utility class to time a limited scope of code
+  // ! a utility class to time a limited scope of code
   class ScopedTiming : public boost::noncopyable
   {
     const std::string section_name_;
@@ -195,6 +195,7 @@ public:
     {
       Profiler::instance().StartTiming(section_name_);
     }
+
     inline ~ScopedTiming()
     {
       Profiler::instance().StopTiming(section_name_);
@@ -213,6 +214,7 @@ protected:
   static Profiler& instance()
   {
     static Profiler pf;
+
     return pf;
   }
 };
@@ -224,6 +226,7 @@ long Profiler::OutputAveraged(CollectiveCommunication& comm, const int refineLev
   const int numProce = comm.size();
 
   std::ostringstream filename;
+
   filename << "p" << numProce << "_refinelvl_" << refineLevel << ".csv";
   filename.flush();
 
@@ -234,7 +237,7 @@ long Profiler::OutputAveraged(CollectiveCommunication& comm, const int refineLev
   for (std::map<int, int>::const_iterator it = m_count.begin(); it != m_count.end(); ++it) {
     std::cout << "proc " << comm.rank() << " bId " << it->first << " count " << it->second << std::endl;
   }
-#endif
+#endif // ifndef NDEBUG
 
   Stuff::testCreateDirectory(Stuff::pathOnly(filename.str()));
   std::ofstream csv((filename.str()).c_str());
@@ -243,7 +246,7 @@ long Profiler::OutputAveraged(CollectiveCommunication& comm, const int refineLev
   AvgMap averages;
   for (MapVector::const_iterator vit = m_timings.begin(); vit != m_timings.end(); ++vit) {
     for (DataMap::const_iterator it = vit->begin(); it != vit->end(); ++it) {
-      //! this used to be GetTiming( it->second ), which is only valid thru an implicit and wrong conversion..
+      // ! this used to be GetTiming( it->second ), which is only valid thru an implicit and wrong conversion..
       averages[it->first] += GetTiming(it->first);
     }
   }
@@ -259,7 +262,7 @@ long Profiler::OutputAveraged(CollectiveCommunication& comm, const int refineLev
   csv << "Speedup (total); Speedup (ohne Solver)" << std::endl;
 
   // outputs column values
-  csv << refineLevel << "," << comm.size() << "," << numDofs << "," << 0 << ","; //! FIXME
+  csv << refineLevel << "," << comm.size() << "," << numDofs << "," << 0 << ","; // !FIXME
   for (AvgMap::const_iterator it = averages.begin(); it != averages.end(); ++it) {
     long clock_count = it->second;
     clock_count = long(comm.sum(clock_count) / double(scale_factor * numProce));
@@ -268,11 +271,10 @@ long Profiler::OutputAveraged(CollectiveCommunication& comm, const int refineLev
   csv << "=I$2/I2,"
       << "=SUM(E$2:G$2)/SUM(E2:G2)" << std::endl;
 
-
   csv.close();
 
   return long((clock() - init_time_) / double(CLOCKS_PER_SEC * scale_factor));
-}
+} // OutputAveraged
 
 template <class CollectiveCommunication, class InfoContainer>
 long Profiler::Output(CollectiveCommunication& comm, InfoContainer& run_infos, const double scale_factor)
@@ -280,20 +282,22 @@ long Profiler::Output(CollectiveCommunication& comm, InfoContainer& run_infos, c
   const int numProce = comm.size();
 
   std::ostringstream filename;
+
   filename << Parameters().getParam("fem.io.datadir", std::string(".")) << "/prof_p" << numProce << ".csv";
   filename.flush();
   return OutputCommon(comm, run_infos, filename.str(), scale_factor);
-}
+} // Output
 
 template <class CollectiveCommunication, class InfoContainerMap>
 void Profiler::OutputMap(CollectiveCommunication& comm, InfoContainerMap& run_infos_map, const double scale_factor)
 {
   std::string dir(Parameters().getParam("fem.io.datadir", std::string(".")));
+
   BOOST_FOREACH (typename InfoContainerMap::value_type el, run_infos_map) {
     OutputCommon(
         comm, el.second, (boost::format("%s/prof_p%d_ref%s.csv") % dir % comm.size() % el.first).str(), scale_factor);
   }
-}
+} // OutputMap
 
 template <class CollectiveCommunication, class InfoContainer>
 long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_infos, std::string filename,
@@ -308,7 +312,7 @@ long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_in
   for (std::map<int, int>::const_iterator it = m_count.begin(); it != m_count.end(); ++it) {
     std::cout << "proc " << comm.rank() << " bId " << it->first << " count " << it->second << std::endl;
   }
-#endif
+#endif // ifndef NDEBUG
 
   Stuff::testCreateDirectory(Stuff::pathOnly(filename));
   std::ofstream csv(filename.c_str());
@@ -347,7 +351,7 @@ long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_in
   csv.close();
 
   return long((clock() - init_time_) / double(CLOCKS_PER_SEC * scale_factor));
-}
+} // OutputCommon
 
 struct IdentityWeights
 {
@@ -384,7 +388,7 @@ struct ProgressiveWeights
   }
 };
 
-//! helper class to estimate time needed to complete a loop with given counter
+// ! helper class to estimate time needed to complete a loop with given counter
 template <class CounterType, class OutputStreamType, class WeightType = IdentityWeights>
 class LoopTimer
 {
@@ -426,12 +430,11 @@ public:
     step_timer_.start();
     ++counter_;
     return *this;
-  }
+  } // ++
 };
-
 } // namespace Stuff
 
-//! global profiler object (for legacy code compat this is outside NS Stuff)
+// ! global profiler object (for legacy code compat this is outside NS Stuff)
 Stuff::Profiler& profiler()
 {
   return Stuff::Profiler::instance();
@@ -439,29 +442,29 @@ Stuff::Profiler& profiler()
 
 #endif // DUNE_STUFF_PROFILER_HH_INCLUDED
 /** Copyright (c) 2012, Rene Milk
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * The views and conclusions contained in the software and documentation are those
- * of the authors and should not be interpreted as representing official policies,
- * either expressed or implied, of the FreeBSD Project.
-**/
+   * All rights reserved.
+   *
+   * Redistribution and use in source and binary forms, with or without
+   * modification, are permitted provided that the following conditions are met:
+   *
+   * 1. Redistributions of source code must retain the above copyright notice, this
+   *    list of conditions and the following disclaimer.
+   * 2. Redistributions in binary form must reproduce the above copyright notice,
+   *    this list of conditions and the following disclaimer in the documentation
+   *    and/or other materials provided with the distribution.
+   *
+   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+   * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+   * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+   * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+   * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+   * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+   * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+   * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+   *
+   * The views and conclusions contained in the software and documentation are those
+   * of the authors and should not be interpreted as representing official policies,
+   * either expressed or implied, of the FreeBSD Project.
+   **/

@@ -1,7 +1,7 @@
 /**
- *  \file   stuff.hh
- *  \brief  contains some stuff
- **/
+   *  \file   stuff.hh
+   *  \brief  contains some stuff
+   **/
 #ifndef STUFF_MISC_HH_INCLUDED
 #define STUFF_MISC_HH_INCLUDED
 
@@ -13,7 +13,7 @@
 #include "cmake_config.h"
 #else
 #include "config.h"
-#endif
+#endif // ifdef HAVE_CMAKE_CONFIG
 #include <dune/common/version.hh>
 #include <dune/common/array.hh>
 #include <dune/common/static_assert.hh>
@@ -35,61 +35,62 @@
 #include <dune/stuff/deprecated.hh>
 
 namespace Stuff {
-
-//! simple and dumb std::string to anything conversion
+// ! simple and dumb std::string to anything conversion
 template <class ReturnType>
 ReturnType fromString(const std::string& s)
 {
   std::stringstream ss;
+
   ss << s;
   ReturnType r;
   ss >> r;
   return r;
-}
+} // fromString
 
-//! simple and dumb anything to std::string conversion
+// ! simple and dumb anything to std::string conversion
 template <class ReturnType>
 std::string toString(const ReturnType& s)
 {
   std::stringstream ss;
+
   ss << s;
   std::string r;
   ss >> r;
   return r;
-}
+} // toString
 
-//! element-index-in-container search
+// ! element-index-in-container search
 template <class StlSequence>
 inline int getIdx(const StlSequence& ct, const typename StlSequence::value_type& val)
 {
   typename StlSequence::const_iterator result = std::find(ct.begin(), ct.end(), val);
   if (result == ct.end())
     return -1;
+
   return std::distance(ct.begin(), result);
-}
+} // getIdx
 
-
-//! no idea what this was for
+// ! no idea what this was for
 template <typename T>
 std::string DUNE_DEPRECATED getParameterString(const std::string& prefix, T min, T max, T inc)
 {
   std::stringstream ss;
+
   ss << prefix << " ";
   for (; min < max; min += inc) {
     ss << min << ",  ";
   }
   return ss.str();
-}
+} // getParameterString
 
 /** \brief string to AnyType tokenizer
-  A given string is split according to a list of delimiters. Each token is coerced into class parameter
-TokenType and saved in a vector which is exposed via iterator-like mechanism
-  \see StringTokenizer, a shorthand tyoedef for string to string tokenisation
-  **/
+   * A given string is split according to a list of delimiters. Each token is coerced into class parameter
+   * TokenType and saved in a vector which is exposed via iterator-like mechanism
+   * \see StringTokenizer, a shorthand tyoedef for string to string tokenisation
+   **/
 template <class TokenType>
 class Tokenizer
 {
-
 protected:
   typedef std::vector<TokenType> Tokens;
   typedef typename Tokens::iterator TokenIterator;
@@ -127,6 +128,7 @@ public:
   TokenType getNextToken()
   {
     TokenType ret = *currentToken_;
+
     ++currentToken_;
     return ret;
   }
@@ -138,7 +140,7 @@ protected:
 
 typedef Tokenizer<std::string> StringTokenizer;
 
-//! for backward compat only
+// ! for backward compat only
 template <class ContainerType>
 void DUNE_DEPRECATED MergeVector(ContainerType& target, const ContainerType& a)
 {
@@ -146,8 +148,8 @@ void DUNE_DEPRECATED MergeVector(ContainerType& target, const ContainerType& a)
 }
 
 /** \brief stupid timing helper
- * \deprecated in favor of boost automatic_timer (in boost >= 1.48)
- **/
+   * \deprecated in favor of boost automatic_timer (in boost >= 1.48)
+   **/
 struct TimeGuard
 {
   const time_t cur_time;
@@ -159,21 +161,21 @@ struct TimeGuard
   ~TimeGuard()
   {
     time_t delta = time(NULL) - cur_time;
+
     std::cout << ctime(&delta) << std::endl;
   }
 };
 
-//! \todo seems borked, resutls in gigantic amount of compile errors?!
+// ! \todo seems borked, resutls in gigantic amount of compile errors?!
 template <class StlSequence, class T>
 void fill_entirely(StlSequence& c, const T& value)
 {
   std::fill(c.begin(), c.end(), value);
 }
 
-
 /** this allows subscription indices to wrap around
-  \example N=4: wraparound_array[4] == wraparound_array[0] && wraparound_array[-1] == wraparound_array[3]
-  **/
+   * \example N=4: wraparound_array[4] == wraparound_array[0] && wraparound_array[-1] == wraparound_array[3]
+   **/
 template <class T, int N>
 struct wraparound_array : public Dune::array<T, N>
 {
@@ -183,69 +185,75 @@ struct wraparound_array : public Dune::array<T, N>
     for (size_t i = 0; i < N; ++i)
       this->operator[](i) = T();
   }
+
   wraparound_array(const BaseType other)
   {
     for (size_t i = 0; i < N; ++i)
       this->operator[](i) = other[i];
   }
+
   typename BaseType::reference operator[](std::size_t i)
   {
     return BaseType::operator[](i % N);
   }
+
   typename BaseType::reference operator[](int i)
   {
     std::size_t real_index = i;
+
     if (i < 0)
       real_index = static_cast<size_t>(N - (((i * -1) % N) + 1));
     return BaseType::operator[](real_index);
-  }
+  } // []
+
   typename BaseType::const_reference operator[](std::size_t i) const
   {
     return BaseType::operator[](i % N);
   }
+
   typename BaseType::const_reference operator[](int i) const
   {
     std::size_t real_index = i;
+
     if (i < 0)
       real_index = static_cast<size_t>(N - (((i * -1) % N) + 1));
     return BaseType::operator[](real_index);
-  }
+  } // []
 };
 
-//! type safe (this will not compile for degraded-to-pointer arrays) way of getting array length
+// ! type safe (this will not compile for degraded-to-pointer arrays) way of getting array length
 template <class T, size_t N>
 size_t arrayLength(T(&/*array*/)[N])
 {
   return N;
 }
-
 } // end namepspace stuff
 
 #endif // end of stuff.hh
 /** Copyright (c) 2012, Rene Milk    , Sven Kaulmann
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * The views and conclusions contained in the software and documentation are those
- * of the authors and should not be interpreted as representing official policies,
- * either expressed or implied, of the FreeBSD Project.
-**/
+   * All rights reserved.
+   *
+   * Redistribution and use in source and binary forms, with or without
+   * modification, are permitted provided that the following conditions are met:
+   *
+   * 1. Redistributions of source code must retain the above copyright notice, this
+   *    list of conditions and the following disclaimer.
+   * 2. Redistributions in binary form must reproduce the above copyright notice,
+   *    this list of conditions and the following disclaimer in the documentation
+   *    and/or other materials provided with the distribution.
+   *
+   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+   * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+   * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+   * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+   * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+   * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+   * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+   * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+   *
+   * The views and conclusions contained in the software and documentation are those
+   * of the authors and should not be interpreted as representing official policies,
+   * either expressed or implied, of the FreeBSD Project.
+   **/

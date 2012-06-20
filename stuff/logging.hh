@@ -1,7 +1,7 @@
 /**
- *  \file logging.hh
- *  \brief  logging
- **/
+   *  \file logging.hh
+   *  \brief  logging
+   **/
 #ifndef LOGGING_HH_INCLUDED
 #define LOGGING_HH_INCLUDED
 
@@ -22,7 +22,7 @@ Stuff::Logging& Logger();
 
 namespace Stuff {
 /** \brief handles all logging
-**/
+  **/
 class Logging
 {
 public:
@@ -36,7 +36,7 @@ public:
     LOG_FILE    = 32
   };
 
-  //! only for logging to a single file which should then be executable by matlab
+  // ! only for logging to a single file which should then be executable by matlab
   class MatlabLogStream
   {
   public:
@@ -71,7 +71,8 @@ public:
     MatlabLogStream& operator<<(std::ostream& (*pf)(std::ostream&))
     {
       if (logflags_ & loglevel_) {
-        if (pf == (std::ostream & (*)(std::ostream&))std::endl) { // flush buffer into stream
+        if (pf == (std::ostream & (*)(std::ostream&))std::endl) {
+          // flush buffer into stream
           buffer_ << "\n";
           Flush();
         } else {
@@ -79,7 +80,7 @@ public:
         }
       }
       return *this;
-    }
+    } // <<
 
     void Flush()
     {
@@ -97,7 +98,7 @@ public:
         logflags_           = 1;
       }
       is_suspended_ = true;
-    }
+    } // Suspend
 
     void Resume()
     {
@@ -120,8 +121,8 @@ public:
     bool is_suspended_;
   };
 
-  //! ostream compatible class wrapping file and console output
-  class LogStream //: virtual public std::ostream
+  // ! ostream compatible class wrapping file and console output
+  class LogStream // : virtual public std::ostream
   {
   public:
     typedef int PriorityType;
@@ -162,7 +163,7 @@ public:
         buffer_ << in;
       UnsetColor();
       return *this;
-    }
+    } // <<
 
     void Suspend(PriorityType priority = default_suspend_priority)
     {
@@ -176,7 +177,7 @@ public:
         }
         is_suspended_ = true;
       }
-    }
+    } // Suspend
 
     void Resume(PriorityType priority = default_suspend_priority)
     {
@@ -186,9 +187,9 @@ public:
         is_suspended_     = false;
         suspend_priority_ = default_suspend_priority;
       }
-    }
+    } // Resume
 
-    //! alias for ostream compat
+    // ! alias for ostream compat
     void flush()
     {
       Flush();
@@ -196,7 +197,8 @@ public:
 
     void Flush()
     {
-      if (logflags_ & loglevel_) { // flush buffer into stream
+      if (logflags_ & loglevel_) {
+        // flush buffer into stream
         if ((logflags_ & LOG_CONSOLE) != 0) {
           std::cout << buffer_.str(); // << std::endl;
           std::cout.flush();
@@ -210,18 +212,18 @@ public:
         buffer_.flush();
         buffer_.str(""); // clear the buffer
       }
-    }
+    } // Flush
 
     void SetColor()
     {
-      //                    if ( logflags_ & LOG_INFO ) {
-      //                        buffer_ << "\033[21;31m";
-      //                    }
+      // if ( logflags_ & LOG_INFO ) {
+      // buffer_ << "\033[21;31m";
+      // }
     }
 
     void UnsetColor()
     {
-      //                    buffer_ << "\033[0m";
+      // buffer_ << "\033[0m";
     }
 
     // template < class Class >
@@ -236,7 +238,8 @@ public:
     {
       SetColor();
       if (logflags_ & loglevel_) {
-        if (pf == (std::ostream & (*)(std::ostream&))std::endl) { // flush buffer into stream
+        if (pf == (std::ostream & (*)(std::ostream&))std::endl) {
+          // flush buffer into stream
           buffer_ << "\n";
           Flush();
         } else
@@ -244,7 +247,7 @@ public:
       }
       UnsetColor();
       return *this;
-    }
+    } // <<
 
     template <class Class, typename Pointer>
     void Log(Pointer pf, Class& c)
@@ -267,6 +270,7 @@ protected:
   ~Logging()
   {
     IdVecCIter it = streamIDs_.end();
+
     for (; it != streamIDs_.begin(); --it) {
       delete streammap_[*it];
       streammap_[*it] = 0;
@@ -288,9 +292,9 @@ protected:
 
 public:
   /** \brief setup loglevel, logfilename
-      \param logflags any OR'd combination of flags
-      \param logfile filename for log, can contain paths, but creation will fail if dir is non-existant
-  **/
+     *  \param logflags any OR'd combination of flags
+     *  \param logfile filename for log, can contain paths, but creation will fail if dir is non-existant
+     **/
   void Create(unsigned int logflags = LOG_FILE | LOG_CONSOLE | LOG_ERR, std::string logfile = "dune_stokes",
               std::string datadir = "data", std::string logdir = std::string(""))
   {
@@ -324,12 +328,13 @@ public:
     matlabLogFile_.open(matlabLogFileName.c_str());
     assert(matlabLogFile_.is_open());
     matlabLogStreamPtr = new MatlabLogStream(LOG_FILE, logflags_, matlabLogFile_);
-  }
+  } // Create
 
   void SetPrefix(std::string prefix)
   {
-    /// begin dtor
+    // / begin dtor
     IdVecCIter it = streamIDs_.end();
+
     for (; it != streamIDs_.begin(); --it) {
       delete streammap_[*it];
       streammap_[*it] = 0;
@@ -347,10 +352,10 @@ public:
     matlabLogFile_.close();
     delete matlabLogStreamPtr;
     matlabLogStreamPtr = 0;
-    /// end dtor
+    // / end dtor
 
     Create(logflags_, prefix);
-  }
+  } // SetPrefix
 
   void SetStreamFlags(LogFlags stream, int flags)
   {
@@ -366,8 +371,8 @@ public:
   }
 
   /** \name Log funcs for member-function pointers
-  * \{
-  */
+     * \{
+     */
   template <typename Pointer, class Class>
   void LogDebug(Pointer pf, Class& c)
   {
@@ -397,7 +402,7 @@ public:
       (c.*pf)(std::cout);
     if ((flagmap_[stream] & LOG_FILE) != 0)
       (c.*pf)(logfile_);
-  }
+  } // Log
 
   template <class Class, typename Pointer>
   void Log(Pointer pf, Class& c, LogFlags stream)
@@ -409,14 +414,14 @@ public:
       (c.*pf)(logfile_);
       (c.*pf)(logfileWoTime_);
     }
-  }
+  } // Log
 
   /** \}
-  */
+     */
 
   /** \name Log funcs for basic types/classes
-  * \{
-  */
+     * \{
+     */
   template <class Class>
   void LogDebug(Class c)
   {
@@ -448,9 +453,10 @@ public:
       logfile_ << c;
       logfileWoTime_ << c;
     }
-  }
+  } // Log
+
   /** \}
-  */
+     */
 
   LogStream& GetStream(int stream)
   {
@@ -477,6 +483,7 @@ public:
   static std::string TimeString()
   {
     const time_t cur_time = time(NULL);
+
     return ctime(&cur_time);
   }
 
@@ -485,33 +492,34 @@ public:
     for (StreamMap::iterator it = streammap_.begin(); it != streammap_.end(); ++it) {
       it->second->Flush();
     }
-  }
+  } // Flush
 
   int AddStream(int flags)
   {
-    //            assert( streamIDs_.find( streamID ) == streamIDs_.end() );
+    // assert( streamIDs_.find( streamID ) == streamIDs_.end() );
     static int streamID_int = 16;
+
     streamID_int <<= 2;
     LogFlags streamID = (LogFlags)streamID_int;
     streamIDs_.push_back(streamID);
     flagmap_[streamID]   = flags | streamID;
     streammap_[streamID] = new LogStream(streamID, flagmap_[streamID], logfile_, logfileWoTime_);
     return streamID_int;
-  }
+  } // AddStream
 
   void Resume(LogStream::PriorityType prio = LogStream::default_suspend_priority)
   {
     for (StreamMap::iterator it = streammap_.begin(); it != streammap_.end(); ++it) {
       it->second->Resume(prio);
     }
-  }
+  } // Resume
 
   void Suspend(LogStream::PriorityType prio = LogStream::default_suspend_priority)
   {
     for (StreamMap::iterator it = streammap_.begin(); it != streammap_.end(); ++it) {
       it->second->Suspend(prio);
     }
-  }
+  } // Suspend
 
   struct SuspendLocal
   {
@@ -521,6 +529,7 @@ public:
     {
       Logger().Suspend(prio_);
     }
+
     ~SuspendLocal()
     {
       Logger().Resume(prio_);
@@ -535,6 +544,7 @@ public:
     {
       Logger().Resume(prio_);
     }
+
     ~ResumeLocal()
     {
       Logger().Suspend(prio_);
@@ -564,38 +574,39 @@ private:
 };
 } // end namespace Stuff{
 
-//! global Logging instance
+// !global Logging instance
 Stuff::Logging& Logger()
 {
   static Stuff::Logging log;
+
   return log;
 }
 
-#endif
+#endif // ifndef LOGGING_HH_INCLUDED
 /** Copyright (c) 2012, Rene Milk
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * The views and conclusions contained in the software and documentation are those
- * of the authors and should not be interpreted as representing official policies,
- * either expressed or implied, of the FreeBSD Project.
-**/
+   * All rights reserved.
+   *
+   * Redistribution and use in source and binary forms, with or without
+   * modification, are permitted provided that the following conditions are met:
+   *
+   * 1. Redistributions of source code must retain the above copyright notice, this
+   *    list of conditions and the following disclaimer.
+   * 2. Redistributions in binary form must reproduce the above copyright notice,
+   *    this list of conditions and the following disclaimer in the documentation
+   *    and/or other materials provided with the distribution.
+   *
+   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+   * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+   * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+   * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+   * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+   * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+   * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+   * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+   *
+   * The views and conclusions contained in the software and documentation are those
+   * of the authors and should not be interpreted as representing official policies,
+   * either expressed or implied, of the FreeBSD Project.
+   **/

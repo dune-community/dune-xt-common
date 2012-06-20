@@ -12,27 +12,26 @@
 #include <dune/istl/bcrsmatrix.hh>
 
 namespace Stuff {
-
-//! ensure matlab output is done with highest precision possible, otherwise weird effects are bound to happen
+// ! ensure matlab output is done with highest precision possible, otherwise weird effects are bound to happen
 static const unsigned int matlab_output_precision = std::numeric_limits<double>::digits10 + 1;
 
 /**
- *  \brief prints a Dune::FieldVector
- *
- *  or anything compatible in terms of Iterators
- *  \tparam T
- *          should be Dune::FieldVector or compatible
- *  \tparam stream
- *          std::ostream or compatible
- *  \param[in]  arg
- *          vector to be printed
- *  \param[in]  name
- *          name to be printed along
- *  \param[in]  out
- *          where to print
- *  \param[opt] prefix
- *          prefix to be printed before every line
- **/
+   *  \brief prints a Dune::FieldVector
+   *
+   *  or anything compatible in terms of Iterators
+   *  \tparam T
+   *          should be Dune::FieldVector or compatible
+   *  \tparam stream
+   *          std::ostream or compatible
+   *  \param[in]  arg
+   *          vector to be printed
+   *  \param[in]  name
+   *          name to be printed along
+   *  \param[in]  out
+   *          where to print
+   *  \param[opt] prefix
+   *          prefix to be printed before every line
+   **/
 template <class T, class stream>
 void printFieldVector(T& arg, std::string name, stream& out, std::string prefix = "")
 {
@@ -44,25 +43,25 @@ void printFieldVector(T& arg, std::string name, stream& out, std::string prefix 
     out << std::setw(14) << std::setprecision(6) << *it;
   }
   out << '\n';
-}
+} // printFieldVector
 
 /**
- *  \brief prints a Dune::FieldMatrix
- *
- *  or anything compatible in terms of Iterators
- *  \tparam T
- *          should be Dune::FieldVector or compatible
- *  \tparam stream
- *          std::ostream or compatible
- *  \param[in]  arg
- *          matrix to be printed
- *  \param[in]  name
- *          name to be printed along
- *  \param[in]  out
- *          where to print
- *  \param[opt] prefix
- *          prefix to be printed before every line
- **/
+   *  \brief prints a Dune::FieldMatrix
+   *
+   *  or anything compatible in terms of Iterators
+   *  \tparam T
+   *          should be Dune::FieldVector or compatible
+   *  \tparam stream
+   *          std::ostream or compatible
+   *  \param[in]  arg
+   *          matrix to be printed
+   *  \param[in]  name
+   *          name to be printed along
+   *  \param[in]  out
+   *          where to print
+   *  \param[opt] prefix
+   *          prefix to be printed before every line
+   **/
 template <class T, class stream>
 void printFieldMatrix(T& arg, std::string name, stream& out, std::string prefix = "")
 {
@@ -79,11 +78,11 @@ void printFieldMatrix(T& arg, std::string name, stream& out, std::string prefix 
     }
     row += 1;
   }
-}
+} // printFieldMatrix
 
 /** \brief print a SparseRowMatrix (or any interface conforming object) to a given stream in matlab (laodable-) format
-  \ingroup Matlab
-  **/
+   * \ingroup Matlab
+   **/
 template <class T, class stream>
 void printSparseRowMatrixMatlabStyle(const T& arg, std::string name, stream& out,
                                      const double eps = Parameters().getParam("eps", 1e-14))
@@ -100,12 +99,11 @@ void printSparseRowMatrixMatlabStyle(const T& arg, std::string name, stream& out
             << ";\n";
     }
   }
-}
-
+} // printSparseRowMatrixMatlabStyle
 
 /** \brief print a ISTLMatrix (or any interface conforming object) to a given stream in matlab (laodable-) format
- \ingroup Matlab
- **/
+   * \ingroup Matlab
+   **/
 template <class MatrixType, class stream>
 void printISTLMatrixMatlabStyle(const MatrixType& arg, std::string name, stream& out,
                                 const double eps = Parameters().getParam("eps", 1e-14))
@@ -133,11 +131,11 @@ void printISTLMatrixMatlabStyle(const MatrixType& arg, std::string name, stream&
       }
     }
   }
-}
+} // printISTLMatrixMatlabStyle
 
 /** \brief print a discrete function (or any interface conforming object) to a given stream in matlab (laodable-) format
-  \ingroup Matlab
-  **/
+   * \ingroup Matlab
+   **/
 template <class T, class stream>
 void printDiscreteFunctionMatlabStyle(const T& arg, const std::string name, stream& out)
 {
@@ -149,11 +147,11 @@ void printDiscreteFunctionMatlabStyle(const T& arg, const std::string name, stre
     out << ";" << std::endl;
   }
   out << "];" << std::endl;
-}
+} // printDiscreteFunctionMatlabStyle
 
 /** \brief print a double vector (or any interface conforming object) to a given stream in matlab (laodable-) format
-  \ingroup Matlab
-  **/
+   * \ingroup Matlab
+   **/
 template <class T, class stream>
 void printDoubleVectorMatlabStyle(const T* arg, const int size, const std::string name, stream& out)
 {
@@ -163,9 +161,9 @@ void printDoubleVectorMatlabStyle(const T* arg, const int size, const std::strin
     out << ";" << std::endl;
   }
   out << "];" << std::endl;
-}
+} // printDoubleVectorMatlabStyle
 
-//! simple vector to stream print
+// ! simple vector to stream print
 template <class Stream, class Type>
 void printDoubleVec(Stream& stream, const Type* vec, const unsigned int N)
 {
@@ -174,9 +172,9 @@ void printDoubleVec(Stream& stream, const Type* vec, const unsigned int N)
     stream << vec[i] << " ";
 
   stream << " ] " << std::endl;
-}
+} // printDoubleVec
 
-//! simple discrete function to stream print
+// ! simple discrete function to stream print
 template <class Stream, class DiscFunc>
 void oneLinePrint(Stream& stream, const DiscFunc& func)
 {
@@ -188,17 +186,17 @@ void oneLinePrint(Stream& stream, const DiscFunc& func)
     stream << std::setw(6) << std::setprecision(3) << *it << "  ";
   }
   stream << " ] " << std::endl;
-}
+} // oneLinePrint
 
 /** \brief localmatrix printing functor for use in Stuff::GridWalk
-  putting this into Stuff::GridWalk::operator() will result in a local matrix being printed for each gird entity\n
-  Example:\n
-  Stuff::GridWalk<GridPartType> gw( gridPart_ );\n
-  Stuff::LocalMatrixPrintFunctor< RmatrixType,FunctorStream> f_R ( Rmatrix, functorStream, "R" );\n
-  gw( f_R );
-  \see Stuff::GridWalk
-  \ingroup GridWalk
-  **/
+   * putting this into Stuff::GridWalk::operator() will result in a local matrix being printed for each gird entity\n
+   * Example:\n
+   * Stuff::GridWalk<GridPartType> gw( gridPart_ );\n
+   * Stuff::LocalMatrixPrintFunctor< RmatrixType,FunctorStream> f_R ( Rmatrix, functorStream, "R" );\n
+   * gw( f_R );
+   * \see Stuff::GridWalk
+   * \ingroup GridWalk
+   **/
 template <class GlobalMatrix, class Stream>
 class LocalMatrixPrintFunctor
 {
@@ -224,7 +222,7 @@ public:
       stream_ << ";" << std::endl;
     }
     stream_ << "];" << std::endl;
-  }
+  } // ()
 
   void preWalk()
   {
@@ -243,8 +241,8 @@ private:
 };
 
 /** GridWalk functor to print all localfunctions of a given DiscreteFunction
- * \ingroup GridWalk
- **/
+   * \ingroup GridWalk
+   **/
 template <class DiscreteFunctionType, class Stream, class QuadratureType>
 class LocalFunctionPrintFunctor
 {
@@ -268,7 +266,7 @@ public:
       lf.evaluate(xLocal, eval);
       stream_ << boost::format("xWorld %f \t %s value %f\n") % xWorld % name_ % eval;
     }
-  }
+  } // ()
 
   void preWalk()
   {
@@ -287,8 +285,8 @@ private:
 };
 
 /** GridWalk functor to print, w/o transformation, all localfunctions of a given DiscreteFunction
- * \ingroup GridWalk
- **/
+   * \ingroup GridWalk
+   **/
 template <class DiscreteFunctionType, class Stream>
 class LocalFunctionVerbatimPrintFunctor
 {
@@ -306,10 +304,9 @@ public:
     typename DiscreteFunctionType::LocalFunctionType lf = discrete_function_.localFunction(en);
 
     for (size_t qp = 0; qp < lf.numDofs(); ++qp) {
-
       stream_ << boost::format("%s dof %d value value %f\n") % name_ % qp % lf[qp];
     }
-  }
+  } // ()
 
   void preWalk()
   {
@@ -328,24 +325,26 @@ private:
 };
 
 /** print min/max of a given DiscreteFucntion obtained by Stuff::getMinMaxOfDiscreteFunction
-  \note hardcoded mult of values by sqrt(2)
-  **/
+   * \note hardcoded mult of values by sqrt(2)
+   **/
 template <class Stream, class Function>
 void printFunctionMinMax(Stream& stream, const Function& func)
 {
   double min = 0.0;
   double max = 0.0;
+
   Stuff::getMinMaxOfDiscreteFunction(func, min, max);
   stream << "  - " << func.name() << std::endl
          << "    min: " << std::sqrt(2.0) * min << std::endl
          << "    max: " << std::sqrt(2.0) * max << std::endl;
-}
+} // printFunctionMinMax
 
-//! useful for visualizing sparsity patterns of matrices
+// ! useful for visualizing sparsity patterns of matrices
 template <class Matrix, class Stream>
 void matrixToGnuplotStream(const Matrix& matrix, Stream& stream)
 {
   unsigned long nz = 0;
+
   for (size_t row = 0; row < matrix.rows(); ++row) {
     for (size_t col = 0; col < matrix.cols(); ++col) {
       if (matrix.find(row, col))
@@ -355,55 +354,56 @@ void matrixToGnuplotStream(const Matrix& matrix, Stream& stream)
     stream << "#non zeros in row " << row << " " << matrix.numNonZeros(row) << " (of " << matrix.cols() << " cols)\n";
   }
   stream << "#total non zeros " << nz << " of " << matrix.rows() * matrix.cols() << " entries\n";
-}
+} // matrixToGnuplotStream
 
-//! proxy to Stuff::matrixToGnuplotStream that redirects its output to a file
+// ! proxy to Stuff::matrixToGnuplotStream that redirects its output to a file
 template <class Matrix>
 void matrixToGnuplotFile(const Matrix& matrix, std::string filename)
 {
   std::string dir(Parameters().getParam("fem.io.datadir", std::string("data")) + "/gnuplot/");
+
   testCreateDirectory(dir);
   std::ofstream file((dir + filename).c_str());
   matrixToGnuplotStream(matrix, file);
   file.flush();
   file.close();
-}
+} // matrixToGnuplotFile
 
 std::string dimToAxisName(const unsigned int dim, const bool capitalize = false)
 {
   char c = 'x';
+
   c += dim;
   if (capitalize)
     c -= 32;
   return std::string() += c;
-}
-
+} // dimToAxisName
 } // end namespace
-#endif
+#endif // ifndef DUNESTUFF_PRINTING_HH_INCLUDED
 /** Copyright (c) 2012, Felix Albrecht, Rene Milk     , Sven Kaulmann
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * The views and conclusions contained in the software and documentation are those
- * of the authors and should not be interpreted as representing official policies,
- * either expressed or implied, of the FreeBSD Project.
-**/
+   * All rights reserved.
+   *
+   * Redistribution and use in source and binary forms, with or without
+   * modification, are permitted provided that the following conditions are met:
+   *
+   * 1. Redistributions of source code must retain the above copyright notice, this
+   *    list of conditions and the following disclaimer.
+   * 2. Redistributions in binary form must reproduce the above copyright notice,
+   *    this list of conditions and the following disclaimer in the documentation
+   *    and/or other materials provided with the distribution.
+   *
+   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+   * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+   * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+   * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+   * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+   * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+   * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+   * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+   *
+   * The views and conclusions contained in the software and documentation are those
+   * of the authors and should not be interpreted as representing official policies,
+   * either expressed or implied, of the FreeBSD Project.
+   **/

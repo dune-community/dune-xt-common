@@ -24,7 +24,7 @@
 #include <dune/fem/function/blockvectorfunction/blockvectorfunction.hh>
 namespace boost {
 namespace math {
-//! isinf specialization for Dune::StraightenBlockVector
+// ! isinf specialization for Dune::StraightenBlockVector
 template <class BlockVectorImp, class DofImp>
 inline bool isinf(const Dune::StraightenBlockVector<BlockVectorImp, DofImp>& x)
 {
@@ -33,13 +33,12 @@ inline bool isinf(const Dune::StraightenBlockVector<BlockVectorImp, DofImp>& x)
       return true;
   }
   return false;
+} // isinf
 }
 }
-}
-#endif
+#endif // if HAVE_DUNE_FEM
 
 namespace Stuff {
-
 /** \todo DOCME **/
 template <class SomeRangeType, class OtherRangeType>
 static double colonProduct(const SomeRangeType& arg1, const OtherRangeType& arg2)
@@ -66,18 +65,19 @@ static double colonProduct(const SomeRangeType& arg1, const OtherRangeType& arg2
     }
   }
   return ret;
-}
+} // colonProduct
 
 /**
- *  \brief  dyadic product
- *
- *          Implements \f$\left(arg_{1} \otimes arg_{2}\right)_{i,j}:={arg_{1}}_{i} {arg_{2}}_{j}\f$
- *			RangeType1 should be fieldmatrix, RangeType2 fieldvector
- **/
+   *  \brief  dyadic product
+   *
+   *          Implements \f$\left(arg_{1} \otimes arg_{2}\right)_{i,j}:={arg_{1}}_{i} {arg_{2}}_{j}\f$
+   *			RangeType1 should be fieldmatrix, RangeType2 fieldvector
+   **/
 template <class RangeType1, class RangeType2>
 static RangeType1 dyadicProduct(const RangeType2& arg1, const RangeType2& arg2)
 {
   RangeType1 ret(0.0);
+
   typedef typename RangeType1::RowIterator MatrixRowIteratorType;
   typedef typename RangeType2::ConstIterator ConstVectorIteratorType;
   typedef typename RangeType2::Iterator VectorIteratorType;
@@ -93,9 +93,9 @@ static RangeType1 dyadicProduct(const RangeType2& arg1, const RangeType2& arg2)
     ++arg1It;
   }
   return ret;
-}
+} // dyadicProduct
 
-//! a vector wrapper for continiously updating min,max,avg of some element type vector
+// ! a vector wrapper for continiously updating min,max,avg of some element type vector
 template <class ElementType>
 class MinMaxAvg
 {
@@ -149,24 +149,24 @@ protected:
   MinMaxAvg(const ThisType& other);
 };
 
-//! bound \param var in [\param min,\param max]
+// ! bound \param var in [\param min,\param max]
 template <typename T>
 T clamp(const T var, const T min, const T max)
 {
-  return ((var < min) ? min : (var > max) ? max : var);
+  return (var < min) ? min : (var > max) ? max : var;
 }
 
-//! float comparison
+// ! float comparison
 template <class T>
 bool aboutEqual(const T& x, const T& y, T relative_tolerance = 1e-10, T absolute_tolerance = 1e-10)
 {
-  return (std::fabs(x - y) <= std::max(absolute_tolerance, relative_tolerance * std::max(std::fabs(x), std::fabs(y))));
+  return std::fabs(x - y) <= std::max(absolute_tolerance, relative_tolerance * std::max(std::fabs(x), std::fabs(y)));
 }
 
 /**
- * \brief MovingAverage
- * \deprecated in favor of MinMaxAvg<double>
- **/
+   * \brief MovingAverage
+   * \deprecated in favor of MinMaxAvg<double>
+   **/
 class MovingAverage
 {
   double avg_;
@@ -183,45 +183,45 @@ public:
     avg_ += (val - avg_) / ++steps_;
     return *this;
   }
+
   operator double()
   {
     return avg_;
   }
 };
 
-//! no-branch sign function
+// ! no-branch sign function
 long sign(long x)
 {
   return long(x != 0) | (long(x >= 0) - 1);
 }
-
 } // end namespace Stuff
 
 #endif // DUNE_STUFF_MATH_HH
 /** Copyright (c) 2012, Rene Milk
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * The views and conclusions contained in the software and documentation are those
- * of the authors and should not be interpreted as representing official policies,
- * either expressed or implied, of the FreeBSD Project.
-**/
+   * All rights reserved.
+   *
+   * Redistribution and use in source and binary forms, with or without
+   * modification, are permitted provided that the following conditions are met:
+   *
+   * 1. Redistributions of source code must retain the above copyright notice, this
+   *    list of conditions and the following disclaimer.
+   * 2. Redistributions in binary form must reproduce the above copyright notice,
+   *    this list of conditions and the following disclaimer in the documentation
+   *    and/or other materials provided with the distribution.
+   *
+   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+   * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+   * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+   * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+   * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+   * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+   * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+   * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+   *
+   * The views and conclusions contained in the software and documentation are those
+   * of the authors and should not be interpreted as representing official policies,
+   * either expressed or implied, of the FreeBSD Project.
+   **/

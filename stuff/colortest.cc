@@ -1,4 +1,3 @@
-
 #include "color.hh"
 
 using namespace Color;
@@ -27,4 +26,4 @@ int main()
   std::cout << underline << "colored 'hello world' for all available colors( 0 - 255): " << endunderline << std::endl;
   for (int i = 0; i < 256; ++i)
     std::cout << highlightString("hello world", i) << std::endl;
-}
+} // main

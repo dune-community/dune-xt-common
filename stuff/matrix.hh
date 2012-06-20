@@ -10,10 +10,10 @@
 #include <dune/istl/operators.hh>
 #include <dune/fem/operator/matrix/istlmatrix.hh>
 #include <dune/fem/operator/matrix/preconditionerwrapper.hh>
-#endif
+#endif // if HAVE_DUNE_ISTL
 
 namespace Dune {
-//! TODO
+// ! TODO
 template <class MatrixImp>
 struct PrecondionWrapperDummy : public Preconditioner<typename MatrixImp::RowDiscreteFunctionType::DofStorageType,
                                                       typename MatrixImp::ColDiscreteFunctionType::DofStorageType>
@@ -37,11 +37,10 @@ struct PrecondionWrapperDummy : public Preconditioner<typename MatrixImp::RowDis
   };
 };
 
-//! obsolete,dysfunctional Matrixoperator
+// ! obsolete,dysfunctional Matrixoperator
 template <class MatrixType>
 class SaneSparseRowMatrixOperator
 {
-
   const MatrixType& object_;
 
 public:
@@ -64,7 +63,8 @@ public:
     // call multOEM of the matrix
     object_.multOEM(x, ret);
   }
-#endif
+
+#endif // ifdef USE_BFG_CG_SCHEME
 
   template <class VectorType>
   void multOEM(const VectorType* x, VectorType* ret) const
@@ -80,9 +80,9 @@ public:
 };
 
 /** \brief get the diagonal of a fieldMatrix into a fieldvector
-  * \note While in principle this might do for SparseRowMatrix as well, don't do it! SparseRowMatrix has specialised
-  *functions for this (putting the diagonal into DiscreteFunctions tho
-  **/
+   * \note While in principle this might do for SparseRowMatrix as well, don't do it! SparseRowMatrix has specialised
+   *functions for this (putting the diagonal into DiscreteFunctions tho
+   **/
 template <class FieldMatrixType>
 class MatrixDiagonal : public FieldVector<typename FieldMatrixType::field_type, FieldMatrixType::rows>
 {
@@ -97,7 +97,7 @@ public:
   }
 };
 
-//! returns Sum of matrix' diagonal entries
+// ! returns Sum of matrix' diagonal entries
 template <class FieldMatrixType>
 typename FieldMatrixType::field_type matrixTrace(const FieldMatrixType& matrix)
 {
@@ -106,9 +106,9 @@ typename FieldMatrixType::field_type matrixTrace(const FieldMatrixType& matrix)
   for (size_t i = 0; i < FieldMatrixType::rows; i++)
     trace += diag[i];
   return trace;
-}
+} // matrixTrace
 
-//! produces a NxN Identity matrix compatible with parent type
+// ! produces a NxN Identity matrix compatible with parent type
 template <class MatrixType>
 class IdentityMatrix : public MatrixType
 {
@@ -126,7 +126,7 @@ public:
   }
 };
 
-//! produces a NxN Identity matrix object compatible with parent type
+// ! produces a NxN Identity matrix object compatible with parent type
 template <class MatrixObjectType>
 class IdentityMatrixObject : public MatrixObjectType
 {
@@ -141,14 +141,14 @@ public:
   }
 };
 
-//! adds the missing setDiag function to SparseRowMatrix
+// ! adds the missing setDiag function to SparseRowMatrix
 template <class DiscFuncType, class MatrixType>
 void setMatrixDiag(MatrixType& matrix, DiscFuncType& diag)
 {
   typedef typename DiscFuncType::DofIteratorType DofIteratorType;
 
-  //! we assume that the dimension of the functionspace of f is the same as
-  //! the size of the matrix
+  // ! we assume that the dimension of the functionspace of f is the same as
+  // ! the size of the matrix
   DofIteratorType it = diag.dbegin();
 
   for (int row = 0; row < matrix.rows(); row++) {
@@ -157,14 +157,15 @@ void setMatrixDiag(MatrixType& matrix, DiscFuncType& diag)
     ++it;
   }
   return;
-}
+} // setMatrixDiag
 
-//! return false if <pre>abs( a(row,col) - b(col,row) ) > tolerance<pre> for any col,row
+// ! return false if <pre>abs( a(row,col) - b(col,row) ) > tolerance<pre> for any col,row
 template <class MatrixType>
 bool areTransposed(const MatrixType& a, const MatrixType& b, const double tolerance = 1e-8)
 {
-  if (a.rows() != b.cols() || b.rows() != a.cols())
+  if ((a.rows() != b.cols()) || (b.rows() != a.cols()))
     return false;
+
   for (int row = 0; row < a.rows(); ++row) {
     for (int col = 0; col < a.cols(); ++col) {
       if (std::fabs(a(row, col) - b(col, row)) > tolerance)
@@ -172,12 +173,11 @@ bool areTransposed(const MatrixType& a, const MatrixType& b, const double tolera
     }
   }
   return true;
-}
+} // areTransposed
 } // namespace Dune
 
-
 namespace Stuff {
-//! extern matrix addition that ignore 0 entries
+// ! extern matrix addition that ignore 0 entries
 template <class MatrixType>
 void addMatrix(MatrixType& dest, const MatrixType& arg, const double eps = 1e-14)
 {
@@ -187,18 +187,20 @@ void addMatrix(MatrixType& dest, const MatrixType& arg, const double eps = 1e-14
       if (std::fabs(value) > eps)
         dest.add(i, j, value);
     }
-}
+
+} // addMatrix
 
 /** @brief Write sparse matrix to given output stream
-  *
-  *  @param[in]  matrix The matrix to be written
-  *  @param[in] out    The outgoing stream
-  */
+   *
+   *  @param[in]  matrix The matrix to be written
+   *  @param[in] out    The outgoing stream
+   */
 template <class SparseMatrixImpl, class Output>
 void writeSparseMatrix(const SparseMatrixImpl& matrix, Output& out)
 {
   const unsigned int nRows = matrix.rows();
   const unsigned int nCols = matrix.cols();
+
   for (int i = 0; i != nRows; ++i) {
     for (int j = 0; j != nCols; ++j) {
       if (matrix.find(i, j)) {
@@ -210,7 +212,7 @@ void writeSparseMatrix(const SparseMatrixImpl& matrix, Output& out)
     }
   }
   return;
-}
+} // writeSparseMatrix
 
 /** @brief Read sparse matrix from given inputstream
    *
@@ -247,12 +249,12 @@ void readSparseMatrix(SparseMatrixImpl& matrix, Input& in)
     assert(entryLine.size() == 3);
     matrix.add(entryLine[0], entryLine[1], entryLine[2]);
   }
-}
+} // readSparseMatrix
 
 /**
- *  \brief  multiplies rows of arg2 with arg1
- *  \todo   doc
- **/
+   *  \brief  multiplies rows of arg2 with arg1
+   *  \todo   doc
+   **/
 template <class FieldMatrixImp>
 FieldMatrixImp rowWiseMatrixMultiplication(const FieldMatrixImp& arg1, const FieldMatrixImp& arg2)
 {
@@ -275,63 +277,63 @@ FieldMatrixImp rowWiseMatrixMultiplication(const FieldMatrixImp& arg1, const Fie
     *retRowIt = row;
   }
   return ret;
-}
-
+} // rowWiseMatrixMultiplication
 
 namespace Matrix {
-
-//! prints actual memusage of matrix in kB
+// ! prints actual memusage of matrix in kB
 template <class MatrixType, class Stream>
 void printMemUsage(const MatrixType& matrix, Stream& stream, std::string name = "")
 {
   long size = matrix.numberOfValues() * sizeof(typename MatrixType::Ttype) / 1024.f;
+
   stream << "matrix size " << name << "\t\t" << size << std::endl;
 }
 
-//! prints actual memusage of matrixobject in kB
+// ! prints actual memusage of matrixobject in kB
 template <class MatrixObjectType, class Stream>
 void printMemUsageObject(const MatrixObjectType& matrix_object, Stream& stream, std::string name = "")
 {
   printMemUsage(matrix_object.matrix(), stream, name);
 }
+
 template <class M>
 void forceTranspose(const M& arg, M& dest)
 {
   assert(arg.cols() == dest.rows());
   assert(dest.cols() == arg.rows());
-  //			dest.clear();
+  // dest.clear();
   for (int i = 0; i < arg.cols(); ++i)
     for (int j = 0; j < arg.rows(); ++j)
       dest.set(j, i, arg(i, j));
-}
+} // forceTranspose
 }
 } // namespace Stuff
 
 #endif // MATRIX_HH
 /** Copyright (c) 2012, Rene Milk    , Sven Kaulmann
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this
- *    list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- * The views and conclusions contained in the software and documentation are those
- * of the authors and should not be interpreted as representing official policies,
- * either expressed or implied, of the FreeBSD Project.
-**/
+   * All rights reserved.
+   *
+   * Redistribution and use in source and binary forms, with or without
+   * modification, are permitted provided that the following conditions are met:
+   *
+   * 1. Redistributions of source code must retain the above copyright notice, this
+   *    list of conditions and the following disclaimer.
+   * 2. Redistributions in binary form must reproduce the above copyright notice,
+   *    this list of conditions and the following disclaimer in the documentation
+   *    and/or other materials provided with the distribution.
+   *
+   * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+   * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+   * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+   * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR
+   * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+   * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+   * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+   * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+   * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+   * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+   *
+   * The views and conclusions contained in the software and documentation are those
+   * of the authors and should not be interpreted as representing official policies,
+   * either expressed or implied, of the FreeBSD Project.
+   **/
