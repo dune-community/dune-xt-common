@@ -42,18 +42,14 @@ public:
   {
   }
 
-  void readCommandLine(int argc, char** argv)
+  void readCommandLine(int argc, char* argv[])
   {
     if (argc < 2) {
-      boost::format usage("usage: %s parameter.file *[section.key:override-value]");
+      boost::format usage("usage: %s parameter.file *[-section.key override-value]");
       DUNE_THROW(Dune::Exception, (usage % argv[0]).str());
     }
     Dune::ParameterTreeParser::readINITree(argv[1], tree_);
-    for (int i = 1; i < argc; ++i) {
-      auto tokens = Stuff::stringTokenize(argv[i], ":");
-      if (tokens.size() > 2)
-        tree_[tokens[0]] = tokens[1];
-    }
+    Dune::ParameterTreeParser::readOptions(argc, argv, tree_);
   } // ReadCommandLine
 
   /** \brief  passthrough to underlying Dune::Parameter
@@ -67,7 +63,7 @@ public:
     return get(name, def, Stuff::ValidateAny<T>(), useDbgStream);
   }
 
-  //! hack around the "string" is no string issue
+  //! hack around the "CHARS" is no string issue
   std::string get(std::string name, const char* def, bool useDbgStream = true)
   {
     return get(name, std::string(def), Stuff::ValidateAny<std::string>(), useDbgStream);
@@ -77,8 +73,6 @@ public:
   T get(std::string name, T def, const ValidatorInterface<T, Validator> validator,
         bool UNUSED_UNLESS_DEBUG(useDbgStream) = true)
   {
-    if (not validator(def))
-      DUNE_THROW(Dune::ParameterInvalid, "default value invalid");
 #ifndef NDEBUG
     if (warning_output_ && !tree_.hasKey(name)) {
       if (useDbgStream)
@@ -95,7 +89,7 @@ public:
     return def;
   } // getParam
 
-  //! hack around the "string" is no string issue
+  //! hack around the "CHARS" is no string issue again
   template <class Validator>
   std::string get(std::string name, const char* def, const ValidatorInterface<std::string, Validator> validator,
                   bool useDbgStream = true)
