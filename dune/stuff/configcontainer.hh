@@ -81,12 +81,7 @@ public:
         std::cerr << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
     }
 #endif // ifndef NDEBUG
-    try {
-      return getValidValue(name, def, validator);
-    } catch (Dune::ParameterInvalid& p) {
-      std::cerr << boost::format("Parameter %s invalid: %s\n") % name % p.what();
-    }
-    return def;
+    return getValidValue(name, def, validator);
   } // getParam
 
   //! hack around the "CHARS" is no string issue again

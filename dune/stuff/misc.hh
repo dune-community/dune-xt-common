@@ -237,7 +237,7 @@ size_t arrayLength(T(&/*array*/)[N])
               token_compress_on --> empty tokens are discarded
  * \return all tokens in a vector, if msg contains no seperators, this'll contain msg as its only element
  **/
-static std::vector<std::string>
+inline std::vector<std::string>
 stringTokenize(const std::string& msg, const std::string& seperators,
                const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off)
 {

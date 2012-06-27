@@ -126,6 +126,10 @@ public:
     : validator_(validator)
   {
   }
+  ValidateInverse(const T arg)
+    : validator_(Validator(arg))
+  {
+  }
   inline bool operator()(const T& val) const
   {
     return !validator_(val);
@@ -133,7 +137,7 @@ public:
 
   std::string msg() const
   {
-    return "Inverse condition failed";
+    return "Inverse condition failed: " + validator_.msg();
   }
 
 private:
@@ -166,10 +170,21 @@ private:
   const T max_;
 };
 
-template <class T>
-struct ValidateNone : public ValidateInverse<T, ValidateAny<T>>
-{
-};
+
+#define INVERSE_VALIDATE(V_NEW_NAME, V_BASE_NAME)                                                                      \
+  template <class T>                                                                                                   \
+  struct V_NEW_NAME : public ValidateInverse<T, V_BASE_NAME<T>>                                                        \
+  {                                                                                                                    \
+    template <typename... Types>                                                                                       \
+    V_NEW_NAME(Types... args)                                                                                          \
+      : ValidateInverse<T, V_BASE_NAME<T>>(args...)                                                                    \
+    {                                                                                                                  \
+    }                                                                                                                  \
+  }
+
+INVERSE_VALIDATE(ValidateNone, ValidateAny);
+INVERSE_VALIDATE(ValidateNotLess, ValidateLess);
+
 
 } // end namesapce Stuff
 
