@@ -99,22 +99,45 @@ template <class T>
 class ValidateLess : public ValidatorInterface<T, ValidateLess<T>>
 {
 public:
-  ValidateLess(const T& max)
-    : max_(max)
+  ValidateLess(const T& baseval)
+    : baseval_(baseval)
   {
   }
   inline bool operator()(const T& val) const
   {
-    return val < max_;
+    return baseval_ < val;
   }
 
   std::string msg() const
   {
-    return (boost::format("given value was invalid: not less than %s") % toString(max_)).str();
+    return (boost::format("given value was invalid: not less than %s") % toString(baseval_)).str();
   }
 
 private:
-  const T max_;
+  const T baseval_;
+};
+
+//! validate arg iff greater than value, obviously
+template <class T>
+class ValidateGreater : public ValidatorInterface<T, ValidateGreater<T>>
+{
+public:
+  ValidateGreater(const T& baseval)
+    : baseval_(baseval)
+  {
+  }
+  inline bool operator()(const T& val) const
+  {
+    return baseval_ > val;
+  }
+
+  std::string msg() const
+  {
+    return (boost::format("given value was invalid: not greater than %s") % toString(baseval_)).str();
+  }
+
+private:
+  const T baseval_;
 };
 
 //! validate iff not Validator(arg)
@@ -144,6 +167,20 @@ private:
   const Validator validator_;
 };
 
+#define INVERSE_VALIDATE(V_NEW_NAME, V_BASE_NAME)                                                                      \
+  template <class T>                                                                                                   \
+  struct V_NEW_NAME : public ValidateInverse<T, V_BASE_NAME<T>>                                                        \
+  {                                                                                                                    \
+    template <typename... Types>                                                                                       \
+    V_NEW_NAME(Types... args)                                                                                          \
+      : ValidateInverse<T, V_BASE_NAME<T>>(args...)                                                                    \
+    {                                                                                                                  \
+    }                                                                                                                  \
+  }
+
+INVERSE_VALIDATE(ValidateNone, ValidateAny);
+INVERSE_VALIDATE(ValidateGreaterOrEqual, ValidateLess);
+
 //! validate arg iff arg \in [min,max]
 template <class T>
 class ValidateInterval : public ValidatorInterface<T, ValidateInterval<T>>
@@ -157,7 +194,9 @@ public:
 
   inline bool operator()(const T& val) const
   {
-    return min_(val) && ValidateInverse<T, ValidateLess<T>>(val)(max_);
+    const bool lowerOk = ValidateGreaterOrEqual<T>(val)(min_);
+    const bool upperOk = ValidateGreaterOrEqual<T>(max_)(val);
+    return lowerOk && upperOk;
   }
 
   std::string msg() const
@@ -166,25 +205,9 @@ public:
   }
 
 private:
-  const ValidateInverse<T, ValidateLess<T>> min_;
+  const T min_;
   const T max_;
 };
-
-
-#define INVERSE_VALIDATE(V_NEW_NAME, V_BASE_NAME)                                                                      \
-  template <class T>                                                                                                   \
-  struct V_NEW_NAME : public ValidateInverse<T, V_BASE_NAME<T>>                                                        \
-  {                                                                                                                    \
-    template <typename... Types>                                                                                       \
-    V_NEW_NAME(Types... args)                                                                                          \
-      : ValidateInverse<T, V_BASE_NAME<T>>(args...)                                                                    \
-    {                                                                                                                  \
-    }                                                                                                                  \
-  }
-
-INVERSE_VALIDATE(ValidateNone, ValidateAny);
-INVERSE_VALIDATE(ValidateNotLess, ValidateLess);
-
 
 } // end namesapce Stuff
 

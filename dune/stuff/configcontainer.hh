@@ -20,7 +20,7 @@ class ConfigContainer
 {
 private:
   template <typename T, class Validator>
-  T getValidValue(std::string name, T def, const ValidatorInterface<T, Validator> validator)
+  T getValidValue(std::string name, T def, const ValidatorInterface<T, Validator>& validator)
   {
     T val = tree_.get(name, def);
     if (validator(val))
@@ -70,7 +70,7 @@ public:
   }
 
   template <typename T, class Validator>
-  T get(std::string name, T def, const ValidatorInterface<T, Validator> validator,
+  T get(std::string name, T def, const ValidatorInterface<T, Validator>& validator,
         bool UNUSED_UNLESS_DEBUG(useDbgStream) = true)
   {
 #ifndef NDEBUG
@@ -86,7 +86,7 @@ public:
 
   //! hack around the "CHARS" is no string issue again
   template <class Validator>
-  std::string get(std::string name, const char* def, const ValidatorInterface<std::string, Validator> validator,
+  std::string get(std::string name, const char* def, const ValidatorInterface<std::string, Validator>& validator,
                   bool useDbgStream = true)
   {
     return get<std::string, Validator>(name, def, validator, useDbgStream);
