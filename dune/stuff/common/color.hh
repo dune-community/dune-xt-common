@@ -60,15 +60,6 @@ static const char* endunderline = "\033[24m";
 static const char* endblink     = "\033[25m";
 static const char* endreverse   = "\033[27m";
 
-// converts int to string by using ostringstream
-std::string intToString(int i)
-{
-  std::ostringstream out;
-
-  out << i;
-  return out.str();
-}
-
 std::string color(int i)
 {
   return "\033[38;5;" + intToString(i) + "m";
