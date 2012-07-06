@@ -2,7 +2,7 @@
 #define DUNE_STUFF_FILESYSTEM_HH
 
 #include "debug.hh"
-#include "misc.hh"
+#include "string.hh"
 #include <string>
 #include <fstream>
 

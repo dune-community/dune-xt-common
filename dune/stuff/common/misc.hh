@@ -32,7 +32,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <cstdio>
-#include <dune/stuff/common/deprecated.hh>
+#include <dune/common/deprecated.hh>
 #include <boost/algorithm/string.hpp>
 
 namespace Dune {

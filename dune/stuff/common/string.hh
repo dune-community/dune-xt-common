@@ -32,7 +32,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <cstdio>
-#include <dune/stuff/common/deprecated.hh>
+#include <dune/common/deprecated.hh>
 #include <boost/algorithm/string.hpp>
 
 namespace Dune {
@@ -45,7 +45,7 @@ namespace String {
 
 // ! simple and dumb std::string to anything conversion
 template <class ReturnType>
-ReturnType from(const std::string& s)
+ReturnType convertFrom(const std::string& s)
 {
   std::stringstream ss;
 
@@ -57,7 +57,7 @@ ReturnType from(const std::string& s)
 
 // ! simple and dumb anything to std::string conversion
 template <class ReturnType>
-std::string to(const ReturnType& s)
+std::string convertTo(const ReturnType& s)
 {
   std::stringstream ss;
 

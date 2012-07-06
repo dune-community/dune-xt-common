@@ -6,12 +6,13 @@
    *
    */
 
+#warning "Rene should take a look at this!"
+#if 0
 // #define new(a, rest...) mynew( a, atoi(__LINE__), __FILE__, rest )
 
 // void * mynew( size_t sz, int line, char* file) throw (std::bad_alloc)
-void* mynew(size_t sz) throw(std::bad_alloc)
-{
-  // std::cerr << "node::new" << std::endl;
+void* mynew(size_t sz) throw (std::bad_alloc){
+// std::cerr << "node::new" << std::endl;
   return malloc(sz);
 }
 
@@ -28,47 +29,44 @@ void* mynew(size_t sz) throw(std::bad_alloc)
 // free( pvMem );
 // }
 
-void* operator new(unsigned long size, const char* file)
-{
+void* operator new(unsigned long size, const char* file) {
   std::cout << file << " operator new(" << size << "):\t";
 
   void* p = malloc(size);
   if (!p)
     throw "operator new() error";
 
-  std::cout << static_cast<void*>(p) << std::endl;
+  std::cout << static_cast< void* >(p) << std::endl;
 
   return p;
 } // new
 
-void* operator new[](unsigned long size, const char* file)
-{
+void* operator new[](unsigned long size, const char* file) {
   std::cout << file << " operator new(" << size << "):\t";
 
   void* p = malloc(size);
   if (!p)
     throw "operator new() error";
 
-  // std::cout << static_cast<void*>(p) << std::endl;
+// std::cout << static_cast<void*>(p) << std::endl;
 
   return p;
 } // new[]
 
-void operator delete(void* p) throw()
-{
-  // std::cout << "operator delete(" << p << ")" << std::endl;
+void operator delete(void* p) throw ()      {
+// std::cout << "operator delete(" << p << ")" << std::endl;
 
   free(p);
 }
 
-void operator delete[](void* p) throw()
-{
-  // std::cout << "operator delete[](" << p << ")" << std::endl;
+void operator delete[](void* p) throw ()      {
+// std::cout << "operator delete[](" << p << ")" << std::endl;
 
   free(p);
 }
 
 #define new (a) new (a, __func__)
+#endif
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.
    *

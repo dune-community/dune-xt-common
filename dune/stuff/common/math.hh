@@ -7,7 +7,7 @@
 #include <cstring>
 #include <iostream>
 
-#include <dune/stuff/common/deprecated.hh>
+#include <dune/common/deprecated.hh>
 #include <dune/common/static_assert.hh>
 
 #include <boost/static_assert.hpp>

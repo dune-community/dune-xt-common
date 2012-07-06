@@ -11,14 +11,6 @@
     *J     = 9;                                                                                                        \
   }
 
-namespace Dune {
-
-namespace Stuff {
-
-namespace Common {
-
-namespace Debug {
-
 // ! from right/bottom limiter for file paths
 const char* rightPathLimiter(const char* path, int depth = 2)
 {
@@ -92,7 +84,8 @@ public:
 #ifndef NDEBUG
 #define ASSERT_EXCEPTION(cond, msg)                                                                                    \
   if (!(cond)) {                                                                                                       \
-    std::string rmsg(std::string(__FILE__) + std::string(":") + Stuff::toString(__LINE__) + std::string("\n")          \
+    std::string rmsg(std::string(__FILE__) + std::string(":") + Stuff::Common::String::convertTo(__LINE__)             \
+                     + std::string("\n")                                                                               \
                      + std::string(msg));                                                                              \
     throw assert_exception(rmsg);                                                                                      \
   }
@@ -121,14 +114,6 @@ public:
   BOOST_ASSERT_MSG(                                                                                                    \
       (expt == actual),                                                                                                \
       (boost::format("assertion %1% == %2% failed: %3% != %4%") % #expt % #actual % expt % actual).str().c_str())
-
-} // namespace Debug
-
-} // namespace Common
-
-} // namespace Stuff
-
-} // namespace Dune
 
 #endif // DUNE_STUFF_DEBUG_HH
 
