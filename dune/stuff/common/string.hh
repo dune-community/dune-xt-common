@@ -61,6 +61,24 @@ std::string toString(const ReturnType& s)
   return r;
 } // toString
 
+/**
+  \brief      Returns a string of lengths s' whitespace (or c chars).
+  \param[in]  s
+              std::string, defines the length of the return string
+  \param[in]  c
+              char, optional argument, defines entries of return string
+  \return     std::string
+              Returns a string of lengths s' whitespace (or c chars).
+  **/
+std::string whitespaceify(const std::string s, const char c = ' ')
+{
+  std::string ret = "";
+  for (unsigned int i = 0; i < s.size(); ++i) {
+    ret += c;
+  }
+  return ret;
+} // end function whitespaceify
+
 // ! element-index-in-container search
 template <class StlSequence>
 inline int getIdx(const StlSequence& ct, const typename StlSequence::value_type& val)

@@ -13,6 +13,20 @@
 #endif // if HAVE_DUNE_ISTL
 
 namespace Dune {
+
+// \todo doc
+template <class DenseMatrixType>
+void clear(DenseMatrixType& matrix)
+{
+  typedef typename DenseMatrixType::value_type ValueType;
+
+  for (unsigned int i = 0; i < matrix.rows(); ++i) {
+    for (unsigned int j = 0; j < matrix.cols(); ++j) {
+      matrix[i][j] = ValueType(0);
+    }
+  }
+} // end function clear
+
 // ! TODO
 template <class MatrixImp>
 struct PrecondionWrapperDummy : public Preconditioner<typename MatrixImp::RowDiscreteFunctionType::DofStorageType,
