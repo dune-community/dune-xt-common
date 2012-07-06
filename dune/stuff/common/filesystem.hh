@@ -9,7 +9,14 @@
 #include <dune/fem/io/file/iointerface.hh>
 #include <boost/filesystem.hpp>
 
+namespace Dune {
+
 namespace Stuff {
+
+namespace Common {
+
+namespace Filesystem {
+
 // ! strip filename from \path if present, return empty string if only filename present
 std::string pathOnly(std::string path)
 {
@@ -66,9 +73,17 @@ void meminfo(Stream& stream)
   fileToStreamFiltered(stream, "/proc/meminfo", "Mem");
   stream << "------------ \n\n" << std::endl;
 } // meminfo
-} // end namespace Stuff
+
+} // namespace Filesystem
+
+} // namespace Common
+
+} // namespace Stuff
+
+} // namespace Dune
 
 #endif // DUNE_STUFF_FILESYSTEM_HH
+
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.
    *

@@ -4,7 +4,7 @@
 #include "misc.hh"
 #include "debug.hh"
 #include "filesystem.hh"
-#include "parametercontainer.hh"
+#include "common/parameter/container.hh"
 #include "math.hh"
 #include "runinfo.hh"
 
@@ -22,13 +22,17 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/config.hpp>
 
-namespace Stuff {
-class Profiler;
-}
-// ! Stuff::Profiler global instance
-Stuff::Profiler& profiler();
+namespace Dune {
 
 namespace Stuff {
+
+namespace Common {
+
+class Profiler;
+
+// ! Stuff::Profiler global instance
+Profiler& profiler();
+
 // ! wraps name, start- and end time for one timing section
 struct TimingData
 {
@@ -432,13 +436,18 @@ public:
     return *this;
   } // ++
 };
-} // namespace Stuff
 
 // ! global profiler object (for legacy code compat this is outside NS Stuff)
-Stuff::Profiler& profiler()
+Profiler& profiler()
 {
-  return Stuff::Profiler::instance();
+  return Profiler::instance();
 }
+
+} // namespace Common
+
+} // namespace Stuff
+
+} // namespace Dune
 
 #endif // DUNE_STUFF_PROFILER_HH_INCLUDED
 /** Copyright (c) 2012, Rene Milk

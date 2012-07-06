@@ -7,7 +7,13 @@
 
 #include "misc.hh"
 
+namespace Dune {
+
 namespace Stuff {
+
+namespace Common {
+
+namespace Parameter {
 
 /** \brief Base class for all Validators
  *  the idea is from dune-fem, only our class is an actual interface
@@ -209,7 +215,13 @@ private:
   const T max_;
 };
 
+} // end namesapce Parameter
+
+} // end namesapce Common
+
 } // end namesapce Stuff
+
+} // end namesapce Dune
 
 template <class T, class Validator>
 std::ostream operator<<(std::ostream& out, const Stuff::ValidatorInterface<T, Validator>& validator)

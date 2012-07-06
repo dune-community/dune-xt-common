@@ -1,7 +1,7 @@
 #ifndef DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
 #define DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
 
-#include <dune/stuff/deprecated.hh> // ensure DUNE_DEPRECATED is defined properly
+#include <dune/stuff/common/deprecated.hh> // ensure DUNE_DEPRECATED is defined properly
 
 #include "logging.hh"
 #include "filesystem.hh"
@@ -14,7 +14,13 @@
 #include <dune/common/parametertreeparser.hh>
 #include <dune/common/exceptions.hh>
 
+namespace Dune {
+
 namespace Stuff {
+
+namespace Common {
+
+namespace Parameter {
 
 class ConfigContainer
 {
@@ -104,8 +110,16 @@ ConfigContainer& Config()
   return parameters;
 }
 
-} // end namespace Stuff
+} // namespace Parameter
+
+} // namespace Common
+
+} // namespace Stuff
+
+} // namespace Dune
+
 #endif // DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
+
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.
    *

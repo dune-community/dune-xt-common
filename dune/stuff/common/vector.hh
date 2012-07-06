@@ -18,9 +18,9 @@ void clear(DenseVectorType& vector)
   for (unsigned int i = 0; i < size; ++i) {
     vector[i] = ValueType(0);
   }
-} // end function clear
+} // void clear( DenseVectorType& vector )
 
-} // end namespace Vector
+} // namespace Vector
 
 } // namespace Common
 

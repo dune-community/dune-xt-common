@@ -3,9 +3,14 @@
 
 #include <signal.h>
 
-#include <dune/stuff/logging.hh>
+#include <dune/stuff/common/logging.hh>
+
+namespace Dune {
 
 namespace Stuff {
+
+namespace Common {
+
 // ! POSIX signal management utils
 namespace Signals {
 // ! reset given signal to default handler
@@ -44,8 +49,15 @@ void installSignalHandler(int signal = SIGINT, handler_type handler = handleInte
 
   sigaction(signal, &new_action, NULL);
 } // installSignalHandler
-} // end namespace signals
-} // end namepsace stuff
+
+} // namespace Signals
+
+} // namepsace Common
+
+} // namepsace Stuff
+
+} // namepsace Dune
+
 #endif // ifndef DUNE_STUFF_SIGNALS
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.

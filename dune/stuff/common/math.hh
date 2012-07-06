@@ -7,7 +7,7 @@
 #include <cstring>
 #include <iostream>
 
-#include <dune/common/deprecated.hh>
+#include <dune/stuff/common/deprecated.hh>
 #include <dune/common/static_assert.hh>
 
 #include <boost/static_assert.hpp>
@@ -38,7 +38,14 @@ inline bool isinf(const Dune::StraightenBlockVector<BlockVectorImp, DofImp>& x)
 }
 #endif // if HAVE_DUNE_FEM
 
+namespace Dune {
+
 namespace Stuff {
+
+namespace Common {
+
+namespace Math {
+
 /** \todo DOCME **/
 template <class SomeRangeType, class OtherRangeType>
 static double colonProduct(const SomeRangeType& arg1, const OtherRangeType& arg2)
@@ -195,9 +202,17 @@ long sign(long x)
 {
   return long(x != 0) | (long(x >= 0) - 1);
 }
-} // end namespace Stuff
+
+} // namespace Math
+
+} // namespace Common
+
+} // namespace Stuff
+
+} // namespace Dune
 
 #endif // DUNE_STUFF_MATH_HH
+
 /** Copyright (c) 2012, Rene Milk
    * All rights reserved.
    *

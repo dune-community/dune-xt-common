@@ -10,6 +10,12 @@
 #endif
 #include <string>
 
+namespace Dune {
+
+namespace Stuff {
+
+namespace Common {
+
 namespace Color {
 // foreground colors
 static const char* black     = "\033[30m";
@@ -150,9 +156,17 @@ std::string highlightSearchString(std::string str, std::string searchstr, int co
   }
   return str;
 } // highlightSearchString
+
 } // end of namespace Color
 
+} // namespace Common
+
+} // namespace Stuff
+
+} // namespace Dune
+
 #endif // end of DUNE_COMMON_COLOR_HH
+
 /** Copyright (c) 2012, Stefan Girke
    * All rights reserved.
    *

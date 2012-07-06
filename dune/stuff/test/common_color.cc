@@ -1,4 +1,4 @@
-#include "color.hh"
+#include "../common/color.hh"
 
 using namespace Color;
 

@@ -4,8 +4,8 @@
 #include <config.h>
 #endif // ifdef HAVE_CMAKE_CONFIG
 
-#include <dune/stuff/validation.hh>
-#include <dune/stuff/typenames.hh>
+#include <dune/stuff/common/parameter/validation.hh>
+#include <dune/stuff/common/typenames.hh>
 #include <dune/common/tuples.hh>
 #include <dune/common/exceptions.hh>
 #include <dune/common/bigunsignedint.hh>

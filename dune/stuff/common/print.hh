@@ -7,11 +7,18 @@
 #include <cmath>
 #include <limits>
 #include <boost/format.hpp>
-#include <dune/stuff/functions.hh>
-#include <dune/stuff/parametercontainer.hh>
+#include <dune/stuff/fem/functions.hh>
+#include <dune/stuff/common/parameter/container.hh>
 #include <dune/istl/bcrsmatrix.hh>
 
+namespace Dune {
+
 namespace Stuff {
+
+namespace Common {
+
+namespace Print {
+
 // ! ensure matlab output is done with highest precision possible, otherwise weird effects are bound to happen
 static const unsigned int matlab_output_precision = std::numeric_limits<double>::digits10 + 1;
 
@@ -378,8 +385,17 @@ std::string dimToAxisName(const unsigned int dim, const bool capitalize = false)
     c -= 32;
   return std::string() += c;
 } // dimToAxisName
-} // end namespace
+
+} // namespace Print
+
+} // namespace Common
+
+} // namespace Stuff
+
+} // namespace Dune
+
 #endif // ifndef DUNESTUFF_PRINTING_HH_INCLUDED
+
 /** Copyright (c) 2012, Felix Albrecht, Rene Milk     , Sven Kaulmann
    * All rights reserved.
    *

@@ -2,8 +2,8 @@
    *  \file   stuff.hh
    *  \brief  contains some stuff
    **/
-#ifndef DUNE_STUFF_COMMON_STRING_HH
-#define DUNE_STUFF_COMMON_STRING_HH
+#ifndef DUNE_STUFF_COMMON_MISC_HH
+#define DUNE_STUFF_COMMON_MISC_HH
 
 #include <cstring>
 #include <map>
@@ -41,75 +41,109 @@ namespace Stuff {
 
 namespace Common {
 
-namespace String {
+namespace Misc {
 
-// ! simple and dumb std::string to anything conversion
-template <class ReturnType>
-ReturnType from(const std::string& s)
+// ! element-index-in-container search
+template <class StlSequence>
+inline int getIdx(const StlSequence& ct, const typename StlSequence::value_type& val)
 {
-  std::stringstream ss;
+  typename StlSequence::const_iterator result = std::find(ct.begin(), ct.end(), val);
+  if (result == ct.end())
+    return -1;
 
-  ss << s;
-  ReturnType r;
-  ss >> r;
-  return r;
-} // fromString
+  return std::distance(ct.begin(), result);
+} // getIdx
 
-// ! simple and dumb anything to std::string conversion
-template <class ReturnType>
-std::string to(const ReturnType& s)
+/** \brief stupid timing helper
+   * \deprecated in favor of boost automatic_timer (in boost >= 1.48)
+   **/
+struct TimeGuard
 {
-  std::stringstream ss;
-
-  ss << s;
-  std::string r;
-  ss >> r;
-  return r;
-} // toString
-
-/**
-  \brief      Returns a string of lengths s' whitespace (or c chars).
-  \param[in]  s
-              std::string, defines the length of the return string
-  \param[in]  c
-              char, optional argument, defines entries of return string
-  \return     std::string
-              Returns a string of lengths s' whitespace (or c chars).
-  **/
-std::string whitespaceify(const std::string s, const char c = ' ')
-{
-  std::string ret = "";
-  for (unsigned int i = 0; i < s.size(); ++i) {
-    ret += c;
+  const time_t cur_time;
+  DUNE_DEPRECATED_MSG("use boost automatic timer instead")
+  TimeGuard()
+    : cur_time(time(NULL))
+  {
   }
-  return ret;
-} // end function whitespaceify
+  ~TimeGuard()
+  {
+    time_t delta = time(NULL) - cur_time;
 
-/** \brief convenience wrapper around boost::algorithm::split to split one string into a vector of strings
- * \param msg the spring to be split
- * \param seperators a list of seperaors, duh
- * \param mode token_compress_off --> potentially empty strings in return,
-              token_compress_on --> empty tokens are discarded
- * \return all tokens in a vector, if msg contains no seperators, this'll contain msg as its only element
- **/
-inline std::vector<std::string>
-tokenize(const std::string& msg, const std::string& seperators,
-         const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off)
+    std::cout << ctime(&delta) << std::endl;
+  }
+};
+
+// ! \todo seems borked, resutls in gigantic amount of compile errors?!
+template <class StlSequence, class T>
+void fill_entirely(StlSequence& c, const T& value)
 {
-  std::vector<std::string> strings;
-  boost::algorithm::split(strings, msg, boost::algorithm::is_any_of(seperators), mode);
-  return strings;
+  std::fill(c.begin(), c.end(), value);
 }
 
-} // namespace String
+/** this allows subscription indices to wrap around
+   * \example N=4: wraparound_array[4] == wraparound_array[0] && wraparound_array[-1] == wraparound_array[3]
+   **/
+template <class T, int N>
+struct wraparound_array : public Dune::array<T, N>
+{
+  typedef Dune::array<T, N> BaseType;
+  wraparound_array()
+  {
+    for (size_t i = 0; i < N; ++i)
+      this->operator[](i) = T();
+  }
+
+  wraparound_array(const BaseType other)
+  {
+    for (size_t i = 0; i < N; ++i)
+      this->operator[](i) = other[i];
+  }
+
+  typename BaseType::reference operator[](std::size_t i)
+  {
+    return BaseType::operator[](i % N);
+  }
+
+  typename BaseType::reference operator[](int i)
+  {
+    std::size_t real_index = i;
+
+    if (i < 0)
+      real_index = static_cast<size_t>(N - (((i * -1) % N) + 1));
+    return BaseType::operator[](real_index);
+  } // []
+
+  typename BaseType::const_reference operator[](std::size_t i) const
+  {
+    return BaseType::operator[](i % N);
+  }
+
+  typename BaseType::const_reference operator[](int i) const
+  {
+    std::size_t real_index = i;
+
+    if (i < 0)
+      real_index = static_cast<size_t>(N - (((i * -1) % N) + 1));
+    return BaseType::operator[](real_index);
+  } // []
+};
+
+// ! type safe (this will not compile for degraded-to-pointer arrays) way of getting array length
+template <class T, size_t N>
+size_t arrayLength(T(&/*array*/)[N])
+{
+  return N;
+}
+
+} // namespace Misc
 
 } // namespace Common
 
-} // namespace Stuff
+} // namepspace Stuff
 
 } // namespace Dune
 
-#endif // DUNE_STUFF_COMMON_STRING_HH
+#endif // DUNE_STUFF_COMMON_MISC_HH
 
 /** Copyright (c) 2012, Rene Milk    , Sven Kaulmann
    * All rights reserved.

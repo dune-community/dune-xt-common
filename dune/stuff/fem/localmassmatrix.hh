@@ -4,7 +4,12 @@
 #include <dune/common/version.hh>
 #include <dune/fem/operator/1order/localmassmatrix.hh>
 
+namespace Dune {
+
 namespace Stuff {
+
+namespace Fem {
+
 // ! create yet another child class just in case fem actually implements something in LocalMassMatrix in addition to its
 // base
 #if DUNE_VERSION_NEWER_REV(DUNE_FEM, 1, 3, 0)
@@ -26,9 +31,15 @@ struct LocalMassMatrix : public Dune::LocalDGMassMatrix<DiscreteFunctionSpaceImp
   }
 };
 #endif // if DUNE_VERSION_NEWER_REV(DUNE_FEM, 1, 3, 0)
-} // namespace Stuff {
+
+} // namespace Fem
+
+} // namespace Stuff
+
+} // namespace Dune
 
 #endif // STUFF_LOCALMASSMATRIX_HH
+
 /** Copyright (c) 2012, Rene Milk    , Sven Kaulmann
    * All rights reserved.
    *
