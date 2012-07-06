@@ -1,9 +1,9 @@
-#ifndef DUNE_HELPER_TOOLS_COMMON_VECTOR_HH
-#define DUNE_HELPER_TOOLS_COMMON_VECTOR_HH
+#ifndef DUNE_STUFF_TOOLS_COMMON_VEECTOR_HH
+#define DUNE_STUFF_TOOLS_COMMON_VEECTOR_HH
 
 namespace Dune {
 
-namespace HelperTools {
+namespace Stuff {
 
 namespace Common {
 
@@ -24,8 +24,8 @@ void clear(DenseVectorType& vector)
 
 } // namespace Common
 
-} // namespace HelperTools
+} // namespace Stuff
 
 } // namespace Dune
 
-#endif // DUNE_HELPER_TOOLS_COMMON_VEECTOR_HH
+#endif // DUNE_STUFF_TOOLS_COMMON_VEECTOR_HH

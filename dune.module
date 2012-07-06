@@ -1,4 +1,5 @@
 Module:dune-stuff
-Version:0.3
+Version:2.2.0
 Maintainer:rene.milk@uni-muenster.de
-Depends: dune-common (>= 2.2) dune-grid (>= 2.2) dune-fem (>= 1.2) 
+Depends: dune-common (>= 2.2) 
+Suggests: dune-grid (>= 2.2) dune-fem (>= 1.2)
