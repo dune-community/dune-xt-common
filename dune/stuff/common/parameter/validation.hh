@@ -5,7 +5,7 @@
 #include <string>
 #include <boost/format.hpp>
 
-#include "misc.hh"
+#include <dune/stuff/common/misc.hh>
 
 namespace Dune {
 
