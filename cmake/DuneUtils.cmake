@@ -120,6 +120,8 @@ add_custom_target( config_refresh
 				${CMAKE_CURRENT_SOURCE_DIR}/cmake/regen_config_header.sh ${CMAKE_CURRENT_BINARY_DIR}/cmake_config.h
 				)
 
+execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
+
 INCLUDE (CheckIncludeFileCXX)
 CHECK_INCLUDE_FILE_CXX("tr1/array" HAVE_TR1_ARRAY)
 CHECK_INCLUDE_FILE_CXX("malloc.h" HAVE_MALLOC_H)
@@ -150,25 +152,30 @@ else()
 endif(CXX_FLAG_CXX11)
 
 SET( CUSTOM_FLAGS
-	"-Wall -Wextra -pedantic -DDNDEBUG -funroll-loops -g -ggdb -fno-strict-aliasing" CACHE STRING  
+	"-Wall -Wextra -Wlogical-op -Wc++0x-compat -Wparentheses -pedantic -Waggregate-return -Wmissing-declarations -Wredundant-decls -Wshadow -Winline -fno-strict-aliasing" CACHE STRING
 	"CUSTOM FLAGS")
 SET( BOOST_ROOT
 	"/opt/boost-1.48" CACHE STRING
 	"" )	
+
+SET( CMAKE_CXX_FLAGS_RELEASE
+	"-ffast-math -funroll-loops -m64 -mfpmath=sse -falign-loops -mtune=native -march=native -O3 -pipe -fomit-frame-pointer " )
+
+SET( CMAKE_CXX_FLAGS_DEBUG
+	"-DDNDEBUG -g3 -ggdb" )
 	
 FIND_PACKAGE( PkgConfig )
 FIND_PACKAGE(Boost 1.42.0 REQUIRED)
 ADD_CXX_FLAGS( -DHAVE_CMAKE_CONFIG ${CXX_STD0X_FLAGS})
 INCLUDE_SYS_DIR(${Boost_INCLUDE_DIRS})
 
-#try to enable link-time-optimisation
-# if (CMAKE_COMPILER_IS_GNUCC)
-# 	execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
-# 	if (GCC_VERSION VERSION_GREATER 4.5 OR GCC_VERSION VERSION_EQUAL 4.5)
-# 		set (CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -flto")
-# 		set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -flto")
-# 		set (CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -flto")
-# 	endif()
-# endif()
+#try to enable link-time-optimization
+if (CMAKE_COMPILER_IS_GNUCC)
+	if (GCC_VERSION VERSION_GREATER 4.5 OR GCC_VERSION VERSION_EQUAL 4.5)
+		set (CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS} -flto")
+		set (CMAKE_SHARED_LINKER_FLAGS_RELEASE "${CMAKE_SHARED_LINKER_FLAGS} -flto")
+		set (CMAKE_MODULE_LINKER_FLAGS_RELEASE "${CMAKE_MODULE_LINKER_FLAGS} -flto")
+	endif()
+endif()
 
 ENABLE_TESTING()

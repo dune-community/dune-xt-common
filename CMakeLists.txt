@@ -37,9 +37,6 @@ SET( GRIDDIM
 	"2" CACHE STRING
 	"GRIDDIM" )
 
-SET( POLORDER
-	"1" CACHE STRING
-	"POLORDER" )
 
 CONFIGURE_FILE( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/cmake_config.h )
 #needs to come first to include correct config.h
@@ -62,8 +59,8 @@ LINK_DIRECTORIES( "/usr/lib" )
 FILE( GLOB_RECURSE stuff "stuff/*.hh" )
 
 
-ADD_EXECUTABLE(function_test src/function_test.cc ${stuff} )
-TARGET_LINK_LIBRARIES(function_test ${COMMON_LIBS} )
+# ADD_EXECUTABLE(function_test dune/stuff/test/function_test.cc ${stuff} )
+# TARGET_LINK_LIBRARIES(function_test ${COMMON_LIBS} )
 
 HEADERCHECK( ${stuff} )
 ADD_DEFINITIONS( ${MY_CXX_FLAGS} )

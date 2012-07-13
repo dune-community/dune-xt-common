@@ -1,12 +1,12 @@
 #ifndef DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
 #define DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
 
-#include <dune/stuff/common/deprecated.hh> // ensure DUNE_DEPRECATED is defined properly
+#include <dune/common/deprecated.hh> // ensure DUNE_DEPRECATED is defined properly
 
-#include "logging.hh"
-#include "filesystem.hh"
-#include "misc.hh"
-#include "validation.hh"
+#include <dune/stuff/common/logging.hh>
+#include <dune/stuff/common/filesystem.hh>
+#include <dune/stuff/common/misc.hh>
+#include <dune/stuff/common/parameter/validation.hh>
 
 #include <boost/format.hpp>
 
@@ -66,13 +66,13 @@ public:
   template <typename T>
   T get(std::string name, T def, bool useDbgStream = true)
   {
-    return get(name, def, Stuff::ValidateAny<T>(), useDbgStream);
+    return get(name, def, ValidateAny<T>(), useDbgStream);
   }
 
   //! hack around the "CHARS" is no string issue
   std::string get(std::string name, const char* def, bool useDbgStream = true)
   {
-    return get(name, std::string(def), Stuff::ValidateAny<std::string>(), useDbgStream);
+    return get(name, std::string(def), ValidateAny<std::string>(), useDbgStream);
   }
 
   template <typename T, class Validator>
