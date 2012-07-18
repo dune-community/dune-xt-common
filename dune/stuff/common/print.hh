@@ -171,8 +171,8 @@ void printDoubleVectorMatlabStyle(const T* arg, const int size, const std::strin
 } // printDoubleVectorMatlabStyle
 
 // ! simple vector to stream print
-template <class Stream, class Type>
-void printDoubleVec(Stream& stream, const Type* vec, const unsigned int N)
+template <class Type>
+void printDoubleVec(std::ostream& stream, const Type* vec, const unsigned int N)
 {
   stream << "\n [ " << std::setw(5);
   for (unsigned int i = 0; i < N; ++i)
@@ -182,8 +182,8 @@ void printDoubleVec(Stream& stream, const Type* vec, const unsigned int N)
 } // printDoubleVec
 
 // ! simple discrete function to stream print
-template <class Stream, class DiscFunc>
-void oneLinePrint(Stream& stream, const DiscFunc& func)
+template <class DiscFunc>
+void oneLinePrint(std::ostream& stream, const DiscFunc& func)
 {
   typedef typename DiscFunc::ConstDofIteratorType DofIteratorType;
   DofIteratorType it = func.dbegin();
@@ -204,11 +204,11 @@ void oneLinePrint(Stream& stream, const DiscFunc& func)
    * \see Stuff::GridWalk
    * \ingroup GridWalk
    **/
-template <class GlobalMatrix, class Stream>
+template <class GlobalMatrix>
 class LocalMatrixPrintFunctor
 {
 public:
-  LocalMatrixPrintFunctor(const GlobalMatrix& m, Stream& stream, const std::string name)
+  LocalMatrixPrintFunctor(const GlobalMatrix& m, std::ostream& stream, const std::string name)
     : matrix_(m)
     , stream_(stream)
     , name_(name)
@@ -243,18 +243,18 @@ public:
 
 private:
   const GlobalMatrix& matrix_;
-  Stream& stream_;
+  std::ostream& stream_;
   const std::string name_;
 };
 
 /** GridWalk functor to print all localfunctions of a given DiscreteFunction
    * \ingroup GridWalk
    **/
-template <class DiscreteFunctionType, class Stream, class QuadratureType>
+template <class DiscreteFunctionType, class QuadratureType>
 class LocalFunctionPrintFunctor
 {
 public:
-  LocalFunctionPrintFunctor(const DiscreteFunctionType& discrete_function, Stream& stream)
+  LocalFunctionPrintFunctor(const DiscreteFunctionType& discrete_function, std::ostream& stream)
     : discrete_function_(discrete_function)
     , stream_(stream)
     , name_(discrete_function.name())
@@ -287,18 +287,18 @@ public:
 
 private:
   const DiscreteFunctionType& discrete_function_;
-  Stream& stream_;
+  std::ostream& stream_;
   const std::string name_;
 };
 
 /** GridWalk functor to print, w/o transformation, all localfunctions of a given DiscreteFunction
    * \ingroup GridWalk
    **/
-template <class DiscreteFunctionType, class Stream>
+template <class DiscreteFunctionType>
 class LocalFunctionVerbatimPrintFunctor
 {
 public:
-  LocalFunctionVerbatimPrintFunctor(const DiscreteFunctionType& discrete_function, Stream& stream)
+  LocalFunctionVerbatimPrintFunctor(const DiscreteFunctionType& discrete_function, std::ostream& stream)
     : discrete_function_(discrete_function)
     , stream_(stream)
     , name_(discrete_function.name())
@@ -327,15 +327,15 @@ public:
 
 private:
   const DiscreteFunctionType& discrete_function_;
-  Stream& stream_;
+  std::ostream& stream_;
   const std::string name_;
 };
 
 /** print min/max of a given DiscreteFucntion obtained by Stuff::getMinMaxOfDiscreteFunction
    * \note hardcoded mult of values by sqrt(2)
    **/
-template <class Stream, class Function>
-void printFunctionMinMax(Stream& stream, const Function& func)
+template <class Function>
+void printFunctionMinMax(std::ostream& stream, const Function& func)
 {
   double min = 0.0;
   double max = 0.0;
@@ -347,8 +347,8 @@ void printFunctionMinMax(Stream& stream, const Function& func)
 } // printFunctionMinMax
 
 // ! useful for visualizing sparsity patterns of matrices
-template <class Matrix, class Stream>
-void matrixToGnuplotStream(const Matrix& matrix, Stream& stream)
+template <class Matrix>
+void matrixToGnuplotStream(const Matrix& matrix, std::ostream& stream)
 {
   unsigned long nz = 0;
 

@@ -3,6 +3,7 @@
 
 #include "debug.hh"
 #include "string.hh"
+#include "logstreams.hh"
 #include <string>
 #include <fstream>
 
@@ -44,8 +45,7 @@ void testCreateDirectory(const std::string path)
 }
 
 // ! read a file and output all lines containing filter string to a stream
-template <class Stream>
-void fileToStreamFiltered(Stream& stream, std::string filename, std::string filter)
+void fileToStreamFiltered(std::ostream& stream, std::string filename, std::string filter)
 {
   std::ifstream file(filename.c_str(), std::ifstream::in);
 
@@ -60,11 +60,10 @@ void fileToStreamFiltered(Stream& stream, std::string filename, std::string filt
 } // fileToStreamFiltered
 
 // ! output programs mem usage stats by reading from /proc
-template <class Stream>
-void meminfo(Stream& stream)
+void meminfo(Dune::Stuff::Common::LogStream& stream)
 {
   stream << "Memory info: \n";
-  stream.Resume();
+  stream.resume();
   pid_t pid = getpid();
   std::stringstream filename;
   filename << "/proc/" << pid << "/status";

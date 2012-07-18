@@ -393,20 +393,20 @@ struct ProgressiveWeights
 };
 
 // ! helper class to estimate time needed to complete a loop with given counter
-template <class CounterType, class OutputStreamType, class WeightType = IdentityWeights>
+template <class CounterType, class WeightType = IdentityWeights>
 class LoopTimer
 {
-  typedef LoopTimer<CounterType, OutputStreamType, WeightType> ThisType;
+  typedef LoopTimer<CounterType, WeightType> ThisType;
   CounterType& counter_;
   const int iteration_count_;
   int iteration_;
-  OutputStreamType& output_stream_;
+  std::ostream& output_stream_;
   WeightType weight_;
   MovingAverage avg_time_per_iteration_;
   Dune::ExecutionTimer step_timer_;
 
 public:
-  LoopTimer(CounterType& counter, const int iteration_count, OutputStreamType& output_stream = std::cout,
+  LoopTimer(CounterType& counter, const int iteration_count, std::ostream& output_stream = std::cout,
             WeightType weight = WeightType())
     : counter_(counter)
     , iteration_count_(iteration_count)

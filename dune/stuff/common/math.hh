@@ -142,8 +142,7 @@ public:
     acc_(el);
   }
 
-  template <class Stream>
-  void output(Stream& stream)
+  void output(std::ofstream& stream)
   {
     stream << boost::format("min: %e\tmax: %e\tavg: %e\n") % min() % max() % average();
   }

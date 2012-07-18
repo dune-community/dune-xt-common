@@ -6,6 +6,7 @@
 #define DUNE_STUFF_COMMON_STRING_HH
 
 #include <cstring>
+#include <ctime>
 #include <map>
 #include <assert.h>
 #include <algorithm>
@@ -36,11 +37,8 @@
 #include <boost/algorithm/string.hpp>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
-
 namespace String {
 
 // ! simple and dumb std::string to anything conversion
@@ -101,12 +99,15 @@ tokenize(const std::string& msg, const std::string& seperators,
   return strings;
 }
 
+inline std::string fromTime(time_t cur_time = time(NULL))
+{
+  return ctime(&cur_time);
+}
+
+
 } // namespace String
-
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_COMMON_STRING_HH

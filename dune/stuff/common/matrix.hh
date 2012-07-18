@@ -298,8 +298,8 @@ FieldMatrixImp rowWiseMatrixMultiplication(const FieldMatrixImp& arg1, const Fie
 } // rowWiseMatrixMultiplication
 
 // ! prints actual memusage of matrix in kB
-template <class MatrixType, class Stream>
-void printMemUsage(const MatrixType& matrix, Stream& stream, std::string name = "")
+template <class MatrixType>
+void printMemUsage(const MatrixType& matrix, std::ostream& stream, std::string name = "")
 {
   long size = matrix.numberOfValues() * sizeof(typename MatrixType::Ttype) / 1024.f;
 
@@ -307,8 +307,8 @@ void printMemUsage(const MatrixType& matrix, Stream& stream, std::string name = 
 }
 
 // ! prints actual memusage of matrixobject in kB
-template <class MatrixObjectType, class Stream>
-void printMemUsageObject(const MatrixObjectType& matrix_object, Stream& stream, std::string name = "")
+template <class MatrixObjectType>
+void printMemUsageObject(const MatrixObjectType& matrix_object, std::ostream& stream, std::string name = "")
 {
   printMemUsage(matrix_object.matrix(), stream, name);
 }

@@ -82,7 +82,7 @@ public:
 #ifndef NDEBUG
     if (warning_output_ && !tree_.hasKey(name)) {
       if (useDbgStream)
-        Logger().Dbg() << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
+        Logger().dbg() << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
       else
         std::cerr << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
     }
