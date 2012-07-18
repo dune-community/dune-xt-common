@@ -10,7 +10,6 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
-
 enum LogFlags
 {
   LOG_NONE    = 1,
@@ -21,144 +20,53 @@ enum LogFlags
   LOG_FILE    = 32
 };
 
-// ! only for logging to a single file which should then be executable by matlab
-class MatlabLogStream : public std::basic_ostream<char, std::char_traits<char>>
+class ILogStream : public std::ostream
 {
-  typedef std::basic_ostream<char, std::char_traits<char>> BaseType;
-
-public:
-  MatlabLogStream(LogFlags loglevel, int& logflags, std::ofstream& logFile)
-    : BaseType(buffer_.rdbuf())
-    , matlabLogFile_(logFile)
-    , loglevel_(loglevel)
-    , logflags_(logflags)
-    , suspended_logflags_(logflags)
-    , is_suspended_(false)
-  {
-  }
-
-  ~MatlabLogStream()
-  {
-  }
-
-  template <typename T>
-  MatlabLogStream& operator<<(T in)
-  {
-    if (logflags_ & loglevel_)
-      buffer_ << in;
-    return *this;
-  }
-
-  MatlabLogStream& operator<<(MatlabLogStream& (*pf)(MatlabLogStream&))
-  {
-    if (logflags_ & loglevel_)
-      buffer_ << pf;
-    return *this;
-  }
-
-  MatlabLogStream& operator<<(std::ostream& (*pf)(std::ostream&))
-  {
-    if (logflags_ & loglevel_) {
-      if (pf == (std::ostream & (*)(std::ostream&))std::endl) {
-        // flush buffer into stream
-        buffer_ << "\n";
-        flush();
-      } else {
-        buffer_ << pf;
-      }
-    }
-    return *this;
-  } // <<
-
-  void flush()
-  {
-    matlabLogFile_ << buffer_.str();
-    matlabLogFile_.flush();
-    buffer_.flush();
-    buffer_.str(""); // clear the buffer
-  }
-
-  void suspend()
-  {
-    // don't accidentally invalidate flags if already suspended
-    if (!is_suspended_) {
-      suspended_logflags_ = logflags_;
-      logflags_           = 1;
-    }
-    is_suspended_ = true;
-  } // Suspend
-
-  void resume()
-  {
-    if (is_suspended_)
-      logflags_   = suspended_logflags_;
-    is_suspended_ = false;
-  }
-
-  std::ofstream& fileStream()
-  {
-    return matlabLogFile_;
-  }
-
-private:
-  std::stringstream buffer_;
-  std::ofstream& matlabLogFile_;
-  LogFlags loglevel_;
-  int& logflags_;
-  int suspended_logflags_;
-  bool is_suspended_;
-};
-
-// ! ostream compatible class wrapping file and console output
-class LogStream : public std::basic_ostream<char, std::char_traits<char>>
-{
-  typedef std::basic_ostream<char, std::char_traits<char>> BaseType;
-
 public:
   typedef int PriorityType;
   static const PriorityType default_suspend_priority = 0;
 
-protected:
-  LogFlags loglevel_;
-  int& logflags_;
-  int suspended_logflags_;
-  std::stringstream buffer_;
-  std::ofstream& logfile_;
-  std::ofstream& logfileWoTime_;
-  bool is_suspended_;
-  PriorityType suspend_priority_;
-
-public:
-  LogStream(LogFlags loglevel, int& logflags, std::ofstream& file, std::ofstream& fileWoTime)
-    : BaseType(buffer_.rdbuf())
-    , loglevel_(loglevel)
+  ILogStream(LogFlags loglevel, int& logflags)
+    : std::ostream(buffer_.rdbuf())
     , logflags_(logflags)
+    , loglevel_(loglevel)
     , suspended_logflags_(logflags)
-    , logfile_(file)
-    , logfileWoTime_(fileWoTime)
     , is_suspended_(false)
     , suspend_priority_(default_suspend_priority)
   {
   }
 
-  ~LogStream()
+  virtual ~ILogStream()
   {
     flush();
   }
 
-  template <typename T>
-  LogStream& operator<<(T in)
+  inline bool enabled() const
   {
-    SetColor();
-    if (logflags_ & loglevel_)
-      buffer_ << in;
-    UnsetColor();
-    return *this;
-  } // <<
+    return (!is_suspended_) && (logflags_ & loglevel_);
+  }
 
+  ILogStream& operator<<(std::ostream& (*pf)(std::ostream&))
+  {
+    if (enabled())
+      buffer_ << pf;
+    return *this;
+  }
+
+  template <class Class, typename Pointer>
+  void log(Pointer pf, Class& c)
+  {
+    if (enabled()) {
+      (c.*pf)(buffer_);
+    }
+  }
+
+  /** \brief stop accepting input into the buffer
+     * the suspend_priority_ mechanism provides a way to silence streams from 'higher' modules
+     * no-op if already suspended
+     ***/
   void suspend(PriorityType priority = default_suspend_priority)
   {
-    // the suspend_priority_ mechanism provides a way to silence streams from 'higher' modules
     suspend_priority_ = std::max(priority, suspend_priority_);
     {
       // don't accidentally invalidate flags if already suspended
@@ -170,6 +78,9 @@ public:
     }
   } // Suspend
 
+  /** \brief start accepting input into the buffer again
+     * no-op if not suspended
+     ***/
   void resume(PriorityType priority = default_suspend_priority)
   {
     if (priority >= suspend_priority_) {
@@ -180,10 +91,74 @@ public:
     }
   } // Resume
 
+  template <typename T>
+  ILogStream& operator<<(T in)
+  {
+    if (enabled())
+      buffer_ << in;
+    return *this;
+  } // <<
+
+  // ! dump buffer into file/stream and clear it
+  virtual void flush()
+  {
+    buffer_.flush();
+    buffer_.clear();
+  }
+
+protected:
+  std::stringstream buffer_;
+  int& logflags_;
+
+private:
+  LogFlags loglevel_;
+  int suspended_logflags_;
+  bool is_suspended_;
+  PriorityType suspend_priority_;
+};
+// ! only for logging to a single file which should then be executable by matlab
+class MatlabLogStream : public ILogStream
+{
+public:
+  MatlabLogStream(LogFlags loglevel, int& logflags, std::ofstream& logFile)
+    : ILogStream(loglevel, logflags)
+    , matlabLogFile_(logFile)
+  {
+  }
+
+  // ! dump buffer into file/stream and clear it
+  void flush()
+  {
+    matlabLogFile_ << buffer_.str();
+    matlabLogFile_.flush();
+    buffer_.flush();
+    buffer_.str(""); // clear the buffer
+  }
+
+  // ! there should be no need to at the fstream directly
+  const std::ofstream& fileStream() const DUNE_DEPRECATED
+  {
+    return matlabLogFile_;
+  }
+
+private:
+  std::ofstream& matlabLogFile_;
+};
+
+// ! ostream compatible class wrapping file and console output
+class LogStream : public ILogStream
+{
+public:
+  LogStream(LogFlags loglevel, int& logflags, std::ofstream& file, std::ofstream& fileWoTime)
+    : ILogStream(loglevel, logflags)
+    , logfile_(file)
+    , logfileWoTime_(fileWoTime)
+  {
+  }
 
   void flush()
   {
-    if (logflags_ & loglevel_) {
+    if (enabled()) {
       // flush buffer into stream
       if ((logflags_ & LOG_CONSOLE) != 0) {
         std::cout << buffer_.str(); // << std::endl;
@@ -200,50 +175,10 @@ public:
     }
   } // Flush
 
-  void SetColor()
-  {
-    // if ( logflags_ & LOG_INFO ) {
-    // buffer_ << "\033[21;31m";
-    // }
-  }
-
-  void UnsetColor()
-  {
-    // buffer_ << "\033[0m";
-  }
-
-  // template < class Class >
-  LogStream& operator<<(LogStream& (*pf)(LogStream&))
-  {
-    if (logflags_ & loglevel_)
-      buffer_ << pf;
-    return *this;
-  }
-
-  LogStream& operator<<(std::ostream& (*pf)(std::ostream&))
-  {
-    SetColor();
-    if (logflags_ & loglevel_) {
-      if (pf == (std::ostream & (*)(std::ostream&))std::endl) {
-        // flush buffer into stream
-        buffer_ << "\n";
-        flush();
-      } else
-        buffer_ << pf;
-    }
-    UnsetColor();
-    return *this;
-  } // <<
-
-  template <class Class, typename Pointer>
-  void Log(Pointer pf, Class& c)
-  {
-    if (logflags_ & loglevel_) {
-      (c.*pf)(buffer_);
-    }
-  }
+private:
+  std::ofstream& logfile_;
+  std::ofstream& logfileWoTime_;
 };
-
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
