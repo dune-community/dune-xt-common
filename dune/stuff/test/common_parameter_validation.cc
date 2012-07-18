@@ -36,8 +36,8 @@ struct Distribution<T, false>
     DUNE_THROW(Dune::Exception, #cond " failed");                                                                      \
   }
 
-using namespace Stuff;
-
+namespace DSC = Dune::Stuff::Common;
+using namespace DSC::Parameter;
 
 template <class T>
 struct TypeTest
@@ -45,8 +45,8 @@ struct TypeTest
   void run() const
   {
     const int samples = 100000;
-    std::cout << "Testing Validators for type " << Typename<T>::value() << "\n\t" << samples << " random numbers ..."
-              << std::endl;
+    std::cout << "Testing Validators for type " << DSC::Typename<T>::value() << "\n\t" << samples
+              << " random numbers ..." << std::endl;
     ;
     {
       std::default_random_engine generator;

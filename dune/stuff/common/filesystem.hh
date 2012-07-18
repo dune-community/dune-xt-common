@@ -39,8 +39,8 @@ std::string filenameOnly(const std::string& path)
 void testCreateDirectory(const std::string path)
 {
   std::string pathonly = pathOnly(path);
-
-  boost::filesystem::create_directories(pathonly);
+  if (!pathonly.empty())
+    boost::filesystem::create_directories(pathonly);
 }
 
 // ! read a file and output all lines containing filter string to a stream
