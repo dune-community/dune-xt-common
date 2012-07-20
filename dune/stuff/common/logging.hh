@@ -34,7 +34,7 @@ private:
   Logging()
     : matlabLogStreamPtr(0)
   {
-    streamIDs_.push_back(LOG_ERR);
+    streamIDs_.push_back(LOG_ERROR);
     streamIDs_.push_back(LOG_DEBUG);
     streamIDs_.push_back(LOG_INFO);
   }
@@ -68,7 +68,7 @@ public:
      *  \param logflags any OR'd combination of flags
      *  \param logfile filename for log, can contain paths, but creation will fail if dir is non-existant
      **/
-  void create(unsigned int logflags = LOG_FILE | LOG_CONSOLE | LOG_ERR, std::string logfile = "dune_stuff_log",
+  void create(unsigned int logflags = LOG_FILE | LOG_CONSOLE | LOG_ERROR, std::string logfile = "dune_stuff_log",
               std::string datadir = "data", std::string logdir = std::string(""))
   {
     logflags_ = logflags;
@@ -181,9 +181,13 @@ public:
     return *(it->second);
   }
 
-  LogStream& err()
+  LogStream& err() DUNE_DEPRECATED_MSG("use error() instead")
   {
-    return getStream(LOG_ERR);
+    return getStream(LOG_ERROR);
+  }
+  LogStream& error()
+  {
+    return getStream(LOG_ERROR);
   }
   LogStream& info()
   {

@@ -14,6 +14,7 @@ enum LogFlags
 {
   LOG_NONE    = 1,
   LOG_ERR     = 2,
+  LOG_ERROR   = 2,
   LOG_INFO    = 4,
   LOG_DEBUG   = 8,
   LOG_CONSOLE = 16,
