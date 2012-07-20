@@ -38,7 +38,6 @@ public:
 
   virtual ~ILogStream()
   {
-    flush();
   }
 
   inline bool enabled() const
@@ -48,8 +47,12 @@ public:
 
   ILogStream& operator<<(std::ostream& (*pf)(std::ostream&))
   {
-    if (enabled())
+    if (enabled()) {
       buffer_ << pf;
+      if (pf == (std::ostream & (*)(std::ostream&))std::endl) {
+        flush();
+      }
+    }
     return *this;
   }
 
