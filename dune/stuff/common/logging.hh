@@ -137,38 +137,14 @@ public:
 
   int getStreamFlags(LogFlags stream)
   {
-    assert(stream & (LOG_ERR | LOG_INFO | LOG_DEBUG));
+    assert(flagmap_.find(stream) != flagmap_.end());
     return flagmap_[stream];
-  }
-
-  /** \name Log funcs for member-function pointers
-     * \{
-     */
-  template <typename Pointer, class Class>
-  void logDebug(Pointer pf, Class& c)
-  {
-    if ((logflags_ & LOG_DEBUG))
-      log(pf, c, LOG_DEBUG);
-  }
-
-  template <class Class, typename Pointer>
-  void logInfo(Pointer pf, Class& c)
-  {
-    if ((logflags_ & LOG_INFO))
-      log(pf, c, LOG_INFO);
-  }
-
-  template <typename Pointer, class Class>
-  void logErr(Pointer pf, Class& c)
-  {
-    if ((logflags_ & LOG_ERR))
-      log(pf, c, LOG_ERR);
   }
 
   template <typename Pointer, class Class>
   void log(void (Class::*pf)(std::ostream&) const, Class& c, LogFlags stream)
   {
-    assert(stream & (LOG_ERR | LOG_INFO | LOG_DEBUG));
+    assert(flagmap_.find(stream) != flagmap_.end());
     if ((flagmap_[stream] & LOG_CONSOLE) != 0)
       (c.*pf)(std::cout);
     if ((flagmap_[stream] & LOG_FILE) != 0)
@@ -193,27 +169,6 @@ public:
   /** \name Log funcs for basic types/classes
      * \{
      */
-  template <class Class>
-  void logDebug(Class c)
-  {
-    if ((logflags_ & LOG_DEBUG))
-      log(c, LOG_DEBUG);
-  }
-
-  template <class Class>
-  void logInfo(Class c)
-  {
-    if ((logflags_ & LOG_INFO))
-      log(c, LOG_INFO);
-  }
-
-  template <class Class>
-  void logErr(Class c)
-  {
-    if ((logflags_ & LOG_ERR))
-      log(c, LOG_ERR);
-  }
-
   template <class Class>
   void log(Class c, LogFlags stream)
   {
