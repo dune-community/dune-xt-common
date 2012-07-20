@@ -1,6 +1,7 @@
 #ifndef DUNE_STUFF_COMMON_MATRIX_HH
 #define DUNE_STUFF_COMMON_MATRIX_HH
 
+#ifdef THIS_WORKS
 #include <dune/fem/operator/matrix/spmatrix.hh>
 #include <dune/common/static_assert.hh>
 #include <dune/stuff/common/debug.hh>
@@ -11,6 +12,7 @@
 #include <dune/fem/operator/matrix/istlmatrix.hh>
 #include <dune/fem/operator/matrix/preconditionerwrapper.hh>
 #endif // if HAVE_DUNE_ISTL
+#endif // THIS_WORKS
 
 namespace Dune {
 
@@ -33,6 +35,7 @@ void clear(DenseMatrixType& matrix)
   }
 } // void clear(DenseMatrixType& matrix)
 
+#ifdef THIS_WORKS
 // ! TODO
 template <class MatrixImp>
 struct PrecondionWrapperDummy : public Preconditioner<typename MatrixImp::RowDiscreteFunctionType::DofStorageType,
@@ -323,6 +326,7 @@ void forceTranspose(const M& arg, M& dest)
     for (int j = 0; j < arg.rows(); ++j)
       dest.set(j, i, arg(i, j));
 } // forceTranspose
+#endif // THIS_WORKS
 
 } // namespace Matrix
 
