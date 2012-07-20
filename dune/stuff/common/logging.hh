@@ -302,6 +302,11 @@ Logging& Logger()
 } // namespace Stuff
 } // namespace Dune
 
+#define DSC_LOG Dune::Stuff::Common::Logger()
+#define DSC_LOG_INFO DSC_LOG.info()
+#define DSC_LOG_DEBUG DSC_LOG.debug()
+#define DSC_LOG_ERROR DSC_LOG.err()
+
 #endif // ifndef LOGGING_HH_INCLUDED
 
 /** Copyright (c) 2012, Rene Milk
