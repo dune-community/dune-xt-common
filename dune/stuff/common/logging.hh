@@ -40,6 +40,8 @@ protected:
     IdVecCIter it = streamIDs_.end();
 
     for (; it != streamIDs_.begin(); --it) {
+      if (streammap_[*it])
+        streammap_[*it]->flush();
       delete streammap_[*it];
       streammap_[*it] = 0;
     }
@@ -199,6 +201,10 @@ public:
     return getStream(LOG_INFO);
   }
   LogStream& dbg()
+  {
+    return getStream(LOG_DEBUG);
+  }
+  LogStream& debug()
   {
     return getStream(LOG_DEBUG);
   }
