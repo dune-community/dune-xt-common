@@ -18,6 +18,7 @@
 #include "string.hh"
 
 #include <boost/range/adaptors.hpp>
+#include <boost/foreach.hpp>
 
 namespace Dune {
 namespace Stuff {
@@ -42,7 +43,8 @@ public:
   ~Logging()
   {
     // destroy in reverse creation order, 2012 style
-    for (auto id : boost::adaptors::reverse(streamIDs_)) {
+    BOOST_REVERSE_FOREACH(auto id, streamIDs_)
+    {
       // logstream dtor is mandated to flush itself
       delete streammap_[id];
       streammap_[id] = 0;
@@ -203,8 +205,9 @@ public:
 
   void flush()
   {
-    for (auto pair : streammap_)
+    BOOST_FOREACH (auto pair, streammap_) {
       pair.second->flush();
+    }
   } // Flush
 
   int addStream(LogFlags flags)
@@ -221,14 +224,16 @@ public:
 
   void resume(LogStream::PriorityType prio = LogStream::default_suspend_priority)
   {
-    for (auto pair : streammap_)
+    BOOST_FOREACH (auto pair, streammap_) {
       pair.second->resume(prio);
+    }
   } // Resume
 
   void suspend(LogStream::PriorityType prio = LogStream::default_suspend_priority)
   {
-    for (auto pair : streammap_)
+    BOOST_FOREACH (auto pair, streammap_) {
       pair.second->suspend(prio);
+    }
   } // Suspend
 
   struct SuspendLocal
