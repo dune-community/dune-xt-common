@@ -93,11 +93,7 @@ public:
 #define ASSERT_EXCEPTION(cond, msg)
 #endif // ifndef NDEBUG
 
-#if 1 /*  there should be no more any compilers needing the "#else" version */
 #define UNUSED(identifier) /* identifier */
-#else /*  stupid, broken compiler */
-#define UNUSED(identifier) identifier
-#endif // if 1
 
 /*  some arguments are only used in debug mode, but unused in release one */
 #ifndef NDEBUG
