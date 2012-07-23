@@ -90,11 +90,12 @@ std::string whitespaceify(const std::string s, const char c = ' ')
               token_compress_on --> empty tokens are discarded
  * \return all tokens in a vector, if msg contains no seperators, this'll contain msg as its only element
  **/
-inline std::vector<std::string>
+template <class T = std::string>
+inline std::vector<T>
 tokenize(const std::string& msg, const std::string& seperators,
          const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off)
 {
-  std::vector<std::string> strings;
+  std::vector<T> strings;
   boost::algorithm::split(strings, msg, boost::algorithm::is_any_of(seperators), mode);
   return strings;
 }
