@@ -6,6 +6,7 @@
 
 #include <dune/stuff/common/parameter/validation.hh>
 #include <dune/stuff/common/typenames.hh>
+#include <dune/stuff/common/math.hh>
 #include <dune/common/tuples.hh>
 #include <dune/common/exceptions.hh>
 #include <dune/common/bigunsignedint.hh>
@@ -47,7 +48,6 @@ struct TypeTest
     const int samples = 100000;
     std::cout << "Testing Validators for type " << DSC::Typename<T>::value() << "\n\t" << samples
               << " random numbers ..." << std::endl;
-    ;
     {
       std::default_random_engine generator;
       const T lower = std::numeric_limits<T>::min();
@@ -70,10 +70,12 @@ struct TypeTest
 
   void test(const T lower, const T upper, const T arg) const
   {
+    const T eps         = DSC::Math::Epsilon<T>::value;
+    const T clamped_arg = DSC::Math::clamp(arg, T(lower + eps), T(upper - eps));
     MY_ASSERT(ValidateAny<T>()(arg));
-    MY_ASSERT(ValidateLess<T>(arg)(upper));
+    MY_ASSERT(ValidateLess<T>(clamped_arg)(upper));
     MY_ASSERT(ValidateGreaterOrEqual<T>(arg)(lower));
-    MY_ASSERT(ValidateGreater<T>(arg)(lower));
+    MY_ASSERT(ValidateGreater<T>(clamped_arg)(lower));
     MY_ASSERT(ValidateInterval<T>(lower, upper)(arg));
   }
 };

@@ -1,6 +1,6 @@
 #include "../common/color.hh"
 
-using namespace Color;
+using namespace Dune::Stuff::Common::Color;
 
 int main()
 {
