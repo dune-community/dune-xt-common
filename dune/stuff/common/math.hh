@@ -75,6 +75,33 @@ static double colonProduct(const SomeRangeType& arg1, const OtherRangeType& arg2
 } // colonProduct
 
 /**
+ * since std::numeric_limits<T>::epsilon() is 0 for integral types
+ * use this to get the minimum increment/difference for all basic types
+ * (or add specializations as necessary ofc)
+ **/
+template <class T, bool is_integral = boost::is_integral<T>::value>
+struct Epsilon
+{
+};
+
+template <class T>
+struct Epsilon<T, true>
+{
+  static const T value;
+};
+
+template <class T>
+struct Epsilon<T, false>
+{
+  static const T value;
+};
+
+template <class T>
+const T Epsilon<T, true>::value = 1;
+template <class T>
+const T Epsilon<T, false>::value = std::numeric_limits<T>::epsilon();
+
+/**
    *  \brief  dyadic product
    *
    *          Implements \f$\left(arg_{1} \otimes arg_{2}\right)_{i,j}:={arg_{1}}_{i} {arg_{2}}_{j}\f$
