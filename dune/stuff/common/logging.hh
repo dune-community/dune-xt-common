@@ -68,7 +68,7 @@ public:
      *  \param logflags any OR'd combination of flags
      *  \param logfile filename for log, can contain paths, but creation will fail if dir is non-existant
      **/
-  void create(unsigned int logflags = LOG_FILE | LOG_CONSOLE | LOG_ERROR, std::string logfile = "dune_stuff_log",
+  void create(int logflags = (LOG_FILE | LOG_CONSOLE | LOG_ERROR), std::string logfile = "dune_stuff_log",
               std::string datadir = "data", std::string logdir = std::string(""))
   {
     logflags_ = logflags;
@@ -133,7 +133,7 @@ public:
     create(logflags_, prefix);
   } // SetPrefix
 
-  void setStreamFlags(LogFlags streamID, int flags)
+  void setStreamFlags(int streamID, int flags)
   {
     assert(flagmap_.find(streamID) != flagmap_.end());
     // this might result in logging to diff targtes, so we flush the current targets
@@ -141,7 +141,7 @@ public:
     flagmap_[streamID] = flags;
   }
 
-  int getStreamFlags(LogFlags streamID) const
+  int getStreamFlags(int streamID) const
   {
     const auto it = flagmap_.find(streamID);
     if (it == flagmap_.end())
@@ -153,19 +153,19 @@ public:
      * \{
      */
   template <typename Pointer, class Class>
-  void log(void (Class::*pf)(std::ostream&) const, Class& c, LogFlags streamID)
+  void log(void (Class::*pf)(std::ostream&) const, Class& c, int streamID)
   {
     getStream(streamID).log(pf, c);
   } // Log
 
   template <class Class, typename Pointer>
-  void log(Pointer pf, Class& c, LogFlags streamID)
+  void log(Pointer pf, Class& c, int streamID)
   {
     getStream(streamID).log(pf, c);
   } // Log
 
   template <class T>
-  void log(T c, LogFlags streamID)
+  void log(T c, int streamID)
   {
     getStream(streamID) << c;
   } // Log
@@ -173,9 +173,9 @@ public:
   /** \}
      */
 
-  LogStream& getStream(LogFlags stream)
+  LogStream& getStream(int streamId)
   {
-    const auto it = streammap_.find(stream);
+    const auto it = streammap_.find(streamId);
     if (it == streammap_.end())
       DUNE_THROW(InvalidStateException, "cannot get unkown Stream");
     return *(it->second);
@@ -214,14 +214,13 @@ public:
     }
   } // Flush
 
-  int addStream(LogFlags flags)
+  int addStream(int flags)
   {
-    //    assert( streamIDs_.find(flags) == streamIDs_.end() );
-    static int streamID_int = 16;
-    streamID_int <<= 2;
-    LogFlags streamID = (LogFlags)streamID_int;
+    static int streamID_int = LOG_NEXT;
+    streamID_int <<= 1;
+    int streamID = streamID_int;
     streamIDs_.push_back(streamID);
-    flagmap_[streamID]   = flags | streamID;
+    flagmap_[streamID]   = (flags | streamID);
     streammap_[streamID] = new LogStream(streamID, flagmap_[streamID], logfile_, logfileWoTime_);
     return streamID_int;
   } // AddStream
@@ -276,12 +275,12 @@ private:
   std::ofstream logfile_;
   std::ofstream logfileWoTime_;
   std::ofstream matlabLogFile_;
-  typedef std::map<LogFlags, int> FlagMap;
+  typedef std::map<int, int> FlagMap;
   FlagMap flagmap_;
-  typedef std::map<LogFlags, LogStream*> StreamMap;
+  typedef std::map<int, LogStream*> StreamMap;
   StreamMap streammap_;
-  typedef std::vector<LogFlags> IdVec;
-  typedef std::vector<LogFlags>::const_iterator IdVecCIter;
+  typedef std::vector<int> IdVec;
+  typedef std::vector<int>::const_iterator IdVecCIter;
   IdVec streamIDs_;
   int logflags_;
   MatlabLogStream* matlabLogStreamPtr;

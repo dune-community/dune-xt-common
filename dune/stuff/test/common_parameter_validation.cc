@@ -5,7 +5,7 @@
 #endif // ifdef HAVE_CMAKE_CONFIG
 
 #include <dune/stuff/common/parameter/validation.hh>
-#include <dune/stuff/common/typenames.hh>
+#include <dune/stuff/common/type_utils.hh>
 #include <dune/stuff/common/math.hh>
 #include <dune/common/tuples.hh>
 #include <dune/common/exceptions.hh>

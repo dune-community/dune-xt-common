@@ -18,7 +18,8 @@ enum LogFlags
   LOG_INFO    = 4,
   LOG_DEBUG   = 8,
   LOG_CONSOLE = 16,
-  LOG_FILE    = 32
+  LOG_FILE    = 32,
+  LOG_NEXT    = 64
 };
 
 class ILogStream : public std::ostream
@@ -27,7 +28,7 @@ public:
   typedef int PriorityType;
   static const PriorityType default_suspend_priority = 0;
 
-  ILogStream(LogFlags loglevel, int& logflags)
+  ILogStream(int loglevel, int& logflags)
     : std::ostream(buffer_.rdbuf())
     , logflags_(logflags)
     , loglevel_(loglevel)
@@ -84,7 +85,7 @@ public:
       // don't accidentally invalidate flags if already suspended
       if (!is_suspended_) {
         suspended_logflags_ = logflags_;
-        logflags_           = 1;
+        logflags_           = LOG_NONE;
       }
       is_suspended_ = true;
     }
@@ -111,7 +112,7 @@ protected:
   int& logflags_;
 
 private:
-  LogFlags loglevel_;
+  int loglevel_;
   int suspended_logflags_;
   bool is_suspended_;
   PriorityType suspend_priority_;
@@ -120,7 +121,7 @@ private:
 class MatlabLogStream : public ILogStream
 {
 public:
-  MatlabLogStream(LogFlags loglevel, int& logflags, std::ofstream& logFile)
+  MatlabLogStream(int loglevel, int& logflags, std::ofstream& logFile)
     : ILogStream(loglevel, logflags)
     , matlabLogFile_(logFile)
   {
@@ -154,7 +155,7 @@ private:
 class LogStream : public ILogStream
 {
 public:
-  LogStream(LogFlags loglevel, int& logflags, std::ofstream& file, std::ofstream& fileWoTime)
+  LogStream(int loglevel, int& logflags, std::ofstream& file, std::ofstream& fileWoTime)
     : ILogStream(loglevel, logflags)
     , logfile_(file)
     , logfileWoTime_(fileWoTime)
