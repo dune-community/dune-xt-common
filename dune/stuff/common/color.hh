@@ -78,29 +78,6 @@ std::string backcolor(int i)
   return "\033[38;5;" + Dune::Stuff::Common::String::convertTo(i) + "m";
 }
 
-// demangles typeid
-template <class T>
-std::string demangledTypeId(T& obj)
-{
-  int status;
-
-#ifdef __GNUC__
-  return abi::__cxa_demangle(typeid(obj).name(), 0, 0, &status);
-
-#else // ifdef __GNUC__
-  return typeid(obj).name();
-
-#endif // ifdef __GNUC__
-} // demangledTypeId
-
-// create output for demangled typeid
-template <class T>
-void realTypeId(T& obj, std::string name = "", int maxlevel = 10000)
-{
-  std::cout << name << (name == "" ? "" : "'s type is ") << highlightTemplate(demangledTypeId(obj), maxlevel)
-            << std::endl;
-}
-
 // maybe you want to choose your own color
 int templateColorChooser(int i)
 {
