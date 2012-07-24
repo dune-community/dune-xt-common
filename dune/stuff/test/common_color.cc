@@ -1,8 +1,8 @@
-#include "../common/color.hh"
+#include <dune/stuff/common/color.hh>
 
 using namespace Dune::Stuff::Common::Color;
 
-int main()
+int main(int, char**)
 {
   std::cout << underline << "a simple 'hello world': " << endunderline << "hello world" << std::endl;
   std::cout << underline << "a colored 'hello world': " << endunderline << highlightString("hello world", 1)
@@ -25,5 +25,6 @@ int main()
             << highlightTemplate("Hello< World, Hello< World, Hello< World< Hello, World > > > >", 2) << std::endl;
   std::cout << underline << "colored 'hello world' for all available colors( 0 - 255): " << endunderline << std::endl;
   for (int i = 0; i < 256; ++i)
-    std::cout << highlightString("hello world", i) << std::endl;
+    std::cout << highlightString("hello world - ", i);
+  std::cout << std::endl;
 } // main
