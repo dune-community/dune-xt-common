@@ -4,6 +4,8 @@
 #include <config.h>
 #endif // ifdef HAVE_CMAKE_CONFIG
 
+#include <dune/common/mpihelper.hh>
+
 int main(int argc, char** argv)
 {
   try {

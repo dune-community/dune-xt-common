@@ -71,6 +71,10 @@ MACRO( ADD_DUNE_MODULES )
 		LINK_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../dune-${MODULE}/lib/.libs )
 		FILE( GLOB_RECURSE tmp_header "${CMAKE_CURRENT_SOURCE_DIR}/../dune-${MODULE}/dune/${MODULE}/*.hh" )
 		LIST( APPEND DUNE_HEADERS ${tmp_header} )
+		SET( tmp_lib ${CMAKE_CURRENT_SOURCE_DIR}/../dune-${MODULE}/lib/.libs/libdune${MODULE}.a  )
+		IF( EXISTS ${tmp_lib} )
+			LIST( APPEND DUNE_LIBS ${tmp_lib} )
+		ENDIF( EXISTS ${tmp_lib} )
 	ENDFOREACH(MODULE)
 ENDMACRO( ADD_DUNE_MODULES )
 
@@ -152,17 +156,17 @@ else()
 endif(CXX_FLAG_CXX11)
 
 SET( CUSTOM_FLAGS
-	"-Wall -Wextra -Wlogical-op -Wc++0x-compat -Wparentheses -pedantic -Waggregate-return -Wmissing-declarations -Wredundant-decls -Wshadow -Winline -fno-strict-aliasing" CACHE STRING
+	"-Wall -Wextra -Wlogical-op -Wc++0x-compat -Wparentheses -pedantic -Wredundant-decls -Wshadow -Winline -fno-strict-aliasing" CACHE STRING
 	"CUSTOM FLAGS")
 SET( BOOST_ROOT
 	"/opt/boost-1.48" CACHE STRING
 	"" )	
 
 SET( CMAKE_CXX_FLAGS_RELEASE
-	"-ffast-math -funroll-loops -m64 -mfpmath=sse -falign-loops -mtune=native -march=native -O3 -pipe -fomit-frame-pointer " )
+	"-DDNDEBUG -funroll-loops -m64 -mfpmath=sse -falign-loops -mtune=native -march=native -O3 -pipe -fomit-frame-pointer " )
 
 SET( CMAKE_CXX_FLAGS_DEBUG
-	"-DDNDEBUG -g3 -ggdb" )
+	"-O0 -DDNDEBUG -g3 -ggdb" )
 	
 FIND_PACKAGE( PkgConfig )
 FIND_PACKAGE(Boost 1.42.0 REQUIRED)

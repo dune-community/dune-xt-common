@@ -30,7 +30,7 @@ SET( BLAS_LIB
 	"" )
 
 SET( GRIDTYPE
-	"SGRID" CACHE STRING
+	"YASPGRID" CACHE STRING
 	"GRIDTYPE" )
 
 SET( GRIDDIM
@@ -43,7 +43,7 @@ CONFIGURE_FILE( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_config.h.in ${CMAKE_CURR
 INCLUDE_DIR( ${dune-stuff_BINARY_DIR} ${dune-stuff_SOURCE_DIR} )
 ADD_CXX_FLAGS( ${CUSTOM_FLAGS} )
 
-ADD_DUNE_MODULES( common istl grid fem )
+ADD_DUNE_MODULES( common istl grid fem geometry localfunctions)
 
 LINK_DIRECTORIES( "/usr/lib" ${CCGNU_LIBRARY_DIRS} )
 
