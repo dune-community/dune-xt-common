@@ -58,9 +58,7 @@ LINK_DIRECTORIES( "/usr/lib" )
 
 FILE( GLOB_RECURSE stuff "stuff/*.hh" )
 
-
-# ADD_EXECUTABLE(function_test dune/stuff/test/function_test.cc ${stuff} )
-# TARGET_LINK_LIBRARIES(function_test ${COMMON_LIBS} )
-
 HEADERCHECK( ${stuff} )
 ADD_DEFINITIONS( ${MY_CXX_FLAGS} )
+
+add_subdirectory(dune)
