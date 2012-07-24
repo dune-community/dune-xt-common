@@ -4,6 +4,10 @@ using namespace Dune::Stuff::Common::Color;
 
 int main(int, char**)
 {
+  std::cout << "Testing some color codes for this terminal." << std::endl;
+  std::cout << "WARNING: This test will succeed although some of the color codes" << std::endl;
+  std::cout << "are not supported by your terminal!" << std::endl;
+  std::cout << "(Sometimes 'blink', 'reverse' or 'italic' are not supported.)" << std::endl;
   std::cout << underline << "a simple 'hello world': " << endunderline << "hello world" << std::endl;
   std::cout << underline << "a colored 'hello world': " << endunderline << highlightString("hello world", 1)
             << std::endl;
@@ -27,4 +31,5 @@ int main(int, char**)
   for (int i = 0; i < 256; ++i)
     std::cout << highlightString("hello world - ", i);
   std::cout << std::endl;
+  return 0;
 } // main

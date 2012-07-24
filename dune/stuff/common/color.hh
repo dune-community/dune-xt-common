@@ -18,6 +18,13 @@ namespace Stuff {
 
 namespace Common {
 
+/**
+ * @brief namespace to define color constants that can be
+ * used to print colored text in an output stream.
+ *
+ *
+ * @warning Some color codes might be unsupported by your terminal.
+ */
 namespace Color {
 // foreground colors
 static const char* const black     = "\033[30m";
@@ -68,11 +75,23 @@ static const char* const endunderline = "\033[24m";
 static const char* const endblink     = "\033[25m";
 static const char* const endreverse   = "\033[27m";
 
+/**
+ * @brief Chooses a color from a 256 color map for a foreground color.
+ *
+ * @param i The color number between 0 and 255.
+ * @returns A string describing a color code.
+ */
 std::string color(int i)
 {
   return "\033[38;5;" + Dune::Stuff::Common::String::convertTo(i) + "m";
 }
 
+/**
+ * @brief Chooses a color from a 256 color map for a background color.
+ *
+ * @param i The color number between 0 and 255.
+ * @returns A string describing a color code.
+ */
 std::string backcolor(int i)
 {
   return "\033[38;5;" + Dune::Stuff::Common::String::convertTo(i) + "m";
@@ -84,7 +103,13 @@ int templateColorChooser(int i)
   return i % 256;
 }
 
-// highlight templates depending on the "template"-level
+/**
+ * @brief Highlights templates depending on the "template"-level.
+ *
+ * @param str The string containing the template string
+ * @param maxlevel The maximal template-level the string is reduced to.
+ * @returns A colored template string.
+ */
 std::string highlightTemplate(std::string str, int maxlevel = 10000)
 {
   if (maxlevel < 0)
@@ -115,23 +140,36 @@ std::string highlightTemplate(std::string str, int maxlevel = 10000)
   return str;
 } // highlightTemplate
 
-// highlight a string in a specified color
+/**
+ * @brief A simple function highlighting a whole string in a specified foreground color.
+ *
+ * @param str The string you want to highlight.
+ * @param colornr A color number from a 256 color map between 0 and 255.
+ * @returns The highlighted string.
+ */
 std::string highlightString(std::string str, int colornr = 0)
 {
   return "\033[38;5;" + Dune::Stuff::Common::String::convertTo(colornr % 256) + "m" + str + "\033[38;5;0m";
 }
 
-// highlight a string which is searched in another string in a specified color
-std::string highlightSearchString(std::string str, std::string searchstr, int colornr = 0)
+/**
+ * @brief Highlights a substring of another string in a specified color.
+ *
+ * @param str The string where you want to highlight substrings.
+ * @param substr The sub string you want to highlight in str.
+ * @param colornr A color number from a 256 color map between 0 and 255.
+ * @returns The highlighted string.
+ */
+std::string highlightSearchString(std::string str, std::string substr, int colornr = 0)
 {
-  int index = str.find(searchstr, 0);
+  int index = str.find(substr, 0);
 
   while (index != int(std::string::npos)) {
     std::string dummy  = "\033[38;5;" + Dune::Stuff::Common::String::convertTo(colornr % 256) + "m";
     std::string dummy2 = "\033[38;5;0m";
     str.insert(index, dummy);
-    str.insert(index + searchstr.size() + dummy.size(), dummy2);
-    index = str.find(searchstr, index + dummy.size() + searchstr.size() + dummy2.size());
+    str.insert(index + substr.size() + dummy.size(), dummy2);
+    index = str.find(substr, index + dummy.size() + substr.size() + dummy2.size());
   }
   return str;
 } // highlightSearchString
