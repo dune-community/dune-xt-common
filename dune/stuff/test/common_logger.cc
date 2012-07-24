@@ -11,6 +11,6 @@ namespace DSC = Dune::Stuff::Common;
 int main(int, char* [])
 {
   DSC::Logger().create();
-  DSC::Logger().err() << "wargh" << std::endl;
+  DSC::Logger().error() << "wargh" << std::endl;
   return 0;
 }
