@@ -39,11 +39,8 @@ inline bool isinf(const Dune::StraightenBlockVector<BlockVectorImp, DofImp>& x)
 #endif // if HAVE_DUNE_FEM
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
-
 namespace Math {
 
 /** \todo DOCME **/
@@ -129,7 +126,7 @@ static RangeType1 dyadicProduct(const RangeType2& arg1, const RangeType2& arg2)
   return ret;
 } // dyadicProduct
 
-// ! a vector wrapper for continiously updating min,max,avg of some element type vector
+//! a vector wrapper for continiously updating min,max,avg of some element type vector
 template <class ElementType>
 class MinMaxAvg
 {
@@ -182,16 +179,20 @@ protected:
   MinMaxAvg(const ThisType& other);
 };
 
-// ! bound \param var in [\param min,\param max]
+//! bound \param var in [\param min,\param max]
 template <typename T>
 T clamp(const T var, const T min, const T max)
 {
   return (var < min) ? min : (var > max) ? max : var;
 }
 
-// ! float comparison
+//! float comparison
 template <class T>
 bool aboutEqual(const T& x, const T& y, T relative_tolerance = 1e-10, T absolute_tolerance = 1e-10)
+    DUNE_DEPRECATED_MSG("use dune/common/float_cmp:Dune::FloatCmp::eq instead ");
+
+template <class T>
+bool aboutEqual(const T& x, const T& y, T relative_tolerance, T absolute_tolerance)
 {
   return std::fabs(x - y) <= std::max(absolute_tolerance, relative_tolerance * std::max(std::fabs(x), std::fabs(y)));
 }
@@ -206,6 +207,7 @@ class MovingAverage
   size_t steps_;
 
 public:
+  DUNE_DEPRECATED_MSG("use MinMaxAvg this from header instead")
   MovingAverage()
     : avg_(0.0)
     , steps_(0)
@@ -223,18 +225,15 @@ public:
   }
 };
 
-// ! no-branch sign function
+//! no-branch sign function
 long sign(long x)
 {
   return long(x != 0) | (long(x >= 0) - 1);
 }
 
 } // namespace Math
-
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_MATH_HH
