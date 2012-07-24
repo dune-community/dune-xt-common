@@ -20,53 +20,53 @@ namespace Common {
 
 namespace Color {
 // foreground colors
-static const char* black     = "\033[30m";
-static const char* red       = "\033[31m";
-static const char* green     = "\033[32m";
-static const char* brown     = "\033[33m";
-static const char* blue      = "\033[34m";
-static const char* purple    = "\033[35m";
-static const char* cyan      = "\033[36m";
-static const char* lightgray = "\033[37m";
+static const char* const black     = "\033[30m";
+static const char* const red       = "\033[31m";
+static const char* const green     = "\033[32m";
+static const char* const brown     = "\033[33m";
+static const char* const blue      = "\033[34m";
+static const char* const purple    = "\033[35m";
+static const char* const cyan      = "\033[36m";
+static const char* const lightgray = "\033[37m";
 // light foreground colors
-static const char* darkgray    = "\033[1;30m";
-static const char* lightred    = "\033[1;31m";
-static const char* lightgreen  = "\033[1;32m";
-static const char* yellow      = "\033[1;33m";
-static const char* lightblue   = "\033[1;34m";
-static const char* lightpurple = "\033[1;35m";
-static const char* lightcyan   = "\033[1;36m";
-static const char* white       = "\033[1;37m";
+static const char* const darkgray    = "\033[1;30m";
+static const char* const lightred    = "\033[1;31m";
+static const char* const lightgreen  = "\033[1;32m";
+static const char* const yellow      = "\033[1;33m";
+static const char* const lightblue   = "\033[1;34m";
+static const char* const lightpurple = "\033[1;35m";
+static const char* const lightcyan   = "\033[1;36m";
+static const char* const white       = "\033[1;37m";
 
 // background colors
-static const char* bblack     = "\033[40m";
-static const char* bred       = "\033[41m";
-static const char* bgreen     = "\033[42m";
-static const char* bbrown     = "\033[43m";
-static const char* bblue      = "\033[44m";
-static const char* bpurple    = "\033[45m";
-static const char* bcyan      = "\033[46m";
-static const char* blightgray = "\033[47m";
+static const char* const bblack     = "\033[40m";
+static const char* const bred       = "\033[41m";
+static const char* const bgreen     = "\033[42m";
+static const char* const bbrown     = "\033[43m";
+static const char* const bblue      = "\033[44m";
+static const char* const bpurple    = "\033[45m";
+static const char* const bcyan      = "\033[46m";
+static const char* const blightgray = "\033[47m";
 // light background colors
-static const char* bdarkgray    = "\033[1;40m";
-static const char* blightred    = "\033[1;41m";
-static const char* blightgreen  = "\033[1;42m";
-static const char* byellow      = "\033[1;43m";
-static const char* blightblue   = "\033[1;44m";
-static const char* blightpurple = "\033[1;45m";
-static const char* blightcyan   = "\033[1;46m";
-static const char* bwhite       = "\033[1;47m";
+static const char* const bdarkgray    = "\033[1;40m";
+static const char* const blightred    = "\033[1;41m";
+static const char* const blightgreen  = "\033[1;42m";
+static const char* const byellow      = "\033[1;43m";
+static const char* const blightblue   = "\033[1;44m";
+static const char* const blightpurple = "\033[1;45m";
+static const char* const blightcyan   = "\033[1;46m";
+static const char* const bwhite       = "\033[1;47m";
 // modifiers
-static const char* normal       = "\033[0m";
-static const char* bold         = "\033[1m";
-static const char* italic       = "\033[2m";
-static const char* underline    = "\033[4m";
-static const char* blink        = "\033[5m";
-static const char* reverse      = "\033[7m";
-static const char* enditalic    = "\033[22m";
-static const char* endunderline = "\033[24m";
-static const char* endblink     = "\033[25m";
-static const char* endreverse   = "\033[27m";
+static const char* const normal       = "\033[0m";
+static const char* const bold         = "\033[1m";
+static const char* const italic       = "\033[2m";
+static const char* const underline    = "\033[4m";
+static const char* const blink        = "\033[5m";
+static const char* const reverse      = "\033[7m";
+static const char* const enditalic    = "\033[22m";
+static const char* const endunderline = "\033[24m";
+static const char* const endblink     = "\033[25m";
+static const char* const endreverse   = "\033[27m";
 
 std::string color(int i)
 {
