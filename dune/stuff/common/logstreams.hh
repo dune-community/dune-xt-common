@@ -59,7 +59,8 @@ public:
   {
     if (enabled()) {
       buffer_ << pf;
-      if (pf == (std::ostream & (*)(std::ostream&))std::endl) {
+      if ((pf == (std::ostream & (*)(std::ostream&))std::endl)
+          || (pf == (std::ostream & (*)(std::ostream&))std::flush)) {
         flush();
       }
     }
