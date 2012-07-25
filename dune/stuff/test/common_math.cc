@@ -29,56 +29,70 @@ struct MinMaxAvgTest
   }
 };
 
-void vectorMathTest()
+template <class T>
+struct VectorMath
 {
-  typedef Dune::FieldVector<double, 2> Vector;
-  typedef Dune::FieldMatrix<double, 2, 2> Matrix;
+  static void run()
   {
-    Vector a(0);
-    a[0] = 1;
-    Vector b(0);
-    b[1] = 1;
-    Matrix aa(0);
-    aa[0][0] = 1;
-    MY_ASSERT(Math::dyadicProduct<Matrix>(a, a) == aa);
-    Matrix ab(0);
-    ab[0][1] = 1;
-    MY_ASSERT(Math::dyadicProduct<Matrix>(a, b) == ab);
+    typedef Dune::FieldVector<double, 2> Vector;
+    typedef Dune::FieldMatrix<double, 2, 2> Matrix;
+    {
+      Vector a(0);
+      a[0] = 1;
+      Vector b(0);
+      b[1] = 1;
+      Matrix aa(0);
+      aa[0][0] = 1;
+      MY_ASSERT(Math::dyadicProduct<Matrix>(a, a) == aa);
+      Matrix ab(0);
+      ab[0][1] = 1;
+      MY_ASSERT(Math::dyadicProduct<Matrix>(a, b) == ab);
+    }
+    {
+      Matrix a(0);
+      a[0][0] = 1;
+      a[1][1] = 1;
+      Matrix b(0);
+      b[1][0] = 1;
+      b[0][1] = 1;
+      MY_ASSERT(Dune::FloatCmp::eq(Math::colonProduct(a, b), 0.0));
+      MY_ASSERT(Dune::FloatCmp::eq(Math::colonProduct(a, a), 2.0));
+    }
   }
-  {
-    Matrix a(0);
-    a[0][0] = 1;
-    a[1][1] = 1;
-    Matrix b(0);
-    b[1][0] = 1;
-    b[0][1] = 1;
-    MY_ASSERT(Dune::FloatCmp::eq(Math::colonProduct(a, b), 0.0));
-    MY_ASSERT(Dune::FloatCmp::eq(Math::colonProduct(a, a), 2.0));
-  }
-}
+};
 
 template <class T>
-void clampTest()
+struct ClampTest
 {
-  const T lower = T(-1);
-  const T upper = T(1);
-  MY_ASSERT(Math::clamp(T(-2), lower, upper) == lower);
-  MY_ASSERT(Math::clamp(T(2), lower, upper) == upper);
-  MY_ASSERT(Math::clamp(T(0), lower, upper) == T(0));
-}
+  static void run()
+  {
+    const T lower = T(-1);
+    const T upper = T(1);
+    MY_ASSERT(Math::clamp(T(-2), lower, upper) == lower);
+    MY_ASSERT(Math::clamp(T(2), lower, upper) == upper);
+    MY_ASSERT(Math::clamp(T(0), lower, upper) == T(0));
+  }
+};
+
+template <class T>
+struct EpsilonInstance
+{
+  static void run()
+  {
+    MY_ASSERT(Math::Epsilon<T>::value != T(0));
+  }
+};
 
 int main(int argc, char** argv)
 {
   try {
     // mpi
+    typedef Dune::tuple<double, int> TestTypes;
     Dune::MPIHelper::instance(argc, argv);
-    MinMaxAvgTest<double>::run();
-    MinMaxAvgTest<int>::run();
-    vectorMathTest();
-    clampTest<double>();
-    clampTest<int>();
-    //    Math::Epsilon<
-
+    TestRunner<MinMaxAvgTest>::run<TestTypes>();
+    TestRunner<ClampTest>::run<TestTypes>();
+    TestRunner<VectorMath>::run<TestTypes>();
+    TestRunner<EpsilonInstance>::run<BasicTypes>();
   } catch (Dune::Exception& e) {
     std::cout << e.what() << std::endl;
     return 1;
