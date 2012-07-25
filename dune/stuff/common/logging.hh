@@ -32,7 +32,9 @@ class Logging
 {
 private:
   Logging()
-    : matlabLogStreamPtr(0)
+    : logflags_(LOG_NONE)
+    , matlabLogStreamPtr(0)
+    , emptyLogStream_(logflags_)
   {
     streamIDs_.push_back(LOG_ERROR);
     streamIDs_.push_back(LOG_DEBUG);
@@ -58,10 +60,12 @@ public:
     }
 
     // delete the MatlabLogStream
-    matlabLogStreamPtr->flush();
-    matlabLogFile_.close();
-    delete matlabLogStreamPtr;
-    matlabLogStreamPtr = 0;
+    if (matlabLogStreamPtr) {
+      matlabLogStreamPtr->flush();
+      matlabLogFile_.close();
+      delete matlabLogStreamPtr;
+      matlabLogStreamPtr = 0;
+    }
   }
 
   /** \brief setup loglevel, logfilename
@@ -94,7 +98,7 @@ public:
     IdVecCIter it = streamIDs_.begin();
     for (; it != streamIDs_.end(); ++it) {
       flagmap_[*it]   = logflags;
-      streammap_[*it] = new LogStream(*it, flagmap_[*it], logfile_, logfileWoTime_);
+      streammap_[*it] = new FileLogStream(*it, flagmap_[*it], logfile_, logfileWoTime_);
     }
     // create the MatlabLogStream
     std::string matlabLogFileName = logdir + logfile + "_matlab.m";
@@ -177,8 +181,10 @@ public:
   {
     const auto it = streammap_.find(streamId);
     if (it == streammap_.end())
-      DUNE_THROW(InvalidStateException, "cannot get unkown Stream");
-    return *(it->second);
+      return emptyLogStream_;
+    //      DUNE_THROW(InvalidStateException, "cannot get unkown Stream");
+    else
+      return *(it->second);
   }
 
   LogStream& err() DUNE_DEPRECATED_MSG("use error() instead")
@@ -201,10 +207,12 @@ public:
   {
     return getStream(LOG_DEBUG);
   }
-  MatlabLogStream& matlab()
+  LogStream& matlab()
   {
-    assert(matlabLogStreamPtr);
-    return *matlabLogStreamPtr;
+    if (matlabLogStreamPtr)
+      return *matlabLogStreamPtr;
+    else
+      return emptyLogStream_;
   }
 
   void flush()
@@ -221,7 +229,7 @@ public:
     int streamID = streamID_int;
     streamIDs_.push_back(streamID);
     flagmap_[streamID]   = (flags | streamID);
-    streammap_[streamID] = new LogStream(streamID, flagmap_[streamID], logfile_, logfileWoTime_);
+    streammap_[streamID] = new FileLogStream(streamID, flagmap_[streamID], logfile_, logfileWoTime_);
     return streamID_int;
   } // AddStream
 
@@ -284,6 +292,7 @@ private:
   IdVec streamIDs_;
   int logflags_;
   MatlabLogStream* matlabLogStreamPtr;
+  EmptyLogStream emptyLogStream_;
 
   friend Logging& Logger();
   // satisfy stricter warnings wrt copying
