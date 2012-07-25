@@ -1,12 +1,7 @@
-#ifdef HAVE_CMAKE_CONFIG
-#include "cmake_config.h"
-#elif defined(HAVE_CONFIG_H)
-#include <config.h>
-#endif // ifdef HAVE_CMAKE_CONFIG
+#include "test_common.hh"
 
 #include <iostream>
 
-#include <dune/common/mpihelper.hh>
 #include <dune/stuff/common/type_utils.hh>
 
 STUFF_TYPENAME(Dune::MPIHelper)

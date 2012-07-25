@@ -1,3 +1,4 @@
+#include "test_common.hh"
 #include <dune/stuff/common/color.hh>
 
 using namespace Dune::Stuff::Common::Color;

@@ -1,24 +1,17 @@
-#ifdef HAVE_CMAKE_CONFIG
-#include "cmake_config.h"
-#elif defined(HAVE_CONFIG_H)
-#include <config.h>
-#endif // ifdef HAVE_CMAKE_CONFIG
+#include "test_common.hh"
 
-#include <dune/common/mpihelper.hh>
 #include <dune/stuff/common/math.hh>
-#include <dune/common/float_cmp.hh>
+#include <dune/common/tupleutility.hh>
 
-#define MY_ASSERT(cond)                                                                                                \
-  if (not cond) {                                                                                                      \
-    DUNE_THROW(Dune::Exception, #cond " failed");                                                                      \
-  }
+using namespace Dune::Stuff::Common;
+
 
 template <class T>
-struct Test
+struct MinMaxAvgTest
 {
   static void run()
   {
-    using namespace Dune::Stuff::Common::Math;
+    using namespace Math;
     MinMaxAvg<T> mma;
     mma(-1);
     mma(1);
@@ -36,13 +29,55 @@ struct Test
   }
 };
 
+void vectorMathTest()
+{
+  typedef Dune::FieldVector<double, 2> Vector;
+  typedef Dune::FieldMatrix<double, 2, 2> Matrix;
+  {
+    Vector a(0);
+    a[0] = 1;
+    Vector b(0);
+    b[1] = 1;
+    Matrix aa(0);
+    aa[0][0] = 1;
+    MY_ASSERT(Math::dyadicProduct<Matrix>(a, a) == aa);
+    Matrix ab(0);
+    ab[0][1] = 1;
+    MY_ASSERT(Math::dyadicProduct<Matrix>(a, b) == ab);
+  }
+  {
+    Matrix a(0);
+    a[0][0] = 1;
+    a[1][1] = 1;
+    Matrix b(0);
+    b[1][0] = 1;
+    b[0][1] = 1;
+    MY_ASSERT(Dune::FloatCmp::eq(Math::colonProduct(a, b), 0.0));
+    MY_ASSERT(Dune::FloatCmp::eq(Math::colonProduct(a, a), 2.0));
+  }
+}
+
+template <class T>
+void clampTest()
+{
+  const T lower = T(-1);
+  const T upper = T(1);
+  MY_ASSERT(Math::clamp(T(-2), lower, upper) == lower);
+  MY_ASSERT(Math::clamp(T(2), lower, upper) == upper);
+  MY_ASSERT(Math::clamp(T(0), lower, upper) == T(0));
+}
+
 int main(int argc, char** argv)
 {
   try {
     // mpi
     Dune::MPIHelper::instance(argc, argv);
-    Test<double>::run();
-    Test<int>::run();
+    MinMaxAvgTest<double>::run();
+    MinMaxAvgTest<int>::run();
+    vectorMathTest();
+    clampTest<double>();
+    clampTest<int>();
+    //    Math::Epsilon<
 
   } catch (Dune::Exception& e) {
     std::cout << e.what() << std::endl;
