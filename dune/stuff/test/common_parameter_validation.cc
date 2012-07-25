@@ -1,41 +1,17 @@
-#ifdef HAVE_CMAKE_CONFIG
-#include "cmake_config.h"
-#elif defined(HAVE_CONFIG_H)
-#include <config.h>
-#endif // ifdef HAVE_CMAKE_CONFIG
+#include "test_common.hh"
 
 #include <dune/stuff/common/parameter/validation.hh>
 #include <dune/stuff/common/type_utils.hh>
 #include <dune/stuff/common/math.hh>
 #include <dune/common/tuples.hh>
+#include <dune/common/tupleutility.hh>
 #include <dune/common/exceptions.hh>
 #include <dune/common/bigunsignedint.hh>
 #include <limits>
-#include <random>
 #include <iostream>
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_integral.hpp>
-
-template <typename, bool>
-struct Distribution
-{
-};
-template <typename T>
-struct Distribution<T, true>
-{
-  typedef std::uniform_int_distribution<T> type;
-};
-template <typename T>
-struct Distribution<T, false>
-{
-  typedef std::uniform_real_distribution<T> type;
-};
-
-#define MY_ASSERT(cond)                                                                                                \
-  if (not cond) {                                                                                                      \
-    DUNE_THROW(Dune::Exception, #cond " failed");                                                                      \
-  }
 
 namespace DSC = Dune::Stuff::Common;
 using namespace DSC::Parameter;
@@ -83,15 +59,7 @@ struct TypeTest
 int main(int, char* [])
 {
   try {
-    TypeTest<double>().run();
-    TypeTest<float>().run();
-    // is_intergral is false for Dune::bigunsignedint
-    //    TypeTest<Dune::bigunsignedint<32> >().run();
-    TypeTest<int>().run();
-    TypeTest<unsigned int>().run();
-    TypeTest<unsigned long>().run();
-    TypeTest<long long>().run();
-    TypeTest<char>().run();
+    TestRunner<TypeTest>::run<BasicTypes>();
     return 0;
   } catch (Dune::Exception& e) {
     std::cerr << e.what() << std::endl;
