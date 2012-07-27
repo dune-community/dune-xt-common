@@ -22,15 +22,16 @@ enum LogFlags
   LOG_NEXT    = 64
 };
 
-class LogStream : public std::ostream
+class SuspendableStrBuffer : public std::basic_stringbuf<char, std::char_traits<char>>
 {
+  typedef std::basic_stringbuf<char, std::char_traits<char>> BaseType;
+
 public:
   typedef int PriorityType;
   static const PriorityType default_suspend_priority = 0;
 
-  LogStream(int loglevel, int& logflags)
-    : std::ostream(buffer_.rdbuf())
-    , logflags_(logflags)
+  SuspendableStrBuffer(int loglevel, int& logflags)
+    : logflags_(logflags)
     , loglevel_(loglevel)
     , suspended_logflags_(logflags)
     , is_suspended_(false)
@@ -38,48 +39,11 @@ public:
   {
   }
 
-  virtual ~LogStream()
-  {
-  }
-
-  inline bool enabled() const
-  {
-    return (!is_suspended_) && (logflags_ & loglevel_);
-  }
-
-  template <typename T>
-  LogStream& operator<<(T in)
-  {
-    if (enabled())
-      buffer_ << in;
-    return *this;
-  } // <<
-
-  LogStream& operator<<(std::ostream& (*pf)(std::ostream&))
-  {
-    if (enabled()) {
-      buffer_ << pf;
-      if ((pf == (std::ostream & (*)(std::ostream&))std::endl)
-          || (pf == (std::ostream & (*)(std::ostream&))std::flush)) {
-        flush();
-      }
-    }
-    return *this;
-  }
-
-  template <class Class, typename Pointer>
-  void log(Pointer pf, Class& c)
-  {
-    if (enabled()) {
-      (c.*pf)(buffer_);
-    }
-  }
-
   /** \brief stop accepting input into the buffer
      * the suspend_priority_ mechanism provides a way to silence streams from 'higher' modules
      * no-op if already suspended
      ***/
-  void suspend(PriorityType priority = default_suspend_priority)
+  void suspend(PriorityType priority)
   {
     suspend_priority_ = std::max(priority, suspend_priority_);
     {
@@ -95,7 +59,7 @@ public:
   /** \brief start accepting input into the buffer again
      * no-op if not suspended
      ***/
-  void resume(PriorityType priority = default_suspend_priority)
+  void resume(PriorityType priority)
   {
     if (priority >= suspend_priority_) {
       if (is_suspended_)
@@ -105,18 +69,82 @@ public:
     }
   } // Resume
 
-  // ! dump buffer into file/stream and clear it
-  virtual void flush() = 0;
-
 protected:
-  std::stringstream buffer_;
-  int& logflags_;
+  virtual std::streamsize xsputn(const char_type* s, std::streamsize count)
+  {
+    if (enabled())
+      return BaseType::xsputn(s, count);
+    // pretend everything was written
+    return std::streamsize(count);
+  }
+
+  virtual int_type overflow(int_type ch = traits_type::eof())
+  {
+    if (enabled())
+      return BaseType::overflow(ch);
+    // anything not equal to traits::eof is considered a success
+    return traits_type::eof() + 1;
+  }
 
 private:
+  inline bool enabled() const
+  {
+    return (!is_suspended_) && (logflags_ & loglevel_);
+  }
+
+  int& logflags_;
   int loglevel_;
   int suspended_logflags_;
   bool is_suspended_;
   PriorityType suspend_priority_;
+};
+
+
+class LogStream : public std::ostream
+{
+public:
+  typedef SuspendableStrBuffer::PriorityType PriorityType;
+  static const PriorityType default_suspend_priority = SuspendableStrBuffer::default_suspend_priority;
+
+  LogStream(int loglevel, int& logflags)
+    : buffer_(loglevel, logflags)
+    , std::ostream(&buffer_)
+  {
+  }
+
+  virtual ~LogStream()
+  {
+  }
+
+  /** \brief forwards suspend to buffer
+     * the suspend_priority_ mechanism provides a way to silence streams from 'higher' modules
+     * no-op if already suspended
+     ***/
+  void suspend(PriorityType priority = default_suspend_priority)
+  {
+    buffer_.suspend(priority);
+  } // Suspend
+
+  /** \brief start accepting input into the buffer again
+     * no-op if not suspended
+     ***/
+  void resume(PriorityType priority = default_suspend_priority)
+  {
+    buffer_.resume(priority);
+  } // Resume
+
+  template <class Class, typename Pointer>
+  void log(Pointer pf, Class& c)
+  {
+    (c.*pf)(buffer_);
+  }
+
+  // ! dump buffer into file/stream and clear it
+  virtual void flush() = 0;
+
+protected:
+  SuspendableStrBuffer buffer_;
+
 }; // LogStream
 
 // ! only for logging to a single file which should then be executable by matlab
@@ -139,8 +167,7 @@ public:
   {
     matlabLogFile_ << buffer_.str();
     matlabLogFile_.flush();
-    buffer_.flush();
-    buffer_.clear();
+    buffer_.str("");
   }
 
   // ! there should be no need to at the fstream directly
@@ -171,21 +198,14 @@ public:
 
   void flush()
   {
-    if (enabled()) {
-      // flush buffer into stream
-      if ((logflags_ & LOG_CONSOLE) != 0) {
-        std::cout << buffer_.str(); // << std::endl;
-        std::cout.flush();
-      }
-      if ((logflags_ & LOG_FILE) != 0) {
-        logfile_ << "\n" << Dune::Stuff::Common::String::fromTime() << buffer_.str() << std::endl;
-        logfileWoTime_ << buffer_.str(); // << std::endl;
-        logfile_.flush();
-        logfileWoTime_.flush();
-      }
-      buffer_.flush();
-      buffer_.str(""); // clear the buffer
-    }
+    // flush buffer into stream
+    std::cout << buffer_.str();
+    std::cout.flush();
+    logfile_ << "\n" << Dune::Stuff::Common::String::fromTime() << buffer_.str() << std::endl;
+    logfileWoTime_ << buffer_.str();
+    logfile_.flush();
+    logfileWoTime_.flush();
+    buffer_.str("");
   } // Flush
 
 private:
@@ -204,7 +224,7 @@ public:
 
   void flush()
   {
-    buffer_.clear();
+    buffer_.str("");
   }
 }; // class EmptyLogStream
 

@@ -58,10 +58,10 @@ public:
     Dune::ParameterTreeParser::readOptions(argc, argv, tree_);
   } // ReadCommandLine
 
-  /** \brief  passthrough to underlying Dune::Parameter
+  /** \brief  passthrough to underlying Dune::ParameterTree
      *  \param  useDbgStream
      *          needs to be set to false when using this function in Logging::Create,
-     *              otherwise an assertion will will cause streams aren't available yet
+     *              otherwise an assertion will fire cause streams aren't available yet
      **/
   template <typename T>
   T get(std::string name, T def, bool useDbgStream = true)
@@ -98,6 +98,12 @@ public:
     return get<std::string, Validator>(name, def, validator, useDbgStream);
   }
 
+  template <class T>
+  void set(const std::string key, const T value)
+  {
+    tree_[key] = value;
+  }
+
 private:
   bool warning_output_;
   Dune::ParameterTree tree_;
@@ -117,6 +123,8 @@ ConfigContainer& Config()
 } // namespace Stuff
 
 } // namespace Dune
+
+#define DSC_CONFIG Dune::Stuff::Common::Parameter::Config()
 
 #endif // DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
 
