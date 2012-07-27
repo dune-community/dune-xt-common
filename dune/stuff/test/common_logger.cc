@@ -4,6 +4,13 @@
 
 namespace DSC = Dune::Stuff::Common;
 
+void balh(std::ostream& out)
+{
+  static int c = 0;
+  out << "balh " << c << "\n";
+  c++;
+}
+
 int main(int, char* [])
 {
   DSC::Logger().create(DSC::LOG_CONSOLE | DSC::LOG_ERROR);
@@ -15,6 +22,12 @@ int main(int, char* [])
     const int id = DSC::Logger().addStream(DSC::LOG_CONSOLE | i);
     DSC::Logger().getStream(id) << "Create a new stream with id: " << id << std::endl;
   }
+  DSC_LOG_ERROR.suspend();
+  DSC_LOG_ERROR << "not in output\n";
+  balh(DSC_LOG_ERROR);
+  DSC_LOG_ERROR.resume();
+  DSC_LOG_ERROR << "in output\n";
+  balh(DSC_LOG_ERROR);
   DSC::Logger().flush();
   return 0;
 }
