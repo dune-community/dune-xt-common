@@ -1,6 +1,9 @@
 #ifndef DUNE_STUFF_COMMON_MATRIX_HH
 #define DUNE_STUFF_COMMON_MATRIX_HH
 
+// dune-common
+#include <dune/common/densematrix.hh>
+
 #ifdef THIS_WORKS
 #include <dune/fem/operator/matrix/spmatrix.hh>
 #include <dune/common/static_assert.hh>
@@ -23,17 +26,21 @@ namespace Common {
 namespace Matrix {
 
 // \todo doc
-template <class DenseMatrixType>
-void clear(DenseMatrixType& matrix)
+template <class MatrixImp>
+void clear(Dune::DenseMatrix<MatrixImp>& matrix)
 {
-  typedef typename DenseMatrixType::value_type ValueType;
-
+  // preparations
+  const typename Dune::DenseMatrix<MatrixImp>::value_type zero(0.0);
+  // loop over all rows
   for (unsigned int i = 0; i < matrix.rows(); ++i) {
+    // get row
+    typename Dune::DenseMatrix<MatrixImp>::row_reference row = matrix[i];
+    // loop over all cols
     for (unsigned int j = 0; j < matrix.cols(); ++j) {
-      matrix[i][j] = ValueType(0);
-    }
-  }
-} // void clear(DenseMatrixType& matrix)
+      row[j] = zero;
+    } // loop over all cols
+  } // loop over all rows
+} // void clear(Dune::DenseMatrix< MatrixImp >& matrix)
 
 #ifdef THIS_WORKS
 // ! TODO
