@@ -69,7 +69,7 @@ endmacro()
 find_package(Doxygen)
 
 if(DOXYGEN_FOUND)
-	find_file(DOXYFILE_IN "Doxyfile.in"
+	find_file(DOXYFILE_IN NAMES "Doxyfile.cmake.in" "Doxyfile.in" 
 			PATHS "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_ROOT}/Modules/")
 
 	include(FindPackageHandleStandardArgs)
