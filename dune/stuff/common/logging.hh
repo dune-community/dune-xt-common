@@ -207,6 +207,10 @@ public:
   {
     return getStream(LOG_DEBUG);
   }
+  LogStream& devnull()
+  {
+    return emptyLogStream_;
+  }
   LogStream& matlab()
   {
     if (matlabLogStreamPtr)
