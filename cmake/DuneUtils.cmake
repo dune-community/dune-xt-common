@@ -62,7 +62,7 @@ MACRO( ADD_CPPCHECK )
 			FILE( APPEND  ${CPPINLINST}  "${SOURCEFILE}\n" )
 		ENDFOREACH( SOURCEFILE )	
 		TO_LIST_SPACES( PLAIN_INCLUDE_DIRS CPPCHECK_FLAGS_SPLIT )
-		ADD_CUSTOM_TARGET(  cppcheck cppcheck --xml --enable=all -f --quiet --file-list=${CPPINLINST}
+		ADD_CUSTOM_TARGET(  cppcheck cppcheck --xml --enable=all --report-progress --file-list=${CPPINLINST}
 				${CPPCHECK_FLAGS_SPLIT}  2>cppcheck.xml )
 	ELSE( EXISTS ${CPPCHECK_BINARY} )
 		MESSAGE( STATUS "Not adding cppcheck target because cppcheck executable not found" )
