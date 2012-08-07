@@ -58,10 +58,10 @@ struct TimingData
 };
 
 /** \brief simple inline profiling class
-   *
    *  - User can set as many (even nested) named sections whose total clock time will be computed across all program
-   *instances.\n
+   * instances.\n
    *  - Provides csv-conform output of process-averaged runtimes.
+   * \todo this could go into libdune-stuff
    **/
 class Profiler
 {
@@ -357,96 +357,15 @@ long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_in
   return long((clock() - init_time_) / double(CLOCKS_PER_SEC * scale_factor));
 } // OutputCommon
 
-struct IdentityWeights
-{
-  double apply(const double to_weigh, const int /*current*/, const int /*max*/)
-  {
-    return to_weigh;
-  }
-};
 
-struct LinearWeights
-{
-  double apply(const double to_weigh, const int current, const int max)
-  {
-    return to_weigh / (current / double(max));
-  }
-};
-struct QuadraticWeights
-{
-  double apply(const double to_weigh, const int current, const int max)
-  {
-    return to_weigh / std::pow(current / double(max), 2.0);
-  }
-};
-struct ProgressiveWeights
-{
-  const int prog_;
-  ProgressiveWeights(const int prog)
-    : prog_(prog)
-  {
-  }
-  double apply(const double to_weigh, const int /*current*/, const int /*max*/)
-  {
-    return to_weigh * prog_;
-  }
-};
-
-//! helper class to estimate time needed to complete a loop with given counter
-template <class CounterType, class WeightType = IdentityWeights>
-class LoopTimer
-{
-  typedef LoopTimer<CounterType, WeightType> ThisType;
-  CounterType& counter_;
-  const int iteration_count_;
-  int iteration_;
-  std::ostream& output_stream_;
-  WeightType weight_;
-  Dune::Stuff::Common::Math::MovingAverage avg_time_per_iteration_;
-  Dune::ExecutionTimer step_timer_;
-
-public:
-  LoopTimer(CounterType& counter, const int iteration_count, std::ostream& output_stream = std::cout,
-            WeightType weight = WeightType())
-    : counter_(counter)
-    , iteration_count_(iteration_count)
-    , iteration_(0)
-    , output_stream_(output_stream)
-    , weight_(weight)
-  {
-    step_timer_.start();
-  }
-
-  ThisType& operator++()
-  {
-    ++iteration_;
-    step_timer_.end();
-    avg_time_per_iteration_ += weight_.apply(std::abs(step_timer_.read()), iteration_, iteration_count_);
-    long remaining_steps     = iteration_count_ - iteration_;
-    double remaining_seconds = remaining_steps * double(avg_time_per_iteration_);
-    boost::posix_time::time_duration diff(0, 0, remaining_seconds, 0);
-    boost::posix_time::ptime target = boost::posix_time::second_clock::local_time();
-    target += diff;
-    output_stream_ << boost::format("\n---\n Total Time remaining: %s -- %s (%f %%)\n---\n")
-                          % boost::posix_time::to_simple_string(diff) % boost::posix_time::to_simple_string(target)
-                          % (100 * (remaining_steps / double(iteration_count_)))
-                   << std::endl;
-    step_timer_.start();
-    ++counter_;
-    return *this;
-  } // ++
-};
-
-//! global profiler object (for legacy code compat this is outside NS Stuff)
+//! global profiler object
 Profiler& profiler()
 {
   return Profiler::instance();
 }
 
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_PROFILER_HH_INCLUDED
