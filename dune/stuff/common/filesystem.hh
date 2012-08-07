@@ -18,13 +18,13 @@ namespace Common {
 
 namespace Filesystem {
 
-// ! strip filename from \path if present, return empty string if only filename present
+//! strip filename from \path if present, return empty string if only filename present
 std::string pathOnly(std::string path)
 {
   return boost::filesystem::path(path).parent_path().string();
 }
 
-// ! return everything after the last slash
+//! return everything after the last slash
 std::string filenameOnly(const std::string& path)
 {
 #if BOOST_FILESYSTEM_VERSION > 2
@@ -36,7 +36,7 @@ std::string filenameOnly(const std::string& path)
 #endif // if BOOST_FILESYSTEM_VERSION > 2
 } // filenameOnly
 
-// ! may include filename, will be stripped
+//! may include filename, will be stripped
 void testCreateDirectory(const std::string path)
 {
   std::string pathonly = pathOnly(path);
@@ -44,7 +44,7 @@ void testCreateDirectory(const std::string path)
     boost::filesystem::create_directories(pathonly);
 }
 
-// ! read a file and output all lines containing filter string to a stream
+//! read a file and output all lines containing filter string to a stream
 void fileToStreamFiltered(std::ostream& stream, std::string filename, std::string filter)
 {
   std::ifstream file(filename.c_str(), std::ifstream::in);
@@ -59,7 +59,7 @@ void fileToStreamFiltered(std::ostream& stream, std::string filename, std::strin
   file.close();
 } // fileToStreamFiltered
 
-// ! output programs mem usage stats by reading from /proc
+//! output programs mem usage stats by reading from /proc
 void meminfo(Dune::Stuff::Common::LogStream& stream)
 {
   stream << "Memory info: \n";

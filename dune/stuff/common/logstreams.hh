@@ -139,7 +139,7 @@ public:
     (c.*pf)(buffer_);
   }
 
-  // ! dump buffer into file/stream and clear it
+  //! dump buffer into file/stream and clear it
   virtual void flush() = 0;
 
 protected:
@@ -147,7 +147,7 @@ protected:
 
 }; // LogStream
 
-// ! only for logging to a single file which should then be executable by matlab
+//! only for logging to a single file which should then be executable by matlab
 class MatlabLogStream : public LogStream
 {
 public:
@@ -162,7 +162,7 @@ public:
     flush();
   }
 
-  // ! dump buffer into file/stream and clear it
+  //! dump buffer into file/stream and clear it
   void flush()
   {
     matlabLogFile_ << buffer_.str();
@@ -170,7 +170,7 @@ public:
     buffer_.str("");
   }
 
-  // ! there should be no need to at the fstream directly
+  //! there should be no need to at the fstream directly
   const std::ofstream& fileStream() const DUNE_DEPRECATED
   {
     return matlabLogFile_;
@@ -180,7 +180,7 @@ private:
   std::ofstream& matlabLogFile_;
 }; // class MatlabLogStream
 
-// ! ostream compatible class wrapping file and console output
+//! ostream compatible class wrapping file and console output
 class FileLogStream : public LogStream
 {
 public:

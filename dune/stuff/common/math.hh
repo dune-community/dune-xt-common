@@ -24,7 +24,7 @@
 #include <dune/fem/function/blockvectorfunction/blockvectorfunction.hh>
 namespace boost {
 namespace math {
-// ! isinf specialization for Dune::StraightenBlockVector
+//! isinf specialization for Dune::StraightenBlockVector
 template <class BlockVectorImp, class DofImp>
 inline bool isinf(const Dune::StraightenBlockVector<BlockVectorImp, DofImp>& x)
 {

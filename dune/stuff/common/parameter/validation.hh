@@ -49,7 +49,7 @@ protected:
   }
 };
 
-// ! a class usable as a default validator
+//! a class usable as a default validator
 template <class T>
 class ValidateAny : public ValidatorInterface<T, ValidateAny<T>>
 {
@@ -75,7 +75,7 @@ public:
   }
 };
 
-// ! validates arg iff in given list
+//! validates arg iff in given list
 template <class T, class ListImp = std::vector<T>>
 class ValidateInList : public ValidatorInterface<T, ValidateInList<T, ListImp>>
 {

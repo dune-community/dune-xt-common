@@ -109,7 +109,7 @@ private:
   Dune::ParameterTree tree_;
 };
 
-// ! global ConfigContainer instance
+//! global ConfigContainer instance
 ConfigContainer& Config()
 {
   static ConfigContainer parameters;

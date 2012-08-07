@@ -11,9 +11,9 @@ namespace Stuff {
 
 namespace Common {
 
-// ! POSIX signal management utils
+//! POSIX signal management utils
 namespace Signals {
-// ! reset given signal to default handler
+//! reset given signal to default handler
 void resetSignal(int signal)
 {
   struct sigaction new_action;
@@ -24,7 +24,7 @@ void resetSignal(int signal)
   sigaction(signal, &new_action, NULL);
 } // resetSignal
 
-// ! example signal handler
+//! example signal handler
 void handleInterrupt(int signal)
 {
   Logger().Info() << "forcefully terminated at " << Logging::TimeString() << std::endl;
@@ -34,10 +34,10 @@ void handleInterrupt(int signal)
   kill(getpid(), signal);
 } // handleInterrupt
 
-// ! type of handler functions
+//! type of handler functions
 typedef void handler_type(int);
 
-// ! calling this from your main() will install handler as callback when signal is received
+//! calling this from your main() will install handler as callback when signal is received
 void installSignalHandler(int signal = SIGINT, handler_type handler = handleInterrupt)
 {
   struct sigaction new_action;

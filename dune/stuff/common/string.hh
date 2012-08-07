@@ -41,7 +41,7 @@ namespace Stuff {
 namespace Common {
 namespace String {
 
-// ! simple and dumb std::string to anything conversion
+//! simple and dumb std::string to anything conversion
 template <class ReturnType>
 ReturnType convertFrom(const std::string& s)
 {
@@ -53,7 +53,7 @@ ReturnType convertFrom(const std::string& s)
   return r;
 } // fromString
 
-// ! simple and dumb anything to std::string conversion
+//! simple and dumb anything to std::string conversion
 template <class ReturnType>
 std::string convertTo(const ReturnType& s)
 {

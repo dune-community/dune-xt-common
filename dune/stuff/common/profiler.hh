@@ -30,10 +30,10 @@ namespace Common {
 
 class Profiler;
 
-// ! Stuff::Profiler global instance
+//! Stuff::Profiler global instance
 Profiler& profiler();
 
-// ! wraps name, start- and end time for one timing section
+//! wraps name, start- and end time for one timing section
 struct TimingData
 {
   clock_t start;
@@ -81,7 +81,7 @@ protected:
   typedef std::vector<DataMap> MapVector;
 
 public:
-  // ! set this to begin a named section
+  //! set this to begin a named section
   void StartTiming(const std::string section_name)
   {
     if (m_cur_run_num >= m_timings.size()) {
@@ -102,7 +102,7 @@ public:
     }
   } // StartTiming
 
-  // ! stop named section's counter
+  //! stop named section's counter
   void StopTiming(const std::string section_name)
   {
     assert(m_cur_run_num < m_timings.size());
@@ -118,7 +118,7 @@ public:
       current_data[section_name] += known_timers_map_[section_name].second.delta();
   } // StopTiming
 
-  // ! get runtime of section in seconds
+  //! get runtime of section in seconds
   long GetTiming(const std::string section_name) const
   {
     assert(m_cur_run_num < m_timings.size());
@@ -154,11 +154,11 @@ public:
   long OutputCommon(CollectiveCommunication& comm, InfoContainer& run_infos, std::string filename,
                     const double scale_factor = 1.0);
 
-  // ! default proxy for output
+  //! default proxy for output
   template <class CollectiveCommunication, class InfoContainer>
   long Output(CollectiveCommunication& comm, InfoContainer& run_infos, const double scale_factor = 1.0);
 
-  // ! proxy for output of a map of runinfos
+  //! proxy for output of a map of runinfos
   template <class CollectiveCommunication, class InfoContainerMap>
   void OutputMap(CollectiveCommunication& comm, InfoContainerMap& run_infos_map, const double scale_factor = 1.0);
 
@@ -175,20 +175,20 @@ public:
     init_time_    = clock();
   } // Reset
 
-  // ! simple counter, usable to count how often a single piece of code is called
+  //! simple counter, usable to count how often a single piece of code is called
   void AddCount(const int num)
   {
     m_count[num] += 1;
   }
 
-  // ! call this after one iteration of your code has finished. increments current run number and puts new timing data
+  //! call this after one iteration of your code has finished. increments current run number and puts new timing data
   // into the vector
   void NextRun()
   {
     m_cur_run_num++;
   }
 
-  // ! a utility class to time a limited scope of code
+  //! a utility class to time a limited scope of code
   class ScopedTiming : public boost::noncopyable
   {
     const std::string section_name_;
@@ -249,7 +249,7 @@ long Profiler::OutputAveraged(CollectiveCommunication& comm, const int refineLev
   AvgMap averages;
   for (MapVector::const_iterator vit = m_timings.begin(); vit != m_timings.end(); ++vit) {
     for (DataMap::const_iterator it = vit->begin(); it != vit->end(); ++it) {
-      // ! this used to be GetTiming( it->second ), which is only valid thru an implicit and wrong conversion..
+      //! this used to be GetTiming( it->second ), which is only valid thru an implicit and wrong conversion..
       averages[it->first] += GetTiming(it->first);
     }
   }
@@ -265,7 +265,7 @@ long Profiler::OutputAveraged(CollectiveCommunication& comm, const int refineLev
   csv << "Speedup (total); Speedup (ohne Solver)" << std::endl;
 
   // outputs column values
-  csv << refineLevel << "," << comm.size() << "," << numDofs << "," << 0 << ","; // !FIXME
+  csv << refineLevel << "," << comm.size() << "," << numDofs << "," << 0 << ","; //! FIXME
   for (AvgMap::const_iterator it = averages.begin(); it != averages.end(); ++it) {
     long clock_count = it->second;
     clock_count = long(comm.sum(clock_count) / double(scale_factor * numProce));
@@ -392,7 +392,7 @@ struct ProgressiveWeights
   }
 };
 
-// ! helper class to estimate time needed to complete a loop with given counter
+//! helper class to estimate time needed to complete a loop with given counter
 template <class CounterType, class WeightType = IdentityWeights>
 class LoopTimer
 {
@@ -437,7 +437,7 @@ public:
   } // ++
 };
 
-// ! global profiler object (for legacy code compat this is outside NS Stuff)
+//! global profiler object (for legacy code compat this is outside NS Stuff)
 Profiler& profiler()
 {
   return Profiler::instance();
