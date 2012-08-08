@@ -9,7 +9,7 @@
 #include "runinfo.hh"
 
 #include <dune/common/exceptions.hh>
-#include <dune/fem/misc/femtimer.hh>
+#include <dune/common/deprecated.hh>
 
 #include <string>
 #include <iostream>
@@ -23,9 +23,7 @@
 #include <boost/config.hpp>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
 
 class Profiler;
@@ -70,7 +68,7 @@ class Profiler
 protected:
   Profiler()
   {
-    Reset(1);
+    reset(1);
   }
   ~Profiler()
   {
@@ -82,7 +80,7 @@ protected:
 
 public:
   //! set this to begin a named section
-  void StartTiming(const std::string section_name)
+  void startTiming(const std::string section_name)
   {
     if (m_cur_run_num >= m_timings.size()) {
       m_timings.push_back(DataMap());
@@ -103,7 +101,7 @@ public:
   } // StartTiming
 
   //! stop named section's counter
-  void StopTiming(const std::string section_name)
+  void stopTiming(const std::string section_name)
   {
     assert(m_cur_run_num < m_timings.size());
     if (known_timers_map_.find(section_name) == known_timers_map_.end())
@@ -119,13 +117,13 @@ public:
   } // StopTiming
 
   //! get runtime of section in seconds
-  long GetTiming(const std::string section_name) const
+  long getTiming(const std::string section_name) const
   {
     assert(m_cur_run_num < m_timings.size());
-    return GetTiming(section_name, m_cur_run_num);
+    return getTiming(section_name, m_cur_run_num);
   }
 
-  long GetTiming(const std::string section_name, const int run_number) const
+  long getTiming(const std::string section_name, const int run_number) const
   {
     assert(run_number < int(m_timings.size()));
     const DataMap& data             = m_timings[run_number];
@@ -143,7 +141,7 @@ public:
      * \tparam CollectiveCommunication should be Dune::CollectiveCommunication< MPI_Comm / double >
      **/
   template <class CollectiveCommunication>
-  long OutputAveraged(CollectiveCommunication& comm, const int refineLevel, const long numDofs,
+  long outputAveraged(CollectiveCommunication& comm, const int refineLevel, const long numDofs,
                       const double scale_factor = 1.0);
 
   /** output to \param filename
@@ -151,22 +149,22 @@ public:
      * \tparam CollectiveCommunication should be Dune::CollectiveCommunication< MPI_Comm / double >
      **/
   template <class CollectiveCommunication, class InfoContainer>
-  long OutputCommon(CollectiveCommunication& comm, InfoContainer& run_infos, std::string filename,
+  long outputCommon(CollectiveCommunication& comm, InfoContainer& run_infos, std::string filename,
                     const double scale_factor = 1.0);
 
   //! default proxy for output
   template <class CollectiveCommunication, class InfoContainer>
-  long Output(CollectiveCommunication& comm, InfoContainer& run_infos, const double scale_factor = 1.0);
+  long output(CollectiveCommunication& comm, InfoContainer& run_infos, const double scale_factor = 1.0);
 
   //! proxy for output of a map of runinfos
   template <class CollectiveCommunication, class InfoContainerMap>
-  void OutputMap(CollectiveCommunication& comm, InfoContainerMap& run_infos_map, const double scale_factor = 1.0);
+  void outputMap(CollectiveCommunication& comm, InfoContainerMap& run_infos_map, const double scale_factor = 1.0);
 
   /** call this with correct numRuns <b> before </b> starting any profiling
      *  if you're planning on doing more than one iteration of your code
      *  called once fromm ctor with numRuns=1
      **/
-  void Reset(const int numRuns)
+  void reset(const int numRuns)
   {
     m_timings.clear();
     m_timings     = MapVector(numRuns, DataMap());
@@ -176,14 +174,14 @@ public:
   } // Reset
 
   //! simple counter, usable to count how often a single piece of code is called
-  void AddCount(const int num)
+  void addCount(const int num)
   {
     m_count[num] += 1;
   }
 
   //! call this after one iteration of your code has finished. increments current run number and puts new timing data
   // into the vector
-  void NextRun()
+  void nextRun()
   {
     m_cur_run_num++;
   }
@@ -197,12 +195,12 @@ public:
     inline ScopedTiming(const std::string& section_name)
       : section_name_(section_name)
     {
-      Profiler::instance().StartTiming(section_name_);
+      Profiler::instance().startTiming(section_name_);
     }
 
     inline ~ScopedTiming()
     {
-      Profiler::instance().StopTiming(section_name_);
+      Profiler::instance().stopTiming(section_name_);
     }
   };
 
@@ -223,7 +221,7 @@ protected:
 };
 
 template <class CollectiveCommunication>
-long Profiler::OutputAveraged(CollectiveCommunication& comm, const int refineLevel, const long numDofs,
+long Profiler::outputAveraged(CollectiveCommunication& comm, const int refineLevel, const long numDofs,
                               const double scale_factor)
 {
   const int numProce = comm.size();
@@ -250,7 +248,7 @@ long Profiler::OutputAveraged(CollectiveCommunication& comm, const int refineLev
   for (MapVector::const_iterator vit = m_timings.begin(); vit != m_timings.end(); ++vit) {
     for (DataMap::const_iterator it = vit->begin(); it != vit->end(); ++it) {
       //! this used to be GetTiming( it->second ), which is only valid thru an implicit and wrong conversion..
-      averages[it->first] += GetTiming(it->first);
+      averages[it->first] += getTiming(it->first);
     }
   }
 
@@ -280,7 +278,7 @@ long Profiler::OutputAveraged(CollectiveCommunication& comm, const int refineLev
 } // OutputAveraged
 
 template <class CollectiveCommunication, class InfoContainer>
-long Profiler::Output(CollectiveCommunication& comm, InfoContainer& run_infos, const double scale_factor)
+long Profiler::output(CollectiveCommunication& comm, InfoContainer& run_infos, const double scale_factor)
 {
   const int numProce = comm.size();
 
@@ -293,7 +291,7 @@ long Profiler::Output(CollectiveCommunication& comm, InfoContainer& run_infos, c
 } // Output
 
 template <class CollectiveCommunication, class InfoContainerMap>
-void Profiler::OutputMap(CollectiveCommunication& comm, InfoContainerMap& run_infos_map, const double scale_factor)
+void Profiler::outputMap(CollectiveCommunication& comm, InfoContainerMap& run_infos_map, const double scale_factor)
 {
   std::string dir(Dune::Stuff::Common::Parameter::Parameters().getParam("fem.io.datadir", std::string(".")));
 
@@ -304,7 +302,7 @@ void Profiler::OutputMap(CollectiveCommunication& comm, InfoContainerMap& run_in
 } // OutputMap
 
 template <class CollectiveCommunication, class InfoContainer>
-long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_infos, std::string filename,
+long Profiler::outputCommon(CollectiveCommunication& comm, InfoContainer& run_infos, std::string filename,
                             const double scale_factor)
 {
   const int numProce = comm.size();
@@ -343,7 +341,7 @@ long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_in
 
     const DataMap& data_map = *ti_it;
     for (DataMap::const_iterator it = data_map.begin(); it != data_map.end(); ++it) {
-      long clock_count = GetTiming(it->first, idx);
+      long clock_count = getTiming(it->first, idx);
       clock_count      = long(comm.sum(clock_count) / double(scale_factor * numProce));
       csv << clock_count << ",";
     }
@@ -367,6 +365,8 @@ Profiler& profiler()
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
+
+#define DSC_PROF Dune::Stuff::Common::profiler()
 
 #endif // DUNE_STUFF_PROFILER_HH_INCLUDED
 /** Copyright (c) 2012, Rene Milk
