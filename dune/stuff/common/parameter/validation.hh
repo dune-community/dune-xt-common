@@ -7,13 +7,11 @@
 
 #include <dune/stuff/common/misc.hh>
 #include <dune/stuff/common/string.hh>
+#include <dune/stuff/common/type_utils.hh>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
-
 namespace Parameter {
 
 /** \brief Base class for all Validators
@@ -217,11 +215,8 @@ private:
 };
 
 } // end namesapce Parameter
-
 } // end namesapce Common
-
 } // end namesapce Stuff
-
 } // end namesapce Dune
 
 template <class T, class Validator>
