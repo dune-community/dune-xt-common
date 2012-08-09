@@ -11,11 +11,8 @@
 #include <boost/filesystem.hpp>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
-
 namespace Filesystem {
 
 //! strip filename from \path if present, return empty string if only filename present

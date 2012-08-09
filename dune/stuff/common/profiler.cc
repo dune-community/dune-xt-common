@@ -1,5 +1,11 @@
+#include <dune/common/mpihelper.hh>
+
+#include <map>
+#include <string>
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
 
 namespace Dune {
 namespace Stuff {
@@ -78,35 +84,33 @@ void Profiler::nextRun()
   m_cur_run_num++;
 }
 
-template <class CollectiveCommunication>
-long Profiler::outputAveraged(CollectiveCommunication& comm, const int refineLevel, const long numDofs,
-                              const double scale_factor)
+
+long Profiler::outputAveraged(const int refineLevel, const long numDofs, const double scale_factor) const
 {
+  const auto& comm   = Dune::MPIHelper::getCollectiveCommunication();
   const int numProce = comm.size();
 
-  std::ostringstream filename;
-
-  filename << "p" << numProce << "_refinelvl_" << refineLevel << ".csv";
-  filename.flush();
+  boost::format csv_name("p%d_refinelvl_%d.csv");
+  csv_name % numProce % refineLevel;
+  boost::filesystem::path filename(m_output_dir);
+  filename /= csv_name.str();
 
   if (comm.rank() == 0)
-    std::cout << "Profiling info in: " << (filename.str()).c_str() << std::endl;
+    std::cout << "Profiling info in: " << filename << std::endl;
 
 #ifndef NDEBUG
-  for (std::map<int, int>::const_iterator it = m_count.begin(); it != m_count.end(); ++it) {
-    std::cout << "proc " << comm.rank() << " bId " << it->first << " count " << it->second << std::endl;
+  for (const auto& count : m_count) {
+    std::cout << "proc " << comm.rank() << " bId " << count.first << " count " << count.second << std::endl;
   }
 #endif // ifndef NDEBUG
 
-  Dune::Stuff::Common::Filesystem::testCreateDirectory(Dune::Stuff::Common::Filesystem::pathOnly(filename.str()));
-  std::ofstream csv((filename.str()).c_str());
+  boost::filesystem::ofstream csv(filename);
 
-  typedef std::map<std::string, long> AvgMap;
-  AvgMap averages;
-  for (MapVector::const_iterator vit = m_timings.begin(); vit != m_timings.end(); ++vit) {
-    for (DataMap::const_iterator it = vit->begin(); it != vit->end(); ++it) {
+  std::map<std::string, long> averages_map;
+  for (const auto& datamap : m_timings) {
+    for (const auto& timing : datamap) {
       //! this used to be GetTiming( it->second ), which is only valid thru an implicit and wrong conversion..
-      averages[it->first] += getTiming(it->first);
+      averages_map[timing.first] += getTiming(timing.first);
     }
   }
 
@@ -115,15 +119,15 @@ long Profiler::outputAveraged(CollectiveCommunication& comm, const int refineLev
       << "processes,"
       << "numDofs,"
       << "L1 error,";
-  for (AvgMap::const_iterator it = averages.begin(); it != averages.end(); ++it) {
-    csv << it->first << ",";
+  for (const auto& avg_item : averages_map) {
+    csv << avg_item.first << ",";
   }
   csv << "Speedup (total); Speedup (ohne Solver)" << std::endl;
 
   // outputs column values
   csv << refineLevel << "," << comm.size() << "," << numDofs << "," << 0 << ","; //! FIXME
-  for (AvgMap::const_iterator it = averages.begin(); it != averages.end(); ++it) {
-    long clock_count = it->second;
+  for (const auto& avg_item : averages_map) {
+    long clock_count = avg_item.second;
     clock_count = long(comm.sum(clock_count) / double(scale_factor * numProce));
     csv << clock_count / double(m_total_runs) << ",";
   }
@@ -135,48 +139,45 @@ long Profiler::outputAveraged(CollectiveCommunication& comm, const int refineLev
   return long((clock() - init_time_) / double(CLOCKS_PER_SEC * scale_factor));
 } // OutputAveraged
 
-template <class CollectiveCommunication, class InfoContainer>
-long Profiler::output(CollectiveCommunication& comm, InfoContainer& run_infos, const double scale_factor)
+long Profiler::output(const Profiler::InfoContainer& run_infos, const double scale_factor) const
 {
+  const auto& comm   = Dune::MPIHelper::getCollectiveCommunication();
   const int numProce = comm.size();
 
-  std::ostringstream filename;
-
-  filename << Dune::Stuff::Common::Parameter::Parameters().getParam("fem.io.datadir", std::string(".")) << "/prof_p"
-           << numProce << ".csv";
-  filename.flush();
-  return OutputCommon(comm, run_infos, filename.str(), scale_factor);
+  boost::filesystem::path filename(m_output_dir);
+  filename /= (boost::format("prof_p%d.csv") % numProce).str();
+  return outputCommon(run_infos, filename, scale_factor);
 } // Output
 
-template <class CollectiveCommunication, class InfoContainerMap>
-void Profiler::outputMap(CollectiveCommunication& comm, InfoContainerMap& run_infos_map, const double scale_factor)
+void Profiler::outputMap(const Profiler::InfoContainerMap& run_infos_map, const double scale_factor) const
 {
-  std::string dir(Dune::Stuff::Common::Parameter::Parameters().getParam("fem.io.datadir", std::string(".")));
+  const auto& comm = Dune::MPIHelper::getCollectiveCommunication();
+  //! TODO fem specific
+  const std::string dir(Dune::Stuff::Common::Parameter::Parameters().getParam("fem.io.datadir", std::string(".")));
 
-  BOOST_FOREACH (typename InfoContainerMap::value_type el, run_infos_map) {
-    OutputCommon(
-        comm, el.second, (boost::format("%s/prof_p%d_ref%s.csv") % dir % comm.size() % el.first).str(), scale_factor);
+  for (const auto& el : run_infos_map) {
+    boost::filesystem::path filename(m_output_dir);
+    filename /= (boost::format("prof_p%d_ref%s.csv") % comm.size() % el.first).str();
+    outputCommon(el.second, filename, scale_factor);
   }
 } // OutputMap
 
-template <class CollectiveCommunication, class InfoContainer>
-long Profiler::outputCommon(CollectiveCommunication& comm, InfoContainer& run_infos, std::string filename,
-                            const double scale_factor)
+long Profiler::outputCommon(const Profiler::InfoContainer& run_infos, const boost::filesystem::path& filename,
+                            const double scale_factor) const
 {
+  const auto& comm   = Dune::MPIHelper::getCollectiveCommunication();
   const int numProce = comm.size();
 
   if (comm.rank() == 0)
-    std::cout << "Profiling info in: " << filename.c_str() << std::endl;
+    std::cout << "Profiling info in: " << filename << std::endl;
 
 #ifndef NDEBUG
-  for (std::map<int, int>::const_iterator it = m_count.begin(); it != m_count.end(); ++it) {
-    std::cout << "proc " << comm.rank() << " bId " << it->first << " count " << it->second << std::endl;
+  for (const auto& count : m_count) {
+    std::cout << "proc " << comm.rank() << " bId " << count.first << " count " << count.second << std::endl;
   }
 #endif // ifndef NDEBUG
 
-  Dune::Stuff::Common::Filesystem::testCreateDirectory(Dune::Stuff::Common::Filesystem::pathOnly(filename));
-  std::ofstream csv(filename.c_str());
-
+  boost::filesystem::ofstream csv(filename);
   // outputs column names
   csv << "refine,"
       << "processes,"
@@ -188,16 +189,13 @@ long Profiler::outputCommon(CollectiveCommunication& comm, InfoContainer& run_in
   csv << "Relative_total_time,compiler" << std::endl;
 
   // outputs column values
-
-  MapVector::const_iterator ti_it = m_timings.begin();
   int idx = 0;
   assert(run_infos.size() >= m_timings.size());
-  for (; ti_it != m_timings.end(); ++ti_it) {
-    Dune::Stuff::Common::RunInfo info = run_infos[idx];
+  for (const DataMap& data_map : m_timings) {
+    const Dune::Stuff::Common::RunInfo& info = run_infos[idx];
     csv << boost::format("%d,%d,%d,%e,") % info.refine_level % comm.size() % info.codim0
                % (info.L2Errors.size() ? info.L2Errors[0] : double(-1));
 
-    const DataMap& data_map = *ti_it;
     for (DataMap::const_iterator it = data_map.begin(); it != data_map.end(); ++it) {
       long clock_count = getTiming(it->first, idx);
       clock_count      = long(comm.sum(clock_count) / double(scale_factor * numProce));
@@ -207,11 +205,22 @@ long Profiler::outputCommon(CollectiveCommunication& comm, InfoContainer& run_in
 
     idx++;
   }
-
   csv.close();
 
   return long((clock() - init_time_) / double(CLOCKS_PER_SEC * scale_factor));
 } // OutputCommon
+
+void Profiler::setOutputdir(const std::string dir)
+{
+  m_output_dir = dir;
+  Dune::Stuff::Common::Filesystem::testCreateDirectory(m_output_dir);
+}
+
+Profiler::Profiler()
+{
+  reset(1);
+  setOutputdir("profiling");
+}
 
 } // namespace Common
 } // namespace Stuff

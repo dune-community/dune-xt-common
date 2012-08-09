@@ -10,6 +10,7 @@
 
 #include <dune/common/exceptions.hh>
 #include <dune/common/deprecated.hh>
+#include <dune/common/mpihelper.hh>
 
 #include <string>
 #include <iostream>
@@ -66,10 +67,7 @@ class Profiler
   friend Profiler& profiler();
 
 protected:
-  Profiler()
-  {
-    reset(1);
-  }
+  Profiler();
   ~Profiler()
   {
   }
@@ -79,6 +77,9 @@ protected:
   typedef std::vector<DataMap> MapVector;
 
 public:
+  typedef std::vector<Dune::Stuff::Common::RunInfo> InfoContainer;
+  typedef std::map<std::string, InfoContainer> InfoContainerMap;
+
   //! set this to begin a named section
   void startTiming(const std::string section_name);
 
@@ -92,27 +93,21 @@ public:
   /** output to currently pre-defined (csv) file, does not output individual run results, but average over all recorded
    * results
      * \param comm used to gather and average the runtime data over all processes
-     * \tparam CollectiveCommunication should be Dune::CollectiveCommunication< MPI_Comm / double >
      **/
-  template <class CollectiveCommunication>
-  long outputAveraged(CollectiveCommunication& comm, const int refineLevel, const long numDofs,
-                      const double scale_factor = 1.0);
+  long outputAveraged(const int refineLevel, const long numDofs, const double scale_factor = 1.0) const;
 
   /** output to \param filename
      * \param comm used to gather and average the runtime data over all processes
      * \tparam CollectiveCommunication should be Dune::CollectiveCommunication< MPI_Comm / double >
      **/
-  template <class CollectiveCommunication, class InfoContainer>
-  long outputCommon(CollectiveCommunication& comm, InfoContainer& run_infos, std::string filename,
-                    const double scale_factor = 1.0);
+  long outputCommon(const InfoContainer& run_infos, const boost::filesystem::path& filename,
+                    const double scale_factor = 1.0) const;
 
   //! default proxy for output
-  template <class CollectiveCommunication, class InfoContainer>
-  long output(CollectiveCommunication& comm, InfoContainer& run_infos, const double scale_factor = 1.0);
+  long output(const InfoContainer& run_infos, const double scale_factor = 1.0) const;
 
   //! proxy for output of a map of runinfos
-  template <class CollectiveCommunication, class InfoContainerMap>
-  void outputMap(CollectiveCommunication& comm, InfoContainerMap& run_infos_map, const double scale_factor = 1.0);
+  void outputMap(const InfoContainerMap& run_infos_map, const double scale_factor = 1.0) const;
 
   /** call this with correct numRuns <b> before </b> starting any profiling
      *  if you're planning on doing more than one iteration of your code
@@ -126,6 +121,8 @@ public:
   //! call this after one iteration of your code has finished. increments current run number and puts new timing data
   // into the vector
   void nextRun();
+
+  void setOutputdir(const std::string dir);
 
   //! a utility class to time a limited scope of code
   class ScopedTiming : public boost::noncopyable
@@ -149,6 +146,8 @@ protected:
   MapVector m_timings;
   unsigned int m_cur_run_num;
   unsigned int m_total_runs;
+  //! runtime tables etc go there
+  std::string m_output_dir;
   // debug counter, only outputted in debug mode
   std::map<int, int> m_count;
   clock_t init_time_;
