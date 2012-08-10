@@ -123,7 +123,7 @@ public:
   template <typename T>
   T get(std::string name, T def, Request req, bool useDbgStream = true)
   {
-    requests_[name].insert(req);
+    requests_map_[name].insert(req);
     return get(name, def, ValidateAny<T>(), useDbgStream);
   }
 
@@ -165,7 +165,7 @@ public:
   printRequests(std::ostream& out) const
   {
     out << "Config requests:";
-    for (const auto& pair : requests_) {
+    for (const auto& pair : requests_map_) {
       out << "Key: " << pair.first;
       for (const auto& req : pair.second) {
         out << "\n\t" << req;
@@ -176,8 +176,7 @@ public:
 
   printMismatchedDefaults(std::ostream& out) const
   {
-
-    for (const auto& pair : requests_) {
+    for (const auto& pair : requests_map_) {
       typedef bool (*func)(const Request&, const Request&);
       std::set<Request, func> mismatched(&strictRequestCompare);
       mismatched.insert(pair.second.begin(), pair.second.end());
@@ -193,7 +192,7 @@ private:
   bool warning_output_;
   Dune::ParameterTree tree_;
   //! config key -> requests map
-  std::map<std::string, std::set<Request>> requests_;
+  std::map<std::string, std::set<Request>> requests_map_;
 };
 
 //! global ConfigContainer instance
