@@ -18,16 +18,16 @@ void Profiler::startTiming(const std::string section_name)
     m_total_runs++;
   }
 
-  KnownTimersMap::iterator section = known_timers_map_.find(section_name);
+  const KnownTimersMap::iterator section = known_timers_map_.find(section_name);
   if (section != known_timers_map_.end()) {
     if (section->second.first) // timer currently running
       return;
 
     section->second.first  = true; // set active, start with new
-    section->second.second = TimingData(section_name, clock());
+    section->second.second = TimingData(section_name);
   } else {
     // init new section
-    known_timers_map_[section_name] = std::make_pair(true, TimingData(section_name, clock()));
+    known_timers_map_[section_name] = std::make_pair(true, TimingData(section_name));
   }
 } // StartTiming
 
@@ -37,13 +37,15 @@ void Profiler::stopTiming(const std::string section_name)
   if (known_timers_map_.find(section_name) == known_timers_map_.end())
     DUNE_THROW(Dune::RangeError, "trying to stop timer " << section_name << " that wasn't started\n");
 
-  known_timers_map_[section_name].first      = false;
-  known_timers_map_[section_name].second.end = clock();
+  known_timers_map_[section_name].first = false; // marks as not running
+  TimingData& timing = known_timers_map_[section_name].second;
+  timing.stop();
+  long long delta       = timing.delta();
   DataMap& current_data = m_timings[m_cur_run_num];
   if (current_data.find(section_name) == current_data.end())
-    current_data[section_name] = known_timers_map_[section_name].second.delta();
+    current_data[section_name] = delta;
   else
-    current_data[section_name] += known_timers_map_[section_name].second.delta();
+    current_data[section_name] += delta;
 } // StopTiming
 
 long Profiler::getTiming(const std::string section_name) const
@@ -61,7 +63,7 @@ long Profiler::getTiming(const std::string section_name, const int run_number) c
     ASSERT_EXCEPTION(false, "no timer found: " + section_name);
     return -1;
   }
-  return long(section->second / double(CLOCKS_PER_SEC));
+  return section->second;
 } // GetTiming
 
 
@@ -136,7 +138,7 @@ long Profiler::outputAveraged(const int refineLevel, const long numDofs, const d
 
   csv.close();
 
-  return long((clock() - init_time_) / double(CLOCKS_PER_SEC * scale_factor));
+  return long((clock() - init_time_) / scale_factor);
 } // OutputAveraged
 
 long Profiler::output(const Profiler::InfoContainer& run_infos, const double scale_factor) const
@@ -207,7 +209,7 @@ long Profiler::outputCommon(const Profiler::InfoContainer& run_infos, const boos
   }
   csv.close();
 
-  return long((clock() - init_time_) / double(CLOCKS_PER_SEC * scale_factor));
+  return long((clock() - init_time_) / scale_factor);
 } // OutputCommon
 
 void Profiler::setOutputdir(const std::string dir)
@@ -216,10 +218,39 @@ void Profiler::setOutputdir(const std::string dir)
   Dune::Stuff::Common::Filesystem::testCreateDirectory(m_output_dir);
 }
 
+void Profiler::outputTimings(const std::string csv) const
+{
+  const auto& comm = Dune::MPIHelper::getCollectiveCommunication();
+  boost::filesystem::path filename(m_output_dir);
+  filename /= (boost::format("timings_p%08d.csv") % comm.rank()).str();
+  boost::filesystem::ofstream out(filename);
+  outputTimings(out);
+}
+
+void Profiler::outputTimings(std::ostream& out) const
+{
+  if (m_timings.size() < 1)
+    return;
+  // csv header:
+  out << "run";
+  for (const auto& section : m_timings[0]) {
+    out << csv_sep << section.first;
+  }
+  int i = 0;
+  for (const auto& datamap : m_timings) {
+    out << std::endl << i;
+    for (const auto& section : datamap) {
+      out << csv_sep << section.second;
+    }
+    out << std::endl;
+  }
+}
+
 Profiler::Profiler()
+  : csv_sep(",")
 {
   reset(1);
-  setOutputdir("profiling");
+  setOutputdir("./profiling");
 }
 
 } // namespace Common

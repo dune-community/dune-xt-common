@@ -22,6 +22,8 @@
 #include <boost/format.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/config.hpp>
+#include <boost/timer/timer.hpp>
+#include <boost/shared_ptr.hpp>
 
 namespace Dune {
 namespace Stuff {
@@ -35,29 +37,35 @@ Profiler& profiler();
 //! wraps name, start- and end time for one timing section
 struct TimingData
 {
-  clock_t start;
-  clock_t end;
+private:
+  boost::shared_ptr<boost::timer::cpu_timer> timer_;
+
+public:
   std::string name;
-  TimingData(const std::string _name, const clock_t _start)
-    : start(_start)
-    , end((clock_t)0.0)
+  TimingData(const std::string _name = "blank")
+    : timer_(new boost::timer::cpu_timer)
     , name(_name)
   {
+    timer_->start();
   }
-  TimingData()
-    : start((clock_t)0.0)
-    , end((clock_t)0.0)
-    , name("blank")
+
+  void stop()
   {
+    timer_->stop();
   }
-  long delta() const
+
+  /** \return time elapsed since object construction in milliseconds
+   *  \note since typical resolutions for user+system time are 10-15ms the nanosecond results are scaled accordingly
+   **/
+  boost::timer::nanosecond_type delta() const
   {
-    return long(end - start);
+    return (timer_->elapsed().user + timer_->elapsed().system) / 1e6;
   }
 };
 
 /** \brief simple inline profiling class
-   *  - User can set as many (even nested) named sections whose total clock time will be computed across all program
+   *  - User can set as many (even nested) named sections whose total (=system+user) time will be computed across all
+  *program
    * instances.\n
    *  - Provides csv-conform output of process-averaged runtimes.
    * \todo this could go into libdune-stuff
@@ -73,6 +81,7 @@ protected:
   }
 
   typedef std::map<std::string, std::pair<bool, TimingData>> KnownTimersMap;
+  //! section name -> seconds
   typedef std::map<std::string, long> DataMap;
   typedef std::vector<DataMap> MapVector;
 
@@ -86,7 +95,7 @@ public:
   //! stop named section's counter
   void stopTiming(const std::string section_name);
 
-  //! get runtime of section in seconds
+  //! get runtime of section in milliseconds
   long getTiming(const std::string section_name) const;
   long getTiming(const std::string section_name, const int run_number) const;
 
@@ -109,6 +118,9 @@ public:
   //! proxy for output of a map of runinfos
   void outputMap(const InfoContainerMap& run_infos_map, const double scale_factor = 1.0) const;
 
+  //! file-output the named sections only
+  void outputTimings(const std::string filename) const;
+  void outputTimings(std::ostream& out = std::cout) const;
   /** call this with correct numRuns <b> before </b> starting any profiling
      *  if you're planning on doing more than one iteration of your code
      *  called once fromm ctor with numRuns=1
@@ -142,7 +154,7 @@ public:
     }
   };
 
-protected:
+private:
   MapVector m_timings;
   unsigned int m_cur_run_num;
   unsigned int m_total_runs;
@@ -152,6 +164,7 @@ protected:
   std::map<int, int> m_count;
   clock_t init_time_;
   KnownTimersMap known_timers_map_;
+  const std::string csv_sep;
 
   static Profiler& instance()
   {
