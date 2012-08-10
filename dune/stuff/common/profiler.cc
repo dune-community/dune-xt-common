@@ -69,6 +69,8 @@ long Profiler::getTiming(const std::string section_name, const int run_number) c
 
 void Profiler::reset(const int numRuns)
 {
+  if (!(numRuns > 0))
+    DUNE_THROW(Dune::RangeError, "preparing the profiler for 0 runs is moronic");
   m_timings.clear();
   m_timings     = MapVector(numRuns, DataMap());
   m_total_runs  = numRuns;
@@ -87,7 +89,7 @@ void Profiler::nextRun()
 }
 
 
-long Profiler::outputAveraged(const int refineLevel, const long numDofs, const double scale_factor) const
+void Profiler::outputAveraged(const int refineLevel, const long numDofs, const double scale_factor) const
 {
   const auto& comm   = Dune::MPIHelper::getCollectiveCommunication();
   const int numProce = comm.size();
@@ -117,46 +119,36 @@ long Profiler::outputAveraged(const int refineLevel, const long numDofs, const d
   }
 
   // outputs column names
-  csv << "refine,"
-      << "processes,"
-      << "numDofs,"
-      << "L1 error,";
+  csv << "refine" << csv_sep << "processes" << csv_sep << "numDofs" << csv_sep << "L1 error" << csv_sep;
   for (const auto& avg_item : averages_map) {
-    csv << avg_item.first << ",";
+    csv << avg_item.first << csv_sep;
   }
-  csv << "Speedup (total); Speedup (ohne Solver)" << std::endl;
+  csv << "Speedup (total)" << csv_sep << "Speedup (ohne Solver)" << std::endl;
 
   // outputs column values
-  csv << refineLevel << "," << comm.size() << "," << numDofs << "," << 0 << ","; //! FIXME
+  csv << refineLevel << csv_sep << comm.size() << csv_sep << numDofs << csv_sep << 0 << csv_sep;
   for (const auto& avg_item : averages_map) {
     long clock_count = avg_item.second;
     clock_count = long(comm.sum(clock_count) / double(scale_factor * numProce));
-    csv << clock_count / double(m_total_runs) << ",";
+    csv << clock_count / double(m_total_runs) << csv_sep;
   }
-  csv << "=I$2/I2,"
-      << "=SUM(E$2:G$2)/SUM(E2:G2)" << std::endl;
-
+  csv << "=I$2/I2" << csv_sep << "=SUM(E$2:G$2)/SUM(E2:G2)" << std::endl;
   csv.close();
-
-  return long((clock() - init_time_) / scale_factor);
 } // OutputAveraged
 
-long Profiler::output(const Profiler::InfoContainer& run_infos, const double scale_factor) const
+void Profiler::output(const Profiler::InfoContainer& run_infos, const double scale_factor) const
 {
   const auto& comm   = Dune::MPIHelper::getCollectiveCommunication();
   const int numProce = comm.size();
 
   boost::filesystem::path filename(m_output_dir);
   filename /= (boost::format("prof_p%d.csv") % numProce).str();
-  return outputCommon(run_infos, filename, scale_factor);
+  outputCommon(run_infos, filename, scale_factor);
 } // Output
 
 void Profiler::outputMap(const Profiler::InfoContainerMap& run_infos_map, const double scale_factor) const
 {
   const auto& comm = Dune::MPIHelper::getCollectiveCommunication();
-  //! TODO fem specific
-  const std::string dir(Dune::Stuff::Common::Parameter::Parameters().getParam("fem.io.datadir", std::string(".")));
-
   for (const auto& el : run_infos_map) {
     boost::filesystem::path filename(m_output_dir);
     filename /= (boost::format("prof_p%d_ref%s.csv") % comm.size() % el.first).str();
@@ -164,7 +156,7 @@ void Profiler::outputMap(const Profiler::InfoContainerMap& run_infos_map, const 
   }
 } // OutputMap
 
-long Profiler::outputCommon(const Profiler::InfoContainer& run_infos, const boost::filesystem::path& filename,
+void Profiler::outputCommon(const Profiler::InfoContainer& run_infos, const boost::filesystem::path& filename,
                             const double scale_factor) const
 {
   const auto& comm   = Dune::MPIHelper::getCollectiveCommunication();
@@ -181,35 +173,30 @@ long Profiler::outputCommon(const Profiler::InfoContainer& run_infos, const boos
 
   boost::filesystem::ofstream csv(filename);
   // outputs column names
-  csv << "refine,"
-      << "processes,"
-      << "numDofs,"
-      << "L2_error,";
+  csv << "refine" << csv_sep << "processes" << csv_sep << "numDofs" << csv_sep << "L2_error" << csv_sep;
   for (DataMap::const_iterator it = m_timings[0].begin(); it != m_timings[0].end(); ++it) {
-    csv << it->first << ",";
+    csv << it->first << csv_sep;
   }
-  csv << "Relative_total_time,compiler" << std::endl;
+  csv << "Relative_total_time" << csv_sep << "compiler" << std::endl;
 
   // outputs column values
   int idx = 0;
   assert(run_infos.size() >= m_timings.size());
   for (const DataMap& data_map : m_timings) {
     const Dune::Stuff::Common::RunInfo& info = run_infos[idx];
-    csv << boost::format("%d,%d,%d,%e,") % info.refine_level % comm.size() % info.codim0
-               % (info.L2Errors.size() ? info.L2Errors[0] : double(-1));
+    csv << boost::format("%d%s%d%s%d%s%e,") % info.refine_level % csv_sep % comm.size() % csv_sep % info.codim0
+               % csv_sep % (info.L2Errors.size() ? info.L2Errors[0] : double(-1));
 
     for (DataMap::const_iterator it = data_map.begin(); it != data_map.end(); ++it) {
       long clock_count = getTiming(it->first, idx);
       clock_count      = long(comm.sum(clock_count) / double(scale_factor * numProce));
-      csv << clock_count << ",";
+      csv << clock_count << csv_sep;
     }
-    csv << boost::format("=1/I$2*I%d,%s\n") % (idx + 2) % BOOST_COMPILER;
+    csv << boost::format("=1/I$2*I%d%s%s\n") % (idx + 2) % csv_sep % BOOST_COMPILER;
 
     idx++;
   }
   csv.close();
-
-  return long((clock() - init_time_) / scale_factor);
 } // OutputCommon
 
 void Profiler::setOutputdir(const std::string dir)

@@ -101,19 +101,11 @@ public:
 
   /** output to currently pre-defined (csv) file, does not output individual run results, but average over all recorded
    * results
-     * \param comm used to gather and average the runtime data over all processes
      **/
-  long outputAveraged(const int refineLevel, const long numDofs, const double scale_factor = 1.0) const;
-
-  /** output to \param filename
-     * \param comm used to gather and average the runtime data over all processes
-     * \tparam CollectiveCommunication should be Dune::CollectiveCommunication< MPI_Comm / double >
-     **/
-  long outputCommon(const InfoContainer& run_infos, const boost::filesystem::path& filename,
-                    const double scale_factor = 1.0) const;
+  void outputAveraged(const int refineLevel, const long numDofs, const double scale_factor = 1.0) const;
 
   //! default proxy for output
-  long output(const InfoContainer& run_infos, const double scale_factor = 1.0) const;
+  void output(const InfoContainer& run_infos, const double scale_factor = 1.0) const;
 
   //! proxy for output of a map of runinfos
   void outputMap(const InfoContainerMap& run_infos_map, const double scale_factor = 1.0) const;
@@ -171,6 +163,12 @@ private:
     static Profiler pf;
     return pf;
   }
+
+  /** output to \param filename
+     * \tparam CollectiveCommunication should be Dune::CollectiveCommunication< MPI_Comm / double >
+     **/
+  void outputCommon(const InfoContainer& run_infos, const boost::filesystem::path& filename,
+                    const double scale_factor = 1.0) const;
 };
 
 //! global profiler object
