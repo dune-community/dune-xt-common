@@ -102,10 +102,19 @@ TYPED_TEST(MinMaxAvgTest, All)
   EXPECT_TRUE(Dune::FloatCmp::eq(mma.average(), TypeParam(-1.0)));
 }
 
+TEST(OtherMath, Range)
+{
+  EXPECT_EQ((std::vector<unsigned int>{0, 1, 2, 3}), Math::range(4u));
+  EXPECT_EQ((std::vector<int>{4, 3, 2, 1}), Math::range(4, 0, -1));
+  EXPECT_EQ((std::vector<int>{-1, 0, 1}), Math::range(-1, 2));
+  EXPECT_EQ((std::vector<float>()), Math::range(0.f));
+  EXPECT_EQ((std::vector<float>{0.f}), Math::range(Math::Epsilon<float>::value));
+}
 
 int main(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
   Dune::MPIHelper::instance(argc, argv);
+  //  std::vector<float> r()
   return RUN_ALL_TESTS();
 }
