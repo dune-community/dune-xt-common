@@ -228,6 +228,11 @@ public:
   }
 }; // class EmptyLogStream
 
+namespace {
+int dev_null_logflag;
+EmptyLogStream dev_null_(dev_null_logflag);
+}
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
