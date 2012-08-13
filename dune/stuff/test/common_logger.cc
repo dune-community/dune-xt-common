@@ -1,6 +1,7 @@
 #include "test_common.hh"
 
 #include <dune/stuff/common/logging.hh>
+#include <dune/stuff/common/logstreams.hh>
 
 namespace DSC = Dune::Stuff::Common;
 
@@ -28,6 +29,9 @@ int main(int, char* [])
   DSC_LOG_ERROR.resume();
   DSC_LOG_ERROR << "in output\n";
   balh(DSC_LOG_ERROR);
+
+  // this should do nothitng whatsoever
+  balh(DSC::dev_null);
   DSC::Logger().flush();
   return 0;
 }
