@@ -115,6 +115,5 @@ int main(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
   Dune::MPIHelper::instance(argc, argv);
-  //  std::vector<float> r()
   return RUN_ALL_TESTS();
 }

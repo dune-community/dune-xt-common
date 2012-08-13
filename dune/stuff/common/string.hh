@@ -120,6 +120,22 @@ inline std::string fromTime(time_t cur_time = time(NULL))
   return ctime(&cur_time);
 }
 
+//! helper struct for lexical cast
+template <typename ElemT>
+struct HexTo
+{
+  // see http://stackoverflow.com/a/2079728
+  ElemT value;
+  operator ElemT() const
+  {
+    return value;
+  }
+  friend std::istream& operator>>(std::istream& in, HexTo& out)
+  {
+    in >> std::hex >> out.value;
+    return in;
+  }
+};
 
 } // namespace String
 } // namespace Common
