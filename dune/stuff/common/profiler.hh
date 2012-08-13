@@ -92,13 +92,26 @@ public:
 
   //! set this to begin a named section
   void startTiming(const std::string section_name);
+  //! appends int to section name
+  void startTiming(const std::string section_name, const int i);
 
   //! stop named section's counter
-  void stopTiming(const std::string section_name);
+  long stopTiming(const std::string section_name);
+  //! appends int to section name
+  long stopTiming(const std::string section_name, const int i);
 
-  //! get runtime of section in milliseconds
+  //! set elapsed time back to 0 for section_name
+  void resetTiming(const std::string section_name);
+  //! appends int to section name
+  void resetTiming(const std::string section_name, const int i);
+
+  //! get runtime of section in current run in milliseconds
   long getTiming(const std::string section_name) const;
-  long getTiming(const std::string section_name, const int run_number) const;
+  //! appends int to section name
+  long getTiming(const std::string section_name, const int i) const;
+
+  //! get runtime of section in run run_number in milliseconds
+  long getTimingIdx(const std::string section_name, const int run_number) const;
 
   /** output to currently pre-defined (csv) file, does not output individual run results, but average over all recorded
    * results
@@ -181,7 +194,7 @@ Profiler& profiler()
 } // namespace Stuff
 } // namespace Dune
 
-#define DSC_PROF Dune::Stuff::Common::profiler()
+#define DSC_PROFILER Dune::Stuff::Common::profiler()
 
 #include "profiler.cc"
 

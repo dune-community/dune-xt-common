@@ -56,10 +56,11 @@ TEST(ProfilerTest, OutputConstness)
   prof.outputMap(info_map);
 }
 
-TEST(ProfilerTest, NonsenseReset)
+TEST(ProfilerTest, ExpectedFailures)
 {
   EXPECT_THROW(DSC_PROF.reset(0), Dune::RangeError);
   EXPECT_THROW(DSC_PROF.reset(-1), Dune::RangeError);
+  EXPECT_THROW(DSC_PROF.stopTiming("This_section_was_never_start"), Dune::RangeError);
 }
 
 int main(int argc, char** argv)
