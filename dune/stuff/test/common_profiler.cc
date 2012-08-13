@@ -15,10 +15,10 @@ void scoped_busywait(const std::string& name, int ms)
 TEST(ProfilerTest, Timing)
 {
   for (auto i : Math::range(1, 4)) {
-    DSC_PROF.startTiming("ProfilerTest.Timing");
+    DSC_PROFILER.startTiming("ProfilerTest.Timing");
     busywait(wait_ms);
-    DSC_PROF.stopTiming("ProfilerTest.Timing");
-    EXPECT_GE(DSC_PROF.getTiming("ProfilerTest.Timing"), i * wait_ms);
+    DSC_PROFILER.stopTiming("ProfilerTest.Timing");
+    EXPECT_GE(DSC_PROFILER.getTiming("ProfilerTest.Timing"), i * wait_ms);
   }
 }
 
@@ -28,26 +28,26 @@ TEST(ProfilerTest, ScopedTiming)
   for (auto DUNE_UNUSED(i) : range) {
     scoped_busywait("ProfilerTest.ScopedTiming", wait_ms);
   }
-  EXPECT_GE(DSC_PROF.getTiming("ProfilerTest.ScopedTiming"), long(range.size() * wait_ms));
+  EXPECT_GE(DSC_PROFILER.getTiming("ProfilerTest.ScopedTiming"), long(range.size() * wait_ms));
 }
 
 TEST(ProfilerTest, MultiRuns)
 {
   const auto range = Math::range(1, 3);
-  DSC_PROF.reset(range.size());
+  DSC_PROFILER.reset(range.size());
   for (auto i : range) {
     scoped_busywait("ProfilerTest.MultiRuns", i * wait_ms);
-    DSC_PROF.nextRun();
+    DSC_PROFILER.nextRun();
   }
   for (auto i : range) {
-    EXPECT_GE(DSC_PROF.getTiming("ProfilerTest.MultiRuns", i - 1), i * wait_ms);
+    EXPECT_GE(DSC_PROFILER.getTiming("ProfilerTest.MultiRuns", i - 1), i * wait_ms);
   }
 }
 
 TEST(ProfilerTest, OutputConstness)
 {
-  DSC_PROF.reset(1);
-  const auto& prof = DSC_PROF;
+  DSC_PROFILER.reset(1);
+  const auto& prof = DSC_PROFILER;
   Profiler::InfoContainer infos;
   Profiler::InfoContainerMap info_map;
   prof.output(infos);
@@ -58,9 +58,9 @@ TEST(ProfilerTest, OutputConstness)
 
 TEST(ProfilerTest, ExpectedFailures)
 {
-  EXPECT_THROW(DSC_PROF.reset(0), Dune::RangeError);
-  EXPECT_THROW(DSC_PROF.reset(-1), Dune::RangeError);
-  EXPECT_THROW(DSC_PROF.stopTiming("This_section_was_never_start"), Dune::RangeError);
+  EXPECT_THROW(DSC_PROFILER.reset(0), Dune::RangeError);
+  EXPECT_THROW(DSC_PROFILER.reset(-1), Dune::RangeError);
+  EXPECT_THROW(DSC_PROFILER.stopTiming("This_section_was_never_start"), Dune::RangeError);
 }
 
 int main(int argc, char** argv)
