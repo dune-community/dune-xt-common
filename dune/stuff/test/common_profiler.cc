@@ -25,10 +25,10 @@ TEST(ProfilerTest, Timing)
 TEST(ProfilerTest, ScopedTiming)
 {
   const auto range = Math::range(1, 4);
-  for (auto i : range) {
+  for (auto DUNE_UNUSED(i) : range) {
     scoped_busywait("ProfilerTest.ScopedTiming", wait_ms);
   }
-  EXPECT_GE(DSC_PROF.getTiming("ProfilerTest.ScopedTiming"), range.size() * wait_ms);
+  EXPECT_GE(DSC_PROF.getTiming("ProfilerTest.ScopedTiming"), long(range.size() * wait_ms));
 }
 
 TEST(ProfilerTest, MultiRuns)
@@ -61,6 +61,7 @@ TEST(ProfilerTest, NonsenseReset)
   EXPECT_THROW(DSC_PROF.reset(0), Dune::RangeError);
   EXPECT_THROW(DSC_PROF.reset(-1), Dune::RangeError);
 }
+
 int main(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);
