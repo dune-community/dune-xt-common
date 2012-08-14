@@ -12,6 +12,10 @@
 #include <iomanip>
 #include <map>
 #include <assert.h>
+
+// dune-common
+#include <dune/common/exceptions.hh>
+
 #include "misc.hh"
 #include "filesystem.hh"
 #include "logstreams.hh"
