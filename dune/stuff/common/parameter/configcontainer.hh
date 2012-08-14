@@ -14,13 +14,63 @@
 #include <dune/common/parametertreeparser.hh>
 #include <dune/common/exceptions.hh>
 
+#define DSC_ORDER_REL_GENERIC(var, a, b)                                                                               \
+  if (a.var < b.var) {                                                                                                 \
+    return true;                                                                                                       \
+  }                                                                                                                    \
+  if (a.var > b.var) {                                                                                                 \
+    return false;                                                                                                      \
+  }
+
+#define DSC_ORDER_REL(var) DSC_ORDER_REL_GENERIC(var, (*this), other)
+
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
-
 namespace Parameter {
+
+//! use this to record defaults, placements and so forth
+struct Request
+{
+  const int line;
+  const std::string file;
+  const std::string key;
+  const std::string def;
+  const std::string validator;
+  Request(const int _line, const std::string _file, const std::string _key, const std::string _def,
+          const std::string _validator)
+    : line(_line)
+    , file(_file)
+    , key(_key)
+    , def(_def)
+    , validator(_validator)
+  {
+  }
+
+  //! requests are considered
+  bool operator<(const Request& other) const
+  {
+    DSC_ORDER_REL(key)
+    DSC_ORDER_REL(def)
+    DSC_ORDER_REL(file)
+    DSC_ORDER_REL(line)
+    return validator < other.validator;
+  }
+};
+
+bool strictRequestCompare(const Request& a, const Request& b)
+{
+  DSC_ORDER_REL_GENERIC(key, a, b);
+  return a.def < b.def;
+}
+
+std::ostream& operator<<(std::ostream& out, const Request& r)
+{
+  boost::format out_f("Request for %s with default %s in %s:%d (validation: %s)");
+  out_f % r.key % r.def % r.file % r.line % r.validator;
+  out << out_f.str();
+  return out;
+}
 
 class ConfigContainer
 {
@@ -69,6 +119,14 @@ public:
     return get(name, def, ValidateAny<T>(), useDbgStream);
   }
 
+  //! get variation with request recording
+  template <typename T>
+  T get(std::string name, T def, Request req, bool useDbgStream = true)
+  {
+    requests_map_[name].insert(req);
+    return get(name, def, ValidateAny<T>(), useDbgStream);
+  }
+
   //! hack around the "CHARS" is no string issue
   std::string get(std::string name, const char* def, bool useDbgStream = true)
   {
@@ -98,18 +156,54 @@ public:
     return get<std::string, Validator>(name, def, validator, useDbgStream);
   }
 
+
+  //! get variation with request recording
+  std::string get(std::string name, const char* def, Request req, bool useDbgStream = true)
+  {
+    requests_map_[name].insert(req);
+    return get(name, std::string(def), ValidateAny<std::string>(), useDbgStream);
+  }
+
   template <class T>
   void set(const std::string key, const T value)
   {
     tree_[key] = value;
   }
 
+  void printRequests(std::ostream& out) const
+  {
+    out << "Config requests:";
+    for (const auto& pair : requests_map_) {
+      out << "Key: " << pair.first;
+      for (const auto& req : pair.second) {
+        out << "\n\t" << req;
+      }
+      out << std::endl;
+    }
+  }
+
+  void printMismatchedDefaults(std::ostream& out) const
+  {
+    for (const auto& pair : requests_map_) {
+      typedef bool (*func)(const Request&, const Request&);
+      std::set<Request, func> mismatched(&strictRequestCompare);
+      mismatched.insert(pair.second.begin(), pair.second.end());
+      out << "Mismatched uses for key " << pair.first << ":";
+      for (const auto& req : mismatched) {
+        out << "\n\t" << req;
+      }
+      out << "\n";
+    }
+  }
+
 private:
   bool warning_output_;
   Dune::ParameterTree tree_;
+  //! config key -> requests map
+  std::map<std::string, std::set<Request>> requests_map_;
 };
 
-// ! global ConfigContainer instance
+//! global ConfigContainer instance
 ConfigContainer& Config()
 {
   static ConfigContainer parameters;
@@ -117,14 +211,30 @@ ConfigContainer& Config()
 }
 
 } // namespace Parameter
-
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #define DSC_CONFIG Dune::Stuff::Common::Parameter::Config()
+
+#define DSC_CONFIG_GET(key, def)                                                                                       \
+  DSC_CONFIG.get(key,                                                                                                  \
+                 def,                                                                                                  \
+                 Dune::Stuff::Common::Parameter::Request(                                                              \
+                     __LINE__, __FILE__, key, Dune::Stuff::Common::String::convertTo(def), "none"))
+
+#define DSC_CONFIG_GETV(key, def, validator)                                                                           \
+  DSC_CONFIG.get(key,                                                                                                  \
+                 def,                                                                                                  \
+                 Dune::Stuff::Common::Parameter::Request(                                                              \
+                     __LINE__, __FILE__, key, Dune::Stuff::Common::String::convertTo(def), #validator))
+
+#define DSC_CONFIG_GETB(key, def, use_logger)                                                                          \
+  DSC_CONFIG.get(key,                                                                                                  \
+                 def,                                                                                                  \
+                 Dune::Stuff::Common::Parameter::Request(                                                              \
+                     __LINE__, __FILE__, key, Dune::Stuff::Common::String::convertTo(def), "none"),                    \
+                 use_logger)
 
 #endif // DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
 

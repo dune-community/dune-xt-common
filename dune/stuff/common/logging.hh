@@ -113,7 +113,7 @@ public:
     matlabLogStreamPtr = new MatlabLogStream(LOG_FILE, logflags_, matlabLogFile_);
   } // Create
 
-  // ! \attention This will probably not do wht we want it to!
+  //! \attention This will probably not do wht we want it to!
   void setPrefix(std::string prefix)
   {
     // / begin dtor
@@ -308,7 +308,7 @@ private:
   Logging& operator=(const Logging&);
 };
 
-// !global Logging instance
+//! global Logging instance
 Logging& Logger()
 {
   static Logging log;

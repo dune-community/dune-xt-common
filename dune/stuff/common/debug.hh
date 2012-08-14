@@ -11,7 +11,7 @@
     *J     = 9;                                                                                                        \
   }
 
-// ! from right/bottom limiter for file paths
+//! from right/bottom limiter for file paths
 const char* rightPathLimiter(const char* path, int depth = 2)
 {
   char* c = new char[255];

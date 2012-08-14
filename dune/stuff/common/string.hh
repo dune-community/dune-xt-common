@@ -41,7 +41,7 @@ namespace Stuff {
 namespace Common {
 namespace String {
 
-// ! simple and dumb std::string to anything conversion
+//! simple and dumb std::string to anything conversion
 template <class ReturnType>
 ReturnType convertFrom(const std::string& s)
 {
@@ -53,7 +53,7 @@ ReturnType convertFrom(const std::string& s)
   return r;
 } // fromString
 
-// ! simple and dumb anything to std::string conversion
+//! simple and dumb anything to std::string conversion
 template <class ReturnType>
 std::string convertTo(const ReturnType& s)
 {
@@ -95,16 +95,47 @@ inline std::vector<T>
 tokenize(const std::string& msg, const std::string& seperators,
          const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off)
 {
-  std::vector<T> strings;
+  std::vector<std::string> strings;
+  boost::algorithm::split(strings, msg, boost::algorithm::is_any_of(seperators), mode);
+  std::vector<T> ret(strings.size());
+  size_t i = 0;
+  // special case for empty strings to avoid non-default init
+  std::generate(
+      std::begin(ret), std::end(ret), [&]() { return strings[i++].empty() ? T() : convertFrom<T>(strings[i - 1]); });
+  return ret;
+}
+
+template <>
+inline std::vector<std::string> tokenize(const std::string& msg, const std::string& seperators,
+                                         const boost::algorithm::token_compress_mode_type mode)
+{
+  std::vector<std::string> strings;
   boost::algorithm::split(strings, msg, boost::algorithm::is_any_of(seperators), mode);
   return strings;
 }
 
+//! returns string with local time in current locale's format
 inline std::string fromTime(time_t cur_time = time(NULL))
 {
   return ctime(&cur_time);
 }
 
+//! helper struct for lexical cast
+template <typename ElemT>
+struct HexTo
+{
+  // see http://stackoverflow.com/a/2079728
+  ElemT value;
+  operator ElemT() const
+  {
+    return value;
+  }
+  friend std::istream& operator>>(std::istream& in, HexTo& out)
+  {
+    in >> std::hex >> out.value;
+    return in;
+  }
+};
 
 } // namespace String
 } // namespace Common

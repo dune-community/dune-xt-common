@@ -43,7 +43,7 @@ void clear(Dune::DenseMatrix<MatrixImp>& matrix)
 } // void clear(Dune::DenseMatrix< MatrixImp >& matrix)
 
 #ifdef THIS_WORKS
-// ! TODO
+//! TODO
 template <class MatrixImp>
 struct PrecondionWrapperDummy : public Preconditioner<typename MatrixImp::RowDiscreteFunctionType::DofStorageType,
                                                       typename MatrixImp::ColDiscreteFunctionType::DofStorageType>
@@ -67,7 +67,7 @@ struct PrecondionWrapperDummy : public Preconditioner<typename MatrixImp::RowDis
   };
 }; // struct PrecondionWrapperDummy
 
-// ! obsolete,dysfunctional Matrixoperator
+//! obsolete,dysfunctional Matrixoperator
 template <class MatrixType>
 class SaneSparseRowMatrixOperator
 {
@@ -127,7 +127,7 @@ public:
   }
 }; // class MatrixDiagonal
 
-// ! returns Sum of matrix' diagonal entries
+//! returns Sum of matrix' diagonal entries
 template <class FieldMatrixType>
 typename FieldMatrixType::field_type matrixTrace(const FieldMatrixType& matrix)
 {
@@ -138,7 +138,7 @@ typename FieldMatrixType::field_type matrixTrace(const FieldMatrixType& matrix)
   return trace;
 } // typename FieldMatrixType::field_type matrixTrace(const FieldMatrixType& matrix)
 
-// ! produces a NxN Identity matrix compatible with parent type
+//! produces a NxN Identity matrix compatible with parent type
 template <class MatrixType>
 class IdentityMatrix : public MatrixType
 {
@@ -156,7 +156,7 @@ public:
   }
 }; // class IdentityMatrix
 
-// ! produces a NxN Identity matrix object compatible with parent type
+//! produces a NxN Identity matrix object compatible with parent type
 template <class MatrixObjectType>
 class IdentityMatrixObject : public MatrixObjectType
 {
@@ -171,14 +171,14 @@ public:
   }
 };
 
-// ! adds the missing setDiag function to SparseRowMatrix
+//! adds the missing setDiag function to SparseRowMatrix
 template <class DiscFuncType, class MatrixType>
 void setMatrixDiag(MatrixType& matrix, DiscFuncType& diag)
 {
   typedef typename DiscFuncType::DofIteratorType DofIteratorType;
 
-  // ! we assume that the dimension of the functionspace of f is the same as
-  // ! the size of the matrix
+  //! we assume that the dimension of the functionspace of f is the same as
+  //! the size of the matrix
   DofIteratorType it = diag.dbegin();
 
   for (int row = 0; row < matrix.rows(); row++) {
@@ -189,7 +189,7 @@ void setMatrixDiag(MatrixType& matrix, DiscFuncType& diag)
   return;
 } // setMatrixDiag
 
-// ! return false if <pre>abs( a(row,col) - b(col,row) ) > tolerance<pre> for any col,row
+//! return false if <pre>abs( a(row,col) - b(col,row) ) > tolerance<pre> for any col,row
 template <class MatrixType>
 bool areTransposed(const MatrixType& a, const MatrixType& b, const double tolerance = 1e-8)
 {
@@ -205,7 +205,7 @@ bool areTransposed(const MatrixType& a, const MatrixType& b, const double tolera
   return true;
 } // areTransposed
 
-// ! extern matrix addition that ignore 0 entries
+//! extern matrix addition that ignore 0 entries
 template <class MatrixType>
 void addMatrix(MatrixType& dest, const MatrixType& arg, const double eps = 1e-14)
 {
@@ -307,7 +307,7 @@ FieldMatrixImp rowWiseMatrixMultiplication(const FieldMatrixImp& arg1, const Fie
   return ret;
 } // rowWiseMatrixMultiplication
 
-// ! prints actual memusage of matrix in kB
+//! prints actual memusage of matrix in kB
 template <class MatrixType>
 void printMemUsage(const MatrixType& matrix, std::ostream& stream, std::string name = "")
 {
@@ -316,7 +316,7 @@ void printMemUsage(const MatrixType& matrix, std::ostream& stream, std::string n
   stream << "matrix size " << name << "\t\t" << size << std::endl;
 }
 
-// ! prints actual memusage of matrixobject in kB
+//! prints actual memusage of matrixobject in kB
 template <class MatrixObjectType>
 void printMemUsageObject(const MatrixObjectType& matrix_object, std::ostream& stream, std::string name = "")
 {

@@ -13,16 +13,14 @@
 #include <dune/stuff/common/string.hh>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
 
 /**
  * @brief namespace to define color constants that can be
  * used to print colored text in an output stream.
  *
- *
+ * * \todo this could go into libdune-stuff
  * @warning Some color codes might be unsupported by your terminal.
  */
 namespace Color {
@@ -177,9 +175,7 @@ std::string highlightSearchString(std::string str, std::string substr, int color
 } // end of namespace Color
 
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // end of DUNE_COMMON_COLOR_HH

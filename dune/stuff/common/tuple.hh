@@ -10,7 +10,7 @@ namespace Stuff {
 
 namespace Common {
 
-// ! split our function wrapper into sep pointers for Datawriter input
+//! split our function wrapper into sep pointers for Datawriter input
 template <class T1, class T2 = T1, class T3 = T2, class T4 = T3>
 struct TupleSerializer
 {

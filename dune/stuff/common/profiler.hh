@@ -9,7 +9,8 @@
 #include "runinfo.hh"
 
 #include <dune/common/exceptions.hh>
-#include <dune/fem/misc/femtimer.hh>
+#include <dune/common/deprecated.hh>
+#include <dune/common/mpihelper.hh>
 
 #include <string>
 #include <iostream>
@@ -21,174 +22,127 @@
 #include <boost/format.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/config.hpp>
+#include <boost/timer/timer.hpp>
+#include <boost/shared_ptr.hpp>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
 
 class Profiler;
 
-// ! Stuff::Profiler global instance
+//! Stuff::Profiler global instance
 Profiler& profiler();
 
-// ! wraps name, start- and end time for one timing section
+//! wraps name, start- and end time for one timing section
 struct TimingData
 {
-  clock_t start;
-  clock_t end;
+private:
+  boost::shared_ptr<boost::timer::cpu_timer> timer_;
+
+public:
   std::string name;
-  TimingData(const std::string _name, const clock_t _start)
-    : start(_start)
-    , end((clock_t)0.0)
+  TimingData(const std::string _name = "blank")
+    : timer_(new boost::timer::cpu_timer)
     , name(_name)
   {
+    timer_->start();
   }
-  TimingData()
-    : start((clock_t)0.0)
-    , end((clock_t)0.0)
-    , name("blank")
+
+  void stop()
   {
+    timer_->stop();
   }
-  long delta() const
+
+  /** \return time elapsed since object construction in milliseconds
+   *  \note since typical resolutions for user+system time are 10-15ms the nanosecond results are scaled accordingly
+   **/
+  boost::timer::nanosecond_type delta() const
   {
-    return long(end - start);
+    return (timer_->elapsed().user + timer_->elapsed().system) / 1e6;
   }
 };
 
 /** \brief simple inline profiling class
-   *
-   *  - User can set as many (even nested) named sections whose total clock time will be computed across all program
-   *instances.\n
+   *  - User can set as many (even nested) named sections whose total (=system+user) time will be computed across all
+  *program
+   * instances.\n
    *  - Provides csv-conform output of process-averaged runtimes.
+   * \todo this could go into libdune-stuff
    **/
 class Profiler
 {
   friend Profiler& profiler();
 
 protected:
-  Profiler()
-  {
-    Reset(1);
-  }
+  Profiler();
   ~Profiler()
   {
   }
 
   typedef std::map<std::string, std::pair<bool, TimingData>> KnownTimersMap;
-  typedef std::map<std::string, long> DataMap;
-  typedef std::vector<DataMap> MapVector;
+  //! section name -> seconds
+  typedef std::map<std::string, long> Datamap;
+  //! "Run idx" -> Datamap = section name -> seconds
+  typedef std::vector<Datamap> DatamapVector;
 
 public:
-  // ! set this to begin a named section
-  void StartTiming(const std::string section_name)
-  {
-    if (m_cur_run_num >= m_timings.size()) {
-      m_timings.push_back(DataMap());
-      m_total_runs++;
-    }
+  typedef std::vector<Dune::Stuff::Common::RunInfo> InfoContainer;
+  typedef std::map<std::string, InfoContainer> InfoContainerMap;
 
-    KnownTimersMap::iterator section = known_timers_map_.find(section_name);
-    if (section != known_timers_map_.end()) {
-      if (section->second.first) // timer currently running
-        return;
+  //! set this to begin a named section
+  void startTiming(const std::string section_name);
+  //! appends int to section name
+  void startTiming(const std::string section_name, const int i);
 
-      section->second.first  = true; // set active, start with new
-      section->second.second = TimingData(section_name, clock());
-    } else {
-      // init new section
-      known_timers_map_[section_name] = std::make_pair(true, TimingData(section_name, clock()));
-    }
-  } // StartTiming
+  //! stop named section's counter
+  long stopTiming(const std::string section_name);
+  //! appends int to section name
+  long stopTiming(const std::string section_name, const int i);
 
-  // ! stop named section's counter
-  void StopTiming(const std::string section_name)
-  {
-    assert(m_cur_run_num < m_timings.size());
-    if (known_timers_map_.find(section_name) == known_timers_map_.end())
-      DUNE_THROW(Dune::RangeError, "trying to stop timer " << section_name << " that wasn't started\n");
+  //! set elapsed time back to 0 for section_name
+  void resetTiming(const std::string section_name);
+  //! appends int to section name
+  void resetTiming(const std::string section_name, const int i);
 
-    known_timers_map_[section_name].first      = false;
-    known_timers_map_[section_name].second.end = clock();
-    DataMap& current_data = m_timings[m_cur_run_num];
-    if (current_data.find(section_name) == current_data.end())
-      current_data[section_name] = known_timers_map_[section_name].second.delta();
-    else
-      current_data[section_name] += known_timers_map_[section_name].second.delta();
-  } // StopTiming
+  //! get runtime of section in current run in milliseconds
+  long getTiming(const std::string section_name) const;
+  //! appends int to section name
+  long getTiming(const std::string section_name, const int i) const;
 
-  // ! get runtime of section in seconds
-  long GetTiming(const std::string section_name) const
-  {
-    assert(m_cur_run_num < m_timings.size());
-    return GetTiming(section_name, m_cur_run_num);
-  }
-
-  long GetTiming(const std::string section_name, const int run_number) const
-  {
-    assert(run_number < int(m_timings.size()));
-    const DataMap& data             = m_timings[run_number];
-    DataMap::const_iterator section = data.find(section_name);
-    if (section == data.end()) {
-      ASSERT_EXCEPTION(false, "no timer found: " + section_name);
-      return -1;
-    }
-    return long(section->second / double(CLOCKS_PER_SEC));
-  } // GetTiming
+  //! get runtime of section in run run_number in milliseconds
+  long getTimingIdx(const std::string section_name, const int run_number) const;
 
   /** output to currently pre-defined (csv) file, does not output individual run results, but average over all recorded
    * results
-     * \param comm used to gather and average the runtime data over all processes
-     * \tparam CollectiveCommunication should be Dune::CollectiveCommunication< MPI_Comm / double >
      **/
-  template <class CollectiveCommunication>
-  long OutputAveraged(CollectiveCommunication& comm, const int refineLevel, const long numDofs,
-                      const double scale_factor = 1.0);
+  void outputAveraged(const int refineLevel, const long numDofs, const double scale_factor = 1.0) const;
 
-  /** output to \param filename
-     * \param comm used to gather and average the runtime data over all processes
-     * \tparam CollectiveCommunication should be Dune::CollectiveCommunication< MPI_Comm / double >
-     **/
-  template <class CollectiveCommunication, class InfoContainer>
-  long OutputCommon(CollectiveCommunication& comm, InfoContainer& run_infos, std::string filename,
-                    const double scale_factor = 1.0);
+  //! default proxy for output
+  void output(const InfoContainer& run_infos, const double scale_factor = 1.0) const;
 
-  // ! default proxy for output
-  template <class CollectiveCommunication, class InfoContainer>
-  long Output(CollectiveCommunication& comm, InfoContainer& run_infos, const double scale_factor = 1.0);
+  //! proxy for output of a map of runinfos
+  void outputMap(const InfoContainerMap& run_infos_map, const double scale_factor = 1.0) const;
 
-  // ! proxy for output of a map of runinfos
-  template <class CollectiveCommunication, class InfoContainerMap>
-  void OutputMap(CollectiveCommunication& comm, InfoContainerMap& run_infos_map, const double scale_factor = 1.0);
-
+  //! file-output the named sections only
+  void outputTimings(const std::string filename) const;
+  void outputTimings(std::ostream& out = std::cout) const;
   /** call this with correct numRuns <b> before </b> starting any profiling
      *  if you're planning on doing more than one iteration of your code
      *  called once fromm ctor with numRuns=1
      **/
-  void Reset(const int numRuns)
-  {
-    m_timings.clear();
-    m_timings     = MapVector(numRuns, DataMap());
-    m_total_runs  = numRuns;
-    m_cur_run_num = 0;
-    init_time_    = clock();
-  } // Reset
+  void reset(const int numRuns);
 
-  // ! simple counter, usable to count how often a single piece of code is called
-  void AddCount(const int num)
-  {
-    m_count[num] += 1;
-  }
+  //! simple counter, usable to count how often a single piece of code is called
+  void addCount(const int num);
 
-  // ! call this after one iteration of your code has finished. increments current run number and puts new timing data
+  //! call this after one iteration of your code has finished. increments current run number and puts new timing data
   // into the vector
-  void NextRun()
-  {
-    m_cur_run_num++;
-  }
+  void nextRun();
 
-  // ! a utility class to time a limited scope of code
+  void setOutputdir(const std::string dir);
+
+  //! a utility class to time a limited scope of code
   class ScopedTiming : public boost::noncopyable
   {
     const std::string section_name_;
@@ -197,257 +151,52 @@ public:
     inline ScopedTiming(const std::string& section_name)
       : section_name_(section_name)
     {
-      Profiler::instance().StartTiming(section_name_);
+      Profiler::instance().startTiming(section_name_);
     }
 
     inline ~ScopedTiming()
     {
-      Profiler::instance().StopTiming(section_name_);
+      Profiler::instance().stopTiming(section_name_);
     }
   };
 
-protected:
-  MapVector m_timings;
-  unsigned int m_cur_run_num;
-  unsigned int m_total_runs;
+private:
+  DatamapVector datamaps_;
+  unsigned int current_run_number_;
+  //! runtime tables etc go there
+  std::string output_dir_;
   // debug counter, only outputted in debug mode
-  std::map<int, int> m_count;
-  clock_t init_time_;
+  std::map<int, int> counters_;
+
   KnownTimersMap known_timers_map_;
+  const std::string csv_sep;
 
   static Profiler& instance()
   {
     static Profiler pf;
     return pf;
   }
+
+  /** output to \param filename
+     * \tparam CollectiveCommunication should be Dune::CollectiveCommunication< MPI_Comm / double >
+     **/
+  void outputCommon(const InfoContainer& run_infos, const boost::filesystem::path& filename,
+                    const double scale_factor = 1.0) const;
 };
 
-template <class CollectiveCommunication>
-long Profiler::OutputAveraged(CollectiveCommunication& comm, const int refineLevel, const long numDofs,
-                              const double scale_factor)
-{
-  const int numProce = comm.size();
-
-  std::ostringstream filename;
-
-  filename << "p" << numProce << "_refinelvl_" << refineLevel << ".csv";
-  filename.flush();
-
-  if (comm.rank() == 0)
-    std::cout << "Profiling info in: " << (filename.str()).c_str() << std::endl;
-
-#ifndef NDEBUG
-  for (std::map<int, int>::const_iterator it = m_count.begin(); it != m_count.end(); ++it) {
-    std::cout << "proc " << comm.rank() << " bId " << it->first << " count " << it->second << std::endl;
-  }
-#endif // ifndef NDEBUG
-
-  Dune::Stuff::Common::Filesystem::testCreateDirectory(Dune::Stuff::Common::Filesystem::pathOnly(filename.str()));
-  std::ofstream csv((filename.str()).c_str());
-
-  typedef std::map<std::string, long> AvgMap;
-  AvgMap averages;
-  for (MapVector::const_iterator vit = m_timings.begin(); vit != m_timings.end(); ++vit) {
-    for (DataMap::const_iterator it = vit->begin(); it != vit->end(); ++it) {
-      // ! this used to be GetTiming( it->second ), which is only valid thru an implicit and wrong conversion..
-      averages[it->first] += GetTiming(it->first);
-    }
-  }
-
-  // outputs column names
-  csv << "refine,"
-      << "processes,"
-      << "numDofs,"
-      << "L1 error,";
-  for (AvgMap::const_iterator it = averages.begin(); it != averages.end(); ++it) {
-    csv << it->first << ",";
-  }
-  csv << "Speedup (total); Speedup (ohne Solver)" << std::endl;
-
-  // outputs column values
-  csv << refineLevel << "," << comm.size() << "," << numDofs << "," << 0 << ","; // !FIXME
-  for (AvgMap::const_iterator it = averages.begin(); it != averages.end(); ++it) {
-    long clock_count = it->second;
-    clock_count = long(comm.sum(clock_count) / double(scale_factor * numProce));
-    csv << clock_count / double(m_total_runs) << ",";
-  }
-  csv << "=I$2/I2,"
-      << "=SUM(E$2:G$2)/SUM(E2:G2)" << std::endl;
-
-  csv.close();
-
-  return long((clock() - init_time_) / double(CLOCKS_PER_SEC * scale_factor));
-} // OutputAveraged
-
-template <class CollectiveCommunication, class InfoContainer>
-long Profiler::Output(CollectiveCommunication& comm, InfoContainer& run_infos, const double scale_factor)
-{
-  const int numProce = comm.size();
-
-  std::ostringstream filename;
-
-  filename << Dune::Stuff::Common::Parameter::Parameters().getParam("fem.io.datadir", std::string(".")) << "/prof_p"
-           << numProce << ".csv";
-  filename.flush();
-  return OutputCommon(comm, run_infos, filename.str(), scale_factor);
-} // Output
-
-template <class CollectiveCommunication, class InfoContainerMap>
-void Profiler::OutputMap(CollectiveCommunication& comm, InfoContainerMap& run_infos_map, const double scale_factor)
-{
-  std::string dir(Dune::Stuff::Common::Parameter::Parameters().getParam("fem.io.datadir", std::string(".")));
-
-  BOOST_FOREACH (typename InfoContainerMap::value_type el, run_infos_map) {
-    OutputCommon(
-        comm, el.second, (boost::format("%s/prof_p%d_ref%s.csv") % dir % comm.size() % el.first).str(), scale_factor);
-  }
-} // OutputMap
-
-template <class CollectiveCommunication, class InfoContainer>
-long Profiler::OutputCommon(CollectiveCommunication& comm, InfoContainer& run_infos, std::string filename,
-                            const double scale_factor)
-{
-  const int numProce = comm.size();
-
-  if (comm.rank() == 0)
-    std::cout << "Profiling info in: " << filename.c_str() << std::endl;
-
-#ifndef NDEBUG
-  for (std::map<int, int>::const_iterator it = m_count.begin(); it != m_count.end(); ++it) {
-    std::cout << "proc " << comm.rank() << " bId " << it->first << " count " << it->second << std::endl;
-  }
-#endif // ifndef NDEBUG
-
-  Dune::Stuff::Common::Filesystem::testCreateDirectory(Dune::Stuff::Common::Filesystem::pathOnly(filename));
-  std::ofstream csv(filename.c_str());
-
-  // outputs column names
-  csv << "refine,"
-      << "processes,"
-      << "numDofs,"
-      << "L2_error,";
-  for (DataMap::const_iterator it = m_timings[0].begin(); it != m_timings[0].end(); ++it) {
-    csv << it->first << ",";
-  }
-  csv << "Relative_total_time,compiler" << std::endl;
-
-  // outputs column values
-
-  MapVector::const_iterator ti_it = m_timings.begin();
-  int idx = 0;
-  assert(run_infos.size() >= m_timings.size());
-  for (; ti_it != m_timings.end(); ++ti_it) {
-    Dune::Stuff::Common::RunInfo info = run_infos[idx];
-    csv << boost::format("%d,%d,%d,%e,") % info.refine_level % comm.size() % info.codim0
-               % (info.L2Errors.size() ? info.L2Errors[0] : double(-1));
-
-    const DataMap& data_map = *ti_it;
-    for (DataMap::const_iterator it = data_map.begin(); it != data_map.end(); ++it) {
-      long clock_count = GetTiming(it->first, idx);
-      clock_count      = long(comm.sum(clock_count) / double(scale_factor * numProce));
-      csv << clock_count << ",";
-    }
-    csv << boost::format("=1/I$2*I%d,%s\n") % (idx + 2) % BOOST_COMPILER;
-
-    idx++;
-  }
-
-  csv.close();
-
-  return long((clock() - init_time_) / double(CLOCKS_PER_SEC * scale_factor));
-} // OutputCommon
-
-struct IdentityWeights
-{
-  double apply(const double to_weigh, const int /*current*/, const int /*max*/)
-  {
-    return to_weigh;
-  }
-};
-
-struct LinearWeights
-{
-  double apply(const double to_weigh, const int current, const int max)
-  {
-    return to_weigh / (current / double(max));
-  }
-};
-struct QuadraticWeights
-{
-  double apply(const double to_weigh, const int current, const int max)
-  {
-    return to_weigh / std::pow(current / double(max), 2.0);
-  }
-};
-struct ProgressiveWeights
-{
-  const int prog_;
-  ProgressiveWeights(const int prog)
-    : prog_(prog)
-  {
-  }
-  double apply(const double to_weigh, const int /*current*/, const int /*max*/)
-  {
-    return to_weigh * prog_;
-  }
-};
-
-// ! helper class to estimate time needed to complete a loop with given counter
-template <class CounterType, class WeightType = IdentityWeights>
-class LoopTimer
-{
-  typedef LoopTimer<CounterType, WeightType> ThisType;
-  CounterType& counter_;
-  const int iteration_count_;
-  int iteration_;
-  std::ostream& output_stream_;
-  WeightType weight_;
-  Dune::Stuff::Common::Math::MovingAverage avg_time_per_iteration_;
-  Dune::ExecutionTimer step_timer_;
-
-public:
-  LoopTimer(CounterType& counter, const int iteration_count, std::ostream& output_stream = std::cout,
-            WeightType weight = WeightType())
-    : counter_(counter)
-    , iteration_count_(iteration_count)
-    , iteration_(0)
-    , output_stream_(output_stream)
-    , weight_(weight)
-  {
-    step_timer_.start();
-  }
-
-  ThisType& operator++()
-  {
-    ++iteration_;
-    step_timer_.end();
-    avg_time_per_iteration_ += weight_.apply(std::abs(step_timer_.read()), iteration_, iteration_count_);
-    long remaining_steps     = iteration_count_ - iteration_;
-    double remaining_seconds = remaining_steps * double(avg_time_per_iteration_);
-    boost::posix_time::time_duration diff(0, 0, remaining_seconds, 0);
-    boost::posix_time::ptime target = boost::posix_time::second_clock::local_time();
-    target += diff;
-    output_stream_ << boost::format("\n---\n Total Time remaining: %s -- %s (%f %%)\n---\n")
-                          % boost::posix_time::to_simple_string(diff) % boost::posix_time::to_simple_string(target)
-                          % (100 * (remaining_steps / double(iteration_count_)))
-                   << std::endl;
-    step_timer_.start();
-    ++counter_;
-    return *this;
-  } // ++
-};
-
-// ! global profiler object (for legacy code compat this is outside NS Stuff)
+//! global profiler object
 Profiler& profiler()
 {
   return Profiler::instance();
 }
 
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
+
+#define DSC_PROFILER Dune::Stuff::Common::profiler()
+
+#include "profiler.cc"
 
 #endif // DUNE_STUFF_PROFILER_HH_INCLUDED
 /** Copyright (c) 2012, Rene Milk

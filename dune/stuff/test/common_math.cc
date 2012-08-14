@@ -4,98 +4,116 @@
 #include <dune/common/tupleutility.hh>
 
 using namespace Dune::Stuff::Common;
-
+typedef testing::Types<double, int> TestTypes;
 
 template <class T>
-struct MinMaxAvgTest
+struct VectorMath : public testing::Test
 {
-  static void run()
+  typedef Dune::FieldVector<double, 2> Vector;
+  typedef Dune::FieldMatrix<double, 2, 2> Matrix;
+  Vector a, b;
+  Matrix c, d, aa, ab;
+
+  VectorMath()
+    : a(0)
+    , b(0)
+    , c(0)
+    , d(0)
+    , aa(0)
+    , ab(0)
   {
-    using namespace Math;
-    MinMaxAvg<T> mma;
-    mma(-1);
-    mma(1);
-    MY_ASSERT(Dune::FloatCmp::eq(mma.min(), T(-1.0)));
-    MY_ASSERT(Dune::FloatCmp::eq(mma.max(), T(1.0)));
-    MY_ASSERT(Dune::FloatCmp::eq(mma.average(), T(0.0)));
-    mma(0);
-    MY_ASSERT(Dune::FloatCmp::eq(mma.min(), T(-1.0)));
-    MY_ASSERT(Dune::FloatCmp::eq(mma.max(), T(1.0)));
-    MY_ASSERT(Dune::FloatCmp::eq(mma.average(), T(0.0)));
-    mma(-4);
-    MY_ASSERT(Dune::FloatCmp::eq(mma.min(), T(-4.0)));
-    MY_ASSERT(Dune::FloatCmp::eq(mma.max(), T(1.0)));
-    MY_ASSERT(Dune::FloatCmp::eq(mma.average(), T(-1.0)));
+    a[0]     = 1;
+    b[1]     = 1;
+    aa[0][0] = 1;
+    ab[0][1] = 1;
+    c[0][0]  = 1;
+    c[1][1]  = 1;
+    d[1][0]  = 1;
+    d[0][1]  = 1;
   }
 };
 
-template <class T>
-struct VectorMath
+TYPED_TEST_CASE(VectorMath, TestTypes);
+TYPED_TEST(VectorMath, dyadicProduct)
 {
-  static void run()
+  typedef typename VectorMath<TypeParam>::Matrix Matrix;
+  EXPECT_EQ(Math::dyadicProduct<Matrix>(this->a, this->a), this->aa);
+  EXPECT_EQ(Math::dyadicProduct<Matrix>(this->a, this->b), this->ab);
+}
+TYPED_TEST(VectorMath, colonProduct)
+{
+  EXPECT_TRUE(Dune::FloatCmp::eq(Math::colonProduct(this->c, this->d), 0.0));
+  EXPECT_TRUE(Dune::FloatCmp::eq(Math::colonProduct(this->c, this->c), 2.0));
+}
+
+template <class T>
+struct ClampTest : public testing::Test
+{
+  const T lower;
+  const T upper;
+  ClampTest()
+    : lower(T(-1))
+    , upper(T(1))
   {
-    typedef Dune::FieldVector<double, 2> Vector;
-    typedef Dune::FieldMatrix<double, 2, 2> Matrix;
-    {
-      Vector a(0);
-      a[0] = 1;
-      Vector b(0);
-      b[1] = 1;
-      Matrix aa(0);
-      aa[0][0] = 1;
-      MY_ASSERT(Math::dyadicProduct<Matrix>(a, a) == aa);
-      Matrix ab(0);
-      ab[0][1] = 1;
-      MY_ASSERT(Math::dyadicProduct<Matrix>(a, b) == ab);
-    }
-    {
-      Matrix a(0);
-      a[0][0] = 1;
-      a[1][1] = 1;
-      Matrix b(0);
-      b[1][0] = 1;
-      b[0][1] = 1;
-      MY_ASSERT(Dune::FloatCmp::eq(Math::colonProduct(a, b), 0.0));
-      MY_ASSERT(Dune::FloatCmp::eq(Math::colonProduct(a, a), 2.0));
-    }
   }
 };
 
-template <class T>
-struct ClampTest
+TYPED_TEST_CASE(ClampTest, TestTypes);
+TYPED_TEST(ClampTest, All)
 {
-  static void run()
-  {
-    const T lower = T(-1);
-    const T upper = T(1);
-    MY_ASSERT(Math::clamp(T(-2), lower, upper) == lower);
-    MY_ASSERT(Math::clamp(T(2), lower, upper) == upper);
-    MY_ASSERT(Math::clamp(T(0), lower, upper) == T(0));
-  }
-};
+  EXPECT_EQ(Math::clamp(TypeParam(-2), this->lower, this->upper), this->lower);
+  EXPECT_EQ(Math::clamp(TypeParam(2), this->lower, this->upper), this->upper);
+  EXPECT_EQ(Math::clamp(TypeParam(0), this->lower, this->upper), TypeParam(0));
+}
 
 template <class T>
-struct EpsilonInstance
+struct EpsilonTest : public testing::Test
 {
-  static void run()
-  {
-    MY_ASSERT(Math::Epsilon<T>::value != T(0));
-  }
 };
+
+TYPED_TEST_CASE(EpsilonTest, TestTypes);
+TYPED_TEST(EpsilonTest, All)
+{
+  EXPECT_NE(Math::Epsilon<TypeParam>::value, TypeParam(0));
+}
+
+template <class T>
+struct MinMaxAvgTest : public testing::Test
+{
+};
+
+TYPED_TEST_CASE(MinMaxAvgTest, TestTypes);
+TYPED_TEST(MinMaxAvgTest, All)
+{
+  using namespace Math;
+  MinMaxAvg<TypeParam> mma;
+  mma(-1);
+  mma(1);
+  EXPECT_TRUE(Dune::FloatCmp::eq(mma.min(), TypeParam(-1.0)));
+  EXPECT_TRUE(Dune::FloatCmp::eq(mma.max(), TypeParam(1.0)));
+  EXPECT_TRUE(Dune::FloatCmp::eq(mma.average(), TypeParam(0.0)));
+  mma(0);
+  EXPECT_TRUE(Dune::FloatCmp::eq(mma.min(), TypeParam(-1.0)));
+  EXPECT_TRUE(Dune::FloatCmp::eq(mma.max(), TypeParam(1.0)));
+  EXPECT_TRUE(Dune::FloatCmp::eq(mma.average(), TypeParam(0.0)));
+  mma(-4);
+  EXPECT_TRUE(Dune::FloatCmp::eq(mma.min(), TypeParam(-4.0)));
+  EXPECT_TRUE(Dune::FloatCmp::eq(mma.max(), TypeParam(1.0)));
+  EXPECT_TRUE(Dune::FloatCmp::eq(mma.average(), TypeParam(-1.0)));
+}
+
+TEST(OtherMath, Range)
+{
+  EXPECT_EQ((std::vector<unsigned int>{0, 1, 2, 3}), Math::range(4u));
+  EXPECT_EQ((std::vector<int>{4, 3, 2, 1}), Math::range(4, 0, -1));
+  EXPECT_EQ((std::vector<int>{-1, 0, 1}), Math::range(-1, 2));
+  EXPECT_EQ((std::vector<float>()), Math::range(0.f));
+  EXPECT_EQ((std::vector<float>{0.f}), Math::range(Math::Epsilon<float>::value));
+}
 
 int main(int argc, char** argv)
 {
-  try {
-    // mpi
-    typedef Dune::tuple<double, int> TestTypes;
-    Dune::MPIHelper::instance(argc, argv);
-    TestRunner<MinMaxAvgTest>::run<TestTypes>();
-    TestRunner<ClampTest>::run<TestTypes>();
-    TestRunner<VectorMath>::run<TestTypes>();
-    TestRunner<EpsilonInstance>::run<BasicTypes>();
-  } catch (Dune::Exception& e) {
-    std::cout << e.what() << std::endl;
-    return 1;
-  }
-  return 0;
+  testing::InitGoogleTest(&argc, argv);
+  Dune::MPIHelper::instance(argc, argv);
+  return RUN_ALL_TESTS();
 }

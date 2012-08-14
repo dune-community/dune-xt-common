@@ -62,7 +62,7 @@ MACRO( ADD_CPPCHECK )
 			FILE( APPEND  ${CPPINLINST}  "${SOURCEFILE}\n" )
 		ENDFOREACH( SOURCEFILE )	
 		TO_LIST_SPACES( PLAIN_INCLUDE_DIRS CPPCHECK_FLAGS_SPLIT )
-		ADD_CUSTOM_TARGET(  cppcheck cppcheck --xml --enable=all -f --quiet --file-list=${CPPINLINST}
+		ADD_CUSTOM_TARGET(  cppcheck cppcheck --xml --enable=all --report-progress --file-list=${CPPINLINST}
 				${CPPCHECK_FLAGS_SPLIT}  2>cppcheck.xml )
 	ELSE( EXISTS ${CPPCHECK_BINARY} )
 		MESSAGE( STATUS "Not adding cppcheck target because cppcheck executable not found" )
@@ -173,9 +173,10 @@ SET( CMAKE_CXX_FLAGS_DEBUG
 	"-O0 -DDNDEBUG -g3 -ggdb" )
 	
 FIND_PACKAGE( PkgConfig )
-FIND_PACKAGE(Boost 1.42.0 REQUIRED)
+FIND_PACKAGE(Boost 1.48.0 REQUIRED)
 ADD_CXX_FLAGS( -DHAVE_CMAKE_CONFIG ${CXX_STD0X_FLAGS})
 INCLUDE_SYS_DIR(${Boost_INCLUDE_DIRS})
+LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
 #try to enable link-time-optimization
 if (CMAKE_COMPILER_IS_GNUCC)

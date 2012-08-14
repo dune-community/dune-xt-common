@@ -24,7 +24,7 @@
 #include <dune/fem/function/blockvectorfunction/blockvectorfunction.hh>
 namespace boost {
 namespace math {
-// ! isinf specialization for Dune::StraightenBlockVector
+//! isinf specialization for Dune::StraightenBlockVector
 template <class BlockVectorImp, class DofImp>
 inline bool isinf(const Dune::StraightenBlockVector<BlockVectorImp, DofImp>& x)
 {
@@ -76,7 +76,7 @@ static double colonProduct(const SomeRangeType& arg1, const OtherRangeType& arg2
  * use this to get the minimum increment/difference for all basic types
  * (or add specializations as necessary ofc)
  **/
-template <class T, bool is_integral = boost::is_integral<T>::value>
+template <class T, bool is_integral = std::is_integral<T>::value>
 struct Epsilon
 {
 };
@@ -97,6 +97,23 @@ template <class T>
 const T Epsilon<T, true>::value = 1;
 template <class T>
 const T Epsilon<T, false>::value = std::numeric_limits<T>::epsilon();
+
+//! get a vector with values in [start : increment : end)
+template <class T, class sequence = std::vector<T>>
+sequence range(const T start, const T end, const T increment = Epsilon<T>::value)
+{
+  sequence ret(typename sequence::size_type(std::abs((end - start) / increment)), start);
+  typename sequence::size_type i = 0;
+  std::generate(std::begin(ret), std::end(ret), [&]() { return start + (increment * i++); });
+  return ret;
+}
+
+//! get a vector with values in [0 : Epsilon<T> : end)
+template <class T, class sequence = std::vector<T>>
+sequence range(const T end)
+{
+  return range(T(0), end);
+}
 
 /**
    *  \brief  dyadic product
