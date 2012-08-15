@@ -3,6 +3,7 @@
 #include <dune/stuff/common/parameter/validation.hh>
 #include <dune/stuff/common/type_utils.hh>
 #include <dune/stuff/common/math.hh>
+#include <dune/stuff/common/random.hh>
 #include <dune/common/tuples.hh>
 #include <dune/common/tupleutility.hh>
 #include <dune/common/exceptions.hh>
@@ -22,7 +23,7 @@ typedef testing::Types<double, float, // Dune::bigunsignedint,
 template <class T>
 struct ValidationTest : public testing::Test
 {
-
+  typedef Math::DefaultRNG<T> RNGType;
   /** for some weird reason my compiler thinks ValidationTest is an abstract class
    * if I don't implement "void TestBody();"
    * \see common_math.cc testcases for why I think it's weird
@@ -33,12 +34,11 @@ struct ValidationTest : public testing::Test
     std::cout << "\tTesting Validators for type " << Typename<T>::value() << "\n\t\t" << samples
               << " random numbers ..." << std::endl;
     {
-      std::default_random_engine generator;
       const T lower = std::numeric_limits<T>::min();
       const T upper = std::numeric_limits<T>::max();
-      typename Distribution<T, boost::is_integral<T>::value>::type distribution(lower, upper);
+      RNGType rng;
       for (int i = samples; i > 0; --i) {
-        const T arg = distribution(generator);
+        const T arg = rng();
         test(lower, upper, arg);
       }
     }

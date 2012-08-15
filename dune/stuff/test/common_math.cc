@@ -111,6 +111,11 @@ TEST(OtherMath, Range)
   EXPECT_EQ((std::vector<float>{0.f}), Math::range(Math::Epsilon<float>::value));
 }
 
+TEST(OtherMath, Sign)
+{
+  EXPECT_TRUE(false); // tests missing
+}
+
 int main(int argc, char** argv)
 {
   testing::InitGoogleTest(&argc, argv);

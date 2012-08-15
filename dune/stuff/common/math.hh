@@ -224,7 +224,7 @@ class MovingAverage
   size_t steps_;
 
 public:
-  DUNE_DEPRECATED_MSG("use MinMaxAvg this from header instead")
+  DUNE_DEPRECATED_MSG("use MinMaxAvg from this header instead")
   MovingAverage()
     : avg_(0.0)
     , steps_(0)

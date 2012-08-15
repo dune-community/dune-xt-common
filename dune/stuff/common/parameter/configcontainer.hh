@@ -75,6 +75,8 @@ std::ostream& operator<<(std::ostream& out, const Request& r)
 class ConfigContainer
 {
 private:
+  typedef std::map<std::string, std::set<Request>> RequestMapType;
+
   template <typename T, class Validator>
   T getValidValue(std::string name, T def, const ValidatorInterface<T, Validator>& validator)
   {
@@ -84,6 +86,14 @@ private:
     std::stringstream ss;
     validator.print(ss);
     DUNE_THROW(Dune::ParameterInvalid, ss.str());
+  }
+
+  std::set<Request> getMismatchedDefaults(RequestMapType::value_type pair) const
+  {
+    typedef bool (*func)(const Request&, const Request&);
+    std::set<Request, func> mismatched(&strictRequestCompare);
+    mismatched.insert(pair.second.begin(), pair.second.end());
+    return std::set<Request>(std::begin(mismatched), std::end(mismatched));
   }
 
 public:
@@ -182,14 +192,22 @@ public:
     }
   }
 
+  RequestMapType getMismatchedDefaultsMap() const
+  {
+    RequestMapType ret;
+    for (const auto& pair : requests_map_) {
+      auto mismatches = getMismatchedDefaults(pair);
+      if (mismatches.size())
+        ret[pair.first] = mismatches;
+    }
+    return ret;
+  }
+
   void printMismatchedDefaults(std::ostream& out) const
   {
     for (const auto& pair : requests_map_) {
-      typedef bool (*func)(const Request&, const Request&);
-      std::set<Request, func> mismatched(&strictRequestCompare);
-      mismatched.insert(pair.second.begin(), pair.second.end());
       out << "Mismatched uses for key " << pair.first << ":";
-      for (const auto& req : mismatched) {
+      for (const auto& req : getMismatchedDefaults(pair)) {
         out << "\n\t" << req;
       }
       out << "\n";
@@ -200,7 +218,7 @@ private:
   bool warning_output_;
   Dune::ParameterTree tree_;
   //! config key -> requests map
-  std::map<std::string, std::set<Request>> requests_map_;
+  RequestMapType requests_map_;
 };
 
 //! global ConfigContainer instance
