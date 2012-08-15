@@ -6,19 +6,36 @@
 
 STUFF_TYPENAME(Dune::MPIHelper)
 
+using namespace Dune::Stuff::Common;
+using namespace std;
+
+TEST(Typename, Knowns)
+{
+  EXPECT_EQ(Typename<unsigned long>::value(), "unsigned long");
+  EXPECT_EQ(Typename<unsigned long>::value(), "unsigned long");
+  EXPECT_EQ(Typename<int>::value(), "int");
+  EXPECT_EQ(Typename<double>::value(), "double");
+  EXPECT_EQ(Typename<float>::value(), "float");
+  EXPECT_EQ(Typename<long>::value(), "long");
+  EXPECT_EQ(Typename<unsigned int>::value(), "unsigned int");
+  EXPECT_EQ(Typename<unsigned long>::value(), "unsigned long");
+  EXPECT_EQ(Typename<char>::value(), "char");
+}
+
+TEST(Typename, Unknowns)
+{
+  EXPECT_NE(Typename<Dune::Exception>::value(), string());
+}
+
+TEST(Typename, Extended)
+{
+  EXPECT_EQ(Typename<Dune::MPIHelper>::value(), string("MPIHelper"));
+}
+
+
 int main(int argc, char** argv)
 {
-  using namespace Dune::Stuff::Common;
-  try {
-    // mpi
-    Dune::MPIHelper::instance(argc, argv);
-    std::cout << "builtin typename:\nunsigned long  -> " << Typename<unsigned long>::value()
-              << "\nunknown: Dune::Exception  -> " << Typename<Dune::Exception>::value()
-              << "\nextended: Dune::MPIHelper -> " << Typename<Dune::MPIHelper>::value() << std::endl;
-
-  } catch (Dune::Exception& e) {
-    std::cout << e.what() << std::endl;
-    return 1;
-  }
-  return 0;
+  testing::InitGoogleTest(&argc, argv);
+  Dune::MPIHelper::instance(argc, argv);
+  return RUN_ALL_TESTS();
 }
