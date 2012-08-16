@@ -177,7 +177,7 @@ public:
   template <class T>
   void set(const std::string key, const T value)
   {
-    tree_[key] = value;
+    tree_[key] = Dune::Stuff::Common::String::convertTo(value);
   }
 
   void printRequests(std::ostream& out) const
