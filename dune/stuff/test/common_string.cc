@@ -11,6 +11,7 @@ using namespace std;
 TEST(StringTest, ConvertTo)
 {
   EXPECT_EQ("9", convertTo<int>(convertFrom<int>("9")));
+  EXPECT_EQ("P", convertTo<char>(convertFrom<char>("P")));
   EXPECT_EQ(double(0.1), convertFrom<double>(convertTo<double>(0.1)));
   EXPECT_EQ("0.10000000000000001",
             convertTo<double>(convertFrom<double>("0.1000000000000000055511151231257827021181583404541015625")));
@@ -29,6 +30,8 @@ TEST(StringTest, ConvertFrom)
 {
   EXPECT_EQ(9, convertFrom<int>("9"));
   EXPECT_EQ(0, convertFrom<int>("0"));
+  EXPECT_EQ('p', convertFrom<char>(convertTo<char>('p')));
+  EXPECT_EQ(-1, convertFrom<char>(convertTo<char>(-1)));
   EXPECT_EQ(true, convertFrom<bool>("1"));
   EXPECT_EQ(false, convertFrom<bool>("0"));
   EXPECT_THROW(convertFrom<int>(""), boost::bad_lexical_cast);

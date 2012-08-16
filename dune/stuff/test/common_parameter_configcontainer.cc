@@ -3,6 +3,7 @@
 #include <dune/stuff/common/parameter/validation.hh>
 #include <dune/stuff/common/parameter/configcontainer.hh>
 #include <dune/stuff/common/random.hh>
+#include <dune/stuff/common/math.hh>
 
 #include <array>
 #include <ostream>
@@ -12,17 +13,18 @@
 using namespace Dune::Stuff::Common;
 using namespace Dune::Stuff::Common::Parameter;
 
-typedef testing::Types<double, float, // Dune::bigunsignedint,
-                       int, unsigned int, unsigned long, long long, char> TestTypes;
+typedef testing::Types<double, float, int, unsigned int, unsigned long, long long, char> TestTypes;
+
 
 template <class T>
 struct ConfigTest : public testing::Test
 {
+  static const int count = 2;
   Math::DefaultRNG<T> rng;
   Math::RandomStrings key_gen;
   // std::array is not assignable from list_of it seems
-  const boost::array<T, 1000> values;
-  const boost::array<std::string, 1000> keys;
+  const boost::array<T, count> values;
+  const boost::array<std::string, count> keys;
   ConfigTest()
     : key_gen(512)
     , values(boost::assign::list_of<T>().repeat_fun(values.size() - 1, rng))
@@ -44,6 +46,13 @@ struct ConfigTest : public testing::Test
 
   void set()
   {
+    for (T val : values) {
+      auto key = key_gen();
+      DSC_CONFIG.set(key, val);
+      // get with default diff from expected
+      auto re = DSC_CONFIG.get(key, val + Math::Epsilon<T>::value);
+      EXPECT_EQ(re, val);
+    }
   }
 
   void other()
