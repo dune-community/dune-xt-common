@@ -17,24 +17,16 @@
 #endif // ifdef HAVE_CMAKE_CONFIG
 #include <dune/common/version.hh>
 #include <dune/common/array.hh>
+#include <dune/common/deprecated.hh>
 #include <dune/common/static_assert.hh>
-#include <cstddef>
-#include <fstream>
-#include <iostream>
 #include <ostream>
-#include <sstream>
 #include <iomanip>
 #include <vector>
-#include <cmath>
-#include <cerrno>
-#include <limits>
-#include <string.h>
-#include <stdexcept>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <cstdio>
-#include <dune/common/deprecated.hh>
+#include <string>
+#include <ctime>
+
 #include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
 
 namespace Dune {
 namespace Stuff {
@@ -43,26 +35,16 @@ namespace String {
 
 //! simple and dumb std::string to anything conversion
 template <class ReturnType>
-ReturnType convertFrom(const std::string& s)
+inline ReturnType convertFrom(const std::string& s)
 {
-  std::stringstream ss;
-
-  ss << s;
-  ReturnType r;
-  ss >> r;
-  return r;
+  return boost::lexical_cast<ReturnType, std::string>(s);
 } // fromString
 
 //! simple and dumb anything to std::string conversion
 template <class ReturnType>
-std::string convertTo(const ReturnType& s)
+inline std::string convertTo(const ReturnType& s)
 {
-  std::stringstream ss;
-
-  ss << s;
-  std::string r;
-  ss >> r;
-  return r;
+  return boost::lexical_cast<std::string, ReturnType>(s);
 } // toString
 
 /**

@@ -10,17 +10,19 @@ using namespace std;
 
 TEST(StringTest, ConvertTo)
 {
-  EXPECT_EQ("9", convertTo<int>(9));
-  EXPECT_EQ("1", convertTo<bool>(true));
-  EXPECT_EQ("0", convertTo<bool>(false));
-  EXPECT_EQ("-1", convertTo<long>(-1));
+  EXPECT_EQ("9", convertTo<int>(convertFrom<int>("9")));
+  EXPECT_EQ(double(0.1), convertFrom<double>(convertTo<double>(0.1)));
+  EXPECT_EQ("0.10000000000000001",
+            convertTo<double>(convertFrom<double>("0.1000000000000000055511151231257827021181583404541015625")));
+  EXPECT_EQ("1", convertTo<bool>(convertFrom<bool>("1")));
+  EXPECT_EQ("0", convertTo<bool>(convertFrom<bool>("0")));
+  EXPECT_EQ("-1", convertTo<long>(convertFrom<long>("-1")));
 }
 
 TEST(StringTest, Hex)
 {
-  const string address = convertTo(Dune::Stuff::Common::dev_null);
-  const auto add = boost::lexical_cast<HexTo<unsigned long>>(address);
-  EXPECT_GT(add, 0u);
+  EXPECT_GT(boost::lexical_cast<HexTo<unsigned long>>(cout), 0u);
+  EXPECT_EQ(boost::lexical_cast<HexTo<unsigned long>>("0x00000F"), 15u);
 }
 
 TEST(StringTest, ConvertFrom)
@@ -29,7 +31,7 @@ TEST(StringTest, ConvertFrom)
   EXPECT_EQ(0, convertFrom<int>("0"));
   EXPECT_EQ(true, convertFrom<bool>("1"));
   EXPECT_EQ(false, convertFrom<bool>("0"));
-  EXPECT_EQ(0, convertFrom<int>(std::string()));
+  EXPECT_THROW(convertFrom<int>(""), boost::bad_lexical_cast);
 }
 
 TEST(StringTest, Whitespace)
