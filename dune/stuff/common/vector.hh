@@ -2,11 +2,8 @@
 #define DUNE_STUFF_TOOLS_COMMON_VEECTOR_HH
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
-
 namespace Vector {
 
 template <class T, class stream = std::ostream>
@@ -34,11 +31,8 @@ void clear(DenseVectorType& vector)
 } // void clear( DenseVectorType& vector )
 
 } // namespace Vector
-
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_TOOLS_COMMON_VEECTOR_HH

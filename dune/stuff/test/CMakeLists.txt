@@ -26,7 +26,7 @@ foreach( tex ${texfiles} )
     add_dependencies(tex_compile ${pdf} )
 endforeach( tex )
 add_test(NAME test_tex_compile COMMAND ${CMAKE_MAKE_PROGRAM} tex_compile)
-LIST(APPEND testnames test_tex_compile )
+LIST(APPEND testnames tex_compile )
 
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
-                  DEPENDS ${testnames} ${texfiles})
+                  DEPENDS ${testnames} )
