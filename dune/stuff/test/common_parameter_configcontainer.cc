@@ -13,7 +13,7 @@
 using namespace Dune::Stuff::Common;
 using namespace Dune::Stuff::Common::Parameter;
 
-typedef testing::Types<double, float, int, unsigned int, unsigned long, long long, char> TestTypes;
+typedef testing::Types<double, float, std::string, int, unsigned int, unsigned long, long long, char> TestTypes;
 
 
 template <class T>

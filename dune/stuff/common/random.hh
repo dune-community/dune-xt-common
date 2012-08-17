@@ -44,18 +44,6 @@ struct RNG
   }
 };
 
-template <class T>
-class DefaultRNG : public RNG<T, typename UniformDistributionSelector<T>::type, std::default_random_engine>
-{
-  typedef RNG<T, typename UniformDistributionSelector<T>::type, std::default_random_engine> BaseType;
-
-public:
-  DefaultRNG(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max())
-    : BaseType(std::default_random_engine(std::random_device()()),
-               typename UniformDistributionSelector<T>::type(min, max))
-  {
-  }
-};
 
 namespace {
 const std::string alphanums("abcdefghijklmnopqrstuvwxyz"
@@ -82,6 +70,29 @@ public:
     std::string ret(length, '\0');
     std::generate(std::begin(ret), std::end(ret), [=]() { return alphanums[distribution(generator)]; });
     return ret;
+  }
+};
+
+template <class T>
+class DefaultRNG : public RNG<T, typename UniformDistributionSelector<T>::type, std::default_random_engine>
+{
+  typedef RNG<T, typename UniformDistributionSelector<T>::type, std::default_random_engine> BaseType;
+
+public:
+  DefaultRNG(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max())
+    : BaseType(std::default_random_engine(std::random_device()()),
+               typename UniformDistributionSelector<T>::type(min, max))
+  {
+  }
+};
+
+template <>
+class DefaultRNG<std::string> : RandomStrings
+{
+public:
+  DefaultRNG(int length = 12)
+    : RandomStrings(length)
+  {
   }
 };
 

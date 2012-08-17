@@ -93,10 +93,18 @@ struct Epsilon<T, false>
   static const T value;
 };
 
+template <>
+struct Epsilon<std::string, false>
+{
+  static const std::string value;
+};
+
+
 template <class T>
 const T Epsilon<T, true>::value = 1;
 template <class T>
-const T Epsilon<T, false>::value = std::numeric_limits<T>::epsilon();
+const T Epsilon<T, false>::value                     = std::numeric_limits<T>::epsilon();
+const std::string Epsilon<std::string, false>::value = "a";
 
 //! get a vector with values in [start : increment : end)
 template <class T, class sequence = std::vector<T>>
