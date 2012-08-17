@@ -3,7 +3,7 @@
 
 using namespace Dune::Stuff::Common::Color;
 
-int main(int, char**)
+TEST(Color, All)
 {
   std::cout << "Testing some color codes for this terminal." << std::endl;
   std::cout << "WARNING: This test will succeed although some of the color codes" << std::endl;
@@ -32,5 +32,11 @@ int main(int, char**)
   for (int i = 0; i < 256; ++i)
     std::cout << highlightString("hello world - ", i);
   std::cout << std::endl;
-  return 0;
 } // main
+
+int main(int argc, char** argv)
+{
+  testing::InitGoogleTest(&argc, argv);
+  Dune::MPIHelper::instance(argc, argv);
+  return RUN_ALL_TESTS();
+}

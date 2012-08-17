@@ -13,6 +13,8 @@
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_integral.hpp>
+#include <boost/assign/list_of.hpp>
+#include <boost/array.hpp>
 
 using namespace Dune::Stuff::Common;
 using namespace Dune::Stuff::Common::Parameter;
@@ -30,6 +32,7 @@ struct ValidationTest : public testing::Test
    **/
   void TestBody()
   {
+    using namespace boost::assign;
     const int samples = 100000;
     std::cout << "\tTesting Validators for type " << Typename<T>::value() << "\n\t\t" << samples
               << " random numbers ..." << std::endl;
@@ -41,6 +44,13 @@ struct ValidationTest : public testing::Test
         const T arg = rng();
         test(lower, upper, arg);
       }
+      boost::array<T, 10> ar = list_of<T>().repeat_fun(9, rng);
+      ValidateInList<T, boost::array<T, 10>> validator(ar);
+      for (T t : ar) {
+        EXPECT_TRUE(validator(t));
+      }
+      std::vector<T> a;
+      EXPECT_FALSE(ValidateInList<T>(a)(rng()));
     }
     std::cout << "\t\tfixed interval" << std::endl;
     {
@@ -48,6 +58,9 @@ struct ValidationTest : public testing::Test
       const T upper = T(2);
       const T arg = T(1);
       test(lower, upper, arg);
+      EXPECT_FALSE(ValidateLess<T>(upper)(lower));
+      EXPECT_FALSE(ValidateGreater<T>(lower)(upper));
+      EXPECT_FALSE(ValidateGreaterOrEqual<T>(lower)(upper + Math::Epsilon<T>::value));
     }
     std::cout << "\t\tdone." << std::endl;
   }
@@ -61,6 +74,7 @@ struct ValidationTest : public testing::Test
     EXPECT_TRUE(ValidateGreaterOrEqual<T>(arg)(lower));
     EXPECT_TRUE(ValidateGreater<T>(clamped_arg)(lower));
     EXPECT_TRUE(ValidateInterval<T>(lower, upper)(arg));
+    EXPECT_FALSE(ValidateNone<T>()(arg));
   }
 };
 
