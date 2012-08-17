@@ -87,7 +87,7 @@ public:
 };
 
 template <>
-class DefaultRNG<std::string> : RandomStrings
+class DefaultRNG<std::string> : public RandomStrings
 {
 public:
   DefaultRNG(int length = 12)
