@@ -27,6 +27,7 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
+
 class Logging;
 Logging& Logger();
 

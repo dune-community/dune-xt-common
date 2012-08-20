@@ -173,7 +173,6 @@ std::string highlightSearchString(std::string str, std::string substr, int color
 } // highlightSearchString
 
 } // end of namespace Color
-
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune

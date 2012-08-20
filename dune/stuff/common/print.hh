@@ -12,11 +12,8 @@
 #include <dune/istl/bcrsmatrix.hh>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
-
 namespace Print {
 
 //! ensure matlab output is done with highest precision possible, otherwise weird effects are bound to happen
@@ -389,11 +386,8 @@ std::string dimToAxisName(const unsigned int dim, const bool capitalize = false)
 } // dimToAxisName
 
 } // namespace Print
-
 } // namespace Common
-
 } // namespace Stuff
-
 } // namespace Dune
 
 #endif // ifndef DUNESTUFF_PRINTING_HH_INCLUDED

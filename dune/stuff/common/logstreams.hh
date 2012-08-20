@@ -10,6 +10,7 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
+
 enum LogFlags
 {
   LOG_NONE    = 1,

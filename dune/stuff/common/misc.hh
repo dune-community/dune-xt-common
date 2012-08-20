@@ -36,11 +36,8 @@
 #include <boost/algorithm/string.hpp>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
-
 namespace Misc {
 
 //! element-index-in-container search
@@ -136,11 +133,8 @@ size_t arrayLength(T(&/*array*/)[N])
 }
 
 } // namespace Misc
-
 } // namespace Common
-
 } // namepspace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_COMMON_MISC_HH

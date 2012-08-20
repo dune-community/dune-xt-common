@@ -6,13 +6,12 @@
 #include <dune/stuff/common/logging.hh>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
 
 //! POSIX signal management utils
 namespace Signals {
+
 //! reset given signal to default handler
 void resetSignal(int signal)
 {
@@ -51,11 +50,8 @@ void installSignalHandler(int signal = SIGINT, handler_type handler = handleInte
 } // installSignalHandler
 
 } // namespace Signals
-
 } // namepsace Common
-
 } // namepsace Stuff
-
 } // namepsace Dune
 
 #endif // ifndef DUNE_STUFF_SIGNALS
