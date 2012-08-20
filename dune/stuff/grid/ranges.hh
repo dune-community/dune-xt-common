@@ -2,8 +2,10 @@
 #define DUNE_STUFF_RANGES_RANGES_HH
 
 #include <dune/grid/common/gridview.hh>
+#include <boost/serialization/static_warning.hpp>
 
 namespace std {
+
 template <class GridViewTraits>
 auto begin(Dune::GridView<GridViewTraits>& view) -> decltype(view.template begin<0>())
 {
@@ -40,9 +42,10 @@ class ViewRange
   const GridViewType& view_;
 
 public:
-  ViewRange(const GridViewType& view) DUNE_DEPRECATED_MSG("completely obsoleted with specialized std::begin/end")
+  ViewRange(const GridViewType& view)
     : view_(view)
   {
+    BOOST_STATIC_WARNING(codim == 0 && "unnecessary ViewRange usage with codim 0");
   }
 
   typename GridViewType::template Codim<codim>::Iterator begin() const
