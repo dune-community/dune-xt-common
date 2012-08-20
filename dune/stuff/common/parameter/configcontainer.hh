@@ -7,6 +7,7 @@
 #include <dune/stuff/common/filesystem.hh>
 #include <dune/stuff/common/misc.hh>
 #include <dune/stuff/common/parameter/validation.hh>
+#include <dune/stuff/common/parameter/tree.hh>
 
 #include <boost/format.hpp>
 
@@ -216,7 +217,7 @@ public:
 
 private:
   bool warning_output_;
-  Dune::ParameterTree tree_;
+  Tree::Extended tree_;
   //! config key -> requests map
   RequestMapType requests_map_;
 };
