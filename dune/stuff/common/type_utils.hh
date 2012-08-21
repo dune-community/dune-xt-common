@@ -62,6 +62,12 @@ struct Typename
   }
 };
 
+
+template <class T>
+std::string getTypename(const T&)
+{
+  return Typename<T>::value();
+}
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune

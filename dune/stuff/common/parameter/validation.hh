@@ -73,6 +73,7 @@ public:
   }
 };
 
+
 //! validates arg iff in given list
 template <class T, class ListImp = std::vector<T>>
 class ValidateInList : public ValidatorInterface<T, ValidateInList<T, ListImp>>
@@ -215,6 +216,17 @@ private:
 };
 
 } // end namesapce Parameter
+
+//! example partial specialisation
+template <typename T>
+struct Typename<Parameter::ValidateAny<T>>
+{
+  static std::string value()
+  {
+    return "Dune::Stuff::Common::Parameter::ValidateAny<T>";
+  }
+};
+
 } // end namesapce Common
 } // end namesapce Stuff
 } // end namesapce Dune
