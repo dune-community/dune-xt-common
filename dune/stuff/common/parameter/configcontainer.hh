@@ -8,6 +8,7 @@
 #include <dune/stuff/common/misc.hh>
 #include <dune/stuff/common/parameter/validation.hh>
 #include <dune/stuff/common/parameter/tree.hh>
+#include <dune/stuff/common/type_utils.hh>
 
 #include <boost/format.hpp>
 
@@ -97,6 +98,22 @@ private:
     return std::set<Request>(std::begin(mismatched), std::end(mismatched));
   }
 
+  template <typename T, class Validator>
+  T get(std::string name, T def, const ValidatorInterface<T, Validator>& validator,
+        bool UNUSED_UNLESS_DEBUG(useDbgStream), const Request& request)
+  {
+    requests_map_[name].insert(request);
+#ifndef NDEBUG
+    if (warning_output_ && !tree_.hasKey(name)) {
+      if (useDbgStream)
+        Logger().dbg() << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
+      else
+        std::cerr << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
+    }
+#endif // ifndef NDEBUG
+    return getValidValue(name, def, validator);
+  } // getParam
+
 public:
   ConfigContainer(const Dune::ParameterTree& tree)
     : warning_output_(false)
@@ -134,8 +151,7 @@ public:
   template <typename T>
   T get(std::string name, T def, Request req, bool useDbgStream = true)
   {
-    requests_map_[name].insert(req);
-    return get(name, def, ValidateAny<T>(), useDbgStream);
+    return get(name, def, ValidateAny<T>(), useDbgStream, req);
   }
 
   //! hack around the "CHARS" is no string issue
@@ -145,19 +161,15 @@ public:
   }
 
   template <typename T, class Validator>
-  T get(std::string name, T def, const ValidatorInterface<T, Validator>& validator,
-        bool UNUSED_UNLESS_DEBUG(useDbgStream) = true)
+  T get(std::string name, T def, const ValidatorInterface<T, Validator>& validator, bool useDbgStream = true)
   {
-#ifndef NDEBUG
-    if (warning_output_ && !tree_.hasKey(name)) {
-      if (useDbgStream)
-        Logger().dbg() << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
-      else
-        std::cerr << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
-    }
-#endif // ifndef NDEBUG
-    return getValidValue(name, def, validator);
-  } // getParam
+    Request req(-1,
+                std::string(),
+                name,
+                Dune::Stuff::Common::String::convertTo(def),
+                Dune::Stuff::Common::getTypename(validator));
+    return get(name, def, validator, useDbgStream, req);
+  }
 
   //! hack around the "CHARS" is no string issue again
   template <class Validator>
@@ -167,12 +179,10 @@ public:
     return get<std::string, Validator>(name, def, validator, useDbgStream);
   }
 
-
   //! get variation with request recording
   std::string get(std::string name, const char* def, Request req, bool useDbgStream = true)
   {
-    requests_map_[name].insert(req);
-    return get(name, std::string(def), ValidateAny<std::string>(), useDbgStream);
+    return get(name, std::string(def), ValidateAny<std::string>(), useDbgStream, req);
   }
 
   template <class T>
