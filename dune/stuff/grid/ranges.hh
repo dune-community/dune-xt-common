@@ -89,36 +89,82 @@ public:
   }
 };
 
-//! adapter enabling intersectionniterator usage in range-based for
-template <class GridViewType>
+/** adapter enabling intersectionniterator usage in range-based for
+ * works for GridParts and GridViews
+ */
+template <class GridAbstractionType, class EntityType>
 class IntersectionRange
 {
-  typedef typename GridViewType::template Codim<0>::Entity EntityType;
-  const GridViewType& view_;
+  const GridAbstractionType& view_;
   const EntityType& entity_;
 
 public:
-  IntersectionRange(const GridViewType& view, const EntityType& entity)
+  IntersectionRange(const GridAbstractionType& view, const EntityType& entity)
     : view_(view)
     , entity_(entity)
   {
   }
 
-  typename GridViewType::IntersectionIterator begin() const
+  auto begin() const -> decltype(view_.ibegin(entity_))
   {
     return view_.ibegin(entity_);
   }
-  typename GridViewType::IntersectionIterator end() const
+
+  auto end() const -> decltype(view_.iend(entity_))
   {
     return view_.iend(entity_);
   }
 };
 
+//! use sfinae to switch between gridview/gridpart signature
 template <class GridViewType>
-IntersectionRange<GridViewType> intersectionRange(const GridViewType& gridview,
-                                                  const typename GridViewType::template Codim<0>::Entity& entity)
+IntersectionRange<GridViewType, typename GridViewType::template Codim<0>::Entity>
+intersectionRange(const GridViewType& gridview, const typename GridViewType::template Codim<0>::Entity& entity)
 {
-  return IntersectionRange<GridViewType>(gridview, entity);
+  return IntersectionRange<GridViewType, typename GridViewType::template Codim<0>::Entity>(gridview, entity);
+}
+
+template <class GridPartType>
+IntersectionRange<GridPartType, typename GridPartType::template Codim<0>::EntityType>
+intersectionRange(const GridPartType& gridpart, const typename GridPartType::template Codim<0>::EntityType& entity)
+{
+  return IntersectionRange<GridPartType, typename GridPartType::template Codim<0>::EntityType>(gridpart, entity);
+}
+
+//! Range adpater for lagrane points from lagrange spaces
+template <class DiscreteFunctionspaceType, int faceCodim>
+class LagrangePointSetRange
+{
+  typedef typename DiscreteFunctionspaceType::LagrangePointSetType LagrangePointSetType;
+  typedef typename LagrangePointSetType::template Codim<faceCodim>::SubEntityIteratorType SubEntityIteratorType;
+  const LagrangePointSetType& lp_set_;
+  const int subEntity_;
+
+public:
+  /** the template isn't lazyness here, the underlying set is tempalted on it too
+   */
+  template <class EntityType>
+  LagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& entity, const int subEntity)
+    : lp_set_(space.lagrangePointSet(entity))
+    , subEntity_(subEntity_)
+  {
+  }
+
+  SubEntityIteratorType begin() const
+  {
+    return lp_set_.template beginSubEntity<faceCodim>(subEntity_);
+  }
+  SubEntityIteratorType end() const
+  {
+    return lp_set_.template endSubEntity<faceCodim>(subEntity_);
+  }
+};
+
+template <int codim, class DiscreteFunctionspaceType, class EntityType>
+LagrangePointSetRange<DiscreteFunctionspaceType, codim>
+lagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& entity, const int subEntity)
+{
+  return LagrangePointSetRange<DiscreteFunctionspaceType, codim>(space, entity, subEntity);
 }
 
 } // namespace Stuff
