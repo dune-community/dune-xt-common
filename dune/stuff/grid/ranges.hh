@@ -4,6 +4,10 @@
 #include <dune/grid/common/gridview.hh>
 #include <boost/serialization/static_warning.hpp>
 
+#ifdef HAVE_DUNE_FEM
+#include <dune/fem/function/common/discretefunction.hh>
+#endif
+
 namespace std {
 
 template <class GridViewTraits>
@@ -29,11 +33,38 @@ auto end(const Dune::GridView<GridViewTraits>& view) -> decltype(view.template e
 {
   return view.template end<0>();
 }
+
+#ifdef HAVE_DUNE_FEM
+
+template <class DiscreteFunctionTraits>
+auto begin(const Dune::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> decltype(func.dbegin())
+{
+  return func.dbegin();
+}
+
+template <class DiscreteFunctionTraits>
+auto end(const Dune::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> decltype(func.dend())
+{
+  return func.dend();
+}
+
+template <class DiscreteFunctionTraits>
+auto begin(Dune::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> decltype(func.dbegin())
+{
+  return func.dbegin();
+}
+
+template <class DiscreteFunctionTraits>
+auto end(Dune::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> decltype(func.dend())
+{
+  return func.dend();
+}
+
+#endif
 }
 
 namespace Dune {
 namespace Stuff {
-namespace Grid {
 
 //! adapter enabling view usage in range-based for
 template <class GridViewType, int codim = 0>
@@ -83,8 +114,14 @@ public:
   }
 };
 
-} // namespace Grid
-} // namespace Stud
+template <class GridViewType>
+IntersectionRange<GridViewType> intersectionRange(const GridViewType& gridview,
+                                                  const typename GridViewType::template Codim<0>::Entity& entity)
+{
+  return IntersectionRange<GridViewType>(gridview, entity);
+}
+
+} // namespace Stuff
 } // namespace Dune
 
 #endif // DUNE_STUFF_RANGES_RANGES_HH
