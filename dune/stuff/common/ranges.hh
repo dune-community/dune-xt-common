@@ -6,33 +6,11 @@
 
 #ifdef HAVE_DUNE_FEM
 #include <dune/fem/function/common/discretefunction.hh>
+#include <dune/fem/gridpart/common/gridpart.hh>
 #endif
 
 namespace std {
 
-template <class GridViewTraits>
-auto begin(Dune::GridView<GridViewTraits>& view) -> decltype(view.template begin<0>())
-{
-  return view.template begin<0>();
-}
-
-template <class GridViewTraits>
-auto end(Dune::GridView<GridViewTraits>& view) -> decltype(view.template end<0>())
-{
-  return view.template end<0>();
-}
-
-template <class GridViewTraits>
-auto begin(const Dune::GridView<GridViewTraits>& view) -> decltype(view.template begin<0>())
-{
-  return view.template begin<0>();
-}
-
-template <class GridViewTraits>
-auto end(const Dune::GridView<GridViewTraits>& view) -> decltype(view.template end<0>())
-{
-  return view.template end<0>();
-}
 
 #ifdef HAVE_DUNE_FEM
 
@@ -61,7 +39,8 @@ auto end(Dune::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> declt
 }
 
 #endif
-}
+
+} // namespace std
 
 namespace Dune {
 namespace Stuff {
@@ -89,6 +68,7 @@ public:
   }
 };
 
+
 /** adapter enabling intersectionniterator usage in range-based for
  * works for GridParts and GridViews
  */
@@ -115,21 +95,6 @@ public:
     return view_.iend(entity_);
   }
 };
-
-//! use sfinae to switch between gridview/gridpart signature
-template <class GridViewType>
-IntersectionRange<GridViewType, typename GridViewType::template Codim<0>::Entity>
-intersectionRange(const GridViewType& gridview, const typename GridViewType::template Codim<0>::Entity& entity)
-{
-  return IntersectionRange<GridViewType, typename GridViewType::template Codim<0>::Entity>(gridview, entity);
-}
-
-template <class GridPartType>
-IntersectionRange<GridPartType, typename GridPartType::template Codim<0>::EntityType>
-intersectionRange(const GridPartType& gridpart, const typename GridPartType::template Codim<0>::EntityType& entity)
-{
-  return IntersectionRange<GridPartType, typename GridPartType::template Codim<0>::EntityType>(gridpart, entity);
-}
 
 //! Range adpater for lagrane points from lagrange spaces
 template <class DiscreteFunctionspaceType, int faceCodim>
@@ -159,6 +124,37 @@ public:
     return lp_set_.template endSubEntity<faceCodim>(subEntity_);
   }
 };
+
+
+template <class GridViewTraits>
+IntersectionRange<Dune::GridView<GridViewTraits>, typename Dune::GridView<GridViewTraits>::template Codim<0>::Entity>
+intersectionRange(const Dune::GridView<GridViewTraits>& gridview,
+                  const typename Dune::GridView<GridViewTraits>::template Codim<0>::Entity& entity)
+{
+  return IntersectionRange<Dune::GridView<GridViewTraits>,
+                           typename Dune::GridView<GridViewTraits>::template Codim<0>::Entity>(gridview, entity);
+}
+
+#ifdef HAVE_DUNE_FEM
+
+template <class GridPartTraits>
+IntersectionRange<Dune::GridPartInterface<GridPartTraits>,
+                  typename Dune::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType>
+intersectionRange(const Dune::GridPartInterface<GridPartTraits>& gridpart,
+                  const typename Dune::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType& entity)
+{
+  return IntersectionRange<Dune::GridPartInterface<GridPartTraits>,
+                           typename Dune::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType>(gridpart,
+                                                                                                            entity);
+}
+#endif
+
+template <class GridViewTraits, int codim = 0>
+ViewRange<Dune::GridView<GridViewTraits>, codim> viewRange(const Dune::GridView<GridViewTraits>& view)
+{
+  return ViewRange<Dune::GridView<GridViewTraits>, codim>(view);
+}
+
 
 template <int codim, class DiscreteFunctionspaceType, class EntityType>
 LagrangePointSetRange<DiscreteFunctionspaceType, codim>

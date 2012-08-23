@@ -26,8 +26,7 @@ void resetSignal(int signal)
 //! example signal handler
 void handleInterrupt(int signal)
 {
-  Logger().Info() << "forcefully terminated at " << Logging::TimeString() << std::endl;
-  Logger().Flush();
+  DSC_LOG_INFO << "forcefully terminated at " << Dune::Stuff::Common::String::fromTime() << std::endl;
   // reset signal handler and commit suicide
   resetSignal(signal);
   kill(getpid(), signal);

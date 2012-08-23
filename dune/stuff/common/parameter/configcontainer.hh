@@ -1,7 +1,10 @@
 #ifndef DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
 #define DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
 
-#include <dune/common/deprecated.hh> // ensure DUNE_DEPRECATED is defined properly
+#include <dune/common/deprecated.hh>
+#include <dune/common/parametertree.hh>
+#include <dune/common/parametertreeparser.hh>
+#include <dune/common/exceptions.hh>
 
 #include <dune/stuff/common/logging.hh>
 #include <dune/stuff/common/filesystem.hh>
@@ -11,10 +14,7 @@
 #include <dune/stuff/common/type_utils.hh>
 
 #include <boost/format.hpp>
-
-#include <dune/common/parametertree.hh>
-#include <dune/common/parametertreeparser.hh>
-#include <dune/common/exceptions.hh>
+#include <set>
 
 #define DSC_ORDER_REL_GENERIC(var, a, b)                                                                               \
   if (a.var < b.var) {                                                                                                 \

@@ -1,15 +1,21 @@
 #ifndef DUNESTUFF_PRINTING_HH_INCLUDED
 #define DUNESTUFF_PRINTING_HH_INCLUDED
 
+#ifdef HAVE_CMAKE_CONFIG
+#include "cmake_config.h"
+#elif defined(HAVE_CONFIG_H)
+#include <config.h>
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 #include <string>
 #include <iostream>
 #include <iomanip>
 #include <cmath>
 #include <limits>
 #include <boost/format.hpp>
-#include <dune/stuff/fem/functions.hh>
 #include <dune/stuff/common/parameter/container.hh>
-#include <dune/istl/bcrsmatrix.hh>
+#include <dune/stuff/fem/functions/checks.hh>
+//#include <dune/istl/bcrsmatrix.hh>
 
 namespace Dune {
 namespace Stuff {

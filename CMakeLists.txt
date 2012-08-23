@@ -47,16 +47,13 @@ ADD_DUNE_MODULES( common istl grid fem geometry localfunctions stuff)
 
 LINK_DIRECTORIES( "/usr/lib" ${CCGNU_LIBRARY_DIRS} )
 
-FILE( GLOB header "src/*.hh" )
-FILE( GLOB_RECURSE stuff "stuff/*.hh" )
+FILE( GLOB_RECURSE stuff "${CMAKE_CURRENT_SOURCE_DIR}/dune/stuff/*.hh" )
 
 set( COMMON_LIBS "grid" "fem" "common"  ${BLAS_LIB} "GL" ${ParaLIBS} ${CCGNU_LIBRARIES} "boost_filesystem")
-set( COMMON_HEADER ${header} ${stuff} ${DUNE_HEADERS} )
+set( COMMON_HEADER ${stuff} ${DUNE_HEADERS} )
 set_source_files_properties( ${COMMON_HEADER} PROPERTIES HEADER_FILE_ONLY 1 )
 
 LINK_DIRECTORIES( "/usr/lib" )
-
-FILE( GLOB_RECURSE stuff "stuff/*.hh" )
 
 HEADERCHECK( ${stuff} )
 ADD_DEFINITIONS( ${MY_CXX_FLAGS} )

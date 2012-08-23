@@ -1,6 +1,8 @@
 #ifndef DUNE_STUFF_TOOLS_COMMON_VEECTOR_HH
 #define DUNE_STUFF_TOOLS_COMMON_VEECTOR_HH
 
+#include <iostream>
+
 namespace Dune {
 namespace Stuff {
 namespace Common {
