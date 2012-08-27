@@ -38,118 +38,22 @@ Logging& Logger();
 class Logging
 {
 private:
-  Logging()
-    : logflags_(LOG_NONE)
-    , matlabLogStreamPtr(0)
-    , emptyLogStream_(logflags_)
-  {
-    streamIDs_.push_back(LOG_ERROR);
-    streamIDs_.push_back(LOG_DEBUG);
-    streamIDs_.push_back(LOG_INFO);
-  }
+  Logging();
 
 public:
-  ~Logging()
-  {
-    // destroy in reverse creation order, 2012 style
-    BOOST_REVERSE_FOREACH(auto id, streamIDs_)
-    {
-      // logstream dtor is mandated to flush itself
-      delete streammap_[id];
-      streammap_[id] = 0;
-    }
-
-    if ((logflags_ & LOG_FILE) != 0) {
-      logfile_ << '\n' << Dune::Stuff::Common::String::fromTime() << ": LOG END" << std::endl;
-      logfileWoTime_ << std::endl;
-      logfile_.close();
-      logfileWoTime_.close();
-    }
-
-    // delete the MatlabLogStream
-    if (matlabLogStreamPtr) {
-      matlabLogStreamPtr->flush();
-      matlabLogFile_.close();
-      delete matlabLogStreamPtr;
-      matlabLogStreamPtr = 0;
-    }
-  }
+  ~Logging();
 
   /** \brief setup loglevel, logfilename
      *  \param logflags any OR'd combination of flags
      *  \param logfile filename for log, can contain paths, but creation will fail if dir is non-existant
      **/
   void create(int logflags = (LOG_FILE | LOG_CONSOLE | LOG_ERROR), const std::string logfile = "dune_stuff_log",
-              const std::string datadir = "data", const std::string _logdir = std::string("logs"))
-  {
-    using namespace boost::filesystem;
-    logflags_   = logflags;
-    path logdir = path(datadir) / _logdir;
-    filename_ = logdir / (logfile + "_time.log");
-    Stuff::Common::Filesystem::testCreateDirectory(filename_.string());
-    filenameWoTime_ = logdir / (logfile + ".log");
-    if ((logflags_ & LOG_FILE) != 0) {
-      logfile_.open(filename_);
-      assert(logfile_.is_open());
-      logfileWoTime_.open(filenameWoTime_);
-      assert(logfileWoTime_.is_open());
-    }
-    IdVecCIter it = streamIDs_.begin();
-    for (; it != streamIDs_.end(); ++it) {
-      flagmap_[*it]   = logflags;
-      streammap_[*it] = new FileLogStream(*it, flagmap_[*it], logfile_, logfileWoTime_);
-    }
-    // create the MatlabLogStream
-    path matlabLogFileName = logdir / (logfile + "_matlab.m");
-    Stuff::Common::Filesystem::testCreateDirectory(matlabLogFileName.string());
-    matlabLogFile_.open(matlabLogFileName);
-    assert(matlabLogFile_.is_open());
-    matlabLogStreamPtr = new MatlabLogStream(LOG_FILE, logflags_, matlabLogFile_);
-  } // Create
+              const std::string datadir = "data", const std::string _logdir = std::string("logs"));
 
   //! \attention This will probably not do wht we want it to!
-  void setPrefix(std::string prefix)
-  {
-    // / begin dtor
-    IdVecCIter it = streamIDs_.end();
-
-    for (; it != streamIDs_.begin(); --it) {
-      delete streammap_[*it];
-      streammap_[*it] = 0;
-    }
-
-    if ((logflags_ & LOG_FILE) != 0) {
-      logfile_ << '\n' << Dune::Stuff::Common::String::fromTime() << ": LOG END" << std::endl;
-      logfileWoTime_ << std::endl;
-      logfile_.close();
-      logfileWoTime_.close();
-    }
-
-    // delete the MatlabLogStream
-    matlabLogStreamPtr->flush();
-    matlabLogFile_.close();
-    delete matlabLogStreamPtr;
-    matlabLogStreamPtr = 0;
-    // / end dtor
-
-    create(logflags_, prefix);
-  } // SetPrefix
-
-  void setStreamFlags(int streamID, int flags)
-  {
-    assert(flagmap_.find(streamID) != flagmap_.end());
-    // this might result in logging to diff targtes, so we flush the current targets
-    flush();
-    flagmap_[streamID] = flags;
-  }
-
-  int getStreamFlags(int streamID) const
-  {
-    const auto it = flagmap_.find(streamID);
-    if (it == flagmap_.end())
-      DUNE_THROW(InvalidStateException, "cannot get flags for unkown Stream id");
-    return it->second;
-  }
+  void setPrefix(std::string prefix);
+  void setStreamFlags(int streamID, int flags);
+  int getStreamFlags(int streamID) const;
 
   /** \name forwarded Log functions
      * \{
@@ -175,16 +79,7 @@ public:
   /** \}
      */
 
-  LogStream& getStream(int streamId)
-  {
-    const auto it = streammap_.find(streamId);
-    if (it == streammap_.end())
-      return emptyLogStream_;
-    //      DUNE_THROW(InvalidStateException, "cannot get unkown Stream");
-    else
-      return *(it->second);
-  }
-
+  LogStream& getStream(int streamId);
   LogStream& err() DUNE_DEPRECATED_MSG("use error() instead")
   {
     return getStream(LOG_ERROR);
@@ -217,37 +112,13 @@ public:
       return emptyLogStream_;
   }
 
-  void flush()
-  {
-    BOOST_FOREACH (auto pair, streammap_) {
-      pair.second->flush();
-    }
-  } // Flush
+  //! flush all active streams
+  void flush();
+  //! creates a new LogStream with given id
+  int addStream(int flags);
 
-  int addStream(int flags)
-  {
-    static int streamID_int = LOG_NEXT;
-    streamID_int <<= 1;
-    int streamID = streamID_int;
-    streamIDs_.push_back(streamID);
-    flagmap_[streamID]   = (flags | streamID);
-    streammap_[streamID] = new FileLogStream(streamID, flagmap_[streamID], logfile_, logfileWoTime_);
-    return streamID_int;
-  } // AddStream
-
-  void resume(LogStream::PriorityType prio = LogStream::default_suspend_priority)
-  {
-    BOOST_FOREACH (auto pair, streammap_) {
-      pair.second->resume(prio);
-    }
-  } // Resume
-
-  void suspend(LogStream::PriorityType prio = LogStream::default_suspend_priority)
-  {
-    BOOST_FOREACH (auto pair, streammap_) {
-      pair.second->suspend(prio);
-    }
-  } // Suspend
+  void resume(LogStream::PriorityType prio = LogStream::default_suspend_priority);
+  void suspend(LogStream::PriorityType prio = LogStream::default_suspend_priority);
 
   struct SuspendLocal
   {
@@ -308,6 +179,7 @@ Logging& Logger()
   static Logging log;
   return log;
 }
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
@@ -316,6 +188,8 @@ Logging& Logger()
 #define DSC_LOG_INFO DSC_LOG.info()
 #define DSC_LOG_DEBUG DSC_LOG.debug()
 #define DSC_LOG_ERROR DSC_LOG.error()
+
+#include "logging.cc"
 
 #endif // ifndef LOGGING_HH_INCLUDED
 
