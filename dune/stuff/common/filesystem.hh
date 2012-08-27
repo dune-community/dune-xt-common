@@ -17,29 +17,32 @@ namespace Common {
 namespace Filesystem {
 
 //! strip filename from \path if present, return empty string if only filename present
-std::string pathOnly(std::string path)
+std::string pathOnly(std::string _path)
 {
-  return boost::filesystem::path(path).parent_path().string();
+  return boost::filesystem::path(_path).parent_path().string();
 }
 
 //! return everything after the last slash
-std::string filenameOnly(const std::string& path)
+std::string filenameOnly(const std::string& _path)
 {
 #if BOOST_FILESYSTEM_VERSION > 2
-  return boost::filesystem::path(path).filename().string();
-
+  return boost::filesystem::path(_path).filename().string();
 #else // if BOOST_FILESYSTEM_VERSION > 2
-  return boost::filesystem::path(path).filename();
-
+  return boost::filesystem::path(_path).filename();
 #endif // if BOOST_FILESYSTEM_VERSION > 2
 } // filenameOnly
 
 //! may include filename, will be stripped
-void testCreateDirectory(const std::string path)
+void testCreateDirectory(const std::string _path)
 {
-  std::string pathonly = pathOnly(path);
+  std::string pathonly = pathOnly(_path);
   if (!pathonly.empty())
     boost::filesystem::create_directories(pathonly);
+}
+
+bool touch(const std::string& _path)
+{
+  return std::ofstream(_path.c_str()).is_open();
 }
 
 boost::filesystem::ofstream* make_ofstream(const boost::filesystem::path& path,
