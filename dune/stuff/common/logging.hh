@@ -23,6 +23,8 @@
 
 #include <boost/range/adaptors.hpp>
 #include <boost/foreach.hpp>
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/path.hpp>
 
 namespace Dune {
 namespace Stuff {
@@ -77,27 +79,19 @@ public:
      *  \param logflags any OR'd combination of flags
      *  \param logfile filename for log, can contain paths, but creation will fail if dir is non-existant
      **/
-  void create(int logflags = (LOG_FILE | LOG_CONSOLE | LOG_ERROR), std::string logfile = "dune_stuff_log",
-              std::string datadir = "data", std::string logdir = std::string(""))
+  void create(int logflags = (LOG_FILE | LOG_CONSOLE | LOG_ERROR), const std::string logfile = "dune_stuff_log",
+              const std::string datadir = "data", const std::string _logdir = std::string("logs"))
   {
-    logflags_ = logflags;
-
-    // if we get a logdir from parameters append path seperator, otherwise leave empty
-    // enables us to use logdir unconditionally further down
-    if (!datadir.empty())
-      datadir += "/";
-    if (!logdir.empty())
-      logdir += "/";
-    logdir = datadir + logdir;
-
-    filename_ = logdir + logfile + "_time.log";
-    Stuff::Common::Filesystem::testCreateDirectory(logdir);
-
-    filenameWoTime_ = logdir + logfile + ".log";
+    using namespace boost::filesystem;
+    logflags_   = logflags;
+    path logdir = path(datadir) / _logdir;
+    filename_ = logdir / (logfile + "_time.log");
+    Stuff::Common::Filesystem::testCreateDirectory(filename_.string());
+    filenameWoTime_ = logdir / (logfile + ".log");
     if ((logflags_ & LOG_FILE) != 0) {
-      logfile_.open(filename_.c_str());
+      logfile_.open(filename_);
       assert(logfile_.is_open());
-      logfileWoTime_.open(filenameWoTime_.c_str());
+      logfileWoTime_.open(filenameWoTime_);
       assert(logfileWoTime_.is_open());
     }
     IdVecCIter it = streamIDs_.begin();
@@ -106,10 +100,9 @@ public:
       streammap_[*it] = new FileLogStream(*it, flagmap_[*it], logfile_, logfileWoTime_);
     }
     // create the MatlabLogStream
-    std::string matlabLogFileName = logdir + logfile + "_matlab.m";
-    Stuff::Common::Filesystem::testCreateDirectory(matlabLogFileName); // could assert this if i figure out
-    // why errno is != EEXIST
-    matlabLogFile_.open(matlabLogFileName.c_str());
+    path matlabLogFileName = logdir / (logfile + "_matlab.m");
+    Stuff::Common::Filesystem::testCreateDirectory(matlabLogFileName.string());
+    matlabLogFile_.open(matlabLogFileName);
     assert(matlabLogFile_.is_open());
     matlabLogStreamPtr = new MatlabLogStream(LOG_FILE, logflags_, matlabLogFile_);
   } // Create
@@ -287,11 +280,11 @@ public:
   };
 
 private:
-  std::string filename_;
-  std::string filenameWoTime_;
-  std::ofstream logfile_;
-  std::ofstream logfileWoTime_;
-  std::ofstream matlabLogFile_;
+  boost::filesystem::path filename_;
+  boost::filesystem::path filenameWoTime_;
+  boost::filesystem::ofstream logfile_;
+  boost::filesystem::ofstream logfileWoTime_;
+  boost::filesystem::ofstream matlabLogFile_;
   typedef std::map<int, int> FlagMap;
   FlagMap flagmap_;
   typedef std::map<int, LogStream*> StreamMap;
