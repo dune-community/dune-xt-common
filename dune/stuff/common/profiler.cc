@@ -97,6 +97,10 @@ long Profiler::getTimingIdx(const std::string section_name, const int run_number
   const Datamap& data             = datamaps_[run_number];
   Datamap::const_iterator section = data.find(section_name);
   if (section == data.end()) {
+    // timer might still be running
+    const auto& timer_it = known_timers_map_.find(section_name);
+    if (timer_it != known_timers_map_.end())
+      return timer_it->second.second.delta();
     ASSERT_EXCEPTION(false, "no timer found: " + section_name);
     return -1;
   }
@@ -120,6 +124,9 @@ void Profiler::addCount(const int num)
 
 void Profiler::nextRun()
 {
+  // set all known timers to "stopped"
+  for (auto& timer_it : known_timers_map_)
+    timer_it.second.first = false;
   current_run_number_++;
 }
 

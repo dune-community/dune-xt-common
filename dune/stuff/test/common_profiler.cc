@@ -34,13 +34,15 @@ TEST(ProfilerTest, ScopedTiming)
 TEST(ProfilerTest, MultiRuns)
 {
   const auto range = Math::range(1, 3);
-  DSC_PROFILER.reset(range.size());
+  // needs to be range.size() + 1 since we're calling nextRun() range.size() times
+  DSC_PROFILER.reset(range.size() + 1);
   for (auto i : range) {
     scoped_busywait("ProfilerTest.MultiRuns", i * wait_ms);
     DSC_PROFILER.nextRun();
   }
   for (auto i : range) {
-    EXPECT_GE(DSC_PROFILER.getTiming("ProfilerTest.MultiRuns", i - 1), i * wait_ms);
+    // i-1 cause runs have 0-based index
+    EXPECT_GE(DSC_PROFILER.getTimingIdx("ProfilerTest.MultiRuns", i - 1), i * wait_ms);
   }
 }
 
@@ -61,6 +63,19 @@ TEST(ProfilerTest, ExpectedFailures)
   EXPECT_THROW(DSC_PROFILER.reset(0), Dune::RangeError);
   EXPECT_THROW(DSC_PROFILER.reset(-1), Dune::RangeError);
   EXPECT_THROW(DSC_PROFILER.stopTiming("This_section_was_never_start"), Dune::RangeError);
+}
+
+TEST(ProfilerTest, NestedTiming)
+{
+  auto& prof = DSC_PROFILER;
+  prof.reset(1);
+  prof.startTiming("NestedTiming.Outer");
+  busywait(100);
+  prof.startTiming("NestedTiming.Inner");
+  busywait(100);
+  auto inner = prof.getTiming("NestedTiming.Inner");
+  auto outer = prof.getTiming("NestedTiming.Outer");
+  EXPECT_GT(outer, inner);
 }
 
 int main(int argc, char** argv)
