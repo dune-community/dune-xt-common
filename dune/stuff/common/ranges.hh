@@ -103,15 +103,15 @@ class LagrangePointSetRange
   typedef typename DiscreteFunctionspaceType::LagrangePointSetType LagrangePointSetType;
   typedef typename LagrangePointSetType::template Codim<faceCodim>::SubEntityIteratorType SubEntityIteratorType;
   const LagrangePointSetType& lp_set_;
-  const int subEntity_;
+  const unsigned int subEntity_;
 
 public:
   /** the template isn't lazyness here, the underlying set is tempalted on it too
    */
   template <class EntityType>
-  LagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& entity, const int subEntity)
+  LagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& entity, const unsigned int subEntity)
     : lp_set_(space.lagrangePointSet(entity))
-    , subEntity_(subEntity_)
+    , subEntity_(subEntity)
   {
   }
 
