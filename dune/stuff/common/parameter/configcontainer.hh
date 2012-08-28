@@ -90,6 +90,7 @@ private:
     DUNE_THROW(Dune::ParameterInvalid, ss.str());
   }
 
+  //! return a set of Request objects for keys that have been queried with non-matching default values
   std::set<Request> getMismatchedDefaults(RequestMapType::value_type pair) const
   {
     typedef bool (*func)(const Request&, const Request&);
@@ -98,6 +99,7 @@ private:
     return std::set<Request>(std::begin(mismatched), std::end(mismatched));
   }
 
+  //! all public get signatures call this one
   template <typename T, class Validator>
   T get(std::string name, T def, const ValidatorInterface<T, Validator>& validator,
         bool UNUSED_UNLESS_DEBUG(useDbgStream), const Request& request)
@@ -111,6 +113,8 @@ private:
         std::cerr << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
     }
 #endif // ifndef NDEBUG
+    if (record_defaults_ && !tree_.hasKey(name))
+      set(name, def);
     return getValidValue(name, def, validator);
   } // getParam
 
@@ -118,12 +122,22 @@ public:
   ConfigContainer(const Dune::ParameterTree& tree)
     : warning_output_(false)
     , tree_(tree)
+    , record_defaults_(false)
   {
   }
 
   ConfigContainer()
     : warning_output_(true)
+    , record_defaults_(false)
   {
+  }
+
+  ~ConfigContainer()
+  {
+    boost::filesystem::path logdir(get("global.datadir", "data", false));
+    logdir /= get("logging.dir", "log", false);
+    boost::filesystem::ofstream out(logdir / "paramter.log");
+    tree_.report(out);
   }
 
   void readCommandLine(int argc, char* argv[])
@@ -152,6 +166,12 @@ public:
   T get(std::string name, T def, Request req, bool useDbgStream = true)
   {
     return get(name, def, ValidateAny<T>(), useDbgStream, req);
+  }
+  template <typename T, class Validator>
+  T get(std::string name, T def, const ValidatorInterface<T, Validator>& validator, Request req,
+        bool useDbgStream = true)
+  {
+    return get(name, def, validator, useDbgStream, req);
   }
 
   //! hack around the "CHARS" is no string issue
@@ -188,7 +208,7 @@ public:
   template <class T>
   void set(const std::string key, const T value)
   {
-    tree_[key] = Dune::Stuff::Common::String::convertTo(value);
+    tree_[key] = String::convertTo(value);
   }
 
   void printRequests(std::ostream& out) const
@@ -225,11 +245,21 @@ public:
     }
   }
 
+  /**
+   *  Control if the value map is filled with default values for missing entries
+   *  Initially false
+   **/
+  void setRecordDefaults(bool record)
+  {
+    record_defaults_ = record;
+  }
+
 private:
   bool warning_output_;
   Tree::Extended tree_;
   //! config key -> requests map
   RequestMapType requests_map_;
+  bool record_defaults_;
 };
 
 //! global ConfigContainer instance
@@ -255,6 +285,7 @@ ConfigContainer& Config()
 #define DSC_CONFIG_GETV(key, def, validator)                                                                           \
   DSC_CONFIG.get(key,                                                                                                  \
                  def,                                                                                                  \
+                 validator,                                                                                            \
                  Dune::Stuff::Common::Parameter::Request(                                                              \
                      __LINE__, __FILE__, key, Dune::Stuff::Common::String::convertTo(def), #validator))
 
