@@ -106,10 +106,7 @@ public:
   }
   LogStream& matlab()
   {
-    if (matlabLogStreamPtr)
-      return *matlabLogStreamPtr;
-    else
-      return emptyLogStream_;
+    return matlabLogStreamPtr ? *static_cast<LogStream*>(matlabLogStreamPtr) : emptyLogStream_;
   }
 
   //! flush all active streams

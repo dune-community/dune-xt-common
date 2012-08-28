@@ -284,6 +284,11 @@ Profiler::Profiler()
   setOutputdir("./profiling");
 }
 
+Profiler::~Profiler()
+{
+}
+
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune

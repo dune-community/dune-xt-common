@@ -35,6 +35,7 @@ Logging::Logging()
 
 Logging::~Logging()
 {
+
   // destroy in reverse creation order, 2012 style
   BOOST_REVERSE_FOREACH(auto id, streamIDs_)
   {
