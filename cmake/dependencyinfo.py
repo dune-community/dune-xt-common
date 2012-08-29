@@ -4,7 +4,7 @@ import sys
 import subprocess
 import sourcetree
 import pprint
-from pygraph.algorithms.cycles import find_cycle
+import networkx as nx
 
 fn = sys.argv[-1]
 strip_base = sys.argv[-2]
@@ -17,7 +17,8 @@ with open(fn,'wb') as out:
         sys.exit(errcode)
 
 (root,graph) = sourcetree.parse_file(strip_base, fn, maxdepth=100)
-cycle_nodes = find_cycle(graph)
+
+cycle_nodes = nx.simple_cycles(graph)
 if cycle_nodes:
     with open(fn+'.cycles','wb') as out:
        pprint.pprint(cycle_nodes, out)
