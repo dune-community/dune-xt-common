@@ -8,6 +8,7 @@
 #include <dune/fem/function/common/discretefunction.hh>
 #include <dune/fem/gridpart/common/gridpart.hh>
 #endif
+#include <dune/stuff/common/math.hh>
 
 namespace std {
 
