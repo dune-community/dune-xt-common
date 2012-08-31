@@ -56,6 +56,8 @@ def parse_file(strip_base, outfile, maxdepth=3):
     return (root, gr)
 
 def render_graph((root, gr)):
-    nx.draw_spring(gr)
+    fig = plt.gcf()
+    fig.set_size_inches(28.5,28.5)
+    nx.draw_graphviz(gr)
     plt.savefig('include_graph_%s.png'%root)
     return gr

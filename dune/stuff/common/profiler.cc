@@ -15,25 +15,25 @@ namespace Common {
 
 void Profiler::startTiming(const std::string section_name, const int i)
 {
-  const std::string section = section_name + String::convertTo(i);
+  const std::string section = section_name + toString(i);
   startTiming(section);
 }
 
 long Profiler::stopTiming(const std::string section_name, const int i)
 {
-  const std::string section = section_name + String::convertTo(i);
+  const std::string section = section_name + toString(i);
   return stopTiming(section);
 }
 
 long Profiler::getTiming(const std::string section_name, const int i) const
 {
-  const std::string section = section_name + String::convertTo(i);
+  const std::string section = section_name + toString(i);
   return getTiming(section);
 }
 
 void Profiler::resetTiming(const std::string section_name, const int i)
 {
-  const std::string section = section_name + String::convertTo(i);
+  const std::string section = section_name + toString(i);
   return resetTiming(section);
 }
 
@@ -246,7 +246,7 @@ void Profiler::outputCommon(const Profiler::InfoContainer& run_infos, const boos
 void Profiler::setOutputdir(const std::string dir)
 {
   output_dir_ = dir;
-  Dune::Stuff::Common::Filesystem::testCreateDirectory(output_dir_);
+  Dune::Stuff::Common::testCreateDirectory(output_dir_);
 }
 
 void Profiler::outputTimings(const std::string csv) const

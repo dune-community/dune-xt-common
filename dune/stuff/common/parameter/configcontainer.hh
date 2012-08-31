@@ -29,7 +29,6 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
-namespace Parameter {
 
 //! use this to record defaults, placements and so forth
 struct Request
@@ -183,11 +182,8 @@ public:
   template <typename T, class Validator>
   T get(std::string name, T def, const ValidatorInterface<T, Validator>& validator, bool useDbgStream = true)
   {
-    Request req(-1,
-                std::string(),
-                name,
-                Dune::Stuff::Common::String::convertTo(def),
-                Dune::Stuff::Common::getTypename(validator));
+    Request req(
+        -1, std::string(), name, Dune::Stuff::Common::toString(def), Dune::Stuff::Common::getTypename(validator));
     return get(name, def, validator, useDbgStream, req);
   }
 
@@ -208,7 +204,7 @@ public:
   template <class T>
   void set(const std::string key, const T value)
   {
-    tree_[key] = String::convertTo(value);
+    tree_[key] = toString(value);
   }
 
   void printRequests(std::ostream& out) const
@@ -256,7 +252,7 @@ public:
 
 private:
   bool warning_output_;
-  Tree::Extended tree_;
+  ExtendedParameterTree tree_;
   //! config key -> requests map
   RequestMapType requests_map_;
   bool record_defaults_;
@@ -269,31 +265,27 @@ ConfigContainer& Config()
   return parameters;
 }
 
-} // namespace Parameter
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
 
-#define DSC_CONFIG Dune::Stuff::Common::Parameter::Config()
+#define DSC_CONFIG Dune::Stuff::Common::Config()
 
 #define DSC_CONFIG_GET(key, def)                                                                                       \
-  DSC_CONFIG.get(key,                                                                                                  \
-                 def,                                                                                                  \
-                 Dune::Stuff::Common::Parameter::Request(                                                              \
-                     __LINE__, __FILE__, key, Dune::Stuff::Common::String::convertTo(def), "none"))
+  DSC_CONFIG.get(                                                                                                      \
+      key, def, Dune::Stuff::Common::Request(__LINE__, __FILE__, key, Dune::Stuff::Common::toString(def), "none"))
 
 #define DSC_CONFIG_GETV(key, def, validator)                                                                           \
-  DSC_CONFIG.get(key,                                                                                                  \
-                 def,                                                                                                  \
-                 validator,                                                                                            \
-                 Dune::Stuff::Common::Parameter::Request(                                                              \
-                     __LINE__, __FILE__, key, Dune::Stuff::Common::String::convertTo(def), #validator))
+  DSC_CONFIG.get(                                                                                                      \
+      key,                                                                                                             \
+      def,                                                                                                             \
+      validator,                                                                                                       \
+      Dune::Stuff::Common::Request(__LINE__, __FILE__, key, Dune::Stuff::Common::toString(def), #validator))
 
 #define DSC_CONFIG_GETB(key, def, use_logger)                                                                          \
   DSC_CONFIG.get(key,                                                                                                  \
                  def,                                                                                                  \
-                 Dune::Stuff::Common::Parameter::Request(                                                              \
-                     __LINE__, __FILE__, key, Dune::Stuff::Common::String::convertTo(def), "none"),                    \
+                 Dune::Stuff::Common::Request(__LINE__, __FILE__, key, Dune::Stuff::Common::toString(def), "none"),    \
                  use_logger)
 
 #endif // DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED

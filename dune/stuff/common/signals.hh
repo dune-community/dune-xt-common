@@ -10,7 +10,6 @@ namespace Stuff {
 namespace Common {
 
 //! POSIX signal management utils
-namespace Signals {
 
 //! reset given signal to default handler
 void resetSignal(int signal)
@@ -48,7 +47,6 @@ void installSignalHandler(int signal = SIGINT, handler_type handler = handleInte
   sigaction(signal, &new_action, NULL);
 } // installSignalHandler
 
-} // namespace Signals
 } // namepsace Common
 } // namepsace Stuff
 } // namepsace Dune

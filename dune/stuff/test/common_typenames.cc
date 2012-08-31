@@ -36,7 +36,7 @@ TEST(Typename, Extended)
     using namespace Dune;
     EXPECT_EQ(Typename<MPIHelper>::value(), string("Dune::MPIHelper"));
   }
-  typedef Dune::Stuff::Common::Parameter::ValidateAny<int> Valid;
+  typedef Dune::Stuff::Common::ValidateAny<int> Valid;
   Valid v;
   EXPECT_EQ(getTypename(v), string("Dune::Stuff::Common::Parameter::ValidateAny<T>"));
 }

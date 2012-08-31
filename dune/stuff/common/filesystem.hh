@@ -14,7 +14,6 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
-namespace Filesystem {
 
 //! strip filename from \path if present, return empty string if only filename present
 std::string pathOnly(std::string _path)
@@ -88,7 +87,6 @@ void meminfo(Dune::Stuff::Common::LogStream& stream)
   stream << "------------ \n\n" << std::endl;
 } // meminfo
 
-} // namespace Filesystem
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune

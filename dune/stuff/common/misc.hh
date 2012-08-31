@@ -31,18 +31,14 @@
 #include <stdexcept>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <cstdio>
-#include <initializer_list>
+
 #include <dune/common/deprecated.hh>
 #include <dune/common/exceptions.hh>
 #include <boost/algorithm/string.hpp>
-#include <boost/range/adaptor/map.hpp>
-#include <boost/iterator/iterator_facade.hpp>
 
 namespace Dune {
 namespace Stuff {
 namespace Common {
-namespace Misc {
 
 //! element-index-in-container search
 template <class StlSequence>
@@ -136,142 +132,6 @@ size_t arrayLength(T(&/*array*/)[N])
   return N;
 }
 
-template <class FixedMapType>
-class FixedMapIterator : public boost::iterator_facade<FixedMapIterator<FixedMapType>,
-                                                       typename FixedMapType::value_type, boost::forward_traversal_tag>
-{
-  typedef FixedMapIterator<FixedMapType> ThisType;
-
-  static const std::size_t N;
-
-public:
-  FixedMapIterator()
-    : index_(N)
-    , map_(nullptr)
-  {
-  }
-
-  explicit FixedMapIterator(FixedMapType* map, std::size_t i)
-    : index_(i)
-    , map_(map)
-  {
-  }
-
-private:
-  friend class boost::iterator_core_access;
-
-  void increment()
-  {
-    index_++;
-  }
-
-  bool equal(ThisType const& other) const
-  {
-    return this->map_ == other.map_;
-  }
-
-  typename FixedMapType::value_type& dereference() const
-  {
-    return map_->map_[index_];
-  }
-
-  std::size_t index_;
-  FixedMapType* map_;
-};
-
-template <class Y>
-const std::size_t FixedMapIterator<Y>::N = Y::N;
-
-//! a std::map like container that prevent map size change
-template <class key_imp, class T, std::size_t nin>
-class FixedMap
-{
-public:
-  typedef std::pair<key_imp, T> value_type;
-  static const std::size_t N;
-
-private:
-  typedef std::array<value_type, nin> MapType;
-
-  template <class R>
-  friend class FixedMapIterator;
-  typedef FixedMap<key_imp, T, nin> ThisType;
-
-public:
-  typedef key_imp key_type;
-  typedef T mapped_type;
-  typedef FixedMapIterator<ThisType> iterator;
-  typedef FixedMapIterator<const ThisType> const_iterator;
-
-  FixedMap()
-  {
-  }
-  FixedMap(const MapType& map)
-  {
-    map_ = map;
-  }
-
-  std::size_t getIdx(const key_type& key) const
-  {
-    //    auto it =
-    assert(false);
-    return -1;
-  }
-
-  const mapped_type& operator[](const key_type& key) const
-  {
-    const auto it = getIdx(key);
-    if (it != -1)
-      DUNE_THROW(Dune::RangeError, "missing key in FixedMap");
-    return map_[it].second;
-  }
-
-  mapped_type& operator[](const key_type& key)
-  {
-    const auto it = getIdx(key);
-    if (it != -1)
-      DUNE_THROW(Dune::RangeError, "missing key in FixedMap");
-    return map_[it].second;
-  }
-
-  const_iterator find(const key_type& key) const
-  {
-    return const_iterator(*this, getIdx(key));
-  }
-
-  iterator find(const key_type& key)
-  {
-    return iterator(this, getIdx(key));
-  }
-
-  iterator begin()
-  {
-    return iterator(this, 0);
-  }
-
-  iterator end()
-  {
-    return iterator(this, N);
-  }
-
-  const_iterator begin() const
-  {
-    return const_iterator(this, 0);
-  }
-
-  const_iterator end() const
-  {
-    return const_iterator(this, N);
-  }
-
-private:
-  MapType map_;
-};
-
-template <class K, class T, std::size_t nin>
-const std::size_t FixedMap<K, T, nin>::N = nin;
-
-} // namespace Misc
 } // namespace Common
 } // namepspace Stuff
 } // namespace Dune

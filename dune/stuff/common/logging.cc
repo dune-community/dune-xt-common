@@ -45,7 +45,7 @@ Logging::~Logging()
   }
 
   if ((logflags_ & LOG_FILE) != 0) {
-    logfile_ << '\n' << Dune::Stuff::Common::String::fromTime() << ": LOG END" << std::endl;
+    logfile_ << '\n' << stringFromTime() << ": LOG END" << std::endl;
     logfileWoTime_ << std::endl;
     logfile_.close();
     logfileWoTime_.close();
@@ -66,7 +66,7 @@ void Logging::create(int logflags, const std::string logfile, const std::string 
   logflags_   = logflags;
   path logdir = path(datadir) / _logdir;
   filename_ = logdir / (logfile + "_time.log");
-  Stuff::Common::Filesystem::testCreateDirectory(filename_.string());
+  testCreateDirectory(filename_.string());
   filenameWoTime_ = logdir / (logfile + ".log");
   if ((logflags_ & LOG_FILE) != 0) {
     logfile_.open(filename_);
@@ -81,7 +81,7 @@ void Logging::create(int logflags, const std::string logfile, const std::string 
   }
   // create the MatlabLogStream
   path matlabLogFileName = logdir / (logfile + "_matlab.m");
-  Stuff::Common::Filesystem::testCreateDirectory(matlabLogFileName.string());
+  testCreateDirectory(matlabLogFileName.string());
   matlabLogFile_.open(matlabLogFileName);
   assert(matlabLogFile_.is_open());
   matlabLogStreamPtr = new MatlabLogStream(LOG_FILE, logflags_, matlabLogFile_);
@@ -98,7 +98,7 @@ void Logging::setPrefix(std::string prefix)
   }
 
   if ((logflags_ & LOG_FILE) != 0) {
-    logfile_ << '\n' << Dune::Stuff::Common::String::fromTime() << ": LOG END" << std::endl;
+    logfile_ << '\n' << stringFromTime() << ": LOG END" << std::endl;
     logfileWoTime_ << std::endl;
     logfile_.close();
     logfileWoTime_.close();

@@ -23,56 +23,60 @@ namespace Common {
  * * \todo this could go into libdune-stuff
  * @warning Some color codes might be unsupported by your terminal.
  */
-namespace Color {
-// foreground colors
-static const char* const black     = "\033[30m";
-static const char* const red       = "\033[31m";
-static const char* const green     = "\033[32m";
-static const char* const brown     = "\033[33m";
-static const char* const blue      = "\033[34m";
-static const char* const purple    = "\033[35m";
-static const char* const cyan      = "\033[36m";
-static const char* const lightgray = "\033[37m";
-// light foreground colors
-static const char* const darkgray    = "\033[1;30m";
-static const char* const lightred    = "\033[1;31m";
-static const char* const lightgreen  = "\033[1;32m";
-static const char* const yellow      = "\033[1;33m";
-static const char* const lightblue   = "\033[1;34m";
-static const char* const lightpurple = "\033[1;35m";
-static const char* const lightcyan   = "\033[1;36m";
-static const char* const white       = "\033[1;37m";
+struct Colors
+{
+  // foreground colors
+  static constexpr char* const black     = "\033[30m";
+  static constexpr char* const red       = "\033[31m";
+  static constexpr char* const green     = "\033[32m";
+  static constexpr char* const brown     = "\033[33m";
+  static constexpr char* const blue      = "\033[34m";
+  static constexpr char* const purple    = "\033[35m";
+  static constexpr char* const cyan      = "\033[36m";
+  static constexpr char* const lightgray = "\033[37m";
+  // light foreground colors
+  static constexpr char* const darkgray    = "\033[1;30m";
+  static constexpr char* const lightred    = "\033[1;31m";
+  static constexpr char* const lightgreen  = "\033[1;32m";
+  static constexpr char* const yellow      = "\033[1;33m";
+  static constexpr char* const lightblue   = "\033[1;34m";
+  static constexpr char* const lightpurple = "\033[1;35m";
+  static constexpr char* const lightcyan   = "\033[1;36m";
+  static constexpr char* const white       = "\033[1;37m";
 
-// background colors
-static const char* const bblack     = "\033[40m";
-static const char* const bred       = "\033[41m";
-static const char* const bgreen     = "\033[42m";
-static const char* const bbrown     = "\033[43m";
-static const char* const bblue      = "\033[44m";
-static const char* const bpurple    = "\033[45m";
-static const char* const bcyan      = "\033[46m";
-static const char* const blightgray = "\033[47m";
-// light background colors
-static const char* const bdarkgray    = "\033[1;40m";
-static const char* const blightred    = "\033[1;41m";
-static const char* const blightgreen  = "\033[1;42m";
-static const char* const byellow      = "\033[1;43m";
-static const char* const blightblue   = "\033[1;44m";
-static const char* const blightpurple = "\033[1;45m";
-static const char* const blightcyan   = "\033[1;46m";
-static const char* const bwhite       = "\033[1;47m";
+  // background colors
+  static constexpr char* const bblack     = "\033[40m";
+  static constexpr char* const bred       = "\033[41m";
+  static constexpr char* const bgreen     = "\033[42m";
+  static constexpr char* const bbrown     = "\033[43m";
+  static constexpr char* const bblue      = "\033[44m";
+  static constexpr char* const bpurple    = "\033[45m";
+  static constexpr char* const bcyan      = "\033[46m";
+  static constexpr char* const blightgray = "\033[47m";
+  // light background colors
+  static constexpr char* const bdarkgray    = "\033[1;40m";
+  static constexpr char* const blightred    = "\033[1;41m";
+  static constexpr char* const blightgreen  = "\033[1;42m";
+  static constexpr char* const byellow      = "\033[1;43m";
+  static constexpr char* const blightblue   = "\033[1;44m";
+  static constexpr char* const blightpurple = "\033[1;45m";
+  static constexpr char* const blightcyan   = "\033[1;46m";
+  static constexpr char* const bwhite       = "\033[1;47m";
+};
 // modifiers
-static const char* const normal       = "\033[0m";
-static const char* const bold         = "\033[1m";
-static const char* const italic       = "\033[2m";
-static const char* const underline    = "\033[4m";
-static const char* const blink        = "\033[5m";
-static const char* const reverse      = "\033[7m";
-static const char* const enditalic    = "\033[22m";
-static const char* const endunderline = "\033[24m";
-static const char* const endblink     = "\033[25m";
-static const char* const endreverse   = "\033[27m";
-
+struct StreamModifiers
+{
+  static constexpr char* const normal       = "\033[0m";
+  static constexpr char* const bold         = "\033[1m";
+  static constexpr char* const italic       = "\033[2m";
+  static constexpr char* const underline    = "\033[4m";
+  static constexpr char* const blink        = "\033[5m";
+  static constexpr char* const reverse      = "\033[7m";
+  static constexpr char* const enditalic    = "\033[22m";
+  static constexpr char* const endunderline = "\033[24m";
+  static constexpr char* const endblink     = "\033[25m";
+  static constexpr char* const endreverse   = "\033[27m";
+};
 /**
  * @brief Chooses a color from a 256 color map for a foreground color.
  *
@@ -81,7 +85,7 @@ static const char* const endreverse   = "\033[27m";
  */
 std::string color(int i)
 {
-  return "\033[38;5;" + Dune::Stuff::Common::String::convertTo(i) + "m";
+  return "\033[38;5;" + toString(i) + "m";
 }
 
 /**
@@ -92,7 +96,7 @@ std::string color(int i)
  */
 std::string backcolor(int i)
 {
-  return "\033[38;5;" + Dune::Stuff::Common::String::convertTo(i) + "m";
+  return "\033[38;5;" + toString(i) + "m";
 }
 
 // maybe you want to choose your own color
@@ -117,14 +121,14 @@ std::string highlightTemplate(std::string str, int maxlevel = 10000)
   for (size_t i = 0; i < str.size(); i++) {
     if (str[i] == '<') {
       level++;
-      std::string dummy = "\033[38;5;" + Dune::Stuff::Common::String::convertTo(templateColorChooser(level)) + "m";
+      std::string dummy = "\033[38;5;" + toString(templateColorChooser(level)) + "m";
       str.insert(i, dummy);
       i += dummy.size();
       if (level == maxlevel)
         startindex = i + 1;
     } else if (str[i] == '>') {
       level--;
-      std::string dummy = "\033[38;5;" + Dune::Stuff::Common::String::convertTo(templateColorChooser(level)) + "m";
+      std::string dummy = "\033[38;5;" + toString(templateColorChooser(level)) + "m";
       str.insert(++i, dummy);
       if (level + 1 == maxlevel) {
         int size = i - startindex - 1;
@@ -147,7 +151,7 @@ std::string highlightTemplate(std::string str, int maxlevel = 10000)
  */
 std::string highlightString(std::string str, int colornr = 0)
 {
-  return "\033[38;5;" + Dune::Stuff::Common::String::convertTo(colornr % 256) + "m" + str + "\033[38;5;0m";
+  return "\033[38;5;" + toString(colornr % 256) + "m" + str + "\033[38;5;0m";
 }
 
 /**
@@ -163,7 +167,7 @@ std::string highlightSearchString(std::string str, std::string substr, int color
   int index = str.find(substr, 0);
 
   while (index != int(std::string::npos)) {
-    std::string dummy  = "\033[38;5;" + Dune::Stuff::Common::String::convertTo(colornr % 256) + "m";
+    std::string dummy  = "\033[38;5;" + toString(colornr % 256) + "m";
     std::string dummy2 = "\033[38;5;0m";
     str.insert(index, dummy);
     str.insert(index + substr.size() + dummy.size(), dummy2);
@@ -172,7 +176,6 @@ std::string highlightSearchString(std::string str, std::string substr, int color
   return str;
 } // highlightSearchString
 
-} // end of namespace Color
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune

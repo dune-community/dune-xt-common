@@ -20,7 +20,7 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
-namespace Matrix {
+
 
 // \todo doc
 template <class MatrixImp>
@@ -332,7 +332,6 @@ void forceTranspose(const M& arg, M& dest)
 } // forceTranspose
 #endif // THIS_WORKS
 
-} // namespace Matrix
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune

@@ -44,6 +44,7 @@ auto end(Dune::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> declt
 
 namespace Dune {
 namespace Stuff {
+namespace Common {
 
 //! adapter enabling view usage in range-based for
 template <class GridViewType, int codim = 0>
@@ -163,6 +164,23 @@ lagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& 
   return LagrangePointSetRange<DiscreteFunctionspaceType, codim>(space, entity, subEntity);
 }
 
+//! get a vector with values in [start : increment : end)
+template <class T, class sequence = std::vector<T>>
+sequence valueRange(const T start, const T end, const T increment = Epsilon<T>::value)
+{
+  sequence ret(typename sequence::size_type(std::abs((end - start) / increment)), start);
+  typename sequence::size_type i = 0;
+  std::generate(std::begin(ret), std::end(ret), [&]() { return start + (increment * i++); });
+  return ret;
+}
+
+//! get a vector with values in [0 : Epsilon<T> : end)
+template <class T, class sequence = std::vector<T>>
+sequence valueRange(const T end)
+{
+  return valueRange(T(0), end);
+}
+} // namespace Common
 } // namespace Stuff
 } // namespace Dune
 

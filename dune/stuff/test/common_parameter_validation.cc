@@ -17,7 +17,6 @@
 #include <boost/array.hpp>
 
 using namespace Dune::Stuff::Common;
-using namespace Dune::Stuff::Common::Parameter;
 
 typedef testing::Types<double, float, // Dune::bigunsignedint,
                        int, unsigned int, unsigned long, long long, char> MathTestTypes;
@@ -25,7 +24,7 @@ typedef testing::Types<double, float, // Dune::bigunsignedint,
 template <class T>
 struct ValidationTest : public testing::Test
 {
-  typedef Math::DefaultRNG<T> RNGType;
+  typedef DefaultRNG<T> RNGType;
   /** for some weird reason my compiler thinks ValidationTest is an abstract class
    * if I don't implement "void TestBody();"
    * \see common_math.cc testcases for why I think it's weird
@@ -60,15 +59,15 @@ struct ValidationTest : public testing::Test
       test(lower, upper, arg);
       EXPECT_FALSE(ValidateLess<T>(upper)(lower));
       EXPECT_FALSE(ValidateGreater<T>(lower)(upper));
-      EXPECT_FALSE(ValidateGreaterOrEqual<T>(lower)(upper + Math::Epsilon<T>::value));
+      EXPECT_FALSE(ValidateGreaterOrEqual<T>(lower)(upper + Epsilon<T>::value));
     }
     std::cout << "\t\tdone." << std::endl;
   }
 
   void test(const T lower, const T upper, const T arg) const
   {
-    const T eps         = Math::Epsilon<T>::value;
-    const T clamped_arg = Math::clamp(arg, T(lower + eps), T(upper - eps));
+    const T eps         = Epsilon<T>::value;
+    const T clamped_arg = clamp(arg, T(lower + eps), T(upper - eps));
     EXPECT_TRUE(ValidateAny<T>()(arg));
     EXPECT_TRUE(ValidateLess<T>(clamped_arg)(upper));
     EXPECT_TRUE(ValidateGreaterOrEqual<T>(arg)(lower));

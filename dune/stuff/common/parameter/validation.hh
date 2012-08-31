@@ -12,7 +12,7 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
-namespace Parameter {
+
 
 /** \brief Base class for all Validators
  *  the idea is from dune-fem, only our class is an actual interface
@@ -116,7 +116,7 @@ public:
 
   std::string msg() const
   {
-    return (boost::format("given value was invalid: not less than %s") % String::convertTo(baseval_)).str();
+    return (boost::format("given value was invalid: not less than %s") % toString(baseval_)).str();
   }
 
 private:
@@ -215,11 +215,9 @@ private:
   const T max_;
 };
 
-} // end namesapce Parameter
-
 //! example partial specialisation
 template <typename T>
-struct Typename<Parameter::ValidateAny<T>>
+struct Typename<ValidateAny<T>>
 {
   static std::string value()
   {
@@ -232,8 +230,7 @@ struct Typename<Parameter::ValidateAny<T>>
 } // end namesapce Dune
 
 template <class T, class Validator>
-std::ostream operator<<(std::ostream& out,
-                        const Dune::Stuff::Common::Parameter::ValidatorInterface<T, Validator>& validator)
+std::ostream operator<<(std::ostream& out, const Dune::Stuff::Common::ValidatorInterface<T, Validator>& validator)
 {
   return out << validator.msg();
 }

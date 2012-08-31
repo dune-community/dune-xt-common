@@ -20,7 +20,6 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
-namespace Print {
 
 //! ensure matlab output is done with highest precision possible, otherwise weird effects are bound to happen
 static const unsigned int matlab_output_precision = std::numeric_limits<double>::digits10 + 1;
@@ -391,7 +390,6 @@ std::string dimToAxisName(const unsigned int dim, const bool capitalize = false)
   return std::string() += c;
 } // dimToAxisName
 
-} // namespace Print
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
