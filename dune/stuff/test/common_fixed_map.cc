@@ -10,7 +10,7 @@
 
 using namespace Dune::Stuff::Common;
 
-TEST(FixedMapTest, Tokenizer)
+TEST(FixedMapTest, All)
 {
   const std::initializer_list<std::pair<std::string, int>> values({{"0", 0}, {"1", 1}, {"2", 2}});
 
@@ -34,6 +34,8 @@ TEST(FixedMapTest, Tokenizer)
     fits[toString(i)] += 1;
     EXPECT_EQ(i + 1, fits[toString(i)]);
   }
+  EXPECT_EQ(std::make_pair(std::string("0"), 0), *too_big.begin());
+  EXPECT_DEATH(*too_big.end(), ".*");
 }
 
 int main(int argc, char** argv)

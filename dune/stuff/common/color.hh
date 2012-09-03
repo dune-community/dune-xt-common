@@ -26,56 +26,56 @@ namespace Common {
 struct Colors
 {
   // foreground colors
-  static constexpr char* const black     = "\033[30m";
-  static constexpr char* const red       = "\033[31m";
-  static constexpr char* const green     = "\033[32m";
-  static constexpr char* const brown     = "\033[33m";
-  static constexpr char* const blue      = "\033[34m";
-  static constexpr char* const purple    = "\033[35m";
-  static constexpr char* const cyan      = "\033[36m";
-  static constexpr char* const lightgray = "\033[37m";
+  static const constexpr char* const black     = "\033[30m";
+  static const constexpr char* const red       = "\033[31m";
+  static const constexpr char* const green     = "\033[32m";
+  static const constexpr char* const brown     = "\033[33m";
+  static const constexpr char* const blue      = "\033[34m";
+  static const constexpr char* const purple    = "\033[35m";
+  static const constexpr char* const cyan      = "\033[36m";
+  static const constexpr char* const lightgray = "\033[37m";
   // light foreground colors
-  static constexpr char* const darkgray    = "\033[1;30m";
-  static constexpr char* const lightred    = "\033[1;31m";
-  static constexpr char* const lightgreen  = "\033[1;32m";
-  static constexpr char* const yellow      = "\033[1;33m";
-  static constexpr char* const lightblue   = "\033[1;34m";
-  static constexpr char* const lightpurple = "\033[1;35m";
-  static constexpr char* const lightcyan   = "\033[1;36m";
-  static constexpr char* const white       = "\033[1;37m";
+  static const constexpr char* const darkgray    = "\033[1;30m";
+  static const constexpr char* const lightred    = "\033[1;31m";
+  static const constexpr char* const lightgreen  = "\033[1;32m";
+  static const constexpr char* const yellow      = "\033[1;33m";
+  static const constexpr char* const lightblue   = "\033[1;34m";
+  static const constexpr char* const lightpurple = "\033[1;35m";
+  static const constexpr char* const lightcyan   = "\033[1;36m";
+  static const constexpr char* const white       = "\033[1;37m";
 
   // background colors
-  static constexpr char* const bblack     = "\033[40m";
-  static constexpr char* const bred       = "\033[41m";
-  static constexpr char* const bgreen     = "\033[42m";
-  static constexpr char* const bbrown     = "\033[43m";
-  static constexpr char* const bblue      = "\033[44m";
-  static constexpr char* const bpurple    = "\033[45m";
-  static constexpr char* const bcyan      = "\033[46m";
-  static constexpr char* const blightgray = "\033[47m";
+  static const constexpr char* const bblack     = "\033[40m";
+  static const constexpr char* const bred       = "\033[41m";
+  static const constexpr char* const bgreen     = "\033[42m";
+  static const constexpr char* const bbrown     = "\033[43m";
+  static const constexpr char* const bblue      = "\033[44m";
+  static const constexpr char* const bpurple    = "\033[45m";
+  static const constexpr char* const bcyan      = "\033[46m";
+  static const constexpr char* const blightgray = "\033[47m";
   // light background colors
-  static constexpr char* const bdarkgray    = "\033[1;40m";
-  static constexpr char* const blightred    = "\033[1;41m";
-  static constexpr char* const blightgreen  = "\033[1;42m";
-  static constexpr char* const byellow      = "\033[1;43m";
-  static constexpr char* const blightblue   = "\033[1;44m";
-  static constexpr char* const blightpurple = "\033[1;45m";
-  static constexpr char* const blightcyan   = "\033[1;46m";
-  static constexpr char* const bwhite       = "\033[1;47m";
+  static const constexpr char* const bdarkgray    = "\033[1;40m";
+  static const constexpr char* const blightred    = "\033[1;41m";
+  static const constexpr char* const blightgreen  = "\033[1;42m";
+  static const constexpr char* const byellow      = "\033[1;43m";
+  static const constexpr char* const blightblue   = "\033[1;44m";
+  static const constexpr char* const blightpurple = "\033[1;45m";
+  static const constexpr char* const blightcyan   = "\033[1;46m";
+  static const constexpr char* const bwhite       = "\033[1;47m";
 };
 // modifiers
 struct StreamModifiers
 {
-  static constexpr char* const normal       = "\033[0m";
-  static constexpr char* const bold         = "\033[1m";
-  static constexpr char* const italic       = "\033[2m";
-  static constexpr char* const underline    = "\033[4m";
-  static constexpr char* const blink        = "\033[5m";
-  static constexpr char* const reverse      = "\033[7m";
-  static constexpr char* const enditalic    = "\033[22m";
-  static constexpr char* const endunderline = "\033[24m";
-  static constexpr char* const endblink     = "\033[25m";
-  static constexpr char* const endreverse   = "\033[27m";
+  static const constexpr char* const normal       = "\033[0m";
+  static const constexpr char* const bold         = "\033[1m";
+  static const constexpr char* const italic       = "\033[2m";
+  static const constexpr char* const underline    = "\033[4m";
+  static const constexpr char* const blink        = "\033[5m";
+  static const constexpr char* const reverse      = "\033[7m";
+  static const constexpr char* const enditalic    = "\033[22m";
+  static const constexpr char* const endunderline = "\033[24m";
+  static const constexpr char* const endblink     = "\033[25m";
+  static const constexpr char* const endreverse   = "\033[27m";
 };
 /**
  * @brief Chooses a color from a 256 color map for a foreground color.

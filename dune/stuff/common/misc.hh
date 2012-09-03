@@ -17,6 +17,9 @@
 #include <dune/common/version.hh>
 #include <dune/common/array.hh>
 #include <dune/common/static_assert.hh>
+#include <dune/common/deprecated.hh>
+#include <dune/common/exceptions.hh>
+
 #include <cstddef>
 #include <fstream>
 #include <iostream>
@@ -32,8 +35,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include <dune/common/deprecated.hh>
-#include <dune/common/exceptions.hh>
 #include <boost/algorithm/string.hpp>
 
 namespace Dune {

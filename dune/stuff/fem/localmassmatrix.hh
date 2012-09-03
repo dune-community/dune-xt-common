@@ -1,6 +1,12 @@
 #ifndef STUFF_LOCALMASSMATRIX_HH
 #define STUFF_LOCALMASSMATRIX_HH
 
+#ifdef HAVE_CMAKE_CONFIG
+#include "cmake_config.h"
+#else
+#include "config.h"
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 #include <dune/common/version.hh>
 #include <dune/fem/operator/1order/localmassmatrix.hh>
 

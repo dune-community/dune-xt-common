@@ -4,6 +4,7 @@
 #include <signal.h>
 
 #include <dune/stuff/common/logging.hh>
+#include <dune/stuff/common/string.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -25,7 +26,7 @@ void resetSignal(int signal)
 //! example signal handler
 void handleInterrupt(int signal)
 {
-  DSC_LOG_INFO << "forcefully terminated at " << Dune::Stuff::Common::String::fromTime() << std::endl;
+  DSC_LOG_INFO << "forcefully terminated at " << stringFromTime() << std::endl;
   // reset signal handler and commit suicide
   resetSignal(signal);
   kill(getpid(), signal);

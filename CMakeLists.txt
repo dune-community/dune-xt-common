@@ -7,6 +7,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
 include(DuneUtils)
 include(UseDoxygen)
 
+#needs to come first to include correct config.h
+INCLUDE_DIR( ${dune-stuff_BINARY_DIR} ${dune-stuff_SOURCE_DIR} )
+
 SET (CMAKE_VERBOSE_MAKEFILE "on" )
 #----------------------------------------------------------------------------------------------------
 # General Settings
@@ -39,11 +42,9 @@ SET( GRIDDIM
 
 
 CONFIGURE_FILE( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/cmake_config.h )
-#needs to come first to include correct config.h
-INCLUDE_DIR( ${dune-stuff_BINARY_DIR} ${dune-stuff_SOURCE_DIR} )
 ADD_CXX_FLAGS( ${CUSTOM_FLAGS} )
 
-ADD_DUNE_MODULES( common istl grid fem geometry localfunctions stuff)
+ADD_DUNE_MODULES( stuff common istl grid fem geometry localfunctions)
 
 LINK_DIRECTORIES( "/usr/lib" ${CCGNU_LIBRARY_DIRS} )
 
@@ -55,6 +56,7 @@ set_source_files_properties( ${COMMON_HEADER} PROPERTIES HEADER_FILE_ONLY 1 )
 
 LINK_DIRECTORIES( "/usr/lib" )
 
+INCLUDE_SYS_DIR( ${CMAKE_CURRENT_SOURCE_DIR}/dune/stuff/test/gtest/include )
 HEADERCHECK( ${stuff} )
 DEPENDENCYCHECK( ${stuff} )
 ADD_DEFINITIONS( ${MY_CXX_FLAGS} )

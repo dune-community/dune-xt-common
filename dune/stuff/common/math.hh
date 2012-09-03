@@ -1,6 +1,12 @@
 #ifndef DUNE_STUFF_MATH_HH
 #define DUNE_STUFF_MATH_HH
 
+#ifdef HAVE_CMAKE_CONFIG
+#include "cmake_config.h"
+#else
+#include "config.h"
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 #include <vector>
 #include <limits>
 #include <algorithm>
@@ -22,6 +28,7 @@
 
 #if HAVE_DUNE_FEM
 #include <dune/fem/function/blockvectorfunction/blockvectorfunction.hh>
+
 namespace boost {
 namespace math {
 //! isinf specialization for Dune::StraightenBlockVector

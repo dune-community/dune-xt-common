@@ -1,1 +1,1 @@
-#error "use something sane, like http://duma.sourceforge.net/ or valgrind"
+#warning "use something sane, like http://duma.sourceforge.net/ or valgrind"

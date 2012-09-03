@@ -7,6 +7,7 @@
 #include <boost/range/adaptor/map.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/assign/list_of.hpp>
+#include <dune/common/exceptions.hh>
 
 namespace Dune {
 namespace Stuff {

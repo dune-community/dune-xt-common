@@ -5,17 +5,18 @@
 #ifndef DUNE_STUFF_COMMON_STRING_HH
 #define DUNE_STUFF_COMMON_STRING_HH
 
-#include <cstring>
-#include <ctime>
-#include <map>
-#include <assert.h>
-#include <algorithm>
 #ifdef HAVE_CMAKE_CONFIG
 #include "cmake_config.h"
 #else
 #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
-#include <dune/common/version.hh>
+
+#include <cstring>
+#include <ctime>
+#include <map>
+#include <assert.h>
+#include <algorithm>
+
 #include <dune/common/array.hh>
 #include <dune/common/deprecated.hh>
 #include <dune/common/static_assert.hh>
