@@ -1,10 +1,11 @@
 #ifndef DUNE_STUFF_TOOLS_COMMON_VEECTOR_HH
 #define DUNE_STUFF_TOOLS_COMMON_VEECTOR_HH
 
+#include <iostream>
+
 namespace Dune {
 namespace Stuff {
 namespace Common {
-namespace Vector {
 
 template <class T, class stream = std::ostream>
 void print(const T& arg, stream& out = std::cout, std::string name = "", std::string prefix = "")
@@ -30,7 +31,6 @@ void clear(DenseVectorType& vector)
   }
 } // void clear( DenseVectorType& vector )
 
-} // namespace Vector
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune

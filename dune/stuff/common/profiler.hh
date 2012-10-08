@@ -76,9 +76,7 @@ class Profiler
 
 protected:
   Profiler();
-  ~Profiler()
-  {
-  }
+  ~Profiler();
 
   typedef std::map<std::string, std::pair<bool, TimingData>> KnownTimersMap;
   //! section name -> seconds

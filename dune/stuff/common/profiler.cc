@@ -15,25 +15,25 @@ namespace Common {
 
 void Profiler::startTiming(const std::string section_name, const int i)
 {
-  const std::string section = section_name + String::convertTo(i);
+  const std::string section = section_name + toString(i);
   startTiming(section);
 }
 
 long Profiler::stopTiming(const std::string section_name, const int i)
 {
-  const std::string section = section_name + String::convertTo(i);
+  const std::string section = section_name + toString(i);
   return stopTiming(section);
 }
 
 long Profiler::getTiming(const std::string section_name, const int i) const
 {
-  const std::string section = section_name + String::convertTo(i);
+  const std::string section = section_name + toString(i);
   return getTiming(section);
 }
 
 void Profiler::resetTiming(const std::string section_name, const int i)
 {
-  const std::string section = section_name + String::convertTo(i);
+  const std::string section = section_name + toString(i);
   return resetTiming(section);
 }
 
@@ -97,6 +97,10 @@ long Profiler::getTimingIdx(const std::string section_name, const int run_number
   const Datamap& data             = datamaps_[run_number];
   Datamap::const_iterator section = data.find(section_name);
   if (section == data.end()) {
+    // timer might still be running
+    const auto& timer_it = known_timers_map_.find(section_name);
+    if (timer_it != known_timers_map_.end())
+      return timer_it->second.second.delta();
     ASSERT_EXCEPTION(false, "no timer found: " + section_name);
     return -1;
   }
@@ -120,6 +124,9 @@ void Profiler::addCount(const int num)
 
 void Profiler::nextRun()
 {
+  // set all known timers to "stopped"
+  for (auto& timer_it : known_timers_map_)
+    timer_it.second.first = false;
   current_run_number_++;
 }
 
@@ -216,7 +223,7 @@ void Profiler::outputCommon(const Profiler::InfoContainer& run_infos, const boos
   csv << "Relative_total_time" << csv_sep << "compiler" << std::endl;
 
   // outputs column values
-  int idx = 0;
+  std::size_t idx = 0;
   for (const Datamap& data_map : datamaps_) {
     if (idx < run_infos.size()) {
       const Dune::Stuff::Common::RunInfo& info = run_infos[idx];
@@ -239,10 +246,10 @@ void Profiler::outputCommon(const Profiler::InfoContainer& run_infos, const boos
 void Profiler::setOutputdir(const std::string dir)
 {
   output_dir_ = dir;
-  Dune::Stuff::Common::Filesystem::testCreateDirectory(output_dir_);
+  Dune::Stuff::Common::testCreateDirectory(output_dir_);
 }
 
-void Profiler::outputTimings(const std::string csv) const
+void Profiler::outputTimings(const std::string /*csv*/) const
 {
   const auto& comm = Dune::MPIHelper::getCollectiveCommunication();
   boost::filesystem::path filename(output_dir_);
@@ -276,6 +283,11 @@ Profiler::Profiler()
   reset(1);
   setOutputdir("./profiling");
 }
+
+Profiler::~Profiler()
+{
+}
+
 
 } // namespace Common
 } // namespace Stuff

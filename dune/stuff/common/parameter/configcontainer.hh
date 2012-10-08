@@ -1,18 +1,26 @@
 #ifndef DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
 #define DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
 
-#include <dune/common/deprecated.hh> // ensure DUNE_DEPRECATED is defined properly
+#ifdef HAVE_CMAKE_CONFIG
+#include "cmake_config.h"
+#elif defined(HAVE_CONFIG_H)
+#include <config.h>
+#endif // ifdef HAVE_CMAKE_CONFIG
+
+#include <dune/common/deprecated.hh>
+#include <dune/common/parametertree.hh>
+#include <dune/common/parametertreeparser.hh>
+#include <dune/common/exceptions.hh>
 
 #include <dune/stuff/common/logging.hh>
 #include <dune/stuff/common/filesystem.hh>
 #include <dune/stuff/common/misc.hh>
 #include <dune/stuff/common/parameter/validation.hh>
+#include <dune/stuff/common/parameter/tree.hh>
+#include <dune/stuff/common/type_utils.hh>
 
 #include <boost/format.hpp>
-
-#include <dune/common/parametertree.hh>
-#include <dune/common/parametertreeparser.hh>
-#include <dune/common/exceptions.hh>
+#include <set>
 
 #define DSC_ORDER_REL_GENERIC(var, a, b)                                                                               \
   if (a.var < b.var) {                                                                                                 \
@@ -27,7 +35,6 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
-namespace Parameter {
 
 //! use this to record defaults, placements and so forth
 struct Request
@@ -88,6 +95,7 @@ private:
     DUNE_THROW(Dune::ParameterInvalid, ss.str());
   }
 
+  //! return a set of Request objects for keys that have been queried with non-matching default values
   std::set<Request> getMismatchedDefaults(RequestMapType::value_type pair) const
   {
     typedef bool (*func)(const Request&, const Request&);
@@ -96,16 +104,45 @@ private:
     return std::set<Request>(std::begin(mismatched), std::end(mismatched));
   }
 
+  //! all public get signatures call this one
+  template <typename T, class Validator>
+  T get(std::string name, T def, const ValidatorInterface<T, Validator>& validator,
+        bool UNUSED_UNLESS_DEBUG(useDbgStream), const Request& request)
+  {
+    requests_map_[name].insert(request);
+#ifndef NDEBUG
+    if (warning_output_ && !tree_.hasKey(name)) {
+      if (useDbgStream)
+        Logger().debug() << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
+      else
+        std::cerr << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
+    }
+#endif // ifndef NDEBUG
+    if (record_defaults_ && !tree_.hasKey(name))
+      set(name, def);
+    return getValidValue(name, def, validator);
+  } // getParam
+
 public:
   ConfigContainer(const Dune::ParameterTree& tree)
     : warning_output_(false)
     , tree_(tree)
+    , record_defaults_(false)
   {
   }
 
   ConfigContainer()
     : warning_output_(true)
+    , record_defaults_(false)
   {
+  }
+
+  ~ConfigContainer()
+  {
+    boost::filesystem::path logdir(get("global.datadir", "data", false));
+    logdir /= get("logging.dir", "log", false);
+    boost::filesystem::ofstream out(logdir / "paramter.log");
+    tree_.report(out);
   }
 
   void readCommandLine(int argc, char* argv[])
@@ -133,8 +170,13 @@ public:
   template <typename T>
   T get(std::string name, T def, Request req, bool useDbgStream = true)
   {
-    requests_map_[name].insert(req);
-    return get(name, def, ValidateAny<T>(), useDbgStream);
+    return get(name, def, ValidateAny<T>(), useDbgStream, req);
+  }
+  template <typename T, class Validator>
+  T get(std::string name, T def, const ValidatorInterface<T, Validator>& validator, Request req,
+        bool useDbgStream = true)
+  {
+    return get(name, def, validator, useDbgStream, req);
   }
 
   //! hack around the "CHARS" is no string issue
@@ -144,19 +186,12 @@ public:
   }
 
   template <typename T, class Validator>
-  T get(std::string name, T def, const ValidatorInterface<T, Validator>& validator,
-        bool UNUSED_UNLESS_DEBUG(useDbgStream) = true)
+  T get(std::string name, T def, const ValidatorInterface<T, Validator>& validator, bool useDbgStream = true)
   {
-#ifndef NDEBUG
-    if (warning_output_ && !tree_.hasKey(name)) {
-      if (useDbgStream)
-        Logger().dbg() << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
-      else
-        std::cerr << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
-    }
-#endif // ifndef NDEBUG
-    return getValidValue(name, def, validator);
-  } // getParam
+    Request req(
+        -1, std::string(), name, Dune::Stuff::Common::toString(def), Dune::Stuff::Common::getTypename(validator));
+    return get(name, def, validator, useDbgStream, req);
+  }
 
   //! hack around the "CHARS" is no string issue again
   template <class Validator>
@@ -166,18 +201,16 @@ public:
     return get<std::string, Validator>(name, def, validator, useDbgStream);
   }
 
-
   //! get variation with request recording
   std::string get(std::string name, const char* def, Request req, bool useDbgStream = true)
   {
-    requests_map_[name].insert(req);
-    return get(name, std::string(def), ValidateAny<std::string>(), useDbgStream);
+    return get(name, std::string(def), ValidateAny<std::string>(), useDbgStream, req);
   }
 
   template <class T>
   void set(const std::string key, const T value)
   {
-    tree_[key] = Dune::Stuff::Common::String::convertTo(value);
+    tree_[key] = toString(value);
   }
 
   void printRequests(std::ostream& out) const
@@ -214,11 +247,21 @@ public:
     }
   }
 
+  /**
+   *  Control if the value map is filled with default values for missing entries
+   *  Initially false
+   **/
+  void setRecordDefaults(bool record)
+  {
+    record_defaults_ = record;
+  }
+
 private:
   bool warning_output_;
-  Dune::ParameterTree tree_;
+  ExtendedParameterTree tree_;
   //! config key -> requests map
   RequestMapType requests_map_;
+  bool record_defaults_;
 };
 
 //! global ConfigContainer instance
@@ -228,30 +271,27 @@ ConfigContainer& Config()
   return parameters;
 }
 
-} // namespace Parameter
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
 
-#define DSC_CONFIG Dune::Stuff::Common::Parameter::Config()
+#define DSC_CONFIG Dune::Stuff::Common::Config()
 
 #define DSC_CONFIG_GET(key, def)                                                                                       \
-  DSC_CONFIG.get(key,                                                                                                  \
-                 def,                                                                                                  \
-                 Dune::Stuff::Common::Parameter::Request(                                                              \
-                     __LINE__, __FILE__, key, Dune::Stuff::Common::String::convertTo(def), "none"))
+  DSC_CONFIG.get(                                                                                                      \
+      key, def, Dune::Stuff::Common::Request(__LINE__, __FILE__, key, Dune::Stuff::Common::toString(def), "none"))
 
 #define DSC_CONFIG_GETV(key, def, validator)                                                                           \
-  DSC_CONFIG.get(key,                                                                                                  \
-                 def,                                                                                                  \
-                 Dune::Stuff::Common::Parameter::Request(                                                              \
-                     __LINE__, __FILE__, key, Dune::Stuff::Common::String::convertTo(def), #validator))
+  DSC_CONFIG.get(                                                                                                      \
+      key,                                                                                                             \
+      def,                                                                                                             \
+      validator,                                                                                                       \
+      Dune::Stuff::Common::Request(__LINE__, __FILE__, key, Dune::Stuff::Common::toString(def), #validator))
 
 #define DSC_CONFIG_GETB(key, def, use_logger)                                                                          \
   DSC_CONFIG.get(key,                                                                                                  \
                  def,                                                                                                  \
-                 Dune::Stuff::Common::Parameter::Request(                                                              \
-                     __LINE__, __FILE__, key, Dune::Stuff::Common::String::convertTo(def), "none"),                    \
+                 Dune::Stuff::Common::Request(__LINE__, __FILE__, key, Dune::Stuff::Common::toString(def), "none"),    \
                  use_logger)
 
 #endif // DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED

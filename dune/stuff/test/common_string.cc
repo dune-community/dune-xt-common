@@ -5,36 +5,36 @@
 #include <boost/lexical_cast.hpp>
 #include <vector>
 
-using namespace Dune::Stuff::Common::String;
+using namespace Dune::Stuff::Common;
 using namespace std;
 
 TEST(StringTest, ConvertTo)
 {
-  EXPECT_EQ("9", convertTo<int>(convertFrom<int>("9")));
-  EXPECT_EQ("P", convertTo<char>(convertFrom<char>("P")));
-  EXPECT_EQ(double(0.1), convertFrom<double>(convertTo<double>(0.1)));
+  EXPECT_EQ("9", toString<int>(fromString<int>("9")));
+  EXPECT_EQ("P", toString<char>(fromString<char>("P")));
+  EXPECT_EQ(double(0.1), fromString<double>(toString<double>(0.1)));
   EXPECT_EQ("0.10000000000000001",
-            convertTo<double>(convertFrom<double>("0.1000000000000000055511151231257827021181583404541015625")));
-  EXPECT_EQ("1", convertTo<bool>(convertFrom<bool>("1")));
-  EXPECT_EQ("0", convertTo<bool>(convertFrom<bool>("0")));
-  EXPECT_EQ("-1", convertTo<long>(convertFrom<long>("-1")));
+            toString<double>(fromString<double>("0.1000000000000000055511151231257827021181583404541015625")));
+  EXPECT_EQ("1", toString<bool>(fromString<bool>("1")));
+  EXPECT_EQ("0", toString<bool>(fromString<bool>("0")));
+  EXPECT_EQ("-1", toString<long>(fromString<long>("-1")));
 }
 
 TEST(StringTest, Hex)
 {
-  EXPECT_GT(boost::lexical_cast<HexTo<unsigned long>>(cout), 0u);
-  EXPECT_EQ(boost::lexical_cast<HexTo<unsigned long>>("0x00000F"), 15u);
+  EXPECT_GT(boost::lexical_cast<HexToString<unsigned long>>(cout), 0u);
+  EXPECT_EQ(boost::lexical_cast<HexToString<unsigned long>>("0x00000F"), 15u);
 }
 
 TEST(StringTest, ConvertFrom)
 {
-  EXPECT_EQ(9, convertFrom<int>("9"));
-  EXPECT_EQ(0, convertFrom<int>("0"));
-  EXPECT_EQ('p', convertFrom<char>(convertTo<char>('p')));
-  EXPECT_EQ(-1, convertFrom<char>(convertTo<char>(-1)));
-  EXPECT_EQ(true, convertFrom<bool>("1"));
-  EXPECT_EQ(false, convertFrom<bool>("0"));
-  EXPECT_THROW(convertFrom<int>(""), boost::bad_lexical_cast);
+  EXPECT_EQ(9, fromString<int>("9"));
+  EXPECT_EQ(0, fromString<int>("0"));
+  EXPECT_EQ('p', fromString<char>(toString<char>('p')));
+  EXPECT_EQ(-1, fromString<char>(toString<char>(-1)));
+  EXPECT_EQ(true, fromString<bool>("1"));
+  EXPECT_EQ(false, fromString<bool>("0"));
+  EXPECT_THROW(fromString<int>(""), boost::bad_lexical_cast);
 }
 
 TEST(StringTest, Whitespace)
@@ -59,7 +59,7 @@ TEST(StringTest, Tokenizer)
 
 TEST(StringTest, TimeString)
 {
-  string ts = fromTime(-1);
+  string ts = stringFromTime(-1);
 }
 
 int main(int argc, char** argv)

@@ -4,15 +4,14 @@
 #include <signal.h>
 
 #include <dune/stuff/common/logging.hh>
+#include <dune/stuff/common/string.hh>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
 
 //! POSIX signal management utils
-namespace Signals {
+
 //! reset given signal to default handler
 void resetSignal(int signal)
 {
@@ -27,8 +26,7 @@ void resetSignal(int signal)
 //! example signal handler
 void handleInterrupt(int signal)
 {
-  Logger().Info() << "forcefully terminated at " << Logging::TimeString() << std::endl;
-  Logger().Flush();
+  DSC_LOG_INFO << "forcefully terminated at " << stringFromTime() << std::endl;
   // reset signal handler and commit suicide
   resetSignal(signal);
   kill(getpid(), signal);
@@ -50,12 +48,8 @@ void installSignalHandler(int signal = SIGINT, handler_type handler = handleInte
   sigaction(signal, &new_action, NULL);
 } // installSignalHandler
 
-} // namespace Signals
-
 } // namepsace Common
-
 } // namepsace Stuff
-
 } // namepsace Dune
 
 #endif // ifndef DUNE_STUFF_SIGNALS

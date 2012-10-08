@@ -11,7 +11,6 @@
 #include <boost/array.hpp>
 
 using namespace Dune::Stuff::Common;
-using namespace Dune::Stuff::Common::Parameter;
 
 typedef testing::Types<double, float, std::string, int, unsigned int, unsigned long, long long, char> TestTypes;
 
@@ -20,8 +19,8 @@ template <class T>
 struct ConfigTest : public testing::Test
 {
   static const int count = 2;
-  Math::DefaultRNG<T> rng;
-  Math::RandomStrings key_gen;
+  DefaultRNG<T> rng;
+  RandomStrings key_gen;
   // std::array is not assignable from list_of it seems
   const boost::array<T, count> values;
   const boost::array<std::string, count> keys;
@@ -50,7 +49,7 @@ struct ConfigTest : public testing::Test
       auto key = key_gen();
       DSC_CONFIG.set(key, val);
       // get with default diff from expected
-      auto re = DSC_CONFIG.get(key, val + Math::Epsilon<T>::value);
+      auto re = DSC_CONFIG.get(key, val + Epsilon<T>::value);
       EXPECT_EQ(re, val);
     }
   }

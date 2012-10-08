@@ -5,17 +5,18 @@
 #ifndef DUNE_STUFF_COMMON_STRING_HH
 #define DUNE_STUFF_COMMON_STRING_HH
 
-#include <cstring>
-#include <ctime>
-#include <map>
-#include <assert.h>
-#include <algorithm>
 #ifdef HAVE_CMAKE_CONFIG
 #include "cmake_config.h"
 #else
 #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
-#include <dune/common/version.hh>
+
+#include <cstring>
+#include <ctime>
+#include <map>
+#include <assert.h>
+#include <algorithm>
+
 #include <dune/common/array.hh>
 #include <dune/common/deprecated.hh>
 #include <dune/common/static_assert.hh>
@@ -31,18 +32,17 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
-namespace String {
 
 //! simple and dumb std::string to anything conversion
 template <class ReturnType>
-inline ReturnType convertFrom(const std::string& s)
+inline ReturnType fromString(const std::string& s)
 {
   return boost::lexical_cast<ReturnType, std::string>(s);
 } // fromString
 
 //! simple and dumb anything to std::string conversion
 template <class ReturnType>
-inline std::string convertTo(const ReturnType& s)
+inline std::string toString(const ReturnType& s)
 {
   return boost::lexical_cast<std::string, ReturnType>(s);
 } // toString
@@ -83,7 +83,7 @@ tokenize(const std::string& msg, const std::string& seperators,
   size_t i = 0;
   // special case for empty strings to avoid non-default init
   std::generate(
-      std::begin(ret), std::end(ret), [&]() { return strings[i++].empty() ? T() : convertFrom<T>(strings[i - 1]); });
+      std::begin(ret), std::end(ret), [&]() { return strings[i++].empty() ? T() : fromString<T>(strings[i - 1]); });
   return ret;
 }
 
@@ -97,14 +97,14 @@ inline std::vector<std::string> tokenize(const std::string& msg, const std::stri
 }
 
 //! returns string with local time in current locale's format
-inline std::string fromTime(time_t cur_time = time(NULL))
+inline std::string stringFromTime(time_t cur_time = time(NULL))
 {
   return ctime(&cur_time);
 }
 
 //! helper struct for lexical cast
 template <typename ElemT>
-struct HexTo
+struct HexToString
 {
   // see http://stackoverflow.com/a/2079728
   ElemT value;
@@ -112,14 +112,13 @@ struct HexTo
   {
     return value;
   }
-  friend std::istream& operator>>(std::istream& in, HexTo& out)
+  friend std::istream& operator>>(std::istream& in, HexToString& out)
   {
     in >> std::hex >> out.value;
     return in;
   }
 };
 
-} // namespace String
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune

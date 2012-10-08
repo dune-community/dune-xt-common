@@ -1,6 +1,7 @@
 #include "test_common.hh"
 
 #include <dune/stuff/common/math.hh>
+#include <dune/stuff/common/ranges.hh>
 #include <dune/common/tupleutility.hh>
 
 using namespace Dune::Stuff::Common;
@@ -37,13 +38,13 @@ TYPED_TEST_CASE(VectorMath, TestTypes);
 TYPED_TEST(VectorMath, dyadicProduct)
 {
   typedef typename VectorMath<TypeParam>::Matrix Matrix;
-  EXPECT_EQ(Math::dyadicProduct<Matrix>(this->a, this->a), this->aa);
-  EXPECT_EQ(Math::dyadicProduct<Matrix>(this->a, this->b), this->ab);
+  EXPECT_EQ(dyadicProduct<Matrix>(this->a, this->a), this->aa);
+  EXPECT_EQ(dyadicProduct<Matrix>(this->a, this->b), this->ab);
 }
 TYPED_TEST(VectorMath, colonProduct)
 {
-  EXPECT_TRUE(Dune::FloatCmp::eq(Math::colonProduct(this->c, this->d), 0.0));
-  EXPECT_TRUE(Dune::FloatCmp::eq(Math::colonProduct(this->c, this->c), 2.0));
+  EXPECT_TRUE(Dune::FloatCmp::eq(colonProduct(this->c, this->d), 0.0));
+  EXPECT_TRUE(Dune::FloatCmp::eq(colonProduct(this->c, this->c), 2.0));
 }
 
 template <class T>
@@ -61,9 +62,9 @@ struct ClampTest : public testing::Test
 TYPED_TEST_CASE(ClampTest, TestTypes);
 TYPED_TEST(ClampTest, All)
 {
-  EXPECT_EQ(Math::clamp(TypeParam(-2), this->lower, this->upper), this->lower);
-  EXPECT_EQ(Math::clamp(TypeParam(2), this->lower, this->upper), this->upper);
-  EXPECT_EQ(Math::clamp(TypeParam(0), this->lower, this->upper), TypeParam(0));
+  EXPECT_EQ(clamp(TypeParam(-2), this->lower, this->upper), this->lower);
+  EXPECT_EQ(clamp(TypeParam(2), this->lower, this->upper), this->upper);
+  EXPECT_EQ(clamp(TypeParam(0), this->lower, this->upper), TypeParam(0));
 }
 
 template <class T>
@@ -74,7 +75,7 @@ struct EpsilonTest : public testing::Test
 TYPED_TEST_CASE(EpsilonTest, TestTypes);
 TYPED_TEST(EpsilonTest, All)
 {
-  EXPECT_NE(Math::Epsilon<TypeParam>::value, TypeParam(0));
+  EXPECT_NE(Epsilon<TypeParam>::value, TypeParam(0));
 }
 
 template <class T>
@@ -85,7 +86,6 @@ struct MinMaxAvgTest : public testing::Test
 TYPED_TEST_CASE(MinMaxAvgTest, TestTypes);
 TYPED_TEST(MinMaxAvgTest, All)
 {
-  using namespace Math;
   MinMaxAvg<TypeParam> mma;
   mma(-1);
   mma(1);
@@ -104,11 +104,11 @@ TYPED_TEST(MinMaxAvgTest, All)
 
 TEST(OtherMath, Range)
 {
-  EXPECT_EQ((std::vector<unsigned int>{0, 1, 2, 3}), Math::range(4u));
-  EXPECT_EQ((std::vector<int>{4, 3, 2, 1}), Math::range(4, 0, -1));
-  EXPECT_EQ((std::vector<int>{-1, 0, 1}), Math::range(-1, 2));
-  EXPECT_EQ((std::vector<float>()), Math::range(0.f));
-  EXPECT_EQ((std::vector<float>{0.f}), Math::range(Math::Epsilon<float>::value));
+  EXPECT_EQ((std::vector<unsigned int>{0, 1, 2, 3}), valueRange(4u));
+  EXPECT_EQ((std::vector<int>{4, 3, 2, 1}), valueRange(4, 0, -1));
+  EXPECT_EQ((std::vector<int>{-1, 0, 1}), valueRange(-1, 2));
+  EXPECT_EQ((std::vector<float>()), valueRange(0.f));
+  EXPECT_EQ((std::vector<float>{0.f}), valueRange(Epsilon<float>::value));
 }
 
 TEST(OtherMath, Sign)

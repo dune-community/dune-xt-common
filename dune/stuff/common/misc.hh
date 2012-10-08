@@ -17,6 +17,9 @@
 #include <dune/common/version.hh>
 #include <dune/common/array.hh>
 #include <dune/common/static_assert.hh>
+#include <dune/common/deprecated.hh>
+#include <dune/common/exceptions.hh>
+
 #include <cstddef>
 #include <fstream>
 #include <iostream>
@@ -31,17 +34,12 @@
 #include <stdexcept>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <cstdio>
-#include <dune/common/deprecated.hh>
+
 #include <boost/algorithm/string.hpp>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
-
-namespace Misc {
 
 //! element-index-in-container search
 template <class StlSequence>
@@ -135,12 +133,8 @@ size_t arrayLength(T(&/*array*/)[N])
   return N;
 }
 
-} // namespace Misc
-
 } // namespace Common
-
 } // namepspace Stuff
-
 } // namespace Dune
 
 #endif // DUNE_STUFF_COMMON_MISC_HH

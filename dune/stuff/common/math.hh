@@ -1,6 +1,12 @@
 #ifndef DUNE_STUFF_MATH_HH
 #define DUNE_STUFF_MATH_HH
 
+#ifdef HAVE_CMAKE_CONFIG
+#include "cmake_config.h"
+#else
+#include "config.h"
+#endif // ifdef HAVE_CMAKE_CONFIG
+
 #include <vector>
 #include <limits>
 #include <algorithm>
@@ -22,11 +28,12 @@
 
 #if HAVE_DUNE_FEM
 #include <dune/fem/function/blockvectorfunction/blockvectorfunction.hh>
+
 namespace boost {
 namespace math {
 //! isinf specialization for Dune::StraightenBlockVector
 template <class BlockVectorImp, class DofImp>
-inline bool isinf(const Dune::StraightenBlockVector<BlockVectorImp, DofImp>& x)
+inline bool isinf(const Dune::Fem::StraightenBlockVector<BlockVectorImp, DofImp>& x)
 {
   for (size_t i = 0; i < x.size(); ++i) {
     if (std::isinf(x[i]))
@@ -41,7 +48,6 @@ inline bool isinf(const Dune::StraightenBlockVector<BlockVectorImp, DofImp>& x)
 namespace Dune {
 namespace Stuff {
 namespace Common {
-namespace Math {
 
 /** \todo DOCME **/
 template <class SomeRangeType, class OtherRangeType>
@@ -105,23 +111,6 @@ const T Epsilon<T, true>::value = 1;
 template <class T>
 const T Epsilon<T, false>::value                     = std::numeric_limits<T>::epsilon();
 const std::string Epsilon<std::string, false>::value = "a";
-
-//! get a vector with values in [start : increment : end)
-template <class T, class sequence = std::vector<T>>
-sequence range(const T start, const T end, const T increment = Epsilon<T>::value)
-{
-  sequence ret(typename sequence::size_type(std::abs((end - start) / increment)), start);
-  typename sequence::size_type i = 0;
-  std::generate(std::begin(ret), std::end(ret), [&]() { return start + (increment * i++); });
-  return ret;
-}
-
-//! get a vector with values in [0 : Epsilon<T> : end)
-template <class T, class sequence = std::vector<T>>
-sequence range(const T end)
-{
-  return range(T(0), end);
-}
 
 /**
    *  \brief  dyadic product
@@ -256,7 +245,6 @@ long sign(long x)
   return long(x != 0) | (long(x >= 0) - 1);
 }
 
-} // namespace Math
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
