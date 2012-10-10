@@ -3,8 +3,13 @@
 
 #include <iostream>
 
+// dune-common
+#include <dune/common/densevector.hh>
+
 namespace Dune {
+
 namespace Stuff {
+
 namespace Common {
 
 template <class T, class stream = std::ostream>
@@ -20,15 +25,18 @@ void print(const T& arg, stream& out = std::cout, std::string name = "", std::st
   out << arg[arg.size() - 1] << "]" << std::endl;
 }
 
-template <class DenseVectorType>
-void clear(DenseVectorType& vector)
+template <class VectorImp>
+void clearVector(Dune::DenseVector<VectorImp>& vector)
 {
-  typedef typename DenseVectorType::value_type ValueType;
+  vector = Dune::DenseVector<VectorImp>::value_type(0);
+  //  typedef typename DenseVectorType::value_type
+  //    ValueType;
 
-  const unsigned int size = vector.size();
-  for (unsigned int i = 0; i < size; ++i) {
-    vector[i] = ValueType(0.0);
-  }
+  //  const unsigned int size = vector.size();
+  //  for( unsigned int i = 0; i < size; ++i )
+  //  {
+  //    vector[i] = ValueType(0.0);
+  //  }
 } // void clear( DenseVectorType& vector )
 
 } // namespace Common

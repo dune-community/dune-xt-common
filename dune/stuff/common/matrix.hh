@@ -24,25 +24,27 @@
 #endif // THIS_WORKS
 
 namespace Dune {
-namespace Stuff {
-namespace Common {
 
+namespace Stuff {
+
+namespace Common {
 
 // \todo doc
 template <class MatrixImp>
 void clear(Dune::DenseMatrix<MatrixImp>& matrix)
 {
-  // preparations
-  const typename Dune::DenseMatrix<MatrixImp>::value_type zero(0.0);
-  // loop over all rows
-  for (unsigned int i = 0; i < matrix.rows(); ++i) {
-    // get row
-    typename Dune::DenseMatrix<MatrixImp>::row_reference row = matrix[i];
-    // loop over all cols
-    for (unsigned int j = 0; j < matrix.cols(); ++j) {
-      row[j] = zero;
-    } // loop over all cols
-  } // loop over all rows
+  matrix = Dune::DenseMatrix<MatrixImp>::value_type(0);
+  //  // preparations
+  //  const typename Dune::DenseMatrix< MatrixImp >::value_type zero(0.0);
+  //  // loop over all rows
+  //  for(unsigned int i = 0; i < matrix.rows(); ++i) {
+  //    // get row
+  //    typename Dune::DenseMatrix< MatrixImp >::row_reference row = matrix[i];
+  //    // loop over all cols
+  //    for(unsigned int j = 0; j < matrix.cols(); ++j) {
+  //      row[j] = zero;
+  //    } // loop over all cols
+  //  } // loop over all rows
 } // void clear(Dune::DenseMatrix< MatrixImp >& matrix)
 
 #ifdef THIS_WORKS
