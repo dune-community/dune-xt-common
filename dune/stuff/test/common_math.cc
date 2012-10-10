@@ -1,5 +1,6 @@
 #include "test_common.hh"
 
+#include <dune/common/dynmatrix.hh>
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/common/ranges.hh>
 #include <dune/common/tupleutility.hh>
@@ -109,6 +110,12 @@ TEST(OtherMath, Range)
   EXPECT_EQ((std::vector<int>{-1, 0, 1}), valueRange(-1, 2));
   EXPECT_EQ((std::vector<float>()), valueRange(0.f));
   EXPECT_EQ((std::vector<float>{0.f}), valueRange(Epsilon<float>::value));
+  Dune::FieldMatrix<double, 2, 2> fMatrix;
+  fMatrix = 0.0;
+  EXPECT_DOUBLE_EQ(fMatrix[1][1], 0.0);
+  Dune::DynamicMatrix<double> dMatrix(2, 2);
+  dMatrix = 0.0;
+  EXPECT_DOUBLE_EQ(dMatrix[1][1], 0.0);
 }
 
 TEST(OtherMath, Sign)
