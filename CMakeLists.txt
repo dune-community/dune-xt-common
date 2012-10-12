@@ -33,13 +33,12 @@ SET( BLAS_LIB
 	"" )
 
 SET( GRIDTYPE
-	"YASPGRID" CACHE STRING
+	"SGRID" CACHE STRING
 	"GRIDTYPE" )
 
 SET( GRIDDIM
 	"2" CACHE STRING
 	"GRIDDIM" )
-
 
 CONFIGURE_FILE( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/cmake_config.h )
 ADD_CXX_FLAGS( ${CUSTOM_FLAGS} )
@@ -62,3 +61,6 @@ DEPENDENCYCHECK( ${stuff} )
 ADD_DEFINITIONS( ${MY_CXX_FLAGS} )
 
 add_subdirectory(dune)
+
+ADD_EXECUTABLE( examples_grid_provider_cube "examples/grid/provider/cube.cc" ${COMMON_HEADERS} )
+TARGET_LINK_LIBRARIES( examples_grid_provider_cube "dunegrid" "dunecommon"  ${CCGNU_LIBRARIES} "boost_filesystem" )
