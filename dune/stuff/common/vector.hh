@@ -26,9 +26,9 @@ void print(const T& arg, stream& out = std::cout, std::string name = "", std::st
 }
 
 template <class VectorImp>
-void clearVector(Dune::DenseVector<VectorImp>& vector)
+void clear(Dune::DenseVector<VectorImp>& vector)
 {
-  vector = Dune::DenseVector<VectorImp>::value_type(0);
+  vector = typename Dune::DenseVector<VectorImp>::value_type(0);
   //  typedef typename DenseVectorType::value_type
   //    ValueType;
 

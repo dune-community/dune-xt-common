@@ -33,7 +33,7 @@ namespace Common {
 template <class MatrixImp>
 void clear(Dune::DenseMatrix<MatrixImp>& matrix)
 {
-  matrix = Dune::DenseMatrix<MatrixImp>::value_type(0);
+  matrix = typename Dune::DenseMatrix<MatrixImp>::value_type(0);
   //  // preparations
   //  const typename Dune::DenseMatrix< MatrixImp >::value_type zero(0.0);
   //  // loop over all rows
