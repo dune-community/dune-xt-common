@@ -61,6 +61,6 @@ DEPENDENCYCHECK( ${stuff} )
 ADD_DEFINITIONS( ${MY_CXX_FLAGS} )
 
 add_subdirectory(dune)
+add_subdirectory(examples)
 
-ADD_EXECUTABLE( examples_grid_provider_cube "examples/grid/provider/cube.cc" ${COMMON_HEADERS} )
-TARGET_LINK_LIBRARIES( examples_grid_provider_cube "dunegrid" "dunecommon"  ${CCGNU_LIBRARIES} "boost_filesystem" )
+
