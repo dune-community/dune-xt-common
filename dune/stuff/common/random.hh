@@ -89,8 +89,8 @@ template <>
 class DefaultRNG<std::string> : public RandomStrings
 {
 public:
-  DefaultRNG(int length = 12)
-    : RandomStrings(length)
+  DefaultRNG(int ilength = 12)
+    : RandomStrings(ilength)
   {
   }
 };
