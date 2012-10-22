@@ -1,3 +1,5 @@
+include(CheckCXXSourceCompiles)
+
 function(TO_LIST_SPACES _LIST_NAME OUTPUT_VAR)
   set(NEW_LIST_SPACE)
   foreach(ITEM ${${_LIST_NAME}})
@@ -177,6 +179,30 @@ endif(CXX_FLAG_CXX11)
 if(NOT CXX_STD0X_FLAGS)
     message(FATAL "you need a c++11 compatible compiler")
 endif()
+
+# __attribute__((deprecated))
+CHECK_CXX_SOURCE_COMPILES("
+   int main(void)
+   {
+     auto f = [&] (){ return 0; };
+     return 0;
+   };
+"  HAS_LAMBDA_FUNCTIONS
+)
+
+CHECK_CXX_SOURCE_COMPILES("
+		#include <vector>
+		#include <iterator>
+		int main(void)
+		{
+			std::vector<int> a;
+			std::vector<int>::const_iterator b = std::begin(a);
+			std::vector<int>::const_iterator e = std::end(a);
+			return 0;
+		};
+"  HAS_STD_BEGIN_END
+)
+
 
 SET( CUSTOM_FLAGS
 	"-Wall -Wextra -Wlogical-op -Wc++0x-compat -Wparentheses -pedantic -Wredundant-decls -Wshadow -Winline -fno-strict-aliasing" CACHE STRING
