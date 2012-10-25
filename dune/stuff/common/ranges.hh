@@ -10,7 +10,8 @@
 #include <dune/grid/common/gridview.hh>
 #include <boost/serialization/static_warning.hpp>
 
-#ifdef HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
+#include <dune/fem/version.hh>
 #include <dune/fem/function/common/discretefunction.hh>
 #include <dune/fem/gridpart/common/gridpart.hh>
 #endif
@@ -19,7 +20,7 @@
 namespace std {
 
 
-#ifdef HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
 
 template <class DiscreteFunctionTraits>
 auto begin(const Dune::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> decltype(func.dbegin())
@@ -143,7 +144,7 @@ intersectionRange(const Dune::GridView<GridViewTraits>& gridview,
                            typename Dune::GridView<GridViewTraits>::template Codim<0>::Entity>(gridview, entity);
 }
 
-#ifdef HAVE_DUNE_FEM
+#if defined(HAVE_DUNE_FEM) && HAVE_DUNE_GRID
 
 template <class GridPartTraits>
 IntersectionRange<Dune::GridPartInterface<GridPartTraits>,
