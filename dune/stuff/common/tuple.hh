@@ -4,12 +4,10 @@
 #include <dune/common/tuples.hh>
 // #include <dune/fem/misc/femtuples.hh>
 
-
-// ========== easy sub tuple extraction ===========
 #define TMAX(t_, no_) (tuple_size<t_>::value <= (no_ + 1) ? 0 : no_)
 #define TELE(t_, s_, no_) typename tuple_element<TMAX(t_, no_), t_>::type::s_
 #define TCOND(t_, no_) (tuple_size<t_>::value <= no_)
-#define SUBTUPLE(t_, s_)                                                                                                                                                                                                                                                                                                                                  \
+#define TUPLE_TYPEDEFS_2_TUPLE(t_, s_)                                                                                                                                                                                                                                                                                                                    \
   typename SelectType<TCOND(t_, 1),                                                                                                                                                                                                                                                                                                                       \
                       Dune::tuple<TELE(t_, s_, 0)>,                                                                                                                                                                                                                                                                                                       \
                       typename SelectType<TCOND(t_, 2),                                                                                                                                                                                                                                                                                                   \
@@ -124,36 +122,58 @@
                                                                                                                               Type>::                                                                                                                                                                                                                     \
                                                                                                           Type>::                                                                                                                                                                                                                                         \
                                                                                       Type>::Type>::Type>::Type>::Type
-// "SUBTUPLE" extracts types of the elements of a tuple and
-// creates a new tuple with these extracted types
-//
-// example:
-//
-// Let two classes be given:
-//
-// class A{ public: typedef int MyFancyType; };
-// class B{ public: typedef int MyFancyType; };
-//
-// Define a tuple, i.e.
-//
-// typedef Dune::tuple< A, B, B >
-//   MyTuple;
-//
-// Instead of writing
-//
-// typedef Dune::tuple< typename tuple_element<0,MyTuple>::type::MyFancyType,
-//                      typename tuple_element<1,MyTuple>::type::MyFancyType,
-//                      typename tuple_element<2,MyTuple>::type::MyFancyType >
-//   MySubTupleType;
-//
-// just write
-//
-// typedef SUBTUPLE( MyTuple, MyFancyType )
-//   MySubTupleType;
-//
-// without (general) restriction to the size
-// of the tuple MyTuple. Enjoy it!
-// ===============================================
+/**
+ * @def TUPLE_TYPEDEFS_2_TUPLE( t_, s_ )
+ *
+ * @brief extracts types of the elements of a Dune::tuple and
+ * creates a new Dune::tuple with these extracted types.
+ *
+ * first argument: the tuple type
+ * second argument: the typedef of the elements of the tuple
+ *
+ * example:
+ * Let two classes be given:
+ *
+ * @code
+ * class A
+ * {
+ *   public:
+ *   typedef int MyFancyType;
+ * };
+ *
+ * class B
+ * {
+ *   public:
+ *   typedef int MyFancyType;
+ * };
+ * @endcode
+ *
+ * Define a tuple, i.e.
+ *
+ * @code
+ * typedef Dune::tuple< A, B, B >
+ *   MyTuple;
+ * @endcode
+ *
+ * Instead of writing
+ *
+ * @code
+ * typedef Dune::tuple< typename tuple_element<0,MyTuple>::type::MyFancyType,
+ *                      typename tuple_element<1,MyTuple>::type::MyFancyType,
+ *                      typename tuple_element<2,MyTuple>::type::MyFancyType >
+ *   MySubTupleType;
+ * @endcode
+ *
+ * just write
+ *
+ * @code
+ * typedef TUPLE_TYPEDEFS_2_TUPLE( MyTuple, MyFancyType )
+ *   MySubTupleType;
+ * @endcode
+ *
+ * without (general) restriction to the size
+ * of the tuple @c MyTuple. Enjoy it!
+ */
 
 
 namespace Dune {
