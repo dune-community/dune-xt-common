@@ -7,8 +7,12 @@
 #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
+#if HAS_STD_BEGIN_END
+
+#if HAVE_DUNE_GRID
 #include <dune/grid/common/gridview.hh>
 #include <boost/serialization/static_warning.hpp>
+#endif
 
 #if HAVE_DUNE_FEM
 #include <dune/fem/version.hh>
@@ -54,6 +58,7 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
+#if HAVE_DUNE_GRID
 //! adapter enabling view usage in range-based for
 template <class GridViewType, int codim = 0>
 class ViewRange
@@ -77,6 +82,11 @@ public:
   }
 };
 
+template <class GridViewTraits, int codim = 0>
+ViewRange<Dune::GridView<GridViewTraits>, codim> viewRange(const Dune::GridView<GridViewTraits>& view)
+{
+  return ViewRange<Dune::GridView<GridViewTraits>, codim>(view);
+}
 
 /** adapter enabling intersectionniterator usage in range-based for
  * works for GridParts and GridViews
@@ -105,6 +115,19 @@ public:
   }
 };
 
+template <class GridViewTraits>
+IntersectionRange<Dune::GridView<GridViewTraits>, typename Dune::GridView<GridViewTraits>::template Codim<0>::Entity>
+intersectionRange(const Dune::GridView<GridViewTraits>& gridview,
+                  const typename Dune::GridView<GridViewTraits>::template Codim<0>::Entity& entity)
+{
+  return IntersectionRange<Dune::GridView<GridViewTraits>,
+                           typename Dune::GridView<GridViewTraits>::template Codim<0>::Entity>(gridview, entity);
+}
+
+#endif //#if HAVE_DUNE_GRID
+
+#if HAVE_DUNE_FEM
+
 //! Range adpater for lagrane points from lagrange spaces
 template <class DiscreteFunctionspaceType, int faceCodim>
 class LagrangePointSetRange
@@ -115,7 +138,7 @@ class LagrangePointSetRange
   const unsigned int subEntity_;
 
 public:
-  /** the template isn't lazyness here, the underlying set is tempalted on it too
+  /** the template isn't lazyness here, the underlying set is templated on it too
    */
   template <class EntityType>
   LagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& entity, const unsigned int subEntity)
@@ -134,17 +157,12 @@ public:
   }
 };
 
-
-template <class GridViewTraits>
-IntersectionRange<Dune::GridView<GridViewTraits>, typename Dune::GridView<GridViewTraits>::template Codim<0>::Entity>
-intersectionRange(const Dune::GridView<GridViewTraits>& gridview,
-                  const typename Dune::GridView<GridViewTraits>::template Codim<0>::Entity& entity)
+template <int codim, class DiscreteFunctionspaceType, class EntityType>
+LagrangePointSetRange<DiscreteFunctionspaceType, codim>
+lagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& entity, const int subEntity)
 {
-  return IntersectionRange<Dune::GridView<GridViewTraits>,
-                           typename Dune::GridView<GridViewTraits>::template Codim<0>::Entity>(gridview, entity);
+  return LagrangePointSetRange<DiscreteFunctionspaceType, codim>(space, entity, subEntity);
 }
-
-#if defined(HAVE_DUNE_FEM) && HAVE_DUNE_GRID
 
 template <class GridPartTraits>
 IntersectionRange<Dune::GridPartInterface<GridPartTraits>,
@@ -156,21 +174,8 @@ intersectionRange(const Dune::GridPartInterface<GridPartTraits>& gridpart,
                            typename Dune::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType>(gridpart,
                                                                                                             entity);
 }
-#endif
+#endif // HAVE_DUNE_FEM
 
-template <class GridViewTraits, int codim = 0>
-ViewRange<Dune::GridView<GridViewTraits>, codim> viewRange(const Dune::GridView<GridViewTraits>& view)
-{
-  return ViewRange<Dune::GridView<GridViewTraits>, codim>(view);
-}
-
-
-template <int codim, class DiscreteFunctionspaceType, class EntityType>
-LagrangePointSetRange<DiscreteFunctionspaceType, codim>
-lagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& entity, const int subEntity)
-{
-  return LagrangePointSetRange<DiscreteFunctionspaceType, codim>(space, entity, subEntity);
-}
 
 //! get a vector with values in [start : increment : end)
 template <class T, class sequence = std::vector<T>>
@@ -188,9 +193,12 @@ sequence valueRange(const T end)
 {
   return valueRange(T(0), end);
 }
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
+
+#endif // HAS_STD_BEGIN_END
 
 #endif // DUNE_STUFF_RANGES_RANGES_HH
 /** Copyright (c) 2012, Felix Albrecht, Rene Milk
