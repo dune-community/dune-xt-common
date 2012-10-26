@@ -7,7 +7,6 @@
 #include <string>
 #include <fstream>
 
-#include <dune/fem/io/file/iointerface.hh>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 
