@@ -12,18 +12,18 @@ namespace Stuff {
 
 namespace Common {
 
-template <class T, class stream = std::ostream>
-void print(const T& arg, stream& out = std::cout, std::string name = "", std::string prefix = "")
-{
-  out << prefix;
-  if (!name.empty())
-    out << name << " = ";
-  out << "[";
-  for (unsigned int i = 0; i < (arg.size() - 1); ++i) {
-    out << arg[i] << ", ";
-  }
-  out << arg[arg.size() - 1] << "]" << std::endl;
-}
+// template< class T, class stream = std::ostream >
+// void print(const T& arg, stream& out = std::cout, std::string name = "", std::string prefix = "") {
+//  out << prefix;
+//  if (!name.empty())
+//    out << name << " = ";
+//  out << "[";
+//  for (unsigned int i = 0; i < (arg.size() - 1); ++i)
+//  {
+//      out << arg[i] << ", ";
+//  }
+//  out << arg[arg.size() - 1] << "]" << std::endl;
+//}
 
 template <class VectorImp>
 void clear(Dune::DenseVector<VectorImp>& vector)
