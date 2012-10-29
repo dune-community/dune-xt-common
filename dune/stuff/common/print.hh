@@ -7,15 +7,26 @@
 #include <config.h>
 #endif // ifdef HAVE_CMAKE_CONFIG
 
+// system
 #include <string>
 #include <iostream>
 #include <iomanip>
 #include <cmath>
 #include <limits>
+#include <vector>
+
+// boost
 #include <boost/format.hpp>
+
+// dune-common
+#include <dune/common/densematrix.hh>
+#include <dune/common/densevector.hh>
+
+// dune-stuff
 #include <dune/stuff/common/parameter/configcontainer.hh>
 #include <dune/stuff/fem/functions/checks.hh>
 #include <dune/stuff/common/filesystem.hh>
+#include <dune/stuff/common/string.hh>
 //#include <dune/istl/bcrsmatrix.hh>
 
 namespace Dune {
@@ -24,6 +35,107 @@ namespace Common {
 
 //! ensure matlab output is done with highest precision possible, otherwise weird effects are bound to happen
 static const unsigned int matlab_output_precision = std::numeric_limits<double>::digits10 + 1;
+
+template <class OutStreamType = std::ostream>
+void print(const double& d, const std::string name = "double", OutStreamType& out = std::cout,
+           const std::string prefix = "")
+{
+  out << prefix << name << " = " << d << std::endl;
+} // void print(const double& d, ...)
+
+template <class OutStreamType = std::ostream>
+void print(const std::vector<double>& ds, const std::string name = "vector_of_double", OutStreamType& out = std::cout,
+           const std::string prefix = "")
+{
+  for (unsigned int i = 0; i < ds.size(); ++i) {
+    print(ds[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
+  }
+} // void print(const std::vector< double >& ds, ...)
+
+template <class VectorImp, class OutStreamType = std::ostream>
+void print(const Dune::DenseVector<VectorImp>& vector, const std::string name = "DenseVector",
+           OutStreamType& out = std::cout, const std::string prefix = "")
+{
+  out << prefix << name << " = [";
+  for (unsigned int i = 0; i < (vector.size() - 1); ++i) {
+    out << vector[i] << ", ";
+  }
+  out << vector[vector.size() - 1] << "];" << std::endl;
+} // void print(const Dune::DenseVector< VectorImp >& vector, ...)
+
+template <class FieldImp, int size, class OutStreamType = std::ostream>
+void print(const std::vector<Dune::FieldVector<FieldImp, size>>& vectors,
+           const std::string name = "vector_of_FieldVector", OutStreamType& out = std::cout,
+           const std::string prefix = "")
+{
+  for (unsigned int i = 0; i < vectors.size(); ++i) {
+    print(vectors[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
+  }
+} // void print(const std::vector< Dune::FieldVector< FieldImp, size > >& vectors, ...)
+
+/**
+ *  \attention  I'm not sure why we need this, print< const std::vector< Dune::DenseVector< VectorImp > >& >
+ *              does not seem to work for Dune::FieldVector.
+ */
+template <class VectorImp, class OutStreamType = std::ostream>
+void print(const std::vector<Dune::DenseVector<VectorImp>>& vectors, const std::string name = "vector_of_DenseVector",
+           OutStreamType& out = std::cout, const std::string prefix = "")
+{
+  for (unsigned int i = 0; i < vectors.size(); ++i) {
+    print(vectors[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
+  }
+} // void print(const std::vector< const Dune::DenseVector< VectorImp > >& vectors, ...)
+
+template <class MatrixImp, class OutStreamType = std::ostream>
+void print(const Dune::DenseMatrix<MatrixImp>& matrix, const std::string name = "DenseMatrix",
+           OutStreamType& out = std::cout, const std::string prefix = "")
+{
+  out << prefix << name << " = [";
+  typedef typename Dune::DenseMatrix<MatrixImp>::const_row_reference RowType;
+  const RowType& firstRow = matrix[0];
+  for (unsigned int j = 0; j < (firstRow.size() - 1); ++j) {
+    out << firstRow[j] << ", ";
+  }
+  out << firstRow[firstRow.size() - 1];
+  if (matrix.rows() == 1)
+    out << "];" << std::endl;
+  else
+    out << ";" << std::endl;
+  for (unsigned int i = 1; i < matrix.rows(); ++i) {
+    out << prefix << whitespaceify(name + " = [");
+    const RowType& row = matrix[i];
+    for (unsigned int j = 0; j < (row.size() - 1); ++j) {
+      out << row[j] << ", ";
+    }
+    out << row[row.size() - 1];
+    if (i == matrix.rows() - 1)
+      out << "];";
+    out << std::endl;
+  }
+} // void print(const Dune::DenseMatrix< MatrixImp >& matrix, ...)
+
+/**
+ *  \attention  I'm not sure why we need this, print< const std::vector< Dune::DenseMatrix< MatrixImp > >& >
+ *              does not seem to work for Dune::FieldMatrix.
+ */
+template <class FieldImp, int rows, int cols, class OutStreamType = std::ostream>
+void print(const std::vector<Dune::FieldMatrix<FieldImp, rows, cols>>& matrices,
+           const std::string name = "vector_of_FieldMatrix", OutStreamType& out = std::cout,
+           const std::string prefix = "")
+{
+  for (unsigned int i = 0; i < matrices.size(); ++i) {
+    print(matrices[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
+  }
+} // void print(const std::vector< Dune::FieldMatrix< FieldImp, rows, cols > >& matrices, ...)
+
+template <class MatrixImp, class OutStreamType = std::ostream>
+void print(const std::vector<Dune::DenseMatrix<MatrixImp>>& matrices, const std::string name = "vector_of_DenseMatrix",
+           OutStreamType& out = std::cout, const std::string prefix = "")
+{
+  for (unsigned int i = 0; i < matrices.size(); ++i) {
+    print(matrices[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
+  }
+} // void print(const std::vector< Dune::DenseMatrix< MatrixImp > >& matrices, ...)
 
 /**
    *  \brief prints a Dune::FieldVector
