@@ -56,14 +56,14 @@ inline std::string toString(const ReturnType& s)
   \return     std::string
               Returns a string of lengths s' whitespace (or c chars).
   **/
-std::string whitespaceify(const std::string s, const char c = ' ')
+std::string whitespaceify(const std::string s, const char whitespace = ' ')
 {
   std::string ret = "";
   for (unsigned int i = 0; i < s.size(); ++i) {
-    ret += c;
+    ret += whitespace;
   }
   return ret;
-} // end function whitespaceify
+} // std::string whitespaceify(const std::string s, const char whitespace = ' ')
 
 #if HAS_LAMBDA_FUNCTIONS && HAS_STD_BEGIN_END
 /** \brief convenience wrapper around boost::algorithm::split to split one string into a vector of strings
