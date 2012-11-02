@@ -1,5 +1,6 @@
 #include "test_common.hh"
 
+// dune-stuff
 #include <dune/stuff/common/logging.hh>
 #include <dune/stuff/common/logstreams.hh>
 
@@ -11,6 +12,17 @@ void balh(std::ostream& out)
   out << "balh " << c << "\n";
   c++;
 }
+
+template <class OutStreamType>
+void do_something_that_takes_long(OutStreamType& out)
+{
+  out << "  there should appear five dots, but not too fast:" << std::flush;
+  for (unsigned int i = 0; i < 5; ++i) {
+    busywait(1000);
+    out << "." << std::flush;
+  }
+  out << std::endl;
+} // void do_something_that_takes_long()
 
 int main(int, char* [])
 {
@@ -30,8 +42,18 @@ int main(int, char* [])
   DSC_LOG_ERROR << "in output\n";
   balh(DSC_LOG_ERROR);
 
-  // this should do nothitng whatsoever
+  // this should do nothing whatsoever
   balh(DSC::dev_null);
   DSC::Logger().flush();
+
+  // this is the desired result:
+  DSC::LogStream& err = DSC::Logger().error();
+  std::cout << "begin std::cout test" << std::endl;
+  do_something_that_takes_long(std::cout);
+  std::cout << "end   std::cout test" << std::endl;
+  std::cout << "begin Logger().error() test" << std::endl;
+  do_something_that_takes_long(err);
+  std::cout << "end   Logger().error() test" << std::endl;
+
   return 0;
 }
