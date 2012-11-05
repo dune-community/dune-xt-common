@@ -58,18 +58,6 @@ public:
   /** \name forwarded Log functions
      * \{
      */
-  template <typename Pointer, class Class>
-  void log(void (Class::*pf)(std::ostream&) const, Class& c, int streamID)
-  {
-    getStream(streamID).log(pf, c);
-  } // Log
-
-  template <class Class, typename Pointer>
-  void log(Pointer pf, Class& c, int streamID)
-  {
-    getStream(streamID).log(pf, c);
-  } // Log
-
   template <class T>
   void log(T c, int streamID)
   {

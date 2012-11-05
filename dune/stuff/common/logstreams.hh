@@ -6,6 +6,8 @@
 #include <fstream>
 #include <sstream>
 #include <iostream>
+#include <type_traits>
+
 
 namespace Dune {
 namespace Stuff {
@@ -93,6 +95,8 @@ private:
     return (!is_suspended_) && (logflags_ & loglevel_);
   }
 
+  SuspendableStrBuffer(const SuspendableStrBuffer&) = delete;
+
   int& logflags_;
   int loglevel_;
   int suspended_logflags_;
@@ -101,20 +105,41 @@ private:
 };
 
 
-class LogStream : public std::ostream
+class LogStream : public std::basic_ostream<char, std::char_traits<char>>
 {
+  typedef std::basic_ostream<char, std::char_traits<char>> BaseType;
+
 public:
   typedef SuspendableStrBuffer::PriorityType PriorityType;
   static const PriorityType default_suspend_priority = SuspendableStrBuffer::default_suspend_priority;
 
-  LogStream(int loglevel, int& logflags)
-    : buffer_(loglevel, logflags)
-    , std::ostream(&buffer_)
+  LogStream(SuspendableStrBuffer* buffer)
+    : buffer_(buffer)
+    , BaseType(buffer_)
   {
+  }
+
+  /** \brief Tunnel buffer setting to ostream base
+   * for some weird reason all derived classes MUST call
+   * it again after base class init
+   **/
+  void rdbuf(SuspendableStrBuffer* buf)
+  {
+    buffer_ = buf;
+    BaseType::rdbuf(buf);
   }
 
   virtual ~LogStream()
   {
+    flush();
+  }
+
+  //! dump buffer into file/stream and clear it
+  virtual LogStream& flush()
+  {
+    assert(buffer_);
+    buffer_->pubsync();
+    return *this;
   }
 
   /** \brief forwards suspend to buffer
@@ -123,7 +148,8 @@ public:
      ***/
   void suspend(PriorityType priority = default_suspend_priority)
   {
-    buffer_.suspend(priority);
+    assert(buffer_);
+    buffer_->suspend(priority);
   } // Suspend
 
   /** \brief start accepting input into the buffer again
@@ -131,102 +157,129 @@ public:
      ***/
   void resume(PriorityType priority = default_suspend_priority)
   {
-    buffer_.resume(priority);
+    assert(buffer_);
+    buffer_->resume(priority);
   } // Resume
 
-  template <class Class, typename Pointer>
-  void log(Pointer pf, Class& c)
-  {
-    (c.*pf)(buffer_);
-  }
-
-  //! dump buffer into file/stream and clear it
-  virtual void flush() = 0;
-
-protected:
-  SuspendableStrBuffer buffer_;
+private:
+  SuspendableStrBuffer* buffer_;
 
 }; // LogStream
 
 //! only for logging to a single file which should then be executable by matlab
 class MatlabLogStream : public LogStream
 {
+private:
+  class MatlabBuffer : public SuspendableStrBuffer
+  {
+  public:
+    MatlabBuffer(int loglevel, int& logflags, std::ofstream& logFile)
+      : SuspendableStrBuffer(loglevel, logflags)
+      , matlabLogFile_(logFile)
+    {
+    }
+
+  private:
+    std::ofstream& matlabLogFile_;
+
+  protected:
+    virtual int sync()
+    {
+      matlabLogFile_ << str();
+      matlabLogFile_.flush();
+      str("");
+      return 0;
+    }
+  };
+
 public:
   MatlabLogStream(int loglevel, int& logflags, std::ofstream& logFile)
-    : LogStream(loglevel, logflags)
-    , matlabLogFile_(logFile)
+    : logBuffer_(loglevel, logflags, logFile)
+    , LogStream(&logBuffer_)
   {
-  }
-
-  virtual ~MatlabLogStream()
-  {
-    flush();
-  }
-
-  //! dump buffer into file/stream and clear it
-  void flush()
-  {
-    matlabLogFile_ << buffer_.str();
-    matlabLogFile_.flush();
-    buffer_.str("");
-  }
-
-  //! there should be no need to at the fstream directly
-  const std::ofstream& fileStream() const DUNE_DEPRECATED
-  {
-    return matlabLogFile_;
+    LogStream::rdbuf(&logBuffer_);
   }
 
 private:
-  std::ofstream& matlabLogFile_;
+  MatlabBuffer logBuffer_;
+
 }; // class MatlabLogStream
 
 //! ostream compatible class wrapping file and console output
 class FileLogStream : public LogStream
 {
+private:
+  class FileBuffer : public SuspendableStrBuffer
+  {
+  public:
+    FileBuffer(int loglevel, int& logflags, std::ofstream& file, std::ofstream& fileWoTime)
+      : SuspendableStrBuffer(loglevel, logflags)
+      , logfile_(file)
+      , logfileWoTime_(fileWoTime)
+    {
+    }
+
+  private:
+    std::ofstream& logfile_;
+    std::ofstream& logfileWoTime_;
+
+  protected:
+    virtual int sync()
+    {
+      // flush buffer into stream
+      std::cout << str();
+      std::cout.flush();
+      logfile_ << "\n" << stringFromTime() << str() << std::endl;
+      logfileWoTime_ << str();
+      logfile_.flush();
+      logfileWoTime_.flush();
+      str("");
+      return 0;
+    }
+  };
+
 public:
   FileLogStream(int loglevel, int& logflags, std::ofstream& file, std::ofstream& fileWoTime)
-    : LogStream(loglevel, logflags)
-    , logfile_(file)
-    , logfileWoTime_(fileWoTime)
+    : logBuffer_(loglevel, logflags, file, fileWoTime)
+    , LogStream(&logBuffer_)
   {
+    LogStream::rdbuf(&logBuffer_);
   }
-
-  virtual ~FileLogStream()
-  {
-    flush();
-  }
-
-  void flush()
-  {
-    // flush buffer into stream
-    std::cout << buffer_.str();
-    std::cout.flush();
-    logfile_ << "\n" << stringFromTime() << buffer_.str() << std::endl;
-    logfileWoTime_ << buffer_.str();
-    logfile_.flush();
-    logfileWoTime_.flush();
-    buffer_.str("");
-  } // Flush
 
 private:
-  std::ofstream& logfile_;
-  std::ofstream& logfileWoTime_;
+  FileBuffer logBuffer_;
 }; // class FileLogStream
 
-// /dev/null
+//! /dev/null
 class EmptyLogStream : public LogStream
 {
+private:
+  class EmptyBuffer : public SuspendableStrBuffer
+  {
+  public:
+    EmptyBuffer(int loglevel, int& logflags)
+      : SuspendableStrBuffer(loglevel, logflags)
+    {
+    }
+
+  protected:
+    virtual int sync()
+    {
+      str("");
+      return 0;
+    }
+  };
+
 public:
   EmptyLogStream(int& logflags)
-    : LogStream(int(LOG_NONE), logflags)
+    : logBuffer_(int(LOG_NONE), logflags)
+    , LogStream(&logBuffer_)
   {
+    LogStream::rdbuf(&logBuffer_);
   }
 
-  void flush()
-  {
-    buffer_.str("");
-  }
+private:
+  EmptyBuffer logBuffer_;
 }; // class EmptyLogStream
 
 namespace {

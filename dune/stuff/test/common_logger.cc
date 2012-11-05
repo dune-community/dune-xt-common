@@ -13,12 +13,11 @@ void balh(std::ostream& out)
   c++;
 }
 
-template <class OutStreamType>
-void do_something_that_takes_long(OutStreamType& out)
+void do_something_that_takes_long(std::ostream& out)
 {
   out << "  there should appear five dots, but not too fast:" << std::flush;
   for (unsigned int i = 0; i < 5; ++i) {
-    busywait(1000);
+    busywait(666);
     out << "." << std::flush;
   }
   out << std::endl;

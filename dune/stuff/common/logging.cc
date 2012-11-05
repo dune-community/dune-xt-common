@@ -136,13 +136,16 @@ LogStream& Logging::getStream(int streamId)
   if (it == streammap_.end())
     return emptyLogStream_;
   //      DUNE_THROW(InvalidStateException, "cannot get unkown Stream");
-  else
+  else {
+    assert(it->second);
     return *(it->second);
+  }
 }
 
 void Logging::flush()
 {
   BOOST_FOREACH (auto pair, streammap_) {
+    assert(pair.second);
     pair.second->flush();
   }
 } // Flush
