@@ -84,6 +84,14 @@ struct MinMaxAvgTest : public testing::Test
 {
 };
 
+template <class MMType, class TypeParam>
+void mmCheck(const MMType& mma)
+{
+  EXPECT_TRUE(Dune::FloatCmp::eq(mma.min(), TypeParam(-4.0)));
+  EXPECT_TRUE(Dune::FloatCmp::eq(mma.max(), TypeParam(1.0)));
+  EXPECT_TRUE(Dune::FloatCmp::eq(mma.average(), TypeParam(-1.0)));
+}
+
 TYPED_TEST_CASE(MinMaxAvgTest, TestTypes);
 TYPED_TEST(MinMaxAvgTest, All)
 {
@@ -98,9 +106,9 @@ TYPED_TEST(MinMaxAvgTest, All)
   EXPECT_TRUE(Dune::FloatCmp::eq(mma.max(), TypeParam(1.0)));
   EXPECT_TRUE(Dune::FloatCmp::eq(mma.average(), TypeParam(0.0)));
   mma(-4);
-  EXPECT_TRUE(Dune::FloatCmp::eq(mma.min(), TypeParam(-4.0)));
-  EXPECT_TRUE(Dune::FloatCmp::eq(mma.max(), TypeParam(1.0)));
-  EXPECT_TRUE(Dune::FloatCmp::eq(mma.average(), TypeParam(-1.0)));
+  mmCheck<MinMaxAvg<TypeParam>, TypeParam>(mma);
+  mmb = mma;
+  mmCheck<MinMaxAvg<TypeParam>, TypeParam>(mmb);
 }
 
 TEST(OtherMath, Range)

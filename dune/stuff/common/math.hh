@@ -194,8 +194,6 @@ protected:
   typedef boost::accumulators::stats<boost::accumulators::tag::max, boost::accumulators::tag::min,
                                      boost::accumulators::tag::mean> StatsType;
   boost::accumulators::accumulator_set<ElementType, StatsType> acc_;
-
-  MinMaxAvg(const ThisType& other);
 };
 
 //! bound \param var in [\param min,\param max]
