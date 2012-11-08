@@ -25,15 +25,19 @@ TEST(FixedMapTest, All)
   for (int i : {3, 4, 5}) {
     EXPECT_EQ(int(), too_big[std::string()]);
   }
+  auto size = fits.size();
   for (auto& pt : fits) {
     int value       = pt.second;
     std::string key = pt.first;
     EXPECT_EQ(key, toString(value));
+    size--;
   }
+  EXPECT_EQ(0, size);
   for (int i : {0, 1, 2}) {
     fits[toString(i)] += 1;
     EXPECT_EQ(i + 1, fits[toString(i)]);
   }
+
   EXPECT_EQ(std::make_pair(std::string("0"), 0), *too_big.begin());
   EXPECT_DEATH(*too_big.end(), ".*");
 }
