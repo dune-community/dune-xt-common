@@ -4,7 +4,7 @@
 #include <dune/common/tuples.hh>
 #include <dune/common/typetraits.hh>
 
-#define TMAX(t_, no_) (tuple_size<t_>::value >= (no_ + 1) ? no_ : 0)
+#define TMAX(t_, no_) (Dune::tuple_size<t_>::value >= (no_ + 1) ? no_ : 0)
 #define TELE(t_, s_, no_) typename Dune::tuple_element<TMAX(t_, no_), t_>::type::s_
 
 template <class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9, int Size>
