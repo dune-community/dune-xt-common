@@ -41,7 +41,7 @@ SET( GRIDDIM
 	"GRIDDIM" )
 
 CONFIGURE_FILE( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/cmake_config.h )
-ADD_CXX_FLAGS( ${CUSTOM_FLAGS} )
+ADD_DEFINITIONS( ${CUSTOM_FLAGS} )
 
 ADD_DUNE_MODULES( stuff common istl grid fem geometry localfunctions)
 
