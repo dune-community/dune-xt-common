@@ -25,6 +25,11 @@ EXECUTE_PROCESS(
 	OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
+if (NOT CMAKE_BUILD_TYPE)
+  message(STATUS "No build type selected, setting default build type 'Debug'")
+  set(CMAKE_BUILD_TYPE "Debug")
+endif()
+
 #----------------------------------------------------------------------------------------------------
 # Options, that can be changed be the User in order to customise dune-stokes
 #----------------------------------------------------------------------------------------------------
