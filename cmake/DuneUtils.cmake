@@ -203,9 +203,6 @@ CHECK_CXX_SOURCE_COMPILES("
 SET( CUSTOM_FLAGS
 	"-Wall -Wextra -Wlogical-op -Wc++0x-compat -Wparentheses -pedantic -Wredundant-decls -Wshadow -Winline -fno-strict-aliasing" CACHE STRING
 	"CUSTOM FLAGS")
-SET( BOOST_ROOT
-	"/opt/boost-1.48" CACHE STRING
-	"" )
 
 SET( CMAKE_CXX_FLAGS_RELEASE
 	"-DDNDEBUG -funroll-loops -m64 -mfpmath=sse -falign-loops -mtune=native -march=native -O3 -pipe -fomit-frame-pointer " )
