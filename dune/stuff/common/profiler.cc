@@ -249,13 +249,39 @@ void Profiler::setOutputdir(const std::string dir)
   Dune::Stuff::Common::testCreateDirectory(output_dir_);
 }
 
-void Profiler::outputTimings(const std::string /*csv*/) const
+void Profiler::outputTimings(const std::string csv) const
 {
   const auto& comm = Dune::MPIHelper::getCollectiveCommunication();
-  boost::filesystem::path filename(output_dir_);
-  filename /= (boost::format("timings_p%08d.csv") % comm.rank()).str();
+  boost::filesystem::path dir(output_dir_);
+  boost::filesystem::path filename = dir / (boost::format("%s_p%08d.csv") % csv % comm.rank()).str();
   boost::filesystem::ofstream out(filename);
   outputTimings(out);
+  if (comm.rank() == 0) {
+    boost::filesystem::path a_filename = dir / (boost::format("%s.csv") % csv).str();
+    boost::filesystem::ofstream a_out(a_filename);
+    outputTimingsAll(a_out);
+  }
+}
+
+void Profiler::outputTimingsAll(std::ostream& out) const
+{
+  if (datamaps_.size() < 1)
+    return;
+  // csv header:
+  const auto& comm = Dune::MPIHelper::getCollectiveCommunication();
+  out << "run";
+  for (const auto& section : datamaps_[0]) {
+    out << csv_sep << section.first << "_avg" << csv_sep << section.first << "_sum";
+  }
+  int i = 0;
+  for (const auto& datamap : datamaps_) {
+    out << std::endl << i;
+    for (const auto& section : datamap) {
+      auto sum = comm.sum(section.second);
+      out << csv_sep << sum / float(comm.size()) << csv_sep << sum;
+    }
+    out << std::endl;
+  }
 }
 
 void Profiler::outputTimings(std::ostream& out) const
