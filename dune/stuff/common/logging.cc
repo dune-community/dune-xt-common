@@ -8,6 +8,7 @@
 
 // dune-common
 #include <dune/common/exceptions.hh>
+#include <dune/common/mpihelper.hh>
 
 #include "misc.hh"
 #include "filesystem.hh"
@@ -63,11 +64,17 @@ Logging::~Logging()
 void Logging::create(int logflags, const std::string logfile, const std::string datadir, const std::string _logdir)
 {
   using namespace boost::filesystem;
+  const auto& comm = Dune::MPIHelper::getCollectiveCommunication();
+  boost::format log_fn("%s%s");
+  if (comm.size() > 1) {
+    const std::string rank = (boost::format("%08d") % comm.rank()).str();
+    log_fn                 = boost::format("%s_p" + rank + "_%s");
+  }
   logflags_   = logflags;
   path logdir = path(datadir) / _logdir;
-  filename_ = logdir / (logfile + "_time.log");
+  filename_ = logdir / (log_fn % logfile % "_time.log").str();
   testCreateDirectory(filename_.string());
-  filenameWoTime_ = logdir / (logfile + ".log");
+  filenameWoTime_ = logdir / (log_fn % logfile % ".log").str();
   if ((logflags_ & LOG_FILE) != 0) {
     logfile_.open(filename_);
     assert(logfile_.is_open());
@@ -80,7 +87,7 @@ void Logging::create(int logflags, const std::string logfile, const std::string 
     streammap_[*it] = new FileLogStream(*it, flagmap_[*it], logfile_, logfileWoTime_);
   }
   // create the MatlabLogStream
-  path matlabLogFileName = logdir / (logfile + "_matlab.m");
+  path matlabLogFileName = logdir / (log_fn % logfile % "_matlab.m").str();
   testCreateDirectory(matlabLogFileName.string());
   matlabLogFile_.open(matlabLogFileName);
   assert(matlabLogFile_.is_open());
