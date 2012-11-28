@@ -122,6 +122,36 @@ struct HexToString
   }
 };
 
+// some legacy stuff I'd like to keep for a while
+namespace String {
+
+template <class T>
+T from(const std::string& s)
+{
+  std::stringstream ss;
+  ss << s;
+  T t;
+  ss >> t;
+  return t;
+}
+
+template <class T>
+std::string to(const T& t)
+{
+  std::stringstream ss;
+  ss << t;
+  std::string s;
+  ss >> s;
+  return s;
+}
+
+bool equal(const std::string& first, const std::string& second)
+{
+  return !first.compare(second);
+}
+
+} // namespace String
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
