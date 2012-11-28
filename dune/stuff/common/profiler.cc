@@ -277,7 +277,8 @@ void Profiler::outputTimingsAll(std::ostream& out) const
   for (const auto& datamap : datamaps_) {
     out << std::endl << i;
     for (const auto& section : datamap) {
-      auto sum = comm.sum(section.second);
+      auto val = section.second;
+      auto sum = comm.sum(val);
       out << csv_sep << sum / float(comm.size()) << csv_sep << sum;
     }
     out << std::endl;
