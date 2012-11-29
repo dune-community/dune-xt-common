@@ -48,13 +48,13 @@ SET( GRIDDIM
 CONFIGURE_FILE( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/cmake_config.h )
 ADD_DEFINITIONS( ${CUSTOM_FLAGS} )
 
-ADD_DUNE_MODULES( stuff common istl grid fem geometry localfunctions)
+ADD_DUNE_MODULES( common istl grid fem geometry localfunctions)
 
 LINK_DIRECTORIES( "/usr/lib" ${CCGNU_LIBRARY_DIRS} )
 
-FILE( GLOB_RECURSE stuff "${CMAKE_CURRENT_SOURCE_DIR}/dune/stuff/*.hh" )
+FILE( GLOB_RECURSE stuff "${CMAKE_CURRENT_SOURCE_DIR}/dune/*.hh" )
 
-set( COMMON_LIBS ${DUNE_LIBS} ${BLAS_LIB} "GL" ${ParaLIBS} ${CCGNU_LIBRARIES} "boost_filesystem")
+set( COMMON_LIBS ${DUNE_LIBS} ${BLAS_LIB} "GL" ${ParaLIBS} ${CCGNU_LIBRARIES} "boost_system" "boost_filesystem")
 set( COMMON_HEADER ${stuff} ${DUNE_HEADERS} )
 set_source_files_properties( ${COMMON_HEADER} PROPERTIES HEADER_FILE_ONLY 1 )
 
