@@ -45,6 +45,16 @@ SET( GRIDDIM
 	"2" CACHE STRING
 	"GRIDDIM" )
 
+# superlu
+find_package( SuperLU REQUIRED)
+include_directories( ${SUPERLU_INCLUDES} )
+link_directories( ${SUPERLU_LIBRARY_DIRS} )
+
+# eigen3
+set( EIGEN3_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/../local/include/eigen3")
+find_package( Eigen3 REQUIRED)
+include_directories(${EIGEN3_INCLUDE_DIR})
+
 CONFIGURE_FILE( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/cmake_config.h )
 ADD_DEFINITIONS( ${CUSTOM_FLAGS} )
 
