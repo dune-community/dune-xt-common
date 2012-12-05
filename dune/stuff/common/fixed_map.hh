@@ -142,7 +142,7 @@ public:
   {
   }
 
-  std::size_t getIdx(const key_type& key) const
+  int getIdx(const key_type& key) const
   {
     const auto it = std::find_if(map_.begin(), map_.end(), [&](const value_type& val) { return val.first == key; });
     if (it == map_.end())
