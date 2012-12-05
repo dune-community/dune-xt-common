@@ -123,7 +123,7 @@ public:
   void outputMap(const InfoContainerMap& run_infos_map, const double scale_factor = 1.0) const;
 
   //! file-output the named sections only
-  void outputTimings(const std::string filename = "timings") const;
+  void outputTimings(const std::string filename) const;
   void outputTimings(std::ostream& out = std::cout) const;
   void outputTimingsAll(std::ostream& out = std::cout) const;
   /** call this with correct numRuns <b> before </b> starting any profiling

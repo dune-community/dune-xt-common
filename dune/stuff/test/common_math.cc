@@ -107,7 +107,7 @@ TYPED_TEST(MinMaxAvgTest, All)
   EXPECT_TRUE(Dune::FloatCmp::eq(mma.average(), TypeParam(0.0)));
   mma(-4);
   mmCheck<MinMaxAvg<TypeParam>, TypeParam>(mma);
-  mmb = mma;
+  auto mmb = mma;
   mmCheck<MinMaxAvg<TypeParam>, TypeParam>(mmb);
 }
 

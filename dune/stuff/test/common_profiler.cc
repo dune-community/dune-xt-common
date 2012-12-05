@@ -55,7 +55,8 @@ TEST(ProfilerTest, OutputConstness)
   Profiler::InfoContainerMap info_map;
   prof.output(infos);
   prof.outputAveraged(0, 0);
-  prof.outputTimings();
+  prof.outputTimings("timings");
+  prof.outputTimings(DSC::dev_null);
   prof.outputMap(info_map);
 }
 
