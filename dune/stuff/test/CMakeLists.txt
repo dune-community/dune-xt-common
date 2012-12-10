@@ -1,5 +1,8 @@
 enable_testing()
 
+HEADERCHECK( ${stuff} )
+DEPENDENCYCHECK( ${stuff} )
+
 set_source_files_properties( ${DUNE_HEADERS} PROPERTIES HEADER_FILE_ONLY 1 )
 include_dir(${CMAKE_CURRENT_SOURCE_DIR} )
 
@@ -7,10 +10,10 @@ file( GLOB test_sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cc" )
 
 foreach( source ${test_sources} )
 	get_filename_component(testname ${source} NAME_WE)
-	add_executable( ${testname} ${source} ${DUNE_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/gtest/gtest-all.cc)
-	add_test( ${testname} ${CMAKE_CURRENT_BINARY_DIR}/${testname} )
-	target_link_libraries( ${testname} boost_filesystem boost_system boost_timer boost_thread ${DUNE_LIBS} pthread )
-	list(APPEND testnames ${testname} )
+	add_executable( test_${testname} ${source} ${DUNE_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/gtest/gtest-all.cc)
+	add_test( test_${testname} ${CMAKE_CURRENT_BINARY_DIR}/${testname} )
+	target_link_libraries( test_${testname} boost_filesystem boost_system boost_timer boost_thread ${DUNE_LIBS} pthread )
+	list(APPEND testnames test_${testname} )
 endforeach( source )
 
 #grid pgf output
