@@ -15,8 +15,8 @@ namespace Common {
 
 enum LogFlags
 {
-  LOG_NONE    = 1,
-  LOG_ERR     = 2,
+  LOG_NONE = 1,
+  //  LOG_ERR = 2,
   LOG_ERROR   = 2,
   LOG_INFO    = 4,
   LOG_DEBUG   = 8,
@@ -114,8 +114,8 @@ public:
   static const PriorityType default_suspend_priority = SuspendableStrBuffer::default_suspend_priority;
 
   LogStream(SuspendableStrBuffer* buffer)
-    : buffer_(buffer)
-    , BaseType(buffer_)
+    : BaseType(buffer_)
+    , buffer_(buffer)
   {
   }
 
