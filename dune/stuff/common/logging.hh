@@ -92,10 +92,6 @@ public:
   {
     return emptyLogStream_;
   }
-  LogStream& matlab()
-  {
-    return matlabLogStreamPtr ? *static_cast<LogStream*>(matlabLogStreamPtr) : emptyLogStream_;
-  }
 
   //! flush all active streams
   void flush();
@@ -139,8 +135,6 @@ private:
   boost::filesystem::path filename_;
   boost::filesystem::path filenameWoTime_;
   boost::filesystem::ofstream logfile_;
-  boost::filesystem::ofstream logfileWoTime_;
-  boost::filesystem::ofstream matlabLogFile_;
   typedef std::map<int, int> FlagMap;
   FlagMap flagmap_;
   typedef std::map<int, LogStream*> StreamMap;
@@ -149,7 +143,6 @@ private:
   typedef std::vector<int>::const_iterator IdVecCIter;
   IdVec streamIDs_;
   int logflags_;
-  MatlabLogStream* matlabLogStreamPtr;
   EmptyLogStream emptyLogStream_;
 
   friend Logging& Logger();

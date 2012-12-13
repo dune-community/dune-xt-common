@@ -26,7 +26,6 @@ namespace Common {
 
 Logging::Logging()
   : logflags_(LOG_NONE)
-  , matlabLogStreamPtr(0)
   , emptyLogStream_(logflags_)
 {
   streamIDs_.push_back(LOG_ERROR);
@@ -46,18 +45,8 @@ Logging::~Logging()
   }
 
   if ((logflags_ & LOG_FILE) != 0) {
-    logfile_ << '\n' << stringFromTime() << ": LOG END" << std::endl;
-    logfileWoTime_ << std::endl;
+    logfile_ << std::endl;
     logfile_.close();
-    logfileWoTime_.close();
-  }
-
-  // delete the MatlabLogStream
-  if (matlabLogStreamPtr) {
-    matlabLogStreamPtr->flush();
-    matlabLogFile_.close();
-    delete matlabLogStreamPtr;
-    matlabLogStreamPtr = 0;
   }
 }
 
@@ -72,26 +61,16 @@ void Logging::create(int logflags, const std::string logfile, const std::string 
   }
   logflags_   = logflags;
   path logdir = path(datadir) / _logdir;
-  filename_ = logdir / (log_fn % logfile % "_time.log").str();
-  testCreateDirectory(filename_.string());
-  filenameWoTime_ = logdir / (log_fn % logfile % ".log").str();
+  filename_ = logdir / (log_fn % logfile % ".log").str();
   if ((logflags_ & LOG_FILE) != 0) {
     logfile_.open(filename_);
     assert(logfile_.is_open());
-    logfileWoTime_.open(filenameWoTime_);
-    assert(logfileWoTime_.is_open());
   }
   IdVecCIter it = streamIDs_.begin();
   for (; it != streamIDs_.end(); ++it) {
     flagmap_[*it]   = logflags;
-    streammap_[*it] = new FileLogStream(*it, flagmap_[*it], logfile_, logfileWoTime_);
+    streammap_[*it] = new FileLogStream(*it, flagmap_[*it], logfile_);
   }
-  // create the MatlabLogStream
-  path matlabLogFileName = logdir / (log_fn % logfile % "_matlab.m").str();
-  testCreateDirectory(matlabLogFileName.string());
-  matlabLogFile_.open(matlabLogFileName);
-  assert(matlabLogFile_.is_open());
-  matlabLogStreamPtr = new MatlabLogStream(LOG_FILE, logflags_, matlabLogFile_);
 } // Create
 
 void Logging::setPrefix(std::string prefix)
@@ -105,17 +84,10 @@ void Logging::setPrefix(std::string prefix)
   }
 
   if ((logflags_ & LOG_FILE) != 0) {
-    logfile_ << '\n' << stringFromTime() << ": LOG END" << std::endl;
-    logfileWoTime_ << std::endl;
+    logfile_ << std::endl;
     logfile_.close();
-    logfileWoTime_.close();
   }
 
-  // delete the MatlabLogStream
-  matlabLogStreamPtr->flush();
-  matlabLogFile_.close();
-  delete matlabLogStreamPtr;
-  matlabLogStreamPtr = 0;
   // / end dtor
 
   create(logflags_, prefix);
@@ -164,7 +136,7 @@ int Logging::addStream(int flags)
   int streamID = streamID_int;
   streamIDs_.push_back(streamID);
   flagmap_[streamID]   = (flags | streamID);
-  streammap_[streamID] = new FileLogStream(streamID, flagmap_[streamID], logfile_, logfileWoTime_);
+  streammap_[streamID] = new FileLogStream(streamID, flagmap_[streamID], logfile_);
   return streamID_int;
 } // AddStream
 

@@ -8,6 +8,7 @@
 #include <iostream>
 #include <type_traits>
 
+#pragma GCC diagnostic ignored "-Wreorder"
 
 namespace Dune {
 namespace Stuff {
@@ -166,45 +167,6 @@ private:
 
 }; // LogStream
 
-//! only for logging to a single file which should then be executable by matlab
-class MatlabLogStream : public LogStream
-{
-private:
-  class MatlabBuffer : public SuspendableStrBuffer
-  {
-  public:
-    MatlabBuffer(int loglevel, int& logflags, std::ofstream& logFile)
-      : SuspendableStrBuffer(loglevel, logflags)
-      , matlabLogFile_(logFile)
-    {
-    }
-
-  private:
-    std::ofstream& matlabLogFile_;
-
-  protected:
-    virtual int sync()
-    {
-      matlabLogFile_ << str();
-      matlabLogFile_.flush();
-      str("");
-      return 0;
-    }
-  };
-
-public:
-  MatlabLogStream(int loglevel, int& logflags, std::ofstream& logFile)
-    : logBuffer_(loglevel, logflags, logFile)
-    , LogStream(&logBuffer_)
-  {
-    LogStream::rdbuf(&logBuffer_);
-  }
-
-private:
-  MatlabBuffer logBuffer_;
-
-}; // class MatlabLogStream
-
 //! ostream compatible class wrapping file and console output
 class FileLogStream : public LogStream
 {
@@ -212,16 +174,14 @@ private:
   class FileBuffer : public SuspendableStrBuffer
   {
   public:
-    FileBuffer(int loglevel, int& logflags, std::ofstream& file, std::ofstream& fileWoTime)
+    FileBuffer(int loglevel, int& logflags, std::ofstream& file)
       : SuspendableStrBuffer(loglevel, logflags)
       , logfile_(file)
-      , logfileWoTime_(fileWoTime)
     {
     }
 
   private:
     std::ofstream& logfile_;
-    std::ofstream& logfileWoTime_;
 
   protected:
     virtual int sync()
@@ -229,18 +189,16 @@ private:
       // flush buffer into stream
       std::cout << str();
       std::cout.flush();
-      logfile_ << "\n" << stringFromTime() << str() << std::endl;
-      logfileWoTime_ << str();
+      logfile_ << str();
       logfile_.flush();
-      logfileWoTime_.flush();
       str("");
       return 0;
     }
   };
 
 public:
-  FileLogStream(int loglevel, int& logflags, std::ofstream& file, std::ofstream& fileWoTime)
-    : logBuffer_(loglevel, logflags, file, fileWoTime)
+  FileLogStream(int loglevel, int& logflags, /*std::ofstream& file,*/ std::ofstream& fileWoTime)
+    : logBuffer_(loglevel, logflags, /*file,*/ fileWoTime)
     , LogStream(&logBuffer_)
   {
     LogStream::rdbuf(&logBuffer_);
@@ -290,6 +248,8 @@ EmptyLogStream dev_null(dev_null_logflag);
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
+
+#pragma GCC diagnostic warning "-Wreorder"
 
 #endif // LOGSTREAMS_HH
 /** Copyright (c) 2012, Rene Milk
