@@ -8,6 +8,7 @@
 #include <iostream>
 #include <type_traits>
 
+#pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wreorder"
 
 namespace Dune {
@@ -249,7 +250,7 @@ EmptyLogStream dev_null(dev_null_logflag);
 } // namespace Stuff
 } // namespace Dune
 
-#pragma GCC diagnostic warning "-Wreorder"
+#pragma GCC diagnostic pop
 
 #endif // LOGSTREAMS_HH
 /** Copyright (c) 2012, Rene Milk
