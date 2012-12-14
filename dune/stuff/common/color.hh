@@ -155,34 +155,35 @@ std::string highlightTemplate(std::string str, int maxlevel = 10000)
  */
 std::string highlightString(std::string str, int colornr = 0)
 {
-  return "\033[38;5;" + toString(colornr % 256) + "m" + str + "\033[38;5;0m";
+  return "\033[38;5;" + toString(colornr % 256) + "m" + str + "\033[0m"; //"\033[38;5;0m";
+}
 
-  std::string highlightString(const std::string string, const std::string color = Colors::red)
-  {
-    return color + string + "\033[0m";
+std::string highlightString(const std::string string, const std::string color = Colors::red)
+{
+  return color + string + "\033[0m";
+}
+
+/**
+ * @brief Highlights a substring of another string in a specified color.
+ *
+ * @param str The string where you want to highlight substrings.
+ * @param substr The sub string you want to highlight in str.
+ * @param colornr A color number from a 256 color map between 0 and 255.
+ * @returns The highlighted string.
+ */
+std::string highlightSearchString(std::string str, std::string substr, int colornr = 0)
+{
+  int index = str.find(substr, 0);
+
+  while (index != int(std::string::npos)) {
+    std::string dummy  = "\033[38;5;" + toString(colornr % 256) + "m";
+    std::string dummy2 = "\033[38;5;0m";
+    str.insert(index, dummy);
+    str.insert(index + substr.size() + dummy.size(), dummy2);
+    index = str.find(substr, index + dummy.size() + substr.size() + dummy2.size());
   }
-
-  /**
-   * @brief Highlights a substring of another string in a specified color.
-   *
-   * @param str The string where you want to highlight substrings.
-   * @param substr The sub string you want to highlight in str.
-   * @param colornr A color number from a 256 color map between 0 and 255.
-   * @returns The highlighted string.
-   */
-  std::string highlightSearchString(std::string str, std::string substr, int colornr = 0)
-  {
-    int index = str.find(substr, 0);
-
-    while (index != int(std::string::npos)) {
-      std::string dummy  = "\033[38;5;" + toString(colornr % 256) + "m";
-      std::string dummy2 = "\033[38;5;0m";
-      str.insert(index, dummy);
-      str.insert(index + substr.size() + dummy.size(), dummy2);
-      index = str.find(substr, index + dummy.size() + substr.size() + dummy2.size());
-    }
-    return str;
-  } // highlightSearchString
+  return str;
+} // highlightSearchString
 
 } // namespace Common
 } // namespace Stuff
