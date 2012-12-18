@@ -62,6 +62,7 @@ void Logging::create(int logflags, const std::string logfile, const std::string 
   logflags_   = logflags;
   path logdir = path(datadir) / _logdir;
   filename_ = logdir / (log_fn % logfile % ".log").str();
+  testCreateDirectory(filename_.string());
   if ((logflags_ & LOG_FILE) != 0) {
     logfile_.open(filename_);
     assert(logfile_.is_open());
