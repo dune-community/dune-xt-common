@@ -12,7 +12,7 @@ foreach( source ${test_sources} )
 	get_filename_component(testname ${source} NAME_WE)
 	add_executable( test_${testname} ${source} ${DUNE_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/gtest/gtest-all.cc)
 	add_test( test_${testname} ${CMAKE_CURRENT_BINARY_DIR}/${testname} )
-	target_link_libraries( test_${testname} boost_filesystem boost_system boost_timer boost_thread ${DUNE_LIBS} pthread )
+	target_link_libraries( test_${testname} ${COMMON_LIBS} pthread )
 	list(APPEND testnames test_${testname} )
 endforeach( source )
 
