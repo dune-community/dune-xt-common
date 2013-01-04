@@ -282,6 +282,7 @@ void Profiler::outputTimingsAll(std::ostream& out) const
       out << csv_sep << sum / float(comm.size()) << csv_sep << sum;
     }
   }
+  out << std::endl;
 }
 
 void Profiler::outputTimings(std::ostream& out) const
