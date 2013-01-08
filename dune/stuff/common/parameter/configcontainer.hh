@@ -159,6 +159,11 @@ public:
     Dune::ParameterTreeParser::readOptions(argc, argv, tree_);
   } // ReadCommandLine
 
+  void readOptions(int argc, char* argv[])
+  {
+    Dune::ParameterTreeParser::readOptions(argc, argv, tree_);
+  }
+
   /** \brief  passthrough to underlying Dune::ParameterTree
      *  \param  useDbgStream
      *          needs to be set to false when using this function in Logging::Create,
