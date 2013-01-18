@@ -191,7 +191,7 @@ LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
 pkg_check_modules(EIGEN eigen3)
 if(EIGEN_FOUND)
-  include_directories(${EIGEN_INCLUDE_DIRS})
+  INCLUDE_SYS_DIR(${EIGEN_INCLUDE_DIRS})
 endif(EIGEN_FOUND)
 
 if(ENABLE_MPI)
