@@ -101,10 +101,6 @@ set_source_files_properties( ${COMMON_HEADER} PROPERTIES HEADER_FILE_ONLY 1 )
 
 LINK_DIRECTORIES( "/usr/lib" )
 
-
-ADD_DEFINITIONS( ${MY_CXX_FLAGS} )
-
 add_subdirectory(dune)
 add_subdirectory(examples)
-
 
