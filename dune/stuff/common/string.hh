@@ -150,6 +150,24 @@ bool equal(const std::string& first, const std::string& second)
   return !first.compare(second);
 }
 
+std::vector<std::string> mainArgsToVector(int argc, char** argv)
+{
+  std::vector<std::string> ret;
+  for (int ii = 0; ii < argc; ++ii)
+    ret.push_back(argv[ii]);
+  return ret;
+} // std::vector< std::string > mainArgsToVector(int argc, char** argv)
+
+char** vectorToMainArgs(const std::vector<std::string> args)
+{
+  char** argv = new char*[args.size()];
+  for (unsigned int ii = 0; ii < args.size(); ++ii) {
+    argv[ii] = new char[args[ii].length() + 1];
+    strcpy(argv[ii], args[ii].c_str());
+  }
+  return argv;
+} // char** vectorToMainArgs(const std::vector< std::string > args)
+
 } // namespace String
 
 } // namespace Common
