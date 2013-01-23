@@ -11,17 +11,11 @@ if( ${GRIDTYPE} MATCHES "UGGRID" )
   if( NOT UG_GRID_FOUND )
     message( FATAL_ERROR "Gridtype ${GRIDTYPE} requested, but libug was not found!" )
   endif( NOT UG_GRID_FOUND )
-  # ug needs Xt, but the libXt.so seems to be missing sometimes
-  SET( TMP_CMAKE_FIND_LIBRARY_SUFFIXES ${CMAKE_FIND_LIBRARY_SUFFIXES} )
-  SET( CMAKE_FIND_LIBRARY_SUFFIXES ${TMP_CMAKE_FIND_LIBRARY_SUFFIXES} ".so.6" )
-  find_library( XT_FOUND Xt )
-  SET( CMAKE_FIND_LIBRARY_SUFFIXES ${TMP_CMAKE_FIND_LIBRARY_SUFFIXES} )
-  if( NOT XT_FOUND )
-    message( FATAL_ERROR "Gridtype UGGRID requested, but libXt was not found!" )
-  endif( NOT XT_FOUND )
   include_sys_dir( ${UG_GRID_INCLUDE_DIRS} )
   link_directories( ${UG_GRID_LIBRARY_DIRS} )
-  set( GRIDLIBS ugS2 ugS3 devX ugL2 ugL3 SM ICE X11 ${XT_FOUND} )
+  # althoug we use pkg_config to find ug we do not use UG_LIBRARIES,
+  # because those listed in lubug.pc are wrong
+  set( GRIDLIBS ugS2 ugS3 devS m )
   add_definitions( "-DENABLE_UG=1" )
 endif( ${GRIDTYPE} MATCHES "UGGRID" )
 
