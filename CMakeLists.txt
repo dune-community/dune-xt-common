@@ -10,6 +10,7 @@ SET(ENV{LD_LIBRARY_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../local/lib:$ENV{LD_LIBRA
 SET(ENV{PKG_CONFIG_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../local/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}" )
 
 include(DuneUtils)
+include(GridUtils)
 include(UseDoxygen)
 
 #needs to come first to include correct config.h
@@ -44,63 +45,10 @@ SET( BLAS_LIB
 	"blas" CACHE STRING
 	"" )
 
-SET( GRIDTYPE
-	"SGRID" CACHE STRING
-	"GRIDTYPE" )
-
-SET( GRIDDIM
-	"2" CACHE STRING
-	"GRIDDIM" )
-
-SET( ALUGRID_BASE_PATH
-	"${CMAKE_CURRENT_SOURCE_DIR}/../local" CACHE STRING
-	"ALUGRID_BASE_PATH" )
-
-SET( ALBERTA_GRID_BASE_PATH
-    "${CMAKE_CURRENT_SOURCE_DIR}/../local" CACHE STRING
-    "ALUGRID_BASE_PATH" )
-
-set( UG_GRID_BASE_PATH
-    "${CMAKE_CURRENT_SOURCE_DIR}/../local" CACHE STRING
-    "UG_GRID_BASE_PATH" )
-
-set( ENABLE_UG OFF )
-if( ${GRIDTYPE} MATCHES "UGGRID" )
-    include_sys_dir( ${UG_GRID_BASE_PATH}/include/ug )
-    link_directories( "${UG_GRID_BASE_PATH}/lib" )
-    set( GRIDLIBS ugS2 ugS3 devS )
-    add_definitions( "-DUGGRID" "-DENABLE_UG=1" )
-endif( ${GRIDTYPE} MATCHES "UGGRID" )
-
-SET( ENABLE_ALUGRID OFF )
-IF( ${GRIDTYPE} MATCHES "ALUGRID" )
-	INCLUDE_SYS_DIR(
-						${ALUGRID_BASE_PATH}/include
-						${ALUGRID_BASE_PATH}/include/serial
-						${ALUGRID_BASE_PATH}/include/duneinterface )
-	LINK_DIRECTORIES( "${ALUGRID_BASE_PATH}/lib"  )
-	SET( GRIDLIBS "alugrid" )
-	SET( ENABLE_ALUGRID ON )
-	IF ( ENABLE_MPI )
-		INCLUDE_SYS_DIR( ${ALUGRID_BASE_PATH}/include/parallel )
-	ENDIF (ENABLE_MPI )
-	ADD_DEFINITIONS( "-DENABLE_ALUGRID" )
-ENDIF( ${GRIDTYPE} MATCHES "ALUGRID" )
-
-SET( ENABLE_ALBERTA OFF )
-IF( ${GRIDTYPE} MATCHES "ALBERTAGRID" )
-	INCLUDE_SYS_DIR( 	${ALBERTA_GRID_BASE_PATH}/include
-						${ALBERTA_GRID_BASE_PATH}/include/alberta)
-	LINK_DIRECTORIES( "${ALBERTA_GRID_BASE_PATH}/lib"  )
-	SET( GRIDLIBS alberta_utilities alberta_2d dunealbertagrid_2d dunegrid)
-	SET( ENABLE_ALBERTA ON )
-	ADD_DEFINITIONS( -DENABLE_ALBERTA=1 -DDEBUG )
-ENDIF( ${GRIDTYPE} MATCHES "ALBERTAGRID" )
-
 CONFIGURE_FILE( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/cmake_config.h )
 ADD_DEFINITIONS( ${CUSTOM_FLAGS} )
 
-ADD_DUNE_MODULES( common istl grid fem geometry localfunctions)
+ADD_DUNE_MODULES( istl grid common fem geometry localfunctions)
 
 LINK_DIRECTORIES( "/usr/lib" ${CCGNU_LIBRARY_DIRS} )
 

@@ -195,6 +195,9 @@ if(EIGEN_FOUND)
   INCLUDE_SYS_DIR(${EIGEN_INCLUDE_DIRS})
 endif(EIGEN_FOUND)
 
+pkg_check_modules(ALU_GRID alugrid)
+pkg_check_modules(UG_GRID libug)
+
 if(ENABLE_MPI)
 	find_package(MPI REQUIRED)
 	if(MPI_FOUND)
