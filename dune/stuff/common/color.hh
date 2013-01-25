@@ -158,7 +158,7 @@ std::string highlightString(std::string str, int colornr = 0)
   return "\033[38;5;" + toString(colornr % 256) + "m" + str + "\033[0m"; //"\033[38;5;0m";
 }
 
-std::string highlightString(const std::string string, const std::string color = Colors::red)
+std::string colorString(const std::string string, const std::string color = Colors::brown)
 {
   return color + string + "\033[0m";
 }
