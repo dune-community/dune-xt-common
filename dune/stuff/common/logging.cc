@@ -27,6 +27,7 @@ namespace Common {
 Logging::Logging()
   : logflags_(LOG_NONE)
   , emptyLogStream_(logflags_)
+  , created_(false)
 {
   streamIDs_.push_back(LOG_ERROR);
   streamIDs_.push_back(LOG_DEBUG);
@@ -72,7 +73,14 @@ void Logging::create(int logflags, const std::string logfile, const std::string 
     flagmap_[*it]   = logflags;
     streammap_[*it] = new FileLogStream(*it, flagmap_[*it], logfile_);
   }
+  created_ = true;
 } // Create
+
+bool Logging::created() const
+{
+  return created_;
+}
+
 
 void Logging::setPrefix(std::string prefix)
 {

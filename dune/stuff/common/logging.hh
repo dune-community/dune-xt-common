@@ -43,6 +43,8 @@ private:
 public:
   ~Logging();
 
+  bool created() const;
+
   /** \brief setup loglevel, logfilename
      *  \param logflags any OR'd combination of flags
      *  \param logfile filename for log, can contain paths, but creation will fail if dir is non-existant
@@ -149,6 +151,7 @@ private:
   // satisfy stricter warnings wrt copying
   Logging(const Logging&);
   Logging& operator=(const Logging&);
+  bool created_;
 };
 
 //! global Logging instance
