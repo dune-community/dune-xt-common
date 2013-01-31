@@ -204,45 +204,6 @@ T clamp(const T var, const T min, const T max)
   return (var < min) ? min : (var > max) ? max : var;
 }
 
-//! float comparison
-template <class T>
-bool aboutEqual(const T& x, const T& y, T relative_tolerance = 1e-10, T absolute_tolerance = 1e-10)
-    DUNE_DEPRECATED_MSG("use dune/common/float_cmp:Dune::FloatCmp::eq instead ");
-
-template <class T>
-bool aboutEqual(const T& x, const T& y, T relative_tolerance, T absolute_tolerance)
-{
-  return std::fabs(x - y) <= std::max(absolute_tolerance, relative_tolerance * std::max(std::fabs(x), std::fabs(y)));
-}
-
-/**
-   * \brief MovingAverage
-   * \deprecated in favor of MinMaxAvg<double>
-   **/
-class MovingAverage
-{
-  double avg_;
-  size_t steps_;
-
-public:
-  DUNE_DEPRECATED_MSG("use MinMaxAvg from this header instead")
-  MovingAverage()
-    : avg_(0.0)
-    , steps_(0)
-  {
-  }
-  MovingAverage& operator+=(double val)
-  {
-    avg_ += (val - avg_) / ++steps_;
-    return *this;
-  }
-
-  operator double()
-  {
-    return avg_;
-  }
-};
-
 //! no-branch sign function
 long sign(long x)
 {

@@ -52,24 +52,6 @@ inline int getIdx(const StlSequence& ct, const typename StlSequence::value_type&
   return std::distance(ct.begin(), result);
 } // getIdx
 
-/** \brief stupid timing helper
-   * \deprecated in favor of boost automatic_timer (in boost >= 1.48)
-   **/
-struct TimeGuard
-{
-  const time_t cur_time;
-  DUNE_DEPRECATED_MSG("use boost automatic timer instead")
-  TimeGuard()
-    : cur_time(time(NULL))
-  {
-  }
-  ~TimeGuard()
-  {
-    time_t delta = time(NULL) - cur_time;
-
-    std::cout << ctime(&delta) << std::endl;
-  }
-};
 
 //! \todo seems borked, resutls in gigantic amount of compile errors?!
 template <class StlSequence, class T>
