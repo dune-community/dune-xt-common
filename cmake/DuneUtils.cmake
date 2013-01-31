@@ -179,7 +179,7 @@ SET( CMAKE_CXX_FLAGS_DEBUG
 	"-O0 -DDNDEBUG -g3 -ggdb -Wall -Wextra -Wc++0x-compat -Wparentheses -pedantic -Wredundant-decls -Wshadow -Wunused-variable -Winline -fno-strict-aliasing -Wundef -Wnon-virtual-dtor " )
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-	set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wdocumentation -Wsign-conversion -Wshorten-64-to-32 -Wused-but-marked-unused -Wdisabled-macro-expansion -Wcovered-switch-default -Wweak-vtables -Wconversion -Wfloat-equal -Wswitch-enum -Wunreachable-code -Wnon-literal-null-conversion ")
+	set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wdocumentation -Wshorten-64-to-32 -Wused-but-marked-unused -Wdisabled-macro-expansion -Wcovered-switch-default -Wweak-vtables -Wfloat-equal -Wswitch-enum -Wunreachable-code -Wnon-literal-null-conversion ")
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 	set( CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wlogical-op")
 endif()

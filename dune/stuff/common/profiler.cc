@@ -102,7 +102,6 @@ long Profiler::getTimingIdx(const std::string section_name, const int run_number
     if (timer_it != known_timers_map_.end())
       return timer_it->second.second.delta();
     ASSERT_EXCEPTION(false, "no timer found: " + section_name);
-    return -1;
   }
   return section->second;
 } // GetTiming
