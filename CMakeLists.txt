@@ -1,3 +1,8 @@
+if( NOT CMAKE_BUILD_TYPE )
+  message( STATUS "No build type selected, setting default build type 'Debug'" )
+  set( CMAKE_BUILD_TYPE "DEBUG" CACHE STRING "DEBUG/RELEASE")
+endif( NOT CMAKE_BUILD_TYPE )
+
 project( dune-stuff )
 
 # cmake specific
@@ -30,11 +35,6 @@ execute_process(
 	ERROR_VARIABLE shell_error
 	OUTPUT_STRIP_TRAILING_WHITESPACE
 )
-
-if( NOT CMAKE_BUILD_TYPE )
-  message( STATUS "No build type selected, setting default build type 'Debug'" )
-  set( CMAKE_BUILD_TYPE "Debug" )
-endif( NOT CMAKE_BUILD_TYPE )
 
 #----------------------------------------------------------------------------------------------------
 # Options, that can be changed be the User in order to customise dune-stokes
