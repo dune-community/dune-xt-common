@@ -104,10 +104,7 @@ struct wraparound_array : public Dune::array<T, N>
 
   typename BaseType::reference operator[](int i)
   {
-    std::size_t real_index = i;
-
-    if (i < 0)
-      real_index = static_cast<size_t>(N - (((i * -1) % N) + 1));
+    const std::size_t real_index = i < 0 ? static_cast<std::size_t>(N - (((i * -1) % N) + 1)) : std::size_t(i);
     return BaseType::operator[](real_index);
   } // []
 
@@ -118,10 +115,7 @@ struct wraparound_array : public Dune::array<T, N>
 
   typename BaseType::const_reference operator[](int i) const
   {
-    std::size_t real_index = i;
-
-    if (i < 0)
-      real_index = static_cast<size_t>(N - (((i * -1) % N) + 1));
+    const std::size_t real_index = i < 0 ? static_cast<std::size_t>(N - (((i * -1) % N) + 1)) : std::size_t(i);
     return BaseType::operator[](real_index);
   } // []
 };

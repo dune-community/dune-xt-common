@@ -177,7 +177,8 @@ public:
   }
   ElementType average() const
   {
-    return boost::accumulators::mean(acc_);
+    // for integer ElementType this just truncates from floating-point
+    return ElementType(boost::accumulators::mean(acc_));
   }
 
   void operator()(const ElementType& el)

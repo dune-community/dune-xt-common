@@ -58,7 +58,7 @@ public:
    **/
   boost::timer::nanosecond_type delta() const
   {
-    return (timer_->elapsed().user + timer_->elapsed().system) / 1e6;
+    return (timer_->elapsed().user + timer_->elapsed().system) / boost::timer::nanosecond_type(1e6);
   }
 };
 

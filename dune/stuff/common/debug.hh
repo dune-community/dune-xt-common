@@ -43,9 +43,9 @@ const char* rightPathLimiter(const char* path, int depth = 2)
 
 char* copy(const char* s)
 {
-  int l   = strlen(s) + 1;
+  size_t l = strlen(s) + 1;
   char* t = new char[l];
-  for (int i = 0; i < l; i++) {
+  for (size_t i = 0; i < l; i++) {
     t[i] = s[i];
   }
   return t;

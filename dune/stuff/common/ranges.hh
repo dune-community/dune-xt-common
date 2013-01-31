@@ -183,7 +183,7 @@ sequence valueRange(const T start, const T end, const T increment = Epsilon<T>::
 {
   sequence ret(typename sequence::size_type(std::abs((end - start) / increment)), start);
   typename sequence::size_type i = 0;
-  std::generate(std::begin(ret), std::end(ret), [&]() { return start + (increment * i++); });
+  std::generate(std::begin(ret), std::end(ret), [&]() { return T(start + (increment * i++)); });
   return ret;
 }
 
