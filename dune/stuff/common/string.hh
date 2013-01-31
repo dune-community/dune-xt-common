@@ -51,7 +51,7 @@ inline std::string toString(const ReturnType& s)
   \brief      Returns a string of lengths s' whitespace (or c chars).
   \param[in]  s
               std::string, defines the length of the return string
-  \param[in]  c
+  \param[in]  whitespace
               char, optional argument, defines entries of return string
   \return     std::string
               Returns a string of lengths s' whitespace (or c chars).

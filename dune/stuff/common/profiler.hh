@@ -175,8 +175,7 @@ private:
     return pf;
   }
 
-  /** output to \param filename
-     * \tparam CollectiveCommunication should be Dune::CollectiveCommunication< MPI_Comm / double >
+  /** output to \param filename filename
      **/
   void outputCommon(const InfoContainer& run_infos, const boost::filesystem::path& filename,
                     const double scale_factor = 1.0) const;

@@ -197,7 +197,7 @@ protected:
   boost::accumulators::accumulator_set<ElementType, StatsType> acc_;
 };
 
-//! bound \param var in [\param min,\param max]
+//! \return var bounded in [min, max]
 template <typename T>
 T clamp(const T var, const T min, const T max)
 {
