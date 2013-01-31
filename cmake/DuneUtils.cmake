@@ -64,8 +64,8 @@ MACRO( ADD_CPPCHECK )
 		FOREACH( SOURCEFILE ${ARGN} )
 			FILE( APPEND  ${CPPINLINST}  "${SOURCEFILE}\n" )
 		ENDFOREACH( SOURCEFILE )
-		TO_LIST_SPACES( CPPCHECK_FLAGS_SPLIT )
-		ADD_CUSTOM_TARGET(  cppcheck cppcheck --xml --enable=all --report-progress --file-list=${CPPINLINST}
+		TO_LIST_SPACES( CPPCHECK_FLAGS_SPLIT ${CMAKE_CXX_FLAGS} )
+		ADD_CUSTOM_TARGET(  cppcheck cppcheck --enable=all --xml --report-progress --file-list=${CPPINLINST}
 				${CPPCHECK_FLAGS_SPLIT}  2>cppcheck.xml )
 	ELSE( EXISTS ${CPPCHECK_BINARY} )
 		MESSAGE( STATUS "Not adding cppcheck target because cppcheck executable not found" )
