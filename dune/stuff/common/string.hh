@@ -56,8 +56,10 @@ inline std::string toString(const ReturnType& s)
   \return     std::string
               Returns a string of lengths s' whitespace (or c chars).
   **/
-std::string whitespaceify(const std::string s, const char whitespace = ' ')
+template <class T>
+std::string whitespaceify(const T& t, const char whitespace = ' ')
 {
+  const std::string s = toString<T>(t);
   std::string ret = "";
   for (unsigned int i = 0; i < s.size(); ++i) {
     ret += whitespace;
