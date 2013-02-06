@@ -5,12 +5,12 @@
 
 // dune-common
 #include <dune/common/densevector.hh>
+#include <dune/common/dynvector.hh>
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
+
 
 // template< class T, class stream = std::ostream >
 // void print(const T& arg, stream& out = std::cout, std::string name = "", std::string prefix = "") {
@@ -25,6 +25,7 @@ namespace Common {
 //  out << arg[arg.size() - 1] << "]" << std::endl;
 //}
 
+
 template <class VectorImp>
 void clear(Dune::DenseVector<VectorImp>& vector)
 {
@@ -38,6 +39,19 @@ void clear(Dune::DenseVector<VectorImp>& vector)
   //    vector[i] = ValueType(0.0);
   //  }
 } // void clear( DenseVectorType& vector )
+
+
+template <class T>
+Dune::DynamicVector<T> resize(const Dune::DynamicVector<T>& inVector, const size_t newSize, const T fill = T(0))
+{
+  Dune::DynamicVector<T> outVector(newSize);
+  for (size_t ii = 0; ii < std::min(inVector.size(), newSize); ++ii)
+    outVector[ii] = inVector[ii];
+  for (size_t ii = std::min(inVector.size(), newSize); ii < newSize; ++ii)
+    outVector[ii] = fill;
+  return outVector;
+}
+
 
 } // namespace Common
 } // namespace Stuff
