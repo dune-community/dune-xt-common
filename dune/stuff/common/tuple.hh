@@ -4,6 +4,14 @@
 #include <dune/common/tuples.hh>
 #include <dune/common/typetraits.hh>
 
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/deref.hpp>
+#include <boost/mpl/begin.hpp>
+#include <boost/mpl/end.hpp>
+#include <boost/mpl/next.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/type_traits.hpp>
+
 #define TMAX(t_, no_) (Dune::tuple_size<t_>::value >= (no_ + 1) ? no_ : 0)
 #define TELE(t_, s_, no_) typename Dune::tuple_element<TMAX(t_, no_), t_>::type::s_
 
@@ -213,6 +221,80 @@ struct FullTuple : public Dune::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9>
   {
   }
 };
+
+// reduced from
+// http://stackoverflow.com/questions/1492204/is-it-possible-to-generate-types-with-all-combinations-of-template-arguments
+namespace TupleProduct {
+using boost::is_same;
+using boost::mpl::begin;
+using boost::mpl::end;
+using boost::mpl::next;
+using boost::mpl::if_;
+using boost::mpl::deref;
+
+unsigned int total_recursions = 0;
+
+struct end_of_recursion_tag
+{
+  static void Run()
+  {
+    std::cout << "end of " << total_recursions << " recursions\n";
+  }
+};
+
+template <class UTypes, // Forward Sequence, e.g. boost::mpl::vector
+          class VTypes, // Forward Sequence, e.g. boost::mpl::vector
+          class TestFunc // class type that has a nested templated run() member function
+          >
+struct Combine
+{
+  // forward declaration
+  template <class UIterator, class VIterator>
+  struct Generate;
+
+  // this class implements recursion body
+  template <class UIterator, class VIterator>
+  struct Next
+  {
+    // u_begin is not necessary ;)
+    // it would be cheaper not to pre-declare all of them since we force evaluation
+    // however this dramatically increase the readability
+    typedef typename begin<VTypes>::type v_begin;
+
+    typedef typename end<UTypes>::type u_end;
+    typedef typename end<VTypes>::type v_end;
+
+    typedef typename next<UIterator>::type u_next;
+    typedef typename next<VIterator>::type v_next;
+
+    typedef
+        typename if_<boost::is_same<v_next, v_end>,
+                     typename if_<boost::is_same<u_next, u_end>, end_of_recursion_tag, Generate<u_next, v_begin>>::type,
+                     Generate<UIterator, v_next>>::type type;
+  };
+
+  //  this class run test on generated types in thos round and go to next*/
+  template <class UIterator = typename begin<UTypes>::type, class VIterator = typename begin<VTypes>::type>
+  struct Generate
+  {
+    //  generate <<next>> target type
+    typedef typename Next<UIterator, VIterator>::type next_type;
+
+    static void Run()
+    {
+      // increment recursion counter
+      ++total_recursions;
+
+      // test on the generated types of this round of recursion
+      TestFunc::template run<typename deref<UIterator>::type, typename deref<VIterator>::type>();
+
+      // go to the next round of recursion
+      next_type::Run();
+    }
+  };
+};
+
+} // namespace TupleProduct
 
 } // namespace Common
 } // namespace Stuff
