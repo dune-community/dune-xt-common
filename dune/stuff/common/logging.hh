@@ -39,6 +39,8 @@ class Logging
 {
 private:
   Logging();
+  //! cleanup stream and flag containers
+  void deinit();
 
 public:
   ~Logging();
@@ -92,7 +94,9 @@ public:
   //! creates a new LogStream with given id
   int addStream(int flags);
 
+  //! re-enable all logging below given priority level
   void resume(LogStream::PriorityType prio = LogStream::default_suspend_priority);
+  //! (temporarily) disable all logging below given priority level
   void suspend(LogStream::PriorityType prio = LogStream::default_suspend_priority);
 
   struct SuspendLocal

@@ -5,7 +5,6 @@
 #include "debug.hh"
 #include "filesystem.hh"
 #include "math.hh"
-#include "runinfo.hh"
 
 #include <dune/common/exceptions.hh>
 #include <dune/common/deprecated.hh>
@@ -84,8 +83,8 @@ protected:
   typedef std::vector<Datamap> DatamapVector;
 
 public:
-  typedef std::vector<Dune::Stuff::Common::RunInfo> InfoContainer;
-  typedef std::map<std::string, InfoContainer> InfoContainerMap;
+  //  typedef std::vector< Dune::Stuff::Common::RunInfo > InfoContainer;
+  //  typedef std::map<std::string, InfoContainer> InfoContainerMap;
 
   //! set this to begin a named section
   void startTiming(const std::string section_name);
@@ -114,12 +113,6 @@ public:
    * results
      **/
   void outputAveraged(const int refineLevel, const long numDofs, const double scale_factor = 1.0) const;
-
-  //! default proxy for output
-  void output(const InfoContainer& run_infos, const double scale_factor = 1.0) const;
-
-  //! proxy for output of a map of runinfos
-  void outputMap(const InfoContainerMap& run_infos_map, const double scale_factor = 1.0) const;
 
   //! file-output the named sections only
   void outputTimings(const std::string filename) const;
@@ -174,11 +167,6 @@ private:
     static Profiler pf;
     return pf;
   }
-
-  /** output to \param filename filename
-     **/
-  void outputCommon(const InfoContainer& run_infos, const boost::filesystem::path& filename,
-                    const double scale_factor = 1.0) const;
 };
 
 //! global profiler object

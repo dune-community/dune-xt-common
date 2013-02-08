@@ -34,9 +34,8 @@ Logging::Logging()
   streamIDs_.push_back(LOG_INFO);
 }
 
-Logging::~Logging()
+void Logging::deinit()
 {
-
   // destroy in reverse creation order, 2012 style
   BOOST_REVERSE_FOREACH(auto id, streamIDs_)
   {
@@ -44,11 +43,15 @@ Logging::~Logging()
     delete streammap_[id];
     streammap_[id] = 0;
   }
-
   if ((logflags_ & LOG_FILE) != 0) {
     logfile_ << std::endl;
     logfile_.close();
   }
+}
+
+Logging::~Logging()
+{
+  deinit();
 }
 
 void Logging::create(int logflags, const std::string logfile, const std::string datadir, const std::string _logdir)
@@ -84,21 +87,7 @@ bool Logging::created() const
 
 void Logging::setPrefix(std::string prefix)
 {
-  // / begin dtor
-  IdVecCIter it = streamIDs_.end();
-
-  for (; it != streamIDs_.begin(); --it) {
-    delete streammap_[*it];
-    streammap_[*it] = 0;
-  }
-
-  if ((logflags_ & LOG_FILE) != 0) {
-    logfile_ << std::endl;
-    logfile_.close();
-  }
-
-  // / end dtor
-
+  deinit();
   create(logflags_, prefix);
 } // SetPrefix
 

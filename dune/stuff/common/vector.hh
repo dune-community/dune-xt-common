@@ -6,42 +6,20 @@
 // dune-common
 #include <dune/common/densevector.hh>
 #include <dune/common/dynvector.hh>
+#include <dune/common/deprecated.hh>
 
 namespace Dune {
 namespace Stuff {
 namespace Common {
 
-
-// template< class T, class stream = std::ostream >
-// void print(const T& arg, stream& out = std::cout, std::string name = "", std::string prefix = "") {
-//  out << prefix;
-//  if (!name.empty())
-//    out << name << " = ";
-//  out << "[";
-//  for (unsigned int i = 0; i < (arg.size() - 1); ++i)
-//  {
-//      out << arg[i] << ", ";
-//  }
-//  out << arg[arg.size() - 1] << "]" << std::endl;
-//}
-
-
 template <class VectorImp>
 void clear(Dune::DenseVector<VectorImp>& vector)
 {
   vector = typename Dune::DenseVector<VectorImp>::value_type(0);
-  //  typedef typename DenseVectorType::value_type
-  //    ValueType;
-
-  //  const unsigned int size = vector.size();
-  //  for( unsigned int i = 0; i < size; ++i )
-  //  {
-  //    vector[i] = ValueType(0.0);
-  //  }
 } // void clear( DenseVectorType& vector )
 
-
 template <class T>
+DUNE_DEPRECATED_MSG("THIS DOES NOT RESIZE ANYTHING")
 Dune::DynamicVector<T> resize(const Dune::DynamicVector<T>& inVector, const size_t newSize, const T fill = T(0))
 {
   Dune::DynamicVector<T> outVector(newSize);
@@ -51,7 +29,6 @@ Dune::DynamicVector<T> resize(const Dune::DynamicVector<T>& inVector, const size
     outVector[ii] = fill;
   return outVector;
 }
-
 
 } // namespace Common
 } // namespace Stuff

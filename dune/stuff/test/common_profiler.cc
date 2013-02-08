@@ -51,13 +51,9 @@ TEST(ProfilerTest, OutputConstness)
 {
   DSC_PROFILER.reset(1);
   const auto& prof = DSC_PROFILER;
-  Profiler::InfoContainer infos;
-  Profiler::InfoContainerMap info_map;
-  prof.output(infos);
   prof.outputAveraged(0, 0);
   prof.outputTimings("timings");
   prof.outputTimings(DSC::dev_null);
-  prof.outputMap(info_map);
 }
 
 TEST(ProfilerTest, ExpectedFailures)

@@ -99,9 +99,9 @@ long Profiler::getTimingIdx(const std::string section_name, const int run_number
   if (section == data.end()) {
     // timer might still be running
     const auto& timer_it = known_timers_map_.find(section_name);
-    if (timer_it != known_timers_map_.end())
-      return timer_it->second.second.delta();
-    ASSERT_EXCEPTION(false, "no timer found: " + section_name);
+    if (timer_it == known_timers_map_.end())
+      DUNE_THROW(Dune::InvalidStateException, "no timer found: " + section_name);
+    return timer_it->second.second.delta();
   }
   return section->second;
 } // GetTiming
@@ -176,71 +176,6 @@ void Profiler::outputAveraged(const int refineLevel, const long numDofs, const d
   csv.close();
 } // OutputAveraged
 
-void Profiler::output(const Profiler::InfoContainer& run_infos, const double scale_factor) const
-{
-  const auto& comm   = Dune::MPIHelper::getCollectiveCommunication();
-  const int numProce = comm.size();
-
-  boost::filesystem::path filename(output_dir_);
-  filename /= (boost::format("prof_p%d.csv") % numProce).str();
-  outputCommon(run_infos, filename, scale_factor);
-} // Output
-
-void Profiler::outputMap(const Profiler::InfoContainerMap& run_infos_map, const double scale_factor) const
-{
-  const auto& comm = Dune::MPIHelper::getCollectiveCommunication();
-  for (const auto& el : run_infos_map) {
-    boost::filesystem::path filename(output_dir_);
-    filename /= (boost::format("prof_p%d_ref%s.csv") % comm.size() % el.first).str();
-    outputCommon(el.second, filename, scale_factor);
-  }
-} // OutputMap
-
-void Profiler::outputCommon(const Profiler::InfoContainer& run_infos, const boost::filesystem::path& filename,
-                            const double scale_factor) const
-{
-  const auto& comm   = Dune::MPIHelper::getCollectiveCommunication();
-  const int numProce = comm.size();
-
-  if (comm.rank() == 0)
-    std::cout << "Profiling info in: " << filename << std::endl;
-
-#ifndef NDEBUG
-  for (const auto& count : counters_) {
-    std::cout << "proc " << comm.rank() << " bId " << count.first << " count " << count.second << std::endl;
-  }
-#endif // ifndef NDEBUG
-
-  boost::filesystem::ofstream csv(filename);
-  // outputs column names
-  if (run_infos.size()) {
-    csv << "refine" << csv_sep << "processes" << csv_sep << "numDofs" << csv_sep << "L2_error" << csv_sep;
-    for (Datamap::const_iterator it = datamaps_[0].begin(); it != datamaps_[0].end(); ++it) {
-      csv << it->first << csv_sep;
-    }
-  }
-  csv << "Relative_total_time" << csv_sep << "compiler" << std::endl;
-
-  // outputs column values
-  std::size_t idx = 0;
-  for (const Datamap& data_map : datamaps_) {
-    if (idx < run_infos.size()) {
-      const Dune::Stuff::Common::RunInfo& info = run_infos[idx];
-      csv << boost::format("%d%s%d%s%d%s%e,") % info.refine_level % csv_sep % comm.size() % csv_sep % info.codim0
-                 % csv_sep % (info.L2Errors.size() ? info.L2Errors[0] : double(-1));
-    }
-
-    for (Datamap::const_iterator it = data_map.begin(); it != data_map.end(); ++it) {
-      long clock_count = getTimingIdx(it->first, idx);
-      clock_count      = long(comm.sum(clock_count) / double(scale_factor * numProce));
-      csv << clock_count << csv_sep;
-    }
-    csv << boost::format("=1/I$2*I%d%s%s\n") % (idx + 2) % csv_sep % BOOST_COMPILER;
-
-    idx++;
-  }
-  csv.close();
-} // OutputCommon
 
 void Profiler::setOutputdir(const std::string dir)
 {

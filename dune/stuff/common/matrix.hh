@@ -16,17 +16,15 @@
 #include <dune/stuff/common/debug.hh>
 #include <dune/stuff/common/math.hh>
 
-#if HAVE_DUNE_ISTL
+#if HAVE_DUNE_ISTL && HAVE_DUNE_FEM
 #include <dune/istl/operators.hh>
 #include <dune/fem/operator/matrix/istlmatrix.hh>
 #include <dune/fem/operator/matrix/preconditionerwrapper.hh>
-#endif // if HAVE_DUNE_ISTL
+#endif // if HAVE_DUNE_ISTL && HAVE_DUNE_FEM
 #endif // THIS_WORKS
 
 namespace Dune {
-
 namespace Stuff {
-
 namespace Common {
 
 // \todo doc

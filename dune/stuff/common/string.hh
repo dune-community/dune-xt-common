@@ -128,6 +128,7 @@ struct HexToString
 namespace String {
 
 template <class T>
+DUNE_DEPRECATED_MSG("use DSC::fromString instead, removal with stuff 2.3")
 T from(const std::string& s)
 {
   std::stringstream ss;
@@ -138,6 +139,7 @@ T from(const std::string& s)
 }
 
 template <class T>
+DUNE_DEPRECATED_MSG("use DSC::toString instead, removal with stuff 2.3")
 std::string to(const T& t)
 {
   std::stringstream ss;
@@ -154,11 +156,8 @@ bool equal(const std::string& first, const std::string& second)
 
 std::vector<std::string> mainArgsToVector(int argc, char** argv)
 {
-  std::vector<std::string> ret;
-  for (int ii = 0; ii < argc; ++ii)
-    ret.push_back(argv[ii]);
-  return ret;
-} // std::vector< std::string > mainArgsToVector(int argc, char** argv)
+  return std::vector<std::string>(argv, argv + argc);
+}
 
 char** vectorToMainArgs(const std::vector<std::string> args)
 {
