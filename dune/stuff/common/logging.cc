@@ -76,14 +76,7 @@ void Logging::create(int logflags, const std::string logfile, const std::string 
     flagmap_[*it]   = logflags;
     streammap_[*it] = new FileLogStream(*it, flagmap_[*it], logfile_);
   }
-  created_ = true;
 } // Create
-
-bool Logging::created() const
-{
-  return created_;
-}
-
 
 void Logging::setPrefix(std::string prefix)
 {
@@ -103,7 +96,8 @@ int Logging::getStreamFlags(int streamID) const
 {
   const auto it = flagmap_.find(streamID);
   if (it == flagmap_.end())
-    DUNE_THROW(InvalidStateException, "cannot get flags for unkown Stream id");
+    DUNE_THROW(InvalidStateException,
+               "cannot get flags for unkown Stream id, maybe you forgot to call \"Logging::create\"?");
   return it->second;
 }
 
@@ -111,8 +105,7 @@ LogStream& Logging::getStream(int streamId)
 {
   const auto it = streammap_.find(streamId);
   if (it == streammap_.end())
-    return emptyLogStream_;
-  //      DUNE_THROW(InvalidStateException, "cannot get unkown Stream");
+    DUNE_THROW(InvalidStateException, "cannot get unknown logStream, maybe you forgot to call \"Logging::create\"?");
   else {
     assert(it->second);
     return *(it->second);

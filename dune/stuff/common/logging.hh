@@ -45,8 +45,6 @@ private:
 public:
   ~Logging();
 
-  bool created() const;
-
   /** \brief setup loglevel, logfilename
      *  \param logflags any OR'd combination of flags
      *  \param logfile filename for log, can contain paths, but creation will fail if dir is non-existant
