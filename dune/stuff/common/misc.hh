@@ -45,7 +45,7 @@ namespace Common {
 template <class StlSequence>
 inline int getIdx(const StlSequence& ct, const typename StlSequence::value_type& val)
 {
-  typename StlSequence::const_iterator result = std::find(ct.begin(), ct.end(), val);
+  auto result = std::find(ct.begin(), ct.end(), val);
   if (result == ct.end())
     return -1;
 
