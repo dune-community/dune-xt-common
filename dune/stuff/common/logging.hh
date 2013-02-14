@@ -5,15 +5,6 @@
 #ifndef LOGGING_HH_INCLUDED
 #define LOGGING_HH_INCLUDED
 
-#include <fstream>
-#include <ostream>
-#include <sstream>
-#include <ctime>
-#include <iomanip>
-#include <map>
-#include <assert.h>
-
-// dune-common
 #include <dune/common/exceptions.hh>
 
 #include "misc.hh"
@@ -25,6 +16,13 @@
 #include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/path.hpp>
+#include <fstream>
+#include <ostream>
+#include <sstream>
+#include <ctime>
+#include <iomanip>
+#include <map>
+#include <assert.h>
 
 namespace Dune {
 namespace Stuff {
