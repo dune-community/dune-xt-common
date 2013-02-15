@@ -248,7 +248,7 @@ public:
   void printMismatchedDefaults(std::ostream& out) const
   {
     for (const auto& pair : requests_map_) {
-      out << "Mismatched uses for key " << pair.first << ":";
+      out << "Mismatched uses for key " << pair.first << ": ";
       for (const auto& req : getMismatchedDefaults(pair)) {
         out << "\n\t" << req;
       }

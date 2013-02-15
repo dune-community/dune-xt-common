@@ -41,9 +41,10 @@ TEST(ProfilerTest, MultiRuns)
     scoped_busywait("ProfilerTest.MultiRuns", i * wait_ms);
     DSC_PROFILER.nextRun();
   }
+  const double confidence_margin = 0.95f;
   for (auto i : dvalueRange) {
     // i-1 cause runs have 0-based index
-    EXPECT_GE(DSC_PROFILER.getTimingIdx("ProfilerTest.MultiRuns", i - 1), i * wait_ms);
+    EXPECT_GE(DSC_PROFILER.getTimingIdx("ProfilerTest.MultiRuns", i - 1), i * wait_ms * confidence_margin);
   }
 }
 

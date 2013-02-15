@@ -23,7 +23,7 @@ void do_something_that_takes_long(std::ostream& out)
   out << std::endl;
 } // void do_something_that_takes_long()
 
-int main(int, char* [])
+int main(int argc, char** argv)
 {
   test_init(argc, argv);
   DSC::Logger().create(DSC::LOG_CONSOLE | DSC::LOG_ERROR);
