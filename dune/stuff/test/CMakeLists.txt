@@ -4,19 +4,8 @@ HEADERCHECK( ${stuff} )
 DEPENDENCYCHECK( ${stuff} )
 
 set_source_files_properties( ${DUNE_HEADERS} PROPERTIES HEADER_FILE_ONLY 1 )
-include_sys_dir(${CMAKE_CURRENT_SOURCE_DIR}/gtest )
 
-file( GLOB test_sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cc" )
-
-add_library(gtest_dune_stuff STATIC ${CMAKE_CURRENT_SOURCE_DIR}/gtest/gtest-all.cc)
-
-foreach( source ${test_sources} )
-	get_filename_component(testname ${source} NAME_WE)
-	add_executable( test_${testname} ${source} )
-	add_test( test_${testname} ${CMAKE_CURRENT_BINARY_DIR}/test_${testname} )
-	target_link_libraries( test_${testname} ${COMMON_LIBS} pthread gtest_dune_stuff )
-	list(APPEND testnames test_${testname} )
-endforeach( source )
+BEGIN_TESTCASES()
 
 #grid pgf output
 include(UseLATEX)
@@ -33,5 +22,4 @@ endforeach( tex )
 add_test(NAME test_tex_compile COMMAND ${CMAKE_MAKE_PROGRAM} tex_compile)
 LIST(APPEND testnames tex_compile )
 
-add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
-                  DEPENDS ${testnames} )
+END_TESTCASES()
