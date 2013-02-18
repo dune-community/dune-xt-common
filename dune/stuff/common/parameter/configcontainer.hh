@@ -132,20 +132,20 @@ public:
     : warning_output_(false)
     , tree_(tree)
     , record_defaults_(false)
+    , logdir_(boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false))
   {
   }
 
   ConfigContainer()
     : warning_output_(true)
     , record_defaults_(false)
+    , logdir_(boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false))
   {
   }
 
   ~ConfigContainer()
   {
-    boost::filesystem::path logdir(get("global.datadir", "data", false));
-    logdir /= get("logging.dir", "log", false);
-    boost::filesystem::ofstream out(logdir / "paramter.log");
+    boost::filesystem::ofstream out(logdir_ / "paramter.log");
     tree_.report(out);
   }
 
@@ -248,7 +248,7 @@ public:
   void printMismatchedDefaults(std::ostream& out) const
   {
     for (const auto& pair : requests_map_) {
-      out << "Mismatched uses for key " << pair.first << ":";
+      out << "Mismatched uses for key " << pair.first << ": ";
       for (const auto& req : getMismatchedDefaults(pair)) {
         out << "\n\t" << req;
       }
@@ -271,6 +271,7 @@ private:
   //! config key -> requests map
   RequestMapType requests_map_;
   bool record_defaults_;
+  const boost::filesystem::path logdir_;
 };
 
 //! global ConfigContainer instance

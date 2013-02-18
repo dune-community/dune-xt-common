@@ -5,15 +5,6 @@
 #ifndef LOGGING_HH_INCLUDED
 #define LOGGING_HH_INCLUDED
 
-#include <fstream>
-#include <ostream>
-#include <sstream>
-#include <ctime>
-#include <iomanip>
-#include <map>
-#include <assert.h>
-
-// dune-common
 #include <dune/common/exceptions.hh>
 
 #include "misc.hh"
@@ -25,6 +16,13 @@
 #include <boost/foreach.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/path.hpp>
+#include <fstream>
+#include <ostream>
+#include <sstream>
+#include <ctime>
+#include <iomanip>
+#include <map>
+#include <assert.h>
 
 namespace Dune {
 namespace Stuff {
@@ -136,16 +134,14 @@ private:
   typedef std::map<int, LogStream*> StreamMap;
   StreamMap streammap_;
   typedef std::vector<int> IdVec;
-  typedef std::vector<int>::const_iterator IdVecCIter;
   IdVec streamIDs_;
   int logflags_;
   EmptyLogStream emptyLogStream_;
 
   friend Logging& Logger();
   // satisfy stricter warnings wrt copying
-  Logging(const Logging&);
-  Logging& operator=(const Logging&);
-  bool created_;
+  Logging(const Logging&) = delete;
+  Logging& operator=(const Logging&) = delete;
 };
 
 //! global Logging instance

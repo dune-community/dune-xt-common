@@ -25,7 +25,7 @@ struct ConfigTest : public testing::Test
   const boost::array<T, count> values;
   const boost::array<std::string, count> keys;
   ConfigTest()
-    : key_gen(512)
+    : key_gen(8)
     , values(boost::assign::list_of<T>().repeat_fun(values.size() - 1, rng))
     , keys(boost::assign::list_of<std::string>().repeat_fun(values.size() - 1, key_gen))
   {
@@ -39,7 +39,11 @@ struct ConfigTest : public testing::Test
       EXPECT_EQ(val, DSC_CONFIG_GET(key, val));
       uniq_keys.insert(key);
     }
-    EXPECT_EQ(0u, DSC_CONFIG.getMismatchedDefaultsMap().size());
+    const auto mismatches = DSC_CONFIG.getMismatchedDefaultsMap();
+    EXPECT_TRUE(mismatches.empty());
+    if (!mismatches.empty()) {
+      DSC_CONFIG.printMismatchedDefaults(std::cerr);
+    }
     EXPECT_EQ(values.size(), uniq_keys.size());
   }
 
@@ -59,8 +63,8 @@ struct ConfigTest : public testing::Test
     DSC_CONFIG.printRequests(dev_null);
     DSC_CONFIG.printMismatchedDefaults(dev_null);
     auto key = this->key_gen();
-    DSC_CONFIG.set(key, 0);
-    EXPECT_THROW(DSC_CONFIG.get(key, T(0), ValidateNone<T>()), Dune::ParameterInvalid);
+    DSC_CONFIG.set(key, T());
+    EXPECT_THROW(DSC_CONFIG.get(key, T(), ValidateNone<T>()), DSC::InvalidParameter);
   }
 };
 
@@ -80,7 +84,6 @@ TYPED_TEST(ConfigTest, Other)
 
 int main(int argc, char** argv)
 {
-  testing::InitGoogleTest(&argc, argv);
-  Dune::MPIHelper::instance(argc, argv);
+  test_init(argc, argv);
   return RUN_ALL_TESTS();
 }

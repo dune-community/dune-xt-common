@@ -128,12 +128,12 @@ TEST(OtherMath, Range)
 
 TEST(OtherMath, Sign)
 {
-  EXPECT_TRUE(false); // tests missing
+  EXPECT_EQ(DSC::sign(1), 1);
+  EXPECT_EQ(DSC::sign(-1), -1);
 }
 
 int main(int argc, char** argv)
 {
-  testing::InitGoogleTest(&argc, argv);
-  Dune::MPIHelper::instance(argc, argv);
+  test_init(argc, argv);
   return RUN_ALL_TESTS();
 }

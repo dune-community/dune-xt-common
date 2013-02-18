@@ -44,7 +44,6 @@ TEST(Typename, Extended)
 
 int main(int argc, char** argv)
 {
-  testing::InitGoogleTest(&argc, argv);
-  Dune::MPIHelper::instance(argc, argv);
+  test_init(argc, argv);
   return RUN_ALL_TESTS();
 }

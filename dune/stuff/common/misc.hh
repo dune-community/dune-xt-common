@@ -45,20 +45,12 @@ namespace Common {
 template <class StlSequence>
 inline int getIdx(const StlSequence& ct, const typename StlSequence::value_type& val)
 {
-  typename StlSequence::const_iterator result = std::find(ct.begin(), ct.end(), val);
+  auto result = std::find(ct.begin(), ct.end(), val);
   if (result == ct.end())
     return -1;
-
   return std::distance(ct.begin(), result);
 } // getIdx
 
-
-//! \todo seems borked, resutls in gigantic amount of compile errors?!
-template <class StlSequence, class T>
-void fill_entirely(StlSequence& c, const T& value)
-{
-  std::fill(c.begin(), c.end(), value);
-}
 
 /** this allows subscription indices to wrap around
    * \example N=4: wraparound_array[4] == wraparound_array[0] && wraparound_array[-1] == wraparound_array[3]

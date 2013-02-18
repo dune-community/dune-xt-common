@@ -131,14 +131,13 @@ static RangeType1 dyadicProduct(const RangeType2& arg1, const RangeType2& arg2)
   typedef typename RangeType1::RowIterator MatrixRowIteratorType;
   typedef typename RangeType2::ConstIterator ConstVectorIteratorType;
   typedef typename RangeType2::Iterator VectorIteratorType;
-  MatrixRowIteratorType rItEnd   = ret.end();
+  const MatrixRowIteratorType rItEnd = ret.end();
   ConstVectorIteratorType arg1It = arg1.begin();
   for (MatrixRowIteratorType rIt = ret.begin(); rIt != rItEnd; ++rIt) {
-    ConstVectorIteratorType arg2It = arg2.begin();
-    VectorIteratorType vItEnd = rIt->end();
-    for (VectorIteratorType vIt = rIt->begin(); vIt != vItEnd; ++vIt) {
+    ConstVectorIteratorType arg2It  = arg2.begin();
+    const VectorIteratorType vItEnd = rIt->end();
+    for (VectorIteratorType vIt = rIt->begin(); vIt != vItEnd; ++vIt, ++arg2It) {
       *vIt = *arg1It * *arg2It;
-      ++arg2It;
     }
     ++arg1It;
   }
@@ -151,8 +150,6 @@ class MinMaxAvg
 {
 protected:
   typedef MinMaxAvg<ElementType> ThisType;
-  typedef std::vector<ElementType> ElementsVec;
-  typedef typename ElementsVec::const_iterator ElementsVecConstIterator;
 
 public:
   MinMaxAvg()
