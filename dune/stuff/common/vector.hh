@@ -19,7 +19,7 @@ void clear(Dune::DenseVector<VectorImp>& vector)
 } // void clear( DenseVectorType& vector )
 
 template <class T>
-DUNE_DEPRECATED_MSG("THIS DOES NOT RESIZE ANYTHING")
+DUNE_DEPRECATED_MSG("THIS WILL BE REMOVED ONCE ExtendedParameterTree::getVector() IS PROPERLY IMPLEMENTED!")
 Dune::DynamicVector<T> resize(const Dune::DynamicVector<T>& inVector, const size_t newSize, const T fill = T(0))
 {
   Dune::DynamicVector<T> outVector(newSize);
