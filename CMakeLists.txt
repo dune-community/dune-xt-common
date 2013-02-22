@@ -68,6 +68,7 @@ set( COMMON_LIBS
      ${CCGNU_LIBRARIES}
      "boost_system" "boost_filesystem" "boost_timer" "boost_thread"
      ${GRIDLIBS}
+     ${FASPLIB}
 )
 
 add_subdirectory(dune)
