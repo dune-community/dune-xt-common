@@ -43,10 +43,6 @@ set( ENABLE_MPI
      "0" CACHE STRING
      "set to 1 to enable mpi")
 
-set( BLAS_LIB
-	   "blas" CACHE STRING
-	   "BLAS_LIB" )
-
 configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/cmake_config.h )
 
 add_dune_modules(
