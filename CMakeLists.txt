@@ -37,7 +37,7 @@ execute_process(
 )
 
 #----------------------------------------------------------------------------------------------------
-# Options, that can be changed be the User in order to customise dune-stokes
+# Options, that can be changed be the User in order to customise dune-stuff
 #----------------------------------------------------------------------------------------------------
 set( ENABLE_MPI
      "0" CACHE STRING
