@@ -149,12 +149,6 @@ std::string to(const T& t)
   return s;
 }
 
-DUNE_DEPRECATED_MSG("nonsense function, to be removed immenently")
-bool equal(const std::string& first, const std::string& second)
-{
-  return !first.compare(second);
-}
-
 DUNE_DEPRECATED_MSG("use the constructor call directly")
 std::vector<std::string> mainArgsToVector(int argc, char** argv)
 {
