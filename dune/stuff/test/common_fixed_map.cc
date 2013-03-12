@@ -22,7 +22,7 @@ TEST(FixedMapTest, All)
   for (int i : {0, 1, 2}) {
     EXPECT_EQ(i, too_big[toString(i)]);
   }
-  for (int i : {3, 4, 5}) {
+  for (int DUNE_UNUSED(i) : {3, 4, 5}) {
     EXPECT_EQ(int(), too_big[std::string()]);
   }
   auto size = fits.size();
