@@ -7,6 +7,8 @@
 #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
+#ifdef HAVE_DUNE_FEM
+
 #include <dune/common/version.hh>
 #include <dune/fem/operator/1order/localmassmatrix.hh>
 
@@ -39,6 +41,8 @@ struct LocalMassMatrix : public Dune::LocalDGMassMatrix<DiscreteFunctionSpaceImp
 } // namespace Fem
 } // namespace Stuff
 } // namespace Dune
+
+#endif // HAVE_DUNE_FEM
 
 #endif // STUFF_LOCALMASSMATRIX_HH
 

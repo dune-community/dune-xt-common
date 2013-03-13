@@ -446,6 +446,7 @@ private:
   const std::string name_;
 };
 
+#ifdef HAVE_DUNE_FEM
 /** print min/max of a given DiscreteFucntion obtained by Stuff::getMinMaxOfDiscreteFunction
    * \note hardcoded mult of values by sqrt(2)
    **/
@@ -460,6 +461,7 @@ void printFunctionMinMax(std::ostream& stream, const Function& func)
          << "    min: " << std::sqrt(2.0) * min << std::endl
          << "    max: " << std::sqrt(2.0) * max << std::endl;
 } // printFunctionMinMax
+#endif // HAVE_DUNE_FEM
 
 //! useful for visualizing sparsity patterns of matrices
 template <class Matrix>
