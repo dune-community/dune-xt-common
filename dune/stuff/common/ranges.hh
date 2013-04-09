@@ -21,10 +21,10 @@
 #endif
 #include <dune/stuff/common/math.hh>
 
-namespace std {
-
+namespace Dune {
 
 #if HAVE_DUNE_FEM
+namespace Fem {
 
 template <class DiscreteFunctionTraits>
 auto begin(const Dune::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> decltype(func.dbegin())
@@ -50,9 +50,10 @@ auto end(Dune::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> declt
   return func.dend();
 }
 
+} // namespace Fem
 #endif
 
-} // namespace std
+} // namespace Dune
 
 namespace Dune {
 namespace Stuff {
