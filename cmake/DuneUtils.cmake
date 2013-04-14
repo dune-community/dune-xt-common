@@ -199,10 +199,10 @@ CHECK_CXX_SOURCE_COMPILES("
 
 
 SET( CMAKE_CXX_FLAGS_RELEASE
-	"-DDNDEBUG -funroll-loops -m64 -mfpmath=sse -falign-loops -mtune=native -march=native -O3 -pipe -fomit-frame-pointer " )
+	"-DDNDEBUG -funroll-loops -m64 -mfpmath=sse -falign-loops -mtune=native -march=native -O3 -pipe -fomit-frame-pointer -fPIC " )
 
 SET( CMAKE_CXX_FLAGS_DEBUG
-	"-O0 -DDNDEBUG -g3 -ggdb -Wall -Wextra -Wc++0x-compat -Wparentheses -pedantic -Wredundant-decls -Wshadow -Wunused-variable -Winline -fno-strict-aliasing -Wundef -Wnon-virtual-dtor " )
+	"-O0 -DDNDEBUG -g3 -ggdb -Wall -Wextra -Wc++0x-compat -Wparentheses -pedantic -Wredundant-decls -Wshadow -Wunused-variable -Winline -fno-strict-aliasing -Wundef -Wnon-virtual-dtor -fPIC " )
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
 	set( CMAKE_CXX_FLAGS_DEBUG
