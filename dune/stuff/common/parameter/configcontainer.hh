@@ -37,13 +37,15 @@ namespace Stuff {
 namespace Common {
 
 //! use this to record defaults, placements and so forth
-struct Request
+class Request
 {
   int line;
   std::string file;
   std::string key;
   std::string def;
   std::string validator;
+
+public:
   Request(const int _line, const std::string _file, const std::string _key, const std::string _def,
           const std::string _validator)
     : line(_line)
@@ -63,6 +65,9 @@ struct Request
     DSC_ORDER_REL(line)
     return validator < other.validator;
   }
+
+  friend bool strictRequestCompare(const Request& a, const Request& b);
+  friend std::ostream& operator<<(std::ostream& out, const Request& r);
 };
 
 bool strictRequestCompare(const Request& a, const Request& b)
