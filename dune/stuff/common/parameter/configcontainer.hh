@@ -39,11 +39,11 @@ namespace Common {
 //! use this to record defaults, placements and so forth
 struct Request
 {
-  const int line;
-  const std::string file;
-  const std::string key;
-  const std::string def;
-  const std::string validator;
+  int line;
+  std::string file;
+  std::string key;
+  std::string def;
+  std::string validator;
   Request(const int _line, const std::string _file, const std::string _key, const std::string _def,
           const std::string _validator)
     : line(_line)
