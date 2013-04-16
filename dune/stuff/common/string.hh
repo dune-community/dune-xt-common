@@ -150,12 +150,12 @@ std::string to(const T& t)
 }
 
 DUNE_DEPRECATED_MSG("use the constructor call directly")
-std::vector<std::string> mainArgsToVector(int argc, char** argv)
+inline std::vector<std::string> mainArgsToVector(int argc, char** argv)
 {
   return std::vector<std::string>(argv, argv + argc);
 }
 
-char** vectorToMainArgs(const std::vector<std::string> args)
+inline char** vectorToMainArgs(const std::vector<std::string> args)
 {
   char** argv = new char*[args.size()];
   for (unsigned int ii = 0; ii < args.size(); ++ii) {

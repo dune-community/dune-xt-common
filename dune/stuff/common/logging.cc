@@ -1,3 +1,5 @@
+#include "logging.hh"
+
 #include <fstream>
 #include <ostream>
 #include <sstream>

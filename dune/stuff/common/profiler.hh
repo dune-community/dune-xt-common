@@ -1,27 +1,16 @@
 #ifndef DUNE_STUFF_PROFILER_HH_INCLUDED
 #define DUNE_STUFF_PROFILER_HH_INCLUDED
 
-#include "misc.hh"
-#include "debug.hh"
-#include "filesystem.hh"
-#include "math.hh"
-
-#include <dune/common/exceptions.hh>
-#include <dune/common/deprecated.hh>
-#include <dune/common/mpihelper.hh>
-
 #include <string>
-#include <iostream>
 #include <map>
 #include <vector>
 #include <ctime>
+#include <memory>
+#include <iostream>
 
-#include <boost/foreach.hpp>
-#include <boost/format.hpp>
-#include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/config.hpp>
+#include <boost/noncopyable.hpp>
 #include <boost/timer/timer.hpp>
-#include <boost/shared_ptr.hpp>
+
 
 namespace Dune {
 namespace Stuff {
@@ -36,29 +25,19 @@ Profiler& profiler();
 struct TimingData
 {
 private:
-  boost::shared_ptr<boost::timer::cpu_timer> timer_;
+  std::shared_ptr<boost::timer::cpu_timer> timer_;
 
 public:
   std::string name;
-  TimingData(const std::string _name = "blank")
-    : timer_(new boost::timer::cpu_timer)
-    , name(_name)
-  {
-    timer_->start();
-  }
 
-  void stop()
-  {
-    timer_->stop();
-  }
+  TimingData(const std::string _name = "blank");
+
+  void stop();
 
   /** \return time elapsed since object construction in milliseconds
    *  \note since typical resolutions for user+system time are 10-15ms the nanosecond results are scaled accordingly
    **/
-  boost::timer::nanosecond_type delta() const
-  {
-    return (timer_->elapsed().user + timer_->elapsed().system) / boost::timer::nanosecond_type(1e6);
-  }
+  boost::timer::nanosecond_type delta() const;
 };
 
 /** \brief simple inline profiling class
@@ -170,7 +149,7 @@ private:
 };
 
 //! global profiler object
-Profiler& profiler()
+inline Profiler& profiler()
 {
   return Profiler::instance();
 }
@@ -181,7 +160,6 @@ Profiler& profiler()
 
 #define DSC_PROFILER Dune::Stuff::Common::profiler()
 
-#include "profiler.cc"
 
 #endif // DUNE_STUFF_PROFILER_HH_INCLUDED
 /** Copyright (c) 2012, Rene Milk

@@ -87,7 +87,7 @@ struct StreamModifiers
  * @param i The color number between 0 and 255.
  * @returns A string describing a color code.
  */
-std::string color(int i)
+inline std::string color(int i)
 {
   return "\033[38;5;" + toString(i) + "m";
 }
@@ -98,13 +98,14 @@ std::string color(int i)
  * @param i The color number between 0 and 255.
  * @returns A string describing a color code.
  */
-std::string backcolor(int i)
+inline std::string backcolor(int i)
 {
   return "\033[38;5;" + toString(i) + "m";
 }
 
-// maybe you want to choose your own color
-int templateColorChooser(int i)
+inline // maybe you want to choose your own color
+    int
+    templateColorChooser(int i)
 {
   return i % 256;
 }
@@ -116,35 +117,7 @@ int templateColorChooser(int i)
  * @param maxlevel The maximal template-level the string is reduced to.
  * @returns A colored template string.
  */
-std::string highlightTemplate(std::string str, int maxlevel = 10000)
-{
-  if (maxlevel < 0)
-    maxlevel        = 0;
-  size_t startindex = 0;
-  int level = 0;
-  for (size_t i = 0; i < str.size(); i++) {
-    if (str[i] == '<') {
-      level++;
-      std::string dummy = "\033[38;5;" + toString(templateColorChooser(level)) + "m";
-      str.insert(i, dummy);
-      i += dummy.size();
-      if (level == maxlevel)
-        startindex = i + 1;
-    } else if (str[i] == '>') {
-      level--;
-      std::string dummy = "\033[38;5;" + toString(templateColorChooser(level)) + "m";
-      str.insert(++i, dummy);
-      if (level + 1 == maxlevel) {
-        auto size = i - startindex - 1;
-        str.erase(startindex, size);
-        i = startindex + 1;
-      }
-      i += dummy.size();
-    }
-  }
-  str += "\033[38;5;0m";
-  return str;
-} // highlightTemplate
+std::string highlightTemplate(std::string str, int maxlevel = 10000);
 
 /**
  * @brief A simple function highlighting a whole string in a specified foreground color.
@@ -153,17 +126,17 @@ std::string highlightTemplate(std::string str, int maxlevel = 10000)
  * @param colornr A color number from a 256 color map between 0 and 255.
  * @returns The highlighted string.
  */
-std::string highlightString(std::string str, int colornr = 0)
+inline std::string highlightString(std::string str, int colornr = 0)
 {
   return "\033[38;5;" + toString(colornr % 256) + "m" + str + "\033[0m"; //"\033[38;5;0m";
 }
 
-std::string colorString(const std::string _string, const std::string _color = Colors::brown)
+inline std::string colorString(const std::string _string, const std::string _color = Colors::brown)
 {
   return _color + _string + "\033[0m";
 }
 
-std::string colorStringRed(const std::string _string)
+inline std::string colorStringRed(const std::string _string)
 {
   return colorString(_string, Colors::red);
 }
@@ -176,19 +149,7 @@ std::string colorStringRed(const std::string _string)
  * @param colornr A color number from a 256 color map between 0 and 255.
  * @returns The highlighted string.
  */
-std::string highlightSearchString(std::string str, std::string substr, int colornr = 0)
-{
-  long index = long(str.find(substr, 0));
-
-  while (index != long(std::string::npos)) {
-    std::string dummy  = "\033[38;5;" + toString(colornr % 256) + "m";
-    std::string dummy2 = "\033[38;5;0m";
-    str.insert(index, dummy);
-    str.insert(index + substr.size() + dummy.size(), dummy2);
-    index = str.find(substr, index + dummy.size() + substr.size() + dummy2.size());
-  }
-  return str;
-} // highlightSearchString
+std::string highlightSearchString(std::string str, std::string substr, int colornr = 0);
 
 } // namespace Common
 } // namespace Stuff

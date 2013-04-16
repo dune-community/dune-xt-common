@@ -11,7 +11,7 @@
     *J     = 9;                                                                                                        \
   }
 
-char* charcopy(const char* s)
+inline char* charcopy(const char* s)
 {
   size_t l = strlen(s) + 1;
   char* t = new char[l];

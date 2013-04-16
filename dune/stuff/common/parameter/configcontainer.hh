@@ -22,15 +22,6 @@
 #include <boost/format.hpp>
 #include <set>
 
-#define DSC_ORDER_REL_GENERIC(var, a, b)                                                                               \
-  if (a.var < b.var) {                                                                                                 \
-    return true;                                                                                                       \
-  }                                                                                                                    \
-  if (a.var > b.var) {                                                                                                 \
-    return false;                                                                                                      \
-  }
-
-#define DSC_ORDER_REL(var) DSC_ORDER_REL_GENERIC(var, (*this), other)
 
 namespace Dune {
 namespace Stuff {
@@ -47,42 +38,18 @@ class Request
 
 public:
   Request(const int _line, const std::string _file, const std::string _key, const std::string _def,
-          const std::string _validator)
-    : line(_line)
-    , file(_file)
-    , key(_key)
-    , def(_def)
-    , validator(_validator)
-  {
-  }
+          const std::string _validator);
 
   //! requests are considered
-  bool operator<(const Request& other) const
-  {
-    DSC_ORDER_REL(key)
-    DSC_ORDER_REL(def)
-    DSC_ORDER_REL(file)
-    DSC_ORDER_REL(line)
-    return validator < other.validator;
-  }
+  bool operator<(const Request& other) const;
 
   friend bool strictRequestCompare(const Request& a, const Request& b);
   friend std::ostream& operator<<(std::ostream& out, const Request& r);
 };
 
-bool strictRequestCompare(const Request& a, const Request& b)
-{
-  DSC_ORDER_REL_GENERIC(key, a, b);
-  return a.def < b.def;
-}
+bool strictRequestCompare(const Request& a, const Request& b);
 
-std::ostream& operator<<(std::ostream& out, const Request& r)
-{
-  boost::format out_f("Request for %s with default %s in %s:%d (validation: %s)");
-  out_f % r.key % r.def % r.file % r.line % r.validator;
-  out << out_f.str();
-  return out;
-}
+std::ostream& operator<<(std::ostream& out, const Request& r);
 
 class InvalidParameter : public Dune::Exception
 {
@@ -105,13 +72,7 @@ private:
   }
 
   //! return a set of Request objects for keys that have been queried with non-matching default values
-  std::set<Request> getMismatchedDefaults(RequestMapType::value_type pair) const
-  {
-    typedef bool (*func)(const Request&, const Request&);
-    std::set<Request, func> mismatched(&strictRequestCompare);
-    mismatched.insert(pair.second.begin(), pair.second.end());
-    return std::set<Request>(std::begin(mismatched), std::end(mismatched));
-  }
+  std::set<Request> getMismatchedDefaults(RequestMapType::value_type pair) const;
 
   //! all public get signatures call this one
   template <typename T, class Validator>
@@ -133,41 +94,12 @@ private:
   } // getParam
 
 public:
-  ConfigContainer(const Dune::ParameterTree& tree)
-    : warning_output_(false)
-    , tree_(tree)
-    , record_defaults_(false)
-    , logdir_(boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false))
-  {
-  }
+  ConfigContainer(const Dune::ParameterTree& tree);
+  ConfigContainer();
+  ~ConfigContainer();
 
-  ConfigContainer()
-    : warning_output_(true)
-    , record_defaults_(false)
-    , logdir_(boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false))
-  {
-  }
-
-  ~ConfigContainer()
-  {
-    boost::filesystem::ofstream out(logdir_ / "paramter.log");
-    tree_.report(out);
-  }
-
-  void readCommandLine(int argc, char* argv[])
-  {
-    if (argc < 2) {
-      boost::format usage("usage: %s parameter.file *[-section.key override-value]");
-      DUNE_THROW(Dune::Exception, (usage % argv[0]).str());
-    }
-    Dune::ParameterTreeParser::readINITree(argv[1], tree_);
-    Dune::ParameterTreeParser::readOptions(argc, argv, tree_);
-  } // ReadCommandLine
-
-  void readOptions(int argc, char* argv[])
-  {
-    Dune::ParameterTreeParser::readOptions(argc, argv, tree_);
-  }
+  void readCommandLine(int argc, char* argv[]);
+  void readOptions(int argc, char* argv[]);
 
   /** \brief  passthrough to underlying Dune::ParameterTree
      *  \param  useDbgStream
@@ -227,48 +159,17 @@ public:
     tree_[key] = toString(value);
   }
 
-  void printRequests(std::ostream& out) const
-  {
-    out << "Config requests:";
-    for (const auto& pair : requests_map_) {
-      out << "Key: " << pair.first;
-      for (const auto& req : pair.second) {
-        out << "\n\t" << req;
-      }
-      out << std::endl;
-    }
-  }
+  void printRequests(std::ostream& out) const;
 
-  RequestMapType getMismatchedDefaultsMap() const
-  {
-    RequestMapType ret;
-    for (const auto& pair : requests_map_) {
-      auto mismatches = getMismatchedDefaults(pair);
-      if (mismatches.size())
-        ret[pair.first] = mismatches;
-    }
-    return ret;
-  }
+  RequestMapType getMismatchedDefaultsMap() const;
 
-  void printMismatchedDefaults(std::ostream& out) const
-  {
-    for (const auto& pair : requests_map_) {
-      out << "Mismatched uses for key " << pair.first << ": ";
-      for (const auto& req : getMismatchedDefaults(pair)) {
-        out << "\n\t" << req;
-      }
-      out << "\n";
-    }
-  }
+  void printMismatchedDefaults(std::ostream& out) const;
 
   /**
    *  Control if the value map is filled with default values for missing entries
    *  Initially false
    **/
-  void setRecordDefaults(bool record)
-  {
-    record_defaults_ = record;
-  }
+  void setRecordDefaults(bool record);
 
 private:
   bool warning_output_;
@@ -280,7 +181,7 @@ private:
 };
 
 //! global ConfigContainer instance
-ConfigContainer& Config()
+inline ConfigContainer& Config()
 {
   static ConfigContainer parameters;
   return parameters;

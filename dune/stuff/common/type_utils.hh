@@ -24,7 +24,7 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-std::string demangleTypename(const std::string& mangled_name)
+inline std::string demangleTypename(const std::string& mangled_name)
 {
 #ifdef __GNUC__
   return abi::__cxa_demangle(mangled_name.c_str(), nullptr, nullptr, nullptr);

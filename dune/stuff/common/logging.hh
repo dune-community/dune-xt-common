@@ -145,7 +145,7 @@ private:
 };
 
 //! global Logging instance
-Logging& Logger()
+inline Logging& Logger()
 {
   static Logging log;
   return log;
@@ -159,8 +159,6 @@ Logging& Logger()
 #define DSC_LOG_INFO DSC_LOG.info()
 #define DSC_LOG_DEBUG DSC_LOG.debug()
 #define DSC_LOG_ERROR DSC_LOG.error()
-
-#include "logging.cc"
 
 #endif // ifndef LOGGING_HH_INCLUDED
 

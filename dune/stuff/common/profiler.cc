@@ -1,4 +1,8 @@
+#include "profiler.hh"
+
 #include <dune/common/mpihelper.hh>
+#include <dune/stuff/common/string.hh>
+#include <dune/stuff/common/filesystem.hh>
 
 #include <map>
 #include <string>
@@ -6,12 +10,33 @@
 #include <boost/format.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <boost/foreach.hpp>
+#include <boost/format.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/config.hpp>
+#include <boost/timer/timer.hpp>
 
-#include <dune/stuff/common/string.hh>
 
 namespace Dune {
 namespace Stuff {
 namespace Common {
+
+TimingData::TimingData(const std::string _name)
+  : timer_(new boost::timer::cpu_timer)
+  , name(_name)
+{
+  timer_->start();
+}
+
+void TimingData::stop()
+{
+  timer_->stop();
+}
+
+boost::timer::nanosecond_type TimingData::delta() const
+{
+  return (timer_->elapsed().user + timer_->elapsed().system) / boost::timer::nanosecond_type(1e6);
+}
 
 void Profiler::startTiming(const std::string section_name, const int i)
 {
