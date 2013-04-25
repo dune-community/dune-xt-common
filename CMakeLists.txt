@@ -66,7 +66,7 @@ set( COMMON_LIBS
      ${DUNE_LIBS}
      ${PARALIBS}
      ${CCGNU_LIBRARIES}
-     "boost_system" "boost_filesystem" "boost_timer" "boost_thread"
+     ${BOOST_LIBS}
      ${GRIDLIBS}
      ${FASPLIB}
 )
