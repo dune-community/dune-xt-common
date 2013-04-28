@@ -33,7 +33,7 @@ namespace boost {
 namespace math {
 //! isinf specialization for Dune::StraightenBlockVector
 template <class BlockVectorImp, class DofImp>
-#if DUNE_VERSION_NEWER(DUNE_FEM, 1, 5)
+#if DUNE_VERSION_NEWER(DUNE_FEM, 1, 4)
 inline bool isinf(const Dune::Fem::StraightenBlockVector<BlockVectorImp, DofImp>& x)
 {
 #else
