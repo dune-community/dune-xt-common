@@ -50,13 +50,11 @@ TEST(StringTest, Tokenizer)
   const vector<string> tokens_compressed = {"a", "t", "kk", "g"};
   EXPECT_EQ(tokens_default, tokenize(msg, seps, boost::algorithm::token_compress_off));
   EXPECT_EQ(tokens_compressed, tokenize(msg, seps, boost::algorithm::token_compress_on));
-#if HAS_LAMBDA_FUNCTIONS && HAS_STD_BEGIN_END
   const string num_msg("-1 2;;4");
   vector<int> numbers_default    = {-1, 2, 0, 4};
   vector<int> numbers_compressed = {-1, 2, 4};
   EXPECT_EQ(numbers_default, tokenize<int>(num_msg, seps, boost::algorithm::token_compress_off));
   EXPECT_EQ(numbers_compressed, tokenize<int>(num_msg, seps, boost::algorithm::token_compress_on));
-#endif
 }
 
 TEST(StringTest, TimeString)
