@@ -493,7 +493,7 @@ void matrixToGnuplotFile(const Matrix& matrix, std::string filename)
   file.close();
 } // matrixToGnuplotFile
 
-std::string dimToAxisName(const unsigned int dim, const bool capitalize = false)
+inline std::string dimToAxisName(const unsigned int dim, const bool capitalize = false)
 {
   char c = 'x';
 
