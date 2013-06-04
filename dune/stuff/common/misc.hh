@@ -45,7 +45,7 @@ namespace Common {
 template <class StlSequence>
 inline int getIdx(const StlSequence& ct, const typename StlSequence::value_type& val)
 {
-  auto result = std::find(ct.begin(), ct.end(), val);
+  const auto result = std::find(ct.begin(), ct.end(), val);
   if (result == ct.end())
     return -1;
   return std::distance(ct.begin(), result);

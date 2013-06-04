@@ -186,6 +186,7 @@ private:
 
 INVERSE_VALIDATE(ValidateNone, ValidateAny);
 INVERSE_VALIDATE(ValidateGreaterOrEqual, ValidateLess);
+INVERSE_VALIDATE(ValidateNotLess, ValidateLess);
 
 //! validate arg iff arg \in [min,max]
 template <class T>
