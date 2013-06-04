@@ -469,8 +469,9 @@ void matrixToGnuplotStream(const Matrix& matrix, std::ostream& stream)
 {
   unsigned long nz = 0;
 
-  for (size_t row = 0; row < matrix.rows(); ++row) {
-    for (size_t col = 0; col < matrix.cols(); ++col) {
+  // don't try to be clever and use an unsigned counter here
+  for (int row = 0; row < matrix.rows(); ++row) {
+    for (int col = 0; col < matrix.cols(); ++col) {
       if (matrix.find(row, col))
         stream << row << "\t" << col << "\t" << matrix(row, col) << std::endl;
     }
