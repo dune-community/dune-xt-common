@@ -10,18 +10,17 @@
 // dune-common
 #include <dune/common/densematrix.hh>
 
-#ifdef THIS_WORKS
-#include <dune/fem/operator/matrix/spmatrix.hh>
 #include <dune/common/static_assert.hh>
 #include <dune/stuff/common/debug.hh>
 #include <dune/stuff/common/math.hh>
 
 #if HAVE_DUNE_ISTL && HAVE_DUNE_FEM
+#include <dune/fem/operator/matrix/spmatrix.hh>
 #include <dune/istl/operators.hh>
 #include <dune/fem/operator/matrix/istlmatrix.hh>
 #include <dune/fem/operator/matrix/preconditionerwrapper.hh>
 #endif // if HAVE_DUNE_ISTL && HAVE_DUNE_FEM
-#endif // THIS_WORKS
+
 
 namespace Dune {
 namespace Stuff {
@@ -45,14 +44,11 @@ void clear(Dune::DenseMatrix<MatrixImp>& matrix)
   //  } // loop over all rows
 } // void clear(Dune::DenseMatrix< MatrixImp >& matrix)
 
-#ifdef THIS_WORKS
+
 //! TODO
 template <class MatrixImp>
-struct PrecondionWrapperDummy : public Preconditioner<typename MatrixImp::RowDiscreteFunctionType::DofStorageType,
-                                                      typename MatrixImp::ColDiscreteFunctionType::DofStorageType>
+struct PrecondionWrapperDummy
 {
-  typedef Preconditioner<typename MatrixImp::RowDiscreteFunctionType::DofStorageType,
-                         typename MatrixImp::ColDiscreteFunctionType::DofStorageType> BaseType;
   typedef typename MatrixImp::RowDiscreteFunctionType::DofStorageType X;
   typedef typename MatrixImp::ColDiscreteFunctionType::DofStorageType Y;
   void pre(X&, Y&)
@@ -64,53 +60,8 @@ struct PrecondionWrapperDummy : public Preconditioner<typename MatrixImp::RowDis
   void post(X&)
   {
   }
-  enum
-  {
-    category = SolverCategory::sequential
-  };
 }; // struct PrecondionWrapperDummy
 
-//! obsolete,dysfunctional Matrixoperator
-template <class MatrixType>
-class SaneSparseRowMatrixOperator
-{
-  const MatrixType& object_;
-
-public:
-  typedef SaneSparseRowMatrixOperator<MatrixType> ThisType;
-  SaneSparseRowMatrixOperator(const MatrixType& object)
-    : object_(object)
-  {
-  }
-
-  template <class DomainFunction, class RangeFunction>
-  void operator()(const DomainFunction& arg, RangeFunction& dest) const
-  {
-    object_.apply(arg, dest);
-  }
-
-#ifdef USE_BFG_CG_SCHEME
-  template <class VectorType, class IterationInfo>
-  void multOEM(const VectorType* x, VectorType* ret, const IterationInfo& /*info*/) const
-  {
-    // call multOEM of the matrix
-    object_.multOEM(x, ret);
-  }
-
-#endif // ifdef USE_BFG_CG_SCHEME
-
-  template <class VectorType>
-  void multOEM(const VectorType* x, VectorType* ret) const
-  {
-    // call multOEM of the matrix
-    object_.multOEM(x, ret);
-  }
-
-  const ThisType& systemMatrix() const
-  {
-    return *this;
-  }
-}; // class SaneSparseRowMatrixOperator
 
 /** \brief get the diagonal of a fieldMatrix into a fieldvector
    * \note While in principle this might do for SparseRowMatrix as well, don't do it! SparseRowMatrix has specialised
@@ -336,7 +287,7 @@ void forceTranspose(const M& arg, M& dest)
     for (int j = 0; j < arg.rows(); ++j)
       dest.set(j, i, arg(i, j));
 } // forceTranspose
-#endif // THIS_WORKS
+
 
 } // namespace Common
 } // namespace Stuff
