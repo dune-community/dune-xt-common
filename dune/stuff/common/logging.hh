@@ -161,9 +161,11 @@ inline Logging& Logger()
 #define DSC_LOG_DEBUG DSC_LOG.debug()
 #define DSC_LOG_ERROR DSC_LOG.error()
 
-#define DSC_LOG_INFO_0 (Dune::MPIHelper::getCommunicator().rank() == 0 ? DSC_LOG.info() : DSC_LOG.devnull())
-#define DSC_LOG_DEBUG_0 (Dune::MPIHelper::getCommunicator().rank() == 0 ? DSC_LOG.debug() : DSC_LOG.devnull())
-#define DSC_LOG_ERROR_0 (Dune::MPIHelper::getCommunicator().rank() == 0 ? DSC_LOG.error() : DSC_LOG.devnull())
+#define DSC_LOG_INFO_0 (Dune::MPIHelper::getCollectiveCommunication().rank() == 0 ? DSC_LOG.info() : DSC_LOG.devnull())
+#define DSC_LOG_DEBUG_0                                                                                                \
+  (Dune::MPIHelper::getCollectiveCommunication().rank() == 0 ? DSC_LOG.debug() : DSC_LOG.devnull())
+#define DSC_LOG_ERROR_0                                                                                                \
+  (Dune::MPIHelper::getCollectiveCommunication().rank() == 0 ? DSC_LOG.error() : DSC_LOG.devnull())
 
 #endif // ifndef LOGGING_HH_INCLUDED
 
