@@ -11,4 +11,5 @@ Version: @VERSION@
 Description: misc support stuff for dune-[navier-]stokes
 URL: http://dune-project.uni-muenster.de/git/projects/dune-navier-stokes/
 Requires: ${DEPENDENCIES}
+Libs: -L${libdir} -ldunestuff
 Cflags: -I${includedir}

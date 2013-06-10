@@ -7,8 +7,6 @@
 #include "config.h"
 #endif // ifdef HAVE_CMAKE_CONFIG
 
-#if HAS_STD_BEGIN_END
-
 #if HAVE_DUNE_GRID
 #include <dune/grid/common/gridview.hh>
 #include <boost/serialization/static_warning.hpp>
@@ -231,8 +229,6 @@ sequence valueRange(const T end)
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
-
-#endif // HAS_STD_BEGIN_END
 
 #endif // DUNE_STUFF_RANGES_RANGES_HH
 /** Copyright (c) 2012, Felix Albrecht, Rene Milk

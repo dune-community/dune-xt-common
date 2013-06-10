@@ -3,6 +3,9 @@
 
 #include "color.hh"
 
+#include <memory>
+#include <type_traits>
+
 /** use this to define Typename specializations in the GLOBAL namespace ONLY **/
 #define STUFF_TYPENAME(NAME)                                                                                           \
   namespace Dune {                                                                                                     \
@@ -68,6 +71,53 @@ std::string getTypename(const T&)
 {
   return Typename<T>::value();
 }
+
+template <class T, class Ptr = void>
+struct is_smart_ptr
+{
+  static const bool value = false;
+  typedef T type;
+};
+
+template <class T>
+struct is_smart_ptr<T, typename std::enable_if<std::is_same<std::unique_ptr<typename T::element_type>, T>::value>::type>
+{
+  static const bool value = true;
+  typedef T type;
+};
+
+template <class T>
+struct is_smart_ptr<T, typename std::enable_if<std::is_same<std::shared_ptr<typename T::element_type>, T>::value>::type>
+{
+  static const bool value = true;
+  typedef T type;
+};
+
+template <class T>
+struct is_smart_ptr<T, typename std::enable_if<std::is_same<std::weak_ptr<typename T::element_type>, T>::value>::type>
+{
+  static const bool value = true;
+  typedef T type;
+};
+
+template <class T, class = void>
+struct PtrCaller
+{
+  static T& call(T& ptr)
+  {
+    return ptr;
+  }
+};
+
+template <class T>
+struct PtrCaller<T, typename std::enable_if<is_smart_ptr<T>::value || std::is_pointer<T>::value>::type>
+{
+  static typename T::element_type& call(T& ptr)
+  {
+    return *ptr;
+  }
+};
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune

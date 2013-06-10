@@ -153,6 +153,24 @@ public:
     return get(name, std::string(def), ValidateAny<std::string>(), useDbgStream, req);
   }
 
+  template <typename T, class Validator = ValidateAny<T>>
+  std::vector<T> getList(const std::string name, const T def = T(), const std::string seperators = ";",
+                         const ValidatorInterface<T, Validator>& validator = ValidateAny<T>(), bool useDbgStream = true)
+  {
+    Request req(
+        -1, std::string(), name, Dune::Stuff::Common::toString(def), Dune::Stuff::Common::getTypename(validator));
+    const auto value  = get<std::string>(name, toString(def), ValidateAny<std::string>(), useDbgStream, req);
+    const auto tokens = tokenize<T>(value, seperators);
+    for (auto token : tokens) {
+      if (!validator(token)) {
+        std::stringstream ss;
+        validator.print(ss);
+        DUNE_THROW(InvalidParameter, ss.str());
+      }
+    }
+    return tokens;
+  }
+
   template <class T>
   void set(const std::string key, const T value)
   {
