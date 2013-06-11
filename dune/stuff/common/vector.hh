@@ -7,6 +7,7 @@
 #include <dune/common/dynvector.hh>
 #include <dune/common/fvector.hh>
 #include <dune/common/deprecated.hh>
+#include <dune/common/float_cmp.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -22,27 +23,14 @@ void clear(Dune::DenseVector<VectorImp>& vector)
 /**
  *  \brief Compare x and y component-wise for almost equality.
  *
- *  This implementation is taken from pymor: https://github.com/pyMor/pyMor/blob/master/src/pymor/tools/floatcmp.py
- *  Credit goes to Stephan Rave
+ *  Applies Dune::FloatCmp::eq() componentwise.
  */
 template <class Field, int size>
-bool float_cmp(const Dune::FieldVector<Field, size>& x, const Dune::FieldVector<Field, size>& y, const Field atol,
-               const Field rtol)
+bool float_cmp(const Dune::FieldVector<Field, size>& x, const Dune::FieldVector<Field, size>& y, const Field tol)
 {
-  unsigned int failure = 0;
+  size_t failure = 0;
   for (size_t ii = 0; ii < size; ++ii)
-    if (std::abs(x[ii] - y[ii]) > atol + std::abs(y[ii]) * rtol)
-      ++failure;
-  return !bool(failure);
-}
-
-template <class Field, int size>
-bool float_cmp(const Dune::FieldVector<Field, size>& x, const Dune::FieldVector<Field, size>& y, const Field atol)
-{
-  unsigned int failure = 0;
-  for (size_t ii = 0; ii < size; ++ii)
-    if (std::abs(x[ii] - y[ii]) > atol + std::abs(y[ii]) * atol)
-      ++failure;
+    failure += Dune::FloatCmp::eq(x[ii], y[ii], tol);
   return !bool(failure);
 }
 
