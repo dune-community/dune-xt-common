@@ -1,5 +1,9 @@
 #include "configcontainer.hh"
 
+#if HAVE_DUNE_FEM
+#include <dune/fem/io/parameter.hh>
+#endif
+
 #define DSC_ORDER_REL_GENERIC(var, a, b)                                                                               \
   if (a.var < b.var) {                                                                                                 \
     return true;                                                                                                       \
@@ -76,6 +80,15 @@ ConfigContainer::~ConfigContainer()
   tree_.report(out);
 }
 
+
+void loadIntoFemParamter(const std::string& filename)
+{
+#if HAVE_DUNE_FEM
+  Dune::Parameter::append(filename);
+#endif
+}
+
+
 void ConfigContainer::readCommandLine(int argc, char* argv[])
 {
   if (argc < 2) {
@@ -83,6 +96,7 @@ void ConfigContainer::readCommandLine(int argc, char* argv[])
     DUNE_THROW(Dune::Exception, (usage % argv[0]).str());
   }
   Dune::ParameterTreeParser::readINITree(argv[1], tree_);
+  loadIntoFemParamter(argv[1]);
   Dune::ParameterTreeParser::readOptions(argc, argv, tree_);
 } // ReadCommandLine
 
