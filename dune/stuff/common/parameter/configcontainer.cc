@@ -78,8 +78,8 @@ ConfigContainer::ConfigContainer()
 
 ConfigContainer::~ConfigContainer()
 {
-  boost::filesystem::ofstream out(logdir_ / "dsc_parameter.log");
-  tree_.report(out);
+  std::unique_ptr<boost::filesystem::ofstream> out(DSC::make_ofstream(logdir_ / "dsc_parameter.log"));
+  tree_.report(*out);
 }
 
 
