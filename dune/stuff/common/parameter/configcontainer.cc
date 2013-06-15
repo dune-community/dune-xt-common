@@ -100,6 +100,9 @@ void ConfigContainer::readCommandLine(int argc, char* argv[])
   Dune::ParameterTreeParser::readINITree(argv[1], tree_);
   loadIntoFemParamter(argv[1]);
   Dune::ParameterTreeParser::readOptions(argc, argv, tree_);
+
+  // datadir and logdir may be given from the command line...
+  logdir_ = boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false);
 } // ReadCommandLine
 
 void ConfigContainer::readOptions(int argc, char* argv[])
