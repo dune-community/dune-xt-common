@@ -195,7 +195,7 @@ private:
   //! config key -> requests map
   RequestMapType requests_map_;
   bool record_defaults_;
-  const boost::filesystem::path logdir_;
+  boost::filesystem::path logdir_;
 };
 
 //! global ConfigContainer instance

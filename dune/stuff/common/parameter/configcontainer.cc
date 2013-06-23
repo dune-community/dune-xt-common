@@ -1,5 +1,9 @@
 #include "configcontainer.hh"
 
+#if HAVE_DUNE_FEM
+#include <dune/fem/io/parameter.hh>
+#endif
+
 #define DSC_ORDER_REL_GENERIC(var, a, b)                                                                               \
   if (a.var < b.var) {                                                                                                 \
     return true;                                                                                                       \
@@ -61,6 +65,7 @@ ConfigContainer::ConfigContainer(const Dune::ParameterTree& tree)
   , record_defaults_(false)
   , logdir_(boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false))
 {
+  testCreateDirectory(logdir_.string());
 }
 
 ConfigContainer::ConfigContainer()
@@ -68,13 +73,23 @@ ConfigContainer::ConfigContainer()
   , record_defaults_(false)
   , logdir_(boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false))
 {
+  testCreateDirectory(logdir_.string());
 }
 
 ConfigContainer::~ConfigContainer()
 {
-  boost::filesystem::ofstream out(logdir_ / "paramter.log");
-  tree_.report(out);
+  std::unique_ptr<boost::filesystem::ofstream> out(DSC::make_ofstream(logdir_ / "dsc_parameter.log"));
+  tree_.report(*out);
 }
+
+
+void loadIntoFemParamter(const std::string& filename)
+{
+#if HAVE_DUNE_FEM
+  Dune::Parameter::append(filename);
+#endif
+}
+
 
 void ConfigContainer::readCommandLine(int argc, char* argv[])
 {
@@ -83,7 +98,11 @@ void ConfigContainer::readCommandLine(int argc, char* argv[])
     DUNE_THROW(Dune::Exception, (usage % argv[0]).str());
   }
   Dune::ParameterTreeParser::readINITree(argv[1], tree_);
+  loadIntoFemParamter(argv[1]);
   Dune::ParameterTreeParser::readOptions(argc, argv, tree_);
+
+  // datadir and logdir may be given from the command line...
+  logdir_ = boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false);
 } // ReadCommandLine
 
 void ConfigContainer::readOptions(int argc, char* argv[])

@@ -147,7 +147,7 @@ intersectionRange(const Dune::GridView<GridViewTraits>& gridview,
 
 #if HAVE_DUNE_FEM
 
-//! Range adpater for lagrane points from lagrange spaces
+//! Range adapter for lagrange points from lagrange spaces
 template <class DiscreteFunctionspaceType, int faceCodim>
 class LagrangePointSetRange
 {
