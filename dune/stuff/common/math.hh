@@ -29,15 +29,17 @@
 #if HAVE_DUNE_FEM
 #include <dune/fem/function/blockvectorfunction/blockvectorfunction.hh>
 
+#include <dune/stuff/fem/namespace.hh>
+
 namespace boost {
 namespace math {
 //! isinf specialization for Dune::StraightenBlockVector
 template <class BlockVectorImp, class DofImp>
-#if DUNE_VERSION_NEWER(DUNE_FEM, 1, 4)
-inline bool isinf(const Dune::Fem::StraightenBlockVector<BlockVectorImp, DofImp>& x)
+#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
+inline bool isinf(const Dune::StraightenBlockVector<BlockVectorImp, DofImp>& x)
 {
 #else
-inline bool isinf(const Dune::StraightenBlockVector<BlockVectorImp, DofImp>& x)
+inline bool isinf(const Dune::Fem::StraightenBlockVector<BlockVectorImp, DofImp>& x)
 {
 #endif
   for (size_t i = 0; i < x.size(); ++i) {
