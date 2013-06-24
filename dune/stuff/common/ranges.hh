@@ -28,6 +28,8 @@ namespace Fem {
 template <class DiscreteFunctionTraits>
 #if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
 auto begin(const Dune::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
+#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+auto begin(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
 #else
 auto begin(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
 #endif
@@ -39,6 +41,8 @@ auto begin(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& f
 template <class DiscreteFunctionTraits>
 #if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
 auto end(const Dune::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
+#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+auto end(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
 #else
 auto end(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
 #endif
@@ -50,6 +54,8 @@ auto end(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& fun
 template <class DiscreteFunctionTraits>
 #if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
 auto begin(Dune::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
+#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+auto begin(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
 #else
 auto begin(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
 #endif
@@ -61,6 +67,8 @@ auto begin(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
 template <class DiscreteFunctionTraits>
 #if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
 auto end(Dune::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
+#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+auto end(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
 #else
 auto end(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
 #endif

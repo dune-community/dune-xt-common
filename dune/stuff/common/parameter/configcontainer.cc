@@ -86,7 +86,13 @@ ConfigContainer::~ConfigContainer()
 void loadIntoFemParamter(const std::string& filename)
 {
 #if HAVE_DUNE_FEM
+#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
   Dune::Parameter::append(filename);
+#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+  Dune::Fem::Parameter::append(filename);
+#else
+  Dune::Fem::Parameter::append(filename);
+#endif
 #endif
 }
 

@@ -18,6 +18,7 @@
 #include <dune/stuff/common/parameter/validation.hh>
 #include <dune/stuff/common/parameter/tree.hh>
 #include <dune/stuff/common/type_utils.hh>
+#include <dune/stuff/fem/namespace.hh>
 
 #include <boost/format.hpp>
 #include <set>
