@@ -21,16 +21,7 @@ namespace Fem {
 
 //! create yet another child class just in case fem actually implements something in LocalMassMatrix in addition to its
 //! base
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-template <class DiscreteFunctionSpaceImp, class VolumeQuadratureImp>
-struct LocalMassMatrix : public Dune::LocalMassMatrix<DiscreteFunctionSpaceImp, VolumeQuadratureImp>
-{
-  LocalMassMatrix(const DiscreteFunctionSpaceImp& spc, const int volQuadOrd = -1)
-    : Dune::LocalMassMatrix<DiscreteFunctionSpaceImp, VolumeQuadratureImp>(spc, volQuadOrd)
-  {
-  }
-};
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
 template <class DiscreteFunctionSpaceImp, class VolumeQuadratureImp>
 struct LocalMassMatrix : public Dune::Fem::LocalMassMatrix<DiscreteFunctionSpaceImp, VolumeQuadratureImp>
 {
@@ -41,10 +32,10 @@ struct LocalMassMatrix : public Dune::Fem::LocalMassMatrix<DiscreteFunctionSpace
 };
 #else // DUNE_FEM_IS
 template <class DiscreteFunctionSpaceImp, class VolumeQuadratureImp>
-struct LocalMassMatrix : public Dune::LocalDGMassMatrix<DiscreteFunctionSpaceImp, VolumeQuadratureImp>
+struct LocalMassMatrix : public Dune::Fem::LocalMassMatrix<DiscreteFunctionSpaceImp, VolumeQuadratureImp>
 {
   LocalMassMatrix(const DiscreteFunctionSpaceImp& spc, const int volQuadOrd = -1)
-    : Dune::LocalDGMassMatrix<DiscreteFunctionSpaceImp, VolumeQuadratureImp>(spc, volQuadOrd)
+    : Dune::Fem::LocalMassMatrix<DiscreteFunctionSpaceImp, VolumeQuadratureImp>(spc, volQuadOrd)
   {
   }
 };

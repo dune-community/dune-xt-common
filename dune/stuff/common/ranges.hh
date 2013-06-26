@@ -26,9 +26,7 @@ namespace Dune {
 namespace Fem {
 
 template <class DiscreteFunctionTraits>
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-auto begin(const Dune::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
 auto begin(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
 #else
 auto begin(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
@@ -39,9 +37,7 @@ auto begin(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& f
 }
 
 template <class DiscreteFunctionTraits>
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-auto end(const Dune::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
 auto end(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
 #else
 auto end(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
@@ -52,9 +48,7 @@ auto end(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& fun
 }
 
 template <class DiscreteFunctionTraits>
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-auto begin(Dune::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
 auto begin(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
 #else
 auto begin(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
@@ -65,9 +59,7 @@ auto begin(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
 }
 
 template <class DiscreteFunctionTraits>
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-auto end(Dune::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
+#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
 auto end(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
 #else
 auto end(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
@@ -192,18 +184,6 @@ lagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& 
   return LagrangePointSetRange<DiscreteFunctionspaceType, codim>(space, entity, subEntity);
 }
 
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-template <class GridPartTraits>
-IntersectionRange<Dune::GridPartInterface<GridPartTraits>,
-                  typename Dune::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType>
-intersectionRange(const Dune::GridPartInterface<GridPartTraits>& gridpart,
-                  const typename Dune::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType& entity)
-{
-  return IntersectionRange<Dune::GridPartInterface<GridPartTraits>,
-                           typename Dune::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType>(gridpart,
-                                                                                                            entity);
-}
-#else
 template <class GridPartTraits>
 IntersectionRange<Dune::Fem::GridPartInterface<GridPartTraits>,
                   typename Dune::Fem::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType>
@@ -214,7 +194,6 @@ intersectionRange(const Dune::Fem::GridPartInterface<GridPartTraits>& gridpart,
                            typename Dune::Fem::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType>(
       gridpart, entity);
 }
-#endif
 #endif // HAVE_DUNE_FEM
 
 
