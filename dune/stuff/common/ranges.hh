@@ -26,45 +26,25 @@ namespace Dune {
 namespace Fem {
 
 template <class DiscreteFunctionTraits>
-#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
-auto begin(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
-#else
-auto begin(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
-#endif
-    -> decltype(func.dbegin())
+auto begin(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> decltype(func.dbegin())
 {
   return func.dbegin();
 }
 
 template <class DiscreteFunctionTraits>
-#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
-auto end(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
-#else
-auto end(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
-#endif
-    -> decltype(func.dend())
+auto end(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> decltype(func.dend())
 {
   return func.dend();
 }
 
 template <class DiscreteFunctionTraits>
-#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
-auto begin(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
-#else
-auto begin(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
-#endif
-    -> decltype(func.dbegin())
+auto begin(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> decltype(func.dbegin())
 {
   return func.dbegin();
 }
 
 template <class DiscreteFunctionTraits>
-#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
-auto end(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
-#else
-auto end(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func)
-#endif
-    -> decltype(func.dend())
+auto end(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> decltype(func.dend())
 {
   return func.dend();
 }

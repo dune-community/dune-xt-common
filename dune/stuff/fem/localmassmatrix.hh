@@ -13,15 +13,12 @@
 
 #include <dune/fem/operator/1order/localmassmatrix.hh>
 
-#include <dune/stuff/fem/namespace.hh>
-
 namespace Dune {
 namespace Stuff {
 namespace Fem {
 
 //! create yet another child class just in case fem actually implements something in LocalMassMatrix in addition to its
 //! base
-#if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
 template <class DiscreteFunctionSpaceImp, class VolumeQuadratureImp>
 struct LocalMassMatrix : public Dune::Fem::LocalMassMatrix<DiscreteFunctionSpaceImp, VolumeQuadratureImp>
 {
@@ -30,16 +27,6 @@ struct LocalMassMatrix : public Dune::Fem::LocalMassMatrix<DiscreteFunctionSpace
   {
   }
 };
-#else // DUNE_FEM_IS
-template <class DiscreteFunctionSpaceImp, class VolumeQuadratureImp>
-struct LocalMassMatrix : public Dune::Fem::LocalMassMatrix<DiscreteFunctionSpaceImp, VolumeQuadratureImp>
-{
-  LocalMassMatrix(const DiscreteFunctionSpaceImp& spc, const int volQuadOrd = -1)
-    : Dune::Fem::LocalMassMatrix<DiscreteFunctionSpaceImp, VolumeQuadratureImp>(spc, volQuadOrd)
-  {
-  }
-};
-#endif // DUNE_FEM_IS
 
 } // namespace Fem
 } // namespace Stuff
