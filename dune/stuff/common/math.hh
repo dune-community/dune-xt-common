@@ -115,10 +115,6 @@ struct Epsilon<std::string, false>
   static const std::string value;
 };
 
-// this is just for the test to compile
-const std::string Epsilon<std::string, false>::value = "_";
-
-
 template <class T>
 const T Epsilon<T, true>::value = 1;
 template <class T>
