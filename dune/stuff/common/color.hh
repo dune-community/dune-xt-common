@@ -26,61 +26,62 @@ namespace Common {
 struct Colors
 {
 
-#define DS_CONST_CHAR const constexpr char *
+#define DS_CONST_CHAR const char *
 
   // foreground colors
-  static DS_CONST_CHAR black     = "\033[30m";
-  static DS_CONST_CHAR red       = "\033[31m";
-  static DS_CONST_CHAR green     = "\033[32m";
-  static DS_CONST_CHAR brown     = "\033[33m";
-  static DS_CONST_CHAR blue      = "\033[34m";
-  static DS_CONST_CHAR purple    = "\033[35m";
-  static DS_CONST_CHAR cyan      = "\033[36m";
-  static DS_CONST_CHAR lightgray = "\033[37m";
+  static DS_CONST_CHAR black;
+  static DS_CONST_CHAR red;
+  static DS_CONST_CHAR green;
+  static DS_CONST_CHAR brown;
+  static DS_CONST_CHAR blue;
+  static DS_CONST_CHAR purple;
+  static DS_CONST_CHAR cyan;
+  static DS_CONST_CHAR lightgray;
   // light foreground colors
-  static DS_CONST_CHAR darkgray    = "\033[1;30m";
-  static DS_CONST_CHAR lightred    = "\033[1;31m";
-  static DS_CONST_CHAR lightgreen  = "\033[1;32m";
-  static DS_CONST_CHAR yellow      = "\033[1;33m";
-  static DS_CONST_CHAR lightblue   = "\033[1;34m";
-  static DS_CONST_CHAR lightpurple = "\033[1;35m";
-  static DS_CONST_CHAR lightcyan   = "\033[1;36m";
-  static DS_CONST_CHAR white       = "\033[1;37m";
+  static DS_CONST_CHAR darkgray;
+  static DS_CONST_CHAR lightred;
+  static DS_CONST_CHAR lightgreen;
+  static DS_CONST_CHAR yellow;
+  static DS_CONST_CHAR lightblue;
+  static DS_CONST_CHAR lightpurple;
+  static DS_CONST_CHAR lightcyan;
+  static DS_CONST_CHAR white;
 
   // background colors
-  static DS_CONST_CHAR bblack     = "\033[40m";
-  static DS_CONST_CHAR bred       = "\033[41m";
-  static DS_CONST_CHAR bgreen     = "\033[42m";
-  static DS_CONST_CHAR bbrown     = "\033[43m";
-  static DS_CONST_CHAR bblue      = "\033[44m";
-  static DS_CONST_CHAR bpurple    = "\033[45m";
-  static DS_CONST_CHAR bcyan      = "\033[46m";
-  static DS_CONST_CHAR blightgray = "\033[47m";
+  static DS_CONST_CHAR bblack;
+  static DS_CONST_CHAR bred;
+  static DS_CONST_CHAR bgreen;
+  static DS_CONST_CHAR bbrown;
+  static DS_CONST_CHAR bblue;
+  static DS_CONST_CHAR bpurple;
+  static DS_CONST_CHAR bcyan;
+  static DS_CONST_CHAR blightgray;
   // light background colors
-  static DS_CONST_CHAR bdarkgray    = "\033[1;40m";
-  static DS_CONST_CHAR blightred    = "\033[1;41m";
-  static DS_CONST_CHAR blightgreen  = "\033[1;42m";
-  static DS_CONST_CHAR byellow      = "\033[1;43m";
-  static DS_CONST_CHAR blightblue   = "\033[1;44m";
-  static DS_CONST_CHAR blightpurple = "\033[1;45m";
-  static DS_CONST_CHAR blightcyan   = "\033[1;46m";
-  static DS_CONST_CHAR bwhite       = "\033[1;47m";
+  static DS_CONST_CHAR bdarkgray;
+  static DS_CONST_CHAR blightred;
+  static DS_CONST_CHAR blightgreen;
+  static DS_CONST_CHAR byellow;
+  static DS_CONST_CHAR blightblue;
+  static DS_CONST_CHAR blightpurple;
+  static DS_CONST_CHAR blightcyan;
+  static DS_CONST_CHAR bwhite;
 };
 // modifiers
 struct StreamModifiers
 {
-  static DS_CONST_CHAR normal       = "\033[0m";
-  static DS_CONST_CHAR bold         = "\033[1m";
-  static DS_CONST_CHAR italic       = "\033[2m";
-  static DS_CONST_CHAR underline    = "\033[4m";
-  static DS_CONST_CHAR blink        = "\033[5m";
-  static DS_CONST_CHAR reverse      = "\033[7m";
-  static DS_CONST_CHAR enditalic    = "\033[22m";
-  static DS_CONST_CHAR endunderline = "\033[24m";
-  static DS_CONST_CHAR endblink     = "\033[25m";
-  static DS_CONST_CHAR endreverse   = "\033[27m";
+  static DS_CONST_CHAR normal;
+  static DS_CONST_CHAR bold;
+  static DS_CONST_CHAR italic;
+  static DS_CONST_CHAR underline;
+  static DS_CONST_CHAR blink;
+  static DS_CONST_CHAR reverse;
+  static DS_CONST_CHAR enditalic;
+  static DS_CONST_CHAR endunderline;
+  static DS_CONST_CHAR endblink;
+  static DS_CONST_CHAR endreverse;
 #undef DS_CONST_CHAR
 };
+
 /**
  * @brief Chooses a color from a 256 color map for a foreground color.
  *

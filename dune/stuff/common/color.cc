@@ -4,6 +4,56 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
+// foreground colors
+const char* Colors::black     = "\033[30m";
+const char* Colors::red       = "\033[31m";
+const char* Colors::green     = "\033[32m";
+const char* Colors::brown     = "\033[33m";
+const char* Colors::blue      = "\033[34m";
+const char* Colors::purple    = "\033[35m";
+const char* Colors::cyan      = "\033[36m";
+const char* Colors::lightgray = "\033[37m";
+// light foreground colors
+const char* Colors::darkgray    = "\033[1;30m";
+const char* Colors::lightred    = "\033[1;31m";
+const char* Colors::lightgreen  = "\033[1;32m";
+const char* Colors::yellow      = "\033[1;33m";
+const char* Colors::lightblue   = "\033[1;34m";
+const char* Colors::lightpurple = "\033[1;35m";
+const char* Colors::lightcyan   = "\033[1;36m";
+const char* Colors::white       = "\033[1;37m";
+
+// background colors
+const char* Colors::bblack     = "\033[40m";
+const char* Colors::bred       = "\033[41m";
+const char* Colors::bgreen     = "\033[42m";
+const char* Colors::bbrown     = "\033[43m";
+const char* Colors::bblue      = "\033[44m";
+const char* Colors::bpurple    = "\033[45m";
+const char* Colors::bcyan      = "\033[46m";
+const char* Colors::blightgray = "\033[47m";
+// light background colors
+const char* Colors::bdarkgray    = "\033[1;40m";
+const char* Colors::blightred    = "\033[1;41m";
+const char* Colors::blightgreen  = "\033[1;42m";
+const char* Colors::byellow      = "\033[1;43m";
+const char* Colors::blightblue   = "\033[1;44m";
+const char* Colors::blightpurple = "\033[1;45m";
+const char* Colors::blightcyan   = "\033[1;46m";
+const char* Colors::bwhite       = "\033[1;47m";
+// modifiers
+const char* StreamModifiers::normal       = "\033[0m";
+const char* StreamModifiers::bold         = "\033[1m";
+const char* StreamModifiers::italic       = "\033[2m";
+const char* StreamModifiers::underline    = "\033[4m";
+const char* StreamModifiers::blink        = "\033[5m";
+const char* StreamModifiers::reverse      = "\033[7m";
+const char* StreamModifiers::enditalic    = "\033[22m";
+const char* StreamModifiers::endunderline = "\033[24m";
+const char* StreamModifiers::endblink     = "\033[25m";
+const char* StreamModifiers::endreverse   = "\033[27m";
+
+
 std::string highlightTemplate(std::string str, int maxlevel /*= 10000*/)
 {
   if (maxlevel < 0)
