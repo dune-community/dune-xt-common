@@ -132,15 +132,9 @@ inline std::string highlightString(std::string str, int colornr = 0)
   return "\033[38;5;" + toString(colornr % 256) + "m" + str + "\033[0m"; //"\033[38;5;0m";
 }
 
-inline std::string colorString(const std::string _string, const std::string _color = Colors::brown)
-{
-  return _color + _string + "\033[0m";
-}
+std::string colorString(const std::string _string, const std::string _color = Colors::brown);
 
-inline std::string colorStringRed(const std::string _string)
-{
-  return colorString(_string, Colors::red);
-}
+std::string colorStringRed(const std::string _string);
 
 /**
  * @brief Highlights a substring of another string in a specified color.

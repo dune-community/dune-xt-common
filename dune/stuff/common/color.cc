@@ -98,6 +98,17 @@ std::string highlightSearchString(std::string str, std::string substr, int color
   return str;
 } // highlightSearchString
 
+std::string colorString(const std::string _string, const std::string _color /*= Colors::brown*/)
+{
+  return _color + _string + "\033[0m";
+}
+
+std::string colorStringRed(const std::string _string)
+{
+  return colorString(_string, Colors::red);
+}
+
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
