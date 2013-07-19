@@ -1,7 +1,10 @@
 #ifndef DUNE_STUFF_COMMON_FLOAT_CMP_HH
 #define DUNE_STUFF_COMMON_FLOAT_CMP_HH
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 #include <dune/common/float_cmp.hh>
+#pragma GCC diagnostic pop
 #include <dune/common/dynvector.hh>
 #include <dune/common/fvector.hh>
 
