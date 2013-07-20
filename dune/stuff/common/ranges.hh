@@ -14,7 +14,9 @@
 
 #if HAVE_DUNE_FEM
 #include <dune/fem/version.hh>
+#include <dune/stuff/common/header/disable_warnings.hh>
 #include <dune/fem/function/common/discretefunction.hh>
+#include <dune/stuff/common/header/reenable_warnings.hh>
 #include <dune/fem/gridpart/common/gridpart.hh>
 #endif
 #include <dune/stuff/common/math.hh>
