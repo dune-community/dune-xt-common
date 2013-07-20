@@ -8,7 +8,9 @@
 #endif // ifdef HAVE_CMAKE_CONFIG
 
 #if HAVE_DUNE_GRID
+#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/grid/common/gridview.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 #include <boost/serialization/static_warning.hpp>
 #endif
 
