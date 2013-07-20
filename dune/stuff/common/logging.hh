@@ -6,9 +6,9 @@
 #define LOGGING_HH_INCLUDED
 
 #include <dune/common/exceptions.hh>
-#include <dune/stuff/common/header/disable_warnings.hh>
+#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/mpihelper.hh>
-#include <dune/stuff/common/header/reenable_warnings.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 
 #include "misc.hh"
 #include "filesystem.hh"
