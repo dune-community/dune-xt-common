@@ -35,9 +35,14 @@
 
 namespace boost {
 namespace math {
+
+// use the limited scope here to no longer care about which effing fem version we compile against
+using namespace Dune;
+using namespace Dune::Fem;
+
 //! isinf specialization for Dune::StraightenBlockVector
 template <class BlockVectorImp, class DofImp>
-inline bool isinf(const Dune::Fem::StraightenBlockVector<BlockVectorImp, DofImp>& x)
+inline bool isinf(const StraightenBlockVector<BlockVectorImp, DofImp>& x)
 {
   for (size_t i = 0; i < x.size(); ++i) {
     if (std::isinf(x[i]))
