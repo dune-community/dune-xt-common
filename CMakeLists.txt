@@ -30,7 +30,7 @@ execute_process(
 )
 
 include(DuneUtils)
-configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/cmake_config.h )
+# configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/cmake_config.h )
 
 
 link_directories( "/usr/lib" ${CCGNU_LIBRARY_DIRS} )
@@ -43,5 +43,7 @@ set_source_files_properties( ${COMMON_HEADER} PROPERTIES HEADER_FILE_ONLY 1 )
 add_subdirectory(dune)
 add_subdirectory(lib)
 add_subdirectory(examples)
+add_subdirectory("cmake/modules")
+add_subdirectory("cmake/scripts")
 
 finalize_dune_project(GENERATE_CONFIG_H_CMAKE)

@@ -31,7 +31,6 @@ if(NOT CXX_STD0X_FLAGS)
     message(FATAL "you need a c++11 compatible compiler")
 endif()
 
-# __attribute__((deprecated))
 CHECK_CXX_SOURCE_COMPILES("
    int main(void)
    {
@@ -84,11 +83,8 @@ endforeach(_lib)
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
-#find_package(SuperLU)
-#if(SUPERLU_FOUND)
-  #include_directories(${SUPERLU_INCLUDES})
-  #link_directories(${SUPERLU_LIBRARY_DIRS})
-#endif(SUPERLU_FOUND)
+#dune-common doesn't add it's deps correctly atm
+list(APPEND DUNE_DEFAULT_LIBS ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
 
 pkg_check_modules(EIGEN eigen3)
 if(EIGEN_FOUND)
