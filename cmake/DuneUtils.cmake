@@ -118,6 +118,7 @@ ENDMACRO( SET_CONFIGHEADER_VARS )
 macro(BEGIN_TESTCASES)
 	include_sys_dir(${DUNE_STUFF_TEST_DIR}/gtest )
 	add_library(gtest_dune_stuff STATIC ${DUNE_STUFF_TEST_DIR}/gtest/gtest-all.cc)
+	target_link_libraries(gtest_dune_stuff pthread)
 
 	file( GLOB test_sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cc" )
 	foreach( source ${test_sources} )
