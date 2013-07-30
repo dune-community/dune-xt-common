@@ -13,13 +13,18 @@ void scoped_busywait(const std::string& name, int ms)
   busywait(ms);
 }
 
+static double confidence_margin()
+{
+  return 0.90f;
+}
+
 TEST(ProfilerTest, Timing)
 {
   for (auto i : valueRange(1, 4)) {
     DSC_PROFILER.startTiming("ProfilerTest.Timing");
     busywait(wait_ms);
     DSC_PROFILER.stopTiming("ProfilerTest.Timing");
-    EXPECT_GE(DSC_PROFILER.getTiming("ProfilerTest.Timing"), i * wait_ms);
+    EXPECT_GE(DSC_PROFILER.getTiming("ProfilerTest.Timing"), i * wait_ms * confidence_margin());
   }
 }
 
@@ -41,10 +46,10 @@ TEST(ProfilerTest, MultiRuns)
     scoped_busywait("ProfilerTest.MultiRuns", i * wait_ms);
     DSC_PROFILER.nextRun();
   }
-  const double confidence_margin = 0.95f;
+
   for (auto i : dvalueRange) {
     // i-1 cause runs have 0-based index
-    EXPECT_GE(DSC_PROFILER.getTimingIdx("ProfilerTest.MultiRuns", i - 1), i * wait_ms * confidence_margin);
+    EXPECT_GE(DSC_PROFILER.getTimingIdx("ProfilerTest.MultiRuns", i - 1), i * wait_ms * confidence_margin());
   }
 }
 
@@ -61,7 +66,7 @@ TEST(ProfilerTest, ExpectedFailures)
 {
   EXPECT_THROW(DSC_PROFILER.reset(0), Dune::RangeError);
   EXPECT_THROW(DSC_PROFILER.reset(-1), Dune::RangeError);
-  EXPECT_THROW(DSC_PROFILER.stopTiming("This_section_was_never_start"), Dune::RangeError);
+  EXPECT_THROW(DSC_PROFILER.stopTiming("This_section_was_never_started"), Dune::RangeError);
 }
 
 TEST(ProfilerTest, NestedTiming)
