@@ -11,8 +11,30 @@ function(TO_LIST_SPACES _LIST_NAME OUTPUT_VAR)
   foreach(ITEM ${${_LIST_NAME}})
     set(NEW_LIST_SPACE ${NEW_LIST_SPACE} ${ITEM})
   endforeach()
+#   string(STRIP ${NEW_LIST_SPACE} NEW_LIST_SPACE)
   set(${OUTPUT_VAR} "${NEW_LIST_SPACE}" PARENT_SCOPE)
 endfunction()
+
+MACRO(INCLUDE_DIR)
+	FOREACH( ARG ${ARGN} )
+		IF(IS_DIRECTORY ${ARG} )
+			INCLUDE_DIRECTORIES(${ARG})
+		ELSE(IS_DIRECTORY ${ARG} )
+			MESSAGE( STATUS "Include directory ${ARG} does not exist" )
+		ENDIF(IS_DIRECTORY ${ARG} )
+    ENDFOREACH( ARG )
+ENDMACRO(INCLUDE_DIR)
+
+MACRO(INCLUDE_SYS_DIR)
+	FOREACH( ARG ${ARGN} )
+		IF(IS_DIRECTORY ${ARG} )
+			ADD_DEFINITIONS("-isystem${ARG}")
+			INCLUDE_DIRECTORIES(${ARG})
+		ELSE(IS_DIRECTORY ${ARG} )
+			MESSAGE( STATUS "Include directory ${ARG} does not exist" )
+		ENDIF(IS_DIRECTORY ${ARG} )
+    ENDFOREACH( ARG )
+ENDMACRO(INCLUDE_SYS_DIR)
 
 MACRO( HEADERCHECK )
 	ADD_CUSTOM_TARGET( headercheck SOURCES ${ARGN} )
@@ -56,22 +78,58 @@ MACRO( ADD_CPPCHECK )
 	ENDIF( EXISTS ${CPPCHECK_BINARY} )
 ENDMACRO( ADD_CPPCHECK )
 
+MACRO( ADD_DUNE_MODULES )
+	FOREACH( MODULE ${ARGN} )
+        if (EXISTS "${DUNE_STUFF_ROOT}/../dune-${MODULE}/config.h")
+            INCLUDE_SYS_DIR( ${DUNE_STUFF_ROOT}/../dune-${MODULE} )
+            list( APPEND DUNE_MODULE_DIRS ${DUNE_STUFF_ROOT}/../dune-${MODULE})
+            set( ${MODULE}_LIBDIR ${DUNE_STUFF_ROOT}/../dune-${MODULE}/lib/.libs)
+            LINK_DIRECTORIES( ${${MODULE}_LIBDIR} )
+            SET( LIBNAME libdune${MODULE}.a )
+            FILE( GLOB_RECURSE ${MODULE}_HEADER "${DUNE_STUFF_ROOT}/../dune-${MODULE}/dune/*.hh" )
+            LIST( APPEND DUNE_HEADERS ${${MODULE}_HEADER} )
+            find_library( ${MODULE}_FOUND ${LIBNAME} PATHS ${${MODULE}_LIBDIR})
+            if ( ${MODULE}_FOUND )
+                string(TOUPPER ${MODULE} UPMODULE )
+                LIST( APPEND DUNE_LIBS ${${MODULE}_FOUND} )
+                ADD_DEFINITIONS( -DHAVE_DUNE_${UPMODULE} )
+                MESSAGE(STATUS "found dune-${MODULE}")
+            else()
+                MESSAGE(STATUS "found dune-${MODULE}, but did not find ${LIBNAME}")
+            endif()
+        else(EXISTS "${DUNE_STUFF_ROOT}/../dune-${MODULE}/config.h")
+            MESSAGE(STATUS "did not find dune-${MODULE}")
+        endif(EXISTS "${DUNE_STUFF_ROOT}/../dune-${MODULE}/config.h")
+	ENDFOREACH(MODULE)
+ENDMACRO( ADD_DUNE_MODULES )
+
+MACRO( ADD_MY_MODULES )
+	FOREACH( MODULE ${ARGN} )
+		INCLUDE_DIR( ${DUNE_STUFF_ROOT}/../dune-${MODULE} )
+		LINK_DIRECTORIES(${DUNE_STUFF_ROOT}/../dune-${MODULE}/${MODULE}/.libs )
+		FILE( GLOB_RECURSE ${MODULE}_HEADER "${DUNE_STUFF_ROOT}/../dune-${MODULE}/dune/*.hh" )
+		LIST( APPEND DUNE_HEADERS ${${MODULE}_HEADER} )
+	ENDFOREACH(MODULE)
+ENDMACRO( ADD_MY_MODULES )
+
+MACRO( SET_CONFIGHEADER_VARS )
+	IF( IS_DIRECTORY ${ALUGRID_BASE_PATH} )
+		SET( ALUGRID_FOUND "1" )
+	ELSE( IS_DIRECTORY ${ALUGRID_BASE_PATH} )
+		SET( ALUGRID_FOUND "0" )
+	ENDIF( IS_DIRECTORY ${ALUGRID_BASE_PATH} )
+ENDMACRO( SET_CONFIGHEADER_VARS )
 
 macro(BEGIN_TESTCASES)
-	include_directories(${DUNE_STUFF_TEST_DIR}/gtest )
+	include_sys_dir(${DUNE_STUFF_TEST_DIR}/gtest )
 	add_library(gtest_dune_stuff STATIC ${DUNE_STUFF_TEST_DIR}/gtest/gtest-all.cc)
-	target_link_libraries(gtest_dune_stuff pthread)
 
 	file( GLOB test_sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cc" )
 	foreach( source ${test_sources} )
 		get_filename_component(testname ${source} NAME_WE)
 		add_executable( test_${testname} ${source} )
 		add_test( test_${testname} ${CMAKE_CURRENT_BINARY_DIR}/test_${testname} )
-		target_link_dune_default_libraries(test_${testname})
-		dune_target_link_libraries( test_${testname} gtest_dune_stuff )
-		dune_target_link_libraries( test_${testname} dunestuff )
-		dune_target_link_libraries( test_${testname} dunefem  )
-		
+		target_link_libraries( test_${testname} ${COMMON_LIBS} gtest_dune_stuff )
 		list(APPEND testnames test_${testname} )
 	endforeach( source )
 endmacro(BEGIN_TESTCASES)
@@ -82,3 +140,143 @@ macro(END_TESTCASES)
                   DEPENDS test_binaries)
 endmacro(END_TESTCASES)
 
+add_custom_target( config_refresh
+				${CMAKE_CURRENT_SOURCE_DIR}/cmake/regen_config_header.sh ${CMAKE_CURRENT_BINARY_DIR}/cmake_config.h
+				)
+
+execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
+
+INCLUDE (CheckIncludeFileCXX)
+CHECK_INCLUDE_FILE_CXX("tr1/array" HAVE_TR1_ARRAY)
+CHECK_INCLUDE_FILE_CXX("malloc.h" HAVE_MALLOC_H)
+
+# try to use compiler flag -std=c++11
+include(TestCXXAcceptsFlag)
+CHECK_CXX_ACCEPTS_FLAG("-std=c++11" CXX_FLAG_CXX11)
+if(CXX_FLAG_CXX11)
+  set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -std=c++11")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ")
+  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++11 ")
+  set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} -std=c++11 ")
+  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++11 ")
+  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -std=c++11 ")
+  set(CXX_STD0X_FLAGS "-std=c++11")
+else()
+  # try to use compiler flag -std=c++0x for older compilers
+  CHECK_CXX_ACCEPTS_FLAG("-std=c++0x" CXX_FLAG_CXX0X)
+  if(CXX_FLAG_CXX0X)
+    set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -std=c++0x" )
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x ")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++0x ")
+    set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} -std=c++0x ")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++0x ")
+    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -std=c++0x ")
+  set(CXX_STD0X_FLAGS "-std=c++0x")
+  endif(CXX_FLAG_CXX0X)
+endif(CXX_FLAG_CXX11)
+
+if(NOT CXX_STD0X_FLAGS)
+    message(FATAL "you need a c++11 compatible compiler")
+endif()
+
+# __attribute__((deprecated))
+CHECK_CXX_SOURCE_COMPILES("
+   int main(void)
+   {
+     auto f = [&] (){ return 0; };
+     return 0;
+   };
+"  HAS_LAMBDA_FUNCTIONS
+)
+
+CHECK_CXX_SOURCE_COMPILES("
+		#include <vector>
+		#include <iterator>
+		int main(void)
+		{
+			std::vector<int> a;
+			std::vector<int>::const_iterator b = std::begin(a);
+			std::vector<int>::const_iterator e = std::end(a);
+			return 0;
+		};
+"  HAS_STD_BEGIN_END
+)
+
+
+SET( CMAKE_CXX_FLAGS_RELEASE
+	"-DDNDEBUG -O2 -fPIC " )
+
+SET( CMAKE_CXX_FLAGS_DEBUG
+	"-O0 -DDNDEBUG -g3 -ggdb -Wall -Wextra -Wc++0x-compat -Wparentheses -pedantic -Wredundant-decls -Wshadow -Wunused-variable -Winline -fno-strict-aliasing -Wundef -Wnon-virtual-dtor -fPIC " )
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+	set( CMAKE_CXX_FLAGS_DEBUG
+				"${CMAKE_CXX_FLAGS_DEBUG} -Wdocumentation -Wshorten-64-to-32 -Wused-but-marked-unused -Wdisabled-macro-expansion -Wcovered-switch-default  -Wfloat-equal -Wswitch-enum -Wunreachable-code -Wnon-literal-null-conversion "
+				CACHE STRING
+				"Flags used by the compiler during debug builds.")
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+	set( CMAKE_CXX_FLAGS_DEBUG
+				"${CMAKE_CXX_FLAGS_DEBUG} -Wlogical-op"
+				CACHE STRING
+				"Flags used by the compiler during debug builds.")
+endif()
+
+FIND_PACKAGE( PkgConfig )
+FIND_PACKAGE(Boost 1.48.0 COMPONENTS system thread filesystem date_time timer REQUIRED)
+SET(BOOST_LIBS ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} 
+                ${Boost_THREAD_LIBRARY} ${Boost_TIMER_LIBRARY} 
+                ${Boost_DATE_TIME_LIBRARY} ${Boost_CHRONO_LIBRARY})
+
+ADD_DEFINITIONS( "-DHAVE_CMAKE_CONFIG ${CXX_STD0X_FLAGS}" )
+INCLUDE_SYS_DIR(${Boost_INCLUDE_DIRS})
+LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
+
+#find_package(SuperLU)
+#if(SUPERLU_FOUND)
+  #include_directories(${SUPERLU_INCLUDES})
+  #link_directories(${SUPERLU_LIBRARY_DIRS})
+#endif(SUPERLU_FOUND)
+
+pkg_check_modules(EIGEN eigen3)
+if(EIGEN_FOUND)
+  INCLUDE_SYS_DIR(${EIGEN_INCLUDE_DIRS})
+endif(EIGEN_FOUND)
+
+pkg_check_modules(ALU_GRID alugrid)
+pkg_check_modules(UG_GRID libug)
+
+include(FindFASP)
+
+if(ENABLE_MPI)
+	find_package(MPI REQUIRED)
+	if(MPI_FOUND)
+		if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+			message(STATUS "Enabling mpi features, mac style!")
+			SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MPI_CXX_COMPILE_FLAGS} -w -pthread -DMPIPP_H -DENABLE_MPI=1" )
+			include_directories(${MPI_CXX_INCLUDE_PATH})
+			SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${MPI_CXX_LINK_FLAGS} -pthread")
+			LIST( APPEND PARALIBS ${MPI_LIBRARY} ${MPI_EXTRA_LIBRARY})
+		else(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+			message(STATUS "Enabling mpi features")
+			SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MPI_CXX_COMPILE_FLAGS} -w -I/usr/lib/openmpi/include -I/usr/lib/openmpi/include/openmpi -pthread -DMPIPP_H -DENABLE_MPI=1" )
+			include_directories(${MPI_CXX_INCLUDE_PATH})
+			SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${MPI_CXX_LINK_FLAGS} -pthread -L/usr/lib/openmpi/lib -lmpi -lopen-rte -lopen-pal -ldl -Wl,--export-dynamic -lnsl -lutil -lm -ldl")
+			LIST( APPEND PARALIBS ${MPI_LIBRARY} ${MPI_EXTRA_LIBRARY} parmetis metis)
+		endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	else(MPI_FOUND)
+		message(FATAL "mpi requested but not found")
+	endif(MPI_FOUND)
+endif(ENABLE_MPI)
+
+Macro(ADD_IF_SUPPORTED dest)
+	FOREACH(flag ${ARGN})
+		CHECK_CXX_ACCEPTS_FLAG("${flag}" has_${flag})
+		if(has_${flag})
+			Set(${dest} "${${dest}} ${flag}")
+		else(has_${flag})
+			Message("compiler doesn't support: ${flag}")
+		endif(has_${flag})
+	ENDFOREACH(flag ${ARGN})
+EndMacro(ADD_IF_SUPPORTED)
+
+ENABLE_TESTING()

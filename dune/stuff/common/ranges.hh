@@ -8,13 +8,17 @@
 #endif // ifdef HAVE_CMAKE_CONFIG
 
 #if HAVE_DUNE_GRID
+#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/grid/common/gridview.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 #include <boost/serialization/static_warning.hpp>
 #endif
 
 #if HAVE_DUNE_FEM
 #include <dune/fem/version.hh>
+#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/fem/function/common/discretefunction.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/fem/gridpart/common/gridpart.hh>
 #endif
 #include <dune/stuff/common/math.hh>
@@ -181,7 +185,7 @@ intersectionRange(const Dune::Fem::GridPartInterface<GridPartTraits>& gridpart,
 template <class T, class sequence = std::vector<T>>
 sequence valueRange(const T start, const T end, const T increment = Epsilon<T>::value)
 {
-  sequence ret(typename sequence::size_type(((end > start) ? end - start : start - end) / increment), start);
+  sequence ret(typename sequence::size_type(((end > start) ? end - start : start - end) / std::abs(increment)), start);
   typename sequence::size_type i = 0;
   std::generate(std::begin(ret), std::end(ret), [&]() { return T(start + (increment * i++)); });
   return ret;

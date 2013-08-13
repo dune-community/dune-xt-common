@@ -27,15 +27,22 @@
 #include <boost/math/special_functions/fpclassify.hpp>
 
 #if HAVE_DUNE_FEM
+#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/fem/function/blockvectorfunction/blockvectorfunction.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/stuff/fem/namespace.hh>
 
 namespace boost {
 namespace math {
+
+// use the limited scope here to no longer care about which effing fem version we compile against
+using namespace Dune;
+using namespace Dune::Fem;
+
 //! isinf specialization for Dune::StraightenBlockVector
 template <class BlockVectorImp, class DofImp>
-inline bool isinf(const Dune::Fem::StraightenBlockVector<BlockVectorImp, DofImp>& x)
+inline bool isinf(const StraightenBlockVector<BlockVectorImp, DofImp>& x)
 {
   for (size_t i = 0; i < x.size(); ++i) {
     if (std::isinf(x[i]))

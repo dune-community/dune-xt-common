@@ -1,7 +1,9 @@
 #include "configcontainer.hh"
 
 #if HAVE_DUNE_FEM
+#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/fem/io/parameter.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 #endif
 
 #define DSC_ORDER_REL_GENERIC(var, a, b)                                                                               \

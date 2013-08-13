@@ -1,9 +1,9 @@
 #ifndef DUNE_STUFF_COMMON_FLOAT_CMP_HH
 #define DUNE_STUFF_COMMON_FLOAT_CMP_HH
 
-#include <dune/stuff/common/header/disable_warnings.hh>
+#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/float_cmp.hh>
-#include <dune/stuff/common/header/reenable_warnings.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/common/dynvector.hh>
 #include <dune/common/fvector.hh>
 
