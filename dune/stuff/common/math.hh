@@ -1,12 +1,7 @@
 #ifndef DUNE_STUFF_COMMON_MATH_HH
 #define DUNE_STUFF_COMMON_MATH_HH
 
-#ifdef HAVE_CMAKE_CONFIG
-#include "cmake_config.h"
-#else
-#include "config.h"
-#endif // ifdef HAVE_CMAKE_CONFIG
-
+#include <config.h>
 #include <vector>
 #include <limits>
 #include <algorithm>

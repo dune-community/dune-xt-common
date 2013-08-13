@@ -8,7 +8,7 @@ dune_add_library("dunestuff"  common/filesystem.cc
   common/signals.cc
   common/math.cc
   fem/femeoc.cc
-  function/expression/mathexpr.cc
+  functions/expression/mathexpr.cc
   ADD_LIBS ${DUNE_LIBS})
 target_link_dune_default_libraries(dunestuff)
 
