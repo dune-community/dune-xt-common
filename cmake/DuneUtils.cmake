@@ -222,28 +222,12 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 endif()
 
 FIND_PACKAGE( PkgConfig )
-FIND_PACKAGE(Boost 1.48.0 COMPONENTS system thread filesystem date_time timer REQUIRED)
-SET(BOOST_LIBS ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} 
-                ${Boost_THREAD_LIBRARY} ${Boost_TIMER_LIBRARY} 
-                ${Boost_DATE_TIME_LIBRARY} ${Boost_CHRONO_LIBRARY})
-
-ADD_DEFINITIONS( "-DHAVE_CMAKE_CONFIG ${CXX_STD0X_FLAGS}" )
-INCLUDE_SYS_DIR(${Boost_INCLUDE_DIRS})
-LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
 #find_package(SuperLU)
 #if(SUPERLU_FOUND)
   #include_directories(${SUPERLU_INCLUDES})
   #link_directories(${SUPERLU_LIBRARY_DIRS})
 #endif(SUPERLU_FOUND)
-
-pkg_check_modules(EIGEN eigen3)
-if(EIGEN_FOUND)
-  INCLUDE_SYS_DIR(${EIGEN_INCLUDE_DIRS})
-endif(EIGEN_FOUND)
-
-pkg_check_modules(ALU_GRID alugrid)
-pkg_check_modules(UG_GRID libug)
 
 include(FindFASP)
 

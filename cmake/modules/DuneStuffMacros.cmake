@@ -73,7 +73,7 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 endif()
 
 FIND_PACKAGE( PkgConfig )
-FIND_PACKAGE(Boost 1.48.0 COMPONENTS system thread filesystem date_time timer REQUIRED)
+FIND_PACKAGE(Boost 1.48.0 COMPONENTS system thread filesystem date_time timer chrono REQUIRED)
 foreach(_lib ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} 
                 ${Boost_THREAD_LIBRARY} ${Boost_TIMER_LIBRARY} 
                 ${Boost_DATE_TIME_LIBRARY} ${Boost_CHRONO_LIBRARY})
@@ -84,7 +84,12 @@ include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 
 #dune-common doesn't add it's deps correctly atm
-list(APPEND DUNE_DEFAULT_LIBS ${LAPACK_LIBRARIES} ${BLAS_LIBRARIES})
+if(HAVE_LAPACK)
+	list(APPEND DUNE_DEFAULT_LIBS ${LAPACK_LIBRARIES})
+endif(HAVE_LAPACK)
+if(HAVE_BLAS)
+	list(APPEND DUNE_DEFAULT_LIBS ${BLAS_LIBRARIES})
+endif(HAVE_BLAS)
 
 pkg_check_modules(EIGEN eigen3)
 if(EIGEN_FOUND)
