@@ -185,7 +185,11 @@ intersectionRange(const Dune::Fem::GridPartInterface<GridPartTraits>& gridpart,
 template <class T, class sequence = std::vector<T>>
 sequence valueRange(const T start, const T end, const T increment = Epsilon<T>::value)
 {
-  sequence ret(typename sequence::size_type(((end > start) ? end - start : start - end) / std::abs(increment)), start);
+  // sadly, no overloaded version of std::abs is available for
+  // unsigned long long, so we compute the absolute value of increment
+  // ourselfs
+  T incrementAbs = (increment >= T() ? increment : -increment);
+  sequence ret(typename sequence::size_type(((end > start) ? end - start : start - end) / incrementAbs), start);
   typename sequence::size_type i = 0;
   std::generate(std::begin(ret), std::end(ret), [&]() { return T(start + (increment * i++)); });
   return ret;
