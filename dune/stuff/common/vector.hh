@@ -7,7 +7,8 @@
 #include <dune/common/dynvector.hh>
 #include <dune/common/fvector.hh>
 #include <dune/common/deprecated.hh>
-#include <dune/common/float_cmp.hh>
+
+#include "float_cmp.hh"
 
 namespace Dune {
 namespace Stuff {
@@ -26,12 +27,10 @@ void clear(Dune::DenseVector<VectorImp>& vector)
  *  Applies Dune::FloatCmp::eq() componentwise.
  */
 template <class Field, int size>
-bool float_cmp(const Dune::FieldVector<Field, size>& x, const Dune::FieldVector<Field, size>& y, const Field tol)
+bool DUNE_DEPRECATED_MSG("Use Dune::Stuff::Common::FloatCMP::eq() instead!")
+    float_cmp(const Dune::FieldVector<Field, size>& x, const Dune::FieldVector<Field, size>& y, const Field tol)
 {
-  size_t failure = 0;
-  for (size_t ii = 0; ii < size; ++ii)
-    failure += Dune::FloatCmp::eq(x[ii], y[ii], tol);
-  return !bool(failure);
+  return FloatCmp::eq(x, y, tol);
 }
 
 template <class T>
