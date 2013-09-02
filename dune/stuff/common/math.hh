@@ -205,6 +205,17 @@ inline long sign(long x)
   return long(x != 0) | (long(x >= 0) - 1);
 }
 
+template <class T, typename = void>
+class numeric_limits : public std::numeric_limits<double>
+{
+};
+
+template <class T>
+class numeric_limits<T, typename std::enable_if<std::numeric_limits<T>::is_specialized>::type>
+    : public std::numeric_limits<T>
+{
+};
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
