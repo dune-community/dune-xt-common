@@ -41,13 +41,15 @@ void print(const double& d, const std::string name = "double", OutStreamType& ou
   out << prefix << name << " = " << d << std::endl;
 } // void print(const double& d, ...)
 
-template <class OutStreamType = std::ostream>
-void print(const std::vector<double>& ds, const std::string name = "vector_of_double", OutStreamType& out = std::cout,
+template <class T, class OutStreamType = std::ostream>
+void print(const std::vector<T>& vector, const std::string name = "vector", OutStreamType& out = std::cout,
            const std::string prefix = "")
 {
-  for (unsigned int i = 0; i < ds.size(); ++i) {
-    print(ds[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
+  out << prefix << name << " = [";
+  for (unsigned int i = 0; i < (vector.size() - 1); ++i) {
+    out << vector[i] << ", ";
   }
+  out << vector[vector.size() - 1] << "];" << std::endl;
 } // void print(const std::vector< double >& ds, ...)
 
 template <class VectorImp, class OutStreamType = std::ostream>
