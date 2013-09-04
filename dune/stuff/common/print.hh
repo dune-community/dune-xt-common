@@ -24,10 +24,8 @@
 
 // dune-stuff
 #include <dune/stuff/common/parameter/configcontainer.hh>
-#include <dune/stuff/fem/functions/checks.hh>
 #include <dune/stuff/common/filesystem.hh>
 #include <dune/stuff/common/string.hh>
-//#include <dune/istl/bcrsmatrix.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -445,23 +443,6 @@ private:
   std::ostream& stream_;
   const std::string name_;
 };
-
-#ifdef HAVE_DUNE_FEM
-/** print min/max of a given DiscreteFucntion obtained by Stuff::getMinMaxOfDiscreteFunction
-   * \note hardcoded mult of values by sqrt(2)
-   **/
-template <class Function>
-void printFunctionMinMax(std::ostream& stream, const Function& func)
-{
-  double min = 0.0;
-  double max = 0.0;
-
-  Dune::Stuff::Fem::getMinMaxOfDiscreteFunction(func, min, max);
-  stream << "  - " << func.name() << std::endl
-         << "    min: " << std::sqrt(2.0) * min << std::endl
-         << "    max: " << std::sqrt(2.0) * max << std::endl;
-} // printFunctionMinMax
-#endif // HAVE_DUNE_FEM
 
 //! useful for visualizing sparsity patterns of matrices
 template <class Matrix>
