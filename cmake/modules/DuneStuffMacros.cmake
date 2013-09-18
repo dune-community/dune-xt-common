@@ -64,13 +64,11 @@ SET( CMAKE_CXX_FLAGS_DEBUG
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   set( CMAKE_CXX_FLAGS_DEBUG
         "${CMAKE_CXX_FLAGS_DEBUG} -Wdocumentation -Wshorten-64-to-32 -Wused-but-marked-unused -Wdisabled-macro-expansion -Wcovered-switch-default  -Wfloat-equal -Wswitch-enum -Wunreachable-code -Wnon-literal-null-conversion "
-        CACHE STRING
-        "Flags used by the compiler during debug builds.")
+        )
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   set( CMAKE_CXX_FLAGS_DEBUG
         "${CMAKE_CXX_FLAGS_DEBUG} -Wlogical-op"
-        CACHE STRING
-        "Flags used by the compiler during debug builds.")
+        )
 endif()
 
 FIND_PACKAGE( PkgConfig )
