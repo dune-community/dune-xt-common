@@ -59,11 +59,11 @@ SET( CMAKE_CXX_FLAGS_RELEASE
   "-DDNDEBUG -O2 -fPIC " )
 
 SET( CMAKE_CXX_FLAGS_DEBUG
-  "-O0 -DDNDEBUG -g3 -ggdb -Wall -Wextra -Wc++0x-compat -Wparentheses -pedantic -Wredundant-decls -Wshadow -Wunused-variable -Winline -fno-strict-aliasing -Wundef -Wnon-virtual-dtor -fPIC " )
+  "-O0 -DDNDEBUG -g3 -ggdb  -Wunused-variable -Winline -fno-strict-aliasing -fPIC -Wall -Wextra -Wc++0x-compat -Wparentheses -pedantic -Wredundant-decls -Wshadow  -Wundef -Wnon-virtual-dtor" )
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   set( CMAKE_CXX_FLAGS_DEBUG
-        "${CMAKE_CXX_FLAGS_DEBUG} -Wdocumentation -Wshorten-64-to-32 -Wused-but-marked-unused -Wdisabled-macro-expansion -Wcovered-switch-default  -Wfloat-equal -Wswitch-enum -Wunreachable-code -Wnon-literal-null-conversion "
+        "${CMAKE_CXX_FLAGS_DEBUG} -Wnon-literal-null-conversion -Wused-but-marked-unused -Wno-tautological-compare -Wfloat-equal -Wdisabled-macro-expansion -Wcovered-switch-default  -Wswitch-enum -Wunreachable-code  -Wshorten-64-to-32"
         )
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   set( CMAKE_CXX_FLAGS_DEBUG
@@ -102,13 +102,13 @@ if(ENABLE_MPI)
   if(MPI_FOUND)
     if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
       message(STATUS "Enabling mpi features, mac style!")
-      SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MPI_CXX_COMPILE_FLAGS} -w -pthread -DMPIPP_H -DENABLE_MPI=1" )
+      SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MPI_CXX_COMPILE_FLAGS} -pthread -DMPIPP_H -DENABLE_MPI=1" )
       include_directories(${MPI_CXX_INCLUDE_PATH})
       SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${MPI_CXX_LINK_FLAGS} -pthread")
       LIST( APPEND PARALIBS ${MPI_LIBRARY} ${MPI_EXTRA_LIBRARY})
     else(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
       message(STATUS "Enabling mpi features")
-      SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MPI_CXX_COMPILE_FLAGS} -w -I/usr/lib/openmpi/include -I/usr/lib/openmpi/include/openmpi -pthread -DMPIPP_H -DENABLE_MPI=1" )
+      SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MPI_CXX_COMPILE_FLAGS} -I/usr/lib/openmpi/include -I/usr/lib/openmpi/include/openmpi -pthread -DMPIPP_H -DENABLE_MPI=1" )
       include_directories(${MPI_CXX_INCLUDE_PATH})
       SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${MPI_CXX_LINK_FLAGS} -pthread -L/usr/lib/openmpi/lib -lmpi -lopen-rte -lopen-pal -ldl -Wl,--export-dynamic -lnsl -lutil -lm -ldl")
       LIST( APPEND PARALIBS ${MPI_LIBRARY} ${MPI_EXTRA_LIBRARY} parmetis metis)
