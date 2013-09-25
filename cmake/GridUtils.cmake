@@ -1,3 +1,6 @@
+pkg_check_modules(ALU_GRID alugrid)
+pkg_check_modules(UG_GRID libug)
+
 SET( GRIDTYPE
 	"SGRID" CACHE STRING
 	"GRIDTYPE" )
