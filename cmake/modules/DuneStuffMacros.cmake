@@ -56,7 +56,7 @@ CHECK_CXX_SOURCE_COMPILES("
 SET( CMAKE_EXPORT_COMPILE_COMMANDS "ON" )
 
 SET( CMAKE_CXX_FLAGS_RELEASE
-  "-DDNDEBUG -O2 -fPIC " )
+  "-DDNDEBUG -DNDEBUG -O2 -fPIC " )
 
 SET( CMAKE_CXX_FLAGS_DEBUG
   "-O0 -DDNDEBUG -g3 -ggdb  -Wunused-variable -Winline -fno-strict-aliasing -fPIC -Wall -Wextra -Wc++0x-compat -Wparentheses -pedantic -Wredundant-decls -Wshadow  -Wundef -Wnon-virtual-dtor" )
