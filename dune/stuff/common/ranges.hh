@@ -12,6 +12,7 @@
 #include <dune/grid/common/gridview.hh>
 #include <dune/stuff/common/reenable_warnings.hh>
 #include <boost/serialization/static_warning.hpp>
+#include <boost/iterator/iterator_facade.hpp>
 #endif
 
 #if HAVE_DUNE_FEM
@@ -20,6 +21,7 @@
 #include <dune/fem/function/common/discretefunction.hh>
 #include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/fem/gridpart/common/gridpart.hh>
+#include <dune/fem/space/lagrange/lagrangepoints.hh>
 #endif
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/fem/namespace.hh>
@@ -128,15 +130,98 @@ intersectionRange(const Dune::GridView<GridViewTraits>& gridview,
                            typename Dune::GridView<GridViewTraits>::template Codim<0>::Entity>(gridview, entity);
 }
 
+//! custom const iterator for \ref FixedMap
+template <class GeometryType>
+class ConstCornerIterator
+    : public boost::iterator_facade<ConstCornerIterator<GeometryType>, const typename GeometryType::GlobalCoordinate,
+                                    boost::forward_traversal_tag>
+{
+  typedef ConstCornerIterator<GeometryType> ThisType;
+  typedef typename GeometryType::GlobalCoordinate CornerType;
+
+public:
+  ConstCornerIterator()
+    : index_(-1)
+    , geometry_(nullptr)
+  {
+  }
+
+  explicit ConstCornerIterator(const GeometryType* const geometry, int i = 0)
+    : index_(i)
+    , geometry_(geometry)
+  {
+  }
+
+private:
+  friend class boost::iterator_core_access;
+
+  void increment()
+  {
+    index_++;
+  }
+
+  bool equal(ThisType const& other) const
+  {
+    return this->geometry_ && (index_ == other.index_) && (this->geometry_ == other.geometry_);
+  }
+
+  const CornerType& dereference() const
+  {
+    return geometry_->corner(index_);
+  }
+
+  int index_;
+  const GeometryType* const geometry_;
+};
+
+template <class GeometryType>
+class CornerRange
+{
+  typedef ConstCornerIterator<GeometryType> IteratorType;
+
+public:
+  CornerRange(const GeometryType& geometry)
+    : geometry_(geometry)
+  {
+  }
+
+  IteratorType begin() const
+  {
+    return IteratorType(geometry_, 0);
+  }
+
+  IteratorType end() const
+  {
+    return IteratorType(geometry_, geometry_->corners());
+  }
+
+private:
+  const GeometryType& geometry_;
+};
+
+template <int mydim, int cdim, class GridImp, template <int, int, class> class GeometryImp>
+CornerRange<Dune::Geometry<mydim, cdim, GridImp, GeometryImp>>
+cornerRange(const Dune::Geometry<mydim, cdim, GridImp, GeometryImp>& geometry)
+{
+  return CornerRange<Dune::Geometry<mydim, cdim, GridImp, GeometryImp>>(geometry);
+}
+
+template <int mydim, int cdim, class GridImp, template <int, int, class> class EntityImp>
+auto cornerRange(const Dune::Entity<mydim, cdim, GridImp, EntityImp>& entity)
+    -> ConstCornerIterator<decltype(entity.geometry())>
+{
+  return CornerRange<decltype(entity.geometry())>(entity.geometry());
+}
+
 #endif //#if HAVE_DUNE_GRID
 
 #if HAVE_DUNE_FEM
 
 //! Range adapter for lagrange points from lagrange spaces
-template <class DiscreteFunctionspaceType, int faceCodim>
+template <class GridPartType, int order, int faceCodim>
 class LagrangePointSetRange
 {
-  typedef typename DiscreteFunctionspaceType::LagrangePointSetType LagrangePointSetType;
+  typedef Dune::Fem::LagrangePointSet<GridPartType, order> LagrangePointSetType;
   typedef typename LagrangePointSetType::template Codim<faceCodim>::SubEntityIteratorType SubEntityIteratorType;
   const LagrangePointSetType& lp_set_;
   const unsigned int subEntity_;
@@ -144,9 +229,15 @@ class LagrangePointSetRange
 public:
   /** the template isn't lazyness here, the underlying set is templated on it too
    */
-  template <class EntityType>
+  template <class DiscreteFunctionspaceType, class EntityType>
   LagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& entity, const unsigned int subEntity)
     : lp_set_(space.lagrangePointSet(entity))
+    , subEntity_(subEntity)
+  {
+  }
+
+  LagrangePointSetRange(const LagrangePointSetType& lp_set, const unsigned int subEntity)
+    : lp_set_(lp_set)
     , subEntity_(subEntity)
   {
   }
@@ -162,10 +253,21 @@ public:
 };
 
 template <int codim, class DiscreteFunctionspaceType, class EntityType>
-LagrangePointSetRange<DiscreteFunctionspaceType, codim>
+LagrangePointSetRange<typename DiscreteFunctionspaceType::GridPartType, DiscreteFunctionspaceType::polynomialOrder,
+                      codim>
 lagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& entity, const int subEntity)
 {
-  return LagrangePointSetRange<DiscreteFunctionspaceType, codim>(space, entity, subEntity);
+  return LagrangePointSetRange<typename DiscreteFunctionspaceType::GridPartType,
+                               DiscreteFunctionspaceType::polynomialOrder,
+                               codim>(space, entity, subEntity);
+}
+
+template <class LgPointSetType, int codim = 1>
+LagrangePointSetRange<typename LgPointSetType::GridPartType, LgPointSetType::polynomialOrder, codim>
+lagrangePointSetRange(const LgPointSetType& lpset, const int subEntity)
+{
+  return LagrangePointSetRange<typename LgPointSetType::GridPartType, LgPointSetType::polynomialOrder, codim>(
+      lpset, subEntity);
 }
 
 template <class GridPartTraits>
