@@ -9,15 +9,8 @@ SET( GRIDDIM
 	"2" CACHE STRING
 	"GRIDDIM" )
 
-if(${GRIDTYPE} MATCHES "YASPGRID")
-	add_definitions( "-D${GRIDTYPE}" )
-	add_definitions( "-DGRIDDIM=${GRIDDIM}" )
-endif(${GRIDTYPE} MATCHES "YASPGRID")
-
-if(${GRIDTYPE} MATCHES "SGRID")
-	add_definitions( "-D${GRIDTYPE}" )
-	add_definitions( "-DGRIDDIM=${GRIDDIM}" )
-endif(${GRIDTYPE} MATCHES "SGRID")
+add_definitions( "-D${GRIDTYPE}" )
+add_definitions( "-DGRIDDIM=${GRIDDIM}" )
 
 set( ENABLE_UG OFF )
 if( ${GRIDTYPE} MATCHES "UGGRID" )
@@ -30,8 +23,6 @@ if( ${GRIDTYPE} MATCHES "UGGRID" )
   # because those listed in lubug.pc are wrong
   set( GRIDLIBS ugS2 ugS3 devS m )
   add_definitions( "-DENABLE_UG=1" )
-	add_definitions( "-D${GRIDTYPE}" )
-	add_definitions( "-DGRIDDIM=${GRIDDIM}" )
 endif( ${GRIDTYPE} MATCHES "UGGRID" )
 
 SET( ENABLE_ALUGRID OFF )
@@ -48,8 +39,6 @@ if( ${GRIDTYPE} MATCHES "ALUGRID" )
 		include_sys_dir( ${ALUGRID_BASE_PATH}/include/parallel )
 	endif( ENABLE_MPI )
 	add_definitions( "-DENABLE_ALUGRID=1" )
-	add_definitions( "-D${GRIDTYPE}" )
-	add_definitions( "-DGRIDDIM=${GRIDDIM}" )
 endif( ${GRIDTYPE} MATCHES "ALUGRID" )
 
 #SET( ENABLE_ALBERTA OFF )
