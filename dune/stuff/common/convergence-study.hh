@@ -40,7 +40,10 @@ public:
 
   virtual double current_grid_width() const = 0;
 
-  virtual void compute_on_current_refinement() = 0;
+  /**
+   * \return The time it took to solve on this refinement.
+   */
+  virtual double compute_on_current_refinement() = 0;
 
   virtual double current_error_norm(const std::string type) = 0;
 
@@ -143,6 +146,9 @@ public:
       // print grid with
       out << " | " << std::setw(8) << std::setprecision(2) << std::scientific << current_grid_width() << std::flush;
 
+      // do the computation
+      const double elapsed = compute_on_current_refinement();
+
       // loop over all norms/columns
       for (const auto& norm : provided_norms()) {
         // compute and print relative error
@@ -170,7 +176,11 @@ public:
         // update
         last_relative_error[norm] = relative_error;
       } // loop over all norms/columns
-      out << std::endl;
+      // print time
+      if (elapsed < 1.0)
+        out << "  (solve took " << int(1000 * elapsed) << "ms)" << std::endl;
+      else
+        out << "  (solve took " << std::setprecision(2) << std::fixed << elapsed << "s)" << std::endl;
       // update
       last_grid_width = current_grid_width();
       if (ii < num_refinements())
