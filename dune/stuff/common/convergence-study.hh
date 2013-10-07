@@ -46,7 +46,7 @@ public:
 
   virtual void refine() = 0;
 
-  std::map<std::string, std::vector<double>> run(std::ostream& out = std::cout)
+  std::map<std::string, std::vector<double>> run(const bool relative = true, std::ostream& out = std::cout)
   {
     if (provided_norms().size() == 0)
       DUNE_THROW(Dune::InvalidStateException, "You have to provide at least one norm!");
@@ -68,14 +68,31 @@ public:
     out << "        grid         ";
     for (const auto& norm : provided_norms()) {
       std::string relative_norm_str = "";
-      if (norm.empty())
-        relative_norm_str = "??? (relative)";
-      else if (norm.size() <= 8)
-        relative_norm_str = norm + " (relative)";
-      else if (norm.size() <= 12)
-        relative_norm_str = norm + " (rel.)";
-      else
-        relative_norm_str  = norm.substr(0, 11) + ". (rel.)";
+      if (norm.empty()) {
+        relative_norm_str = "???";
+        if (relative)
+          relative_norm_str += " (relative)";
+        else
+          relative_norm_str += " (absolute)";
+      } else if (norm.size() <= 8) {
+        relative_norm_str = norm;
+        if (relative)
+          relative_norm_str += " (relative)";
+        else
+          relative_norm_str += " (absolute)";
+      } else if (norm.size() <= 12) {
+        relative_norm_str = norm;
+        if (relative)
+          relative_norm_str += " (rel.)";
+        else
+          relative_norm_str += " (abs.)";
+      } else {
+        relative_norm_str = norm.substr(0, 11);
+        if (relative)
+          relative_norm_str += " (rel.)";
+        else
+          relative_norm_str += " (abs.)";
+      }
       const double missing = (19.0 - relative_norm_str.size()) / 2.0;
       for (size_t ii = 0; ii < missing; ++ii)
         relative_norm_str += " ";
@@ -103,7 +120,10 @@ public:
     std::map<std::string, double> reference_norm;
     std::map<std::string, double> last_relative_error;
     for (const auto& norm : provided_norms()) {
-      reference_norm[norm]      = norm_reference_solution(norm);
+      if (relative)
+        reference_norm[norm] = norm_reference_solution(norm);
+      else
+        reference_norm[norm]    = 0.0;
       last_relative_error[norm] = 0.0;
     }
     double last_grid_width = current_grid_width();
@@ -126,7 +146,9 @@ public:
       // loop over all norms/columns
       for (const auto& norm : provided_norms()) {
         // compute and print relative error
-        const double relative_error = current_error_norm(norm) / reference_norm[norm];
+        double relative_error = current_error_norm(norm);
+        if (relative)
+          relative_error /= reference_norm[norm];
         ret[norm].push_back(relative_error);
         out << " | " << std::setw(8) << std::setprecision(2) << std::scientific << relative_error << std::flush;
         // print eoc
