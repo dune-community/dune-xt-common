@@ -90,11 +90,10 @@ public:
         else
           relative_norm_str += " (abs.)";
       } else {
-        relative_norm_str = norm.substr(0, 11);
         if (relative)
-          relative_norm_str += " (rel.)";
+          relative_norm_str = norm.substr(0, 11) + ". (rel.)";
         else
-          relative_norm_str += " (abs.)";
+          relative_norm_str = norm.substr(0, 19);
       }
       const double missing = (19.0 - relative_norm_str.size()) / 2.0;
       for (size_t ii = 0; ii < missing; ++ii)
