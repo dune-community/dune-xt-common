@@ -10,7 +10,6 @@
 
 // dune-common
 #include <dune/common/exceptions.hh>
-#include <dune/common/mpihelper.hh>
 
 #include "misc.hh"
 #include "filesystem.hh"
