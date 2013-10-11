@@ -8,6 +8,19 @@
 
 #include "profiler.hh"
 
+#if HAVE_LIKWID
+#include <likwid.h>
+#define DSC_LIKWID_BEGIN_SECTION(name)                                                                                 \
+  LIKWID_MARKER_INIT;                                                                                                  \
+  LIKWID_MARKER_START(name);
+#define DSC_LIKWID_END_SECTION(name)                                                                                   \
+  LIKWID_MARKER_STOP(name);                                                                                            \
+  LIKWID_MARKER_CLOSE;
+#else
+#define DSC_LIKWID_BEGIN_SECTION(name)
+#define DSC_LIKWID_END_SECTION(name)
+#endif
+
 #include <dune/stuff/common/disable_warnings.hh>
 #if DUNE_VERSION_NEWER(DUNE_COMMON, 2, 3)
 #include <dune/common/parallel/mpihelper.hh>
@@ -55,12 +68,14 @@ boost::timer::nanosecond_type TimingData::delta() const
 void Profiler::startTiming(const std::string section_name, const int i)
 {
   const std::string section = section_name + toString(i);
+  DSC_LIKWID_BEGIN_SECTION(section)
   startTiming(section);
 }
 
 long Profiler::stopTiming(const std::string section_name, const int i)
 {
   const std::string section = section_name + toString(i);
+  DSC_LIKWID_END_SECTION(section)
   return stopTiming(section);
 }
 
