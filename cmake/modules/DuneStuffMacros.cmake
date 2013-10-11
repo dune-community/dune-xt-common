@@ -92,7 +92,7 @@ endif(HAVE_BLAS)
 
 pkg_check_modules(EIGEN eigen3)
 if(EIGEN_FOUND)
-  include_sys_dir(${EIGEN_INCLUDE_DIRS})
+  include_directories(${EIGEN_INCLUDE_DIRS})
 endif(EIGEN_FOUND)
 
 # include(FindFASP)
