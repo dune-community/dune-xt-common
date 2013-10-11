@@ -71,6 +71,17 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         )
 endif()
 
+MACRO(INCLUDE_SYS_DIR)
+    FOREACH( ARG ${ARGN} )
+        IF(IS_DIRECTORY ${ARG} )
+            INCLUDE_DIRECTORIES(${ARG})
+            ADD_DEFINITIONS("-isystem${ARG}")
+        ELSE(IS_DIRECTORY ${ARG} )
+            MESSAGE( STATUS "Include directory ${ARG} does not exist" )
+        ENDIF(IS_DIRECTORY ${ARG} )
+    ENDFOREACH( ARG )
+ENDMACRO(INCLUDE_SYS_DIR)
+
 FIND_PACKAGE( PkgConfig )
 FIND_PACKAGE(Boost 1.48.0 COMPONENTS system thread filesystem date_time timer chrono REQUIRED)
 foreach(_lib ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} 

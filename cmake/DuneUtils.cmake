@@ -1,6 +1,8 @@
 include(CheckCXXSourceCompiles)
 
-set(DUNE_STUFF_ROOT ${PROJECT_SOURCE_DIR}/../dune-stuff 
+include(modules/DuneStuffMacros)
+
+set(DUNE_STUFF_ROOT ${PROJECT_SOURCE_DIR}/../dune-stuff
 		CACHE STRING "path to dune-stuff module root" )
 set(DUNE_STUFF_TEST_DIR ${DUNE_STUFF_ROOT}/dune/stuff/test 
 		CACHE STRING "path to dir containing gtest subdir")
@@ -14,17 +16,6 @@ function(TO_LIST_SPACES _LIST_NAME OUTPUT_VAR)
 #   string(STRIP ${NEW_LIST_SPACE} NEW_LIST_SPACE)
   set(${OUTPUT_VAR} "${NEW_LIST_SPACE}" PARENT_SCOPE)
 endfunction()
-
-MACRO(INCLUDE_SYS_DIR)
-	FOREACH( ARG ${ARGN} )
-		IF(IS_DIRECTORY ${ARG} )
-			ADD_DEFINITIONS("-isystem${ARG}")
-			INCLUDE_DIRECTORIES(${ARG})
-		ELSE(IS_DIRECTORY ${ARG} )
-			MESSAGE( STATUS "Include directory ${ARG} does not exist" )
-		ENDIF(IS_DIRECTORY ${ARG} )
-    ENDFOREACH( ARG )
-ENDMACRO(INCLUDE_SYS_DIR)
 
 MACRO( HEADERCHECK )
 	ADD_CUSTOM_TARGET( headercheck SOURCES ${ARGN} )
@@ -136,8 +127,6 @@ add_custom_target( config_refresh
 				)
 
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
-
-include(modules/DuneStuffMacros)
 
 #find_package(SuperLU)
 #if(SUPERLU_FOUND)
