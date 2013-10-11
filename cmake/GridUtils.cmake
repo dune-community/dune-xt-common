@@ -9,6 +9,9 @@ SET( GRIDDIM
 	"2" CACHE STRING
 	"GRIDDIM" )
 
+add_definitions( "-D${GRIDTYPE}" )
+add_definitions( "-DGRIDDIM=${GRIDDIM}" )
+
 set( ENABLE_UG OFF )
 if( ${GRIDTYPE} MATCHES "UGGRID" )
   if( NOT UG_GRID_FOUND )
