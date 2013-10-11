@@ -108,8 +108,10 @@ endif(EIGEN_FOUND)
 
 include(FindLIKWID)
 find_package(LIKWID)
-list(APPEND DUNE_DEFAULT_LIBS "${LIKWID_LIBRARY}")
-include_directories(${LIKWID_INCLUDE_DIR})
+if(LIKWID_FOUND)
+  list(APPEND DUNE_DEFAULT_LIBS "${LIKWID_LIBRARY}")
+  include_directories(${LIKWID_INCLUDE_DIR})
+endif(LIKWID_FOUND)
 # include(FindFASP)
 
 if(ENABLE_MPI)
