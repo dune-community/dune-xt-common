@@ -8,14 +8,10 @@
 
 #include "profiler.hh"
 
-#if HAVE_LIKWID
+#if HAVE_LIKWID && ENABLE_PERFMON
 #include <likwid.h>
-#define DSC_LIKWID_BEGIN_SECTION(name)                                                                                 \
-  LIKWID_MARKER_INIT;                                                                                                  \
-  LIKWID_MARKER_START(name);
-#define DSC_LIKWID_END_SECTION(name)                                                                                   \
-  LIKWID_MARKER_STOP(name);                                                                                            \
-  LIKWID_MARKER_CLOSE;
+#define DSC_LIKWID_BEGIN_SECTION(name) LIKWID_MARKER_START(name.c_str());
+#define DSC_LIKWID_END_SECTION(name) LIKWID_MARKER_STOP(name.c_str());
 #else
 #define DSC_LIKWID_BEGIN_SECTION(name)
 #define DSC_LIKWID_END_SECTION(name)
@@ -68,14 +64,12 @@ boost::timer::nanosecond_type TimingData::delta() const
 void Profiler::startTiming(const std::string section_name, const int i)
 {
   const std::string section = section_name + toString(i);
-  DSC_LIKWID_BEGIN_SECTION(section)
   startTiming(section);
 }
 
 long Profiler::stopTiming(const std::string section_name, const int i)
 {
   const std::string section = section_name + toString(i);
-  DSC_LIKWID_END_SECTION(section)
   return stopTiming(section);
 }
 
@@ -119,10 +113,12 @@ void Profiler::startTiming(const std::string section_name)
     // init new section
     known_timers_map_[section_name] = std::make_pair(true, TimingData(section_name));
   }
+  DSC_LIKWID_BEGIN_SECTION(section_name)
 } // StartTiming
 
 long Profiler::stopTiming(const std::string section_name)
 {
+  DSC_LIKWID_END_SECTION(section_name)
   assert(current_run_number_ < datamaps_.size());
   if (known_timers_map_.find(section_name) == known_timers_map_.end())
     DUNE_THROW(Dune::RangeError, "trying to stop timer " << section_name << " that wasn't started\n");
@@ -295,12 +291,14 @@ void Profiler::outputTimings(std::ostream& out) const
 Profiler::Profiler()
   : csv_sep(",")
 {
+  LIKWID_MARKER_INIT;
   reset(1);
   setOutputdir("./profiling");
 }
 
 Profiler::~Profiler()
 {
+  LIKWID_MARKER_CLOSE;
 }
 
 

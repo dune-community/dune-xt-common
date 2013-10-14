@@ -114,6 +114,9 @@ if(LIKWID_FOUND)
   list(APPEND DUNE_DEFAULT_LIBS "${LIKWID_LIBRARY}")
   include_directories(${LIKWID_INCLUDE_DIR})
 endif(LIKWID_FOUND)
+set(ENABLE_PERFMON 0 CACHE STRING "enable likwid performance monitoring API usage")
+
+
 # include(FindFASP)
 
 if(ENABLE_MPI)
