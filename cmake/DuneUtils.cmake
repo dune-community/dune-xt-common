@@ -1,5 +1,6 @@
 include(CheckCXXSourceCompiles)
 
+
 include(modules/DuneStuffMacros)
 
 set(DUNE_STUFF_ROOT ${PROJECT_SOURCE_DIR}/../dune-stuff
@@ -7,6 +8,8 @@ set(DUNE_STUFF_ROOT ${PROJECT_SOURCE_DIR}/../dune-stuff
 set(DUNE_STUFF_TEST_DIR ${DUNE_STUFF_ROOT}/dune/stuff/test 
 		CACHE STRING "path to dir containing gtest subdir")
 mark_as_advanced(DUNE_STUFF_ROOT DUNE_STUFF_TEST_DIR)
+
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${DUNE_STUFF_ROOT}/cmake/modules)
 
 function(TO_LIST_SPACES _LIST_NAME OUTPUT_VAR)
   set(NEW_LIST_SPACE)
