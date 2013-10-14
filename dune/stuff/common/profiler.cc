@@ -12,9 +12,13 @@
 #include <likwid.h>
 #define DSC_LIKWID_BEGIN_SECTION(name) LIKWID_MARKER_START(name.c_str());
 #define DSC_LIKWID_END_SECTION(name) LIKWID_MARKER_STOP(name.c_str());
+#define DSC_LIKWID_INIT LIKWID_MARKER_INIT
+#define DSC_LIKWID_CLOSE LIKWID_MARKER_CLOSE
 #else
 #define DSC_LIKWID_BEGIN_SECTION(name)
 #define DSC_LIKWID_END_SECTION(name)
+#define DSC_LIKWID_INIT
+#define DSC_LIKWID_CLOSE
 #endif
 
 #include <dune/stuff/common/disable_warnings.hh>
@@ -291,14 +295,14 @@ void Profiler::outputTimings(std::ostream& out) const
 Profiler::Profiler()
   : csv_sep(",")
 {
-  LIKWID_MARKER_INIT;
+  DSC_LIKWID_INIT;
   reset(1);
   setOutputdir("./profiling");
 }
 
 Profiler::~Profiler()
 {
-  LIKWID_MARKER_CLOSE;
+  DSC_LIKWID_CLOSE;
 }
 
 
