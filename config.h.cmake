@@ -14,4 +14,6 @@
 
 #define HAVE_LIKWID ${HAVE_LIKWID}
 
+#define DS_OVERRIDE ${DS_OVERRIDE}
+#define DS_FINAL  ${DS_FINAL}
 /* end dune-stuff */
