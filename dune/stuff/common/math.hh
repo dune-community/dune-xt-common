@@ -116,6 +116,33 @@ const T Epsilon<T, false>::value = std::numeric_limits<T>::epsilon();
 
 
 /**
+ *  Helper struct to compute absolute values of signed and unsigned values,
+ *  std::abs is only defined for unsigned types.
+ **/
+template <class T, bool isUnsigned = std::is_unsigned<T>::value>
+struct absoluteValue
+{
+  static T result(const T& val)
+  {
+    return std::abs(val);
+  }
+};
+template <class T>
+struct absoluteValue<T, true>
+{
+  static T result(const T& val)
+  {
+    return val;
+  }
+};
+
+template <class T>
+T abs(const T& val)
+{
+  return absoluteValue<T>::result(val);
+}
+
+/**
    *  \brief  dyadic product
    *
    *          Implements \f$\left(arg_{1} \otimes arg_{2}\right)_{i,j}:={arg_{1}}_{i} {arg_{2}}_{j}\f$
