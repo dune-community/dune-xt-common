@@ -8,6 +8,9 @@ set(lib_dune_stuff_sources common/filesystem.cc
   common/signals.cc
   common/math.cc
   fem/femeoc.cc
+  grid/fakeentity.cc 
+  functions/interfaces.cc 
+  functions/constant.cc
   functions/expression/mathexpr.cc )
 
 dune_add_library("dunestuff" ${lib_dune_stuff_sources}
