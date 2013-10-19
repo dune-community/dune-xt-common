@@ -12,6 +12,7 @@ set(lib_dune_stuff_sources common/filesystem.cc
   functions/interfaces.cc 
   functions/constant.cc
   functions/expression/mathexpr.cc
+  functions/expression.cc
   la/container/pattern.cc )
 
 dune_add_library("dunestuff" ${lib_dune_stuff_sources}
