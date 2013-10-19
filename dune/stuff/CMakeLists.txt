@@ -10,6 +10,7 @@ set(lib_dune_stuff_sources common/filesystem.cc
   fem/femeoc.cc
   grid/fakeentity.cc 
   functions/interfaces.cc 
+  functions/checkerboard.cc
   functions/constant.cc
   functions/expression/mathexpr.cc
   functions/expression.cc
