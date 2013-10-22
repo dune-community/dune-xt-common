@@ -11,6 +11,7 @@
 #include <dune/stuff/common/disable_warnings.hh>
 #include <dune/grid/common/gridview.hh>
 #include <dune/stuff/common/reenable_warnings.hh>
+#include <dune/grid/common/geometry.hh>
 #include <boost/serialization/static_warning.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 #endif
