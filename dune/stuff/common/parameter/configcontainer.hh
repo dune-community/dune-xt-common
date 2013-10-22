@@ -168,6 +168,17 @@ public:
     return tokens;
   }
 
+  bool hasSub(const std::string& subTreeName) const
+  {
+    return tree_.hasSub(subTreeName);
+  }
+
+  const ParameterTree sub(const std::string& subTreeName) const
+  {
+    tree_.assertSub(subTreeName);
+    return tree_.sub(subTreeName);
+  }
+
   template <class T>
   void set(const std::string key, const T value)
   {
