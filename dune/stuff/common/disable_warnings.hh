@@ -8,6 +8,7 @@
 #pragma GCC diagnostic ignored "-Wshadow"
 #pragma GCC diagnostic ignored "-Wreorder"
 #pragma GCC diagnostic ignored "-Wreorder"
+#pragma GCC diagnostic ignored "-Wused-but-marked-unused"
 #endif
 
 /** Copyright (c) 2012, Rene Milk, Felix Albrecht
