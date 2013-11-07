@@ -7,8 +7,10 @@
 #pragma GCC diagnostic ignored "-Wtype-limits"
 #pragma GCC diagnostic ignored "-Wshadow"
 #pragma GCC diagnostic ignored "-Wreorder"
+#pragma GCC diagnostic ignored "-Wreorder"
 #endif
-/** Copyright (c) 2012, Rene Milk
+
+/** Copyright (c) 2012, Rene Milk, Felix Albrecht
    * All rights reserved.
    *
    * Redistribution and use in source and binary forms, with or without
