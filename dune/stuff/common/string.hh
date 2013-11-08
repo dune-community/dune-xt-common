@@ -31,17 +31,48 @@ namespace Common {
 
 //! simple and dumb std::string to anything conversion
 template <class ReturnType>
-inline ReturnType fromString(const std::string& s)
+inline ReturnType fromString(const std::string s)
 {
   return boost::lexical_cast<ReturnType, std::string>(s);
 } // fromString
+
+
+inline std::string toString(const char* s)
+{
+  return std::string(s);
+} // toString
+
+inline std::string toString(const std::string s)
+{
+  return std::string(s);
+} // toString
 
 //! simple and dumb anything to std::string conversion
 template <class ReturnType>
 inline std::string toString(const ReturnType& s)
 {
-  return boost::lexical_cast<std::string, ReturnType>(s);
+  return std::to_string(s);
 } // toString
+
+
+#define DSC_TOSTR(tn, tns)                                                                                             \
+  template <>                                                                                                          \
+  inline tn fromString<tn>(const std::string s)                                                                        \
+  {                                                                                                                    \
+    return std::sto##tns(s);                                                                                           \
+  }
+
+DSC_TOSTR(int, i)
+DSC_TOSTR(long, l)
+DSC_TOSTR(long long, ll)
+DSC_TOSTR(unsigned long, ul)
+DSC_TOSTR(unsigned long long, ull)
+DSC_TOSTR(float, f)
+DSC_TOSTR(double, d)
+DSC_TOSTR(long double, ld)
+
+#undef DSC_TOSTR
+
 
 /**
   \brief      Returns a string of lengths s' whitespace (or c chars).
