@@ -104,32 +104,32 @@ public:
      *              otherwise an assertion will fire cause streams aren't available yet
      **/
   template <typename T>
-  T get(std::string name, T def, bool useDbgStream = true)
+  T get(const std::string name, T def, bool useDbgStream = true)
   {
     return get(name, def, ValidateAny<T>(), useDbgStream);
   }
 
   //! get variation with request recording
   template <typename T>
-  T get(std::string name, T def, Request req, bool useDbgStream = true)
+  T get(const std::string name, T def, Request req, bool useDbgStream = true)
   {
     return get(name, def, ValidateAny<T>(), useDbgStream, req);
   }
   template <typename T, class Validator>
-  T get(std::string name, T def, const ValidatorInterface<T, Validator>& validator, Request req,
+  T get(const std::string name, T def, const ValidatorInterface<T, Validator>& validator, Request req,
         bool useDbgStream = true)
   {
     return get(name, def, validator, useDbgStream, req);
   }
 
   //! hack around the "CHARS" is no string issue
-  std::string get(std::string name, const char* def, bool useDbgStream = true)
+  std::string get(const std::string name, const char* def, bool useDbgStream = true)
   {
     return get(name, std::string(def), ValidateAny<std::string>(), useDbgStream);
   }
 
   template <typename T, class Validator>
-  T get(std::string name, T def, const ValidatorInterface<T, Validator>& validator, bool useDbgStream = true)
+  T get(const std::string name, T def, const ValidatorInterface<T, Validator>& validator, bool useDbgStream = true)
   {
     Request req(
         -1, std::string(), name, Dune::Stuff::Common::toString(def), Dune::Stuff::Common::getTypename(validator));
@@ -138,14 +138,14 @@ public:
 
   //! hack around the "CHARS" is no string issue again
   template <class Validator>
-  std::string get(std::string name, const char* def, const ValidatorInterface<std::string, Validator>& validator,
+  std::string get(const std::string name, const char* def, const ValidatorInterface<std::string, Validator>& validator,
                   bool useDbgStream = true)
   {
     return get<std::string, Validator>(name, def, validator, useDbgStream);
   }
 
   //! get variation with request recording
-  std::string get(std::string name, const char* def, Request req, bool useDbgStream = true)
+  std::string get(const std::string name, const char* def, Request req, bool useDbgStream = true)
   {
     return get(name, std::string(def), ValidateAny<std::string>(), useDbgStream, req);
   }
@@ -168,12 +168,12 @@ public:
     return tokens;
   }
 
-  bool hasSub(const std::string& subTreeName) const
+  bool hasSub(const std::string subTreeName) const
   {
     return tree_.hasSub(subTreeName);
   }
 
-  const ParameterTree sub(const std::string& subTreeName) const
+  const ParameterTree sub(const std::string subTreeName) const
   {
     tree_.assertSub(subTreeName);
     return tree_.sub(subTreeName);
