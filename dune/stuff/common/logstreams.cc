@@ -38,8 +38,10 @@ void SuspendableStrBuffer::resume(PriorityType priority)
 
 std::streamsize SuspendableStrBuffer::xsputn(const char_type* s, std::streamsize count)
 {
-  if (enabled())
+  if (enabled()) {
+    std::lock_guard<std::mutex> guard(mutex_);
     return BaseType::xsputn(s, count);
+  }
   // pretend everything was written
   return std::streamsize(count);
 }
@@ -64,6 +66,7 @@ LogStream& LogStream::flush()
 int FileLogStream::FileBuffer::sync()
 {
   // flush buffer into stream
+  std::lock_guard<std::mutex> guard(sync_mutex_);
   std::cout << str();
   std::cout.flush();
   logfile_ << str();

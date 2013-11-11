@@ -7,6 +7,7 @@
 #include <sstream>
 #include <iostream>
 #include <type_traits>
+#include <mutex>
 
 #include <dune/stuff/common/disable_warnings.hh>
 
@@ -63,6 +64,7 @@ private:
   int suspended_logflags_;
   bool is_suspended_;
   PriorityType suspend_priority_;
+  std::mutex mutex_;
 };
 
 
@@ -137,6 +139,7 @@ private:
 
   private:
     std::ofstream& logfile_;
+    std::mutex sync_mutex_;
 
   protected:
     virtual int sync();

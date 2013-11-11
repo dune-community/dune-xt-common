@@ -145,7 +145,7 @@ private:
   boost::filesystem::ofstream logfile_;
   typedef std::map<int, int> FlagMap;
   FlagMap flagmap_;
-  typedef std::map<int, LogStream*> StreamMap;
+  typedef std::map<int, std::unique_ptr<LogStream>> StreamMap;
   StreamMap streammap_;
   typedef std::vector<int> IdVec;
   IdVec streamIDs_;

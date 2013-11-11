@@ -16,8 +16,8 @@
 #include "logstreams.hh"
 #include "string.hh"
 
-#include <boost/range/adaptors.hpp>
-#include <boost/foreach.hpp>
+#include <dune/stuff/common/memory.hh>
+
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/path.hpp>
 
@@ -26,25 +26,17 @@ namespace Stuff {
 namespace Common {
 
 Logging::Logging()
-  : logflags_(LOG_NONE)
+  : streamIDs_({LOG_ERROR, LOG_DEBUG, LOG_INFO})
+  , logflags_(LOG_NONE)
   , emptyLogStream_(logflags_)
 {
-  streamIDs_.push_back(LOG_ERROR);
-  streamIDs_.push_back(LOG_DEBUG);
-  streamIDs_.push_back(LOG_INFO);
-  for (auto id : streamIDs_)
-    streammap_[id] = new EmptyLogStream(logflags_);
+  for (const auto id : streamIDs_)
+    streammap_[id] = make_unique<EmptyLogStream>(logflags_);
 }
 
 void Logging::deinit()
 {
-  // destroy in reverse creation order, 2012 style
-  BOOST_REVERSE_FOREACH(auto id, streamIDs_)
-  {
-    // logstream dtor is mandated to flush itself
-    delete streammap_[id];
-    streammap_[id] = 0;
-  }
+  streammap_.clear();
   if ((logflags_ & LOG_FILE) != 0) {
     logfile_ << std::endl;
     logfile_.close();
@@ -74,18 +66,17 @@ void Logging::create(int logflags, const std::string logfile, const std::string 
     assert(logfile_.is_open());
   }
 
-  for (auto id : streamIDs_) {
-    flagmap_[id] = logflags;
-    delete streammap_[id];
-    streammap_[id] = new FileLogStream(id, flagmap_[id], logfile_);
+  for (const auto id : streamIDs_) {
+    flagmap_[id]   = logflags;
+    streammap_[id] = make_unique<FileLogStream>(id, flagmap_[id], logfile_);
   }
-} // Create
+} // create
 
 void Logging::setPrefix(std::string prefix)
 {
   deinit();
   create(logflags_, prefix);
-} // SetPrefix
+} // setPrefix
 
 void Logging::setStreamFlags(int streamID, int flags)
 {
@@ -117,11 +108,11 @@ LogStream& Logging::getStream(int streamId)
 
 void Logging::flush()
 {
-  for (auto pair : streammap_) {
+  for (auto& pair : streammap_) {
     assert(pair.second);
     pair.second->flush();
   }
-} // Flush
+} // flush
 
 int Logging::addStream(int flags)
 {
@@ -130,23 +121,23 @@ int Logging::addStream(int flags)
   int streamID = streamID_int;
   streamIDs_.push_back(streamID);
   flagmap_[streamID]   = (flags | streamID);
-  streammap_[streamID] = new FileLogStream(streamID, flagmap_[streamID], logfile_);
+  streammap_[streamID] = make_unique<FileLogStream>(streamID, flagmap_[streamID], logfile_);
   return streamID_int;
-} // AddStream
+} // addStream
 
 void Logging::resume(LogStream::PriorityType prio)
 {
-  for (auto pair : streammap_) {
+  for (auto& pair : streammap_) {
     pair.second->resume(prio);
   }
-} // Resume
+} // resume
 
 void Logging::suspend(LogStream::PriorityType prio)
 {
-  BOOST_FOREACH (auto pair, streammap_) {
+  for (auto& pair : streammap_) {
     pair.second->suspend(prio);
   }
-} // Suspend
+} // suspend
 
 } // namespace Common
 } // namespace Stuff
