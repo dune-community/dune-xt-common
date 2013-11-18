@@ -41,7 +41,6 @@ set( COMMON_HEADER ${stuff} ${DUNE_HEADERS} )
 set_source_files_properties( ${COMMON_HEADER} PROPERTIES HEADER_FILE_ONLY 1 )
 
 add_subdirectory(dune)
-add_subdirectory(lib)
 #add_subdirectory(examples)
 add_subdirectory("cmake/modules")
 add_subdirectory("cmake/scripts")
