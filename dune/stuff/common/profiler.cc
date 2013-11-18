@@ -63,8 +63,10 @@ void TimingData::stop()
 
 TimingData::DeltaType TimingData::delta() const
 {
-  const auto weight = 1 / (ThreadManager::current_threads() * boost::timer::nanosecond_type(1e6));
-  return std::make_pair((timer_->elapsed().user + timer_->elapsed().system) * weight, timer_->elapsed().wall * weight);
+  const auto weight = 1.0 / double(boost::timer::nanosecond_type(1e6));
+  return std::make_pair((timer_->elapsed().user + timer_->elapsed().system) * weight
+                            / double(ThreadManager::current_threads()),
+                        timer_->elapsed().wall * weight);
 }
 
 void Profiler::startTiming(const std::string section_name, const int i)
@@ -146,7 +148,7 @@ long Profiler::stopTiming(const std::string section_name, const bool use_walltim
 long Profiler::getTiming(const std::string section_name, const bool use_walltime) const
 {
   assert(current_run_number_ < datamaps_.size());
-  return getTimingIdx(section_name, current_run_number_);
+  return getTimingIdx(section_name, current_run_number_, use_walltime);
 }
 
 long Profiler::getTimingIdx(const std::string section_name, const int run_number, const bool use_walltime) const
@@ -272,7 +274,7 @@ void Profiler::outputTimingsAll(std::ostream& out) const
     out << std::endl << i++;
     for (const auto& section : datamap) {
       auto wall     = section.second.second;
-      auto usr      = section.second.second;
+      auto usr      = section.second.first;
       auto wall_sum = comm.sum(wall);
       auto usr_sum  = comm.sum(usr);
 

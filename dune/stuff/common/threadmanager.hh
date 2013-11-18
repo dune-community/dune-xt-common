@@ -10,16 +10,16 @@ namespace Stuff {
 struct ThreadManager
 {
   //! return maximal number of threads possbile in the current run
-  static inline unsigned int max_threads();
+  static unsigned int max_threads();
 
   //! return number of current threads
-  static inline unsigned int current_threads();
+  static unsigned int current_threads();
 
   //! return thread number
-  static inline unsigned int thread();
+  static unsigned int thread();
 
   //! set maximal number of threads available during run
-  static inline void set_max_threads(const unsigned int count);
+  static void set_max_threads(const unsigned int count);
 };
 }
 }
