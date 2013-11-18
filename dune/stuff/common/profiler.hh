@@ -34,10 +34,13 @@ public:
 
   void stop();
 
+  typedef boost::timer::nanosecond_type TimeType;
+  typedef std::pair<TimeType, TimeType> DeltaType;
+
   /** \return time elapsed since object construction in milliseconds
    *  \note since typical resolutions for user+system time are 10-15ms the nanosecond results are scaled accordingly
    **/
-  boost::timer::nanosecond_type delta() const;
+  DeltaType delta() const;
 };
 
 /** \brief simple inline profiling class
@@ -57,7 +60,7 @@ protected:
 
   typedef std::map<std::string, std::pair<bool, TimingData>> KnownTimersMap;
   //! section name -> seconds
-  typedef std::map<std::string, long> Datamap;
+  typedef std::map<std::string, TimingData::DeltaType> Datamap;
   //! "Run idx" -> Datamap = section name -> seconds
   typedef std::vector<Datamap> DatamapVector;
 
@@ -71,9 +74,9 @@ public:
   void startTiming(const std::string section_name, const int i);
 
   //! stop named section's counter
-  long stopTiming(const std::string section_name);
+  long stopTiming(const std::string section_name, const bool use_walltime = false);
   //! appends int to section name
-  long stopTiming(const std::string section_name, const int i);
+  long stopTiming(const std::string section_name, const int i, const bool use_walltime = false);
 
   //! set elapsed time back to 0 for section_name
   void resetTiming(const std::string section_name);
@@ -81,12 +84,12 @@ public:
   void resetTiming(const std::string section_name, const int i);
 
   //! get runtime of section in current run in milliseconds
-  long getTiming(const std::string section_name) const;
+  long getTiming(const std::string section_name, const bool use_walltime = false) const;
   //! appends int to section name
-  long getTiming(const std::string section_name, const int i) const;
+  long getTiming(const std::string section_name, const int i, const bool use_walltime = false) const;
 
   //! get runtime of section in run run_number in milliseconds
-  long getTimingIdx(const std::string section_name, const int run_number) const;
+  long getTimingIdx(const std::string section_name, const int run_number, const bool use_walltime = false) const;
 
   /** output to currently pre-defined (csv) file, does not output individual run results, but average over all recorded
    * results

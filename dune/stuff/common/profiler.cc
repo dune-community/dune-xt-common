@@ -30,6 +30,7 @@
 #include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/common/filesystem.hh>
+#include <dune/stuff/common/threadmanager.hh>
 
 #include <map>
 #include <string>
@@ -60,9 +61,10 @@ void TimingData::stop()
   timer_->stop();
 }
 
-boost::timer::nanosecond_type TimingData::delta() const
+TimingData::DeltaType TimingData::delta() const
 {
-  return (timer_->elapsed().user + timer_->elapsed().system) / boost::timer::nanosecond_type(1e6);
+  const auto weight = 1 / (ThreadManager::current_threads() * boost::timer::nanosecond_type(1e6));
+  return std::make_pair((timer_->elapsed().user + timer_->elapsed().system) * weight, timer_->elapsed().wall * weight);
 }
 
 void Profiler::startTiming(const std::string section_name, const int i)
@@ -71,16 +73,16 @@ void Profiler::startTiming(const std::string section_name, const int i)
   startTiming(section);
 }
 
-long Profiler::stopTiming(const std::string section_name, const int i)
+long Profiler::stopTiming(const std::string section_name, const int i, const bool use_walltime)
 {
   const std::string section = section_name + toString(i);
-  return stopTiming(section);
+  return stopTiming(section, use_walltime);
 }
 
-long Profiler::getTiming(const std::string section_name, const int i) const
+long Profiler::getTiming(const std::string section_name, const int i, const bool use_walltime) const
 {
   const std::string section = section_name + toString(i);
-  return getTiming(section);
+  return getTiming(section, use_walltime);
 }
 
 void Profiler::resetTiming(const std::string section_name, const int i)
@@ -97,7 +99,7 @@ void Profiler::resetTiming(const std::string section_name)
     // ok, timer simply wasn't running
   }
   Datamap& current_data      = datamaps_[current_run_number_];
-  current_data[section_name] = 0;
+  current_data[section_name] = TimingData::DeltaType(0, 0);
 }
 
 void Profiler::startTiming(const std::string section_name)
@@ -120,7 +122,7 @@ void Profiler::startTiming(const std::string section_name)
   DSC_LIKWID_BEGIN_SECTION(section_name)
 } // StartTiming
 
-long Profiler::stopTiming(const std::string section_name)
+long Profiler::stopTiming(const std::string section_name, const bool use_walltime)
 {
   DSC_LIKWID_END_SECTION(section_name)
   assert(current_run_number_ < datamaps_.size());
@@ -130,22 +132,24 @@ long Profiler::stopTiming(const std::string section_name)
   known_timers_map_[section_name].first = false; // marks as not running
   TimingData& timing = known_timers_map_[section_name].second;
   timing.stop();
-  long delta            = timing.delta();
+  auto delta            = timing.delta();
   Datamap& current_data = datamaps_[current_run_number_];
   if (current_data.find(section_name) == current_data.end())
     current_data[section_name] = delta;
-  else
-    current_data[section_name] += delta;
-  return delta;
+  else {
+    current_data[section_name].first += delta.first;
+    current_data[section_name].second += delta.second;
+  }
+  return use_walltime ? delta.second : delta.first;
 } // StopTiming
 
-long Profiler::getTiming(const std::string section_name) const
+long Profiler::getTiming(const std::string section_name, const bool use_walltime) const
 {
   assert(current_run_number_ < datamaps_.size());
   return getTimingIdx(section_name, current_run_number_);
 }
 
-long Profiler::getTimingIdx(const std::string section_name, const int run_number) const
+long Profiler::getTimingIdx(const std::string section_name, const int run_number, const bool use_walltime) const
 {
   assert(run_number < int(datamaps_.size()));
   const Datamap& data             = datamaps_[run_number];
@@ -155,9 +159,9 @@ long Profiler::getTimingIdx(const std::string section_name, const int run_number
     const auto& timer_it = known_timers_map_.find(section_name);
     if (timer_it == known_timers_map_.end())
       DUNE_THROW(Dune::InvalidStateException, "no timer found: " + section_name);
-    return timer_it->second.second.delta();
+    return use_walltime ? timer_it->second.second.delta().second : timer_it->second.second.delta().first;
   }
-  return section->second;
+  return use_walltime ? section->second.second : section->second.first;
 } // GetTiming
 
 
@@ -259,15 +263,20 @@ void Profiler::outputTimingsAll(std::ostream& out) const
   const auto& comm = Dune::MPIHelper::getCollectiveCommunication();
   out << "run";
   for (const auto& section : datamaps_[0]) {
-    out << csv_sep << section.first << "_avg" << csv_sep << section.first << "_sum";
+    out << csv_sep << section.first << "_avg_usr" << csv_sep << section.first << "_sum_usr" << csv_sep << section.first
+        << "_avg_wall" << csv_sep << section.first << "_sum_wall";
   }
-  int i = 0;
+  int i             = 0;
+  const auto weight = 1 / float(comm.size());
   for (const auto& datamap : datamaps_) {
     out << std::endl << i++;
     for (const auto& section : datamap) {
-      auto val = section.second;
-      auto sum = comm.sum(val);
-      out << csv_sep << sum / float(comm.size()) << csv_sep << sum;
+      auto wall     = section.second.second;
+      auto usr      = section.second.second;
+      auto wall_sum = comm.sum(wall);
+      auto usr_sum  = comm.sum(usr);
+
+      out << csv_sep << usr_sum * weight << csv_sep << usr_sum << csv_sep << wall_sum * weight << csv_sep << wall_sum;
     }
   }
   out << std::endl;
@@ -286,7 +295,7 @@ void Profiler::outputTimings(std::ostream& out) const
   for (const auto& datamap : datamaps_) {
     out << std::endl << i;
     for (const auto& section : datamap) {
-      out << csv_sep << section.second;
+      out << csv_sep << section.second.first;
     }
     out << std::endl;
   }
