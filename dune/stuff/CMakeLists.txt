@@ -7,6 +7,7 @@ set(lib_dune_stuff_sources common/filesystem.cc
   common/parameter/tree.cc
   common/signals.cc
   common/math.cc
+  common/threadmanager.cc
   fem/femeoc.cc
   grid/fakeentity.cc 
   functions/interfaces.cc 
