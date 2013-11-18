@@ -54,7 +54,7 @@ class Profiler
 {
   friend Profiler& profiler();
 
-protected:
+private:
   Profiler();
   ~Profiler();
 
@@ -64,32 +64,35 @@ protected:
   //! "Run idx" -> Datamap = section name -> seconds
   typedef std::vector<Datamap> DatamapVector;
 
+  //! appends int to section name
+  long stopTiming(const std::string section_name, const int i, const bool use_walltime);
+
+  //! appends int to section name
+  void startTiming(const std::string section_name, const int i);
+
+  //! appends int to section name
+  void resetTiming(const std::string section_name, const int i);
+
+  //! appends int to section name
+  long getTiming(const std::string section_name, const int i, const bool use_walltime) const;
+  //! get runtime of section in run run_number in milliseconds
+  long getTimingIdx(const std::string section_name, const int run_number, const bool use_walltime) const;
+
 public:
   //  typedef std::vector< Dune::Stuff::Common::RunInfo > InfoContainer;
   //  typedef std::map<std::string, InfoContainer> InfoContainerMap;
 
   //! set this to begin a named section
   void startTiming(const std::string section_name);
-  //! appends int to section name
-  void startTiming(const std::string section_name, const int i);
 
   //! stop named section's counter
   long stopTiming(const std::string section_name, const bool use_walltime = false);
-  //! appends int to section name
-  long stopTiming(const std::string section_name, const int i, const bool use_walltime = false);
 
   //! set elapsed time back to 0 for section_name
   void resetTiming(const std::string section_name);
-  //! appends int to section name
-  void resetTiming(const std::string section_name, const int i);
 
   //! get runtime of section in current run in milliseconds
   long getTiming(const std::string section_name, const bool use_walltime = false) const;
-  //! appends int to section name
-  long getTiming(const std::string section_name, const int i, const bool use_walltime = false) const;
-
-  //! get runtime of section in run run_number in milliseconds
-  long getTimingIdx(const std::string section_name, const int run_number, const bool use_walltime = false) const;
 
   /** output to currently pre-defined (csv) file, does not output individual run results, but average over all recorded
    * results
@@ -100,6 +103,7 @@ public:
   void outputTimings(const std::string filename) const;
   void outputTimings(std::ostream& out = std::cout) const;
   void outputTimingsAll(std::ostream& out = std::cout) const;
+
   /** call this with correct numRuns <b> before </b> starting any profiling
      *  if you're planning on doing more than one iteration of your code
      *  called once fromm ctor with numRuns=1
