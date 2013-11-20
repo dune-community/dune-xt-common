@@ -244,11 +244,9 @@ void Profiler::outputTimings(const std::string csv) const
   boost::filesystem::path filename = dir / (boost::format("%s_p%08d.csv") % csv % comm.rank()).str();
   boost::filesystem::ofstream out(filename);
   outputTimings(out);
-  if (comm.rank() == 0) {
-    boost::filesystem::path a_filename = dir / (boost::format("%s.csv") % csv).str();
-    boost::filesystem::ofstream a_out(a_filename);
-    outputTimingsAll(a_out);
-  }
+  boost::filesystem::path a_filename = dir / (boost::format("%s.csv") % csv).str();
+  boost::filesystem::ofstream a_out(a_filename);
+  outputTimingsAll(a_out);
 }
 
 void Profiler::outputTimingsAll(std::ostream& out) const
@@ -257,20 +255,25 @@ void Profiler::outputTimingsAll(std::ostream& out) const
     return;
   // csv header:
   const auto& comm = Dune::MPIHelper::getCollectiveCommunication();
-  out << "run";
+
+  std::stringstream stash;
+
+  stash << "run";
   for (const auto& section : datamaps_[0]) {
-    out << csv_sep << section.first << "_avg" << csv_sep << section.first << "_sum";
+    stash << csv_sep << section.first << "_avg" << csv_sep << section.first << "_sum";
   }
   int i = 0;
   for (const auto& datamap : datamaps_) {
-    out << std::endl << i++;
+    stash << std::endl << i++;
     for (const auto& section : datamap) {
       auto val = section.second;
       auto sum = comm.sum(val);
-      out << csv_sep << sum / float(comm.size()) << csv_sep << sum;
+      stash << csv_sep << sum / float(comm.size()) << csv_sep << sum;
     }
   }
-  out << std::endl;
+  stash << std::endl;
+  if (comm.rank() == 0)
+    out << stash.str();
 }
 
 void Profiler::outputTimings(std::ostream& out) const
