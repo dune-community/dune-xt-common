@@ -260,15 +260,21 @@ void Profiler::outputTimingsAll(std::ostream& out) const
 
   stash << "run";
   for (const auto& section : datamaps_[0]) {
-    stash << csv_sep << section.first << "_avg" << csv_sep << section.first << "_sum";
+    stash << csv_sep << section.first << "_avg_usr" << csv_sep << section.first << "_max_usr" << csv_sep
+          << section.first << "_avg_wall" << csv_sep << section.first << "_max_wall";
   }
   int i = 0;
   for (const auto& datamap : datamaps_) {
     stash << std::endl << i++;
     for (const auto& section : datamap) {
-      auto val = section.second;
-      auto sum = comm.sum(val);
-      stash << csv_sep << sum / float(comm.size()) << csv_sep << sum;
+      auto wall     = section.second.second;
+      auto usr      = section.second.first;
+      auto wall_sum = comm.sum(wall);
+      auto usr_sum  = comm.sum(usr);
+      auto wall_max = comm.max(wall);
+      auto usr_max  = comm.max(usr);
+
+      stash << csv_sep << usr_sum * weight << csv_sep << usr_max << csv_sep << wall_sum * weight << csv_sep << wall_max;
     }
   }
   stash << std::endl;
