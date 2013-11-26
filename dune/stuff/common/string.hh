@@ -36,6 +36,24 @@ inline ReturnType fromString(const std::string s)
   return boost::lexical_cast<ReturnType, std::string>(s);
 } // fromString
 
+#define DSC_FRSTR(tn, tns)                                                                                             \
+  template <>                                                                                                          \
+  inline tn fromString<tn>(const std::string s)                                                                        \
+  {                                                                                                                    \
+    return std::sto##tns(s);                                                                                           \
+  }
+
+DSC_FRSTR(int, i)
+DSC_FRSTR(long, l)
+DSC_FRSTR(long long, ll)
+DSC_FRSTR(unsigned long, ul)
+DSC_FRSTR(unsigned long long, ull)
+DSC_FRSTR(float, f)
+DSC_FRSTR(double, d)
+DSC_FRSTR(long double, ld)
+
+#undef DSC_FRSTR
+
 
 inline std::string toString(const char* s)
 {
@@ -48,30 +66,11 @@ inline std::string toString(const std::string s)
 } // toString
 
 //! simple and dumb anything to std::string conversion
-template <class ReturnType>
-inline std::string toString(const ReturnType& s)
+template <class InType>
+inline std::string toString(const InType& s)
 {
   return std::to_string(s);
 } // toString
-
-
-#define DSC_TOSTR(tn, tns)                                                                                             \
-  template <>                                                                                                          \
-  inline tn fromString<tn>(const std::string s)                                                                        \
-  {                                                                                                                    \
-    return std::sto##tns(s);                                                                                           \
-  }
-
-DSC_TOSTR(int, i)
-DSC_TOSTR(long, l)
-DSC_TOSTR(long long, ll)
-DSC_TOSTR(unsigned long, ul)
-DSC_TOSTR(unsigned long long, ull)
-DSC_TOSTR(float, f)
-DSC_TOSTR(double, d)
-DSC_TOSTR(long double, ld)
-
-#undef DSC_TOSTR
 
 
 /**
