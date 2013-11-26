@@ -1,3 +1,4 @@
+#include <config.h>
 #include "configcontainer.hh"
 
 #if HAVE_DUNE_FEM
@@ -85,16 +86,18 @@ ConfigContainer::~ConfigContainer()
 }
 
 
-void loadIntoFemParamter(const std::string& filename)
+void loadIntoFemParameter(const Dune::ParameterTree& tree, const std::string pref = "")
 {
 #if HAVE_DUNE_FEM
-#if DUNE_FEM_IS_MULTISCALE_COMPATIBLE
-  Dune::Parameter::append(filename);
-#elif DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
-  Dune::Fem::Parameter::append(filename);
-#else
-  Dune::Fem::Parameter::append(filename);
-#endif
+  for (auto key : tree.getValueKeys()) {
+    const auto val = tree.get(key, std::string());
+    key = pref + "." + key;
+    Dune::Fem::Parameter::replaceKey(key, val);
+  }
+  for (auto subkey : tree.getSubKeys()) {
+    const auto subpref = pref.empty() ? subkey : pref + "." + subkey;
+    loadIntoFemParameter(tree.sub(subkey), subpref);
+  }
 #endif
 }
 
@@ -106,8 +109,8 @@ void ConfigContainer::readCommandLine(int argc, char* argv[])
     DUNE_THROW(Dune::Exception, (usage % argv[0]).str());
   }
   Dune::ParameterTreeParser::readINITree(argv[1], tree_);
-  loadIntoFemParamter(argv[1]);
   Dune::ParameterTreeParser::readOptions(argc, argv, tree_);
+  loadIntoFemParameter(tree_);
 
   // datadir and logdir may be given from the command line...
   logdir_ = boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false);
