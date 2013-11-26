@@ -250,11 +250,9 @@ void Profiler::outputTimings(const std::string csv) const
   boost::filesystem::path filename = dir / (boost::format("%s_p%08d.csv") % csv % comm.rank()).str();
   boost::filesystem::ofstream out(filename);
   outputTimings(out);
-  if (comm.rank() == 0) {
-    boost::filesystem::path a_filename = dir / (boost::format("%s.csv") % csv).str();
-    boost::filesystem::ofstream a_out(a_filename);
-    outputTimingsAll(a_out);
-  }
+  boost::filesystem::path a_filename = dir / (boost::format("%s.csv") % csv).str();
+  boost::filesystem::ofstream a_out(a_filename);
+  outputTimingsAll(a_out);
 }
 
 void Profiler::outputTimingsAll(std::ostream& out) const
@@ -263,25 +261,31 @@ void Profiler::outputTimingsAll(std::ostream& out) const
     return;
   // csv header:
   const auto& comm = Dune::MPIHelper::getCollectiveCommunication();
-  out << "run";
+
+  std::stringstream stash;
+
+  stash << "run";
   for (const auto& section : datamaps_[0]) {
-    out << csv_sep << section.first << "_avg_usr" << csv_sep << section.first << "_sum_usr" << csv_sep << section.first
-        << "_avg_wall" << csv_sep << section.first << "_sum_wall";
+    stash << csv_sep << section.first << "_avg_usr" << csv_sep << section.first << "_max_usr" << csv_sep
+          << section.first << "_avg_wall" << csv_sep << section.first << "_max_wall";
   }
-  int i             = 0;
-  const auto weight = 1 / float(comm.size());
+  int i = 0;
   for (const auto& datamap : datamaps_) {
-    out << std::endl << i++;
+    stash << std::endl << i++;
     for (const auto& section : datamap) {
       auto wall     = section.second.second;
       auto usr      = section.second.first;
       auto wall_sum = comm.sum(wall);
       auto usr_sum  = comm.sum(usr);
+      auto wall_max = comm.max(wall);
+      auto usr_max  = comm.max(usr);
 
-      out << csv_sep << usr_sum * weight << csv_sep << usr_sum << csv_sep << wall_sum * weight << csv_sep << wall_sum;
+      stash << csv_sep << usr_sum * weight << csv_sep << usr_max << csv_sep << wall_sum * weight << csv_sep << wall_max;
     }
   }
-  out << std::endl;
+  stash << std::endl;
+  if (comm.rank() == 0)
+    out << stash.str();
 }
 
 void Profiler::outputTimings(std::ostream& out) const
