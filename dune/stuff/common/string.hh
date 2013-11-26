@@ -86,7 +86,7 @@ DSC_TOSTR(long double, ld)
 template <class T>
 std::string whitespaceify(const T& t, const char whitespace = ' ')
 {
-  const std::string s = toString<T>(t);
+  const std::string s = toString(t);
   std::string ret = "";
   for (unsigned int i = 0; i < s.size(); ++i) {
     ret += whitespace;
