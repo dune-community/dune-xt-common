@@ -15,9 +15,9 @@ namespace Stuff {
 namespace Common {
 
 template <class VectorImp>
-void clear(Dune::DenseVector<VectorImp>& vector)
+inline void clear(Dune::DenseVector<VectorImp>& vector)
 {
-  vector = typename Dune::DenseVector<VectorImp>::value_type(0);
+  vector *= typename Dune::DenseVector<VectorImp>::value_type(0);
 }
 
 
