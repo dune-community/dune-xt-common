@@ -116,10 +116,10 @@ void Profiler::startTiming(const std::string section_name)
       return;
 
     section->second.first  = true; // set active, start with new
-    section->second.second = TimingData(section_name);
+    section->second.second = PerThreadValue<TimingData>(section_name);
   } else {
     // init new section
-    known_timers_map_[section_name] = std::make_pair(true, TimingData(section_name));
+    known_timers_map_[section_name] = std::make_pair(true, PerThreadValue<TimingData>(section_name));
   }
   DSC_LIKWID_BEGIN_SECTION(section_name)
 } // StartTiming
@@ -132,7 +132,7 @@ long Profiler::stopTiming(const std::string section_name, const bool use_walltim
     DUNE_THROW(Dune::RangeError, "trying to stop timer " << section_name << " that wasn't started\n");
 
   known_timers_map_[section_name].first = false; // marks as not running
-  TimingData& timing = known_timers_map_[section_name].second;
+  TimingData& timing = *(known_timers_map_[section_name].second);
   timing.stop();
   auto delta            = timing.delta();
   Datamap& current_data = datamaps_[current_run_number_];
@@ -161,7 +161,7 @@ long Profiler::getTimingIdx(const std::string section_name, const int run_number
     const auto& timer_it = known_timers_map_.find(section_name);
     if (timer_it == known_timers_map_.end())
       DUNE_THROW(Dune::InvalidStateException, "no timer found: " + section_name);
-    return use_walltime ? timer_it->second.second.delta().second : timer_it->second.second.delta().first;
+    return use_walltime ? timer_it->second.second->delta().second : timer_it->second.second->delta().first;
   }
   return use_walltime ? section->second.second : section->second.first;
 } // GetTiming
