@@ -8,6 +8,8 @@
 #include <dune/common/fvector.hh>
 #include <dune/common/deprecated.hh>
 
+#include <dune/stuff/la/container/interface.hh>
+#include <dune/stuff/la/container/eigen.hh>
 #include "float_cmp.hh"
 
 namespace Dune {
@@ -18,6 +20,23 @@ template <class VectorImp>
 inline void clear(Dune::DenseVector<VectorImp>& vector)
 {
   vector *= typename Dune::DenseVector<VectorImp>::value_type(0);
+}
+
+/**
+ *  \brief  Clears s vector.
+ *  \note   This default implementation is not optimal. Add a specialization for each implementation below!
+ */
+template <class T>
+inline void clear(LA::VectorInterface<T>& vector)
+{
+  for (size_t ii = 0; ii < vector.size(); ++ii)
+    vector.set(ii, typename LA::VectorInterface<T>::ElementType(0));
+}
+
+template <class T>
+inline void clear(LA::EigenDenseVector<T>& vector)
+{
+  vector.backend() *= typename LA::EigenDenseVector<T>::ElementType(0);
 }
 
 
