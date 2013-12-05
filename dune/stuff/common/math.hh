@@ -1,7 +1,6 @@
 #ifndef DUNE_STUFF_COMMON_MATH_HH
 #define DUNE_STUFF_COMMON_MATH_HH
 
-#include <config.h>
 #include <vector>
 #include <limits>
 #include <algorithm>

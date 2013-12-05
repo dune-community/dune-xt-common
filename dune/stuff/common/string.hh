@@ -5,8 +5,6 @@
 #ifndef DUNE_STUFF_COMMON_STRING_HH
 #define DUNE_STUFF_COMMON_STRING_HH
 
-#include <config.h>
-
 #include <cstring>
 #include <ctime>
 #include <map>

@@ -1,8 +1,6 @@
 #ifndef DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
 #define DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
 
-#include <config.h>
-
 #include <dune/common/deprecated.hh>
 #include <dune/common/parametertree.hh>
 #include <dune/common/parametertreeparser.hh>

@@ -9,7 +9,6 @@
 #include <map>
 #include <assert.h>
 #include <algorithm>
-#include <config.h>
 #include <dune/common/version.hh>
 #include <dune/common/array.hh>
 #include <dune/common/static_assert.hh>
