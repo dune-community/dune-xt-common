@@ -5,12 +5,6 @@
 #ifndef LOGGING_HH_INCLUDED
 #define LOGGING_HH_INCLUDED
 
-#ifdef HAVE_CMAKE_CONFIG
-#include "cmake_config.h"
-#elif defined(HAVE_CONFIG_H)
-#include <config.h>
-#endif // ifdef HAVE_CMAKE_CONFIG
-
 #include <dune/common/exceptions.hh>
 #include <dune/common/version.hh>
 #include <dune/stuff/common/disable_warnings.hh>

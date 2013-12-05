@@ -1,12 +1,6 @@
 #ifndef DUNE_STUFF_RANGES_RANGES_HH
 #define DUNE_STUFF_RANGES_RANGES_HH
 
-#ifdef HAVE_CMAKE_CONFIG
-#include "cmake_config.h"
-#else
-#include "config.h"
-#endif // ifdef HAVE_CMAKE_CONFIG
-
 #if HAVE_DUNE_GRID
 #include <dune/stuff/common/disable_warnings.hh>
 #include <dune/grid/common/gridview.hh>
