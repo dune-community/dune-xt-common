@@ -13,6 +13,7 @@
 #include <dune/common/exceptions.hh>
 
 #include <dune/stuff/common/string.hh>
+#include <dune/stuff/common/color.hh>
 
 namespace Dune {
 namespace Stuff {
