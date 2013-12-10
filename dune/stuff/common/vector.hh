@@ -30,14 +30,14 @@ template <class T>
 inline void clear(LA::VectorInterface<T>& vector)
 {
   for (size_t ii = 0; ii < vector.size(); ++ii)
-    vector.set(ii, typename LA::VectorInterface<T>::ElementType(0));
+    vector.set(ii, typename LA::VectorInterface<T>::ScalarType(0));
 }
 
 #if HAVE_EIGEN
 template <class T>
 inline void clear(LA::EigenDenseVector<T>& vector)
 {
-  vector.backend() *= typename LA::EigenDenseVector<T>::ElementType(0);
+  vector.backend() *= typename LA::EigenDenseVector<T>::ScalarType(0);
 }
 #endif
 
