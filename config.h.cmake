@@ -1,5 +1,8 @@
 /* begin dune-stuff */
 
+/* We need this for the python bindings (there is no unsigned in python). */
+#define DUNE_STUFF_SSIZE_T long int
+
 /* Define to the version of dune-stuff */
 #define DUNE_STUFF_VERSION "${DUNE_STUFF_VERSION}"
 
