@@ -6,8 +6,9 @@
 #ifndef DUNE_STUFF_COMMON_CRTP_HH
 #define DUNE_STUFF_COMMON_CRTP_HH
 
+#include <atomic>
+
 #include "exceptions.hh"
-#include <dune/common/bartonnackmanifcheck.hh>
 
 #ifdef CHECK_CRTP
 #undef CHECK_CRTP
@@ -20,14 +21,14 @@
 #define CHECK_CRTP(dummy)
 #else
 /**
-  * This macro is essentially a slightly modified copy of the CHECK_INTERFACE_IMPLEMENTATION macro.
+  * This macro is essentially a thread safe variant of the CHECK_INTERFACE_IMPLEMENTATION macro from dune-common.
   */
 #define CHECK_CRTP(__interface_method_to_call__)                                                                       \
   {                                                                                                                    \
-    static bool call = false;                                                                                          \
+    static std::atomic<bool> call(false);                                                                              \
     if (call)                                                                                                          \
       DUNE_THROW_COLORFULLY(Dune::Stuff::Exception::CRTP_check_failed,                                                 \
-                            "The derived class does not implement a required method!");                                \
+                            "The derived class does not implement the required method!");                              \
     call = true;                                                                                                       \
     try {                                                                                                              \
       (__interface_method_to_call__);                                                                                  \
