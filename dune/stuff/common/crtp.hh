@@ -60,12 +60,12 @@ class CRTPInterface
 protected:
   typedef typename Traits::derived_type derived_type;
 
-  inline derived_type& as_imp(InterfaceType& that)
+  static inline derived_type& as_imp(InterfaceType& that)
   {
     return static_cast<derived_type&>(that);
   }
 
-  inline const derived_type& as_imp(const InterfaceType& that) const
+  static inline const derived_type& as_imp(const InterfaceType& that)
   {
     return static_cast<const derived_type&>(that);
   }
