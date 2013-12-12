@@ -8,7 +8,7 @@
 #include <dune/common/fvector.hh>
 #include <dune/common/deprecated.hh>
 
-#include <dune/stuff/la/container/interface.hh>
+#include <dune/stuff/la/container/interfaces.hh>
 #include <dune/stuff/la/container/eigen.hh>
 #include "float_cmp.hh"
 
