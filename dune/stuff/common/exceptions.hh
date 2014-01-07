@@ -69,6 +69,10 @@ class results_are_not_as_expected : public Dune::Exception
 {
 };
 
+class internal_error : public Dune::Exception
+{
+};
+
 
 } // namespace Exception
 } // namespace Stuff
