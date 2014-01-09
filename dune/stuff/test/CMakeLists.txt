@@ -1,6 +1,5 @@
 enable_testing()
 
-HEADERCHECK( ${stuff} )
 DEPENDENCYCHECK( ${stuff} )
 
 set_source_files_properties( ${DUNE_HEADERS} PROPERTIES HEADER_FILE_ONLY 1 )
