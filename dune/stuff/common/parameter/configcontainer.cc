@@ -7,6 +7,10 @@
 #include <dune/stuff/common/reenable_warnings.hh>
 #endif
 
+#ifndef HAVE_DUNE_FEM_PARAMETER_REPLACE
+#define HAVE_DUNE_FEM_PARAMETER_REPLACE 0
+#endif
+
 #define DSC_ORDER_REL_GENERIC(var, a, b)                                                                               \
   if (a.var < b.var) {                                                                                                 \
     return true;                                                                                                       \
@@ -88,7 +92,7 @@ ConfigContainer::~ConfigContainer()
 
 void loadIntoFemParameter(const Dune::ParameterTree& tree, const std::string pref = "")
 {
-#if HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM_PARAMETER_REPLACE
   for (auto key : tree.getValueKeys()) {
     const auto val = tree.get(key, std::string());
     key = pref + "." + key;
