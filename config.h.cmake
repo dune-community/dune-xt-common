@@ -1,4 +1,5 @@
-
+/* begin dune-stuff */
+// NEVER delete/alter above comment, dune's cmake crap relies on it
 
 /* We need this for the python bindings (there is no unsigned in python). */
 #define DUNE_STUFF_SSIZE_T long int
@@ -25,3 +26,4 @@
 #define DS_FINAL  ${DS_FINAL}
 #define HAVE_DUNE_FEM_PARAMETER_REPLACE 0
 /* end dune-stuff */
+// NEVER delete/alter above comment, dune's cmake crap relies on it
