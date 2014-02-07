@@ -108,6 +108,14 @@ if(EIGEN_FOUND)
   include_directories(${EIGEN_INCLUDE_DIRS})
 endif(EIGEN_FOUND)
 
+pkg_check_modules(LIBAMA libama)
+if(LIBAMA_FOUND)
+        include_directories(${LIBAMA_INCLUDE_DIRS})
+        find_library(LIBAMA_LIBRARY NAMES ama
+                HINTS ${LIBAMA_LIBDIR} ${LIBAMA_LIBRARY_DIRS})
+        list(APPEND DUNE_DEFAULT_LIBS ${LIBAMA_LIBRARY})
+endif(LIBAMA_FOUND)
+
 include(FindLIKWID)
 find_package(LIKWID)
 if(LIKWID_FOUND)
