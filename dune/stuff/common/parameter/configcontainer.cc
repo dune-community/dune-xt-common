@@ -102,6 +102,9 @@ void loadIntoFemParameter(const Dune::ParameterTree& tree, const std::string pre
     const auto subpref = pref.empty() ? subkey : pref + "." + subkey;
     loadIntoFemParameter(tree.sub(subkey), subpref);
   }
+#else
+  (void)(tree);
+  (void)(pref);
 #endif
 }
 
