@@ -18,7 +18,7 @@
 #include <dune/stuff/common/exceptions.hh>
 
 if (a.size() != b.size())
-  DUNE_THROW_COLORFULLY(Exception::shapes_do_not_match,
+  DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
                        "size of a (" << a.size() << ") does not match the size of b (" << b.size() << ")!");
 \endcode
  *  This macro is essentially copied from dune-common with added color functionality.
@@ -46,7 +46,7 @@ if (a.size() != b.size())
 
 namespace Dune {
 namespace Stuff {
-namespace Exception {
+namespace Exceptions {
 
 
 class CRTP_check_failed : public Dune::Exception
@@ -74,7 +74,7 @@ class internal_error : public Dune::Exception
 };
 
 
-} // namespace Exception
+} // namespace Exceptions
 } // namespace Stuff
 } // namespace Dune
 
