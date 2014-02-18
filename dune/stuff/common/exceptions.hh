@@ -73,6 +73,10 @@ class internal_error : public Dune::Exception
 {
 };
 
+class linear_solver_failed : public Dune::Exception
+{
+};
+
 
 } // namespace Exceptions
 } // namespace Stuff
