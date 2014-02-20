@@ -1,7 +1,7 @@
 include(CheckCXXSourceCompiles)
 
 
-include(modules/DuneStuffMacros)
+include(DuneStuffMacros)
 
 set(DUNE_STUFF_ROOT ${PROJECT_SOURCE_DIR}/../dune-stuff
 		CACHE STRING "path to dune-stuff module root" )
