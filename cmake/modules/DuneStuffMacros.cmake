@@ -60,6 +60,8 @@ SET( CMAKE_EXPORT_COMPILE_COMMANDS "ON" )
 SET( CMAKE_CXX_FLAGS_RELEASE
   "-DDNDEBUG -DNDEBUG -O2 -fPIC " )
 
+SET( CMAKE_CXX_FLAGS "-DDUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS=1 ${CMAKE_CXX_FLAGS}" )
+
 SET( CMAKE_CXX_FLAGS_DEBUG
   "-O0 -DDNDEBUG -g3 -ggdb  -Wunused-variable -Winline -fno-strict-aliasing -fPIC -Wall -Wextra -Wc++0x-compat -Wparentheses -pedantic -Wredundant-decls -Wshadow  -Wundef -Wnon-virtual-dtor" )
 
