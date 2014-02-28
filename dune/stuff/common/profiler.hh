@@ -80,9 +80,6 @@ private:
   long getTimingIdx(const std::string section_name, const int run_number, const bool use_walltime) const;
 
 public:
-  //  typedef std::vector< Dune::Stuff::Common::RunInfo > InfoContainer;
-  //  typedef std::map<std::string, InfoContainer> InfoContainerMap;
-
   //! set this to begin a named section
   void startTiming(const std::string section_name);
 

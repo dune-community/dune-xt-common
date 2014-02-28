@@ -37,22 +37,6 @@ TEST(ProfilerTest, ScopedTiming)
   EXPECT_GE(DSC_PROFILER.getTiming("ProfilerTest.ScopedTiming"), long(dvalueRange.size() * wait_ms));
 }
 
-TEST(ProfilerTest, MultiRuns)
-{
-  const auto dvalueRange = valueRange(1, 3);
-  // needs to be dvalueRange.size() + 1 since we're calling nextRun() dvalueRange.size() times
-  DSC_PROFILER.reset(dvalueRange.size() + 1);
-  for (auto i : dvalueRange) {
-    scoped_busywait("ProfilerTest.MultiRuns", i * wait_ms);
-    DSC_PROFILER.nextRun();
-  }
-
-  for (auto i : dvalueRange) {
-    // i-1 cause runs have 0-based index
-    EXPECT_GE(DSC_PROFILER.getTimingIdx("ProfilerTest.MultiRuns", i - 1), i * wait_ms * confidence_margin());
-  }
-}
-
 TEST(ProfilerTest, OutputConstness)
 {
   DSC_PROFILER.reset(1);
