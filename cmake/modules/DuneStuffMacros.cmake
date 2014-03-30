@@ -107,7 +107,10 @@ endif(HAVE_BLAS)
 
 pkg_check_modules(EIGEN eigen3)
 if(EIGEN_FOUND)
+  set(HAVE_EIGEN 1)
   include_directories(${EIGEN_INCLUDE_DIRS})
+else(EIGEN_FOUND)
+  set(HAVE_EIGEN 0)
 endif(EIGEN_FOUND)
 
 pkg_check_modules(LIBAMA libama)

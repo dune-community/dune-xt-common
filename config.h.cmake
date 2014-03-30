@@ -16,6 +16,9 @@
 /* Define to the revision of dune-stuff */
 #define DUNE_STUFF_VERSION_REVISION ${DUNE_STUFF_VERSION_REVISION}
 
+/* Define to 1 if eigen was found, else 0 */
+#define HAVE_EIGEN ${HAVE_EIGEN}
+
 #define HAVE_LIKWID ${HAVE_LIKWID}
 #define ENABLE_PERFMON ${ENABLE_PERFMON}
 #if ENABLE_PERFMON && HAVE_LIKWID
