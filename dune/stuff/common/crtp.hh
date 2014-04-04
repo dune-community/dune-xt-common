@@ -57,7 +57,7 @@ namespace Stuff {
 template <class InterfaceType, class Traits>
 class CRTPInterface
 {
-protected:
+public:
   typedef typename Traits::derived_type derived_type;
 
   static inline derived_type& as_imp(InterfaceType& that)
