@@ -11,7 +11,7 @@
 #pragma GCC diagnostic ignored "-Wused-but-marked-unused"
 #endif
 
-/** Copyright (c) 2012, Rene Milk, Felix Albrecht
+/** Copyright (c) 2012, Rene Milk, Felix Schindler
    * All rights reserved.
    *
    * Redistribution and use in source and binary forms, with or without

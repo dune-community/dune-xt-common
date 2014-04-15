@@ -1,6 +1,6 @@
 ﻿// This file is part of the dune-gdt project:
 //   http://users.dune-project.org/projects/dune-gdt
-// Copyright holders: Felix Albrecht
+// Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 #ifndef DUNE_STUFF_COMMON_CONVERGENCE_STUDY_HH

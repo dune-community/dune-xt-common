@@ -2,7 +2,7 @@
 #pragma GCC diagnostic pop
 #endif
 
-/** Copyright (c) 2012, Rene Milk, Felix Albrecht
+/** Copyright (c) 2012, Rene Milk, Felix Schindler
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without

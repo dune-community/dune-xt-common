@@ -487,7 +487,7 @@ inline std::string dimToAxisName(const unsigned int dim, const bool capitalize =
 
 #endif // ifndef DUNESTUFF_PRINTING_HH_INCLUDED
 
-/** Copyright (c) 2012, Felix Albrecht, Rene Milk     , Sven Kaulmann
+/** Copyright (c) 2012, Rene Milk, Felix Schindler     , Sven Kaulmann
    * All rights reserved.
    *
    * Redistribution and use in source and binary forms, with or without
