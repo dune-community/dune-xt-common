@@ -1,9 +1,8 @@
-#include <config.h>
+#include "config.h"
 
 #include "threadmanager.hh"
 
-
-#ifdef HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
 
 #include <dune/fem/misc/threadmanager.hh>
 
@@ -27,7 +26,7 @@ void Dune::Stuff::ThreadManager::set_max_threads(const unsigned int count)
   Dune::Fem::ThreadManager::setMaxNumberThreads(count);
 }
 
-#else // ifdef HAVE_DUNE_FEM
+#else // if HAVE_DUNE_FEM
 
 unsigned int Dune::Stuff::ThreadManager::max_threads()
 {
@@ -48,4 +47,4 @@ void Dune::Stuff::ThreadManager::set_max_threads(const unsigned int /*count*/)
 {
 }
 
-#endif // else ifdef HAVE_DUNE_FEM
+#endif // HAVE_DUNE_FEM

@@ -1,7 +1,7 @@
 #ifndef STUFF_LOCALMASSMATRIX_HH
 #define STUFF_LOCALMASSMATRIX_HH
 
-#ifdef HAVE_DUNE_FEM
+#if HAVE_DUNE_FEM
 
 #include <dune/common/version.hh>
 
