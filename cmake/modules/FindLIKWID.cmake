@@ -1,3 +1,7 @@
+# This file is part of the dune-stuff project:
+#   http://users.dune-project.org/projects/dune-stuff
+# Copyright holders: Rene Milk, Felix Schindler
+# License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 find_path(LIKWID_INCLUDE_DIR NAMES likwid.h PATHS ${LIKWID_ROOT} PATH_SUFFIXES include)
 find_library(LIKWID_LIBRARY  NAMES likwid   PATHS ${LIKWID_ROOT} PATH_SUFFIXES lib)

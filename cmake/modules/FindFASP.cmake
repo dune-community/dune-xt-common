@@ -1,3 +1,8 @@
+# This file is part of the dune-stuff project:
+#   http://users.dune-project.org/projects/dune-stuff
+# Copyright holders: Rene Milk, Felix Schindler
+# License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+
 message("-- checking for 'fasp' library")
 find_library(FASP_LIBRARY fasp "${CMAKE_CURRENT_SOURCE_DIR}/../local/lib/")
 if("${FASP_LIBRARY}" MATCHES "FASP_LIBRARY-NOTFOUND")

@@ -1,3 +1,8 @@
+# This file is part of the dune-stuff project:
+#   http://users.dune-project.org/projects/dune-stuff
+# Copyright holders: Rene Milk, Felix Schindler
+# License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+
 set(lib_dune_stuff_sources common/filesystem.cc 
   common/color.cc 
   common/logging.cc 
@@ -22,7 +27,9 @@ set(lib_dune_stuff_sources common/filesystem.cc
 dune_add_library("dunestuff" ${lib_dune_stuff_sources}
   ADD_LIBS ${DUNE_LIBS})
 target_link_dune_default_libraries(dunestuff)
-add_dune_alugrid_flags(dunestuff)
+if(dune-grid_FOUND)
+  add_dune_alugrid_flags(dunestuff)
+endif(dune-grid_FOUND)
 
 add_analyze(${lib_dune_stuff_sources})
 

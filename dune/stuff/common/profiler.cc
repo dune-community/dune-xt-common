@@ -1,10 +1,13 @@
-#include <dune/common/version.hh>
+// This file is part of the dune-stuff project:
+//   http://users.dune-project.org/projects/dune-stuff
+// Copyright holders: Rene Milk, Felix Schindler
+// License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+//
+// Contributors: Sven Kaulmann
 
-#ifdef HAVE_CMAKE_CONFIG
-#include "cmake_config.h"
-#elif defined(HAVE_CONFIG_H)
-#include <config.h>
-#endif // ifdef HAVE_CMAKE_CONFIG
+#include "config.h"
+
+#include <dune/common/version.hh>
 
 #include "profiler.hh"
 

@@ -1,11 +1,15 @@
-#include <config.h>
+// This file is part of the dune-stuff project:
+//   http://users.dune-project.org/projects/dune-stuff
+// Copyright holders: Rene Milk, Felix Schindler
+// License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+
+#include "config.h"
 
 #include "threadmanager.hh"
 
+#if HAVE_DUNE_FEM
 
-#ifdef HAVE_DUNE_FEM
-
-#include <dune/fem/misc/threadmanager.hh>
+#include <dune/fem/misc/threads/threadmanager.hh>
 
 unsigned int Dune::Stuff::ThreadManager::max_threads()
 {
@@ -27,7 +31,7 @@ void Dune::Stuff::ThreadManager::set_max_threads(const unsigned int count)
   Dune::Fem::ThreadManager::setMaxNumberThreads(count);
 }
 
-#else // ifdef HAVE_DUNE_FEM
+#else // if HAVE_DUNE_FEM
 
 unsigned int Dune::Stuff::ThreadManager::max_threads()
 {
@@ -48,4 +52,4 @@ void Dune::Stuff::ThreadManager::set_max_threads(const unsigned int /*count*/)
 {
 }
 
-#endif // else ifdef HAVE_DUNE_FEM
+#endif // HAVE_DUNE_FEM
