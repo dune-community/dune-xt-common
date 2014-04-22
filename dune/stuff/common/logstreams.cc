@@ -62,8 +62,8 @@ SuspendableStrBuffer::int_type SuspendableStrBuffer::overflow(SuspendableStrBuff
 
 LogStream& LogStream::flush()
 {
-  assert(buffer_);
-  buffer_->pubsync();
+  assert(this->buffer_);
+  this->buffer_->pubsync();
   return *this;
 }
 
