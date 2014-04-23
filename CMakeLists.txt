@@ -7,8 +7,7 @@ project("dune-stuff" CXX)
 
 if(CMAKE_WITH_AUTOTOOLS)
   # this is how it used to be in the good old days :)
-  # this assumes that we use autotools to configure everything and just use this CMakeLists.txt for the tests and
-  # examples in dune-gdt
+  # this assumes that we use autotools to configure everything and just use this CMakeLists.txt for the tests
   if( NOT CMAKE_BUILD_TYPE )
     message( STATUS "No build type selected, setting default build type 'Debug'" )
     set( CMAKE_BUILD_TYPE "DEBUG" CACHE STRING "DEBUG/RELEASE")
@@ -128,7 +127,6 @@ else(CMAKE_WITH_AUTOTOOLS)
   set_source_files_properties( ${COMMON_HEADER} PROPERTIES HEADER_FILE_ONLY 1 )
 
   add_subdirectory(dune)
-  #add_subdirectory(examples)
   add_subdirectory("cmake/modules")
   add_subdirectory("cmake/scripts")
 
