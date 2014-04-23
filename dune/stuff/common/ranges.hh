@@ -9,9 +9,7 @@
 #define DUNE_STUFF_RANGES_RANGES_HH
 
 #if HAVE_DUNE_GRID
-#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/grid/common/gridview.hh>
-#include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/grid/common/geometry.hh>
 #include <dune/grid/common/entity.hh>
 #include <boost/serialization/static_warning.hpp>
@@ -19,17 +17,16 @@
 #endif
 
 #if HAVE_DUNE_FEM
-#include <dune/fem/version.hh>
 #include <dune/stuff/fem/namespace.hh>
 #include <dune/stuff/common/disable_warnings.hh>
 #include <dune/fem/function/common/discretefunction.hh>
-#include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/fem/gridpart/common/gridpart.hh>
 #if DUNE_FEM_IS_LOCALFUNCTIONS_COMPATIBLE
 #include <dune/fem/space/lagrangespace/lagrangepoints.hh>
 #else
 #include <dune/fem/space/lagrange/lagrangepoints.hh>
 #endif
+#include <dune/stuff/common/reenable_warnings.hh>
 #endif
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/fem/namespace.hh>
@@ -37,7 +34,9 @@
 namespace Dune {
 
 #if HAVE_DUNE_FEM
+
 namespace Fem {
+
 
 template <class DiscreteFunctionTraits>
 auto begin(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> decltype(func.dbegin())
@@ -63,16 +62,17 @@ auto end(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> 
   return func.dend();
 }
 
+
 } // namespace Fem
-#endif
 
-} // namespace Dune
+#endif // HAVE_DUNE_FEM
 
-namespace Dune {
 namespace Stuff {
 namespace Common {
 
 #if HAVE_DUNE_GRID
+
+
 //! adapter enabling view usage in range-based for
 template <class GridViewType, int codim = 0>
 class ViewRange
@@ -288,6 +288,7 @@ intersectionRange(const Dune::Fem::GridPartInterface<GridPartTraits>& gridpart,
                            typename Dune::Fem::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType>(
       gridpart, entity);
 }
+
 #endif // HAVE_DUNE_FEM
 
 //! get a vector with values in [start : increment : end)
