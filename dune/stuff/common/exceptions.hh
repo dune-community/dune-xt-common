@@ -1,6 +1,6 @@
 // This file is part of the dune-stuff project:
 //   https://users.dune-project.org/projects/dune-stuff/
-// Copyright Holders: Rene Milk, Felix Schindler
+// Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 #ifndef DUNE_STUFF_COMMON_EXCEPTIONS_HH
@@ -61,6 +61,14 @@ class index_out_of_range : public Dune::Exception
 {
 };
 
+class wrong_input_given : public Dune::Exception
+{
+};
+
+class you_are_using_this_wrongly : public Dune::Exception
+{
+};
+
 class configuration_error : public Dune::Exception
 {
 };
@@ -70,6 +78,10 @@ class results_are_not_as_expected : public Dune::Exception
 };
 
 class internal_error : public Dune::Exception
+{
+};
+
+class external_error : public Dune::Exception
 {
 };
 

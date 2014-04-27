@@ -1,5 +1,5 @@
 // This file is part of the dune-stuff project:
-//   http://users.dune-project.org/projects/dune-stuff
+//   https://users.dune-project.org/projects/dune-stuff
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
@@ -9,7 +9,7 @@
 
 #if HAVE_DUNE_FEM
 
-#include <dune/fem/misc/threads/threadmanager.hh>
+#include <dune/fem/misc/threadmanager.hh>
 
 unsigned int Dune::Stuff::ThreadManager::max_threads()
 {
