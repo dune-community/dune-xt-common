@@ -10,8 +10,10 @@
 
 #if HAVE_DUNE_GRID
 #include <dune/grid/common/gridview.hh>
+#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/grid/common/geometry.hh>
 #include <dune/grid/common/entity.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 #include <boost/serialization/static_warning.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 #endif
