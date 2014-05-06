@@ -57,6 +57,8 @@ protected:
   virtual int_type overflow(int_type ch = traits_type::eof());
 
 private:
+  int pubsync();
+
   inline bool enabled() const
   {
     return (!is_suspended_) && (logflags_ & loglevel_);
