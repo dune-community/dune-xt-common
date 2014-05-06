@@ -59,6 +59,12 @@ SuspendableStrBuffer::int_type SuspendableStrBuffer::overflow(SuspendableStrBuff
   return traits_type::eof() + 1;
 }
 
+int SuspendableStrBuffer::pubsync()
+{
+  if (enabled())
+    return BaseType::pubsync();
+  return 0;
+}
 
 LogStream& LogStream::flush()
 {
