@@ -18,7 +18,6 @@
 
 #include <dune/common/array.hh>
 #include <dune/common/deprecated.hh>
-#include <dune/common/static_assert.hh>
 #include <ostream>
 #include <iomanip>
 #include <vector>
