@@ -16,7 +16,6 @@
 #include <algorithm>
 #include <dune/common/version.hh>
 #include <dune/common/array.hh>
-#include <dune/common/static_assert.hh>
 #include <dune/common/deprecated.hh>
 #include <dune/common/exceptions.hh>
 

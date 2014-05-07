@@ -11,7 +11,6 @@
 // dune-common
 #include <dune/common/densematrix.hh>
 
-#include <dune/common/static_assert.hh>
 #include <dune/stuff/common/debug.hh>
 #include <dune/stuff/common/math.hh>
 
@@ -68,7 +67,7 @@ class MatrixDiagonal : public FieldVector<typename FieldMatrixType::field_type, 
 public:
   MatrixDiagonal(const FieldMatrixType& matrix)
   {
-    dune_static_assert(FieldMatrixType::rows == FieldMatrixType::cols, "Matrix must be square!");
+    static_assert(FieldMatrixType::rows == FieldMatrixType::cols, "Matrix must be square!");
     // CompileTimeChecker< FieldMatrixType::rows == FieldMatrixType::cols > matrix_must_be_square;
 
     for (size_t i = 0; i < FieldMatrixType::rows; i++)
