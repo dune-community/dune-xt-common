@@ -6,7 +6,6 @@
 #include <boost/config.hpp>
 
 #if BOOST_CLANG
-#error "foobar"
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
 #pragma GCC diagnostic ignored "-Wdeprecated-register"
