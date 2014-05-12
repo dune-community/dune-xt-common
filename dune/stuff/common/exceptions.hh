@@ -61,11 +61,15 @@ class index_out_of_range : public Dune::Exception
 {
 };
 
-class wrong_input_given : public Dune::Exception
+class you_are_using_this_wrongly : public Dune::Exception
 {
 };
 
-class you_are_using_this_wrongly : public Dune::Exception
+class wrong_input_given : public you_are_using_this_wrongly
+{
+};
+
+class requirements_not_met : public you_are_using_this_wrongly
 {
 };
 
