@@ -33,7 +33,26 @@
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/fem/namespace.hh>
 
+#if HAVE_DUNE_GDT
+#include <dune/gdt/spaces/interface.hh>
+#endif
+
 namespace Dune {
+
+#if HAVE_DUNE_GDT
+template <class Traits, int codim = 0>
+typename Traits::GridViewType::template Codim<codim>::Iterator begin(const Dune::GDT::SpaceInterface<Traits>& space)
+{
+  return space.grid_view()->template begin<codim>();
+}
+
+template <class Traits, int codim = 0>
+typename Traits::GridViewType::template Codim<codim>::Iterator end(const Dune::GDT::SpaceInterface<Traits>& space)
+{
+  return space.grid_view()->template end<codim>();
+}
+
+#endif
 
 #if HAVE_DUNE_FEM
 
