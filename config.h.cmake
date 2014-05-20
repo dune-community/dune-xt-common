@@ -28,5 +28,41 @@
 #define DS_OVERRIDE ${DS_OVERRIDE}
 #define DS_FINAL  ${DS_FINAL}
 #define HAVE_DUNE_FEM_PARAMETER_REPLACE 0
+
+#ifndef HAVE_DUNE_FEM
+# define HAVE_FUNE_FEM 0
+# endif
+
+#ifndef HAVE_EMPLACE
+# define HAVE_EMPLACE 0
+#endif
+
+#ifndef ENABLE_SUPERLU
+# define ENABLE_SUPERLU 0
+#endif
+
+#ifndef ENABLE_UMFPACK
+# define ENABLE_UMFPACK 0
+#endif
+
+#ifndef ENABLE_BOOST
+# define ENABLE_BOOST 0
+#endif
+
+#ifndef ENABLE_PETSC
+# define ENABLE_PETSC 0
+#endif
+
+#ifndef BOOST_CLANG
+# define BOOST_CLANG 0
+#endif
+
+#ifndef ENABLE_MPI
+# define ENABLE_MPI 0
+#endif
+
+#ifndef HAVE_CONSTEXPR
+# define HAVE_CONSTEXPR 0
+#endif
 /* end dune-stuff */
 // NEVER delete/alter above comment, dune's cmake crap relies on it
