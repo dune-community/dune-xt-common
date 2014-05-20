@@ -7,8 +7,7 @@
 #define DUNE_STUFF_COMMON_EXCEPTIONS_HH
 
 #include <dune/common/exceptions.hh>
-
-#include <dune/stuff/common/color.hh>
+#include <dune/common/parallel/mpihelper.hh>
 
 /**
  *  \brief Macro to throw a colorfull exception.
@@ -28,21 +27,31 @@ if (a.size() != b.size())
  */
 #define DUNE_THROW_COLORFULLY(E, m)                                                                                    \
   do {                                                                                                                 \
+    const std::string red   = "\033[31m";                                                                              \
+    const std::string clear = "\033[0m";                                                                               \
     E th__ex;                                                                                                          \
     std::ostringstream th__msg;                                                                                        \
     th__msg << m;                                                                                                      \
     std::ostringstream th__out;                                                                                        \
-    th__out << Dune::Stuff::Common::Colors::red << #E << "\033[0m\n";                                                  \
-    th__out << Dune::Stuff::Common::Colors::red << "[\033[0m";                                                         \
+    th__out << red << #E << clear;                                                                                     \
+    if (Dune::MPIHelper::getCollectiveCommunication().size() > 0)                                                      \
+      th__out << " (on rank " << Dune::MPIHelper::getCollectiveCommunication().rank() << ")";                          \
+    th__out << "\n";                                                                                                   \
+    th__out << red << "[" << clear;                                                                                    \
     th__out << __func__;                                                                                               \
-    th__out << Dune::Stuff::Common::Colors::red << "|\033[0m";                                                         \
-    th__out << __FILE__ << Dune::Stuff::Common::Colors::red << ":" << __LINE__ << "]\033[0m";                          \
+    th__out << red << "|" << clear;                                                                                    \
+    th__out << __FILE__ << red << ":" << __LINE__ << "]" << clear;                                                     \
     if (!th__msg.str().empty())                                                                                        \
-      th__out << "\n" << Dune::Stuff::Common::Colors::red << "=>\033[0m " << th__msg.str();                            \
+      th__out << "\n" << red << "=>" << clear << " " << th__msg.str();                                                 \
     th__ex.message(th__out.str());                                                                                     \
     throw th__ex;                                                                                                      \
   } while (0)
 // DUNE_THROW_COLORFULLY
+
+#ifdef DUNE_THROW
+#undef DUNE_THROW
+#define DUNE_THROW DUNE_THROW_COLORFULLY
+#endif // DUNE_THROW
 
 namespace Dune {
 namespace Stuff {
