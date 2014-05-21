@@ -125,8 +125,10 @@ macro(BEGIN_TESTCASES)
 endmacro(BEGIN_TESTCASES)
 
 macro(END_TESTCASES)
-    add_directory_test_target(_test_target)
-    add_dependencies(${_test_target} ${testnames})
+    IF(NOT CMAKE_WITH_AUTOTOOLS)
+        add_directory_test_target(_test_target)
+        add_dependencies(${_test_target} ${testnames})
+    ENDIF(NOT CMAKE_WITH_AUTOTOOLS)
 	add_custom_target(test_binaries DEPENDS ${testnames})
 	add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
                   DEPENDS test_binaries)
