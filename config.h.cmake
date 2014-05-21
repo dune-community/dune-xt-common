@@ -41,10 +41,6 @@
 # define ENABLE_SUPERLU 0
 #endif
 
-#ifndef ENABLE_UMFPACK
-# define ENABLE_UMFPACK 0
-#endif
-
 #ifndef ENABLE_BOOST
 # define ENABLE_BOOST 0
 #endif
