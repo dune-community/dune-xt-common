@@ -28,6 +28,7 @@ if (a.size() != b.size())
 #define DUNE_THROW_COLORFULLY(E, m)                                                                                    \
   do {                                                                                                                 \
     const std::string red   = "\033[31m";                                                                              \
+    const std::string brown = "\033[33m";                                                                              \
     const std::string clear = "\033[0m";                                                                               \
     E th__ex;                                                                                                          \
     std::ostringstream th__msg;                                                                                        \
@@ -37,12 +38,12 @@ if (a.size() != b.size())
     if (Dune::MPIHelper::getCollectiveCommunication().size() > 1)                                                      \
       th__out << " (on rank " << Dune::MPIHelper::getCollectiveCommunication().rank() << ")";                          \
     th__out << "\n";                                                                                                   \
-    th__out << red << "[" << clear;                                                                                    \
-    th__out << __func__;                                                                                               \
-    th__out << red << "|" << clear;                                                                                    \
-    th__out << __FILE__ << red << ":" << __LINE__ << "]" << clear;                                                     \
+    th__out << brown << "[" << clear;                                                                                  \
+    th__out << red << __func__ << clear;                                                                               \
+    th__out << brown << "|" << clear;                                                                                  \
+    th__out << __FILE__ << brown << ":" << clear << red << __LINE__ << clear << brown << "]" << clear;                 \
     if (!th__msg.str().empty())                                                                                        \
-      th__out << "\n" << red << "=>" << clear << " " << th__msg.str();                                                 \
+      th__out << "\n" << brown << "=>" << clear << " " << th__msg.str();                                               \
     th__ex.message(th__out.str());                                                                                     \
     throw th__ex;                                                                                                      \
   } while (0)
