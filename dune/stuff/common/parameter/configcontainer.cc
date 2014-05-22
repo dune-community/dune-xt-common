@@ -5,7 +5,7 @@
 //
 // Contributors: Sven Kaulmann
 
-#include <config.h>
+#include "config.h"
 #include "configcontainer.hh"
 
 #if HAVE_DUNE_FEM
