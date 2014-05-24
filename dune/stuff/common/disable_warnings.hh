@@ -18,6 +18,8 @@
 #pragma GCC diagnostic ignored "-Wuninitialized"
 #pragma GCC diagnostic ignored "-Wused-but-marked-unused"
 #pragma GCC diagnostic ignored "-Wlogical-not-parentheses"
+#pragma GCC diagnostic ignored "-Wlogical-op-parentheses"
+#pragma GCC diagnostic ignored "-Wundef"
 #elif BOOST_GCC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
