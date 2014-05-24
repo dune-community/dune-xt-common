@@ -63,6 +63,65 @@ public:
 }; // class FieldMatrix
 
 
+template <class K>
+class FieldMatrix<K, 1, 1> : public Dune::FieldMatrix<K, 1, 1>
+{
+  static const int ROWS = 1;
+  static const int COLS = 1;
+  typedef Dune::FieldMatrix<K, ROWS, COLS> BaseType;
+  typedef FieldMatrix<K, ROWS, COLS> ThisType;
+
+public:
+  FieldMatrix(const size_t rr, const size_t cc, const K kk = K(0))
+    : BaseType(kk)
+  {
+    if (rr != ROWS || cc != COLS)
+      DUNE_THROW_COLORFULLY(Exceptions::wrong_input_given,
+                            "You are trying to construct a FieldMatrix< ..., " << ROWS << ", " << COLS << " > (of "
+                                                                               << "static size) with "
+                                                                               << rr
+                                                                               << " rows and "
+                                                                               << cc
+                                                                               << " columns!");
+  } // ... FieldMatrix(...)
+
+  FieldMatrix(const BaseType& other)
+    : BaseType(other)
+  {
+  }
+
+  FieldMatrix(const FieldVector<K, 1>& other)
+    : BaseType(other[0])
+  {
+  }
+
+  ThisType& operator=(const BaseType& other)
+  {
+    return BaseType::operator=(other);
+  }
+
+  ThisType& operator=(const FieldVector<K, 1>& other)
+  {
+    return BaseType::operator=(other[0]);
+  }
+
+  FieldVector<K, ROWS> operator*(const FieldVector<K, COLS>& vec) const
+  {
+    FieldVector<K, ROWS> ret;
+    this->mv(vec, ret);
+    return ret;
+  } // ... operator*(...)
+
+  ThisType operator*(const K& scal) const
+  {
+    ThisType ret(*this);
+    ret *= scal;
+    return ret;
+  } // ... operator*(...)
+
+}; // class FieldMatrix
+
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
