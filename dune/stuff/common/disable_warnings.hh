@@ -20,6 +20,11 @@
 #pragma GCC diagnostic ignored "-Wlogical-not-parentheses"
 #pragma GCC diagnostic ignored "-Wlogical-op-parentheses"
 #pragma GCC diagnostic ignored "-Wundef"
+#pragma GCC diagnostic ignored "-Wunreachable-code"
+#pragma GCC diagnostic ignored "-Wcovered-switch-default"
+#pragma GCC diagnostic ignored "-Wswitch-enum"
+#pragma GCC diagnostic ignored "-Wunused-const-variable"
+#pragma GCC diagnostic ignored "-Wunused-private-field"
 #elif BOOST_GCC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wunused-parameter"
