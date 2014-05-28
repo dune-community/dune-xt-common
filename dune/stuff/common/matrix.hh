@@ -22,10 +22,10 @@
 #endif
 #include <dune/stuff/common/disable_warnings.hh>
 #include <dune/fem/operator/matrix/spmatrix.hh>
-#include <dune/fem/operator/matrix/istlmatrix.hh>
-#include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/istl/operators.hh>
+#include <dune/fem/operator/matrix/istlmatrix.hh>
 #include <dune/fem/operator/matrix/preconditionerwrapper.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 #endif // if HAVE_DUNE_ISTL && HAVE_DUNE_FEM
 
 
