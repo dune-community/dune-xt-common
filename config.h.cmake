@@ -31,7 +31,23 @@
 
 #ifndef HAVE_DUNE_FEM
 # define HAVE_FUNE_FEM 0
-# endif
+#endif
+
+#ifndef HAVE_DUNE_PYMOR
+# define HAVE_DUNE_PYMOR 0
+#endif
+
+#ifndef HAVE_DUNE_GRID_MULTISCALE
+# define HAVE_DUNE_GRID_MULTISCALE 0
+#endif
+
+#ifndef HAVE_DUNE_GDT
+# define HAVE_DUNE_GDT 0
+#endif
+
+#ifndef HAVE_DUNE_HDD
+# define HAVE_DUNE_HDD 0
+#endif
 
 #ifndef HAVE_EMPLACE
 # define HAVE_EMPLACE 0
@@ -63,6 +79,10 @@
 
 #ifndef HAVE_MPI
 # define HAVE_MPI 0
+#endif
+
+#ifndef HAVE_FASP
+# define HAVE_FASP 0
 #endif
 
 #ifndef HAVE_CONSTEXPR
