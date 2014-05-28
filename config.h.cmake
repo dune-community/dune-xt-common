@@ -61,6 +61,10 @@
 # define ENABLE_MPI 0
 #endif
 
+#ifndef HAVE_MPI
+# define HAVE_MPI 0
+#endif
+
 #ifndef HAVE_CONSTEXPR
 # define HAVE_CONSTEXPR 0
 #endif
