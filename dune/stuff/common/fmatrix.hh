@@ -53,6 +53,13 @@ public:
     return ret;
   } // ... operator*(...)
 
+  FieldVector<K, ROWS> operator*(const FieldMatrix<K, 1, COLS>& mat) const
+  {
+    FieldVector<K, ROWS> ret;
+    this->mv(mat[0], ret);
+    return ret;
+  } // ... operator*(...)
+
   ThisType operator*(const K& scal) const
   {
     ThisType ret(*this);
