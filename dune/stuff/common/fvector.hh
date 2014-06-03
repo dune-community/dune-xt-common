@@ -25,7 +25,7 @@ class FieldVector : public Dune::FieldVector<K, SIZE>
   typedef FieldVector<K, SIZE> ThisType;
 
 public:
-  FieldVector(const size_t sz, const K kk = K(0))
+  FieldVector(const size_t sz = SIZE, const K kk = K(0))
     : BaseType(kk)
   {
 #ifndef NDEBUG
