@@ -25,18 +25,10 @@ class FieldVector : public Dune::FieldVector<K, SIZE>
   typedef FieldVector<K, SIZE> ThisType;
 
 public:
-  FieldVector(const size_t sz = SIZE, const K kk = K(0))
+  FieldVector(const K kk = K(0))
     : BaseType(kk)
   {
-#ifndef NDEBUG
-    if (sz != SIZE)
-      DUNE_THROW_COLORFULLY(Exceptions::wrong_input_given,
-                            "You are trying to construct a FieldVector< ..., " << SIZE << " > (of "
-                                                                               << "static size) with a size of "
-                                                                               << sz
-                                                                               << "!");
-#endif // NDEBUG
-  } // ... FieldVector(...)
+  }
 
   FieldVector(const BaseType& other)
     : BaseType(other)
