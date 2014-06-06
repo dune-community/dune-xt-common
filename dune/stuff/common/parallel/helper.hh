@@ -12,10 +12,11 @@
 
 #if HAVE_DUNE_ISTL
 #include <dune/istl/paamg/pinfo.hh>
-#endif // HAVE_DUNE_ISTL
+#endif
 
 namespace Dune {
 namespace Stuff {
+
 
 //! marker for sequential in MPI-enabled solver stuffs
 struct SequentialCommunication
@@ -24,6 +25,7 @@ struct SequentialCommunication
 #endif
 {
 };
+
 
 template <class GridCommImp>
 struct UseParallelCommunication
@@ -34,6 +36,7 @@ struct UseParallelCommunication
   static constexpr bool value = false;
 #endif
 };
+
 
 } // namespace Stuff
 } // namespace Dune
