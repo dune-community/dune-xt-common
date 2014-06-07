@@ -12,9 +12,7 @@
 #include <dune/common/dynvector.hh>
 #include <dune/common/fvector.hh>
 
-#if HAVE_EIGEN
-#include <dune/stuff/la/container/eigen.hh>
-#endif
+#include <dune/stuff/la/container/interfaces.hh>
 
 #include <type_traits>
 
@@ -68,53 +66,16 @@ namespace FloatCmp {
       if (!Dune::FloatCmp::id<T, style>(first[ii], second[ii], epsilon))                                               \
         return false;                                                                                                  \
     return true;                                                                                                       \
-  }
-// DUNE_STUFF_GENERATE_VECTOR_COMPARATOR
-
-DUNE_STUFF_GENERATE_VECTOR_COMPARATOR(eq)
-DUNE_STUFF_GENERATE_VECTOR_COMPARATOR(ne)
-DUNE_STUFF_GENERATE_VECTOR_COMPARATOR(gt)
-DUNE_STUFF_GENERATE_VECTOR_COMPARATOR(lt)
-DUNE_STUFF_GENERATE_VECTOR_COMPARATOR(ge)
-DUNE_STUFF_GENERATE_VECTOR_COMPARATOR(le)
-
-#undef DUNE_STUFF_GENERATE_VECTOR_COMPARATOR
-
-#if HAVE_EIGEN
-
-#define DUNE_STUFF_GENERATE_VECTOR_COMPARATOR(id)                                                                      \
-  template <class T, Dune::FloatCmp::CmpStyle style = Dune::FloatCmp::defaultCmpStyle>                                 \
-  bool id(const Dune::Stuff::LA::EigenDenseVector<T>& first,                                                           \
-          const Dune::Stuff::LA::EigenDenseVector<T>& second,                                                          \
-          typename Dune::FloatCmp::EpsilonType<T>::Type epsilon = Dune::FloatCmp::DefaultEpsilon<T, style>::value())   \
-  {                                                                                                                    \
-    assert(first.size() == second.size());                                                                             \
-    for (size_t ii = 0; ii < first.size(); ++ii)                                                                       \
-      if (!Dune::FloatCmp::id<T, style>(first.backend()[ii], second.backend()[ii], epsilon))                           \
-        return false;                                                                                                  \
-    return true;                                                                                                       \
   }                                                                                                                    \
-                                                                                                                       \
-  template <class T, Dune::FloatCmp::CmpStyle style = Dune::FloatCmp::defaultCmpStyle>                                 \
-  bool id(const Dune::DynamicVector<T>& first,                                                                         \
-          const Dune::Stuff::LA::EigenDenseVector<T>& second,                                                          \
-          typename Dune::FloatCmp::EpsilonType<T>::Type epsilon = Dune::FloatCmp::DefaultEpsilon<T, style>::value())   \
+  template <class F, class S, Dune::FloatCmp::CmpStyle style = Dune::FloatCmp::defaultCmpStyle>                        \
+  bool id(const Stuff::LA::VectorInterface<F>& first,                                                                  \
+          const Stuff::LA::VectorInterface<S>& second,                                                                 \
+          typename Dune::FloatCmp::EpsilonType<typename F::ScalarType>::Type epsilon =                                 \
+              Dune::FloatCmp::DefaultEpsilon<typename F::ScalarType, style>::value())                                  \
   {                                                                                                                    \
     assert(first.size() == second.size());                                                                             \
     for (size_t ii = 0; ii < first.size(); ++ii)                                                                       \
-      if (!Dune::FloatCmp::id<T, style>(first[ii], second.backend()[ii], epsilon))                                     \
-        return false;                                                                                                  \
-    return true;                                                                                                       \
-  }                                                                                                                    \
-                                                                                                                       \
-  template <class T, Dune::FloatCmp::CmpStyle style = Dune::FloatCmp::defaultCmpStyle>                                 \
-  bool id(const Dune::Stuff::LA::EigenDenseVector<T>& first,                                                           \
-          const Dune::DynamicVector<T>& second,                                                                        \
-          typename Dune::FloatCmp::EpsilonType<T>::Type epsilon = Dune::FloatCmp::DefaultEpsilon<T, style>::value())   \
-  {                                                                                                                    \
-    assert(first.size() == second.size());                                                                             \
-    for (size_t ii = 0; ii < first.size(); ++ii)                                                                       \
-      if (!Dune::FloatCmp::id<T, style>(first[ii], second.backend()[ii], epsilon))                                     \
+      if (!Dune::FloatCmp::id<typename F::ScalarType, style>(first[ii], second[ii], epsilon))                          \
         return false;                                                                                                  \
     return true;                                                                                                       \
   }
@@ -128,8 +89,6 @@ DUNE_STUFF_GENERATE_VECTOR_COMPARATOR(ge)
 DUNE_STUFF_GENERATE_VECTOR_COMPARATOR(le)
 
 #undef DUNE_STUFF_GENERATE_VECTOR_COMPARATOR
-
-#endif // HAVE_EIGEN
 
 
 } // namespace FloatCmp

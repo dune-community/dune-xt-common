@@ -23,9 +23,10 @@ class FieldMatrix : public Dune::FieldMatrix<K, ROWS, COLS>
   typedef FieldMatrix<K, ROWS, COLS> ThisType;
 
 public:
-  FieldMatrix(const size_t rr, const size_t cc, const K kk = K(0))
+  FieldMatrix(const size_t rr = ROWS, const size_t cc = COLS, const K kk = K(0))
     : BaseType(kk)
   {
+#ifndef NDEBUG
     if (rr != ROWS || cc != COLS)
       DUNE_THROW_COLORFULLY(Exceptions::wrong_input_given,
                             "You are trying to construct a FieldMatrix< ..., " << ROWS << ", " << COLS << " > (of "
@@ -34,6 +35,7 @@ public:
                                                                                << " rows and "
                                                                                << cc
                                                                                << " columns!");
+#endif // NDEBUG
   } // ... FieldMatrix(...)
 
   FieldMatrix(const BaseType& other)
@@ -46,10 +48,17 @@ public:
     return BaseType::operator=(other);
   }
 
-  FieldVector<K, ROWS> operator*(const FieldVector<K, COLS>& vec) const
+  Dune::FieldVector<K, ROWS> operator*(const Dune::FieldVector<K, COLS>& vec) const
   {
-    FieldVector<K, ROWS> ret;
+    Dune::FieldVector<K, ROWS> ret;
     this->mv(vec, ret);
+    return ret;
+  } // ... operator*(...)
+
+  Dune::FieldVector<K, ROWS> operator*(const FieldMatrix<K, 1, COLS>& mat) const
+  {
+    Dune::FieldVector<K, ROWS> ret;
+    this->mv(mat[0], ret);
     return ret;
   } // ... operator*(...)
 
@@ -72,9 +81,10 @@ class FieldMatrix<K, 1, 1> : public Dune::FieldMatrix<K, 1, 1>
   typedef FieldMatrix<K, ROWS, COLS> ThisType;
 
 public:
-  FieldMatrix(const size_t rr, const size_t cc, const K kk = K(0))
+  FieldMatrix(const size_t rr = ROWS, const size_t cc = COLS, const K kk = K(0))
     : BaseType(kk)
   {
+#ifndef NDEBUG
     if (rr != ROWS || cc != COLS)
       DUNE_THROW_COLORFULLY(Exceptions::wrong_input_given,
                             "You are trying to construct a FieldMatrix< ..., " << ROWS << ", " << COLS << " > (of "
@@ -83,6 +93,7 @@ public:
                                                                                << " rows and "
                                                                                << cc
                                                                                << " columns!");
+#endif // NDEBUG
   } // ... FieldMatrix(...)
 
   FieldMatrix(const BaseType& other)

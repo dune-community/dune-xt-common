@@ -212,15 +212,15 @@ void readSparseMatrix(SparseMatrixImpl& matrix, Input& in)
         found          = row.size();
       std::string subs = row.substr(last_found, found - last_found);
       last_found = found + 1;
-      std::istringstream in(subs);
+      std::istringstream in_str(subs);
       if (entryLine.size() == 2) {
-        in.precision(12);
-        in.setf(std::ios::scientific);
+        in_str.precision(12);
+        in_str.setf(std::ios::scientific);
       } else {
-        in.precision(10);
-        in.setf(std::ios::fixed);
+        in_str.precision(10);
+        in_str.setf(std::ios::fixed);
       }
-      in >> temp;
+      in_str >> temp;
       entryLine.push_back(temp);
       found = row.find_first_of(",", last_found);
     } while (last_found != row.size() + 1);
