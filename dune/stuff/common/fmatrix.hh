@@ -10,6 +10,7 @@
 #include <dune/common/fvector.hh>
 
 #include <dune/stuff/common/exceptions.hh>
+#include <dune/stuff/common/debug.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -23,7 +24,8 @@ class FieldMatrix : public Dune::FieldMatrix<K, ROWS, COLS>
   typedef FieldMatrix<K, ROWS, COLS> ThisType;
 
 public:
-  FieldMatrix(const size_t rr = ROWS, const size_t cc = COLS, const K kk = K(0))
+  FieldMatrix(const size_t UNUSED_UNLESS_DEBUG(rr) = ROWS, const size_t UNUSED_UNLESS_DEBUG(cc) = COLS,
+              const K kk = K(0))
     : BaseType(kk)
   {
 #ifndef NDEBUG
@@ -81,7 +83,8 @@ class FieldMatrix<K, 1, 1> : public Dune::FieldMatrix<K, 1, 1>
   typedef FieldMatrix<K, ROWS, COLS> ThisType;
 
 public:
-  FieldMatrix(const size_t rr = ROWS, const size_t cc = COLS, const K kk = K(0))
+  FieldMatrix(const size_t UNUSED_UNLESS_DEBUG(rr) = ROWS, const size_t UNUSED_UNLESS_DEBUG(cc) = COLS,
+              const K kk = K(0))
     : BaseType(kk)
   {
 #ifndef NDEBUG
