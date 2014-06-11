@@ -74,18 +74,22 @@ std::set<Request> ConfigContainer::getMismatchedDefaults(ConfigContainer::Reques
 }
 
 ConfigContainer::ConfigContainer(const Dune::ParameterTree& tree)
-  : warning_output_(false)
-  , tree_(tree)
+  : tree_(tree)
   , record_defaults_(false)
   , logdir_(boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false))
+#ifndef NDEBUG
+  , warning_output_(false)
+#endif
 {
   testCreateDirectory(logdir_.string());
 }
 
 ConfigContainer::ConfigContainer()
-  : warning_output_(true)
-  , record_defaults_(false)
+  : record_defaults_(false)
   , logdir_(boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false))
+#ifndef NDEBUG
+  , warning_output_(true)
+#endif
 {
   testCreateDirectory(logdir_.string());
 }
