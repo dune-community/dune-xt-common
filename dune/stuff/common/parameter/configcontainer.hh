@@ -9,7 +9,9 @@
 #define DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
 
 #include <dune/common/deprecated.hh>
+#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/parametertree.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/common/parametertreeparser.hh>
 #include <dune/common/exceptions.hh>
 
@@ -203,7 +205,9 @@ public:
   void setRecordDefaults(bool record);
 
 private:
+#ifndef NDEBUG
   bool warning_output_;
+#endif
   ExtendedParameterTree tree_;
   //! config key -> requests map
   RequestMapType requests_map_;
