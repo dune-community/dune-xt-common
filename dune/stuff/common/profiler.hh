@@ -16,7 +16,7 @@
 #include <boost/noncopyable.hpp>
 #include <boost/timer/timer.hpp>
 
-#include <dune/stuff/common/threadmanager.hh>
+#include <dune/stuff/common/parallel/threadmanager.hh>
 
 namespace Dune {
 namespace Stuff {

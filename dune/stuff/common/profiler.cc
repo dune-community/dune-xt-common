@@ -33,7 +33,7 @@
 #include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/common/filesystem.hh>
-#include <dune/stuff/common/threadmanager.hh>
+#include <dune/stuff/common/parallel/threadmanager.hh>
 
 #include <map>
 #include <string>
