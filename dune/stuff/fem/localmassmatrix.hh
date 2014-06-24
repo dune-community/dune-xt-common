@@ -10,7 +10,9 @@
 
 #include <dune/common/version.hh>
 
+#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/fem/operator/1order/localmassmatrix.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 
 namespace Dune {
 namespace Stuff {

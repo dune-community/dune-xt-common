@@ -10,7 +10,9 @@
 
 #include <dune/common/densevector.hh>
 #include <dune/common/dynvector.hh>
+#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/fvector.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/common/deprecated.hh>
 
 #include <dune/stuff/la/container/interfaces.hh>
