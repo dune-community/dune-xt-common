@@ -7,6 +7,7 @@
 #define DUNE_STUFF_RANDOM_HH
 
 #include <random>
+#include <limits>
 #include <boost/assign/list_of.hpp>
 
 namespace Dune {
@@ -64,7 +65,8 @@ class RandomStrings : public RNG<std::string, std::uniform_int_distribution<int>
 
 public:
   RandomStrings(size_t l)
-    : BaseType(std::mt19937(std::random_device()()), std::uniform_int_distribution<int>(0, alphanums.size() - 1))
+    : BaseType(std::mt19937(std::random_device()()),
+               std::uniform_int_distribution<int>(0, assert_is_int_compatible_and_convert(alphanums.size() - 1)))
     , length(l)
   {
   }
@@ -74,6 +76,13 @@ public:
     std::string ret(length, '\0');
     std::generate(std::begin(ret), std::end(ret), [=]() { return alphanums[distribution(generator)]; });
     return ret;
+  }
+
+private:
+  static inline int assert_is_int_compatible_and_convert(size_t size)
+  {
+    assert(size < std::numeric_limits<int>::max());
+    return int(size);
   }
 };
 
