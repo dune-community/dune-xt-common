@@ -105,7 +105,7 @@ std::string highlightSearchString(std::string str, std::string substr, int color
 
 std::string colorString(const std::string _string, const std::string _color /*= Colors::brown*/)
 {
-  return _color + _string + "\033[0m";
+  return _color + _string + StreamModifiers::normal;
 }
 
 std::string colorStringRed(const std::string _string)
