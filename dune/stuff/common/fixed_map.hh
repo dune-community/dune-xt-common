@@ -137,7 +137,7 @@ public:
    */
   explicit FixedMap(const std::initializer_list<value_type>& list)
     : map_(boost::assign::list_of<value_type>(*list.begin())
-               .range(list.begin() + (1 - std::min(long(N) - long(list.size()), 0l)), list.end())
+               .range(list.begin() + 1, list.end() + std::min(long(N) - long(list.size()), 0l))
                .repeat(std::max(long(N) - long(list.size()), 0l), std::make_pair(key_type(), T())))
   {
   }
