@@ -86,8 +86,12 @@ class FieldMatrix<K, 1, 1> : public Dune::FieldMatrix<K, 1, 1>
   typedef FieldMatrix<K, ROWS, COLS> ThisType;
 
 public:
-  FieldMatrix(const size_t UNUSED_UNLESS_DEBUG(rr) = ROWS, const size_t UNUSED_UNLESS_DEBUG(cc) = COLS,
-              const K kk = K(0))
+  FieldMatrix(const K kk = K(0))
+    : BaseType(kk)
+  {
+  }
+
+  FieldMatrix(const size_t UNUSED_UNLESS_DEBUG(rr), const size_t UNUSED_UNLESS_DEBUG(cc), const K kk = K(0))
     : BaseType(kk)
   {
 #ifndef NDEBUG
