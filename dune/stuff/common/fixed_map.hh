@@ -137,8 +137,8 @@ public:
    */
   explicit FixedMap(const std::initializer_list<value_type>& list)
     : map_(boost::assign::list_of<value_type>(*list.begin())
-               .range(list.begin() + (1 - std::min(long(N) - long(list.size()), 0l)), list.end())
-               .repeat(std::max(long(N) - long(list.size()), 0l), std::make_pair(key_type(), T())))
+               .range(list.begin() + (1 - std::min(N - list.size(), std::size_t(0))), list.end())
+               .repeat(std::max(N - list.size(), std::size_t(0)), std::make_pair(key_type(), T())))
   {
   }
 
@@ -147,18 +147,18 @@ public:
   {
   }
 
-  long getIdx(const key_type& key) const
+  std::size_t getIdx(const key_type& key) const
   {
     const auto it = std::find_if(map_.begin(), map_.end(), [&](const value_type& val) { return val.first == key; });
     if (it == map_.end())
-      return -1;
+      return N;
     return std::distance(map_.begin(), it);
   }
 
   const mapped_type& operator[](const key_type& key) const
   {
     const auto it = getIdx(key);
-    if (it == -1)
+    if (it == N)
       DUNE_THROW(Dune::RangeError, "missing key in FixedMap");
     return map_[it].second;
   }
@@ -166,14 +166,14 @@ public:
   mapped_type& operator[](const key_type& key)
   {
     const auto it = getIdx(key);
-    if (it == -1)
+    if (it == N)
       DUNE_THROW(Dune::RangeError, "missing key in FixedMap");
     return map_[it].second;
   }
 
   const_iterator find(const key_type& key) const
   {
-    return const_iterator(*this, getIdx(key));
+    return const_iterator(this, getIdx(key));
   }
 
   iterator find(const key_type& key)
