@@ -159,7 +159,7 @@ public:
   {
     const auto it = getIdx(key);
     if (it == N)
-      DUNE_THROW(Dune::RangeError, "missing key in FixedMap");
+      DUNE_THROW(RangeError, "missing key '" << key << "' in FixedMap!");
     return map_[it].second;
   }
 
@@ -167,7 +167,7 @@ public:
   {
     const auto it = getIdx(key);
     if (it == N)
-      DUNE_THROW(Dune::RangeError, "missing key in FixedMap");
+      DUNE_THROW(RangeError, "missing key '" << key << "' in FixedMap!");
     return map_[it].second;
   }
 
