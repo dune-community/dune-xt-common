@@ -70,7 +70,7 @@ SET( CMAKE_CXX_FLAGS_RELEASE
 SET( CMAKE_CXX_FLAGS "-DDUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS=1 ${CMAKE_CXX_FLAGS}" )
 
 SET( CMAKE_CXX_FLAGS_DEBUG
-  "-DDNDEBUG -g3 -ggdb  -Wunused-variable -Winline -fno-strict-aliasing -fPIC -Wall -Wextra -Wc++0x-compat -Wparentheses -pedantic -Wredundant-decls -Wshadow  -Wundef -Wnon-virtual-dtor -ftemplate-backtrace-limit=0" )
+  "-O0 -DDNDEBUG -g3 -ggdb  -Wunused-variable -Winline -fno-strict-aliasing -fPIC -Wall -Wextra -Wc++0x-compat -Wparentheses -pedantic -Wredundant-decls -Wshadow  -Wundef -Wnon-virtual-dtor -ftemplate-backtrace-limit=0" )
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   set( CMAKE_CXX_FLAGS_DEBUG
