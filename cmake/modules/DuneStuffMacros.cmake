@@ -64,21 +64,21 @@ include(CheckOverrideFinal)
 
 SET( CMAKE_EXPORT_COMPILE_COMMANDS "ON" )
 
-SET( CMAKE_CXX_FLAGS_RELEASE
+SET( CMAKE_CXX_FLAGS_RELEASE CACHE STRING
   "-DDNDEBUG -DNDEBUG -O2 -fPIC " )
 
 SET( CMAKE_CXX_FLAGS "-DDUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS=1 ${CMAKE_CXX_FLAGS}" )
 
 SET( CMAKE_CXX_FLAGS_DEBUG
-  "-O0 -DDNDEBUG -g3 -ggdb  -Wunused-variable -Winline -fno-strict-aliasing -fPIC -Wall -Wextra -Wc++0x-compat -Wparentheses -pedantic -Wredundant-decls -Wshadow  -Wundef -Wnon-virtual-dtor -ftemplate-backtrace-limit=0" )
+  "-DDNDEBUG -g3 -ggdb  -Wunused-variable -Winline -fno-strict-aliasing -fPIC -Wall -Wextra -Wc++0x-compat -Wparentheses -pedantic -Wredundant-decls -Wshadow  -Wundef -Wnon-virtual-dtor -ftemplate-backtrace-limit=0" )
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  set( CMAKE_CXX_FLAGS_DEBUG
-        "${CMAKE_CXX_FLAGS_DEBUG} -Wnon-literal-null-conversion -Wused-but-marked-unused -Wno-tautological-compare -Wfloat-equal -Wdisabled-macro-expansion -Wcovered-switch-default  -Wswitch-enum -Wunreachable-code  -Wshorten-64-to-32"
+        set( CMAKE_CXX_FLAGS_DEBUG CACHE STRING
+        "${CMAKE_CXX_FLAGS_DEBUG} -Wnon-literal-null-conversion -Wused-but-marked-unused -Wno-tautological-compare -Wfloat-equal -Wdisabled-macro-expansion -Wcovered-switch-default  -Wswitch-enum -Wunreachable-code  -Wshorten-64-to-32 -O0"
         )
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  set( CMAKE_CXX_FLAGS_DEBUG
-        "${CMAKE_CXX_FLAGS_DEBUG} -Wlogical-op"
+        set( CMAKE_CXX_FLAGS_DEBUG CACHE STRING
+        "${CMAKE_CXX_FLAGS_DEBUG} -Wlogical-op -Og"
         )
 endif()
 
