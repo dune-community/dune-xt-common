@@ -7,6 +7,7 @@
 
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/common/logstreams.hh>
+#include <dune/stuff/common/exceptions.hh>
 #include <boost/lexical_cast.hpp>
 #include <bits/functexcept.h>
 #include <vector>
@@ -19,8 +20,7 @@ TEST(StringTest, ConvertTo)
   EXPECT_EQ("9", toString(fromString<int>("9")));
   EXPECT_EQ("P", toString(fromString<char>("P")));
   EXPECT_EQ(double(0.1), fromString<double>(toString<double>(0.1)));
-  EXPECT_EQ("0.10000000000000001",
-            toString(fromString<double>("0.1000000000000000055511151231257827021181583404541015625")));
+  EXPECT_EQ("0.100006", toString(fromString<double>("0.1000055511151231257827021181583404541015625")));
   EXPECT_EQ("1", toString(fromString<bool>("1")));
   EXPECT_EQ("0", toString(fromString<bool>("0")));
   EXPECT_EQ("-1", toString(fromString<long>("-1")));
@@ -36,8 +36,9 @@ TEST(StringTest, ConvertFrom)
 {
   EXPECT_EQ(9, fromString<int>("9"));
   EXPECT_EQ(0, fromString<int>("0"));
-  EXPECT_EQ('p', fromString<char>(toString<char>('p')));
+  EXPECT_EQ('p', fromString<char>(toString('p')));
   EXPECT_EQ(-1, fromString<char>(toString<char>(-1)));
+  EXPECT_THROW(fromString<char>("sd"), Dune::Stuff::Exceptions::wrong_input_given);
   EXPECT_EQ(true, fromString<bool>("1"));
   EXPECT_EQ(false, fromString<bool>("0"));
   EXPECT_THROW(fromString<int>(""), std::invalid_argument);
