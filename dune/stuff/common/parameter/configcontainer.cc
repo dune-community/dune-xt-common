@@ -96,7 +96,10 @@ std::set<Request> ConfigContainer::getMismatchedDefaults(ConfigContainer::Reques
   typedef bool (*func)(const Request&, const Request&);
   std::set<Request, func> mismatched(&strictRequestCompare);
   mismatched.insert(pair.second.begin(), pair.second.end());
-  return std::set<Request>(std::begin(mismatched), std::end(mismatched));
+  if (mismatched.size() <= std::size_t(1))
+    return *(new std::set<Request>);
+  else
+    return std::set<Request>(std::begin(mismatched), std::end(mismatched));
 }
 
 ConfigContainer::ConfigContainer(const Dune::ParameterTree& tree)
@@ -201,11 +204,14 @@ ConfigContainer::RequestMapType ConfigContainer::getMismatchedDefaultsMap() cons
 void ConfigContainer::printMismatchedDefaults(std::ostream& out) const
 {
   for (const auto& pair : requests_map_) {
-    out << "Mismatched uses for key " << pair.first << ": ";
-    for (const auto& req : getMismatchedDefaults(pair)) {
-      out << "\n\t" << req;
+    auto mismatched = getMismatchedDefaults(pair);
+    if (mismatched.size()) {
+      out << "Mismatched uses for key " << pair.first << ": ";
+      for (const auto& req : mismatched) {
+        out << "\n\t" << req;
+      }
+      out << "\n";
     }
-    out << "\n";
   }
 }
 
