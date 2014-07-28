@@ -20,7 +20,9 @@
 #include <boost/format.hpp>
 
 // dune-common
+#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/densematrix.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/common/densevector.hh>
 
 // dune-stuff

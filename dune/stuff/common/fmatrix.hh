@@ -6,8 +6,10 @@
 #ifndef DUNE_STUFF_COMMON_FMATRIX_HH
 #define DUNE_STUFF_COMMON_FMATRIX_HH
 
+#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/fmatrix.hh>
 #include <dune/common/fvector.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/debug.hh>

@@ -17,7 +17,7 @@ using namespace Dune::Stuff::Common;
 
 TEST(FixedMapTest, All)
 {
-  const std::initializer_list<std::pair<std::string, int>> values({{"0", 0}, {"1", 1}, {"2", 2}});
+  const std::initializer_list<std::pair<std::string, int>> values{{"0", 0}, {"1", 1}, {"2", 2}};
 
   const FixedMap<std::string, int, 1> too_small(values);
   FixedMap<std::string, int, 3> fits(values);

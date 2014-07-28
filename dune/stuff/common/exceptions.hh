@@ -7,7 +7,9 @@
 #define DUNE_STUFF_COMMON_EXCEPTIONS_HH
 
 #include <dune/common/exceptions.hh>
+#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/parallel/mpihelper.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 
 /**
  *  \brief Macro to throw a colorfull exception.

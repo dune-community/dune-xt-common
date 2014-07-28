@@ -42,6 +42,16 @@ Request::Request(const int _line, const std::string _file, const std::string _ke
 {
 }
 
+/**
+ * \brief less-than operator for Requests
+ * \details Compare this' member variables key, def, file, line and validator (in that order) with other's. Returns
+ *          true if the first comparison returns true (i.e. this.key < other.key) and returns false if this.key >
+ *          other.key. If neither true nor false is returned in the first comparison (i.e. this.key "==" other.key), the
+ *          next comparison is evaluated similarly. If none of the first four comparisons returns a value, the value of
+ *          this.validator < other.validator is returned.
+ * \param other Request to compare with.
+ * \return bool this < other (see detailed description)
+ */
 bool Request::operator<(const Request& other) const
 {
   DSC_ORDER_REL(key)
@@ -51,6 +61,13 @@ bool Request::operator<(const Request& other) const
   return validator < other.validator;
 }
 
+/**
+ * \brief Less-than comparison of member variables key and def of a and b
+ * \details Return true if a.key < b.key and false if a.key > b.key. If nothing is returned in this first step, the
+ *  value of a.def < b.def is returned.
+ * \param a, b Requests to compare
+ * \return bool a < b (see detailed description)
+ */
 bool strictRequestCompare(const Request& a, const Request& b)
 {
   DSC_ORDER_REL_GENERIC(key, a, b);
@@ -65,27 +82,43 @@ std::ostream& operator<<(std::ostream& out, const Request& r)
   return out;
 }
 
+/**
+ * \brief Checks if there are Request with differing default values to the same key.
+ * \details Extracts the std::set<Request> from pair and removes all duplicates with respect to key and def. If there is
+ *  only one Request left after this step (or if the extracted set was empty originally), an empty set is returned,
+ *  otherwise the set of differing requests is returned.
+ * \param pair RequestMapType::value_type (i.e. std::pair< std::string, std::set<Request> >)
+ * \return std::set filled with Requests that differ either in key or in def (or both), empty if there are no such
+ *  differing Requests
+ */
 std::set<Request> ConfigContainer::getMismatchedDefaults(ConfigContainer::RequestMapType::value_type pair) const
 {
   typedef bool (*func)(const Request&, const Request&);
   std::set<Request, func> mismatched(&strictRequestCompare);
   mismatched.insert(pair.second.begin(), pair.second.end());
-  return std::set<Request>(std::begin(mismatched), std::end(mismatched));
+  if (mismatched.size() <= std::size_t(1))
+    return *(new std::set<Request>);
+  else
+    return std::set<Request>(std::begin(mismatched), std::end(mismatched));
 }
 
 ConfigContainer::ConfigContainer(const Dune::ParameterTree& tree)
-  : warning_output_(false)
-  , tree_(tree)
+  : tree_(tree)
   , record_defaults_(false)
   , logdir_(boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false))
+#ifndef NDEBUG
+  , warning_output_(false)
+#endif
 {
   testCreateDirectory(logdir_.string());
 }
 
 ConfigContainer::ConfigContainer()
-  : warning_output_(true)
-  , record_defaults_(false)
+  : record_defaults_(false)
   , logdir_(boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false))
+#ifndef NDEBUG
+  , warning_output_(true)
+#endif
 {
   testCreateDirectory(logdir_.string());
 }
@@ -96,7 +129,11 @@ ConfigContainer::~ConfigContainer()
   tree_.report(*out);
 }
 
-
+/**
+ * \brief Load all key-value pairs from tree into fem parameter database.
+ * \param tree ParameterTree to get values from.
+ * \param pref Prefix that is added to each key and subkey (like this: pref.key), default is "".
+ */
 void loadIntoFemParameter(const Dune::ParameterTree& tree, const std::string pref = "")
 {
 #if HAVE_DUNE_FEM_PARAMETER_REPLACE
@@ -115,7 +152,8 @@ void loadIntoFemParameter(const Dune::ParameterTree& tree, const std::string pre
 #endif
 }
 
-
+//! get parameters from parameter file or key-value pairs given on the command line and store in ConfigContainer (and
+//!  load into fem parameter, if available)
 void ConfigContainer::readCommandLine(int argc, char* argv[])
 {
   if (argc < 2) {
@@ -130,11 +168,13 @@ void ConfigContainer::readCommandLine(int argc, char* argv[])
   logdir_ = boost::filesystem::path(get("global.datadir", "data", false)) / get("logging.dir", "log", false);
 } // ReadCommandLine
 
+//! search command line options for key-value pairs and add them to ConfigContainer
 void ConfigContainer::readOptions(int argc, char* argv[])
 {
   Dune::ParameterTreeParser::readOptions(argc, argv, tree_);
 }
 
+//! print all Requests in requests_map_
 void ConfigContainer::printRequests(std::ostream& out) const
 {
   out << "Config requests:";
@@ -147,6 +187,8 @@ void ConfigContainer::printRequests(std::ostream& out) const
   }
 }
 
+//! return a map mapping keys which where requested with at least two different default values to a set containing
+//! the corresponding Requests
 ConfigContainer::RequestMapType ConfigContainer::getMismatchedDefaultsMap() const
 {
   RequestMapType ret;
@@ -158,14 +200,18 @@ ConfigContainer::RequestMapType ConfigContainer::getMismatchedDefaultsMap() cons
   return ret;
 }
 
+//! print all keys that were requested with at least two different default values and their respective Requests
 void ConfigContainer::printMismatchedDefaults(std::ostream& out) const
 {
   for (const auto& pair : requests_map_) {
-    out << "Mismatched uses for key " << pair.first << ": ";
-    for (const auto& req : getMismatchedDefaults(pair)) {
-      out << "\n\t" << req;
+    auto mismatched = getMismatchedDefaults(pair);
+    if (mismatched.size()) {
+      out << "Mismatched uses for key " << pair.first << ": ";
+      for (const auto& req : mismatched) {
+        out << "\n\t" << req;
+      }
+      out << "\n";
     }
-    out << "\n";
   }
 }
 

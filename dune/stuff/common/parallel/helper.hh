@@ -8,7 +8,9 @@
 
 #include <type_traits>
 
+#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/parallel/collectivecommunication.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 
 #if HAVE_DUNE_ISTL
 #include <dune/stuff/common/disable_warnings.hh>
