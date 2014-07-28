@@ -75,6 +75,7 @@ if(CMAKE_WITH_AUTOTOOLS)
                  ${COMMON_HEADER} )
   TARGET_LINK_LIBRARIES(this_needs_to_be_here_to_have_header_listing_until_we_have_a_real_executable
                         ${COMMON_LIBS})
+  
 
 else(CMAKE_WITH_AUTOTOOLS)
   # this assumes that we run dunecontrol with the --use-cmake option
@@ -129,6 +130,16 @@ else(CMAKE_WITH_AUTOTOOLS)
   add_subdirectory(dune)
   add_subdirectory("cmake/modules")
   add_subdirectory("cmake/scripts")
+  
+    #disable most warnings from dependent modules
+    foreach(_mod ${ALL_DEPENDENCIES})
+        dune_module_to_uppercase(_upper_case "${_mod}")
+        if(${_mod}_INCLUDE_DIRS)
+            foreach( _idir ${${_mod}_INCLUDE_DIRS} )
+                add_definitions("-isystem ${_idir}")
+            endforeach( _idir )
+        endif(${_mod}_INCLUDE_DIRS)
+    endforeach(_mod DEPENDENCIES)
 
   finalize_dune_project(GENERATE_CONFIG_H_CMAKE)
 endif(CMAKE_WITH_AUTOTOOLS)
