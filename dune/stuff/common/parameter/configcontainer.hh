@@ -89,7 +89,8 @@ private:
    */
   template <typename T, class Validator>
   T get(std::string name, T def, const ValidatorInterface<T, Validator>& validator,
-        bool UNUSED_UNLESS_DEBUG(useDbgStream), const Request& request, const size_t size, const size_t cols)
+        bool UNUSED_UNLESS_DEBUG(useDbgStream), const Request& request, const size_t size, const size_t cols,
+        const bool def_provided = true)
   {
     requests_map_[name].insert(request);
 #ifndef NDEBUG
@@ -100,7 +101,7 @@ private:
         std::cerr << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
     }
 #endif // ifndef NDEBUG
-    if (record_defaults_ && !tree_.hasKey(name) && !(tree_[name].empty()))
+    if (record_defaults_ && !tree_.hasKey(name) && def_provided)
       set(name, def);
     return get_valid_value(name, def, validator, size, cols);
   } // get
@@ -201,7 +202,7 @@ public:
     if (!has_key(name))
       DUNE_THROW(InvalidParameter, "");
     Request req(-1, std::string(), name, std::string(), Dune::Stuff::Common::getTypename(ValidateAny<T>()));
-    return get<T, ValidateAny<T>>(name, T(), ValidateAny<T>(), useDbgStream, req, size, cols);
+    return get<T, ValidateAny<T>>(name, T(), ValidateAny<T>(), useDbgStream, req, size, cols, false);
   }
 
   //! const get without default value, without validation
@@ -317,9 +318,18 @@ public:
     tree_.add(paramtree, sub_id, overwrite);
   } // ... add(...)
 
-  RequestMapType requests_map() const
+
+  ConfigContainer& operator+=(ConfigContainer& other)
   {
-    return requests_map_;
+    add(other);
+    return *this;
+  }
+
+  ConfigContainer operator+(ConfigContainer& other)
+  {
+    ConfigContainer ret(*this);
+    ret += other;
+    return ret;
   }
 
   ConfigContainer& operator=(const ConfigContainer& other)
@@ -334,27 +344,20 @@ public:
     return *this;
   } // ... operator=(...)
 
+
   ExtendedParameterTree tree() const
   {
     return tree_;
   }
 
+  RequestMapType requests_map() const
+  {
+    return requests_map_;
+  }
+
   bool empty() const
   {
     return tree_.getValueKeys().empty() && tree_.getSubKeys().empty();
-  }
-
-  ConfigContainer& operator+=(ConfigContainer& other)
-  {
-    add(other);
-    return *this;
-  }
-
-  ConfigContainer operator+(ConfigContainer& other)
-  {
-    ConfigContainer ret(*this);
-    ret += other;
-    return ret;
   }
 
   void report(std::ostream& out = std::cout, const std::string& prefix = "") const
@@ -381,7 +384,6 @@ public:
   {
     return tree_.reportString(prefix);
   } // ... report_string(...)
-
 
   // read parameters from command line and/or file
   void readCommandLine(int argc, char* argv[]);
