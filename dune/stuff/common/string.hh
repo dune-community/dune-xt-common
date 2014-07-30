@@ -190,14 +190,6 @@ protected:
     // check if this is a matrix
     if (matrix_str.substr(0, 1) == "[" && matrix_str.substr(matrix_str.size() - 1, 1) == "]") {
       matrix_str = matrix_str.substr(1, matrix_str.size() - 2);
-      if (matrix_str.find("[") != std::string::npos || matrix_str.find("]") != std::string::npos)
-        DUNE_THROW_COLORFULLY(Exceptions::wrong_input_given,
-                              "Matrix (see below) contains additional square brackets ('[' or ']'). fromString for "
-                                  << "nested containers is not implemented."
-                                  << "\n"
-                                  << "'["
-                                  << matrix_str
-                                  << "]'");
       // we treat this as a matrix and split along ';' to obtain the rows
       const auto row_tokens = tokenize<std::string>(matrix_str, ";", boost::algorithm::token_compress_on);
       if (rows > 0 && row_tokens.size() < rows)
@@ -256,15 +248,6 @@ protected:
     // check if this is a vector
     if (vector_str.substr(0, 1) == "[" && vector_str.substr(vector_str.size() - 1, 1) == "]") {
       vector_str = vector_str.substr(1, vector_str.size() - 2);
-      // check for remaining "[" in string
-      if (vector_str.find("[") != std::string::npos || vector_str.find("]") != std::string::npos)
-        DUNE_THROW_COLORFULLY(Exceptions::wrong_input_given,
-                              "Vector (see below) contains additional square brackets ('[' or ']'). fromString for "
-                                  << "nested containers is not implemented."
-                                  << "\n"
-                                  << "'["
-                                  << vector_str
-                                  << "]'");
       // we treat this as a vector and split along ' '
       const auto tokens = tokenize<std::string>(vector_str, " ", boost::algorithm::token_compress_on);
       if (size > 0 && tokens.size() < size)
