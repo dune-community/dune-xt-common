@@ -170,7 +170,7 @@ private:
     return this->geometry_ && (index_ == other.index_) && (this->geometry_ == other.geometry_);
   }
 
-  const CornerType& dereference() const
+  CornerType dereference() const
   {
     return geometry_->corner(index_);
   }
@@ -192,12 +192,12 @@ public:
 
   IteratorType begin() const
   {
-    return IteratorType(geometry_, 0);
+    return IteratorType(&geometry_, 0);
   }
 
   IteratorType end() const
   {
-    return IteratorType(geometry_, geometry_->corners());
+    return IteratorType(&geometry_, geometry_.corners());
   }
 
 private:
@@ -213,9 +213,9 @@ cornerRange(const Dune::Geometry<mydim, cdim, GridImp, GeometryImp>& geometry)
 
 template <int mydim, int cdim, class GridImp, template <int, int, class> class EntityImp>
 auto cornerRange(const Dune::Entity<mydim, cdim, GridImp, EntityImp>& entity)
-    -> ConstCornerIterator<decltype(entity.geometry())>
+    -> CornerRange<typename std::remove_reference<decltype(entity.geometry())>::type>
 {
-  return CornerRange<decltype(entity.geometry())>(entity.geometry());
+  return CornerRange<typename std::remove_reference<decltype(entity.geometry())>::type>(entity.geometry());
 }
 
 #endif //#if HAVE_DUNE_GRID
