@@ -21,6 +21,7 @@
 #include <vector>
 #include <string>
 #include <ctime>
+#include <iostream>
 
 #include <dune/common/array.hh>
 #include <dune/common/deprecated.hh>
@@ -325,6 +326,16 @@ public:
   } // ... fromString(...)
 }; // class Choose < char >
 
+template <>
+class Choose<const char*> : ChooseBase<const char*>
+{
+public:
+  static inline const char* fromString(const std::string s, size_t rows = 0, size_t cols = 0)
+  {
+    return s.c_str();
+  } // ... fromString(...)
+}; // class Choose < const char * >
+
 //! get numerical types from string, using std::sto*
 #define DSC_FRSTR(tn, tns)                                                                                             \
   template <>                                                                                                          \
@@ -428,7 +439,7 @@ DSC_VECTORFRSTR(LA::IstlDenseVector)
 
 #undef DSC_VECTORFRSTR
 
-//! fromString for vector types where the number of rows and columns is also templated
+//! fromString for vector types where the size is also templated
 #define DSC_FIELDVECTORFRSTR(FieldVectorType)                                                                          \
   template <class S, int SIZE>                                                                                         \
   class Choose<FieldVectorType<S, SIZE>> : ChooseBase<FieldVectorType<S, SIZE>>                                        \
@@ -446,7 +457,7 @@ DSC_VECTORFRSTR(LA::IstlDenseVector)
                                   << " but this type of vector can not have any size other than "                      \
                                   << SIZE                                                                              \
                                   << "!");                                                                             \
-      return BaseType::template get_vector_from_string<FieldVectorType<S, SIZE>, S>(s, size);                          \
+      return BaseType::template get_vector_from_string<FieldVectorType<S, SIZE>, S>(s, SIZE);                          \
     }                                                                                                                  \
   };
 
