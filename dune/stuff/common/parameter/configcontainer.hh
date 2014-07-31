@@ -44,9 +44,27 @@ public:
   Request(const int _line, const std::string _file, const std::string _key, const std::string _def,
           const std::string _validator);
 
-  //! requests are considered
+  /**
+   * \brief less-than operator for Requests
+   * \details Compare this' member variables key, def, file, line and validator (in that order) with other's. Returns
+   *          true if the first comparison returns true (i.e. this.key < other.key) and returns false if this.key >
+   *          other.key. If neither true nor false is returned in the first comparison (i.e. this.key "==" other.key),
+   * the
+   *          next comparison is evaluated similarly. If none of the first four comparisons returns a value, the value
+   * of
+   *          this.validator < other.validator is returned.
+   * \param other Request to compare with.
+   * \return bool this < other (see detailed description)
+   */
   bool operator<(const Request& other) const;
 
+  /**
+   * \brief Less-than comparison of member variables key and def of a and b
+   * \details Return true if a.key < b.key and false if a.key > b.key. If nothing is returned in this first step, the
+   *  value of a.def < b.def is returned.
+   * \param a, b Requests to compare
+   * \return bool a < b (see detailed description)
+   */
   friend bool strictRequestCompare(const Request& a, const Request& b);
   friend std::ostream& operator<<(std::ostream& out, const Request& r);
 };
@@ -66,73 +84,135 @@ private:
 
   //! get value from tree and validate with validator
   template <typename T, class Validator>
-  T get_valid_value(std::string name, T def, const ValidatorInterface<T, Validator>& validator, const size_t size,
+  T get_valid_value(std::string key, T def, const ValidatorInterface<T, Validator>& validator, const size_t size,
                     const size_t cols) const
   {
-    std::string valstring = tree_.get(name, toString(def));
+    std::string valstring = tree_.get(key, toString(def));
     T val = fromString<T>(valstring, size, cols);
     if (validator(val))
       return val;
-    std::stringstream ss;
-    validator.print(ss);
-    DUNE_THROW(InvalidParameter, ss.str());
+    else {
+      std::stringstream ss;
+      validator.print(ss);
+      DUNE_THROW(InvalidParameter, ss.str());
+    }
   }
 
-  //! return a set of Request objects for keys that have been queried with non-matching default values
-  std::set<Request> getMismatchedDefaults(RequestMapType::value_type pair) const;
-
   /** \brief all public get signatures call this one
-   *  \param size Determines the size of the returning container (size if T is a vector type, rows if T is a matrix
-   * type, 0 means automatic).
-   *  \param cols Determines the number of columns of the returning matrix if T is a matrix type (0 means automatic,
-   * ignored, if T is a vector type).
+   *  \param key requested key
+   *  \param def default value
+   *  \param validator validator that is used to validate the value before it is returned
+   *  \param request Request that is stored in requests_map_
+   *  \param size Determines the size of the returning container (size if T is a vector type,
+   *  rows if T is a matrix type, 0 means automatic).
+   *  \param cols Determines the number of columns of the returning matrix if T is a matrix type
+   *  (0 means automatic, ignored, if T is a vector or scalar type).
+   *  \param def_provided bool to indicate if the calling get method provides a default value
+   *  \return value associated to key in ConfigContainer (interpreted as type T),
+   *  def if key does not exist in ConfigContainer
    */
   template <typename T, class Validator>
-  T get(std::string name, T def, const ValidatorInterface<T, Validator>& validator,
-        bool UNUSED_UNLESS_DEBUG(useDbgStream), const Request& request, const size_t size, const size_t cols,
-        const bool def_provided = true)
+  T get(std::string key, T def, const ValidatorInterface<T, Validator>& validator, const Request& request,
+        const size_t size, const size_t cols, const bool def_provided)
   {
-    requests_map_[name].insert(request);
+    requests_map_[key].insert(request);
 #ifndef NDEBUG
-    if (warning_output_ && !tree_.hasKey(name)) {
-      if (useDbgStream)
-        Logger().debug() << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
-      else
-        std::cerr << "WARNING: using default value for parameter \"" << name << "\"" << std::endl;
+    if (warning_output_ && !tree_.hasKey(key)) {
+      std::cerr << "WARNING: using default value for parameter \"" << key << "\"" << std::endl;
     }
 #endif // ifndef NDEBUG
-    if (record_defaults_ && !tree_.hasKey(name) && def_provided)
-      set(name, def);
-    return get_valid_value(name, def, validator, size, cols);
+    if (record_defaults_ && !tree_.hasKey(key) && def_provided)
+      set(key, def);
+    return get_valid_value(key, def, validator, size, cols);
   } // get
 
 public:
   // Constructors and destructors
-  //! copy tree to tree_, set warning_output and record_defaults to false, set logdir_ to ???
+  //! copy tree to tree_, set warning_output and record_defaults to false
   ConfigContainer(const ParameterTree& tree);
 
-  //! warning_output = true, record_defaults = false, logdir_ = ???
+  //! warning_output = true, record_defaults = false
   ConfigContainer();
 
-  //! warning output = true, record_defaults = false, logdir_ = ???, tree_[key] = value
+  //! warning output = true, record_defaults = false, tree_[key] = value
   template <class T>
-  ConfigContainer(const std::string key, const T& value);
+  ConfigContainer(const std::string key, const T& value)
+    : record_defaults_(false)
+    , logdir_(boost::filesystem::path(get("global.datadir", "data")) / get("logging.dir", "log"))
+#ifndef NDEBUG
+    , warning_output_(true)
+#endif
+  {
+    set(key, value);
+  }
 
-  //! warning output = true, record_defaults = false, logdir_ = ???, tree_[key] = value
+  //! warning output = true, record_defaults = false, tree_[key] = value
   template <class T>
-  ConfigContainer(const std::string key, const char* value);
+  ConfigContainer(const std::string key, const char* value)
+    : record_defaults_(false)
+    , logdir_(boost::filesystem::path(get("global.datadir", "data")) / get("logging.dir", "log"))
+#ifndef NDEBUG
+    , warning_output_(true)
+#endif
+  {
+    set(key, value);
+  }
 
-  //! warning output = true, record_defaults = false, logdir_ = ???, tree_[keys[ii]] = values[ii] for 0 <= ii <=
-  //! keys.size()
+  //! warning output = true, record_defaults = false, tree_[keys[ii]] = values[ii] for 0 <= ii <= keys.size()
   template <class T>
-  ConfigContainer(const std::vector<std::string> keys, const std::vector<T> values_in);
+  ConfigContainer(const std::vector<std::string> keys, const std::vector<T> values_in)
+    : record_defaults_(false)
+    , logdir_(boost::filesystem::path(get("global.datadir", "data")) / get("logging.dir", "log"))
+#ifndef NDEBUG
+    , warning_output_(true)
+#endif
+  {
+    if (keys.size() != values_in.size())
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
+                            "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' ("
+                                                   << values_in.size()
+                                                   << ")!");
+    for (size_t ii = 0; ii < keys.size(); ++ii)
+      set(keys[ii], values_in[ii]);
+  }
 
   /** creates std::vector< T > from value_list and then behaves exactly like
    * ConfigContainer(const std::vector< std::string > keys, const std::vector< T > values_in) */
   template <class T>
-  ConfigContainer(const std::vector<std::string> keys, const std::initializer_list<T> value_list);
+  ConfigContainer(const std::vector<std::string> keys, const std::initializer_list<T> value_list)
+    : record_defaults_(false)
+    , logdir_(boost::filesystem::path(get("global.datadir", "data")) / get("logging.dir", "log"))
+#ifndef NDEBUG
+    , warning_output_(true)
+#endif
+  {
+    std::vector<T> tmp_values(value_list);
+    if (keys.size() != tmp_values.size())
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
+                            "The size of 'keys' (" << keys.size() << ") does not match the size of 'value_list' ("
+                                                   << tmp_values.size()
+                                                   << ")!");
+    for (size_t ii = 0; ii < keys.size(); ++ii)
+      set(keys[ii], tmp_values[ii]);
+  }
 
-  ConfigContainer(const std::vector<std::string> keys, const std::initializer_list<std::string> value_list);
+  // explicit specialization of the constructor above
+  ConfigContainer(const std::vector<std::string> keys, const std::initializer_list<std::string> value_list)
+    : record_defaults_(false)
+    , logdir_(boost::filesystem::path(get("global.datadir", "data", 0, 0)) / get("logging.dir", "log", 0, 0))
+#ifndef NDEBUG
+    , warning_output_(true)
+#endif
+  {
+    std::vector<std::string> tmp_values(value_list);
+    if (keys.size() != tmp_values.size())
+      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
+                            "The size of 'keys' (" << keys.size() << ") does not match the size of 'value_list' ("
+                                                   << tmp_values.size()
+                                                   << ")!");
+    for (size_t ii = 0; ii < keys.size(); ++ii)
+      set(keys[ii], tmp_values[ii]);
+  }
 
   //! read ParameterTree from file and call ConfigContainer(const ParameterTree& tree)
   explicit ConfigContainer(const std::string filename);
@@ -149,104 +229,100 @@ public:
   // get parameters from tree
   //! get variation with default value, without validation, request needs to be provided
   template <typename T>
-  T get(const std::string name, T def, Request req, bool useDbgStream = true, const size_t size = 0,
-        const size_t cols = 0)
+  T get(const std::string key, T def, Request req, const size_t size = 0, const size_t cols = 0)
   {
-    return get(name, def, ValidateAny<T>(), useDbgStream, req, size, cols);
+    return get(key, def, ValidateAny<T>(), req, size, cols, true);
   }
 
   //! get variation with default value and validation, request needs to be provided
   template <typename T, class Validator>
-  T get(const std::string name, T def, const ValidatorInterface<T, Validator>& validator, Request req,
-        bool useDbgStream = true, const size_t size = 0, const size_t cols = 0)
+  T get(const std::string key, T def, const ValidatorInterface<T, Validator>& validator, Request req,
+        const size_t size = 0, const size_t cols = 0)
   {
-    return get(name, def, validator, useDbgStream, req, size, cols);
+    return get(key, def, validator, req, size, cols, true);
   }
 
   //! get variation with default value, validation
   template <typename T, class Validator>
-  T get(const std::string name, T def, const size_t size = 0, const size_t cols = 0, bool useDbgStream = true,
+  T get(const std::string key, T def, const size_t size = 0, const size_t cols = 0,
         const ValidatorInterface<T, Validator>& validator = ValidateAny<T>())
   {
     Request req(
-        -1, std::string(), name, Dune::Stuff::Common::toString(def), Dune::Stuff::Common::getTypename(validator));
-    return get(name, def, validator, useDbgStream, req, size, cols);
+        -1, std::string(), key, Dune::Stuff::Common::toString(def), Dune::Stuff::Common::getTypename(validator));
+    return get(key, def, validator, req, size, cols, true);
   }
 
   //! get variation with default value, without validation.
   template <typename T>
-  T get(const std::string name, T def, const size_t size = 0, const size_t cols = 0, bool useDbgStream = true)
+  T get(const std::string key, T def, const size_t size = 0, const size_t cols = 0)
   {
-    Request req(-1,
-                std::string(),
-                name,
-                Dune::Stuff::Common::toString(def),
-                Dune::Stuff::Common::getTypename(ValidateAny<T>()));
-    return get(name, def, ValidateAny<T>(), useDbgStream, req, size, cols);
+    Request req(
+        -1, std::string(), key, Dune::Stuff::Common::toString(def), Dune::Stuff::Common::getTypename(ValidateAny<T>()));
+    return get(key, def, ValidateAny<T>(), req, size, cols, true);
   }
 
   //! get variation with default value, validation
   template <typename T, class Validator>
-  T get(const std::string name, T def, const ValidatorInterface<T, Validator>& validator, bool useDbgStream = true,
-        const size_t size = 0, const size_t cols = 0)
+  T get(const std::string key, T def, const ValidatorInterface<T, Validator>& validator, const size_t size = 0,
+        const size_t cols = 0)
   {
     Request req(
-        -1, std::string(), name, Dune::Stuff::Common::toString(def), Dune::Stuff::Common::getTypename(validator));
-    return get(name, def, validator, useDbgStream, req, size, cols);
+        -1, std::string(), key, Dune::Stuff::Common::toString(def), Dune::Stuff::Common::getTypename(validator));
+    return get(key, def, validator, req, size, cols, true);
   }
 
   //! get without default value, without validation
   template <class T>
-  T get(const std::string name, size_t size = 0, size_t cols = 0, bool useDbgStream = true)
+  T get(const std::string key, size_t size = 0, size_t cols = 0)
   {
-    if (!has_key(name))
+    if (!has_key(key))
       DUNE_THROW(InvalidParameter, "");
-    Request req(-1, std::string(), name, std::string(), Dune::Stuff::Common::getTypename(ValidateAny<T>()));
-    return get<T, ValidateAny<T>>(name, T(), ValidateAny<T>(), useDbgStream, req, size, cols, false);
+    Request req(-1, std::string(), key, std::string(), Dune::Stuff::Common::getTypename(ValidateAny<T>()));
+    return get<T, ValidateAny<T>>(key, T(), ValidateAny<T>(), req, size, cols, false);
   }
 
   //! const get without default value, without validation
   template <class T>
-  T get(const std::string name, size_t size = 0, size_t cols = 0, bool useDbgStream = true) const
+  T get(const std::string key, size_t size = 0, size_t cols = 0) const
   {
-    if (!has_key(name))
+    if (!has_key(key))
       DUNE_THROW(InvalidParameter, "ConfigContainer does not have this key and there was no default value provided");
-    return get_valid_value<T, ValidateAny<T>>(name, T(), ValidateAny<T>(), size, cols);
+    return get_valid_value<T, ValidateAny<T>>(key, T(), ValidateAny<T>(), size, cols);
   }
 
   //! const get with default value, without validation
   template <class T>
-  T get(const std::string name, T def, size_t size = 0, size_t cols = 0, bool useDbgStream = true) const
+  T get(const std::string key, T def, size_t size = 0, size_t cols = 0) const
   {
-    return get_valid_value<T, ValidateAny<T>>(name, def, ValidateAny<T>(), size, cols);
+    return get_valid_value<T, ValidateAny<T>>(key, def, ValidateAny<T>(), size, cols);
   }
 
   //! const get without default value, with validation
   template <class T, class Validator>
-  T get(const std::string name, const ValidatorInterface<T, Validator>& validator, size_t size = 0, size_t cols = 0,
-        bool useDbgStream = true) const
+  T get(const std::string key, const ValidatorInterface<T, Validator>& validator, size_t size = 0,
+        size_t cols = 0) const
   {
-    if (!has_key(name))
+    if (!has_key(key))
       DUNE_THROW(InvalidParameter, "ConfigContainer does not have this key and there was no default value provided");
-    return get_valid_value(name, T(), validator, size, cols);
+    return get_valid_value(key, T(), validator, size, cols);
   }
 
   //! const get with default value, with validation
   template <class T, class Validator>
-  T get(const std::string name, T def, const ValidatorInterface<T, Validator>& validator, size_t size = 0,
-        size_t cols = 0, bool useDbgStream = true) const
+  T get(const std::string key, T def, const ValidatorInterface<T, Validator>& validator, size_t size = 0,
+        size_t cols = 0) const
   {
-    return get_valid_value(name, def, validator, size, cols);
+    return get_valid_value(key, def, validator, size, cols);
   }
 
   //! get std::vector< T > from tree_
   template <typename T, class Validator = ValidateAny<T>>
-  std::vector<T> getList(const std::string name, const T def = T(), const std::string separators = ";",
-                         const ValidatorInterface<T, Validator>& validator = ValidateAny<T>(), bool useDbgStream = true)
+  std::vector<T> getList(const std::string key, const T def = T(), const std::string separators = ";",
+                         const ValidatorInterface<T, Validator>& validator = ValidateAny<T>())
   {
     Request req(
-        -1, std::string(), name, Dune::Stuff::Common::toString(def), Dune::Stuff::Common::getTypename(validator));
-    const auto value  = get(name, toString(def), ValidateAny<std::string>(), useDbgStream, req);
+        -1, std::string(), key, Dune::Stuff::Common::toString(def), Dune::Stuff::Common::getTypename(validator));
+    const auto value  = get(key, toString(def), ValidateAny<std::string>(), req);
     const auto tokens = tokenize<T>(value, separators);
     for (auto token : tokens) {
       if (!validator(token)) {
@@ -258,7 +334,7 @@ public:
     return tokens;
   }
 
-  // set values in tree_
+  //! set value to key in ConfigContainer
   template <class T>
   void set(const std::string key, const T& value, const bool overwrite = false)
   {
@@ -269,7 +345,7 @@ public:
                                              << "\n======================\n"
                                              << report_string());
     tree_[key] = toString(value);
-  }
+  } // ... set(..., T, ...)
 
   void set(const std::string& key, const char* value, const bool overwrite = false)
   {
@@ -280,165 +356,106 @@ public:
                                              << "\n======================\n"
                                              << report_string());
     tree_[key] = toString(value);
-  } // ... set(...)
+  } // ... set(..., const char *, ...)
 
-  // forwards to ExtendedParameterTree tree_
-  bool has_key(const std::string& key) const
-  {
-    return tree_.hasKey(key);
-  }
+  //! check if key is existing in tree_
+  bool has_key(const std::string& key) const;
 
-  bool has_sub(const std::string subTreeName) const
-  {
-    return tree_.hasSub(subTreeName);
-  }
+  //! check if sub is existing in tree_
+  bool has_sub(const std::string subTreeName) const;
 
-  const ParameterTree sub(const std::string subTreeName) const
-  {
-    tree_.assertSub(subTreeName);
-    return tree_.sub(subTreeName);
-  }
+  //! get subtree of tree_
+  const ParameterTree sub(const std::string subTreeName) const;
 
-  std::string& operator[](std::string name)
-  {
-    return tree_[name];
-  }
+  //! get reference to value assigned to key in tree_
+  std::string& operator[](std::string key);
 
-  // add ConfigContainer or ParameterTree to ConfigContainer
-  void add(const ConfigContainer& other, const std::string sub_id = "", const bool overwrite = false)
-  {
-    tree_.add(other.tree(), sub_id, overwrite);
-    for (auto pair : other.requests_map())
-      for (auto request : pair.second)
-        requests_map_[pair.first].insert(request);
-  } // ... add(...)
+  /** \brief add another ConfigContainer to this (merge tree_s and requests_map_s)
+   *  \param other ConfigContainer to add
+   *  \param sub_id if not empty, other.tree_ is merged in as a sub "sub_id" of tree_
+   *  \param overwrite if true, existing values are overwritten by other's values to the same key
+   */
+  void add(const ConfigContainer& other, const std::string sub_id = "", const bool overwrite = false);
 
-  void add(const ParameterTree& paramtree, const std::string sub_id = "", const bool overwrite = false)
-  {
-    tree_.add(paramtree, sub_id, overwrite);
-  } // ... add(...)
+  /** \brief add a Dune::ParameterTree paramtree to this (merge tree_ and paramtree)
+   *  \param paramtree ParameterTree to add
+   *  \param sub_id if not empty, paramtree is merged in as a sub "sub_id" of tree_
+   *  \param overwrite if true, existing values are overwritten by paramtree's values to the same key
+   */
+  void add(const ParameterTree& paramtree, const std::string sub_id = "", const bool overwrite = false);
 
+  //! add another ConfigContainer to this (merge tree_s and requests_map_s)
+  ConfigContainer& operator+=(ConfigContainer& other);
 
-  ConfigContainer& operator+=(ConfigContainer& other)
-  {
-    add(other);
-    return *this;
-  }
+  //! add this and another ConfigContainer (merge tree_s and requests_map_s)
+  ConfigContainer operator+(ConfigContainer& other);
 
-  ConfigContainer operator+(ConfigContainer& other)
-  {
-    ConfigContainer ret(*this);
-    ret += other;
-    return ret;
-  }
+  //! assignment operator
+  ConfigContainer& operator=(const ConfigContainer& other);
 
-  ConfigContainer& operator=(const ConfigContainer& other)
-  {
-    tree_ = other.tree_;
-#ifndef NDEBUG
-    warning_output_ = other.warning_output_;
-#endif
-    requests_map_    = other.requests_map_;
-    record_defaults_ = other.record_defaults_;
-    logdir_          = other.logdir_;
-    return *this;
-  } // ... operator=(...)
+  //! return tree_
+  ExtendedParameterTree tree() const;
 
+  //! return requests_map_
+  RequestMapType requests_map() const;
 
-  ExtendedParameterTree tree() const
-  {
-    return tree_;
-  }
+  //! check if tree_ is empty (if tree_ is empty return true even if requests_map_ is not empty)
+  bool empty() const;
 
-  RequestMapType requests_map() const
-  {
-    return requests_map_;
-  }
+  /** \brief print requests_map_ and tree_
+   *  \param out output stream
+   *  \param prefix is printed before each key from tree_
+   */
+  void report(std::ostream& out = std::cout, const std::string& prefix = "") const;
 
-  bool empty() const
-  {
-    return tree_.getValueKeys().empty() && tree_.getSubKeys().empty();
-  }
+  //! store output of report(..., prefix) in std::string
+  std::string report_string(const std::string& prefix = "") const;
 
-  void report(std::ostream& out = std::cout, const std::string& prefix = "") const
-  {
-    printRequests(out);
-    if (!empty()) {
-      if (tree_.getSubKeys().size() == 0) {
-        tree_.reportAsSub(out, prefix, "");
-      } else if (tree_.getValueKeys().size() == 0) {
-        const std::string common_prefix = tree_.findCommonPrefix(tree_, "");
-        if (!common_prefix.empty()) {
-          out << prefix << "[" << common_prefix << "]" << std::endl;
-          const ConfigContainer& commonSub(sub(common_prefix));
-          tree_.reportFlatly(commonSub.tree(), prefix, out);
-        } else
-          tree_.reportAsSub(out, prefix, "");
-      } else {
-        tree_.reportAsSub(out, prefix, "");
-      }
-    }
-  } // ... report(...)
-
-  std::string report_string(const std::string& prefix = "") const
-  {
-    return tree_.reportString(prefix);
-  } // ... report_string(...)
-
-  // read parameters from command line and/or file
+  /** get parameters from parameter file or key-value pairs given on the command line and store in ConfigContainer (and
+  load into fem parameter, if available) */
   void readCommandLine(int argc, char* argv[]);
+
+  //! search command line options for key-value pairs and add them to ConfigContainer
   void readOptions(int argc, char* argv[]);
 
+  //! print all Requests in requests_map_
   void printRequests(std::ostream& out) const;
 
+  /** return a map mapping keys which where requested with at least two different default values to a set containing
+  the corresponding Requests */
   RequestMapType getMismatchedDefaultsMap() const;
 
+  /**
+     * \brief Checks if there are Request with differing default values to the same key
+     *  (i.e. if the key was queried with non-matching default values)
+     * \details Extracts the std::set<Request> from pair and removes all duplicates with respect to key and def. If
+   * there is
+     *  only one Request left after this step (or if the extracted set was empty originally), an empty set is returned,
+     *  otherwise the set of differing requests is returned.
+     * \param pair RequestMapType::value_type (i.e. std::pair< std::string, std::set<Request> >)
+     * \return std::set filled with Requests that differ either in key or in def (or both), empty if there are no such
+     *  differing Requests
+     */
+  std::set<Request> getMismatchedDefaults(RequestMapType::value_type pair) const;
+
+  //! print all keys that were requested with at least two different default values and their respective Requests
   void printMismatchedDefaults(std::ostream& out) const;
 
   /**
-   *  Control if the value map is filled with default values for missing entries
-   *  Initially false
-   **/
+     *  Control if the value map is filled with default values for missing entries
+     *  Initially false
+     **/
   void setRecordDefaults(bool record);
 
 private:
-  // methods to read in a parameter tree
-  static ParameterTree initialize(const std::string filename)
-  {
-    ParameterTree param_tree;
-    Dune::ParameterTreeParser::readINITree(filename, param_tree);
-    return param_tree;
-  } // ... initialize(...)
+  //! read Dune::ParameterTree from file
+  static ParameterTree initialize(const std::string filename);
 
-  static ParameterTree initialize(int argc, char** argv)
-  {
-    ParameterTree param_tree;
-    if (argc == 2) {
-      Dune::ParameterTreeParser::readINITree(argv[1], param_tree);
-    } else if (argc > 2) {
-      Dune::ParameterTreeParser::readOptions(argc, argv, param_tree);
-    }
-    if (param_tree.hasKey("paramfile")) {
-      Dune::ParameterTreeParser::readINITree(param_tree.get<std::string>("paramfile"), param_tree, false);
-    }
-    return param_tree;
-  } // ... initialize(...)
+  //! read Dune::ParameterTree from arguments
+  static ParameterTree initialize(int argc, char** argv);
 
-  static ParameterTree initialize(int argc, char** argv, std::string filename)
-  {
-    ParameterTree param_tree;
-    if (argc == 1) {
-      Dune::ParameterTreeParser::readINITree(filename, param_tree);
-    } else if (argc == 2) {
-      Dune::ParameterTreeParser::readINITree(argv[1], param_tree);
-    } else {
-      Dune::ParameterTreeParser::readOptions(argc, argv, param_tree);
-    }
-    if (param_tree.hasKey("paramfile")) {
-      Dune::ParameterTreeParser::readINITree(param_tree.get<std::string>("paramfile"), param_tree, false);
-    }
-    return param_tree;
-  } // ... initialize(...)
+  //! read Dune::ParameterTree from arguments and file
+  static ParameterTree initialize(int argc, char** argv, std::string filename);
 
 // member variables
 #ifndef NDEBUG

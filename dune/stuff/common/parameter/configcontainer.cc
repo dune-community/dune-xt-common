@@ -42,16 +42,6 @@ Request::Request(const int _line, const std::string _file, const std::string _ke
 {
 }
 
-/**
- * \brief less-than operator for Requests
- * \details Compare this' member variables key, def, file, line and validator (in that order) with other's. Returns
- *          true if the first comparison returns true (i.e. this.key < other.key) and returns false if this.key >
- *          other.key. If neither true nor false is returned in the first comparison (i.e. this.key "==" other.key), the
- *          next comparison is evaluated similarly. If none of the first four comparisons returns a value, the value of
- *          this.validator < other.validator is returned.
- * \param other Request to compare with.
- * \return bool this < other (see detailed description)
- */
 bool Request::operator<(const Request& other) const
 {
   DSC_ORDER_REL(key)
@@ -61,13 +51,6 @@ bool Request::operator<(const Request& other) const
   return validator < other.validator;
 }
 
-/**
- * \brief Less-than comparison of member variables key and def of a and b
- * \details Return true if a.key < b.key and false if a.key > b.key. If nothing is returned in this first step, the
- *  value of a.def < b.def is returned.
- * \param a, b Requests to compare
- * \return bool a < b (see detailed description)
- */
 bool strictRequestCompare(const Request& a, const Request& b)
 {
   DSC_ORDER_REL_GENERIC(key, a, b);
@@ -82,15 +65,6 @@ std::ostream& operator<<(std::ostream& out, const Request& r)
   return out;
 }
 
-/**
- * \brief Checks if there are Request with differing default values to the same key.
- * \details Extracts the std::set<Request> from pair and removes all duplicates with respect to key and def. If there is
- *  only one Request left after this step (or if the extracted set was empty originally), an empty set is returned,
- *  otherwise the set of differing requests is returned.
- * \param pair RequestMapType::value_type (i.e. std::pair< std::string, std::set<Request> >)
- * \return std::set filled with Requests that differ either in key or in def (or both), empty if there are no such
- *  differing Requests
- */
 std::set<Request> ConfigContainer::getMismatchedDefaults(ConfigContainer::RequestMapType::value_type pair) const
 {
   typedef bool (*func)(const Request&, const Request&);
@@ -106,8 +80,7 @@ std::set<Request> ConfigContainer::getMismatchedDefaults(ConfigContainer::Reques
 ConfigContainer::ConfigContainer(const Dune::ParameterTree& tree)
   : tree_(tree)
   , record_defaults_(false)
-  , logdir_(boost::filesystem::path(get("global.datadir", "data", 0, 0, false))
-            / get("logging.dir", "log", 0, 0, false))
+  , logdir_(boost::filesystem::path(get("global.datadir", "data")) / get("logging.dir", "log"))
 #ifndef NDEBUG
   , warning_output_(false)
 #endif
@@ -117,92 +90,12 @@ ConfigContainer::ConfigContainer(const Dune::ParameterTree& tree)
 
 ConfigContainer::ConfigContainer()
   : record_defaults_(false)
-  , logdir_(boost::filesystem::path(get("global.datadir", "data", 0, 0, false))
-            / get("logging.dir", "log", 0, 0, false))
+  , logdir_(boost::filesystem::path(get("global.datadir", "data")) / get("logging.dir", "log"))
 #ifndef NDEBUG
   , warning_output_(true)
 #endif
 {
   testCreateDirectory(logdir_.string());
-}
-
-template <class T>
-ConfigContainer::ConfigContainer(const std::string key, const T& value)
-  : record_defaults_(false)
-  , logdir_(boost::filesystem::path(get("global.datadir", "data", 0, 0, false))
-            / get("logging.dir", "log", 0, 0, false))
-#ifndef NDEBUG
-  , warning_output_(true)
-#endif
-{
-  set(key, value);
-}
-
-template <class T>
-ConfigContainer::ConfigContainer(const std::string key, const char* value)
-  : record_defaults_(false)
-  , logdir_(boost::filesystem::path(get("global.datadir", "data", 0, 0, false))
-            / get("logging.dir", "log", 0, 0, false))
-#ifndef NDEBUG
-  , warning_output_(true)
-#endif
-{
-  set(key, value);
-}
-
-template <class T>
-ConfigContainer::ConfigContainer(const std::vector<std::string> keys, const std::vector<T> values_in)
-  : record_defaults_(false)
-  , logdir_(boost::filesystem::path(get("global.datadir", "data", 0, 0, false))
-            / get("logging.dir", "log", 0, 0, false))
-#ifndef NDEBUG
-  , warning_output_(true)
-#endif
-{
-  if (keys.size() != values_in.size())
-    DUNE_THROW_COLORFULLY(
-        Exceptions::shapes_do_not_match,
-        "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' (" << values_in.size() << ")!");
-  for (size_t ii = 0; ii < keys.size(); ++ii)
-    set(keys[ii], values_in[ii]);
-}
-
-template <class T>
-ConfigContainer::ConfigContainer(const std::vector<std::string> keys, const std::initializer_list<T> value_list)
-  : record_defaults_(false)
-  , logdir_(boost::filesystem::path(get("global.datadir", "data", 0, 0, false))
-            / get("logging.dir", "log", 0, 0, false))
-#ifndef NDEBUG
-  , warning_output_(true)
-#endif
-{
-  std::vector<T> tmp_values(value_list);
-  if (keys.size() != tmp_values.size())
-    DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
-                          "The size of 'keys' (" << keys.size() << ") does not match the size of 'value_list' ("
-                                                 << tmp_values.size()
-                                                 << ")!");
-  for (size_t ii = 0; ii < keys.size(); ++ii)
-    set(keys[ii], tmp_values[ii]);
-}
-
-ConfigContainer::ConfigContainer(const std::vector<std::string> keys,
-                                 const std::initializer_list<std::string> value_list)
-  : record_defaults_(false)
-  , logdir_(boost::filesystem::path(get("global.datadir", "data", 0, 0, false))
-            / get("logging.dir", "log", 0, 0, false))
-#ifndef NDEBUG
-  , warning_output_(true)
-#endif
-{
-  std::vector<std::string> tmp_values(value_list);
-  if (keys.size() != tmp_values.size())
-    DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
-                          "The size of 'keys' (" << keys.size() << ") does not match the size of 'value_list' ("
-                                                 << tmp_values.size()
-                                                 << ")!");
-  for (size_t ii = 0; ii < keys.size(); ++ii)
-    set(keys[ii], tmp_values[ii]);
 }
 
 ConfigContainer::ConfigContainer(const std::string filename)
@@ -226,7 +119,6 @@ ConfigContainer::~ConfigContainer()
   tree_.report(*out);
 }
 
-// method definitions for ConfigContainer
 /**
  * \brief Load all key-value pairs from tree into fem parameter database.
  * \param tree ParameterTree to get values from.
@@ -250,8 +142,109 @@ void loadIntoFemParameter(const Dune::ParameterTree& tree, const std::string pre
 #endif
 }
 
-//! get parameters from parameter file or key-value pairs given on the command line and store in ConfigContainer (and
-//!  load into fem parameter, if available)
+// method definitions for ConfigContainer
+bool ConfigContainer::has_key(const std::string& key) const
+{
+  return tree_.hasKey(key);
+} // ... has_key(...)
+
+const ParameterTree ConfigContainer::sub(const std::string subTreeName) const
+{
+  tree_.assertSub(subTreeName);
+  return tree_.sub(subTreeName);
+} // ... sub(...)
+
+std::string& ConfigContainer::operator[](std::string key)
+{
+  return tree_[key];
+} // ... operator[](...)
+
+bool ConfigContainer::has_sub(const std::string subTreeName) const
+{
+  return tree_.hasSub(subTreeName);
+} // ... has_sub(...)
+
+void ConfigContainer::add(const ConfigContainer& other, const std::string sub_id /*= ""*/,
+                          const bool overwrite /* = false*/)
+{
+  tree_.add(other.tree(), sub_id, overwrite);
+  for (auto pair : other.requests_map_)
+    for (auto request : pair.second)
+      requests_map_[pair.first].insert(request);
+} // ... add(...)
+
+void ConfigContainer::add(const ParameterTree& paramtree, const std::string sub_id /* = ""*/,
+                          const bool overwrite /* = false*/)
+{
+  tree_.add(paramtree, sub_id, overwrite);
+} // ... add(...)
+
+ConfigContainer& ConfigContainer::operator+=(ConfigContainer& other)
+{
+  add(other);
+  return *this;
+} // ... operator+=
+
+ConfigContainer ConfigContainer::operator+(ConfigContainer& other)
+{
+  ConfigContainer ret(*this);
+  ret += other;
+  return ret;
+} // ... operator+
+
+ConfigContainer& ConfigContainer::operator=(const ConfigContainer& other)
+{
+  tree_ = other.tree_;
+#ifndef NDEBUG
+  warning_output_ = other.warning_output_;
+#endif
+  requests_map_    = other.requests_map_;
+  record_defaults_ = other.record_defaults_;
+  logdir_          = other.logdir_;
+  return *this;
+} // ... operator=(...)
+
+ExtendedParameterTree ConfigContainer::tree() const
+{
+  return tree_;
+} // ... tree()
+
+// RequestMapType ConfigContainer::requests_map() const {
+//  return requests_map_;
+//} // ... requests_map()
+
+bool ConfigContainer::empty() const
+{
+  return tree_.getValueKeys().empty() && tree_.getSubKeys().empty();
+} // ... empty()
+
+void ConfigContainer::report(std::ostream& out /* = std::cout*/, const std::string& prefix /* = ""*/) const
+{
+  printRequests(out);
+  if (!empty()) {
+    if (tree_.getSubKeys().size() == 0) {
+      tree_.reportAsSub(out, prefix, "");
+    } else if (tree_.getValueKeys().size() == 0) {
+      const std::string common_prefix = tree_.findCommonPrefix(tree_, "");
+      if (!common_prefix.empty()) {
+        out << prefix << "[" << common_prefix << "]" << std::endl;
+        const ConfigContainer& commonSub(sub(common_prefix));
+        tree_.reportFlatly(commonSub.tree(), prefix, out);
+      } else
+        tree_.reportAsSub(out, prefix, "");
+    } else {
+      tree_.reportAsSub(out, prefix, "");
+    }
+  }
+} // ... report(...)
+
+std::string ConfigContainer::report_string(const std::string& prefix /* = ""*/) const
+{
+  std::stringstream stream;
+  report(stream, prefix);
+  return stream.str();
+} // ... report_string(...)
+
 void ConfigContainer::readCommandLine(int argc, char* argv[])
 {
   if (argc < 2) {
@@ -263,17 +256,14 @@ void ConfigContainer::readCommandLine(int argc, char* argv[])
   loadIntoFemParameter(tree_);
 
   // datadir and logdir may be given from the command line...
-  logdir_ =
-      boost::filesystem::path(get("global.datadir", "data", 0, 0, false)) / get("logging.dir", "log", 0, 0, false);
+  logdir_ = boost::filesystem::path(get("global.datadir", "data")) / get("logging.dir", "log");
 } // ReadCommandLine
 
-//! search command line options for key-value pairs and add them to ConfigContainer
 void ConfigContainer::readOptions(int argc, char* argv[])
 {
   Dune::ParameterTreeParser::readOptions(argc, argv, tree_);
 }
 
-//! print all Requests in requests_map_
 void ConfigContainer::printRequests(std::ostream& out) const
 {
   out << "Config requests:";
@@ -286,8 +276,6 @@ void ConfigContainer::printRequests(std::ostream& out) const
   }
 }
 
-//! return a map mapping keys which where requested with at least two different default values to a set containing
-//! the corresponding Requests
 ConfigContainer::RequestMapType ConfigContainer::getMismatchedDefaultsMap() const
 {
   RequestMapType ret;
@@ -299,7 +287,6 @@ ConfigContainer::RequestMapType ConfigContainer::getMismatchedDefaultsMap() cons
   return ret;
 }
 
-//! print all keys that were requested with at least two different default values and their respective Requests
 void ConfigContainer::printMismatchedDefaults(std::ostream& out) const
 {
   for (const auto& pair : requests_map_) {
@@ -318,6 +305,44 @@ void ConfigContainer::setRecordDefaults(bool record)
 {
   record_defaults_ = record;
 }
+
+ParameterTree ConfigContainer::initialize(const std::string filename)
+{
+  ParameterTree param_tree;
+  Dune::ParameterTreeParser::readINITree(filename, param_tree);
+  return param_tree;
+} // ... initialize(...)
+
+ParameterTree ConfigContainer::initialize(int argc, char** argv)
+{
+  ParameterTree param_tree;
+  if (argc == 2) {
+    Dune::ParameterTreeParser::readINITree(argv[1], param_tree);
+  } else if (argc > 2) {
+    Dune::ParameterTreeParser::readOptions(argc, argv, param_tree);
+  }
+  if (param_tree.hasKey("paramfile")) {
+    Dune::ParameterTreeParser::readINITree(param_tree.get<std::string>("paramfile"), param_tree, false);
+  }
+  return param_tree;
+} // ... initialize(...)
+
+ParameterTree ConfigContainer::initialize(int argc, char** argv, std::string filename)
+{
+  ParameterTree param_tree;
+  if (argc == 1) {
+    Dune::ParameterTreeParser::readINITree(filename, param_tree);
+  } else if (argc == 2) {
+    Dune::ParameterTreeParser::readINITree(argv[1], param_tree);
+  } else {
+    Dune::ParameterTreeParser::readOptions(argc, argv, param_tree);
+  }
+  if (param_tree.hasKey("paramfile")) {
+    Dune::ParameterTreeParser::readINITree(param_tree.get<std::string>("paramfile"), param_tree, false);
+  }
+  return param_tree;
+} // ... initialize(...)
+
 
 } // namespace Common
 } // namespace Stuff
