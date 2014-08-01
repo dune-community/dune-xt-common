@@ -519,7 +519,7 @@ DSC_VECTORTOSTR(LA::IstlDenseVector)
 
 #undef DSC_VECTORTOSTR
 
-//! toString for vector types where the number of rows and columns is also templated
+//! toString for vector types where the size is also templated
 #define DSC_FIELDVECTORTOSTR(FieldVectorType)                                                                          \
   template <class S, int SIZE>                                                                                         \
   inline std::string toString(const FieldVectorType<S, SIZE> vector)                                                   \
