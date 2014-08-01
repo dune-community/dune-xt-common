@@ -35,17 +35,6 @@ inline void clear(LA::VectorInterface<T>& vector)
   vector *= typename LA::VectorInterface<T>::ScalarType(0);
 }
 
-/**
- *  \brief Compare x and y component-wise for almost equality.
- *
- *  Applies Dune::FloatCmp::eq() componentwise.
- */
-template <class Field, int size>
-bool DUNE_DEPRECATED_MSG("Use Dune::Stuff::Common::FloatCMP::eq() instead!")
-    float_cmp(const Dune::FieldVector<Field, size>& x, const Dune::FieldVector<Field, size>& y, const Field tol)
-{
-  return FloatCmp::eq(x, y, tol);
-}
 
 template <class T>
 DUNE_DEPRECATED_MSG("THIS WILL BE REMOVED ONCE ExtendedParameterTree::getVector() IS PROPERLY IMPLEMENTED!")

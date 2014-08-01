@@ -178,34 +178,6 @@ struct HexToString
 // some legacy stuff I'd like to keep for a while
 namespace String {
 
-template <class T>
-DUNE_DEPRECATED_MSG("use DSC::fromString instead, removal with stuff 2.3")
-T from(const std::string& s)
-{
-  std::stringstream ss;
-  ss << s;
-  T t;
-  ss >> t;
-  return t;
-}
-
-template <class T>
-DUNE_DEPRECATED_MSG("use DSC::toString instead, removal with stuff 2.3")
-std::string to(const T& t)
-{
-  std::stringstream ss;
-  ss << t;
-  std::string s;
-  ss >> s;
-  return s;
-}
-
-DUNE_DEPRECATED_MSG("use the constructor call directly")
-inline std::vector<std::string> mainArgsToVector(int argc, char** argv)
-{
-  return std::vector<std::string>(argv, argv + argc);
-}
-
 inline char** vectorToMainArgs(const std::vector<std::string> args)
 {
   char** argv = new char*[args.size()];

@@ -69,6 +69,10 @@ public:
   {
     return static_cast<const derived_type&>(that);
   }
+
+protected:
+  // nicely avoid warning about non-virtual dtor when derived classes have vfunc
+  ~CRTPInterface() = default;
 }; // CRTPInterface
 
 
