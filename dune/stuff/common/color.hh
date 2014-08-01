@@ -17,8 +17,6 @@
 #endif
 #include <string>
 
-#include <dune/stuff/common/string.hh>
-
 namespace Dune {
 namespace Stuff {
 namespace Common {
@@ -97,7 +95,7 @@ struct StreamModifiers
  */
 inline std::string color(int i)
 {
-  return "\033[38;5;" + toString(i) + "m";
+  return "\033[38;5;" + std::to_string(i) + "m";
 }
 
 /**
@@ -108,7 +106,7 @@ inline std::string color(int i)
  */
 inline std::string backcolor(int i)
 {
-  return "\033[38;5;" + toString(i) + "m";
+  return "\033[38;5;" + std::to_string(i) + "m";
 }
 
 inline // maybe you want to choose your own color
@@ -136,7 +134,7 @@ std::string highlightTemplate(std::string str, int maxlevel = 10000);
  */
 inline std::string highlightString(std::string str, int colornr = 0)
 {
-  return "\033[38;5;" + toString(colornr % 256) + "m" + str + "\033[0m"; //"\033[38;5;0m";
+  return "\033[38;5;" + std::to_string(colornr % 256) + "m" + str + "\033[0m"; //"\033[38;5;0m";
 }
 
 std::string colorString(const std::string _string, const std::string _color = Colors::brown);
