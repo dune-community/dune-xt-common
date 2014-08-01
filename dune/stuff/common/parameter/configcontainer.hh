@@ -457,15 +457,15 @@ private:
   //! read Dune::ParameterTree from arguments and file
   static ParameterTree initialize(int argc, char** argv, std::string filename);
 
-// member variables
-#ifndef NDEBUG
-  bool warning_output_;
-#endif
+  // member variables
   ExtendedParameterTree tree_;
   //! config key -> requests map
   RequestMapType requests_map_;
   bool record_defaults_;
   boost::filesystem::path logdir_;
+#ifndef NDEBUG
+  bool warning_output_;
+#endif
 };
 
 
