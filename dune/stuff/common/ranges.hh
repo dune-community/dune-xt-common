@@ -28,6 +28,8 @@
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/fem/namespace.hh>
 
+#include <type_traits>
+
 namespace Dune {
 
 #if HAVE_DUNE_FEM
@@ -290,21 +292,40 @@ intersectionRange(const Dune::Fem::GridPartInterface<GridPartTraits>& gridpart,
 
 //! get a vector with values in [start : increment : end)
 template <class T, class sequence = std::vector<T>>
-sequence valueRange(const T start, const T end, const T increment = Epsilon<T>::value)
+typename std::enable_if<!std::is_enum<T>::value, sequence>::type valueRange(const T start, const T end,
+                                                                            const T increment = Epsilon<T>::value)
 {
   // sadly, no overloaded version of std::abs is available for
   // unsigned long long, so we compute the absolute value of increment
-  // ourselfs
-  const T incrementAbs = Dune::Stuff::Common::abs(increment);
+  // ourselves
+  const auto incrementAbs = Dune::Stuff::Common::abs(increment);
+  assert(incrementAbs > 0);
   sequence ret(typename sequence::size_type(((end > start) ? end - start : start - end) / incrementAbs), start);
   typename sequence::size_type i = 0;
   std::generate(std::begin(ret), std::end(ret), [&]() { return T(start + (increment * i++)); });
   return ret;
 }
 
+//! signature for enumeration Types T
+template <class T, class sequence = std::vector<typename absretval<T>::type>>
+typename std::enable_if<std::is_enum<T>::value, sequence>::type
+valueRange(const T start, const T end,
+           const typename absretval<T>::type increment = Epsilon<typename absretval<T>::type>::value)
+{
+  typedef typename absretval<T>::type R;
+  return valueRange(static_cast<R>(start), static_cast<R>(end), increment);
+}
+
 //! get a vector with values in [0 : Epsilon<T> : end)
 template <class T, class sequence = std::vector<T>>
-sequence valueRange(const T end)
+typename std::enable_if<!std::is_enum<T>::value, sequence>::type valueRange(const T end)
+{
+  return valueRange(T(0), end);
+}
+
+//! get a vector with values in [0 : Epsilon<T> : end)
+template <class T, class sequence = std::vector<typename absretval<T>::type>>
+typename std::enable_if<std::is_enum<T>::value, sequence>::type valueRange(const T end)
 {
   return valueRange(T(0), end);
 }

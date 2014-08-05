@@ -13,6 +13,7 @@
 #include <algorithm>
 #include <cstring>
 #include <iostream>
+#include <type_traits>
 
 #include <dune/common/deprecated.hh>
 
@@ -122,7 +123,7 @@ const T Epsilon<T, false>::value = std::numeric_limits<T>::epsilon();
 
 /**
  *  Helper struct to compute absolute values of signed and unsigned values,
- *  std::abs is only defined for unsigned types.
+ *  std::abs is only defined for signed types.
  **/
 template <class T, bool isUnsigned = std::is_unsigned<T>::value>
 struct absoluteValue
@@ -141,10 +142,23 @@ struct absoluteValue<T, true>
   }
 };
 
-template <class T>
-T abs(const T& val)
+template <class T, bool is_enum = std::is_enum<T>::value>
+struct absretval
 {
-  return absoluteValue<T>::result(val);
+  typedef T type;
+};
+
+template <class T>
+struct absretval<T, true>
+{
+  typedef typename std::underlying_type<T>::type type;
+};
+
+template <class T>
+typename absretval<T>::type abs(const T& val)
+{
+  typedef typename absretval<T>::type R;
+  return absoluteValue<R>::result(static_cast<R>(val));
 }
 
 /**
