@@ -123,6 +123,17 @@ struct PtrCaller<T, typename std::enable_if<is_smart_ptr<T>::value || std::is_po
   }
 };
 
+template <class T>
+struct underlying_type
+{
+#if __GNUC__ == 4 && (__GNUC_MINOR__ < 7)
+  typedef typename std::conditional<TpEnum(-1) < TpEnum(0), typename std::make_signed<TpEnum>::type,
+                                    typename std::make_unsigned<TpEnum>::type>::type type;
+#else
+  typedef typename std::underlying_type<T>::type type;
+#endif
+};
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune

@@ -33,6 +33,7 @@
 #include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/stuff/fem/namespace.hh>
+#include <dune/stuff/common/type_utils.hh>
 
 namespace boost {
 namespace math {
@@ -151,7 +152,7 @@ struct absretval
 template <class T>
 struct absretval<T, true>
 {
-  typedef typename std::underlying_type<T>::type type;
+  typedef typename underlying_type<T>::type type;
 };
 
 template <class T>
