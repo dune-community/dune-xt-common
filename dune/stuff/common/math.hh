@@ -27,13 +27,14 @@
 #include <boost/accumulators/statistics/mean.hpp>
 #include <boost/math/special_functions/fpclassify.hpp>
 
+#include <dune/stuff/common/type_utils.hh>
+
 #if HAVE_DUNE_FEM
 #include <dune/stuff/common/disable_warnings.hh>
 #include <dune/fem/function/blockvectorfunction/blockvectorfunction.hh>
 #include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/stuff/fem/namespace.hh>
-#include <dune/stuff/common/type_utils.hh>
 
 namespace boost {
 namespace math {
