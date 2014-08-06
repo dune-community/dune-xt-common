@@ -65,12 +65,12 @@ include(CheckOverrideFinal)
 SET( CMAKE_EXPORT_COMPILE_COMMANDS "ON" )
 
 SET( CMAKE_CXX_FLAGS_RELEASE CACHE STRING
-  "-DDNDEBUG -DNDEBUG -O2 -fPIC " )
+  "-DDNDEBUG -DNDEBUG -O2 -fPIC " ${CMAKE_CXX_FLAGS_RELEASE})
 
 SET( CMAKE_CXX_FLAGS "-DDUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS=1 ${CMAKE_CXX_FLAGS}" )
 
 SET( CMAKE_CXX_FLAGS_DEBUG
-  "-DDNDEBUG -g3 -ggdb  -Wunused-variable -Winline -fno-strict-aliasing -fPIC -Wall -Wextra -Wc++0x-compat -Wparentheses -pedantic -Wredundant-decls -Wshadow  -Wundef -Wnon-virtual-dtor -ftemplate-backtrace-limit=0" )
+  "-DDNDEBUG -g3 -ggdb  -Wunused-variable -Winline -fno-strict-aliasing -fPIC -Wall -Wextra -Wc++0x-compat -Wparentheses -pedantic -Wredundant-decls -Wshadow  -Wundef -Wnon-virtual-dtor -ftemplate-backtrace-limit=0 ${CMAKE_CXX_FLAGS_DEBUG}")
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
         set( CMAKE_CXX_FLAGS_DEBUG CACHE STRING
