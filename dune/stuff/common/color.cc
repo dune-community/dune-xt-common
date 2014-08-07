@@ -68,14 +68,14 @@ std::string highlightTemplate(std::string str, int maxlevel /*= 10000*/)
   for (size_t i = 0; i < str.size(); i++) {
     if (str[i] == '<') {
       level++;
-      std::string dummy = "\033[38;5;" + toString(templateColorChooser(level)) + "m";
+      std::string dummy = "\033[38;5;" + std::to_string(templateColorChooser(level)) + "m";
       str.insert(i, dummy);
       i += dummy.size();
       if (level == maxlevel)
         startindex = i + 1;
     } else if (str[i] == '>') {
       level--;
-      std::string dummy = "\033[38;5;" + toString(templateColorChooser(level)) + "m";
+      std::string dummy = "\033[38;5;" + std::to_string(templateColorChooser(level)) + "m";
       str.insert(++i, dummy);
       if (level + 1 == maxlevel) {
         auto size = i - startindex - 1;
@@ -94,7 +94,7 @@ std::string highlightSearchString(std::string str, std::string substr, int color
   long index = long(str.find(substr, 0));
 
   while (index != long(std::string::npos)) {
-    std::string dummy  = "\033[38;5;" + toString(colornr % 256) + "m";
+    std::string dummy  = "\033[38;5;" + std::to_string(colornr % 256) + "m";
     std::string dummy2 = "\033[38;5;0m";
     str.insert(index, dummy);
     str.insert(index + substr.size() + dummy.size(), dummy2);
