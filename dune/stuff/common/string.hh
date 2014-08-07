@@ -174,12 +174,12 @@ private:
     S s_out;
     try {
       s_out = Choose<S>::fromString(str_in);
-    } catch (std::exception& e) {
-      DUNE_THROW_COLORFULLY(Exceptions::external_error,
-                            "Error " << e.what() << " in the stl while parsing the value " << str_in << ". \n");
     } catch (boost::bad_lexical_cast& e) {
       DUNE_THROW_COLORFULLY(Exceptions::external_error,
                             "Error " << e.what() << " in boost while parsing the value " << str_in << ". \n");
+    } catch (std::exception& e) {
+      DUNE_THROW_COLORFULLY(Exceptions::external_error,
+                            "Error " << e.what() << " in the stl while parsing the value " << str_in << ". \n");
     }
     return s_out;
   } // ... convert_from_string_safely(...)
