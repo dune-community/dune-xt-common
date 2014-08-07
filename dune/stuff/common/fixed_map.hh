@@ -135,14 +135,14 @@ public:
    * if list.size() > N only the first N elements are considered
    * if list.size() < N the Map is padded with default constructed elements
    */
-  explicit FixedMap(const std::initializer_list<value_type>& list)
+  FixedMap(const std::initializer_list<value_type>& list)
     : map_(boost::assign::list_of<value_type>(*list.begin())
                .range(list.begin() + 1, list.end() - (N > list.size() ? size_t(0) : (list.size() - N)))
                .repeat(N > list.size() ? N - list.size() : size_t(0), std::make_pair(key_type(), T())))
   {
   }
 
-  explicit FixedMap(const MapType& map)
+  FixedMap(const MapType& map)
     : map_(map)
   {
   }

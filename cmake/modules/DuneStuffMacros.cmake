@@ -65,8 +65,9 @@ include(CheckOverrideFinal)
 SET( CMAKE_EXPORT_COMPILE_COMMANDS "ON" )
 
 SET( CMAKE_CXX_FLAGS_RELEASE CACHE STRING
-  "-DDNDEBUG -DNDEBUG -O2 -fPIC " ${CMAKE_CXX_FLAGS_RELEASE})
+  "-DDNDEBUG -DNDEBUG -O2 -fPIC ${CMAKE_CXX_FLAGS_RELEASE}")
 
+# exp grid extensions needed for boundaryId stuff
 SET( CMAKE_CXX_FLAGS "-DDUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS=1 ${CMAKE_CXX_FLAGS}" )
 
 SET( CMAKE_CXX_FLAGS_DEBUG
@@ -74,11 +75,11 @@ SET( CMAKE_CXX_FLAGS_DEBUG
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
         set( CMAKE_CXX_FLAGS_DEBUG CACHE STRING
-        "${CMAKE_CXX_FLAGS_DEBUG} -Wnon-literal-null-conversion -Wused-but-marked-unused -Wno-tautological-compare -Wfloat-equal -Wdisabled-macro-expansion -Wcovered-switch-default  -Wswitch-enum -Wunreachable-code  -Wshorten-64-to-32 -O0"
+        "-Wnon-literal-null-conversion -Wused-but-marked-unused -Wno-tautological-compare -Wfloat-equal -Wdisabled-macro-expansion -Wcovered-switch-default  -Wswitch-enum -Wunreachable-code  -Wshorten-64-to-32 -O0 ${CMAKE_CXX_FLAGS_DEBUG}"
         )
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         set( CMAKE_CXX_FLAGS_DEBUG CACHE STRING
-        "${CMAKE_CXX_FLAGS_DEBUG} -Wlogical-op -Og"
+        "-Wlogical-op -Og ${CMAKE_CXX_FLAGS_DEBUG} "
         )
 endif()
 
