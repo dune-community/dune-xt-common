@@ -123,6 +123,19 @@ struct PtrCaller<T, typename std::enable_if<is_smart_ptr<T>::value || std::is_po
   }
 };
 
+//! workaround for gcc 4.7 missing underlying type, via
+//! https://stackoverflow.com/questions/9343329/how-to-know-underlying-type-of-class-enum/10956467#10956467
+template <class T>
+struct underlying_type
+{
+#if __GNUC__ == 4 && (__GNUC_MINOR__ < 7)
+  typedef typename std::conditional<T(-1) < T(0), typename std::make_signed<T>::type,
+                                    typename std::make_unsigned<T>::type>::type type;
+#else
+  typedef typename std::underlying_type<T>::type type;
+#endif
+};
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune

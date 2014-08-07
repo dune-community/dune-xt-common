@@ -9,6 +9,7 @@
 #include <dune/common/dynmatrix.hh>
 #include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/stuff/common/math.hh>
+#include <dune/stuff/common/float_cmp.hh>
 #include <dune/stuff/common/ranges.hh>
 #include <dune/common/tupleutility.hh>
 
@@ -137,6 +138,24 @@ TEST(OtherMath, Sign)
 {
   EXPECT_EQ(DSC::sign(1), 1);
   EXPECT_EQ(DSC::sign(-1), -1);
+  EXPECT_EQ(DSC::sign(1.), 1);
+  EXPECT_EQ(DSC::sign(-1.), -1);
+}
+
+TEST(OtherMath, FloatCmp)
+{
+  std::vector<double> ones{1., 1.};
+  std::vector<double> twos{2., 2.};
+  Dune::FieldVector<double, 2> dones(1.);
+  EXPECT_TRUE(DSC::FloatCmp::eq(ones, ones));
+  EXPECT_TRUE(DSC::FloatCmp::eq(dones, dones));
+  EXPECT_FALSE(DSC::FloatCmp::ne(ones, ones));
+  EXPECT_FALSE(DSC::FloatCmp::ne(dones, dones));
+
+  EXPECT_TRUE(DSC::FloatCmp::vec_ne(dones, Dune::FieldVector<double, 2>{1, 0}));
+  EXPECT_TRUE(DSC::FloatCmp::lt(dones, Dune::FieldVector<double, 2>{2, 2}));
+  EXPECT_TRUE(DSC::FloatCmp::lt(ones, twos));
+  EXPECT_TRUE(DSC::FloatCmp::gt(twos, ones));
 }
 
 int main(int argc, char** argv)
