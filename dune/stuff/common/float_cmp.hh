@@ -90,6 +90,12 @@ DUNE_STUFF_GENERATE_VECTOR_COMPARATOR(le)
 
 #undef DUNE_STUFF_GENERATE_VECTOR_COMPARATOR
 
+template <class T, int size, Dune::FloatCmp::CmpStyle style = Dune::FloatCmp::defaultCmpStyle>
+bool vec_ne(const Dune::FieldVector<T, size>& first, const Dune::FieldVector<T, size>& second,
+            typename Dune::FloatCmp::EpsilonType<T>::Type epsilon = Dune::FloatCmp::DefaultEpsilon<T, style>::value())
+{
+  return !eq(first, second, epsilon);
+}
 
 } // namespace FloatCmp
 } // namespace Common
