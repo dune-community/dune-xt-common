@@ -24,13 +24,13 @@ namespace Stuff {
 namespace Common {
 
 template <class VectorImp>
-inline void clear(Dune::DenseVector<VectorImp>& vector)
+inline void DUNE_DEPRECATED_MSG("Use *= 0 instead!") clear(Dune::DenseVector<VectorImp>& vector)
 {
   vector *= typename Dune::DenseVector<VectorImp>::value_type(0);
 }
 
 template <class T>
-inline void clear(LA::VectorInterface<T>& vector)
+inline void DUNE_DEPRECATED_MSG("Use *= 0 instead!") clear(LA::VectorInterface<T>& vector)
 {
   vector *= typename LA::VectorInterface<T>::ScalarType(0);
 }
