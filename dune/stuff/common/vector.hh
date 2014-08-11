@@ -36,18 +36,6 @@ inline void clear(LA::VectorInterface<T>& vector)
 }
 
 
-template <class T>
-DUNE_DEPRECATED_MSG("THIS WILL BE REMOVED ONCE ExtendedParameterTree::getVector() IS PROPERLY IMPLEMENTED!")
-Dune::DynamicVector<T> resize(const Dune::DynamicVector<T>& inVector, const size_t newSize, const T fill = T(0))
-{
-  Dune::DynamicVector<T> outVector(newSize);
-  for (size_t ii = 0; ii < std::min(inVector.size(), newSize); ++ii)
-    outVector[ii] = inVector[ii];
-  for (size_t ii = std::min(inVector.size(), newSize); ii < newSize; ++ii)
-    outVector[ii] = fill;
-  return outVector;
-}
-
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
