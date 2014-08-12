@@ -169,7 +169,7 @@ struct ConfigTest : public testing::Test
     DSC_CONFIG.printMismatchedDefaults(dev_null);
     auto key = this->key_gen();
     DSC_CONFIG.set(key, T());
-    EXPECT_THROW(DSC_CONFIG.get(key, T(), ValidateNone<T>()), DSC::InvalidParameter);
+    EXPECT_THROW(DSC_CONFIG.get(key, T(), ValidateNone<T>()), Dune::Stuff::Exceptions::configuration_error);
   }
 }; // struct ConfigTest
 
