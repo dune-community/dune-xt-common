@@ -228,7 +228,7 @@ bool ConfigContainer::has_key(const std::string& key) const
   return BaseType::hasKey(key);
 }
 
-const ConfigContainer ConfigContainer::sub(const std::string sub_id) const
+ConfigContainer ConfigContainer::sub(const std::string sub_id) const
 {
   if (empty())
     DUNE_THROW(Exceptions::configuration_error,
@@ -296,14 +296,15 @@ ConfigContainer& ConfigContainer::operator=(const ConfigContainer& other)
   return *this;
 } // ... operator=(...)
 
-ExtendedParameterTree ConfigContainer::tree() const
+const ConfigContainer& ConfigContainer::tree() const
 {
   return *this;
 } // ... tree()
 
-// RequestMapType ConfigContainer::requests_map() const {
-//  return requests_map_;
-//} // ... requests_map()
+const typename ConfigContainer::RequestMapType& ConfigContainer::requests_map() const
+{
+  return requests_map_;
+} // ... requests_map()
 
 bool ConfigContainer::empty() const
 {

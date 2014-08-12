@@ -100,13 +100,11 @@ class ConfigContainer : public Dune::ParameterTree
   typedef std::map<std::string, std::set<Request>> RequestMapType;
 
 public:
-  //! warning_output = true, record_defaults = false
   ConfigContainer(const bool record_defaults = internal::config_container_record_defaults,
                   const bool warn_on_default_access = internal::config_container_warn_on_default_access,
                   const bool log_on_exit            = internal::config_container_log_on_exit,
                   const std::string logfile = internal::config_container_logfile);
 
-  //! copy tree to tree_, set warning_output and record_defaults to false
   ConfigContainer(const ParameterTree& tree, const bool record_defaults = internal::config_container_record_defaults,
                   const bool warn_on_default_access = internal::config_container_warn_on_default_access,
                   const bool log_on_exit            = internal::config_container_log_on_exit,
@@ -131,7 +129,6 @@ public:
                   const bool log_on_exit            = internal::config_container_log_on_exit,
                   const std::string logfile = internal::config_container_logfile);
 
-  //! warning output = true, record_defaults = false, tree_[key] = value
   template <class T>
   ConfigContainer(const std::string key, const T& value,
                   const bool record_defaults        = internal::config_container_record_defaults,
@@ -149,7 +146,6 @@ public:
     setup_();
   }
 
-  //! warning output = true, record_defaults = false, tree_[key] = value
   ConfigContainer(const std::string key, const char* value,
                   const bool record_defaults        = internal::config_container_record_defaults,
                   const bool warn_on_default_access = internal::config_container_warn_on_default_access,
@@ -162,7 +158,7 @@ public:
                   const bool log_on_exit            = internal::config_container_log_on_exit,
                   const std::string logfile = internal::config_container_logfile);
 
-  //! warning output = true, record_defaults = false, tree_[keys[ii]] = values[ii] for 0 <= ii <= keys.size()
+  //! operator[](keys[ii]) = values[ii] for 0 <= ii <= keys.size()
   template <class T>
   ConfigContainer(const std::vector<std::string> keys, const std::vector<T> values_in,
                   const bool record_defaults        = internal::config_container_record_defaults,
@@ -204,70 +200,39 @@ public:
                   const bool log_on_exit            = internal::config_container_log_on_exit,
                   const std::string logfile = internal::config_container_logfile);
 
-  //! destructor printing tree_.report() to logdir_
   ~ConfigContainer();
 
-  void set_record_defaults(const bool value = internal::config_container_record_defaults);
+  ConfigContainer& operator=(const ConfigContainer& other);
 
-  void set_warn_on_default_access(const bool value = internal::config_container_warn_on_default_access);
+  /**
+   * \defgroup base ´´These methods replace or override those from Dune::ParameterTree.``
+   * \{
+   */
 
-  void set_log_on_exit(const bool value = internal::config_container_log_on_exit);
+  //! check if key is existing in tree_
+  bool has_key(const std::string& key) const;
 
-  void set_logfile(const std::string logfile = internal::config_container_logfile);
+  //! check if sub is existing in tree_
+  bool has_sub(const std::string subTreeName) const;
 
-  //! get variation with default value, without validation, request needs to be provided
-  template <typename T>
-  T get(const std::string key, T def, Request req, const size_t size = 0, const size_t cols = 0)
-  {
-    return get(key, def, ValidateAny<T>(), req, size, cols, true);
-  }
+  /** \brief print the ParameterTree
+   *  \param out output stream
+   *  \param prefix to be prepended to each line
+   */
+  void report(std::ostream& out = std::cout, const std::string& prefix = "") const;
 
-  //! get variation with default value and validation, request needs to be provided
-  template <typename T, class Validator>
-  T get(const std::string key, T def, const ValidatorInterface<T, Validator>& validator, Request req,
-        const size_t size = 0, const size_t cols = 0)
-  {
-    return get(key, def, validator, req, size, cols, true);
-  }
+  //! get subtree
+  ConfigContainer sub(const std::string sub_id) const;
 
-  //! get variation with default value, validation
-  template <typename T, class Validator>
-  T get(const std::string key, T def, const size_t size = 0, const size_t cols = 0,
-        const ValidatorInterface<T, Validator>& validator = ValidateAny<T>())
-  {
-    Request req(
-        -1, std::string(), key, Dune::Stuff::Common::toString(def), Dune::Stuff::Common::getTypename(validator));
-    return get(key, def, validator, req, size, cols, true);
-  }
+  /**
+   * \}
+   */
 
-  //! get variation with default value, without validation.
-  template <typename T>
-  T get(const std::string key, T def, const size_t size = 0, const size_t cols = 0)
-  {
-    Request req(
-        -1, std::string(), key, Dune::Stuff::Common::toString(def), Dune::Stuff::Common::getTypename(ValidateAny<T>()));
-    return get(key, def, ValidateAny<T>(), req, size, cols, true);
-  }
-
-  //! get variation with default value, validation
-  template <typename T, class Validator>
-  T get(const std::string key, T def, const ValidatorInterface<T, Validator>& validator, const size_t size = 0,
-        const size_t cols = 0)
-  {
-    Request req(
-        -1, std::string(), key, Dune::Stuff::Common::toString(def), Dune::Stuff::Common::getTypename(validator));
-    return get(key, def, validator, req, size, cols, true);
-  }
-
-  //! get without default value, without validation
-  template <class T>
-  T get(const std::string key, size_t size = 0, size_t cols = 0)
-  {
-    if (!has_key(key))
-      DUNE_THROW(Exceptions::configuration_error, "");
-    Request req(-1, std::string(), key, std::string(), Dune::Stuff::Common::getTypename(ValidateAny<T>()));
-    return get<T, ValidateAny<T>>(key, T(), ValidateAny<T>(), req, size, cols, false);
-  }
+  /**
+   * \defgroup base_get ´´These methods replace the get methods of Dune::ParameterTree and allow for vectors and
+   * matrices.``
+   * \{
+   */
 
   //! const get without default value, without validation
   template <class T>
@@ -285,6 +250,25 @@ public:
   {
     return get_valid_value<T, ValidateAny<T>>(key, def, ValidateAny<T>(), size, cols);
   }
+
+  //  //! get without default value, without validation
+  //  template< class T >
+  //  T get(const std::string key, size_t size = 0, size_t cols = 0) {
+  //    if (!has_key(key))
+  //      DUNE_THROW(Exceptions::configuration_error, "");
+  //    Request req(-1, std::string(), key,
+  //                std::string(), Dune::Stuff::Common::getTypename(ValidateAny< T >()));
+  //    return get_< T, ValidateAny< T > >(key, T(), ValidateAny< T >(), req, size, cols, false);
+  //  }
+
+  /**
+   * \}
+   */
+
+  /**
+   * \defgroup validated_get ´´These methods allow for an additional validator.``
+   * \{
+   */
 
   //! const get without default value, with validation
   template <class T, class Validator>
@@ -305,6 +289,63 @@ public:
     return get_valid_value(key, def, validator, size, cols);
   }
 
+  /**
+   * \}
+   */
+
+  /**
+   * \defgroup default_get ´´These methods set the provided default value as value, if none exists.``
+   * \{
+   */
+
+  //! variant with default value, without validation
+  template <typename T>
+  T get(const std::string key, T def, const size_t size = 0, const size_t cols = 0)
+  {
+    Request req(
+        -1, std::string(), key, Dune::Stuff::Common::toString(def), Dune::Stuff::Common::getTypename(ValidateAny<T>()));
+    return get_(key, def, ValidateAny<T>(), req, size, cols, true);
+  }
+
+  //! get variation with default value, without validation, request needs to be provided
+  template <typename T>
+  T get(const std::string key, T def, Request req, const size_t size = 0, const size_t cols = 0)
+  {
+    return get_(key, def, ValidateAny<T>(), req, size, cols, true);
+  }
+
+  //! get variation with default value and validation, request needs to be provided
+  template <typename T, class Validator>
+  T get(const std::string key, T def, const ValidatorInterface<T, Validator>& validator, Request req,
+        const size_t size = 0, const size_t cols = 0)
+  {
+    return get_(key, def, validator, req, size, cols, true);
+  }
+
+  //! get variation with default value, validation
+  template <typename T, class Validator>
+  T get(const std::string key, T def, const size_t size = 0, const size_t cols = 0,
+        const ValidatorInterface<T, Validator>& validator = ValidateAny<T>())
+  {
+    Request req(
+        -1, std::string(), key, Dune::Stuff::Common::toString(def), Dune::Stuff::Common::getTypename(validator));
+    return get_(key, def, validator, req, size, cols, true);
+  }
+
+  //! get variation with default value, validation
+  template <typename T, class Validator>
+  T get(const std::string key, T def, const ValidatorInterface<T, Validator>& validator, const size_t size = 0,
+        const size_t cols = 0)
+  {
+    Request req(
+        -1, std::string(), key, Dune::Stuff::Common::toString(def), Dune::Stuff::Common::getTypename(validator));
+    return get_(key, def, validator, req, size, cols, true);
+  }
+
+  /**
+   * \}
+   */
+
   //! get std::vector< T > from tree_
   template <typename T, class Validator = ValidateAny<T>>
   std::vector<T> getList(const std::string key, const T def = T(), const std::string separators = ";",
@@ -323,6 +364,11 @@ public:
     }
     return tokens;
   }
+
+  /**
+   * \defgroup set ´´These methods allow to set key: value pairs.``
+   * \{
+   */
 
   //! set value to key in ConfigContainer
   template <class T>
@@ -348,17 +394,14 @@ public:
     BaseType::operator[](key) = toString(value);
   } // ... set(..., const char *, ...)
 
-  //! check if key is existing in tree_
-  bool has_key(const std::string& key) const;
+  /**
+   * \}
+   */
 
-  //! check if sub is existing in tree_
-  bool has_sub(const std::string subTreeName) const;
-
-  //! get subtree of tree_
-  const ConfigContainer sub(const std::string sub_id) const;
-
-  //  //! get reference to value assigned to key in tree_
-  //  std::string& operator[](std::string key);
+  /**
+   * \defgroup add ´´These methods allow merge trees.``
+   * \{
+   */
 
   /** \brief add another ConfigContainer to this (merge tree_s and requests_map_s)
    *  \param other ConfigContainer to add
@@ -380,23 +423,20 @@ public:
   //! add this and another ConfigContainer (merge tree_s and requests_map_s)
   ConfigContainer operator+(ConfigContainer& other);
 
-  //! assignment operator
-  ConfigContainer& operator=(const ConfigContainer& other);
+  /**
+   * \}
+   */
 
-  //! return tree_
-  ExtendedParameterTree tree() const;
+  void set_record_defaults(const bool value = internal::config_container_record_defaults);
 
-  //! return requests_map_
-  RequestMapType requests_map() const;
+  void set_warn_on_default_access(const bool value = internal::config_container_warn_on_default_access);
+
+  void set_log_on_exit(const bool value = internal::config_container_log_on_exit);
+
+  void set_logfile(const std::string logfile = internal::config_container_logfile);
 
   //! check if tree_ is empty (if tree_ is empty return true even if requests_map_ is not empty)
   bool empty() const;
-
-  /** \brief print requests_map_ and tree_
-   *  \param out output stream
-   *  \param prefix is printed before each key from tree_
-   */
-  void report(std::ostream& out = std::cout, const std::string& prefix = "") const;
 
   //! store output of report(..., prefix) in std::string
   std::string report_string(const std::string& prefix = "") const;
@@ -432,10 +472,25 @@ public:
   void printMismatchedDefaults(std::ostream& out) const;
 
   /**
+   * \defgroup deprecated ´´These methods are deprecated.``
+   * \{
+   */
+
+  /**
      *  Control if the value map is filled with default values for missing entries
      *  Initially false
      **/
   void setRecordDefaults(bool record);
+
+  //! return tree_
+  const ConfigContainer& tree() const;
+
+  //! return requests_map_
+  const RequestMapType& requests_map() const;
+
+  /**
+   * \}
+   */
 
 private:
   void setup_();
@@ -505,13 +560,13 @@ private:
    *  def if key does not exist in ConfigContainer
    */
   template <typename T, class Validator>
-  T get(std::string key, T def, const ValidatorInterface<T, Validator>& validator, const Request& request,
-        const size_t size, const size_t cols, const bool def_provided)
+  T get_(std::string key, const T& def, const ValidatorInterface<T, Validator>& validator, const Request& request,
+         const size_t size, const size_t cols, const bool def_provided)
   {
     requests_map_[key].insert(request);
 #ifndef NDEBUG
     if (warn_on_default_access_ && !has_key(key)) {
-      std::cerr << DSC::colorString("WARNING", DSC::Colors::brown) << ": using default value for parameter \"" << key
+      std::cerr << DSC::colorString("WARNING:", DSC::Colors::brown) << " using default value for parameter \"" << key
                 << "\"" << std::endl;
     }
 #endif // ifndef NDEBUG
