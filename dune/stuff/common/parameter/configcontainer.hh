@@ -221,7 +221,9 @@ public:
    */
   void report(std::ostream& out = std::cout, const std::string& prefix = "") const;
 
-  //! get subtree
+  /**
+   * @attention Please note the difference to Dune::ParameterTree::sub (return: value vs. reference)!
+   */
   ConfigContainer sub(const std::string sub_id) const;
 
   /**
@@ -250,16 +252,6 @@ public:
   {
     return get_valid_value<T, ValidateAny<T>>(key, def, ValidateAny<T>(), size, cols);
   }
-
-  //  //! get without default value, without validation
-  //  template< class T >
-  //  T get(const std::string key, size_t size = 0, size_t cols = 0) {
-  //    if (!has_key(key))
-  //      DUNE_THROW(Exceptions::configuration_error, "");
-  //    Request req(-1, std::string(), key,
-  //                std::string(), Dune::Stuff::Common::getTypename(ValidateAny< T >()));
-  //    return get_< T, ValidateAny< T > >(key, T(), ValidateAny< T >(), req, size, cols, false);
-  //  }
 
   /**
    * \}
@@ -383,16 +375,7 @@ public:
     BaseType::operator[](key) = toString(value);
   } // ... set(..., T, ...)
 
-  void set(const std::string& key, const char* value, const bool overwrite = false)
-  {
-    if (has_key(key) && !overwrite)
-      DUNE_THROW(Exceptions::configuration_error,
-                 "While adding '" << key << "' = '" << value << "' to this (see below), the key '" << key
-                                  << "' already exists and you requested no overwrite!"
-                                  << "\n======================\n"
-                                  << report_string());
-    BaseType::operator[](key) = toString(value);
-  } // ... set(..., const char *, ...)
+  void set(const std::string& key, const char* value, const bool overwrite = false);
 
   /**
    * \}
@@ -544,7 +527,7 @@ private:
       validator.print(ss);
       DUNE_THROW(Exceptions::configuration_error, ss.str());
     }
-  }
+  } // ... get_valid_value(...)
 
   /** \brief all public get signatures call this one
    *  \param key requested key
