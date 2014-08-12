@@ -19,6 +19,7 @@
 #include <dune/common/parametertreeparser.hh>
 
 #include <dune/stuff/common/exceptions.hh>
+#include <dune/stuff/common/color.hh>
 #include <dune/stuff/common/logging.hh>
 #include <dune/stuff/common/filesystem.hh>
 #include <dune/stuff/common/misc.hh>
@@ -80,49 +81,98 @@ class DUNE_DEPRECATED_MSG("Use configuration_error instead!") InvalidParameter :
 };
 
 
+namespace internal {
+
+
+static const bool config_container_record_defaults        = false;
+static const bool config_container_log_on_exit            = false;
+static const bool config_container_warn_on_default_access = false;
+static const std::string config_container_logfile         = "data/log/dsc_parameter.log";
+
+
+} // namespace internal
+
+
 class ConfigContainer
 {
   typedef std::map<std::string, std::set<Request>> RequestMapType;
 
 public:
   //! warning_output = true, record_defaults = false
-  ConfigContainer();
+  ConfigContainer(const bool record_defaults = internal::config_container_record_defaults,
+                  const bool warn_on_default_access = internal::config_container_warn_on_default_access,
+                  const bool log_on_exit            = internal::config_container_log_on_exit,
+                  const std::string logfile = internal::config_container_logfile);
 
   //! copy tree to tree_, set warning_output and record_defaults to false
-  ConfigContainer(const ParameterTree& tree);
+  ConfigContainer(const ParameterTree& tree, const bool record_defaults = internal::config_container_record_defaults,
+                  const bool warn_on_default_access = internal::config_container_warn_on_default_access,
+                  const bool log_on_exit            = internal::config_container_log_on_exit,
+                  const std::string logfile = internal::config_container_logfile);
+
+  ConfigContainer(const ConfigContainer& other);
 
   //! read ParameterTree from file and call ConfigContainer(const ParameterTree& tree)
-  explicit ConfigContainer(const std::string filename);
+  explicit ConfigContainer(const std::string filename, const bool record_defaults, const bool warn_on_default_access,
+                           const bool log_on_exit, const std::string logfile);
 
   //! read ParameterTree from given arguments and call ConfigContainer(const ParameterTree& tree)
-  ConfigContainer(int argc, char** argv);
+  ConfigContainer(int argc, char** argv, const bool record_defaults = internal::config_container_record_defaults,
+                  const bool warn_on_default_access = internal::config_container_warn_on_default_access,
+                  const bool log_on_exit            = internal::config_container_log_on_exit,
+                  const std::string logfile = internal::config_container_logfile);
 
   //! read ParameterTree from given arguments and file and call ConfigContainer(const ParameterTree& tree)
-  ConfigContainer(int argc, char** argv, const std::string filename);
+  ConfigContainer(int argc, char** argv, const std::string filename,
+                  const bool record_defaults        = internal::config_container_record_defaults,
+                  const bool warn_on_default_access = internal::config_container_warn_on_default_access,
+                  const bool log_on_exit            = internal::config_container_log_on_exit,
+                  const std::string logfile = internal::config_container_logfile);
 
   //! warning output = true, record_defaults = false, tree_[key] = value
   template <class T>
-  ConfigContainer(const std::string key, const T& value)
-    : record_defaults_(false)
-    , logdir_(boost::filesystem::path(get("global.datadir", "data")) / get("logging.dir", "log"))
-#ifndef NDEBUG
-    , warning_output_(true)
-#endif
+  ConfigContainer(const std::string key, const T& value,
+                  const bool record_defaults        = internal::config_container_record_defaults,
+                  const bool warn_on_default_access = internal::config_container_warn_on_default_access,
+                  const bool log_on_exit            = internal::config_container_log_on_exit,
+                  const std::string logfile = internal::config_container_logfile)
+    : tree_()
+    , requests_map_()
+    , record_defaults_(record_defaults)
+    , warn_on_default_access_(warn_on_default_access)
+    , log_on_exit_(log_on_exit)
+    , logfile_(logfile)
   {
     set(key, value);
+    setup_();
   }
 
   //! warning output = true, record_defaults = false, tree_[key] = value
-  ConfigContainer(const std::string key, const char* value);
+  ConfigContainer(const std::string key, const char* value,
+                  const bool record_defaults        = internal::config_container_record_defaults,
+                  const bool warn_on_default_access = internal::config_container_warn_on_default_access,
+                  const bool log_on_exit            = internal::config_container_log_on_exit,
+                  const std::string logfile = internal::config_container_logfile);
+
+  ConfigContainer(const char* key, const char* value,
+                  const bool record_defaults        = internal::config_container_record_defaults,
+                  const bool warn_on_default_access = internal::config_container_warn_on_default_access,
+                  const bool log_on_exit            = internal::config_container_log_on_exit,
+                  const std::string logfile = internal::config_container_logfile);
 
   //! warning output = true, record_defaults = false, tree_[keys[ii]] = values[ii] for 0 <= ii <= keys.size()
   template <class T>
-  ConfigContainer(const std::vector<std::string> keys, const std::vector<T> values_in)
-    : record_defaults_(false)
-    , logdir_(boost::filesystem::path(get("global.datadir", "data")) / get("logging.dir", "log"))
-#ifndef NDEBUG
-    , warning_output_(true)
-#endif
+  ConfigContainer(const std::vector<std::string> keys, const std::vector<T> values_in,
+                  const bool record_defaults        = internal::config_container_record_defaults,
+                  const bool warn_on_default_access = internal::config_container_warn_on_default_access,
+                  const bool log_on_exit            = internal::config_container_log_on_exit,
+                  const std::string logfile = internal::config_container_logfile)
+    : tree_()
+    , requests_map_()
+    , record_defaults_(record_defaults)
+    , warn_on_default_access_(warn_on_default_access)
+    , log_on_exit_(log_on_exit)
+    , logfile_(logfile)
   {
     if (keys.size() != values_in.size())
       DUNE_THROW(Exceptions::shapes_do_not_match,
@@ -130,33 +180,38 @@ public:
                                         << ")!");
     for (size_t ii = 0; ii < keys.size(); ++ii)
       set(keys[ii], values_in[ii]);
+    setup_();
   }
 
   /** creates std::vector< T > from value_list and then behaves exactly like
    * ConfigContainer(const std::vector< std::string > keys, const std::vector< T > values_in) */
   template <class T>
-  ConfigContainer(const std::vector<std::string> keys, const std::initializer_list<T> value_list)
-    : record_defaults_(false)
-    , logdir_(boost::filesystem::path(get("global.datadir", "data")) / get("logging.dir", "log"))
-#ifndef NDEBUG
-    , warning_output_(true)
-#endif
+  ConfigContainer(const std::vector<std::string> keys, const std::initializer_list<T> value_list,
+                  const bool record_defaults        = internal::config_container_record_defaults,
+                  const bool warn_on_default_access = internal::config_container_warn_on_default_access,
+                  const bool log_on_exit            = internal::config_container_log_on_exit,
+                  const std::string logfile = internal::config_container_logfile)
+    : ConfigContainer(keys, std::vector<T>(value_list), record_defaults, warn_on_default_access, log_on_exit, logfile)
   {
-    std::vector<T> tmp_values(value_list);
-    if (keys.size() != tmp_values.size())
-      DUNE_THROW(Exceptions::shapes_do_not_match,
-                 "The size of 'keys' (" << keys.size() << ") does not match the size of 'value_list' ("
-                                        << tmp_values.size()
-                                        << ")!");
-    for (size_t ii = 0; ii < keys.size(); ++ii)
-      set(keys[ii], tmp_values[ii]);
   }
 
   // explicit specialization of the constructor above
-  ConfigContainer(const std::vector<std::string> keys, const std::initializer_list<std::string> value_list);
+  ConfigContainer(const std::vector<std::string> keys, const std::initializer_list<std::string> value_list,
+                  const bool record_defaults        = internal::config_container_record_defaults,
+                  const bool warn_on_default_access = internal::config_container_warn_on_default_access,
+                  const bool log_on_exit            = internal::config_container_log_on_exit,
+                  const std::string logfile = internal::config_container_logfile);
 
   //! destructor printing tree_.report() to logdir_
   ~ConfigContainer();
+
+  void set_record_defaults(const bool value = internal::config_container_record_defaults);
+
+  void set_warn_on_default_access(const bool value = internal::config_container_warn_on_default_access);
+
+  void set_log_on_exit(const bool value = internal::config_container_log_on_exit);
+
+  void set_logfile(const std::string logfile = internal::config_container_logfile);
 
   //! get variation with default value, without validation, request needs to be provided
   template <typename T>
@@ -381,6 +436,8 @@ public:
   void setRecordDefaults(bool record);
 
 private:
+  void setup_();
+
   //! get value from tree and validate with validator
   template <typename T, class Validator>
   T get_valid_value(std::string key, T def, const ValidatorInterface<T, Validator>& validator, const size_t size,
@@ -416,8 +473,9 @@ private:
   {
     requests_map_[key].insert(request);
 #ifndef NDEBUG
-    if (warning_output_ && !tree_.hasKey(key)) {
-      std::cerr << "WARNING: using default value for parameter \"" << key << "\"" << std::endl;
+    if (warn_on_default_access_ && !tree_.hasKey(key)) {
+      std::cerr << DSC::colorString("WARNING", DSC::Colors::brown) << ": using default value for parameter \"" << key
+                << "\"" << std::endl;
     }
 #endif // ifndef NDEBUG
     if (record_defaults_ && !tree_.hasKey(key) && def_provided)
@@ -434,15 +492,13 @@ private:
   //! read Dune::ParameterTree from arguments and file
   static ParameterTree initialize(int argc, char** argv, std::string filename);
 
-  // member variables
   ExtendedParameterTree tree_;
   //! config key -> requests map
   RequestMapType requests_map_;
   bool record_defaults_;
-  boost::filesystem::path logdir_;
-#ifndef NDEBUG
-  bool warning_output_;
-#endif
+  bool warn_on_default_access_;
+  bool log_on_exit_;
+  std::string logfile_;
 }; // class ConfigContainer
 
 
@@ -456,7 +512,7 @@ inline std::ostream& operator<<(std::ostream& out, const ConfigContainer& config
 //! global ConfigContainer instance
 inline ConfigContainer& Config()
 {
-  static ConfigContainer parameters;
+  static ConfigContainer parameters(false, true, true);
   return parameters;
 }
 

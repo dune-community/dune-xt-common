@@ -65,6 +65,129 @@ std::ostream& operator<<(std::ostream& out, const Request& r)
   return out;
 }
 
+
+ConfigContainer::ConfigContainer(const bool record_defaults, const bool warn_on_default_access, const bool log_on_exit,
+                                 const std::string logfile)
+  : tree_()
+  , requests_map_()
+  , record_defaults_(record_defaults)
+  , warn_on_default_access_(warn_on_default_access)
+  , log_on_exit_(log_on_exit)
+  , logfile_(logfile)
+{
+  setup_();
+}
+
+ConfigContainer::ConfigContainer(const Dune::ParameterTree& tree, const bool record_defaults,
+                                 const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
+  : tree_(tree)
+  , requests_map_()
+  , record_defaults_(record_defaults)
+  , warn_on_default_access_(warn_on_default_access)
+  , log_on_exit_(log_on_exit)
+  , logfile_(logfile)
+{
+  setup_();
+}
+
+ConfigContainer::ConfigContainer(const ConfigContainer& other)
+  : tree_(other.tree_)
+  , requests_map_(other.requests_map_)
+  , record_defaults_(other.record_defaults_)
+  , warn_on_default_access_(other.warn_on_default_access_)
+  , log_on_exit_(other.log_on_exit_)
+  , logfile_(other.logfile_)
+{
+}
+
+ConfigContainer::ConfigContainer(const std::string filename, const bool record_defaults,
+                                 const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
+  : ConfigContainer::ConfigContainer(initialize(filename), record_defaults, warn_on_default_access, log_on_exit,
+                                     logfile)
+{
+}
+
+ConfigContainer::ConfigContainer(int argc, char** argv, const bool record_defaults, const bool warn_on_default_access,
+                                 const bool log_on_exit, const std::string logfile)
+  : ConfigContainer::ConfigContainer(initialize(argc, argv), record_defaults, warn_on_default_access, log_on_exit,
+                                     logfile)
+{
+}
+
+ConfigContainer::ConfigContainer(int argc, char** argv, const std::string filename, const bool record_defaults,
+                                 const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
+  : ConfigContainer::ConfigContainer(initialize(argc, argv, filename), record_defaults, warn_on_default_access,
+                                     log_on_exit, logfile)
+{
+}
+
+ConfigContainer::ConfigContainer(const std::string key, const char* value, const bool record_defaults,
+                                 const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
+  : tree_()
+  , requests_map_()
+  , record_defaults_(record_defaults)
+  , warn_on_default_access_(warn_on_default_access)
+  , log_on_exit_(log_on_exit)
+  , logfile_(logfile)
+{
+  set(key, value);
+  setup_();
+}
+
+ConfigContainer::ConfigContainer(const char* key, const char* value, const bool record_defaults,
+                                 const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
+  : tree_()
+  , requests_map_()
+  , record_defaults_(record_defaults)
+  , warn_on_default_access_(warn_on_default_access)
+  , log_on_exit_(log_on_exit)
+  , logfile_(logfile)
+{
+  set(key, value);
+  setup_();
+}
+
+ConfigContainer::ConfigContainer(const std::vector<std::string> keys,
+                                 const std::initializer_list<std::string> value_list, const bool record_defaults,
+                                 const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
+  : ConfigContainer(keys, std::vector<std::string>(value_list), record_defaults, warn_on_default_access, log_on_exit,
+                    logfile)
+{
+}
+
+ConfigContainer::~ConfigContainer()
+{
+  if (log_on_exit_) {
+    std::unique_ptr<boost::filesystem::ofstream> out(DSC::make_ofstream(logfile_));
+    tree_.report(*out);
+  }
+}
+
+void ConfigContainer::set_record_defaults(const bool value)
+{
+  record_defaults_ = value;
+}
+
+void ConfigContainer::set_warn_on_default_access(const bool value)
+{
+  warn_on_default_access_ = value;
+}
+
+void ConfigContainer::set_log_on_exit(const bool value)
+{
+  if (!log_on_exit_ && value)
+    testCreateDirectory(pathOnly(logfile_));
+  log_on_exit_ = value;
+}
+
+void ConfigContainer::set_logfile(const std::string logfile)
+{
+  if (logfile.empty())
+    DUNE_THROW(Exceptions::wrong_input_given, "logfile must not be empty!");
+  if (log_on_exit_)
+    testCreateDirectory(pathOnly(logfile_));
+}
+
 std::set<Request> ConfigContainer::getMismatchedDefaults(ConfigContainer::RequestMapType::value_type pair) const
 {
   typedef bool (*func)(const Request&, const Request&);
@@ -74,77 +197,6 @@ std::set<Request> ConfigContainer::getMismatchedDefaults(ConfigContainer::Reques
     return *(new std::set<Request>);
   else
     return std::set<Request>(std::begin(mismatched), std::end(mismatched));
-}
-
-// Constructors and destructors for ConfigContainer
-ConfigContainer::ConfigContainer(const Dune::ParameterTree& tree)
-  : tree_(tree)
-  , record_defaults_(false)
-  , logdir_(boost::filesystem::path(get("global.datadir", "data")) / get("logging.dir", "log"))
-#ifndef NDEBUG
-  , warning_output_(false)
-#endif
-{
-  testCreateDirectory(logdir_.string());
-}
-
-ConfigContainer::ConfigContainer()
-  : record_defaults_(false)
-  , logdir_(boost::filesystem::path(get("global.datadir", "data")) / get("logging.dir", "log"))
-#ifndef NDEBUG
-  , warning_output_(true)
-#endif
-{
-  testCreateDirectory(logdir_.string());
-}
-
-ConfigContainer::ConfigContainer(const std::string key, const char* value)
-  : record_defaults_(false)
-  , logdir_(boost::filesystem::path(get("global.datadir", "data")) / get("logging.dir", "log"))
-#ifndef NDEBUG
-  , warning_output_(true)
-#endif
-{
-  set(key, value);
-}
-
-ConfigContainer::ConfigContainer(const std::vector<std::string> keys,
-                                 const std::initializer_list<std::string> value_list)
-  : record_defaults_(false)
-  , logdir_(boost::filesystem::path(get("global.datadir", "data", 0, 0)) / get("logging.dir", "log", 0, 0))
-#ifndef NDEBUG
-  , warning_output_(true)
-#endif
-{
-  std::vector<std::string> tmp_values(value_list);
-  if (keys.size() != tmp_values.size())
-    DUNE_THROW(Exceptions::shapes_do_not_match,
-               "The size of 'keys' (" << keys.size() << ") does not match the size of 'value_list' ("
-                                      << tmp_values.size()
-                                      << ")!");
-  for (size_t ii = 0; ii < keys.size(); ++ii)
-    set(keys[ii], tmp_values[ii]);
-}
-
-ConfigContainer::ConfigContainer(const std::string filename)
-  : ConfigContainer::ConfigContainer(initialize(filename))
-{
-}
-
-ConfigContainer::ConfigContainer(int argc, char** argv)
-  : ConfigContainer::ConfigContainer(initialize(argc, argv))
-{
-}
-
-ConfigContainer::ConfigContainer(int argc, char** argv, const std::string filename)
-  : ConfigContainer::ConfigContainer(initialize(argc, argv, filename))
-{
-}
-
-ConfigContainer::~ConfigContainer()
-{
-  std::unique_ptr<boost::filesystem::ofstream> out(DSC::make_ofstream(logdir_ / "dsc_parameter.log"));
-  tree_.report(*out);
 }
 
 /**
@@ -222,13 +274,14 @@ ConfigContainer ConfigContainer::operator+(ConfigContainer& other)
 
 ConfigContainer& ConfigContainer::operator=(const ConfigContainer& other)
 {
-  tree_ = other.tree_;
-#ifndef NDEBUG
-  warning_output_ = other.warning_output_;
-#endif
-  requests_map_    = other.requests_map_;
-  record_defaults_ = other.record_defaults_;
-  logdir_          = other.logdir_;
+  if (this != &other) {
+    tree_                   = other.tree_;
+    requests_map_           = other.requests_map_;
+    record_defaults_        = other.record_defaults_;
+    warn_on_default_access_ = other.warn_on_default_access_;
+    log_on_exit_            = other.log_on_exit_;
+    logfile_                = other.logfile_;
+  }
   return *this;
 } // ... operator=(...)
 
@@ -284,8 +337,8 @@ void ConfigContainer::readCommandLine(int argc, char* argv[])
   loadIntoFemParameter(tree_);
 
   // datadir and logdir may be given from the command line...
-  logdir_ = boost::filesystem::path(get("global.datadir", "data")) / get("logging.dir", "log");
-} // ReadCommandLine
+  setup_();
+} // readCommandLine
 
 void ConfigContainer::readOptions(int argc, char* argv[])
 {
@@ -333,6 +386,19 @@ void ConfigContainer::setRecordDefaults(bool record)
 {
   record_defaults_ = record;
 }
+
+void ConfigContainer::setup_()
+{
+  if (logfile_.empty())
+    logfile_ = boost::filesystem::path(internal::config_container_logfile).string();
+  if (has_key("global.datadir") && has_key("logging.dir"))
+    logfile_ = (boost::filesystem::path(get<std::string>("global.datadir")) / get<std::string>("logging.dir")
+                / "dsc_parameter.log")
+                   .string();
+  logfile_ = boost::filesystem::path(logfile_).string();
+  if (log_on_exit_)
+    testCreateDirectory(pathOnly(logfile_));
+} // ... setup_(...)
 
 ParameterTree ConfigContainer::initialize(const std::string filename)
 {
