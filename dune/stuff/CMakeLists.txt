@@ -9,7 +9,6 @@ set(lib_dune_stuff_sources common/filesystem.cc
   common/logstreams.cc
   common/profiler.cc
   common/parameter/configcontainer.cc
-  common/parameter/tree.cc
   common/signals.cc
   common/math.cc
   common/parallel/threadmanager.cc
