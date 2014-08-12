@@ -31,6 +31,7 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
+
 //! use this to record defaults, placements and so forth
 class Request
 {
@@ -73,9 +74,10 @@ bool strictRequestCompare(const Request& a, const Request& b);
 
 std::ostream& operator<<(std::ostream& out, const Request& r);
 
-class InvalidParameter : public Dune::Exception
+class DUNE_DEPRECATED_MSG("Use configuration_error instead!") InvalidParameter : public Exceptions::configuration_error
 {
 };
+
 
 class ConfigContainer
 {
@@ -94,7 +96,7 @@ private:
     else {
       std::stringstream ss;
       validator.print(ss);
-      DUNE_THROW(InvalidParameter, ss.str());
+      DUNE_THROW(Exceptions::configuration_error, ss.str());
     }
   }
 
@@ -147,16 +149,7 @@ public:
   }
 
   //! warning output = true, record_defaults = false, tree_[key] = value
-  template <class T>
-  ConfigContainer(const std::string key, const char* value)
-    : record_defaults_(false)
-    , logdir_(boost::filesystem::path(get("global.datadir", "data")) / get("logging.dir", "log"))
-#ifndef NDEBUG
-    , warning_output_(true)
-#endif
-  {
-    set(key, value);
-  }
+  ConfigContainer(const std::string key, const char* value);
 
   //! warning output = true, record_defaults = false, tree_[keys[ii]] = values[ii] for 0 <= ii <= keys.size()
   template <class T>
@@ -168,10 +161,9 @@ public:
 #endif
   {
     if (keys.size() != values_in.size())
-      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
-                            "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' ("
-                                                   << values_in.size()
-                                                   << ")!");
+      DUNE_THROW(Exceptions::shapes_do_not_match,
+                 "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' (" << values_in.size()
+                                        << ")!");
     for (size_t ii = 0; ii < keys.size(); ++ii)
       set(keys[ii], values_in[ii]);
   }
@@ -188,31 +180,16 @@ public:
   {
     std::vector<T> tmp_values(value_list);
     if (keys.size() != tmp_values.size())
-      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
-                            "The size of 'keys' (" << keys.size() << ") does not match the size of 'value_list' ("
-                                                   << tmp_values.size()
-                                                   << ")!");
+      DUNE_THROW(Exceptions::shapes_do_not_match,
+                 "The size of 'keys' (" << keys.size() << ") does not match the size of 'value_list' ("
+                                        << tmp_values.size()
+                                        << ")!");
     for (size_t ii = 0; ii < keys.size(); ++ii)
       set(keys[ii], tmp_values[ii]);
   }
 
   // explicit specialization of the constructor above
-  ConfigContainer(const std::vector<std::string> keys, const std::initializer_list<std::string> value_list)
-    : record_defaults_(false)
-    , logdir_(boost::filesystem::path(get("global.datadir", "data", 0, 0)) / get("logging.dir", "log", 0, 0))
-#ifndef NDEBUG
-    , warning_output_(true)
-#endif
-  {
-    std::vector<std::string> tmp_values(value_list);
-    if (keys.size() != tmp_values.size())
-      DUNE_THROW_COLORFULLY(Exceptions::shapes_do_not_match,
-                            "The size of 'keys' (" << keys.size() << ") does not match the size of 'value_list' ("
-                                                   << tmp_values.size()
-                                                   << ")!");
-    for (size_t ii = 0; ii < keys.size(); ++ii)
-      set(keys[ii], tmp_values[ii]);
-  }
+  ConfigContainer(const std::vector<std::string> keys, const std::initializer_list<std::string> value_list);
 
   //! read ParameterTree from file and call ConfigContainer(const ParameterTree& tree)
   explicit ConfigContainer(const std::string filename);
@@ -276,7 +253,7 @@ public:
   T get(const std::string key, size_t size = 0, size_t cols = 0)
   {
     if (!has_key(key))
-      DUNE_THROW(InvalidParameter, "");
+      DUNE_THROW(Exceptions::configuration_error, "");
     Request req(-1, std::string(), key, std::string(), Dune::Stuff::Common::getTypename(ValidateAny<T>()));
     return get<T, ValidateAny<T>>(key, T(), ValidateAny<T>(), req, size, cols, false);
   }
@@ -286,7 +263,8 @@ public:
   T get(const std::string key, size_t size = 0, size_t cols = 0) const
   {
     if (!has_key(key))
-      DUNE_THROW(InvalidParameter, "ConfigContainer does not have this key and there was no default value provided");
+      DUNE_THROW(Exceptions::configuration_error,
+                 "ConfigContainer does not have this key and there was no default value provided");
     return get_valid_value<T, ValidateAny<T>>(key, T(), ValidateAny<T>(), size, cols);
   }
 
@@ -303,7 +281,8 @@ public:
         size_t cols = 0) const
   {
     if (!has_key(key))
-      DUNE_THROW(InvalidParameter, "ConfigContainer does not have this key and there was no default value provided");
+      DUNE_THROW(Exceptions::configuration_error,
+                 "ConfigContainer does not have this key and there was no default value provided");
     return get_valid_value(key, T(), validator, size, cols);
   }
 
@@ -328,7 +307,7 @@ public:
       if (!validator(token)) {
         std::stringstream ss;
         validator.print(ss);
-        DUNE_THROW(InvalidParameter, ss.str());
+        DUNE_THROW(Exceptions::configuration_error, ss.str());
       }
     }
     return tokens;
@@ -339,22 +318,22 @@ public:
   void set(const std::string key, const T& value, const bool overwrite = false)
   {
     if (has_key(key) && !overwrite)
-      DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
-                            "While adding '" << key << "' = '" << value << "' to this (see below), the key '" << key
-                                             << "' already exists and you requested no overwrite!"
-                                             << "\n======================\n"
-                                             << report_string());
+      DUNE_THROW(Exceptions::configuration_error,
+                 "While adding '" << key << "' = '" << value << "' to this (see below), the key '" << key
+                                  << "' already exists and you requested no overwrite!"
+                                  << "\n======================\n"
+                                  << report_string());
     tree_[key] = toString(value);
   } // ... set(..., T, ...)
 
   void set(const std::string& key, const char* value, const bool overwrite = false)
   {
     if (has_key(key) && !overwrite)
-      DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
-                            "While adding '" << key << "' = '" << value << "' to this (see below), the key '" << key
-                                             << "' already exists and you requested no overwrite!"
-                                             << "\n======================\n"
-                                             << report_string());
+      DUNE_THROW(Exceptions::configuration_error,
+                 "While adding '" << key << "' = '" << value << "' to this (see below), the key '" << key
+                                  << "' already exists and you requested no overwrite!"
+                                  << "\n======================\n"
+                                  << report_string());
     tree_[key] = toString(value);
   } // ... set(..., const char *, ...)
 
