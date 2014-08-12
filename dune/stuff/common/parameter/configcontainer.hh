@@ -353,7 +353,7 @@ public:
   bool has_sub(const std::string subTreeName) const;
 
   //! get subtree of tree_
-  const ParameterTree sub(const std::string subTreeName) const;
+  const ConfigContainer sub(const std::string sub_id) const;
 
   //! get reference to value assigned to key in tree_
   std::string& operator[](std::string key);

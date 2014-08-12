@@ -226,23 +226,34 @@ void loadIntoFemParameter(const Dune::ParameterTree& tree, const std::string pre
 bool ConfigContainer::has_key(const std::string& key) const
 {
   return tree_.hasKey(key);
-} // ... has_key(...)
+}
 
-const ParameterTree ConfigContainer::sub(const std::string subTreeName) const
+const ConfigContainer ConfigContainer::sub(const std::string sub_id) const
 {
-  tree_.assertSub(subTreeName);
-  return tree_.sub(subTreeName);
+  if (tree_.empty())
+    DUNE_THROW(Exceptions::configuration_error,
+               "You can not get anything from an empty ConfigContainer, use has_sub(\"" << sub_id
+                                                                                        << "\") to check first!");
+  if (sub_id.empty())
+    DUNE_THROW(Exceptions::configuration_error, "Given sub_id must not be empty!");
+  if (!has_sub(sub_id))
+    DUNE_THROW(Exceptions::configuration_error,
+               "Subtree '" << sub_id << "' does not exist in this ConfigContainer (see below), use has_sub(\"" << sub_id
+                           << "\") to check first!"
+                           << "\n======================\n"
+                           << report_string());
+  return ConfigContainer(tree_.sub(sub_id));
 } // ... sub(...)
 
 std::string& ConfigContainer::operator[](std::string key)
 {
   return tree_[key];
-} // ... operator[](...)
+}
 
 bool ConfigContainer::has_sub(const std::string subTreeName) const
 {
   return tree_.hasSub(subTreeName);
-} // ... has_sub(...)
+}
 
 void ConfigContainer::add(const ConfigContainer& other, const std::string sub_id /*= ""*/,
                           const bool overwrite /* = false*/)
