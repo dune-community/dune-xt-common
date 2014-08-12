@@ -9,6 +9,7 @@
 #define DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
 
 #include <set>
+#include <sstream>
 
 #include <boost/format.hpp>
 
@@ -93,8 +94,9 @@ static const std::string config_container_logfile         = "data/log/dsc_parame
 } // namespace internal
 
 
-class ConfigContainer
+class ConfigContainer : public Dune::ParameterTree
 {
+  typedef Dune::ParameterTree BaseType;
   typedef std::map<std::string, std::set<Request>> RequestMapType;
 
 public:
@@ -136,7 +138,7 @@ public:
                   const bool warn_on_default_access = internal::config_container_warn_on_default_access,
                   const bool log_on_exit            = internal::config_container_log_on_exit,
                   const std::string logfile = internal::config_container_logfile)
-    : tree_()
+    : BaseType()
     , requests_map_()
     , record_defaults_(record_defaults)
     , warn_on_default_access_(warn_on_default_access)
@@ -167,7 +169,7 @@ public:
                   const bool warn_on_default_access = internal::config_container_warn_on_default_access,
                   const bool log_on_exit            = internal::config_container_log_on_exit,
                   const std::string logfile = internal::config_container_logfile)
-    : tree_()
+    : BaseType()
     , requests_map_()
     , record_defaults_(record_defaults)
     , warn_on_default_access_(warn_on_default_access)
@@ -332,7 +334,7 @@ public:
                                   << "' already exists and you requested no overwrite!"
                                   << "\n======================\n"
                                   << report_string());
-    tree_[key] = toString(value);
+    BaseType::operator[](key) = toString(value);
   } // ... set(..., T, ...)
 
   void set(const std::string& key, const char* value, const bool overwrite = false)
@@ -343,7 +345,7 @@ public:
                                   << "' already exists and you requested no overwrite!"
                                   << "\n======================\n"
                                   << report_string());
-    tree_[key] = toString(value);
+    BaseType::operator[](key) = toString(value);
   } // ... set(..., const char *, ...)
 
   //! check if key is existing in tree_
@@ -355,8 +357,8 @@ public:
   //! get subtree of tree_
   const ConfigContainer sub(const std::string sub_id) const;
 
-  //! get reference to value assigned to key in tree_
-  std::string& operator[](std::string key);
+  //  //! get reference to value assigned to key in tree_
+  //  std::string& operator[](std::string key);
 
   /** \brief add another ConfigContainer to this (merge tree_s and requests_map_s)
    *  \param other ConfigContainer to add
@@ -370,7 +372,7 @@ public:
    *  \param sub_id if not empty, paramtree is merged in as a sub "sub_id" of tree_
    *  \param overwrite if true, existing values are overwritten by paramtree's values to the same key
    */
-  void add(const ParameterTree& paramtree, const std::string sub_id = "", const bool overwrite = false);
+  void add(const ParameterTree& other, const std::string sub_id = "", const bool overwrite = false);
 
   //! add another ConfigContainer to this (merge tree_s and requests_map_s)
   ConfigContainer& operator+=(ConfigContainer& other);
@@ -438,12 +440,47 @@ public:
 private:
   void setup_();
 
+  void add_tree_(const ConfigContainer& other, const std::string sub_id, const bool overwrite)
+  {
+    if (sub_id.empty()) {
+      const auto& keys = other.getValueKeys();
+      for (const std::string& key : keys) {
+        if (has_key(key) && !overwrite)
+          DUNE_THROW(Exceptions::configuration_error,
+                     "While adding 'other' to this (see below), the key '"
+                         << key
+                         << "' already exists and you requested no overwrite!"
+                         << "\n==== this ============\n"
+                         << report_string()
+                         << "\n==== other ===========\n"
+                         << other.report_string());
+        set(key, other.get<std::string>(key));
+      }
+    } else {
+      if (has_key(sub_id) && !overwrite)
+        DUNE_THROW(Exceptions::configuration_error,
+                   "While adding 'other' to this (see below), the key '"
+                       << sub_id
+                       << "' already exists and you requested no overwrite!"
+                       << "\n==== this ============\n"
+                       << report_string()
+                       << "\n==== other ===========\n"
+                       << other.report_string());
+      else if (has_sub(sub_id)) {
+        ConfigContainer sub_tree = BaseType::sub(sub_id);
+        sub_tree.add(other);
+        BaseType::sub(sub_id) = sub_tree;
+      } else
+        BaseType::sub(sub_id) = other;
+    }
+  } // ... add_tree_(...)
+
   //! get value from tree and validate with validator
   template <typename T, class Validator>
   T get_valid_value(std::string key, T def, const ValidatorInterface<T, Validator>& validator, const size_t size,
                     const size_t cols) const
   {
-    std::string valstring = tree_.get(key, toString(def));
+    std::string valstring = BaseType::get(key, toString(def));
     T val = fromString<T>(valstring, size, cols);
     if (validator(val))
       return val;
@@ -473,12 +510,12 @@ private:
   {
     requests_map_[key].insert(request);
 #ifndef NDEBUG
-    if (warn_on_default_access_ && !tree_.hasKey(key)) {
+    if (warn_on_default_access_ && !has_key(key)) {
       std::cerr << DSC::colorString("WARNING", DSC::Colors::brown) << ": using default value for parameter \"" << key
                 << "\"" << std::endl;
     }
 #endif // ifndef NDEBUG
-    if (record_defaults_ && !tree_.hasKey(key) && def_provided)
+    if (record_defaults_ && !has_key(key) && def_provided)
       set(key, def);
     return get_valid_value(key, def, validator, size, cols);
   } // get
@@ -492,7 +529,12 @@ private:
   //! read Dune::ParameterTree from arguments and file
   static ParameterTree initialize(int argc, char** argv, std::string filename);
 
-  ExtendedParameterTree tree_;
+  void report_as_sub(std::ostream& out, const std::string& prefix, const std::string& sub_path) const;
+
+  std::string find_common_prefix(const BaseType& subtree, const std::string previous_prefix) const;
+
+  void report_flatly(const BaseType& subtree, const std::string& prefix, std::ostream& out) const;
+
   //! config key -> requests map
   RequestMapType requests_map_;
   bool record_defaults_;

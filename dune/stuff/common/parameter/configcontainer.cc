@@ -68,7 +68,7 @@ std::ostream& operator<<(std::ostream& out, const Request& r)
 
 ConfigContainer::ConfigContainer(const bool record_defaults, const bool warn_on_default_access, const bool log_on_exit,
                                  const std::string logfile)
-  : tree_()
+  : BaseType()
   , requests_map_()
   , record_defaults_(record_defaults)
   , warn_on_default_access_(warn_on_default_access)
@@ -80,7 +80,7 @@ ConfigContainer::ConfigContainer(const bool record_defaults, const bool warn_on_
 
 ConfigContainer::ConfigContainer(const Dune::ParameterTree& tree, const bool record_defaults,
                                  const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
-  : tree_(tree)
+  : BaseType(tree)
   , requests_map_()
   , record_defaults_(record_defaults)
   , warn_on_default_access_(warn_on_default_access)
@@ -91,7 +91,7 @@ ConfigContainer::ConfigContainer(const Dune::ParameterTree& tree, const bool rec
 }
 
 ConfigContainer::ConfigContainer(const ConfigContainer& other)
-  : tree_(other.tree_)
+  : BaseType(other)
   , requests_map_(other.requests_map_)
   , record_defaults_(other.record_defaults_)
   , warn_on_default_access_(other.warn_on_default_access_)
@@ -123,7 +123,7 @@ ConfigContainer::ConfigContainer(int argc, char** argv, const std::string filena
 
 ConfigContainer::ConfigContainer(const std::string key, const char* value, const bool record_defaults,
                                  const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
-  : tree_()
+  : BaseType()
   , requests_map_()
   , record_defaults_(record_defaults)
   , warn_on_default_access_(warn_on_default_access)
@@ -136,7 +136,7 @@ ConfigContainer::ConfigContainer(const std::string key, const char* value, const
 
 ConfigContainer::ConfigContainer(const char* key, const char* value, const bool record_defaults,
                                  const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
-  : tree_()
+  : BaseType()
   , requests_map_()
   , record_defaults_(record_defaults)
   , warn_on_default_access_(warn_on_default_access)
@@ -159,7 +159,7 @@ ConfigContainer::~ConfigContainer()
 {
   if (log_on_exit_) {
     std::unique_ptr<boost::filesystem::ofstream> out(DSC::make_ofstream(logfile_));
-    tree_.report(*out);
+    report(*out);
   }
 }
 
@@ -225,12 +225,12 @@ void loadIntoFemParameter(const Dune::ParameterTree& tree, const std::string pre
 // method definitions for ConfigContainer
 bool ConfigContainer::has_key(const std::string& key) const
 {
-  return tree_.hasKey(key);
+  return BaseType::hasKey(key);
 }
 
 const ConfigContainer ConfigContainer::sub(const std::string sub_id) const
 {
-  if (tree_.empty())
+  if (empty())
     DUNE_THROW(Exceptions::configuration_error,
                "You can not get anything from an empty ConfigContainer, use has_sub(\"" << sub_id
                                                                                         << "\") to check first!");
@@ -242,32 +242,32 @@ const ConfigContainer ConfigContainer::sub(const std::string sub_id) const
                            << "\") to check first!"
                            << "\n======================\n"
                            << report_string());
-  return ConfigContainer(tree_.sub(sub_id));
+  return ConfigContainer(BaseType::sub(sub_id));
 } // ... sub(...)
 
-std::string& ConfigContainer::operator[](std::string key)
-{
-  return tree_[key];
-}
+// std::string& ConfigContainer::operator[](std::string key)
+//{
+//  return tree_[key];
+//}
 
 bool ConfigContainer::has_sub(const std::string subTreeName) const
 {
-  return tree_.hasSub(subTreeName);
+  return BaseType::hasSub(subTreeName);
 }
 
 void ConfigContainer::add(const ConfigContainer& other, const std::string sub_id /*= ""*/,
                           const bool overwrite /* = false*/)
 {
-  tree_.add(other.tree(), sub_id, overwrite);
+  add_tree_(other, sub_id, overwrite);
   for (auto pair : other.requests_map_)
     for (auto request : pair.second)
       requests_map_[pair.first].insert(request);
 } // ... add(...)
 
-void ConfigContainer::add(const ParameterTree& paramtree, const std::string sub_id /* = ""*/,
+void ConfigContainer::add(const ParameterTree& other, const std::string sub_id /* = ""*/,
                           const bool overwrite /* = false*/)
 {
-  tree_.add(paramtree, sub_id, overwrite);
+  add_tree_(other, sub_id, overwrite);
 } // ... add(...)
 
 ConfigContainer& ConfigContainer::operator+=(ConfigContainer& other)
@@ -286,7 +286,7 @@ ConfigContainer ConfigContainer::operator+(ConfigContainer& other)
 ConfigContainer& ConfigContainer::operator=(const ConfigContainer& other)
 {
   if (this != &other) {
-    tree_                   = other.tree_;
+    BaseType::operator      =(other);
     requests_map_           = other.requests_map_;
     record_defaults_        = other.record_defaults_;
     warn_on_default_access_ = other.warn_on_default_access_;
@@ -298,7 +298,7 @@ ConfigContainer& ConfigContainer::operator=(const ConfigContainer& other)
 
 ExtendedParameterTree ConfigContainer::tree() const
 {
-  return tree_;
+  return *this;
 } // ... tree()
 
 // RequestMapType ConfigContainer::requests_map() const {
@@ -307,30 +307,29 @@ ExtendedParameterTree ConfigContainer::tree() const
 
 bool ConfigContainer::empty() const
 {
-  return tree_.getValueKeys().empty() && tree_.getSubKeys().empty();
+  return this->getValueKeys().empty() && this->getSubKeys().empty();
 } // ... empty()
 
 void ConfigContainer::report(std::ostream& out /* = std::cout*/, const std::string& prefix /* = ""*/) const
 {
-  printRequests(out);
   if (!empty()) {
-    if (tree_.getSubKeys().size() == 0) {
-      tree_.reportAsSub(out, prefix, "");
-    } else if (tree_.getValueKeys().size() == 0) {
-      const std::string common_prefix = tree_.findCommonPrefix(tree_, "");
+    if (subKeys.size() == 0) {
+      report_as_sub(out, prefix, "");
+    } else if (valueKeys.size() == 0) {
+      const std::string common_prefix = find_common_prefix(*this, "");
       if (!common_prefix.empty()) {
         out << prefix << "[" << common_prefix << "]" << std::endl;
-        const ConfigContainer& commonSub(sub(common_prefix));
-        tree_.reportFlatly(commonSub.tree(), prefix, out);
+        const ConfigContainer& commonSub = sub(common_prefix);
+        report_flatly(commonSub, prefix, out);
       } else
-        tree_.reportAsSub(out, prefix, "");
+        report_as_sub(out, prefix, "");
     } else {
-      tree_.reportAsSub(out, prefix, "");
+      report_as_sub(out, prefix, "");
     }
   }
 } // ... report(...)
 
-std::string ConfigContainer::report_string(const std::string& prefix /* = ""*/) const
+std::string ConfigContainer::report_string(const std::string& prefix) const
 {
   std::stringstream stream;
   report(stream, prefix);
@@ -343,9 +342,9 @@ void ConfigContainer::readCommandLine(int argc, char* argv[])
     boost::format usage("usage: %s parameter.file *[-section.key override-value]");
     DUNE_THROW(Dune::Exception, (usage % argv[0]).str());
   }
-  Dune::ParameterTreeParser::readINITree(argv[1], tree_);
-  Dune::ParameterTreeParser::readOptions(argc, argv, tree_);
-  loadIntoFemParameter(tree_);
+  Dune::ParameterTreeParser::readINITree(argv[1], *this);
+  Dune::ParameterTreeParser::readOptions(argc, argv, *this);
+  loadIntoFemParameter(*this);
 
   // datadir and logdir may be given from the command line...
   setup_();
@@ -353,7 +352,7 @@ void ConfigContainer::readCommandLine(int argc, char* argv[])
 
 void ConfigContainer::readOptions(int argc, char* argv[])
 {
-  Dune::ParameterTreeParser::readOptions(argc, argv, tree_);
+  Dune::ParameterTreeParser::readOptions(argc, argv, *this);
 }
 
 void ConfigContainer::printRequests(std::ostream& out) const
@@ -447,6 +446,49 @@ ParameterTree ConfigContainer::initialize(int argc, char** argv, std::string fil
   }
   return param_tree;
 } // ... initialize(...)
+
+
+void ConfigContainer::report_as_sub(std::ostream& out, const std::string& prefix, const std::string& sub_path) const
+{
+  for (auto pair : values)
+    out << prefix << pair.first << " = " << pair.second << std::endl;
+  for (auto pair : subs) {
+    ConfigContainer sub_tree(pair.second);
+    if (sub_tree.getValueKeys().size())
+      out << prefix << "[" << sub_path << pair.first << "]" << std::endl;
+    sub_tree.report_as_sub(out, prefix, sub_path + pair.first + ".");
+  }
+} // ... report_as_sub(...)
+
+std::string ConfigContainer::find_common_prefix(const BaseType& subtree, const std::string previous_prefix) const
+{
+  const auto& valuekeys = subtree.getValueKeys();
+  const auto& subkeys = subtree.getSubKeys();
+  if (valuekeys.size() == 0 && subkeys.size() == 1) {
+    // we append the subs name
+    if (previous_prefix.empty())
+      return find_common_prefix(subtree.sub(subkeys[0]), subkeys[0]);
+    else
+      return find_common_prefix(subtree.sub(subkeys[0]), previous_prefix + "." + subkeys[0]);
+  } else {
+    // end of the recursion, return the previous prefix
+    return previous_prefix;
+  }
+} // ... find_common_prefix(...)
+
+void ConfigContainer::report_flatly(const BaseType& subtree, const std::string& prefix, std::ostream& out) const
+{
+  // report all the keys
+  for (auto key : subtree.getValueKeys())
+    out << prefix << key << " = " << subtree[key] << std::endl;
+  // report all the subs
+  for (auto subkey : subtree.getSubKeys()) {
+    if (prefix.empty())
+      report_flatly(subtree.sub(subkey), subkey + ".", out);
+    else
+      report_flatly(subtree.sub(subkey), prefix + subkey + ".", out);
+  }
+} // ... report_flatly(...)
 
 
 } // namespace Common
