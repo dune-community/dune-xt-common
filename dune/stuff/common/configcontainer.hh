@@ -24,7 +24,7 @@
 #include <dune/stuff/common/logging.hh>
 #include <dune/stuff/common/filesystem.hh>
 #include <dune/stuff/common/misc.hh>
-#include <dune/stuff/common/parameter/validation.hh>
+#include <dune/stuff/common/validation.hh>
 #include <dune/stuff/common/parameter/tree.hh>
 #include <dune/stuff/common/type_utils.hh>
 #include <dune/stuff/fem/namespace.hh>

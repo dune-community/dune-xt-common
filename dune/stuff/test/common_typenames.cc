@@ -8,7 +8,7 @@
 #include <iostream>
 
 #include <dune/stuff/common/type_utils.hh>
-#include <dune/stuff/common/parameter/validation.hh>
+#include <dune/stuff/common/validation.hh>
 
 STUFF_TYPENAME(Dune::MPIHelper)
 
