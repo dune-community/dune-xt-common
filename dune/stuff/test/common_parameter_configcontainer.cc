@@ -7,7 +7,7 @@
 #include <dune/stuff/test/test_common.hh>
 
 #include <dune/stuff/common/validation.hh>
-#include <dune/stuff/common/configcontainer.hh>
+#include <dune/stuff/common/configuration.hh>
 #include <dune/stuff/common/random.hh>
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/common/logging.hh>

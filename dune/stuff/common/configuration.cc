@@ -6,7 +6,7 @@
 // Contributors: Sven Kaulmann
 
 #include "config.h"
-#include "configcontainer.hh"
+#include "configuration.hh"
 
 #if HAVE_DUNE_FEM
 #include <dune/stuff/common/disable_warnings.hh>

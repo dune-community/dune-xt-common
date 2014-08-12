@@ -26,7 +26,7 @@
 #include <dune/common/densevector.hh>
 
 // dune-stuff
-#include <dune/stuff/common/configcontainer.hh>
+#include <dune/stuff/common/configuration.hh>
 #include <dune/stuff/common/filesystem.hh>
 #include <dune/stuff/common/string.hh>
 
