@@ -8,13 +8,17 @@
 #ifndef DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
 #define DUNE_STUFF_CONFIGCONTAINER_HH_INCLUDED
 
+#include <set>
+
+#include <boost/format.hpp>
+
 #include <dune/common/deprecated.hh>
 #include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/parametertree.hh>
 #include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/common/parametertreeparser.hh>
-#include <dune/common/exceptions.hh>
 
+#include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/logging.hh>
 #include <dune/stuff/common/filesystem.hh>
 #include <dune/stuff/common/misc.hh>
@@ -22,9 +26,6 @@
 #include <dune/stuff/common/parameter/tree.hh>
 #include <dune/stuff/common/type_utils.hh>
 #include <dune/stuff/fem/namespace.hh>
-
-#include <boost/format.hpp>
-#include <set>
 
 
 namespace Dune {
@@ -81,60 +82,23 @@ class DUNE_DEPRECATED_MSG("Use configuration_error instead!") InvalidParameter :
 
 class ConfigContainer
 {
-private:
   typedef std::map<std::string, std::set<Request>> RequestMapType;
 
-  //! get value from tree and validate with validator
-  template <typename T, class Validator>
-  T get_valid_value(std::string key, T def, const ValidatorInterface<T, Validator>& validator, const size_t size,
-                    const size_t cols) const
-  {
-    std::string valstring = tree_.get(key, toString(def));
-    T val = fromString<T>(valstring, size, cols);
-    if (validator(val))
-      return val;
-    else {
-      std::stringstream ss;
-      validator.print(ss);
-      DUNE_THROW(Exceptions::configuration_error, ss.str());
-    }
-  }
-
-  /** \brief all public get signatures call this one
-   *  \param key requested key
-   *  \param def default value
-   *  \param validator validator that is used to validate the value before it is returned
-   *  \param request Request that is stored in requests_map_
-   *  \param size Determines the size of the returning container (size if T is a vector type,
-   *  rows if T is a matrix type, 0 means automatic).
-   *  \param cols Determines the number of columns of the returning matrix if T is a matrix type
-   *  (0 means automatic, ignored, if T is a vector or scalar type).
-   *  \param def_provided bool to indicate if the calling get method provides a default value
-   *  \return value associated to key in ConfigContainer (interpreted as type T),
-   *  def if key does not exist in ConfigContainer
-   */
-  template <typename T, class Validator>
-  T get(std::string key, T def, const ValidatorInterface<T, Validator>& validator, const Request& request,
-        const size_t size, const size_t cols, const bool def_provided)
-  {
-    requests_map_[key].insert(request);
-#ifndef NDEBUG
-    if (warning_output_ && !tree_.hasKey(key)) {
-      std::cerr << "WARNING: using default value for parameter \"" << key << "\"" << std::endl;
-    }
-#endif // ifndef NDEBUG
-    if (record_defaults_ && !tree_.hasKey(key) && def_provided)
-      set(key, def);
-    return get_valid_value(key, def, validator, size, cols);
-  } // get
-
 public:
-  // Constructors and destructors
+  //! warning_output = true, record_defaults = false
+  ConfigContainer();
+
   //! copy tree to tree_, set warning_output and record_defaults to false
   ConfigContainer(const ParameterTree& tree);
 
-  //! warning_output = true, record_defaults = false
-  ConfigContainer();
+  //! read ParameterTree from file and call ConfigContainer(const ParameterTree& tree)
+  explicit ConfigContainer(const std::string filename);
+
+  //! read ParameterTree from given arguments and call ConfigContainer(const ParameterTree& tree)
+  ConfigContainer(int argc, char** argv);
+
+  //! read ParameterTree from given arguments and file and call ConfigContainer(const ParameterTree& tree)
+  ConfigContainer(int argc, char** argv, const std::string filename);
 
   //! warning output = true, record_defaults = false, tree_[key] = value
   template <class T>
@@ -191,19 +155,9 @@ public:
   // explicit specialization of the constructor above
   ConfigContainer(const std::vector<std::string> keys, const std::initializer_list<std::string> value_list);
 
-  //! read ParameterTree from file and call ConfigContainer(const ParameterTree& tree)
-  explicit ConfigContainer(const std::string filename);
-
-  //! read ParameterTree from given arguments and call ConfigContainer(const ParameterTree& tree)
-  ConfigContainer(int argc, char** argv);
-
-  //! read ParameterTree from given arguments and file and call ConfigContainer(const ParameterTree& tree)
-  ConfigContainer(int argc, char** argv, const std::string filename);
-
   //! destructor printing tree_.report() to logdir_
   ~ConfigContainer();
 
-  // get parameters from tree
   //! get variation with default value, without validation, request needs to be provided
   template <typename T>
   T get(const std::string key, T def, Request req, const size_t size = 0, const size_t cols = 0)
@@ -427,6 +381,50 @@ public:
   void setRecordDefaults(bool record);
 
 private:
+  //! get value from tree and validate with validator
+  template <typename T, class Validator>
+  T get_valid_value(std::string key, T def, const ValidatorInterface<T, Validator>& validator, const size_t size,
+                    const size_t cols) const
+  {
+    std::string valstring = tree_.get(key, toString(def));
+    T val = fromString<T>(valstring, size, cols);
+    if (validator(val))
+      return val;
+    else {
+      std::stringstream ss;
+      validator.print(ss);
+      DUNE_THROW(Exceptions::configuration_error, ss.str());
+    }
+  }
+
+  /** \brief all public get signatures call this one
+   *  \param key requested key
+   *  \param def default value
+   *  \param validator validator that is used to validate the value before it is returned
+   *  \param request Request that is stored in requests_map_
+   *  \param size Determines the size of the returning container (size if T is a vector type,
+   *  rows if T is a matrix type, 0 means automatic).
+   *  \param cols Determines the number of columns of the returning matrix if T is a matrix type
+   *  (0 means automatic, ignored, if T is a vector or scalar type).
+   *  \param def_provided bool to indicate if the calling get method provides a default value
+   *  \return value associated to key in ConfigContainer (interpreted as type T),
+   *  def if key does not exist in ConfigContainer
+   */
+  template <typename T, class Validator>
+  T get(std::string key, T def, const ValidatorInterface<T, Validator>& validator, const Request& request,
+        const size_t size, const size_t cols, const bool def_provided)
+  {
+    requests_map_[key].insert(request);
+#ifndef NDEBUG
+    if (warning_output_ && !tree_.hasKey(key)) {
+      std::cerr << "WARNING: using default value for parameter \"" << key << "\"" << std::endl;
+    }
+#endif // ifndef NDEBUG
+    if (record_defaults_ && !tree_.hasKey(key) && def_provided)
+      set(key, def);
+    return get_valid_value(key, def, validator, size, cols);
+  } // get
+
   //! read Dune::ParameterTree from file
   static ParameterTree initialize(const std::string filename);
 
@@ -445,7 +443,7 @@ private:
 #ifndef NDEBUG
   bool warning_output_;
 #endif
-};
+}; // class ConfigContainer
 
 
 inline std::ostream& operator<<(std::ostream& out, const ConfigContainer& config)
@@ -454,6 +452,7 @@ inline std::ostream& operator<<(std::ostream& out, const ConfigContainer& config
   return out;
 }
 
+
 //! global ConfigContainer instance
 inline ConfigContainer& Config()
 {
@@ -461,9 +460,11 @@ inline ConfigContainer& Config()
   return parameters;
 }
 
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
+
 
 #define DSC_CONFIG Dune::Stuff::Common::Config()
 
