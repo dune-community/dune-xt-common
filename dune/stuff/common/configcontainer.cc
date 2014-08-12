@@ -160,6 +160,7 @@ ConfigContainer::~ConfigContainer()
   if (log_on_exit_) {
     std::unique_ptr<boost::filesystem::ofstream> out(DSC::make_ofstream(logfile_));
     report(*out);
+    print_requests(*out);
   }
 }
 
@@ -189,6 +190,11 @@ void ConfigContainer::set_logfile(const std::string logfile)
 }
 
 std::set<Request> ConfigContainer::getMismatchedDefaults(ConfigContainer::RequestMapType::value_type pair) const
+{
+  return get_mismatched_defaults(pair);
+}
+
+std::set<Request> ConfigContainer::get_mismatched_defaults(ConfigContainer::RequestMapType::value_type pair) const
 {
   typedef bool (*func)(const Request&, const Request&);
   std::set<Request, func> mismatched(&strictRequestCompare);
@@ -344,6 +350,11 @@ std::string ConfigContainer::report_string(const std::string& prefix) const
 
 void ConfigContainer::readCommandLine(int argc, char* argv[])
 {
+  read_command_line(argc, argv);
+}
+
+void ConfigContainer::read_command_line(int argc, char* argv[])
+{
   if (argc < 2) {
     boost::format usage("usage: %s parameter.file *[-section.key override-value]");
     DUNE_THROW(Dune::Exception, (usage % argv[0]).str());
@@ -356,12 +367,22 @@ void ConfigContainer::readCommandLine(int argc, char* argv[])
   setup_();
 } // readCommandLine
 
-void ConfigContainer::readOptions(int argc, char* argv[])
+void ConfigContainer::read_options(int argc, char* argv[])
 {
   Dune::ParameterTreeParser::readOptions(argc, argv, *this);
 }
 
+void ConfigContainer::readOptions(int argc, char* argv[])
+{
+  read_options(argc, argv);
+}
+
 void ConfigContainer::printRequests(std::ostream& out) const
+{
+  print_requests(out);
+}
+
+void ConfigContainer::print_requests(std::ostream& out) const
 {
   out << "Config requests:";
   for (const auto& pair : requests_map_) {
@@ -375,9 +396,14 @@ void ConfigContainer::printRequests(std::ostream& out) const
 
 ConfigContainer::RequestMapType ConfigContainer::getMismatchedDefaultsMap() const
 {
+  return get_mismatched_defaults_map();
+}
+
+ConfigContainer::RequestMapType ConfigContainer::get_mismatched_defaults_map() const
+{
   RequestMapType ret;
   for (const auto& pair : requests_map_) {
-    auto mismatches = getMismatchedDefaults(pair);
+    auto mismatches = get_mismatched_defaults(pair);
     if (mismatches.size())
       ret[pair.first] = mismatches;
   }
@@ -386,8 +412,13 @@ ConfigContainer::RequestMapType ConfigContainer::getMismatchedDefaultsMap() cons
 
 void ConfigContainer::printMismatchedDefaults(std::ostream& out) const
 {
+  print_mismatched_defaults(out);
+}
+
+void ConfigContainer::print_mismatched_defaults(std::ostream& out) const
+{
   for (const auto& pair : requests_map_) {
-    auto mismatched = getMismatchedDefaults(pair);
+    auto mismatched = get_mismatched_defaults(pair);
     if (mismatched.size()) {
       out << "Mismatched uses for key " << pair.first << ": ";
       for (const auto& req : mismatched) {
@@ -415,6 +446,41 @@ void ConfigContainer::setup_()
   if (log_on_exit_)
     testCreateDirectory(pathOnly(logfile_));
 } // ... setup_(...)
+
+void ConfigContainer::add_tree_(const ConfigContainer& other, const std::string sub_id, const bool overwrite)
+{
+  if (sub_id.empty()) {
+    const auto& keys = other.getValueKeys();
+    for (const std::string& key : keys) {
+      if (has_key(key) && !overwrite)
+        DUNE_THROW(Exceptions::configuration_error,
+                   "While adding 'other' to this (see below), the key '"
+                       << key
+                       << "' already exists and you requested no overwrite!"
+                       << "\n==== this ============\n"
+                       << report_string()
+                       << "\n==== other ===========\n"
+                       << other.report_string());
+      set(key, other.get<std::string>(key));
+    }
+  } else {
+    if (has_key(sub_id) && !overwrite)
+      DUNE_THROW(Exceptions::configuration_error,
+                 "While adding 'other' to this (see below), the key '"
+                     << sub_id
+                     << "' already exists and you requested no overwrite!"
+                     << "\n==== this ============\n"
+                     << report_string()
+                     << "\n==== other ===========\n"
+                     << other.report_string());
+    else if (has_sub(sub_id)) {
+      ConfigContainer sub_tree = BaseType::sub(sub_id);
+      sub_tree.add(other);
+      BaseType::sub(sub_id) = sub_tree;
+    } else
+      BaseType::sub(sub_id) = other;
+  }
+} // ... add_tree_(...)
 
 ParameterTree ConfigContainer::initialize(const std::string filename)
 {
@@ -496,6 +562,12 @@ void ConfigContainer::report_flatly(const BaseType& subtree, const std::string& 
   }
 } // ... report_flatly(...)
 
+
+std::ostream& operator<<(std::ostream& out, const ConfigContainer& config)
+{
+  config.report(out);
+  return out;
+}
 
 } // namespace Common
 } // namespace Stuff

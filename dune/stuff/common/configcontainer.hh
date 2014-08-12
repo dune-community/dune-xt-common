@@ -25,7 +25,6 @@
 #include <dune/stuff/common/filesystem.hh>
 #include <dune/stuff/common/misc.hh>
 #include <dune/stuff/common/validation.hh>
-#include <dune/stuff/common/parameter/tree.hh>
 #include <dune/stuff/common/type_utils.hh>
 #include <dune/stuff/fem/namespace.hh>
 
@@ -426,17 +425,20 @@ public:
 
   /** get parameters from parameter file or key-value pairs given on the command line and store in ConfigContainer (and
   load into fem parameter, if available) */
-  void readCommandLine(int argc, char* argv[]);
+  void read_command_line(int argc, char* argv[]);
 
   //! search command line options for key-value pairs and add them to ConfigContainer
-  void readOptions(int argc, char* argv[]);
+  void read_options(int argc, char* argv[]);
+
+  //! return requests_map_
+  const RequestMapType& requests_map() const;
 
   //! print all Requests in requests_map_
-  void printRequests(std::ostream& out) const;
+  void print_requests(std::ostream& out) const;
 
   /** return a map mapping keys which where requested with at least two different default values to a set containing
   the corresponding Requests */
-  RequestMapType getMismatchedDefaultsMap() const;
+  RequestMapType get_mismatched_defaults_map() const;
 
   /**
      * \brief Checks if there are Request with differing default values to the same key
@@ -449,27 +451,37 @@ public:
      * \return std::set filled with Requests that differ either in key or in def (or both), empty if there are no such
      *  differing Requests
      */
-  std::set<Request> getMismatchedDefaults(RequestMapType::value_type pair) const;
+  std::set<Request> get_mismatched_defaults(RequestMapType::value_type pair) const;
 
   //! print all keys that were requested with at least two different default values and their respective Requests
-  void printMismatchedDefaults(std::ostream& out) const;
+  void print_mismatched_defaults(std::ostream& out) const;
 
   /**
    * \defgroup deprecated ´´These methods are deprecated.``
    * \{
    */
 
+  void DUNE_DEPRECATED_MSG("Use 'read_command_line' instead!") readCommandLine(int argc, char* argv[]);
+
+  void DUNE_DEPRECATED_MSG("Use 'read_options' instead!") readOptions(int argc, char* argv[]);
+
+  void DUNE_DEPRECATED_MSG("Use 'print_requests' instead!") printRequests(std::ostream& out) const;
+
+  RequestMapType DUNE_DEPRECATED_MSG("Use 'get_mismatched_defaults_map' instead!") getMismatchedDefaultsMap() const;
+
+  std::set<Request> DUNE_DEPRECATED_MSG("Use 'get_mismatched_defaults' instead!")
+      getMismatchedDefaults(RequestMapType::value_type pair) const;
+
+  void DUNE_DEPRECATED_MSG("Use 'print_mismatched_defaults' instead!") printMismatchedDefaults(std::ostream& out) const;
+
   /**
      *  Control if the value map is filled with default values for missing entries
      *  Initially false
      **/
-  void setRecordDefaults(bool record);
+  void DUNE_DEPRECATED_MSG("Use 'set_record_defaults' instead!") setRecordDefaults(bool record);
 
   //! return tree_
-  const ConfigContainer& tree() const;
-
-  //! return requests_map_
-  const RequestMapType& requests_map() const;
+  const DUNE_DEPRECATED_MSG("Use *this instead!") ConfigContainer& tree() const;
 
   /**
    * \}
@@ -478,40 +490,7 @@ public:
 private:
   void setup_();
 
-  void add_tree_(const ConfigContainer& other, const std::string sub_id, const bool overwrite)
-  {
-    if (sub_id.empty()) {
-      const auto& keys = other.getValueKeys();
-      for (const std::string& key : keys) {
-        if (has_key(key) && !overwrite)
-          DUNE_THROW(Exceptions::configuration_error,
-                     "While adding 'other' to this (see below), the key '"
-                         << key
-                         << "' already exists and you requested no overwrite!"
-                         << "\n==== this ============\n"
-                         << report_string()
-                         << "\n==== other ===========\n"
-                         << other.report_string());
-        set(key, other.get<std::string>(key));
-      }
-    } else {
-      if (has_key(sub_id) && !overwrite)
-        DUNE_THROW(Exceptions::configuration_error,
-                   "While adding 'other' to this (see below), the key '"
-                       << sub_id
-                       << "' already exists and you requested no overwrite!"
-                       << "\n==== this ============\n"
-                       << report_string()
-                       << "\n==== other ===========\n"
-                       << other.report_string());
-      else if (has_sub(sub_id)) {
-        ConfigContainer sub_tree = BaseType::sub(sub_id);
-        sub_tree.add(other);
-        BaseType::sub(sub_id) = sub_tree;
-      } else
-        BaseType::sub(sub_id) = other;
-    }
-  } // ... add_tree_(...)
+  void add_tree_(const ConfigContainer& other, const std::string sub_id, const bool overwrite);
 
   //! get value from tree and validate with validator
   template <typename T, class Validator>
@@ -582,11 +561,7 @@ private:
 }; // class ConfigContainer
 
 
-inline std::ostream& operator<<(std::ostream& out, const ConfigContainer& config)
-{
-  config.report(out);
-  return out;
-}
+std::ostream& operator<<(std::ostream& out, const ConfigContainer& config);
 
 
 //! global ConfigContainer instance
