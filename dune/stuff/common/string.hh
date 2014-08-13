@@ -161,13 +161,13 @@ private:
   {
     const std::string str_out = boost::algorithm::trim_copy(str_in);
     if (str_out.find(";") != std::string::npos)
-      DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
-                            "There was an error while parsing the string below. "
-                                << "The value contained a ';': '"
-                                << str_out
-                                << "'!\n"
-                                << "This usually happens if you try to get a matrix expression with a vector type "
-                                << "or if you are missing the white space after the ';' in a matrix expression!\n");
+      DUNE_THROW(Exceptions::configuration_error,
+                 "There was an error while parsing the string below. "
+                     << "The value contained a ';': '"
+                     << str_out
+                     << "'!\n"
+                     << "This usually happens if you try to get a matrix expression with a vector type "
+                     << "or if you are missing the white space after the ';' in a matrix expression!\n");
     return str_out;
   } // ... trim_copy_safely(...)
 
@@ -178,11 +178,11 @@ private:
     try {
       s_out = Choose<S>::fromString(str_in);
     } catch (boost::bad_lexical_cast& e) {
-      DUNE_THROW_COLORFULLY(Exceptions::external_error,
-                            "Error " << e.what() << " in boost while parsing the value " << str_in << ". \n");
+      DUNE_THROW(Exceptions::external_error,
+                 "Error " << e.what() << " in boost while parsing the value " << str_in << ". \n");
     } catch (std::exception& e) {
-      DUNE_THROW_COLORFULLY(Exceptions::external_error,
-                            "Error " << e.what() << " in the stl while parsing the value " << str_in << ". \n");
+      DUNE_THROW(Exceptions::external_error,
+                 "Error " << e.what() << " in the stl while parsing the value " << str_in << ". \n");
     }
     return s_out;
   } // ... convert_from_string_safely(...)
@@ -197,13 +197,13 @@ protected:
       // we treat this as a matrix and split along ';' to obtain the rows
       const auto row_tokens = tokenize<std::string>(matrix_str, ";", boost::algorithm::token_compress_on);
       if (rows > 0 && row_tokens.size() < rows)
-        DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
-                              "Matrix (see below) has only " << row_tokens.size() << " rows but " << rows
-                                                             << " rows were requested!"
-                                                             << "\n"
-                                                             << "'["
-                                                             << matrix_str
-                                                             << "]'");
+        DUNE_THROW(Exceptions::configuration_error,
+                   "Matrix (see below) has only " << row_tokens.size() << " rows but " << rows
+                                                  << " rows were requested!"
+                                                  << "\n"
+                                                  << "'["
+                                                  << matrix_str
+                                                  << "]'");
       const size_t actual_rows = (rows > 0) ? std::min(row_tokens.size(), rows) : row_tokens.size();
       // compute the number of columns the matrix will have
       size_t min_cols = std::numeric_limits<size_t>::max();
@@ -214,13 +214,12 @@ protected:
         min_cols                 = std::min(min_cols, column_tokens.size());
       }
       if (cols > 0 && min_cols < cols)
-        DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
-                              "Matrix (see below) has only " << min_cols << " columns but " << cols
-                                                             << " columns were requested!"
-                                                             << "\n"
-                                                             << "'["
-                                                             << matrix_str
-                                                             << "]'");
+        DUNE_THROW(Exceptions::configuration_error,
+                   "Matrix (see below) has only " << min_cols << " columns but " << cols << " columns were requested!"
+                                                  << "\n"
+                                                  << "'["
+                                                  << matrix_str
+                                                  << "]'");
       const size_t actual_cols = (cols > 0) ? std::min(min_cols, cols) : min_cols;
       MatrixType ret           = MatrixConstructor<MatrixType>::create(actual_rows, actual_cols);
       // now we do the same again and build the actual matrix
@@ -255,13 +254,13 @@ protected:
       // we treat this as a vector and split along ' '
       const auto tokens = tokenize<std::string>(vector_str, " ", boost::algorithm::token_compress_on);
       if (size > 0 && tokens.size() < size)
-        DUNE_THROW_COLORFULLY(Exceptions::configuration_error,
-                              "Vector (see below) has only " << tokens.size() << " elements but " << size
-                                                             << " elements were requested!"
-                                                             << "\n"
-                                                             << "'["
-                                                             << vector_str
-                                                             << "]'");
+        DUNE_THROW(Exceptions::configuration_error,
+                   "Vector (see below) has only " << tokens.size() << " elements but " << size
+                                                  << " elements were requested!"
+                                                  << "\n"
+                                                  << "'["
+                                                  << vector_str
+                                                  << "]'");
       const size_t actual_size = (size > 0) ? std::min(tokens.size(), size) : tokens.size();
       VectorType ret(actual_size);
       for (size_t ii = 0; ii < actual_size; ++ii)
@@ -313,7 +312,7 @@ public:
       try {
         return char(stoi(s));
       } catch (std::invalid_argument) {
-        DUNE_THROW_COLORFULLY(Stuff::Exceptions::wrong_input_given, "Failed to convert string to char");
+        DUNE_THROW(Stuff::Exceptions::wrong_input_given, "Failed to convert string to char");
       }
     }
   } // ... fromString(...)
@@ -392,15 +391,15 @@ DSC_MATRIXFRSTR(LA::EigenDenseMatrix)
                                                             const size_t cols = 0)                                     \
     {                                                                                                                  \
       if ((rows > 0 && rows != ROWS) || (cols > 0 && cols != COLS))                                                    \
-        DUNE_THROW_COLORFULLY(                                                                                         \
-            Exceptions::configuration_error,                                                                           \
-            "You requested a '" << getTypename(FieldMatrixType<S, ROWS, COLS>()) << "' with a size of " << rows << "x" \
-                                << cols                                                                                \
-                                << " but this type of matrix can not have any size other than "                        \
-                                << ROWS                                                                                \
-                                << "x"                                                                                 \
-                                << COLS                                                                                \
-                                << "!");                                                                               \
+        DUNE_THROW(Exceptions::configuration_error,                                                                    \
+                   "You requested a '" << getTypename(FieldMatrixType<S, ROWS, COLS>()) << "' with a size of " << rows \
+                                       << "x"                                                                          \
+                                       << cols                                                                         \
+                                       << " but this type of matrix can not have any size other than "                 \
+                                       << ROWS                                                                         \
+                                       << "x"                                                                          \
+                                       << COLS                                                                         \
+                                       << "!");                                                                        \
       return BaseType::template get_matrix_from_string<FieldMatrixType<S, ROWS, COLS>, S>(s, ROWS, COLS);              \
     }                                                                                                                  \
   };
@@ -452,12 +451,12 @@ DSC_VECTORFRSTR(LA::IstlDenseVector)
     {                                                                                                                  \
       assert(cols == 0);                                                                                               \
       if (size > 0 && size != SIZE)                                                                                    \
-        DUNE_THROW_COLORFULLY(Exceptions::configuration_error,                                                         \
-                              "You requested a '" /*<< Typename< VectorType >::value() <<*/ "' with a 'size' of "      \
-                                  << size                                                                              \
-                                  << " but this type of vector can not have any size other than "                      \
-                                  << SIZE                                                                              \
-                                  << "!");                                                                             \
+        DUNE_THROW(Exceptions::configuration_error,                                                                    \
+                   "You requested a '" /*<< Typename< VectorType >::value() <<*/ "' with a 'size' of "                 \
+                       << size                                                                                         \
+                       << " but this type of vector can not have any size other than "                                 \
+                       << SIZE                                                                                         \
+                       << "!");                                                                                        \
       return BaseType::template get_vector_from_string<FieldVectorType<S, SIZE>, S>(s, SIZE);                          \
     }                                                                                                                  \
   };

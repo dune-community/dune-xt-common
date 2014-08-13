@@ -42,11 +42,11 @@ public:
   {
 #ifndef NDEBUG
     if (vec.size() != SIZE)
-      DUNE_THROW_COLORFULLY(Exceptions::wrong_input_given,
-                            "You are trying to construct a FieldVector< ..., " << SIZE << " > (of "
-                                                                               << "static size) from a vector of size "
-                                                                               << vec.size()
-                                                                               << "!");
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "You are trying to construct a FieldVector< ..., " << SIZE << " > (of "
+                                                                    << "static size) from a vector of size "
+                                                                    << vec.size()
+                                                                    << "!");
 #endif // NDEBUG
     for (size_t ii = 0; ii < SIZE; ++ii)
       this->operator[](ii) = vec[ii];
@@ -57,11 +57,11 @@ public:
   {
 #ifndef NDEBUG
     if (list.size() != SIZE)
-      DUNE_THROW_COLORFULLY(Exceptions::wrong_input_given,
-                            "You are trying to construct a FieldVector< ..., " << SIZE << " > (of "
-                                                                               << "static size) from a list of size "
-                                                                               << list.size()
-                                                                               << "!");
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "You are trying to construct a FieldVector< ..., " << SIZE << " > (of "
+                                                                    << "static size) from a list of size "
+                                                                    << list.size()
+                                                                    << "!");
 #endif // NDEBUG
     size_t ii = 0;
     for (auto element : list) {
