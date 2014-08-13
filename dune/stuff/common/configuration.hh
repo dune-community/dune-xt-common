@@ -237,20 +237,20 @@ public:
 
   //! const get without default value, without validation
   template <class T>
-  T get(const std::string key, size_t size = 0, size_t cols = 0) const
+  T get(const std::string key, const size_t size = 0, const size_t cols = 0) const
   {
     if (!has_key(key))
       DUNE_THROW(Exceptions::configuration_error,
                  "Configuration does not have this key and there was no default value provided");
     return get_valid_value<T, ValidateAny<T>>(key, T(), ValidateAny<T>(), size, cols);
-  }
+  } // ... get(...)
 
   //! const get with default value, without validation
   template <class T>
-  T get(const std::string key, T def, size_t size = 0, size_t cols = 0) const
+  T get(const std::string key, const T& def, const size_t size = 0, const size_t cols = 0) const
   {
     return get_valid_value<T, ValidateAny<T>>(key, def, ValidateAny<T>(), size, cols);
-  }
+  } // ... get(...)
 
   /**
    * \}
@@ -263,19 +263,19 @@ public:
 
   //! const get without default value, with validation
   template <class T, class Validator>
-  T get(const std::string key, const ValidatorInterface<T, Validator>& validator, size_t size = 0,
-        size_t cols = 0) const
+  T get(const std::string key, const ValidatorInterface<T, Validator>& validator, const size_t size = 0,
+        const size_t cols = 0) const
   {
     if (!has_key(key))
       DUNE_THROW(Exceptions::configuration_error,
                  "Configuration does not have this key and there was no default value provided");
     return get_valid_value(key, T(), validator, size, cols);
-  }
+  } // ... get(...)
 
   //! const get with default value, with validation
   template <class T, class Validator>
-  T get(const std::string key, T def, const ValidatorInterface<T, Validator>& validator, size_t size = 0,
-        size_t cols = 0) const
+  T get(const std::string key, const T& def, const ValidatorInterface<T, Validator>& validator, const size_t size = 0,
+        const size_t cols = 0) const
   {
     return get_valid_value(key, def, validator, size, cols);
   }
@@ -291,23 +291,23 @@ public:
 
   //! variant with default value, without validation
   template <typename T>
-  T get(const std::string key, T def, const size_t size = 0, const size_t cols = 0)
+  T get(const std::string key, const T& def, const size_t size = 0, const size_t cols = 0)
   {
     Request req(
         -1, std::string(), key, Dune::Stuff::Common::toString(def), Dune::Stuff::Common::getTypename(ValidateAny<T>()));
     return get_(key, def, ValidateAny<T>(), req, size, cols, true);
-  }
+  } // ... get(...)
 
   //! get variation with default value, without validation, request needs to be provided
   template <typename T>
-  T get(const std::string key, T def, Request req, const size_t size = 0, const size_t cols = 0)
+  T get(const std::string key, const T& def, Request req, const size_t size = 0, const size_t cols = 0)
   {
     return get_(key, def, ValidateAny<T>(), req, size, cols, true);
   }
 
   //! get variation with default value and validation, request needs to be provided
   template <typename T, class Validator>
-  T get(const std::string key, T def, const ValidatorInterface<T, Validator>& validator, Request req,
+  T get(const std::string key, const T& def, const ValidatorInterface<T, Validator>& validator, Request req,
         const size_t size = 0, const size_t cols = 0)
   {
     return get_(key, def, validator, req, size, cols, true);
@@ -315,17 +315,17 @@ public:
 
   //! get variation with default value, validation
   template <typename T, class Validator>
-  T get(const std::string key, T def, const size_t size = 0, const size_t cols = 0,
+  T get(const std::string key, const T& def, const size_t size = 0, const size_t cols = 0,
         const ValidatorInterface<T, Validator>& validator = ValidateAny<T>())
   {
     Request req(
         -1, std::string(), key, Dune::Stuff::Common::toString(def), Dune::Stuff::Common::getTypename(validator));
     return get_(key, def, validator, req, size, cols, true);
-  }
+  } // ... get(...)
 
   //! get variation with default value, validation
   template <typename T, class Validator>
-  T get(const std::string key, T def, const ValidatorInterface<T, Validator>& validator, const size_t size = 0,
+  T get(const std::string key, const T& def, const ValidatorInterface<T, Validator>& validator, const size_t size = 0,
         const size_t cols = 0)
   {
     Request req(
@@ -354,7 +354,7 @@ public:
       }
     }
     return tokens;
-  }
+  } // ... getList(...)
 
   /**
    * \defgroup set ´´These methods allow to set key: value pairs.``
@@ -494,8 +494,8 @@ private:
 
   //! get value from tree and validate with validator
   template <typename T, class Validator>
-  T get_valid_value(std::string key, T def, const ValidatorInterface<T, Validator>& validator, const size_t size,
-                    const size_t cols) const
+  T get_valid_value(const std::string& key, const T& def, const ValidatorInterface<T, Validator>& validator,
+                    const size_t size, const size_t cols) const
   {
     std::string valstring = BaseType::get(key, toString(def));
     T val = fromString<T>(valstring, size, cols);
@@ -522,8 +522,8 @@ private:
    *  def if key does not exist in Configuration
    */
   template <typename T, class Validator>
-  T get_(std::string key, const T& def, const ValidatorInterface<T, Validator>& validator, const Request& request,
-         const size_t size, const size_t cols, const bool def_provided)
+  T get_(const std::string& key, const T& def, const ValidatorInterface<T, Validator>& validator,
+         const Request& request, const size_t size, const size_t cols, const bool def_provided)
   {
     requests_map_[key].insert(request);
 #ifndef NDEBUG
@@ -535,7 +535,7 @@ private:
     if (record_defaults_ && !has_key(key) && def_provided)
       set(key, def);
     return get_valid_value(key, def, validator, size, cols);
-  } // get
+  } // ... get_(...)
 
   //! read Dune::ParameterTree from file
   static ParameterTree initialize(const std::string filename);
