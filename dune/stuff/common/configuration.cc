@@ -66,8 +66,8 @@ std::ostream& operator<<(std::ostream& out, const Request& r)
 }
 
 
-ConfigContainer::ConfigContainer(const bool record_defaults, const bool warn_on_default_access, const bool log_on_exit,
-                                 const std::string logfile)
+Configuration::Configuration(const bool record_defaults, const bool warn_on_default_access, const bool log_on_exit,
+                             const std::string logfile)
   : BaseType()
   , requests_map_()
   , record_defaults_(record_defaults)
@@ -78,8 +78,8 @@ ConfigContainer::ConfigContainer(const bool record_defaults, const bool warn_on_
   setup_();
 }
 
-ConfigContainer::ConfigContainer(const Dune::ParameterTree& tree, const bool record_defaults,
-                                 const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
+Configuration::Configuration(const Dune::ParameterTree& tree, const bool record_defaults,
+                             const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
   : BaseType(tree)
   , requests_map_()
   , record_defaults_(record_defaults)
@@ -90,7 +90,7 @@ ConfigContainer::ConfigContainer(const Dune::ParameterTree& tree, const bool rec
   setup_();
 }
 
-ConfigContainer::ConfigContainer(const ConfigContainer& other)
+Configuration::Configuration(const Configuration& other)
   : BaseType(other)
   , requests_map_(other.requests_map_)
   , record_defaults_(other.record_defaults_)
@@ -100,29 +100,27 @@ ConfigContainer::ConfigContainer(const ConfigContainer& other)
 {
 }
 
-ConfigContainer::ConfigContainer(const std::string filename, const bool record_defaults,
-                                 const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
-  : ConfigContainer::ConfigContainer(initialize(filename), record_defaults, warn_on_default_access, log_on_exit,
-                                     logfile)
+Configuration::Configuration(const std::string filename, const bool record_defaults, const bool warn_on_default_access,
+                             const bool log_on_exit, const std::string logfile)
+  : Configuration::Configuration(initialize(filename), record_defaults, warn_on_default_access, log_on_exit, logfile)
 {
 }
 
-ConfigContainer::ConfigContainer(int argc, char** argv, const bool record_defaults, const bool warn_on_default_access,
-                                 const bool log_on_exit, const std::string logfile)
-  : ConfigContainer::ConfigContainer(initialize(argc, argv), record_defaults, warn_on_default_access, log_on_exit,
-                                     logfile)
+Configuration::Configuration(int argc, char** argv, const bool record_defaults, const bool warn_on_default_access,
+                             const bool log_on_exit, const std::string logfile)
+  : Configuration::Configuration(initialize(argc, argv), record_defaults, warn_on_default_access, log_on_exit, logfile)
 {
 }
 
-ConfigContainer::ConfigContainer(int argc, char** argv, const std::string filename, const bool record_defaults,
-                                 const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
-  : ConfigContainer::ConfigContainer(initialize(argc, argv, filename), record_defaults, warn_on_default_access,
-                                     log_on_exit, logfile)
+Configuration::Configuration(int argc, char** argv, const std::string filename, const bool record_defaults,
+                             const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
+  : Configuration::Configuration(initialize(argc, argv, filename), record_defaults, warn_on_default_access, log_on_exit,
+                                 logfile)
 {
 }
 
-ConfigContainer::ConfigContainer(const std::string key, const char* value, const bool record_defaults,
-                                 const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
+Configuration::Configuration(const std::string key, const char* value, const bool record_defaults,
+                             const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
   : BaseType()
   , requests_map_()
   , record_defaults_(record_defaults)
@@ -134,8 +132,8 @@ ConfigContainer::ConfigContainer(const std::string key, const char* value, const
   setup_();
 }
 
-ConfigContainer::ConfigContainer(const char* key, const char* value, const bool record_defaults,
-                                 const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
+Configuration::Configuration(const char* key, const char* value, const bool record_defaults,
+                             const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
   : BaseType()
   , requests_map_()
   , record_defaults_(record_defaults)
@@ -147,15 +145,15 @@ ConfigContainer::ConfigContainer(const char* key, const char* value, const bool 
   setup_();
 }
 
-ConfigContainer::ConfigContainer(const std::vector<std::string> keys,
-                                 const std::initializer_list<std::string> value_list, const bool record_defaults,
-                                 const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
-  : ConfigContainer(keys, std::vector<std::string>(value_list), record_defaults, warn_on_default_access, log_on_exit,
-                    logfile)
+Configuration::Configuration(const std::vector<std::string> keys, const std::initializer_list<std::string> value_list,
+                             const bool record_defaults, const bool warn_on_default_access, const bool log_on_exit,
+                             const std::string logfile)
+  : Configuration(keys, std::vector<std::string>(value_list), record_defaults, warn_on_default_access, log_on_exit,
+                  logfile)
 {
 }
 
-ConfigContainer::~ConfigContainer()
+Configuration::~Configuration()
 {
   if (log_on_exit_) {
     std::unique_ptr<boost::filesystem::ofstream> out(DSC::make_ofstream(logfile_));
@@ -164,24 +162,24 @@ ConfigContainer::~ConfigContainer()
   }
 }
 
-void ConfigContainer::set_record_defaults(const bool value)
+void Configuration::set_record_defaults(const bool value)
 {
   record_defaults_ = value;
 }
 
-void ConfigContainer::set_warn_on_default_access(const bool value)
+void Configuration::set_warn_on_default_access(const bool value)
 {
   warn_on_default_access_ = value;
 }
 
-void ConfigContainer::set_log_on_exit(const bool value)
+void Configuration::set_log_on_exit(const bool value)
 {
   if (!log_on_exit_ && value)
     testCreateDirectory(pathOnly(logfile_));
   log_on_exit_ = value;
 }
 
-void ConfigContainer::set_logfile(const std::string logfile)
+void Configuration::set_logfile(const std::string logfile)
 {
   if (logfile.empty())
     DUNE_THROW(Exceptions::wrong_input_given, "logfile must not be empty!");
@@ -189,12 +187,12 @@ void ConfigContainer::set_logfile(const std::string logfile)
     testCreateDirectory(pathOnly(logfile_));
 }
 
-std::set<Request> ConfigContainer::getMismatchedDefaults(ConfigContainer::RequestMapType::value_type pair) const
+std::set<Request> Configuration::getMismatchedDefaults(Configuration::RequestMapType::value_type pair) const
 {
   return get_mismatched_defaults(pair);
 }
 
-std::set<Request> ConfigContainer::get_mismatched_defaults(ConfigContainer::RequestMapType::value_type pair) const
+std::set<Request> Configuration::get_mismatched_defaults(Configuration::RequestMapType::value_type pair) const
 {
   typedef bool (*func)(const Request&, const Request&);
   std::set<Request, func> mismatched(&strictRequestCompare);
@@ -228,46 +226,46 @@ void loadIntoFemParameter(const Dune::ParameterTree& tree, const std::string pre
 #endif
 }
 
-// method definitions for ConfigContainer
-bool ConfigContainer::has_key(const std::string& key) const
+// method definitions for Configuration
+bool Configuration::has_key(const std::string& key) const
 {
   return BaseType::hasKey(key);
 }
 
-ConfigContainer ConfigContainer::sub(const std::string sub_id) const
+Configuration Configuration::sub(const std::string sub_id) const
 {
   if (empty())
     DUNE_THROW(Exceptions::configuration_error,
-               "You can not get anything from an empty ConfigContainer, use has_sub(\"" << sub_id
-                                                                                        << "\") to check first!");
+               "You can not get anything from an empty Configuration, use has_sub(\"" << sub_id
+                                                                                      << "\") to check first!");
   if (sub_id.empty())
     DUNE_THROW(Exceptions::configuration_error, "Given sub_id must not be empty!");
   if (!has_sub(sub_id))
     DUNE_THROW(Exceptions::configuration_error,
-               "Subtree '" << sub_id << "' does not exist in this ConfigContainer (see below), use has_sub(\"" << sub_id
+               "Subtree '" << sub_id << "' does not exist in this Configuration (see below), use has_sub(\"" << sub_id
                            << "\") to check first!"
                            << "\n======================\n"
                            << report_string());
-  return ConfigContainer(BaseType::sub(sub_id));
+  return Configuration(BaseType::sub(sub_id));
 } // ... sub(...)
 
-// std::string& ConfigContainer::operator[](std::string key)
+// std::string& Configuration::operator[](std::string key)
 //{
 //  return tree_[key];
 //}
 
-bool ConfigContainer::has_sub(const std::string subTreeName) const
+bool Configuration::has_sub(const std::string subTreeName) const
 {
   return BaseType::hasSub(subTreeName);
 }
 
-void ConfigContainer::set(const std::string& key, const char* value, const bool overwrite)
+void Configuration::set(const std::string& key, const char* value, const bool overwrite)
 {
   set(key, std::string(value), overwrite);
 }
 
-void ConfigContainer::add(const ConfigContainer& other, const std::string sub_id /*= ""*/,
-                          const bool overwrite /* = false*/)
+void Configuration::add(const Configuration& other, const std::string sub_id /*= ""*/,
+                        const bool overwrite /* = false*/)
 {
   add_tree_(other, sub_id, overwrite);
   for (auto pair : other.requests_map_)
@@ -275,26 +273,26 @@ void ConfigContainer::add(const ConfigContainer& other, const std::string sub_id
       requests_map_[pair.first].insert(request);
 } // ... add(...)
 
-void ConfigContainer::add(const ParameterTree& other, const std::string sub_id /* = ""*/,
-                          const bool overwrite /* = false*/)
+void Configuration::add(const ParameterTree& other, const std::string sub_id /* = ""*/,
+                        const bool overwrite /* = false*/)
 {
   add_tree_(other, sub_id, overwrite);
 } // ... add(...)
 
-ConfigContainer& ConfigContainer::operator+=(ConfigContainer& other)
+Configuration& Configuration::operator+=(Configuration& other)
 {
   add(other);
   return *this;
 } // ... operator+=
 
-ConfigContainer ConfigContainer::operator+(ConfigContainer& other)
+Configuration Configuration::operator+(Configuration& other)
 {
-  ConfigContainer ret(*this);
+  Configuration ret(*this);
   ret += other;
   return ret;
 } // ... operator+
 
-ConfigContainer& ConfigContainer::operator=(const ConfigContainer& other)
+Configuration& Configuration::operator=(const Configuration& other)
 {
   if (this != &other) {
     BaseType::operator      =(other);
@@ -307,22 +305,22 @@ ConfigContainer& ConfigContainer::operator=(const ConfigContainer& other)
   return *this;
 } // ... operator=(...)
 
-const ConfigContainer& ConfigContainer::tree() const
+const Configuration& Configuration::tree() const
 {
   return *this;
 } // ... tree()
 
-const typename ConfigContainer::RequestMapType& ConfigContainer::requests_map() const
+const typename Configuration::RequestMapType& Configuration::requests_map() const
 {
   return requests_map_;
 } // ... requests_map()
 
-bool ConfigContainer::empty() const
+bool Configuration::empty() const
 {
   return this->getValueKeys().empty() && this->getSubKeys().empty();
 } // ... empty()
 
-void ConfigContainer::report(std::ostream& out /* = std::cout*/, const std::string& prefix /* = ""*/) const
+void Configuration::report(std::ostream& out /* = std::cout*/, const std::string& prefix /* = ""*/) const
 {
   if (!empty()) {
     if (subKeys.size() == 0) {
@@ -331,7 +329,7 @@ void ConfigContainer::report(std::ostream& out /* = std::cout*/, const std::stri
       const std::string common_prefix = find_common_prefix(*this, "");
       if (!common_prefix.empty()) {
         out << prefix << "[" << common_prefix << "]" << std::endl;
-        const ConfigContainer& commonSub = sub(common_prefix);
+        const Configuration& commonSub = sub(common_prefix);
         report_flatly(commonSub, prefix, out);
       } else
         report_as_sub(out, prefix, "");
@@ -341,19 +339,19 @@ void ConfigContainer::report(std::ostream& out /* = std::cout*/, const std::stri
   }
 } // ... report(...)
 
-std::string ConfigContainer::report_string(const std::string& prefix) const
+std::string Configuration::report_string(const std::string& prefix) const
 {
   std::stringstream stream;
   report(stream, prefix);
   return stream.str();
 } // ... report_string(...)
 
-void ConfigContainer::readCommandLine(int argc, char* argv[])
+void Configuration::readCommandLine(int argc, char* argv[])
 {
   read_command_line(argc, argv);
 }
 
-void ConfigContainer::read_command_line(int argc, char* argv[])
+void Configuration::read_command_line(int argc, char* argv[])
 {
   if (argc < 2) {
     boost::format usage("usage: %s parameter.file *[-section.key override-value]");
@@ -367,22 +365,22 @@ void ConfigContainer::read_command_line(int argc, char* argv[])
   setup_();
 } // readCommandLine
 
-void ConfigContainer::read_options(int argc, char* argv[])
+void Configuration::read_options(int argc, char* argv[])
 {
   Dune::ParameterTreeParser::readOptions(argc, argv, *this);
 }
 
-void ConfigContainer::readOptions(int argc, char* argv[])
+void Configuration::readOptions(int argc, char* argv[])
 {
   read_options(argc, argv);
 }
 
-void ConfigContainer::printRequests(std::ostream& out) const
+void Configuration::printRequests(std::ostream& out) const
 {
   print_requests(out);
 }
 
-void ConfigContainer::print_requests(std::ostream& out) const
+void Configuration::print_requests(std::ostream& out) const
 {
   out << "Config requests:";
   for (const auto& pair : requests_map_) {
@@ -394,12 +392,12 @@ void ConfigContainer::print_requests(std::ostream& out) const
   }
 }
 
-ConfigContainer::RequestMapType ConfigContainer::getMismatchedDefaultsMap() const
+Configuration::RequestMapType Configuration::getMismatchedDefaultsMap() const
 {
   return get_mismatched_defaults_map();
 }
 
-ConfigContainer::RequestMapType ConfigContainer::get_mismatched_defaults_map() const
+Configuration::RequestMapType Configuration::get_mismatched_defaults_map() const
 {
   RequestMapType ret;
   for (const auto& pair : requests_map_) {
@@ -410,12 +408,12 @@ ConfigContainer::RequestMapType ConfigContainer::get_mismatched_defaults_map() c
   return ret;
 }
 
-void ConfigContainer::printMismatchedDefaults(std::ostream& out) const
+void Configuration::printMismatchedDefaults(std::ostream& out) const
 {
   print_mismatched_defaults(out);
 }
 
-void ConfigContainer::print_mismatched_defaults(std::ostream& out) const
+void Configuration::print_mismatched_defaults(std::ostream& out) const
 {
   for (const auto& pair : requests_map_) {
     auto mismatched = get_mismatched_defaults(pair);
@@ -429,15 +427,15 @@ void ConfigContainer::print_mismatched_defaults(std::ostream& out) const
   }
 }
 
-void ConfigContainer::setRecordDefaults(bool record)
+void Configuration::setRecordDefaults(bool record)
 {
   record_defaults_ = record;
 }
 
-void ConfigContainer::setup_()
+void Configuration::setup_()
 {
   if (logfile_.empty())
-    logfile_ = boost::filesystem::path(internal::config_container_logfile).string();
+    logfile_ = boost::filesystem::path(internal::configuration_logfile).string();
   if (has_key("global.datadir") && has_key("logging.dir"))
     logfile_ = (boost::filesystem::path(get<std::string>("global.datadir")) / get<std::string>("logging.dir")
                 / "dsc_parameter.log")
@@ -447,7 +445,7 @@ void ConfigContainer::setup_()
     testCreateDirectory(pathOnly(logfile_));
 } // ... setup_(...)
 
-void ConfigContainer::add_tree_(const ConfigContainer& other, const std::string sub_id, const bool overwrite)
+void Configuration::add_tree_(const Configuration& other, const std::string sub_id, const bool overwrite)
 {
   if (sub_id.empty()) {
     const auto& keys = other.getValueKeys();
@@ -474,7 +472,7 @@ void ConfigContainer::add_tree_(const ConfigContainer& other, const std::string 
                      << "\n==== other ===========\n"
                      << other.report_string());
     else if (has_sub(sub_id)) {
-      ConfigContainer sub_tree = BaseType::sub(sub_id);
+      Configuration sub_tree = BaseType::sub(sub_id);
       sub_tree.add(other);
       BaseType::sub(sub_id) = sub_tree;
     } else
@@ -482,14 +480,14 @@ void ConfigContainer::add_tree_(const ConfigContainer& other, const std::string 
   }
 } // ... add_tree_(...)
 
-ParameterTree ConfigContainer::initialize(const std::string filename)
+ParameterTree Configuration::initialize(const std::string filename)
 {
   ParameterTree param_tree;
   Dune::ParameterTreeParser::readINITree(filename, param_tree);
   return param_tree;
 } // ... initialize(...)
 
-ParameterTree ConfigContainer::initialize(int argc, char** argv)
+ParameterTree Configuration::initialize(int argc, char** argv)
 {
   ParameterTree param_tree;
   if (argc == 2) {
@@ -503,7 +501,7 @@ ParameterTree ConfigContainer::initialize(int argc, char** argv)
   return param_tree;
 } // ... initialize(...)
 
-ParameterTree ConfigContainer::initialize(int argc, char** argv, std::string filename)
+ParameterTree Configuration::initialize(int argc, char** argv, std::string filename)
 {
   ParameterTree param_tree;
   if (argc == 1) {
@@ -520,19 +518,19 @@ ParameterTree ConfigContainer::initialize(int argc, char** argv, std::string fil
 } // ... initialize(...)
 
 
-void ConfigContainer::report_as_sub(std::ostream& out, const std::string& prefix, const std::string& sub_path) const
+void Configuration::report_as_sub(std::ostream& out, const std::string& prefix, const std::string& sub_path) const
 {
   for (auto pair : values)
     out << prefix << pair.first << " = " << pair.second << std::endl;
   for (auto pair : subs) {
-    ConfigContainer sub_tree(pair.second);
+    Configuration sub_tree(pair.second);
     if (sub_tree.getValueKeys().size())
       out << prefix << "[" << sub_path << pair.first << "]" << std::endl;
     sub_tree.report_as_sub(out, prefix, sub_path + pair.first + ".");
   }
 } // ... report_as_sub(...)
 
-std::string ConfigContainer::find_common_prefix(const BaseType& subtree, const std::string previous_prefix) const
+std::string Configuration::find_common_prefix(const BaseType& subtree, const std::string previous_prefix) const
 {
   const auto& valuekeys = subtree.getValueKeys();
   const auto& subkeys = subtree.getSubKeys();
@@ -548,7 +546,7 @@ std::string ConfigContainer::find_common_prefix(const BaseType& subtree, const s
   }
 } // ... find_common_prefix(...)
 
-void ConfigContainer::report_flatly(const BaseType& subtree, const std::string& prefix, std::ostream& out) const
+void Configuration::report_flatly(const BaseType& subtree, const std::string& prefix, std::ostream& out) const
 {
   // report all the keys
   for (auto key : subtree.getValueKeys())
@@ -563,7 +561,7 @@ void ConfigContainer::report_flatly(const BaseType& subtree, const std::string& 
 } // ... report_flatly(...)
 
 
-std::ostream& operator<<(std::ostream& out, const ConfigContainer& config)
+std::ostream& operator<<(std::ostream& out, const Configuration& config)
 {
   config.report(out);
   return out;
