@@ -1,5 +1,5 @@
 # This file is part of the dune-stuff project:
-#   http://users.dune-project.org/projects/dune-stuff
+#   https://github.com/wwu-numerik/dune-stuff
 # Copyright holders: Rene Milk, Felix Schindler
 # License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 #
@@ -113,15 +113,13 @@ if(HAVE_BLAS)
 	list(APPEND DUNE_DEFAULT_LIBS ${BLAS_LIBRARIES})
 endif(HAVE_BLAS)
 
-pkg_check_modules(EIGEN eigen3)
-set(CMAKE_REQUIRED_INCLUDES ${EIGEN_INCLUDE_DIRS})
-check_include_file_cxx("Eigen/SparseLU" HAVE_EIGEN_SPARSE)
-if(EIGEN_FOUND AND HAVE_EIGEN_SPARSE)  
-  include_directories(${EIGEN_INCLUDE_DIRS})
+find_package(Eigen3 3.2.0)
+if(EIGEN3_FOUND)  
+  include_directories(${EIGEN3_INCLUDE_DIR})
   set(HAVE_EIGEN 1)
-else(EIGEN_FOUND AND HAVE_EIGEN_SPARSE)
+else(EIGEN3_FOUND)
   set(HAVE_EIGEN 0)
-endif(EIGEN_FOUND AND HAVE_EIGEN_SPARSE)
+endif(EIGEN3_FOUND)
 
 pkg_check_modules(LIBAMA libama)
 if(LIBAMA_FOUND)

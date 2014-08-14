@@ -1,5 +1,5 @@
 // This file is part of the dune-stuff project:
-//   https://users.dune-project.org/projects/dune-stuff
+//   https://github.com/wwu-numerik/dune-stuff
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
@@ -152,8 +152,11 @@ TEST(OtherMath, FloatCmp)
   EXPECT_FALSE(DSC::FloatCmp::ne(ones, ones));
   EXPECT_FALSE(DSC::FloatCmp::ne(dones, dones));
 
-  EXPECT_TRUE(DSC::FloatCmp::vec_ne(dones, Dune::FieldVector<double, 2>{1, 0}));
-  EXPECT_TRUE(DSC::FloatCmp::lt(dones, Dune::FieldVector<double, 2>{2, 2}));
+  Dune::FieldVector<double, 2> other(1.);
+  other[1] = 0;
+  EXPECT_TRUE(DSC::FloatCmp::vec_ne(dones, other));
+  other = 2;
+  EXPECT_TRUE(DSC::FloatCmp::lt(dones, other));
   EXPECT_TRUE(DSC::FloatCmp::lt(ones, twos));
   EXPECT_TRUE(DSC::FloatCmp::gt(twos, ones));
 }

@@ -1,12 +1,14 @@
 # This file is part of the dune-stuff project:
-#   http://users.dune-project.org/projects/dune-stuff
+#   https://github.com/wwu-numerik/dune-stuff
 # Copyright holders: Rene Milk, Felix Schindler
 # License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 dune-stuff is a DUNE (http://www.dune-project.org) module which provides a wide
-collection of ... stuff! This contains (but is not limited to) a logger, a
-profiler, various print functions, LA container and solver, projections, ...
+collection of ... stuff! This includes (but is not limited to) a logger, a
+profiler, string conversion, LA container and solver, ...
 
 New users may best try out this module by using the git supermodule
-dune-stuff-demos (https://users.dune-project.org/projects/dune-stuff-demos).
-Experienced DUNE users may go ahead...
+dune-stuff-demos (http://users.dune-project.org/projects/dune-stuff-demos).
+Experienced DUNE users may go ahead!
+
+Please see our github page for issue tracking, further information, ...
