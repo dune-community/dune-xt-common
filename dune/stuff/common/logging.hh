@@ -56,7 +56,7 @@ public:
      *  \param logfile filename for log, can contain paths, but creation will fail if dir is non-existant
      **/
   void create(int logflags = (LOG_FILE | LOG_CONSOLE | LOG_ERROR), const std::string logfile = "dune_stuff_log",
-              const std::string datadir = "data", const std::string _logdir = std::string("logs"));
+              const std::string datadir = "data", const std::string _logdir = std::string("log"));
 
   //! \attention This will probably not do wht we want it to!
   void setPrefix(std::string prefix);
