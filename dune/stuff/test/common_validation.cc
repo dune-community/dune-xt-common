@@ -88,9 +88,3 @@ TYPED_TEST(ValidationTest, All)
   ValidationTest<TypeParam> k;
   k.TestBody();
 }
-
-int main(int argc, char** argv)
-{
-  test_init(argc, argv);
-  return RUN_ALL_TESTS();
-}
