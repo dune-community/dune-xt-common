@@ -5,7 +5,7 @@
 
 #include "test_common.hh"
 
-#include <dune/stuff/common/parameter/validation.hh>
+#include <dune/stuff/common/validation.hh>
 #include <dune/stuff/common/type_utils.hh>
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/common/random.hh>
