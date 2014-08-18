@@ -28,9 +28,8 @@ void do_something_that_takes_long(std::ostream& out)
   out << std::endl;
 } // void do_something_that_takes_long()
 
-int main(int argc, char** argv)
+TEST(LoggerTest, all)
 {
-  test_init(argc, argv);
   DSC::Logger().create(DSC::LOG_CONSOLE | DSC::LOG_ERROR);
   DSC::Logger().error() << "This should be in output\n";
   DSC::Logger().info() << "This should NOT be in output\n";
@@ -59,6 +58,4 @@ int main(int argc, char** argv)
   std::cout << "begin Logger().error() test" << std::endl;
   do_something_that_takes_long(err);
   std::cout << "end   Logger().error() test" << std::endl;
-
-  return 0;
 }
