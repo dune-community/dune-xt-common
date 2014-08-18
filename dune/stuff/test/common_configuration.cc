@@ -126,8 +126,8 @@ struct ConfigTest : public testing::Test
   DefaultRNG<T> rng;
   RandomStrings key_gen;
   // std::array is not assignable from list_of it seems
-  const boost::array<T, count> values;
-  const boost::array<std::string, count> keys;
+  boost::array<T, count> values;
+  boost::array<std::string, count> keys;
   ConfigTest()
     : key_gen(8)
     , values(boost::assign::list_of<T>().repeat_fun(values.size() - 1, rng))
@@ -638,21 +638,4 @@ TYPED_TEST_CASE(ConfigurationTest, ConfigurationCreators);
 TYPED_TEST(ConfigurationTest, behaves_correctly)
 {
   this->behaves_correctly();
-}
-
-int main(int argc, char** argv)
-{
-  try {
-    test_init(argc, argv);
-    return RUN_ALL_TESTS();
-  } catch (Dune::Exception& e) {
-    std::cerr << "Dune reported error: " << e.what() << std::endl;
-    std::abort();
-  } catch (std::exception& e) {
-    std::cerr << e.what() << std::endl;
-    std::abort();
-  } catch (...) {
-    std::cerr << "Unknown exception thrown!" << std::endl;
-    std::abort();
-  } // try
 }

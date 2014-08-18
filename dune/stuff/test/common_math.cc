@@ -160,9 +160,3 @@ TEST(OtherMath, FloatCmp)
   EXPECT_TRUE(DSC::FloatCmp::lt(ones, twos));
   EXPECT_TRUE(DSC::FloatCmp::gt(twos, ones));
 }
-
-int main(int argc, char** argv)
-{
-  test_init(argc, argv);
-  return RUN_ALL_TESTS();
-}

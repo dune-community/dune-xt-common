@@ -47,9 +47,3 @@ TEST(FixedMapTest, All)
   // death test segfaults inside gtest -> disabled
   //  EXPECT_DEATH(*too_big.end(), ".*");
 }
-
-int main(int argc, char** argv)
-{
-  test_init(argc, argv);
-  return RUN_ALL_TESTS();
-}

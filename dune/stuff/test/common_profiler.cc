@@ -70,9 +70,3 @@ TEST(ProfilerTest, NestedTiming)
   auto outer = prof.getTiming("NestedTiming.Outer");
   EXPECT_GT(outer, inner);
 }
-
-int main(int argc, char** argv)
-{
-  test_init(argc, argv);
-  return RUN_ALL_TESTS();
-}
