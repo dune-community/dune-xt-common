@@ -126,8 +126,8 @@ struct ConfigTest : public testing::Test
   DefaultRNG<T> rng;
   RandomStrings key_gen;
   // std::array is not assignable from list_of it seems
-  const boost::array<T, count> values;
-  const boost::array<std::string, count> keys;
+  boost::array<T, count> values;
+  boost::array<std::string, count> keys;
   ConfigTest()
     : key_gen(8)
     , values(boost::assign::list_of<T>().repeat_fun(values.size() - 1, rng))
