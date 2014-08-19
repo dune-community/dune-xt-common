@@ -88,3 +88,5 @@ TYPED_TEST(ValidationTest, All)
   ValidationTest<TypeParam> k;
   k.TestBody();
 }
+
+#include <dune/stuff/test/test_main.cxx>

@@ -44,4 +44,6 @@ TEST(Color, All)
   for (int i = 0; i < 256; ++i)
     std::cout << highlightString("hello world - ", i);
   std::cout << std::endl;
-}
+} // main
+
+#include <dune/stuff/test/test_main.cxx>

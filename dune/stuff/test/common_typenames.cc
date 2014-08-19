@@ -45,3 +45,5 @@ TEST(Typename, Extended)
   Valid v;
   EXPECT_EQ(getTypename(v), string("Dune::Stuff::Common::Parameter::ValidateAny<T>"));
 }
+
+#include <dune/stuff/test/test_main.cxx>
