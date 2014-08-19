@@ -50,8 +50,4 @@ TEST(Product, All)
   base_generator_type::Run();
 }
 
-int main(int argc, char** argv)
-{
-  test_init(argc, argv);
-  return RUN_ALL_TESTS();
-}
+#include <dune/stuff/test/test_main.cxx>
