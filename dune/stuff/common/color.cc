@@ -6,6 +6,7 @@
 #include "color.hh"
 
 #include <stdlib.h>
+#include <string>
 
 namespace Dune {
 namespace Stuff {
@@ -69,9 +70,11 @@ bool terminal_supports_color()
   const char* const term = getenv("TERM");
   if (term == NULL)
     return false;
-  else
-    return term == "xterm" || term == "xterm-color" || term == "xterm-256color" || term == "screen" || term == "linux"
-           || term == "cygwin";
+  else {
+    const auto term_str = std::string(term);
+    return term_str == "xterm" || term_str == "xterm-color" || term_str == "xterm-256color" || term_str == "screen"
+           || term_str == "linux" || term_str == "cygwin";
+  }
 } // ... terminal_supports_color(...)
 
 
