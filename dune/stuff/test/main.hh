@@ -107,6 +107,7 @@ int main(int argc, char** argv)
 #ifdef DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
   try {
 #endif
+
     testing::InitGoogleTest(&argc, argv);
     DSC_CONFIG.read_options(argc, argv);
 #if HAVE_DUNE_FEM
@@ -117,6 +118,7 @@ int main(int argc, char** argv)
     DSC::Logger().create(DSC::LOG_CONSOLE | DSC::LOG_ERROR);
 
     return RUN_ALL_TESTS();
+
 #ifdef DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
   } catch (Dune::Exception& e) {
     std::cerr << "\nDune reported error: " << e.what() << std::endl;
