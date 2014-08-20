@@ -115,7 +115,17 @@ int main(int argc, char** argv)
 #else
   Dune::MPIHelper::instance(argc, argv);
 #endif
-    DSC::Logger().create(DSC::LOG_CONSOLE | DSC::LOG_ERROR);
+
+    DSC::Logger().create(
+#ifdef DUNE_STUFF_TEST_MAIN_ENABLE_INFO_LOGGING
+        DSC::LOG_CONSOLE | DSC::LOG_INFO | DSC::LOG_ERROR
+#else
+      DSC::LOG_CONSOLE | DSC::LOG_ERROR
+#endif
+        ,
+        "",
+        "",
+        "");
 
     return RUN_ALL_TESTS();
 
