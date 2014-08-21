@@ -48,6 +48,8 @@ public:
 
   virtual void refine() = 0;
 
+  std::vector<std::string> used_norms() const;
+
   std::map<std::string, std::vector<double>> run(const bool relative = true, std::ostream& out = std::cout);
 
 private:

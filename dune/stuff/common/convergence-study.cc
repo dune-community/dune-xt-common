@@ -23,36 +23,42 @@ ConvergenceStudy::ConvergenceStudy(const std::vector<std::string> only_use_this_
 {
 }
 
-std::map<std::string, std::vector<double>> ConvergenceStudy::run(const bool relative, std::ostream& out)
+std::vector<std::string> ConvergenceStudy::used_norms() const
 {
-  if (provided_norms().size() == 0)
-    DUNE_THROW(Dune::InvalidStateException, "You have to provide at least one norm!");
   std::vector<std::string> used_norms;
   for (auto norm : provided_norms())
     if (only_use_this_norms_.empty()
         || std::find(only_use_this_norms_.begin(), only_use_this_norms_.end(), norm) != only_use_this_norms_.end())
       used_norms.push_back(norm);
-  if (used_norms.size() == 0)
+  return used_norms;
+} // ... used_norms(...)
+
+std::map<std::string, std::vector<double>> ConvergenceStudy::run(const bool relative, std::ostream& out)
+{
+  if (provided_norms().size() == 0)
+    DUNE_THROW(Dune::InvalidStateException, "You have to provide at least one norm!");
+  const auto actually_used_norms = used_norms();
+  if (actually_used_norms.size() == 0)
     DUNE_THROW(Dune::InvalidStateException,
                "There are no common norms in 'provided_norms()' and 'only_use_this_norms'!");
 
   std::map<std::string, std::vector<double>> ret;
-  for (const auto& norm : used_norms)
+  for (const auto& norm : actually_used_norms)
     ret[norm] = std::vector<double>();
 
   // print table header
   out << identifier() << std::endl;
-  if (identifier().size() > 22 * (used_norms.size() + 1))
+  if (identifier().size() > 22 * (actually_used_norms.size() + 1))
     out << Stuff::Common::whitespaceify(identifier(), '=') << std::endl;
   else {
     out << "=====================";
-    for (size_t nn = 0; nn < used_norms.size(); ++nn)
+    for (size_t nn = 0; nn < actually_used_norms.size(); ++nn)
       out << "======================";
   }
   out << "\n";
   // * print line of grid and norms
   out << "        grid         ";
-  for (const auto& norm : used_norms) {
+  for (const auto& norm : actually_used_norms) {
     std::string relative_norm_str = "";
     if (norm.empty()) {
       relative_norm_str = "???";
@@ -87,24 +93,24 @@ std::map<std::string, std::vector<double>> ConvergenceStudy::run(const bool rela
   out << "\n";
   // * print thin delimiter
   out << "---------------------";
-  for (size_t nn = 0; nn < used_norms.size(); ++nn)
+  for (size_t nn = 0; nn < actually_used_norms.size(); ++nn)
     out << "+---------------------";
   out << "\n";
   // * print size/width/error/EOC markers
   out << "     size |    width ";
-  for (size_t nn = 0; nn < used_norms.size(); ++nn)
+  for (size_t nn = 0; nn < actually_used_norms.size(); ++nn)
     out << "|    error |      EOC ";
   out << "\n";
   // * print thick delimiter
   out << "==========+==========";
-  for (size_t nn = 0; nn < used_norms.size(); ++nn)
+  for (size_t nn = 0; nn < actually_used_norms.size(); ++nn)
     out << "+==========+==========";
   out << std::endl;
 
   // prepare data structures
   std::map<std::string, double> reference_norm;
   std::map<std::string, double> last_relative_error;
-  for (const auto& norm : used_norms) {
+  for (const auto& norm : actually_used_norms) {
     if (relative)
       reference_norm[norm] = norm_reference_solution(norm);
     else
@@ -118,7 +124,7 @@ std::map<std::string, std::vector<double>> ConvergenceStudy::run(const bool rela
     // print delimiter
     if (ii > 0) {
       out << "----------+----------";
-      for (size_t nn = 0; nn < used_norms.size(); ++nn)
+      for (size_t nn = 0; nn < actually_used_norms.size(); ++nn)
         out << "+----------+----------";
       out << "\n";
     }
@@ -132,7 +138,7 @@ std::map<std::string, std::vector<double>> ConvergenceStudy::run(const bool rela
     const double elapsed = compute_on_current_refinement();
 
     // loop over all norms/columns
-    for (const auto& norm : used_norms) {
+    for (const auto& norm : actually_used_norms) {
       // compute and print relative error
       double relative_error = current_error_norm(norm);
       if (relative)
