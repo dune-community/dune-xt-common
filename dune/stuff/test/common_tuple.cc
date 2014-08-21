@@ -49,3 +49,5 @@ TEST(Product, All)
   typedef Combine<u_types, v_types, print_value>::Generate<> base_generator_type;
   base_generator_type::Run();
 }
+
+#include <dune/stuff/test/test_main.cxx>

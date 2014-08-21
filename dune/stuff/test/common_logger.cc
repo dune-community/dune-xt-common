@@ -59,3 +59,5 @@ TEST(LoggerTest, all)
   do_something_that_takes_long(err);
   std::cout << "end   Logger().error() test" << std::endl;
 }
+
+#include <dune/stuff/test/test_main.cxx>

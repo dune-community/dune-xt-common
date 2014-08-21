@@ -5,6 +5,9 @@
 
 #include "color.hh"
 
+#include <stdlib.h>
+#include <string>
+
 namespace Dune {
 namespace Stuff {
 namespace Common {
@@ -59,6 +62,22 @@ const char* StreamModifiers::endblink     = "\033[25m";
 const char* StreamModifiers::endreverse   = "\033[27m";
 
 
+/**
+ * This is taken from gtest-all.cc!
+ */
+bool terminal_supports_color()
+{
+  const char* const term = getenv("TERM");
+  if (term == NULL)
+    return false;
+  else {
+    const auto term_str = std::string(term);
+    return term_str == "xterm" || term_str == "xterm-color" || term_str == "xterm-256color" || term_str == "screen"
+           || term_str == "linux" || term_str == "cygwin";
+  }
+} // ... terminal_supports_color(...)
+
+
 std::string highlightTemplate(std::string str, int maxlevel /*= 10000*/)
 {
   if (maxlevel < 0)
@@ -103,14 +122,17 @@ std::string highlightSearchString(std::string str, std::string substr, int color
   return str;
 } // highlightSearchString
 
-std::string colorString(const std::string _string, const std::string _color /*= Colors::brown*/)
+std::string colorString(const std::string str, const std::string clr)
 {
-  return _color + _string + StreamModifiers::normal;
+  if (terminal_supports_color())
+    return clr + str + StreamModifiers::normal;
+  else
+    return str;
 }
 
-std::string colorStringRed(const std::string _string)
+std::string colorStringRed(const std::string str)
 {
-  return colorString(_string, Colors::red);
+  return colorString(str, Colors::red);
 }
 
 

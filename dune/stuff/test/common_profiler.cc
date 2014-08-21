@@ -70,3 +70,5 @@ TEST(ProfilerTest, NestedTiming)
   auto outer = prof.getTiming("NestedTiming.Outer");
   EXPECT_GT(outer, inner);
 }
+
+#include <dune/stuff/test/test_main.cxx>

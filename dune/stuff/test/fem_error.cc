@@ -4,3 +4,5 @@
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 #include "test_common.hh"
+
+#include <dune/stuff/test/test_main.cxx>

@@ -125,7 +125,8 @@ struct ConfigTest : public testing::Test
   static const int count = 2;
   DefaultRNG<T> rng;
   RandomStrings key_gen;
-  // std::array is not assignable from list_of it seems
+  // std::array is not assignable from list_of it seems. Don't make the following two arrays const (triggers boost/intel
+  // compiler bug, last tested with icpc version 14.0.3).
   boost::array<T, count> values;
   boost::array<std::string, count> keys;
   ConfigTest()
@@ -639,3 +640,5 @@ TYPED_TEST(ConfigurationTest, behaves_correctly)
 {
   this->behaves_correctly();
 }
+
+#include <dune/stuff/test/test_main.cxx>

@@ -155,7 +155,7 @@ Configuration::Configuration(const std::vector<std::string> keys, const std::ini
 
 Configuration::~Configuration()
 {
-  if (log_on_exit_) {
+  if (log_on_exit_ && !empty()) {
     std::unique_ptr<boost::filesystem::ofstream> out(DSC::make_ofstream(logfile_));
     report(*out);
     print_requests(*out);
@@ -375,13 +375,15 @@ void Configuration::printRequests(std::ostream& out) const
 
 void Configuration::print_requests(std::ostream& out) const
 {
-  out << "Config requests:";
-  for (const auto& pair : requests_map_) {
-    out << "Key: " << pair.first;
-    for (const auto& req : pair.second) {
-      out << "\n\t" << req;
+  if (!requests_map_.empty()) {
+    out << "Config requests:";
+    for (const auto& pair : requests_map_) {
+      out << "Key: " << pair.first;
+      for (const auto& req : pair.second) {
+        out << "\n\t" << req;
+      }
+      out << std::endl;
     }
-    out << std::endl;
   }
 }
 
