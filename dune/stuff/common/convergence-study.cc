@@ -5,6 +5,8 @@
 
 #include "config.h"
 
+#include <algorithm>
+
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/common/color.hh>
@@ -27,7 +29,8 @@ std::map<std::string, std::vector<double>> ConvergenceStudy::run(const bool rela
     DUNE_THROW(Dune::InvalidStateException, "You have to provide at least one norm!");
   std::vector<std::string> used_norms;
   for (auto norm : provided_norms())
-    if (std::find(only_use_this_norms_.begin(), only_use_this_norms_.end(), norm) != only_use_this_norms_.end())
+    if (only_use_this_norms_.empty()
+        || std::find(only_use_this_norms_.begin(), only_use_this_norms_.end(), norm) != only_use_this_norms_.end())
       used_norms.push_back(norm);
   if (used_norms.size() == 0)
     DUNE_THROW(Dune::InvalidStateException,
