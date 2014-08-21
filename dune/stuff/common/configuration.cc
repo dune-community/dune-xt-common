@@ -156,6 +156,7 @@ Configuration::Configuration(const std::vector<std::string> keys, const std::ini
 Configuration::~Configuration()
 {
   if (log_on_exit_ && !empty()) {
+    testCreateDirectory(pathOnly(logfile_));
     std::unique_ptr<boost::filesystem::ofstream> out(DSC::make_ofstream(logfile_));
     report(*out);
     print_requests(*out);
@@ -436,8 +437,6 @@ void Configuration::setup_()
                 / "dsc_parameter.log")
                    .string();
   logfile_ = boost::filesystem::path(logfile_).string();
-  if (log_on_exit_)
-    testCreateDirectory(pathOnly(logfile_));
 } // ... setup_(...)
 
 void Configuration::add_tree_(const Configuration& other, const std::string sub_id, const bool overwrite)
