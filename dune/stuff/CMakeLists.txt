@@ -4,8 +4,9 @@
 # License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 set(lib_dune_stuff_sources common/filesystem.cc 
-  common/color.cc 
-  common/logging.cc 
+  common/color.cc
+  common/convergence-study.cc
+  common/logging.cc
   common/logstreams.cc
   common/profiler.cc
   common/configuration.cc
