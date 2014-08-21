@@ -5,7 +5,7 @@
 
 #include "test_common.hh"
 
-#include <dune/stuff/common/parameter/validation.hh>
+#include <dune/stuff/common/validation.hh>
 #include <dune/stuff/common/type_utils.hh>
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/common/random.hh>
@@ -89,8 +89,4 @@ TYPED_TEST(ValidationTest, All)
   k.TestBody();
 }
 
-int main(int argc, char** argv)
-{
-  test_init(argc, argv);
-  return RUN_ALL_TESTS();
-}
+#include <dune/stuff/test/test_main.cxx>

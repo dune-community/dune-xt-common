@@ -8,7 +8,7 @@
 #include <iostream>
 
 #include <dune/stuff/common/type_utils.hh>
-#include <dune/stuff/common/parameter/validation.hh>
+#include <dune/stuff/common/validation.hh>
 
 STUFF_TYPENAME(Dune::MPIHelper)
 
@@ -46,9 +46,4 @@ TEST(Typename, Extended)
   EXPECT_EQ(getTypename(v), string("Dune::Stuff::Common::Parameter::ValidateAny<T>"));
 }
 
-
-int main(int argc, char** argv)
-{
-  test_init(argc, argv);
-  return RUN_ALL_TESTS();
-}
+#include <dune/stuff/test/test_main.cxx>

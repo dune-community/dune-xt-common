@@ -27,8 +27,8 @@
   {                                                                                                                    \
     static std::atomic<bool> call(false);                                                                              \
     if (call)                                                                                                          \
-      DUNE_THROW_COLORFULLY(Dune::Stuff::Exceptions::CRTP_check_failed,                                                \
-                            "The derived class does not implement the required method!");                              \
+      DUNE_THROW(Dune::Stuff::Exceptions::CRTP_check_failed,                                                           \
+                 "The derived class does not implement the required method!");                                         \
     call = true;                                                                                                       \
     try {                                                                                                              \
       (__interface_method_to_call__);                                                                                  \
