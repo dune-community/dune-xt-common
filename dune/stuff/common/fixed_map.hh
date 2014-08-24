@@ -8,12 +8,17 @@
 
 #include <array>
 #include <utility>
+#include <map>
+
 #include <boost/array.hpp>
 #include <boost/range/adaptor/map.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/assign/list_of.hpp>
+
 #include <dune/common/exceptions.hh>
 #include <dune/common/nullptr.hh>
+
+#include <dune/stuff/common/exceptions.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -222,17 +227,127 @@ private:
 template <class K, class T, std::size_t nin>
 const std::size_t FixedMap<K, T, nin>::N = nin;
 
+
+template <typename _Key, typename _Tp, typename _Compare = std::less<_Key>,
+          typename _Alloc                                = std::allocator<std::pair<const _Key, _Tp>>>
+class MapWOautoInsert : public std::map<_Key, _Tp, _Compare, _Alloc>
+{
+  typedef std::map<_Key, _Tp, _Compare, _Alloc> BaseType;
+
+public:
+  typedef typename BaseType::mapped_type mapped_type;
+  typedef typename BaseType::allocator_type allocator_type;
+  typedef typename BaseType::value_type value_type;
+  typedef typename BaseType::key_type key_type;
+
+private:
+  typedef typename __gnu_cxx::__alloc_traits<_Alloc>::template rebind<value_type>::other _Pair_alloc_type;
+  typedef __gnu_cxx::__alloc_traits<_Pair_alloc_type> _Alloc_traits;
+
+public:
+  MapWOautoInsert()
+    : BaseType()
+  {
+  }
+
+  explicit MapWOautoInsert(const _Compare& __comp, const allocator_type& __a = allocator_type())
+    : BaseType(__comp, __a)
+  {
+  }
+
+  MapWOautoInsert(const MapWOautoInsert& __x)
+    : BaseType(__x)
+  {
+  }
+
+  MapWOautoInsert(MapWOautoInsert&& __x) noexcept(std::is_nothrow_copy_constructible<_Compare>::value)
+    : BaseType(__x)
+  {
+  }
+
+  MapWOautoInsert(std::initializer_list<value_type> __l, const _Compare& __comp = _Compare(),
+                  const allocator_type& __a = allocator_type())
+    : BaseType(__l, __comp, __a)
+  {
+  }
+
+  explicit MapWOautoInsert(const allocator_type& __a)
+    : BaseType(__a)
+  {
+  }
+
+  MapWOautoInsert(const MapWOautoInsert& __m, const allocator_type& __a)
+    : BaseType(__m, __a)
+  {
+  }
+
+  MapWOautoInsert(MapWOautoInsert&& __m, const allocator_type& __a) noexcept(
+      std::is_nothrow_copy_constructible<_Compare>::value&& _Alloc_traits::_S_always_equal())
+    : BaseType(__m, __a)
+  {
+  }
+
+  MapWOautoInsert(std::initializer_list<value_type> __l, const allocator_type& __a)
+    : BaseType(__l, __a)
+  {
+  }
+
+  template <typename _InputIterator>
+  MapWOautoInsert(_InputIterator __first, _InputIterator __last, const allocator_type& __a)
+    : BaseType(__first, __last, __a)
+  {
+  }
+
+  template <typename _InputIterator>
+  MapWOautoInsert(_InputIterator __first, _InputIterator __last)
+    : BaseType(__first, __last)
+  {
+  }
+
+  template <typename _InputIterator>
+  MapWOautoInsert(_InputIterator __first, _InputIterator __last, const _Compare& __comp,
+                  const allocator_type& __a = allocator_type())
+    : BaseType(__first, __last, __comp, __a)
+  {
+  }
+
+  /**
+   * \note Throws an exception Exceptions::you_are_using_this_wrong if the key does not exist.
+   */
+  mapped_type& operator[](const key_type& __k)
+  {
+    if (this->find(__k) == this->end())
+      DUNE_THROW(Exceptions::you_are_using_this_wrong, "Given key '" << __k << "' does not exist, insert it first!");
+    return BaseType::operator[](__k);
+  }
+
+  /**
+   * \note Throws an exception Exceptions::you_are_using_this_wrong if the key does not exist.
+   * \attention Note the different return type (by value).
+   */
+  mapped_type operator[](const key_type& __k) const
+  {
+    if (this->find(__k) == this->end())
+      DUNE_THROW(Exceptions::you_are_using_this_wrong, "Given key '" << __k << "' does not exist, insert it first!");
+    return this->find(__k)->second;
+  }
+}; // class MapWOautoInsert
+
+
 } // namespace Common
 } // namepspace Stuff
 } // namespace Dune
-
 namespace std {
+
+
 template <class key_imp, class T, std::size_t nin>
 inline ostream& operator<<(ostream& out, const Dune::Stuff::Common::FixedMap<key_imp, T, nin>& map)
 {
   map.print(out);
   return out;
 }
-}
+
+
+} // namespace std
 
 #endif // DUNE_STUFF_FIXED_MAP_HH
