@@ -8,6 +8,9 @@
 
 #include "config.h"
 
+#include <string>
+#include <vector>
+#include <map>
 #include <random>
 #include <fstream>
 #include <sys/time.h>
@@ -30,6 +33,22 @@
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/common/configuration.hh>
 #include <dune/stuff/common/logging.hh>
+#include <dune/stuff/common/convergence-study.hh>
+
+
+static void check_for_success(const Dune::Stuff::Common::ConvergenceStudy& study,
+                              const std::map<std::string, std::vector<double>>& errors_map)
+{
+  for (const auto& norm : study.used_norms()) {
+    const auto expected_results = study.expected_results(norm);
+    const auto errors_search = errors_map.find(norm);
+    EXPECT_NE(errors_search, errors_map.end()) << "          norm = " << norm;
+    const auto& errors = errors_search->second;
+    EXPECT_LE(errors.size(), expected_results.size()) << "          norm = " << norm;
+    for (size_t ii = 0; ii < errors.size(); ++ii)
+      EXPECT_LE(errors[ii], expected_results[ii]) << "          norm = " << norm << ", level = " << ii;
+  }
+} // ... check_for_success(...)
 
 
 class DUNE_DEPRECATED_MSG("Use the expectation macros of the gtest test suite (20.08.2014)!") errors_are_not_as_expected
