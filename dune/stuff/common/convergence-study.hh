@@ -52,6 +52,8 @@ public:
 
   std::map<std::string, std::vector<double>> run(const bool relative = true, std::ostream& out = std::cout);
 
+  virtual std::vector<double> expected_results(const std::string /*type*/) const;
+
 private:
   std::vector<std::string> only_use_this_norms_;
 }; // class ConvergenceStudy
