@@ -9,7 +9,7 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <ostream>
+#include <iostream>
 
 namespace Dune {
 namespace Stuff {
