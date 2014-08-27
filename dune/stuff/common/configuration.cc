@@ -78,9 +78,9 @@ Configuration::Configuration(const bool record_defaults, const bool warn_on_defa
   setup_();
 }
 
-Configuration::Configuration(const Dune::ParameterTree& tree, const bool record_defaults,
+Configuration::Configuration(const Dune::ParameterTree& tree_in, const bool record_defaults,
                              const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
-  : BaseType(tree)
+  : BaseType(tree_in)
   , requests_map_()
   , record_defaults_(record_defaults)
   , warn_on_default_access_(warn_on_default_access)
