@@ -7,9 +7,7 @@
 
 #include <sys/time.h>
 
-#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/stuff/test/gtest/gtest.h>
-#include <dune/stuff/common/reenable_warnings.hh>
 
 #include "main_header.hh"
 
