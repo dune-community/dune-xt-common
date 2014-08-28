@@ -45,9 +45,10 @@ std::pair<size_t, ssize_t> convert_to_scientific(const double number, const size
   //  std::cout << "number      = " << number << std::endl;
   //  std::cout << "exponent    = " << exponent << std::endl;
   //  std::cout << "coefficient = " << coefficient << std::endl;
-  //  std::cout << "scaled      = " << size_t(std::floor(factor * coefficient)) << std::endl << std::endl;
+  //  std::cout << "scaled         = " << std::round(factor * coefficient) << std::endl;
+  //  std::cout << "size_t(scaled) = " << size_t(std::round(factor * coefficient)) << std::endl << std::endl;
 
-  return std::make_pair(size_t(std::floor(factor * coefficient)), exponent);
+  return std::make_pair(size_t(std::round(factor * coefficient)), exponent);
 } // ... convert_to_scientific(...)
 
 
