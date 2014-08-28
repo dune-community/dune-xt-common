@@ -3,7 +3,7 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#include "test_common.hh"
+#include "main.cxx"
 
 #include <string>
 #include <array>
@@ -47,5 +47,3 @@ TEST(FixedMapTest, All)
   // death test segfaults inside gtest -> disabled
   //  EXPECT_DEATH(*too_big.end(), ".*");
 }
-
-#include <dune/stuff/test/test_main.cxx>

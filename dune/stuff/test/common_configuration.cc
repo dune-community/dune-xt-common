@@ -4,7 +4,7 @@
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 // This one has to come first (includes the config.h)!
-#include <dune/stuff/test/test_common.hh>
+#include <dune/stuff/test/main.cxx>
 
 #include <dune/stuff/common/validation.hh>
 #include <dune/stuff/common/configuration.hh>
@@ -639,5 +639,3 @@ TYPED_TEST(ConfigurationTest, behaves_correctly)
 {
   this->behaves_correctly();
 }
-
-#include <dune/stuff/test/test_main.cxx>

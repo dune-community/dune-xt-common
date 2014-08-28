@@ -3,7 +3,7 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#include "test_common.hh"
+#include "main.cxx"
 
 #include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/dynmatrix.hh>
@@ -49,5 +49,3 @@ TEST(Product, All)
   typedef Combine<u_types, v_types, print_value>::Generate<> base_generator_type;
   base_generator_type::Run();
 }
-
-#include <dune/stuff/test/test_main.cxx>
