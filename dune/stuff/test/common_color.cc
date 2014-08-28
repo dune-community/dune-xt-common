@@ -5,7 +5,7 @@
 //
 // Contributors: Stefan Girke
 
-#include "main.cxx"
+#include "main.hxx"
 #include <dune/stuff/common/color.hh>
 
 using namespace Dune::Stuff::Common;
