@@ -22,7 +22,8 @@ set(lib_dune_stuff_sources common/filesystem.cc
   functions/expression.cc
   functions/spe10.cc
   functions.cc
-  la/container/pattern.cc )
+  la/container/pattern.cc
+  test/main_header.cxx)
 
 dune_add_library("dunestuff" ${lib_dune_stuff_sources}
   ADD_LIBS ${DUNE_LIBS})
