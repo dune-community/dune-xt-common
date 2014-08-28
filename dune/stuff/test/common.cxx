@@ -9,7 +9,7 @@
 
 #include <dune/stuff/test/gtest/gtest.h>
 
-#include "main_header.hh"
+#include "common.hh"
 
 void busywait(const int ms)
 {
