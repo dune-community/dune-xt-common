@@ -3,12 +3,8 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-/**
-  * After a grace period this header should be moved to main.hh.
-  **/
-
-#ifndef DUNE_STUFF_TEST_MAIN_HEADER_HH
-#define DUNE_STUFF_TEST_MAIN_HEADER_HH
+#ifndef DUNE_STUFF_TEST_MAIN_COMMON_HH
+#define DUNE_STUFF_TEST_MAIN_COMMON_HH
 
 #include <string>
 #include <map>
@@ -74,4 +70,4 @@ void check_for_success(const Dune::Stuff::Common::ConvergenceStudy& study,
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_TEST_MAIN_HEADER_HH
+#endif // DUNE_STUFF_TEST_MAIN_COMMON_HH
