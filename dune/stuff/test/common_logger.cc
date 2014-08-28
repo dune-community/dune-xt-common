@@ -3,9 +3,10 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#include "main.hxx"
+#include "config.h"
 
-// dune-stuff
+#include <dune/stuff/test/gtest/gtest.h>
+#include <dune/stuff/test/common.hh>
 #include <dune/stuff/common/logging.hh>
 #include <dune/stuff/common/logstreams.hh>
 
@@ -30,7 +31,8 @@ void do_something_that_takes_long(std::ostream& out)
 
 int main(int argc, char** argv)
 {
-  test_init(argc, argv);
+  testing::InitGoogleTest(&argc, argv);
+
   DSC::Logger().create(DSC::LOG_CONSOLE | DSC::LOG_ERROR);
   DSC::Logger().error() << "This should be in output\n";
   DSC::Logger().info() << "This should NOT be in output\n";
