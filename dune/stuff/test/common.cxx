@@ -5,6 +5,7 @@
 
 #include "config.h"
 
+#include <cmath>
 #include <sys/time.h>
 
 #include <dune/stuff/test/gtest/gtest.h>
@@ -26,19 +27,56 @@ void busywait(const int ms)
 namespace Dune {
 namespace Stuff {
 namespace Test {
+namespace internal {
+
+
+std::pair<size_t, ssize_t> convert_to_scientific(const double number, const size_t precision)
+{
+  // see http://www.mathworks.com/matlabcentral/newsreader/view_thread/151859
+  const double sign  = (number > 0.0) ? 1.0 : -1.0;
+  const double tmp   = std::log10(std::abs(number));
+  ssize_t exponent   = ((tmp > 0) ? 1 : -1) * std::floor(std::abs(tmp));
+  double coefficient = sign * std::pow(10.0, tmp - exponent);
+  if (std::abs(coefficient) < 1.0) {
+    coefficient *= 10.0;
+    exponent -= 1;
+  }
+  const double factor = std::pow(10, precision);
+  //  std::cout << "number      = " << number << std::endl;
+  //  std::cout << "exponent    = " << exponent << std::endl;
+  //  std::cout << "coefficient = " << coefficient << std::endl;
+  //  std::cout << "scaled      = " << size_t(std::floor(factor * coefficient)) << std::endl << std::endl;
+
+  return std::make_pair(size_t(std::floor(factor * coefficient)), exponent);
+} // ... convert_to_scientific(...)
+
+
+} // namespace internal
 
 
 void check_for_success(const Dune::Stuff::Common::ConvergenceStudy& study,
-                       const std::map<std::string, std::vector<double>>& errors_map)
+                       const std::map<std::string, std::vector<double>>& results_map)
 {
   for (const auto& norm : study.used_norms()) {
     const auto expected_results = study.expected_results(norm);
-    const auto errors_search = errors_map.find(norm);
-    EXPECT_NE(errors_search, errors_map.end()) << "          norm = " << norm;
-    const auto& errors = errors_search->second;
-    EXPECT_LE(errors.size(), expected_results.size()) << "          norm = " << norm;
-    for (size_t ii = 0; ii < errors.size(); ++ii)
-      EXPECT_LE(errors[ii], expected_results[ii]) << "          norm = " << norm << ", level = " << ii;
+    const auto results_search = results_map.find(norm);
+    EXPECT_NE(results_search, results_map.end()) << "          norm = " << norm;
+    const auto& actual_results = results_search->second;
+    EXPECT_LE(actual_results.size(), expected_results.size()) << "          norm = " << norm;
+    for (size_t ii = 0; ii < actual_results.size(); ++ii) {
+      const auto actual_result   = internal::convert_to_scientific(actual_results[ii], 2);
+      const auto expected_result = internal::convert_to_scientific(expected_results[ii], 2);
+      EXPECT_EQ(actual_result.second, expected_result.second)
+          << "          Exponent comparison (in scientific notation, precision 2) failed for\n"
+          << "          norm: " << norm << "\n"
+          << "          actual_results[" << ii << "]   = " << actual_results[ii] << "\n"
+          << "          expected_results[" << ii << "] = " << expected_results[ii];
+      EXPECT_EQ(actual_result.first, expected_result.first)
+          << "          Coefficient comparison (in scientific notation, precision 2) failed for\n"
+          << "          norm: " << norm << "\n"
+          << "          actual_results[" << ii << "]   = " << actual_results[ii] << "\n"
+          << "          expected_results[" << ii << "] = " << expected_results[ii];
+    }
   }
 } // ... check_for_success(...)
 

@@ -9,6 +9,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <utility>
 
 #include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/tuples.hh>
@@ -60,6 +61,13 @@ void busywait(const int ms);
 namespace Dune {
 namespace Stuff {
 namespace Test {
+namespace internal {
+
+
+std::pair<size_t, ssize_t> convert_to_scientific(const double number, const size_t precision = 2);
+
+
+} // namespace internal
 
 
 void check_for_success(const Dune::Stuff::Common::ConvergenceStudy& study,
