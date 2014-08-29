@@ -33,7 +33,8 @@ std::vector<std::string> ConvergenceStudy::used_norms() const
   return used_norms;
 } // ... used_norms(...)
 
-std::map<std::string, std::vector<double>> ConvergenceStudy::run(const bool relative, std::ostream& out)
+std::map<std::string, std::vector<double>> ConvergenceStudy::run(const bool relative, std::ostream& out,
+                                                                 const bool print_timings)
 {
   if (provided_norms().size() == 0)
     DUNE_THROW(Dune::InvalidStateException, "You have to provide at least one norm!");
@@ -165,10 +166,13 @@ std::map<std::string, std::vector<double>> ConvergenceStudy::run(const bool rela
       last_relative_error[norm] = relative_error;
     } // loop over all norms/columns
     // print time
-    if (elapsed < 1.0)
-      out << "  (solve took " << int(1000 * elapsed) << "ms)" << std::endl;
-    else
-      out << "  (solve took " << std::setprecision(2) << std::fixed << elapsed << "s)" << std::endl;
+    if (print_timings) {
+      if (elapsed < 1.0)
+        out << "  (solve took " << int(1000 * elapsed) << "ms)";
+      else
+        out << "  (solve took " << std::setprecision(2) << std::fixed << elapsed << "s)";
+    }
+    out << std::endl;
     // update
     last_grid_width = current_grid_width();
     if (ii < num_refinements())

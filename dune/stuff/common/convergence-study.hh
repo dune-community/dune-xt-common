@@ -50,7 +50,8 @@ public:
 
   std::vector<std::string> used_norms() const;
 
-  std::map<std::string, std::vector<double>> run(const bool relative = true, std::ostream& out = std::cout);
+  std::map<std::string, std::vector<double>> run(const bool relative = true, std::ostream& out = std::cout,
+                                                 const bool print_timings = true);
 
   virtual std::vector<double> expected_results(const std::string /*type*/) const;
 
