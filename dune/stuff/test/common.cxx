@@ -65,14 +65,18 @@ void check_for_success(const Dune::Stuff::Common::ConvergenceStudy& study,
     const auto& actual_results = results_search->second;
     EXPECT_LE(actual_results.size(), expected_results.size()) << "          norm = " << norm;
     for (size_t ii = 0; ii < actual_results.size(); ++ii) {
-      const auto actual_result   = internal::convert_to_scientific(actual_results[ii], 2);
-      const auto expected_result = internal::convert_to_scientific(expected_results[ii], 2);
-      EXPECT_EQ(actual_result.second, expected_result.second)
+      const auto actual_result     = internal::convert_to_scientific(actual_results[ii], 2);
+      const auto expected_result   = internal::convert_to_scientific(expected_results[ii], 2);
+      const auto actual_exponent   = actual_result.second;
+      const auto expected_exponent = expected_result.second;
+      EXPECT_EQ(actual_exponent, expected_exponent)
           << "          Exponent comparison (in scientific notation, precision 2) failed for\n"
           << "          norm: " << norm << "\n"
           << "          actual_results[" << ii << "]   = " << actual_results[ii] << "\n"
           << "          expected_results[" << ii << "] = " << expected_results[ii];
-      EXPECT_EQ(actual_result.first, expected_result.first)
+      const auto actual_coefficient   = actual_result.first;
+      const auto expected_coefficient = expected_result.first;
+      EXPECT_EQ(actual_coefficient, expected_coefficient)
           << "          Coefficient comparison (in scientific notation, precision 2) failed for\n"
           << "          norm: " << norm << "\n"
           << "          actual_results[" << ii << "]   = " << actual_results[ii] << "\n"
