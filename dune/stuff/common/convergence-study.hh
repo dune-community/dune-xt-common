@@ -19,7 +19,7 @@ namespace Common {
 class ConvergenceStudy
 {
 public:
-  ConvergenceStudy(const std::vector<std::string> only_use_this_norms = {});
+  ConvergenceStudy(const std::vector<std::string> only_these_norms = {});
 
   virtual ~ConvergenceStudy()
   {
@@ -56,7 +56,7 @@ public:
   virtual std::vector<double> expected_results(const std::string /*type*/) const;
 
 private:
-  std::vector<std::string> only_use_this_norms_;
+  std::vector<std::string> only_these_norms_;
 }; // class ConvergenceStudy
 
 

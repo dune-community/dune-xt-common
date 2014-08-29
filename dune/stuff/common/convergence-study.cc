@@ -18,8 +18,8 @@ namespace Stuff {
 namespace Common {
 
 
-ConvergenceStudy::ConvergenceStudy(const std::vector<std::string> only_use_this_norms)
-  : only_use_this_norms_(only_use_this_norms)
+ConvergenceStudy::ConvergenceStudy(const std::vector<std::string> only_these_norms)
+  : only_these_norms_(only_these_norms)
 {
 }
 
@@ -27,8 +27,8 @@ std::vector<std::string> ConvergenceStudy::used_norms() const
 {
   std::vector<std::string> used_norms;
   for (auto norm : provided_norms())
-    if (only_use_this_norms_.empty()
-        || std::find(only_use_this_norms_.begin(), only_use_this_norms_.end(), norm) != only_use_this_norms_.end())
+    if (only_these_norms_.empty()
+        || std::find(only_these_norms_.begin(), only_these_norms_.end(), norm) != only_these_norms_.end())
       used_norms.push_back(norm);
   return used_norms;
 } // ... used_norms(...)
