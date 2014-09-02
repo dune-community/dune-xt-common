@@ -118,8 +118,8 @@
 # define HAVE_UG 0
 #endif
 
-#ifndef HAVE_ALBERTA
-# define HAVE_ALBERTA 0
+#ifndef HAVE_GRAPE
+# define HAVE_GRAPE 0
 #endif
 
 /*** End: Silence implicitly False evaluation of undefined macro warnings ****/

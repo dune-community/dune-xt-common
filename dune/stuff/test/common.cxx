@@ -62,8 +62,12 @@ void check_eoc_study_for_success(const Dune::Stuff::Common::ConvergenceStudy& st
     const auto expected_results = study.expected_results(norm);
     const auto results_search = results_map.find(norm);
     EXPECT_NE(results_search, results_map.end()) << "          norm = " << norm;
+    if (results_search == results_map.end())
+      return;
     const auto& actual_results = results_search->second;
     EXPECT_LE(actual_results.size(), expected_results.size()) << "          norm = " << norm;
+    if (actual_results.size() > expected_results.size())
+      return;
     for (size_t ii = 0; ii < actual_results.size(); ++ii) {
       const auto actual_result     = internal::convert_to_scientific(actual_results[ii], 2);
       const auto expected_result   = internal::convert_to_scientific(expected_results[ii], 2);
@@ -74,6 +78,8 @@ void check_eoc_study_for_success(const Dune::Stuff::Common::ConvergenceStudy& st
           << "          norm: " << norm << "\n"
           << "          actual_results[" << ii << "]   = " << actual_results[ii] << "\n"
           << "          expected_results[" << ii << "] = " << expected_results[ii];
+      if (actual_exponent != expected_exponent)
+        return;
       const auto actual_coefficient   = actual_result.first;
       const auto expected_coefficient = expected_result.first;
       EXPECT_EQ(actual_coefficient, expected_coefficient)
