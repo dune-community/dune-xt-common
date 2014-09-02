@@ -3,7 +3,7 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#include "test_common.hh"
+#include "main.hxx"
 
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/common/logstreams.hh>
@@ -193,5 +193,3 @@ TEST(StringTest, TimeString)
 {
   string ts = stringFromTime(-1);
 }
-
-#include <dune/stuff/test/test_main.cxx>

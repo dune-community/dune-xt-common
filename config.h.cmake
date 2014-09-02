@@ -29,6 +29,7 @@
 #define DS_FINAL  ${DS_FINAL}
 #define HAVE_DUNE_FEM_PARAMETER_REPLACE 0
 
+/*** Silence implicitly False evaluation of undefined macro warnings ****/
 #ifndef HAVE_DUNE_FEM
 # define HAVE_FUNE_FEM 0
 #endif
@@ -88,5 +89,40 @@
 #ifndef HAVE_CONSTEXPR
 # define HAVE_CONSTEXPR 0
 #endif
+
+#ifndef HAVE_DUNE_METAGRID
+# define HAVE_DUNE_METAGRID 0
+#endif 
+
+#ifndef HAVE_DUNE_SPGRID
+# define HAVE_DUNE_SPGRID 0
+#endif 
+
+#ifndef HAVE_PETSC
+# define HAVE_PETSC 0
+#endif
+
+#ifndef HAVE_ALUGRID
+# define HAVE_ALUGRID 0
+#endif
+
+#ifndef DUNE_FEM_COMPATIBILITY
+# define DUNE_FEM_COMPATIBILITY 0
+#endif
+
+#ifndef HAVE_ALBERTA
+# define HAVE_ALBERTA 0
+#endif
+
+#ifndef HAVE_UG
+# define HAVE_UG 0
+#endif
+
+#ifndef HAVE_ALBERTA
+# define HAVE_ALBERTA 0
+#endif
+
+/*** End: Silence implicitly False evaluation of undefined macro warnings ****/
+
 /* end dune-stuff */
 // NEVER delete/alter above comment, dune's cmake crap relies on it

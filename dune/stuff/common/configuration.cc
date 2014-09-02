@@ -78,9 +78,9 @@ Configuration::Configuration(const bool record_defaults, const bool warn_on_defa
   setup_();
 }
 
-Configuration::Configuration(const Dune::ParameterTree& tree, const bool record_defaults,
+Configuration::Configuration(const Dune::ParameterTree& tree_in, const bool record_defaults,
                              const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
-  : BaseType(tree)
+  : BaseType(tree_in)
   , requests_map_()
   , record_defaults_(record_defaults)
   , warn_on_default_access_(warn_on_default_access)
@@ -156,6 +156,7 @@ Configuration::Configuration(const std::vector<std::string> keys, const std::ini
 Configuration::~Configuration()
 {
   if (log_on_exit_ && !empty()) {
+    testCreateDirectory(pathOnly(logfile_));
     std::unique_ptr<boost::filesystem::ofstream> out(DSC::make_ofstream(logfile_));
     report(*out);
     print_requests(*out);
@@ -436,8 +437,6 @@ void Configuration::setup_()
                 / "dsc_parameter.log")
                    .string();
   logfile_ = boost::filesystem::path(logfile_).string();
-  if (log_on_exit_)
-    testCreateDirectory(pathOnly(logfile_));
 } // ... setup_(...)
 
 void Configuration::add_tree_(const Configuration& other, const std::string sub_id, const bool overwrite)

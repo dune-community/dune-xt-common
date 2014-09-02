@@ -51,6 +51,8 @@
 #ifndef GTEST_INCLUDE_GTEST_GTEST_H_
 #define GTEST_INCLUDE_GTEST_GTEST_H_
 
+#include <dune/stuff/common/disable_warnings.hh>
+
 #include <limits>
 #include <vector>
 
@@ -19533,5 +19535,7 @@ bool StaticAssertTypeEq() {
   (::testing::UnitTest::GetInstance()->Run())
 
 }  // namespace testing
+
+#include <dune/stuff/common/reenable_warnings.hh>
 
 #endif  // GTEST_INCLUDE_GTEST_GTEST_H_

@@ -3,7 +3,7 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#include "test_common.hh"
+#include "main.hxx"
 
 #include <iostream>
 
@@ -45,5 +45,3 @@ TEST(Typename, Extended)
   Valid v;
   EXPECT_EQ(getTypename(v), string("Dune::Stuff::Common::Parameter::ValidateAny<T>"));
 }
-
-#include <dune/stuff/test/test_main.cxx>

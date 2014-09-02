@@ -4,8 +4,9 @@
 # License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 set(lib_dune_stuff_sources common/filesystem.cc 
-  common/color.cc 
-  common/logging.cc 
+  common/color.cc
+  common/convergence-study.cc
+  common/logging.cc
   common/logstreams.cc
   common/profiler.cc
   common/configuration.cc
@@ -21,7 +22,8 @@ set(lib_dune_stuff_sources common/filesystem.cc
   functions/expression.cc
   functions/spe10.cc
   functions.cc
-  la/container/pattern.cc )
+  la/container/pattern.cc
+  test/common.cxx)
 
 dune_add_library("dunestuff" ${lib_dune_stuff_sources}
   ADD_LIBS ${DUNE_LIBS})
