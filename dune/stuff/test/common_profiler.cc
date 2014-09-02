@@ -3,7 +3,7 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#include "test_common.hh"
+#include "main.hxx"
 
 #include <dune/stuff/common/profiler.hh>
 #include <dune/stuff/common/math.hh>
@@ -70,5 +70,3 @@ TEST(ProfilerTest, NestedTiming)
   auto outer = prof.getTiming("NestedTiming.Outer");
   EXPECT_GT(outer, inner);
 }
-
-#include <dune/stuff/test/test_main.cxx>

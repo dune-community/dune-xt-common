@@ -3,7 +3,7 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#include "test_common.hh"
+#include "main.hxx"
 
 // dune-stuff
 #include <dune/stuff/common/logging.hh>
@@ -59,5 +59,3 @@ TEST(LoggerTest, all)
   do_something_that_takes_long(err);
   std::cout << "end   Logger().error() test" << std::endl;
 }
-
-#include <dune/stuff/test/test_main.cxx>

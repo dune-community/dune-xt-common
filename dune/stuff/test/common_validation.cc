@@ -3,7 +3,7 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#include "test_common.hh"
+#include "main.hxx"
 
 #include <dune/stuff/common/validation.hh>
 #include <dune/stuff/common/type_utils.hh>
@@ -88,5 +88,3 @@ TYPED_TEST(ValidationTest, All)
   ValidationTest<TypeParam> k;
   k.TestBody();
 }
-
-#include <dune/stuff/test/test_main.cxx>
