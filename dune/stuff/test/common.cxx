@@ -55,8 +55,8 @@ std::pair<size_t, ssize_t> convert_to_scientific(const double number, const size
 } // namespace internal
 
 
-void check_for_success(const Dune::Stuff::Common::ConvergenceStudy& study,
-                       const std::map<std::string, std::vector<double>>& results_map)
+void check_eoc_study_for_success(const Dune::Stuff::Common::ConvergenceStudy& study,
+                                 const std::map<std::string, std::vector<double>>& results_map)
 {
   for (const auto& norm : study.used_norms()) {
     const auto expected_results = study.expected_results(norm);

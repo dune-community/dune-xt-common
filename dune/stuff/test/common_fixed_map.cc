@@ -26,15 +26,19 @@ TEST(FixedMapTest, All)
   EXPECT_THROW(too_small["1"], Dune::RangeError);
   for (int i : {0, 1, 2}) {
     EXPECT_EQ(i, too_big[toString(i)]);
+    EXPECT_NE(too_big.find(toString(i)), too_big.end());
   }
   for (int DUNE_UNUSED(i) : {3, 4, 5}) {
     EXPECT_EQ(int(), too_big[std::string()]);
+    EXPECT_EQ(too_big.find(toString(i)), too_big.end());
   }
-  auto size = fits.size();
+  auto size      = fits.size();
+  const auto end = fits.end();
   for (auto& pt : fits) {
-    int value       = pt.second;
-    std::string key = pt.first;
+    const int value       = pt.second;
+    const std::string key = pt.first;
     EXPECT_EQ(key, toString(value));
+    EXPECT_NE(fits.find(key), end);
     size--;
   }
   EXPECT_EQ(0, size);

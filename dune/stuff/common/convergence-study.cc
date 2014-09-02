@@ -25,12 +25,15 @@ ConvergenceStudy::ConvergenceStudy(const std::vector<std::string> only_these_nor
 
 std::vector<std::string> ConvergenceStudy::used_norms() const
 {
-  std::vector<std::string> used_norms;
-  for (auto norm : provided_norms())
-    if (only_these_norms_.empty()
-        || std::find(only_these_norms_.begin(), only_these_norms_.end(), norm) != only_these_norms_.end())
-      used_norms.push_back(norm);
-  return used_norms;
+  if (only_these_norms_.empty())
+    return provided_norms();
+  else {
+    std::vector<std::string> ret;
+    for (auto norm : provided_norms())
+      if (std::find(only_these_norms_.begin(), only_these_norms_.end(), norm) != only_these_norms_.end())
+        ret.push_back(norm);
+    return ret;
+  }
 } // ... used_norms(...)
 
 std::map<std::string, std::vector<double>> ConvergenceStudy::run(const bool relative, std::ostream& out,
@@ -40,8 +43,7 @@ std::map<std::string, std::vector<double>> ConvergenceStudy::run(const bool rela
     DUNE_THROW(Dune::InvalidStateException, "You have to provide at least one norm!");
   const auto actually_used_norms = used_norms();
   if (actually_used_norms.size() == 0)
-    DUNE_THROW(Dune::InvalidStateException,
-               "There are no common norms in 'provided_norms()' and 'only_use_this_norms'!");
+    DUNE_THROW(Dune::InvalidStateException, "There are no common norms in 'provided_norms()' and 'only_these_norms'!");
 
   std::map<std::string, std::vector<double>> ret;
   for (const auto& norm : actually_used_norms)
