@@ -188,7 +188,7 @@ macro(add_analyze)
 endmacro(add_analyze)
 
 macro(add_format)
-    find_program(FORMAT NAMES clang-format clang-format-3.4)
+    find_program(FORMAT NAMES clang-format clang-format-3.4 clang-format-3.5 clang-format-3.6 clang-format-3.7 clang-format-3.8)
     if(EXISTS ${FORMAT})
         message(STATUS "adding format target")
         add_custom_target( format SOURCES ${ARGN} )
