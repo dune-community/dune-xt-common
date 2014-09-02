@@ -118,10 +118,6 @@
 # define HAVE_UG 0
 #endif
 
-#ifndef HAVE_ALBERTA
-# define HAVE_ALBERTA 0
-#endif
-
 #ifndef HAVE_GRAPE
 # define HAVE_GRAPE 0
 #endif
