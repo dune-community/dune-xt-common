@@ -6,6 +6,7 @@
 set(lib_dune_stuff_sources common/filesystem.cc 
   common/color.cc
   common/convergence-study.cc
+  common/localization-study.cc
   common/logging.cc
   common/logstreams.cc
   common/profiler.cc
