@@ -25,6 +25,74 @@ namespace internal {
 
 
 template <class T>
+class ConstAccessInterface
+{
+public:
+  virtual ~ConstAccessInterface()
+  {
+  }
+
+  virtual const T& access() const = 0;
+}; // class ConstAccessInterface
+
+
+template <class T>
+class ConstAccessByReference : public ConstAccessInterface<T>
+{
+public:
+  ConstAccessByReference(const T& tt)
+    : tt_(tt)
+  {
+  }
+
+  virtual ~ConstAccessByReference()
+  {
+  }
+
+  virtual const T& access() const
+  {
+    return tt_;
+  }
+
+private:
+  const T& tt_;
+}; // class ConstAccessByReference
+
+
+template <class T>
+class ConstAccessByPointer : public ConstAccessInterface<T>
+{
+public:
+  ConstAccessByPointer(const T* tt)
+    : tt_(tt)
+  {
+  }
+
+  ConstAccessByPointer(std::unique_ptr<const T>&& tt)
+    : tt_(tt)
+  {
+  }
+
+  ConstAccessByPointer(std::shared_ptr<const T> tt)
+    : tt_(tt)
+  {
+  }
+
+  virtual ~ConstAccessByPointer()
+  {
+  }
+
+  virtual const T& access() const
+  {
+    return *tt_;
+  }
+
+private:
+  const std::shared_ptr<const T> tt_;
+}; // class ConstAccessByPointer
+
+
+template <class T>
 class AccessInterface
 {
 public:
@@ -33,6 +101,8 @@ public:
   }
 
   virtual T& access() = 0;
+
+  virtual const T& access() const = 0;
 }; // class AccessInterface
 
 
@@ -50,6 +120,11 @@ public:
   }
 
   virtual T& access()
+  {
+    return tt_;
+  }
+
+  virtual const T& access() const
   {
     return tt_;
   }
@@ -87,12 +162,63 @@ public:
     return *tt_;
   }
 
+  virtual const T& access() const
+  {
+    return *tt_;
+  }
+
 private:
   std::shared_ptr<T> tt_;
 }; // class AccessByPointer
 
 
 } // namespace internal
+
+
+template <class T>
+class ConstStorageProvider
+{
+public:
+  ConstStorageProvider(const T& tt)
+    : provide_(make_unique<internal::ConstAccessByReference<T>>(tt))
+  {
+  }
+
+  ConstStorageProvider(const T* tt)
+    : provide_(make_unique<internal::ConstAccessByPointer<T>>(tt))
+  {
+  }
+
+  ConstStorageProvider(std::unique_ptr<const T>&& tt)
+    : provide_(make_unique<internal::ConstAccessByPointer<T>>(tt))
+  {
+  }
+
+  ConstStorageProvider(std::shared_ptr<const T> tt)
+    : provide_(make_unique<internal::ConstAccessByPointer<T>>(tt))
+  {
+  }
+
+  /**
+   * Since the intended behaviour is unknown, call ConstStorageProvider(new T(tt)) or ConstStorageProvider(tt) manually!
+   */
+  ConstStorageProvider(const ConstStorageProvider<T>& other) = delete;
+
+  ConstStorageProvider(ConstStorageProvider<T>&& other)
+    : provide_(other.provide_)
+  {
+  }
+
+  ConstStorageProvider<T> operator=(const ConstStorageProvider<T>& /*other*/) = delete;
+
+  const T& storage_access() const
+  {
+    return provide_->access();
+  }
+
+private:
+  std::unique_ptr<internal::ConstAccessInterface<T>> provide_;
+}; // class ConstStorageProvider
 
 
 template <class T>
