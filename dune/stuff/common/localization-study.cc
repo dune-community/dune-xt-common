@@ -37,7 +37,7 @@ std::vector<std::string> LocalizationStudy::used_indicators() const
   }
 } // ... used_indicators(...)
 
-void LocalizationStudy::run_localization(std::ostream& out)
+void LocalizationStudy::run(std::ostream& out)
 {
   if (provided_indicators().size() == 0)
     DUNE_THROW(Dune::InvalidStateException, "You have to provide at least one indicator!");
