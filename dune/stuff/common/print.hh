@@ -496,6 +496,7 @@ void matrixToGnuplotFile(const Matrix& matrix, std::string filename)
   file.close();
 } // matrixToGnuplotFile
 
+//! maps 1,2,3 to x,y,z / X,Y,Z
 inline std::string dimToAxisName(const unsigned int dim, const bool capitalize = false)
 {
   char c = 'x';

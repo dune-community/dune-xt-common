@@ -12,9 +12,15 @@ namespace Stuff {
 namespace Common {
 
 //! strip filename from \path if present, return empty string if only filename present
-std::string pathOnly(std::string _path)
+std::string directoryOnly(std::string _path)
 {
   return boost::filesystem::path(_path).parent_path().string();
+}
+
+//! strip filename from \path if present, return empty string if only filename present
+std::string pathOnly(std::string _path)
+{
+  return directoryOnly(_path);
 }
 
 //! return everything after the last slash
@@ -30,7 +36,7 @@ std::string filenameOnly(const std::string& _path)
 //! may include filename, will be stripped
 void testCreateDirectory(const std::string _path)
 {
-  std::string pathonly = pathOnly(_path);
+  std::string pathonly = directoryOnly(_path);
   if (!pathonly.empty())
     boost::filesystem::create_directories(pathonly);
 }
