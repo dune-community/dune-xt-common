@@ -14,6 +14,7 @@ set(lib_dune_stuff_sources common/filesystem.cc
   common/signals.cc
   common/math.cc
   common/parallel/threadmanager.cc
+  common/parallel/helper.cc
   fem/femeoc.cc
   grid/fakeentity.cc 
   functions/interfaces.cc 

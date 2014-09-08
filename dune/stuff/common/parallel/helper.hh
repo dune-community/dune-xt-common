@@ -41,6 +41,11 @@ struct UseParallelCommunication
 #endif
 };
 
+/**
+ * \brief calls MPI_Abort if enable-parallel, noop otherwise
+ * \returns MPI_Abort if enable-parallel, 1 otherwise
+ **/
+int abort_all_mpi_processes();
 
 } // namespace Stuff
 } // namespace Dune
