@@ -155,7 +155,9 @@ TEST(StringTest, ConvertFrom)
   EXPECT_EQ(-1, fromString<char>(toString(char(-1))));
   EXPECT_THROW(fromString<char>("sd"), Dune::Stuff::Exceptions::wrong_input_given);
   EXPECT_EQ(true, fromString<bool>("1"));
+  EXPECT_EQ(true, fromString<bool>("true"));
   EXPECT_EQ(false, fromString<bool>("0"));
+  EXPECT_EQ(false, fromString<bool>("false"));
   EXPECT_THROW(fromString<int>(""), std::invalid_argument);
 }
 
