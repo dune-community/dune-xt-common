@@ -23,20 +23,20 @@
 #include <ctime>
 #include <iostream>
 
-#include <dune/common/array.hh>
-#include <dune/common/deprecated.hh>
-
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <dune/stuff/common/disable_warnings.hh>
+#include <dune/common/array.hh>
+#include <dune/common/deprecated.hh>
 #include <dune/common/fmatrix.hh>
 #include <dune/common/densematrix.hh>
 #include <dune/common/fvector.hh>
 #include <dune/common/dynmatrix.hh>
-#include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/common/dynvector.hh>
 #include <dune/common/densevector.hh>
+#include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/fvector.hh>
@@ -88,6 +88,47 @@ class ChooseBase
     static Dune::FieldMatrix<K, r, c> create(const size_t /*rows*/, const size_t /*cols*/)
     {
       return Dune::FieldMatrix<K, r, c>();
+    }
+  };
+
+  template <class V>
+  struct VectorConstructor
+  {
+    static V create(const size_t size)
+    {
+      return V(size);
+    }
+  };
+
+  template <class K, int s>
+  struct VectorConstructor<Dune::FieldVector<K, s>>
+  {
+    static Dune::FieldVector<K, s> create(const size_t size)
+    {
+      typedef Dune::FieldVector<K, s> GivingThisTypeDirectlyToTypenameDidNotCompileWTF;
+      if (size > 0 && size != s)
+        DUNE_THROW(Exceptions::wrong_input_given,
+                   "Can not create a '" << Typename<GivingThisTypeDirectlyToTypenameDidNotCompileWTF>::value()
+                                        << "' of size "
+                                        << size
+                                        << "!");
+      return Dune::FieldVector<K, s>();
+    }
+  };
+
+  template <class K, int s>
+  struct VectorConstructor<Dune::Stuff::Common::FieldVector<K, s>>
+  {
+    static Dune::FieldVector<K, s> create(const size_t size)
+    {
+      typedef Dune::FieldVector<K, s> GivingThisTypeDirectlyToTypenameDidNotCompileWTF;
+      if (size > 0 && size != s)
+        DUNE_THROW(Exceptions::wrong_input_given,
+                   "Can not create a '" << Typename<GivingThisTypeDirectlyToTypenameDidNotCompileWTF>::value()
+                                        << "' of size "
+                                        << size
+                                        << "!");
+      return Dune::FieldVector<K, s>();
     }
   };
 
@@ -263,7 +304,7 @@ protected:
                                                   << vector_str
                                                   << "]'");
       const size_t actual_size = (size > 0) ? std::min(tokens.size(), size) : tokens.size();
-      VectorType ret(actual_size);
+      VectorType ret = VectorConstructor<VectorType>::create(actual_size);
       for (size_t ii = 0; ii < actual_size; ++ii)
         ret[ii] = convert_from_string_safely<S>(trim_copy_safely(tokens[ii]));
       return ret;
@@ -271,7 +312,7 @@ protected:
       // we treat this as a scalar
       const S val              = convert_from_string_safely<S>(trim_copy_safely(vector_str));
       const size_t actual_size = (size == 0 ? 1 : size);
-      VectorType ret(actual_size);
+      VectorType ret = VectorConstructor<VectorType>::create(actual_size);
       for (size_t ii = 0; ii < actual_size; ++ii)
         ret[ii] = val;
       return ret;
