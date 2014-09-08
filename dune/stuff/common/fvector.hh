@@ -14,6 +14,8 @@
 #include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/stuff/common/exceptions.hh>
+#include <dune/stuff/common/debug.hh>
+
 
 namespace Dune {
 namespace Stuff {
@@ -31,6 +33,19 @@ public:
     : BaseType(kk)
   {
   }
+
+  FieldVector(const size_t UNUSED_UNLESS_DEBUG(sz), const K kk)
+    : BaseType(kk)
+  {
+#ifndef NDEBUG
+    if (sz != SIZE)
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "You are trying to construct a FieldVector< ..., " << SIZE << " > (of "
+                                                                    << "static size) with "
+                                                                    << sz
+                                                                    << " elements!");
+#endif // NDEBUG
+  } // ... FieldVector(...)
 
   FieldVector(const BaseType& other)
     : BaseType(other)
