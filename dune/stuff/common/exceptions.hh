@@ -135,7 +135,9 @@ class you_have_to_implement_this : public Dune::NotImplemented
 {
 };
 
-class test_results_missing : public Dune::NotImplemented
+class DUNE_DEPRECATED_MSG(
+    "Use something like 'EXPECT_TRUE(false) << \"test results missing for type: \" << type;' (08.09.2014)!")
+    test_results_missing : public Dune::NotImplemented
 {
 };
 
