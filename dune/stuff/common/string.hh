@@ -347,6 +347,35 @@ public:
   } // ... fromString(...)
 }; // class Choose < const char * >
 
+template <>
+class Choose<bool> : ChooseBase<bool>
+{
+public:
+  static inline bool fromString(const std::string ss, const size_t UNUSED_UNLESS_DEBUG(rows) = 0,
+                                const size_t UNUSED_UNLESS_DEBUG(cols) = 0)
+  {
+    assert(rows == 0);
+    assert(cols == 0);
+    std::string ss_lower_case = ss;
+    std::transform(ss_lower_case.begin(), ss_lower_case.end(), ss_lower_case.begin(), ::tolower);
+    if (ss_lower_case == "true")
+      return true;
+    else if (ss_lower_case == "false")
+      return false;
+    else {
+      try {
+        return boost::lexical_cast<bool, std::string>(ss);
+      } catch (boost::bad_lexical_cast& e) {
+        DUNE_THROW(Exceptions::external_error,
+                   "Error in boost while converting the string '" << ss << "' to type 'bool':\n" << e.what());
+      } catch (std::exception& e) {
+        DUNE_THROW(Exceptions::external_error,
+                   "Error in the stl while converting the string '" << ss << "' to type 'bool':\n" << e.what());
+      }
+    }
+  } // ... fromString(...)
+}; // class Choose < bool >
+
 //! get numerical types from string, using std::sto*
 #define DSC_FRSTR(tn, tns)                                                                                             \
   template <>                                                                                                          \
