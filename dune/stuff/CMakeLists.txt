@@ -23,6 +23,8 @@ set(lib_dune_stuff_sources common/filesystem.cc
 
 dune_add_library("dunestuff" ${lib_dune_stuff_sources}
   ADD_LIBS ${DUNE_LIBS})
+add_dune_mpi_flags(dunestuff)
+
 target_link_dune_default_libraries(dunestuff)
 if(dune-grid_FOUND)
   add_dune_alugrid_flags(dunestuff)
