@@ -6,7 +6,7 @@
 #ifndef DUNE_STUFF_COMMON_THREADMANAGER_HH_DEPRECATED
 #define DUNE_STUFF_COMMON_THREADMANAGER_HH_DEPRECATED
 
-#warning This header is deprecated, use '#include <dune/stuff/common/parallel/threadmanager.hh' instead!
+#warning This header is deprecated, use '#include <dune/stuff/common/parallel/threadmanager.hh>' instead!
 #include <dune/stuff/common/parallel/threadmanager.hh>
 
 #endif // DUNE_STUFF_COMMON_THREADMANAGER_HH_DEPRECATED
