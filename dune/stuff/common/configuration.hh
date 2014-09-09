@@ -247,7 +247,9 @@ public:
   {
     if (!has_key(key))
       DUNE_THROW(Exceptions::configuration_error,
-                 "Configuration does not have this key and there was no default value provided");
+                 "This configuration (see below) does not contain the key '" << key << "' and there was no default "
+                                                                             << "value provided!\n\n"
+                                                                             << report_string());
     return get_valid_value<T, ValidateAny<T>>(key, T(), ValidateAny<T>(), size, cols);
   } // ... get(...)
 
