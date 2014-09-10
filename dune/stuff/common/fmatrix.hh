@@ -124,7 +124,8 @@ public:
 
   ThisType& operator=(const FieldVector<K, 1>& other)
   {
-    return BaseType::operator=(other[0]);
+    BaseType::operator=(other[0]);
+    return *this;
   }
 
   ThisType operator*(const K& scal) const
