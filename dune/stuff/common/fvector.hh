@@ -87,7 +87,8 @@ public:
 
   ThisType& operator=(const BaseType& other)
   {
-    return BaseType::operator=(other);
+    BaseType::operator=(other);
+    return *this;
   }
 }; // class FieldVector
 
