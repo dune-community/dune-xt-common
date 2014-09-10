@@ -100,6 +100,17 @@ Configuration::Configuration(const Configuration& other)
 {
 }
 
+Configuration::Configuration(std::istream& in, const bool record_defaults, const bool warn_on_default_access,
+                             const bool log_on_exit, const std::string logfile)
+  : BaseType(initialize(in))
+  , requests_map_()
+  , record_defaults_(record_defaults)
+  , warn_on_default_access_(warn_on_default_access)
+  , log_on_exit_(log_on_exit)
+  , logfile_(logfile)
+{
+}
+
 Configuration::Configuration(const std::string filename, const bool record_defaults, const bool warn_on_default_access,
                              const bool log_on_exit, const std::string logfile)
   : Configuration::Configuration(initialize(filename), record_defaults, warn_on_default_access, log_on_exit, logfile)
@@ -478,6 +489,13 @@ ParameterTree Configuration::initialize(const std::string filename)
 {
   ParameterTree param_tree;
   Dune::ParameterTreeParser::readINITree(filename, param_tree);
+  return param_tree;
+} // ... initialize(...)
+
+ParameterTree Configuration::initialize(std::istream& in)
+{
+  ParameterTree param_tree;
+  Dune::ParameterTreeParser::readINITree(in, param_tree);
   return param_tree;
 } // ... initialize(...)
 

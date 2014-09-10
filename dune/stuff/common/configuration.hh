@@ -117,6 +117,11 @@ public:
 
   Configuration(const Configuration& other);
 
+  Configuration(std::istream& in, const bool record_defaults = internal::configuration_record_defaults,
+                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                const bool log_on_exit            = internal::configuration_log_on_exit,
+                const std::string logfile = internal::configuration_logfile);
+
   //! read ParameterTree from file and call Configuration(const ParameterTree& tree)
   explicit Configuration(const std::string filename, const bool record_defaults, const bool warn_on_default_access,
                          const bool log_on_exit, const std::string logfile);
@@ -577,6 +582,9 @@ private:
 
   //! read Dune::ParameterTree from file
   static ParameterTree initialize(const std::string filename);
+
+  //! read Dune::ParameterTree from istream
+  static ParameterTree initialize(std::istream& in);
 
   //! read Dune::ParameterTree from arguments
   static ParameterTree initialize(int argc, char** argv);
