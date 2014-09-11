@@ -117,6 +117,7 @@ else(CMAKE_WITH_AUTOTOOLS)
   )
 
   include(DuneUtils)
+  include(GridUtils)
   # configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/cmake_config.h )
 
 
