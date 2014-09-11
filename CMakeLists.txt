@@ -128,7 +128,13 @@ else(CMAKE_WITH_AUTOTOOLS)
   # header
   file( GLOB_RECURSE stuff "${CMAKE_CURRENT_SOURCE_DIR}/dune/*.hh" )
   set( COMMON_HEADER ${stuff} ${DUNE_HEADERS} )
-  set_source_files_properties( ${COMMON_HEADER} PROPERTIES HEADER_FILE_ONLY 1 )
+  # add header of dependent modules for header listing
+  foreach(_mod ${ALL_DEPENDENCIES})
+    file(GLOB_RECURSE HEADER_LIST "${CMAKE_CURRENT_SOURCE_DIR}/../${_mod}/*.hh")
+    list(APPEND COMMON_HEADER ${HEADER_LIST})
+  endforeach(_mod DEPENDENCIES)
+  set_source_files_properties(${COMMON_HEADER} PROPERTIES HEADER_FILE_ONLY 1)
+
   #disable most warnings from dependent modules
   foreach(_mod ${ALL_DEPENDENCIES})
       dune_module_to_uppercase(_upper_case "${_mod}")
