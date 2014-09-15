@@ -7,8 +7,13 @@
 
 #include <cmath>
 #include <sys/time.h>
+#include <vector>
+#include <map>
+#include <string>
+#include <sstream>
 
 #include <dune/stuff/test/gtest/gtest.h>
+#include <dune/stuff/common/exceptions.hh>
 
 #include "common.hh"
 
@@ -42,14 +47,23 @@ std::pair<size_t, ssize_t> convert_to_scientific(const double number, const size
     exponent -= 1;
   }
   const double factor = std::pow(10, precision);
-  //  std::cout << "number      = " << number << std::endl;
-  //  std::cout << "exponent    = " << exponent << std::endl;
-  //  std::cout << "coefficient = " << coefficient << std::endl;
-  //  std::cout << "scaled         = " << std::round(factor * coefficient) << std::endl;
-  //  std::cout << "size_t(scaled) = " << size_t(std::round(factor * coefficient)) << std::endl << std::endl;
-
   return std::make_pair(size_t(std::round(factor * coefficient)), exponent);
 } // ... convert_to_scientific(...)
+
+
+std::string print_vector(const std::vector<double>& vec)
+{
+  if (vec.empty())
+    return "{}";
+  else {
+    std::stringstream ss;
+    ss << "{" << std::setprecision(2) << std::scientific << vec[0];
+    for (size_t ii = 1; ii < vec.size(); ++ii)
+      ss << ", " << std::setprecision(2) << std::scientific << vec[ii];
+    ss << "}";
+    return ss.str();
+  }
+} // ... print_vector(...)
 
 
 } // namespace internal
@@ -89,7 +103,27 @@ void check_eoc_study_for_success(const Dune::Stuff::Common::ConvergenceStudy& st
           << "          expected_results[" << ii << "] = " << expected_results[ii];
     }
   }
-} // ... check_for_success(...)
+} // ... check_eoc_study_for_success(...)
+
+
+void print_collected_eoc_study_results(const std::map<std::string, std::vector<double>>& results, std::ostream& out)
+{
+  if (results.empty())
+    DUNE_THROW(Exceptions::wrong_input_given, "Given results must not be empty!");
+  std::vector<std::string> actually_used_norms;
+  for (const auto& element : results)
+    actually_used_norms.push_back(element.first);
+
+  out << "if (type == \"" << actually_used_norms[0] << "\")\n";
+  out << "  return " << internal::print_vector(results.at(actually_used_norms[0])) << ";\n";
+  for (size_t ii = 1; ii < actually_used_norms.size(); ++ii) {
+    out << "else if (type == \"" << actually_used_norms[ii] << "\")\n";
+    out << "  return " << internal::print_vector(results.at(actually_used_norms[ii])) << ";\n";
+  }
+  out << "else\n";
+  out << "  EXPECT_TRUE(false) << \"test results missing for type: \" << type;\n";
+  out << "return {};" << std::endl;
+} // ... print_collected_eoc_study_results(...)
 
 
 } // namespace Test
