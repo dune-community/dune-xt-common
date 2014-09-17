@@ -5,6 +5,13 @@
 
 #include "config.h"
 
+#ifndef DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
+#define DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS 0
+#endif
+#ifndef DUNE_STUFF_TEST_MAIN_ENABLE_INFO_LOGGING
+#define DUNE_STUFF_TEST_MAIN_ENABLE_INFO_LOGGING 0
+#endif
+
 #include <string>
 #include <vector>
 #include <map>
@@ -54,7 +61,7 @@ std::vector<double> DUNE_DEPRECATED_MSG("Use the expectation macros of the gtest
 
 int main(int argc, char** argv)
 {
-#ifdef DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
+#if DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
   try {
 #endif
 
@@ -67,7 +74,7 @@ int main(int argc, char** argv)
 #endif
 
     DSC::Logger().create(
-#ifdef DUNE_STUFF_TEST_MAIN_ENABLE_INFO_LOGGING
+#if DUNE_STUFF_TEST_MAIN_ENABLE_INFO_LOGGING
         DSC::LOG_CONSOLE | DSC::LOG_INFO | DSC::LOG_ERROR
 #else
       DSC::LOG_CONSOLE | DSC::LOG_ERROR
@@ -79,7 +86,7 @@ int main(int argc, char** argv)
 
     return RUN_ALL_TESTS();
 
-#ifdef DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
+#if DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
   } catch (Dune::Exception& e) {
     std::cerr << "\nDune reported error: " << e.what() << std::endl;
     std::abort();
