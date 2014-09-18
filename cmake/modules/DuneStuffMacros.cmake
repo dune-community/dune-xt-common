@@ -79,8 +79,9 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
         )
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         set( CMAKE_CXX_FLAGS_DEBUG CACHE STRING
-        "-Wlogical-op -Og ${CMAKE_CXX_FLAGS_DEBUG} "
+        "-Wlogical-op  ${CMAKE_CXX_FLAGS_DEBUG} "
         )
+        ADD_IF_SUPPORTED("-Og")
 endif()
 
 MACRO(INCLUDE_SYS_DIR)
