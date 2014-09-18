@@ -60,6 +60,17 @@ CHECK_CXX_SOURCE_COMPILES("
 "  HAS_STD_BEGIN_END
 )
 
+Macro(ADD_IF_SUPPORTED dest)
+  FOREACH(flag ${ARGN})
+    CHECK_CXX_ACCEPTS_FLAG("${flag}" has_${flag})
+    if(has_${flag})
+      Set(${dest} "${${dest}} ${flag}")
+    else(has_${flag})
+      Message("compiler doesn't support: ${flag}")
+    endif(has_${flag})
+  ENDFOREACH(flag ${ARGN})
+EndMacro(ADD_IF_SUPPORTED)
+
 include(CheckOverrideFinal)
 
 SET( CMAKE_EXPORT_COMPILE_COMMANDS "ON" )
@@ -157,16 +168,6 @@ else(TBB_FOUND)
   set(HAVE_TBB 0)
 endif(TBB_FOUND)
 
-Macro(ADD_IF_SUPPORTED dest)
-  FOREACH(flag ${ARGN})
-    CHECK_CXX_ACCEPTS_FLAG("${flag}" has_${flag})
-    if(has_${flag})
-      Set(${dest} "${${dest}} ${flag}")
-    else(has_${flag})
-      Message("compiler doesn't support: ${flag}")
-    endif(has_${flag})
-  ENDFOREACH(flag ${ARGN})
-EndMacro(ADD_IF_SUPPORTED)
 
 macro(add_analyze)
     find_program(ANALYZER clang-check)
