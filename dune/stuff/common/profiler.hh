@@ -12,6 +12,7 @@
 #include <ctime>
 #include <memory>
 #include <iostream>
+#include <mutex>
 
 #include <boost/noncopyable.hpp>
 #include <boost/timer/timer.hpp>
@@ -150,6 +151,7 @@ private:
 
   KnownTimersMap known_timers_map_;
   const std::string csv_sep;
+  std::mutex mutex_;
 
   static Profiler& instance()
   {

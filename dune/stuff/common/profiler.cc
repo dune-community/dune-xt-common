@@ -109,6 +109,7 @@ void Profiler::resetTiming(const std::string section_name)
 
 void Profiler::startTiming(const std::string section_name)
 {
+  std::lock_guard<std::mutex> lock(mutex_);
   if (current_run_number_ >= datamaps_.size()) {
     datamaps_.push_back(Datamap());
   }
