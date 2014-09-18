@@ -60,10 +60,6 @@ if(CMAKE_WITH_AUTOTOOLS)
 
 endif(CMAKE_WITH_AUTOTOOLS)
 
-
-if(${GRIDTYPE} MATCHES "ALUGRID")
-  if(NOT ALUGRID_FOUND)
-    message( FATAL_ERROR "Gridtype ${GRIDTYPE} requested, but alugrid was not found!" )
-  endif(NOT ALUGRID_FOUND)
+if(ALUGRID_FOUND)
   add_definitions("-DENABLE_ALUGRID=1")
-endif(${GRIDTYPE} MATCHES "ALUGRID")
+endif(ALUGRID_FOUND)
