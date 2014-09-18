@@ -464,7 +464,7 @@ void Configuration::add_tree_(const Configuration& other, const std::string sub_
                        << report_string()
                        << "\n==== other ===========\n"
                        << other.report_string());
-      set(key, other.get<std::string>(key));
+      set(key, other.get<std::string>(key), overwrite);
     }
   } else {
     if (has_key(sub_id) && !overwrite)
@@ -478,7 +478,7 @@ void Configuration::add_tree_(const Configuration& other, const std::string sub_
                      << other.report_string());
     else if (has_sub(sub_id)) {
       Configuration sub_tree = BaseType::sub(sub_id);
-      sub_tree.add(other);
+      sub_tree.add(other, "", overwrite);
       BaseType::sub(sub_id) = sub_tree;
     } else
       BaseType::sub(sub_id) = other;
