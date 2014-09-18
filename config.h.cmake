@@ -19,6 +19,9 @@
 /* Define to 1 if eigen was found, else 0 */
 #define HAVE_EIGEN ${HAVE_EIGEN}
 
+/* Define to 1 if threading building blocks were found, else 0 */
+#define HAVE_TBB ${HAVE_TBB}
+
 #define HAVE_LIKWID ${HAVE_LIKWID}
 #define ENABLE_PERFMON ${ENABLE_PERFMON}
 #if ENABLE_PERFMON && HAVE_LIKWID
