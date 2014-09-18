@@ -7,6 +7,8 @@
 #define DUNE_STUFF_COMMON_THREADMANAGER_HH
 
 #include <vector>
+#include <algorithm>
+#include <type_traits>
 
 namespace Dune {
 namespace Stuff {
@@ -27,6 +29,9 @@ struct ThreadManager
 
   //! set maximal number of threads available during run
   static void set_max_threads(const unsigned int count);
+
+private:
+  //  std::unique_ptr<tbb::task_scheduler_init> tbb_init_;
 };
 
 template <class ValueImp>
@@ -41,7 +46,7 @@ private:
 
 public:
   //! Initialization by copy construction of ValueType
-  PerThreadValue(const ValueType& value)
+  explicit PerThreadValue(const ValueType& value)
     : values_(ThreadManager::max_threads(), value)
   {
   }
@@ -76,6 +81,17 @@ public:
   typename ContainerType::size_type size() const
   {
     return values_.size();
+  }
+
+  template <class BinaryOperation>
+  ValueType accumulate(ValueType init, BinaryOperation op) const
+  {
+    return std::accumulate(values_.begin(), values_.end(), init);
+  }
+
+  ValueType sum() const
+  {
+    return accumulate(ValueType(0), std::plus<ValueType>());
   }
 
 private:
