@@ -115,6 +115,8 @@ public:
                 const bool log_on_exit            = internal::configuration_log_on_exit,
                 const std::string logfile = internal::configuration_logfile);
 
+  explicit Configuration(const ParameterTree& tree, const std::string sub_id);
+
   Configuration(const Configuration& other);
 
   Configuration(std::istream& in, const bool record_defaults = internal::configuration_record_defaults,

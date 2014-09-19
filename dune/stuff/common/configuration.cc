@@ -90,6 +90,18 @@ Configuration::Configuration(const Dune::ParameterTree& tree_in, const bool reco
   setup_();
 }
 
+Configuration::Configuration(const ParameterTree& tree, const std::string sub_id)
+  : BaseType()
+  , requests_map_()
+  , record_defaults_(internal::configuration_record_defaults)
+  , warn_on_default_access_(internal::configuration_warn_on_default_access)
+  , log_on_exit_(internal::configuration_log_on_exit)
+  , logfile_(internal::configuration_logfile)
+{
+  setup_();
+  add(tree, sub_id);
+}
+
 Configuration::Configuration(const Configuration& other)
   : BaseType(other)
   , requests_map_(other.requests_map_)
