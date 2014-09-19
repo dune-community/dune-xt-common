@@ -10,34 +10,30 @@
 #ifndef LOGGING_HH_INCLUDED
 #define LOGGING_HH_INCLUDED
 
-#include <dune/common/exceptions.hh>
+#include <map>
+#include <string>
+
+#include <fstream>
+#include <ostream>
+#include <sstream>
+
+#include <boost/filesystem.hpp>
+#include <boost/filesystem/fstream.hpp>
+
 #include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/parallel/mpihelper.hh>
 #include <dune/stuff/common/reenable_warnings.hh>
 
-#include "misc.hh"
-#include "filesystem.hh"
 #include "logstreams.hh"
-#include "string.hh"
-
-#include <boost/range/adaptors.hpp>
-#include <boost/foreach.hpp>
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/path.hpp>
-#include <fstream>
-#include <ostream>
-#include <sstream>
-#include <ctime>
-#include <iomanip>
-#include <map>
-#include <assert.h>
 
 namespace Dune {
 namespace Stuff {
 namespace Common {
 
+
 class Logging;
 Logging& Logger();
+
 
 /** \brief handles all logging
   **/

@@ -5,28 +5,13 @@
 
 #include "config.h"
 
-#include "logging.hh"
+#include <boost/format.hpp>
 
-#include <fstream>
-#include <ostream>
-#include <sstream>
-#include <ctime>
-#include <iomanip>
-#include <map>
-#include <assert.h>
-
-// dune-common
-#include <dune/common/exceptions.hh>
-
-#include "misc.hh"
+#include "memory.hh"
+#include "exceptions.hh"
 #include "filesystem.hh"
-#include "logstreams.hh"
-#include "string.hh"
 
-#include <dune/stuff/common/memory.hh>
-
-#include <boost/filesystem.hpp>
-#include <boost/filesystem/path.hpp>
+#include "logging.hh"
 
 namespace Dune {
 namespace Stuff {
