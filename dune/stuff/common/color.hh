@@ -145,6 +145,8 @@ std::string colorString(const std::string str, const std::string clr = Colors::b
 
 std::string colorStringRed(const std::string str);
 
+std::string bold_white(const std::string str);
+
 /**
  * @brief Highlights a substring of another string in a specified color.
  *

@@ -136,6 +136,18 @@ std::string colorStringRed(const std::string str)
 }
 
 
+std::string bold_white(const std::string str)
+{
+  std::string pre  = "";
+  std::string post = "";
+  if (terminal_supports_color()) {
+    pre  = pre + StreamModifiers::bold + Colors::white;
+    post = post + StreamModifiers::normal;
+  }
+  return pre + str + post;
+}
+
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
