@@ -11,6 +11,13 @@
 #include <memory>
 #include <type_traits>
 
+// static_assert/AlwaysFalse redirect to avoid warnings
+#if DUNE_VERSION_NEWER(DUNE_COMMON, 3, 9) // EXADUNE
+#include <dune/common/typetraits.hh>
+#else
+#include <dune/common/static_assert.hh>
+#endif
+
 /** use this to define Typename specializations in the GLOBAL namespace ONLY **/
 #define STUFF_TYPENAME(NAME)                                                                                           \
   namespace Dune {                                                                                                     \
