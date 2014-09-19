@@ -7,8 +7,8 @@
    *  \file logging.hh
    *  \brief  logging
    **/
-#ifndef LOGGING_HH_INCLUDED
-#define LOGGING_HH_INCLUDED
+#ifndef DUNE_STUFF_COMMON_LOGGING_HH
+#define DUNE_STUFF_COMMON_LOGGING_HH
 
 #include <map>
 #include <string>
@@ -26,6 +26,7 @@
 #include <dune/stuff/common/reenable_warnings.hh>
 
 #include "logstreams.hh"
+#include "color.hh"
 
 namespace Dune {
 namespace Stuff {
@@ -172,6 +173,7 @@ std::string elapsed_time();
 } // namespace Stuff
 } // namespace Dune
 
+
 #define DSC_LOG Dune::Stuff::Common::Logger()
 #define DSC_LOG_INFO DSC_LOG.info()
 #define DSC_LOG_DEBUG DSC_LOG.debug()
@@ -184,4 +186,10 @@ std::string elapsed_time();
 #define DSC_LOG_ERROR_0                                                                                                \
   (Dune::MPIHelper::getCollectiveCommunication().rank() == 0 ? DSC_LOG.error() : DSC_LOG.devnull())
 
-#endif // ifndef LOGGING_HH_INCLUDED
+#define DSC_LOG_INFO_TIMED(str_id)                                                                                     \
+  DSC_LOG_INFO << Dune::Stuff::Common::elapsed_time() << Dune::Stuff::Common::bold_white(str_id) << ": "
+#define DSC_LOG_DEBUG_TIMED(str_id)                                                                                    \
+  DSC_LOG_DEBUG << Dune::Stuff::Common::elapsed_time() << Dune::Stuff::Common::bold_white(str_id) << ": "
+
+
+#endif // DUNE_STUFF_COMMON_LOGGING_HH
