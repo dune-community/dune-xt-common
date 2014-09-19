@@ -22,6 +22,7 @@
 
 #include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/parallel/mpihelper.hh>
+#include <dune/common/timer.hh>
 #include <dune/stuff/common/reenable_warnings.hh>
 
 #include "logstreams.hh"
@@ -154,6 +155,18 @@ inline Logging& Logger()
   static Logging log;
   return log;
 }
+
+
+//! global timer instance
+inline Timer& GlobalTimer()
+{
+  static Timer timer;
+  return timer;
+}
+
+
+std::string elapsed_time();
+
 
 } // namespace Common
 } // namespace Stuff

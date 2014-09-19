@@ -131,6 +131,29 @@ void Logging::suspend(LogStream::PriorityType prio)
   }
 } // suspend
 
+
+std::string elapsed_time()
+{
+  const double secs_per_week = 604800;
+  const double secs_per_day  = 86400;
+  const double secs_per_hour = 3600;
+  const double elapsed = GlobalTimer().elapsed();
+  const size_t weeks(elapsed / secs_per_week);
+  const size_t days((elapsed - weeks * secs_per_week) / secs_per_day);
+  const size_t hours((elapsed - weeks * secs_per_week - days * secs_per_day) / 3600.0);
+  const size_t minutes((elapsed - weeks * secs_per_week - days * secs_per_day - hours * secs_per_hour) / 60.0);
+  const size_t seconds(elapsed - weeks * secs_per_week - days * secs_per_day - hours * secs_per_hour - minutes * 60);
+  if (elapsed > secs_per_week) // more than a week
+    return (boost::format("%02dw %02dd %02d:%02d:%02d|") % weeks % days % hours % minutes % seconds).str();
+  else if (elapsed > secs_per_day) // less than a week, more than a day
+    return (boost::format("%02dd %02d:%02d:%02d|") % days % hours % minutes % seconds).str();
+  else if (elapsed > secs_per_hour) // less than a day, more than one hour
+    return (boost::format("%02d:%02d:%02d|") % hours % minutes % seconds).str();
+  else // less than one hour
+    return (boost::format("%02d:%02d|") % minutes % seconds).str();
+} // ... elapsed_time(...)
+
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
