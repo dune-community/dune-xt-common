@@ -73,33 +73,76 @@ namespace Common {
 
 
 //! adapter enabling view usage in range-based for
-template <class GridViewType, int codim = 0>
-class ViewRange
+template <class GridPartViewType, int codim = 0>
+class EntityRange
 {
-  const GridViewType& view_;
+  const GridPartViewType& part_view_;
 
 public:
-  ViewRange(const GridViewType& view)
-    : view_(view)
+  EntityRange(const GridPartViewType& part_view)
+    : part_view_(part_view)
   {
-    BOOST_STATIC_WARNING(codim == 0 && "unnecessary ViewRange usage with codim 0");
+    BOOST_STATIC_WARNING(codim == 0 && "unnecessary EntityRange usage with codim 0");
   }
 
-  typename GridViewType::template Codim<codim>::Iterator begin() const
+  auto begin() const -> decltype(part_view_.template begin<codim>())
   {
-    return view_.template begin<codim>();
+    return part_view_.template begin<codim>();
   }
-  typename GridViewType::template Codim<codim>::Iterator end() const
+
+  auto end() const -> decltype(part_view_.template end<codim>())
   {
-    return view_.template end<codim>();
+    return part_view_.template end<codim>();
   }
-};
+}; // class EntityRange
+
+
+template <class GridPartViewType, int codim = 0>
+class DUNE_DEPRECATED_MSG("Use EntityRange instead (22.09.2014)!") ViewRange
+    : public EntityRange<GridPartViewType, codim>
+{
+public:
+  template <class... Args>
+  ViewRange(Args&&... args)
+    : EntityRange<GridPartViewType, codim>(std::forward<Args>(args)...)
+  {
+  }
+}; // class ViewRange
+
 
 template <class GridViewTraits, int codim = 0>
-ViewRange<Dune::GridView<GridViewTraits>, codim> viewRange(const Dune::GridView<GridViewTraits>& view)
+EntityRange<Dune::GridView<GridViewTraits>, codim> DUNE_DEPRECATED_MSG("Use entityRange instead (22.09.2014)!")
+    viewRange(const Dune::GridView<GridViewTraits>& view)
 {
-  return ViewRange<Dune::GridView<GridViewTraits>, codim>(view);
+  return EntityRange<Dune::GridView<GridViewTraits>, codim>(view);
 }
+
+template <class GridViewTraits, int codim = 0>
+EntityRange<Dune::GridView<GridViewTraits>, codim> entityRange(const Dune::GridView<GridViewTraits>& view)
+{
+  return EntityRange<Dune::GridView<GridViewTraits>, codim>(view);
+}
+
+
+#if HAVE_DUNE_FEM
+
+
+template <class GP, int codim = 0>
+EntityRange<Dune::Fem::GridPartInterface<GP>, codim> DUNE_DEPRECATED_MSG("Use entityRange instead (22.09.2014)!")
+    viewRange(const Dune::Fem::GridPartInterface<GP>& part)
+{
+  return EntityRange<Dune::Fem::GridPartInterface<GP>, codim>(part);
+}
+
+template <class GP, int codim = 0>
+EntityRange<Dune::Fem::GridPartInterface<GP>, codim> entityRange(const Dune::Fem::GridPartInterface<GP>& part)
+{
+  return EntityRange<Dune::Fem::GridPartInterface<GP>, codim>(part);
+}
+
+
+#endif // HAVE_DUNE_FEM
+
 
 /** adapter enabling intersectionniterator usage in range-based for
  * works for GridParts and GridViews
