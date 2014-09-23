@@ -59,3 +59,9 @@ TEST(LoggerTest, all)
   do_something_that_takes_long(err);
   std::cout << "end   Logger().error() test" << std::endl;
 }
+
+TEST(LoggerTest, file)
+{
+  DSC::Logger().create(DSC::LOG_INFO | DSC::LOG_CONSOLE | DSC::LOG_FILE, "test_common_logger", "", "");
+  DSC::Logger().info() << "This output should be in 'test_common_logger.log'" << std::endl;
+}
