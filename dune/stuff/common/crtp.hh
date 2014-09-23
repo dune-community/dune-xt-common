@@ -7,6 +7,7 @@
 #define DUNE_STUFF_COMMON_CRTP_HH
 
 #include <atomic>
+#include <mutex>
 
 #include "exceptions.hh"
 
@@ -20,11 +21,13 @@
 #ifdef NDEBUG
 #define CHECK_CRTP(dummy)
 #else
+
 /**
   * This macro is essentially a thread safe variant of the CHECK_INTERFACE_IMPLEMENTATION macro from dune-common.
   */
 #define CHECK_CRTP(__interface_method_to_call__)                                                                       \
   {                                                                                                                    \
+    std::lock_guard<std::recursive_mutex> crtp_mutex_guard(this->crtp_mutex_);                                         \
     static std::atomic<bool> call(false);                                                                              \
     if (call)                                                                                                          \
       DUNE_THROW(Dune::Stuff::Exceptions::CRTP_check_failed,                                                           \
@@ -83,6 +86,9 @@ public:
 protected:
   // nicely avoid warning about non-virtual dtor when derived classes have vfunc
   ~CRTPInterface() = default;
+#ifndef NDEBUG
+  mutable std::recursive_mutex crtp_mutex_;
+#endif
 }; // CRTPInterface
 
 
