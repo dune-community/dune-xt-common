@@ -13,6 +13,8 @@
 #include <type_traits>
 #include <mutex>
 
+#include <dune/common/timer.hh>
+
 #include "memory.hh"
 #include "string.hh"
 
@@ -108,6 +110,28 @@ protected:
 }; // class EmptyBuffer
 
 
+class TimedPrefixedStreamBuffer : public std::basic_stringbuf<char, std::char_traits<char>>
+{
+  typedef std::basic_stringbuf<char, std::char_traits<char>> BaseType;
+
+public:
+  TimedPrefixedStreamBuffer(const Timer& timer, const std::string prefix, std::ostream& out = std::cout);
+
+  virtual int sync();
+
+private:
+  TimedPrefixedStreamBuffer(const TimedPrefixedStreamBuffer&) = delete;
+
+  std::string elapsed_time_str() const;
+
+  const Timer& timer_;
+  const std::string prefix_;
+  std::ostream& out_;
+  bool prefix_needed_;
+  std::mutex mutex_;
+}; // class TimedPrefixedStreamBuffer
+
+
 class LogStream : StorageProvider<SuspendableStrBuffer>, public std::basic_ostream<char, std::char_traits<char>>
 {
   typedef StorageProvider<SuspendableStrBuffer> StorageBaseType;
@@ -150,6 +174,19 @@ public:
     this->storage_access().resume(priority);
   } // Resume
 }; // LogStream
+
+
+class TimedPrefixedLogStream : StorageProvider<TimedPrefixedStreamBuffer>,
+                               public std::basic_ostream<char, std::char_traits<char>>
+{
+  typedef StorageProvider<TimedPrefixedStreamBuffer> StorageBaseType;
+  typedef std::basic_ostream<char, std::char_traits<char>> OstreamBaseType;
+
+public:
+  TimedPrefixedLogStream(const Timer& timer, const std::string prefix, std::ostream& out);
+
+  virtual ~TimedPrefixedLogStream();
+}; // TimedPrefixedLogStream
 
 
 //! ostream compatible class wrapping file and console output
