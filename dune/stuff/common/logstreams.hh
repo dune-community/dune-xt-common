@@ -6,7 +6,6 @@
 #ifndef DUNE_STUFF_LOGSTREAMS_HH
 #define DUNE_STUFF_LOGSTREAMS_HH
 
-#include "string.hh"
 #include <ostream>
 #include <fstream>
 #include <sstream>
@@ -14,11 +13,13 @@
 #include <type_traits>
 #include <mutex>
 
-#include <dune/stuff/common/disable_warnings.hh>
+#include "memory.hh"
+#include "string.hh"
 
 namespace Dune {
 namespace Stuff {
 namespace Common {
+
 
 enum LogFlags
 {
@@ -30,6 +31,7 @@ enum LogFlags
   LOG_FILE    = 32,
   LOG_NEXT    = 64
 };
+
 
 class SuspendableStrBuffer : public std::basic_stringbuf<char, std::char_traits<char>>
 {
@@ -72,24 +74,43 @@ private:
   bool is_suspended_;
   PriorityType suspend_priority_;
   std::mutex mutex_;
-};
+}; // class SuspendableStrBuffer
 
 
-class BufferContainer
+class FileBuffer : public SuspendableStrBuffer
 {
 public:
-  BufferContainer(SuspendableStrBuffer* buffer)
-    : buffer_(buffer)
+  FileBuffer(int loglevel, int& logflags, std::ofstream& file)
+    : SuspendableStrBuffer(loglevel, logflags)
+    , logfile_(file)
+  {
+  }
+
+private:
+  std::ofstream& logfile_;
+  std::mutex sync_mutex_;
+
+protected:
+  virtual int sync();
+}; // class FileBuffer
+
+
+class EmptyBuffer : public SuspendableStrBuffer
+{
+public:
+  EmptyBuffer(int loglevel, int& logflags)
+    : SuspendableStrBuffer(loglevel, logflags)
   {
   }
 
 protected:
-  SuspendableStrBuffer* buffer_;
-}; // class BufferContainer
+  virtual int sync();
+}; // class EmptyBuffer
 
 
-class LogStream : public BufferContainer, public std::basic_ostream<char, std::char_traits<char>>
+class LogStream : StorageProvider<SuspendableStrBuffer>, public std::basic_ostream<char, std::char_traits<char>>
 {
+  typedef StorageProvider<SuspendableStrBuffer> StorageBaseType;
   typedef std::basic_ostream<char, std::char_traits<char>> BaseType;
 
 public:
@@ -97,19 +118,9 @@ public:
   static const PriorityType default_suspend_priority = SuspendableStrBuffer::default_suspend_priority;
 
   LogStream(SuspendableStrBuffer* buffer)
-    : BufferContainer(buffer)
-    , BaseType(this->buffer_)
+    : StorageBaseType(buffer)
+    , BaseType(&this->storage_access())
   {
-  }
-
-  /** \brief Tunnel buffer setting to ostream base
-   * for some weird reason all derived classes MUST call
-   * it again after base class init
-   **/
-  void rdbuf(SuspendableStrBuffer* buf)
-  {
-    this->buffer_ = buf;
-    BaseType::rdbuf(buf);
   }
 
   virtual ~LogStream()
@@ -126,8 +137,8 @@ public:
      ***/
   void suspend(PriorityType priority = default_suspend_priority)
   {
-    assert(this->buffer_);
-    this->buffer_->suspend(priority);
+    assert(&this->storage_access());
+    this->storage_access().suspend(priority);
   }
 
   /** \brief start accepting input into the buffer again
@@ -135,8 +146,8 @@ public:
      ***/
   void resume(PriorityType priority = default_suspend_priority)
   {
-    assert(this->buffer_);
-    this->buffer_->resume(priority);
+    assert(&this->storage_access());
+    this->storage_access().resume(priority);
   } // Resume
 }; // LogStream
 
@@ -144,63 +155,22 @@ public:
 //! ostream compatible class wrapping file and console output
 class FileLogStream : public LogStream
 {
-private:
-  class FileBuffer : public SuspendableStrBuffer
-  {
-  public:
-    FileBuffer(int loglevel, int& logflags, std::ofstream& file)
-      : SuspendableStrBuffer(loglevel, logflags)
-      , logfile_(file)
-    {
-    }
-
-  private:
-    std::ofstream& logfile_;
-    std::mutex sync_mutex_;
-
-  protected:
-    virtual int sync();
-  };
-
 public:
   FileLogStream(int loglevel, int& logflags, /*std::ofstream& file,*/ std::ofstream& fileWoTime)
-    : logBuffer_(loglevel, logflags, /*file,*/ fileWoTime)
-    , LogStream(&logBuffer_)
+    : LogStream(new FileBuffer(loglevel, logflags, /*file,*/ fileWoTime))
   {
-    LogStream::rdbuf(&logBuffer_);
   }
-
-private:
-  FileBuffer logBuffer_;
 }; // class FileLogStream
 
 
 //! /dev/null
 class EmptyLogStream : public LogStream
 {
-private:
-  class EmptyBuffer : public SuspendableStrBuffer
-  {
-  public:
-    EmptyBuffer(int loglevel, int& logflags)
-      : SuspendableStrBuffer(loglevel, logflags)
-    {
-    }
-
-  protected:
-    virtual int sync();
-  };
-
 public:
   EmptyLogStream(int& logflags)
-    : logBuffer_(int(LOG_NONE), logflags)
-    , LogStream(&logBuffer_)
+    : LogStream(new EmptyBuffer(int(LOG_NONE), logflags))
   {
-    LogStream::rdbuf(&logBuffer_);
   }
-
-private:
-  EmptyBuffer logBuffer_;
 }; // class EmptyLogStream
 
 
@@ -209,10 +179,9 @@ int dev_null_logflag;
 EmptyLogStream dev_null(dev_null_logflag);
 }
 
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
-
-#include <dune/stuff/common/reenable_warnings.hh>
 
 #endif // LOGSTREAMS_HH
