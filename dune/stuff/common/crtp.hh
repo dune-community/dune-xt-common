@@ -87,6 +87,18 @@ protected:
   // nicely avoid warning about non-virtual dtor when derived classes have vfunc
   ~CRTPInterface() = default;
 #ifndef NDEBUG
+  /** constructors below should avoid derived classes becoming impossible to copy(-assign)
+   * due to mutex's deleted copy(-assign) ctor
+   * it's in fact perfectly correct that the copy gets a new mutex
+   **/
+  CRTPInterface() = default;
+  CRTPInterface(const CRTPInterface&)
+  {
+  }
+  CRTPInterface& operator=(const CRTPInterface&)
+  {
+  }
+
   mutable std::recursive_mutex crtp_mutex_;
 #endif
 }; // CRTPInterface
