@@ -68,6 +68,43 @@ std::string color(int i)
 }
 
 
+std::map<std::string, std::string>& color_map()
+{
+  static std::map<std::string, std::string> map_;
+  static bool created_ = false;
+  if (!created_) {
+    map_["black"]       = Colors::black;
+    map_["blue"]        = Colors::blue;
+    map_["brown"]       = Colors::brown;
+    map_["cyan"]        = Colors::cyan;
+    map_["darkgray"]    = Colors::darkgray;
+    map_["green"]       = Colors::green;
+    map_["lightblue"]   = Colors::lightblue;
+    map_["lightcyan"]   = Colors::lightcyan;
+    map_["lightgray"]   = Colors::lightgray;
+    map_["lightgreen"]  = Colors::lightgreen;
+    map_["lightpurple"] = Colors::lightpurple;
+    map_["lightred"]    = Colors::lightred;
+    map_["purple"]      = Colors::purple;
+    map_["red"]         = Colors::red;
+    map_["white"]       = Colors::white;
+    map_["yellow"]      = Colors::yellow;
+    created_            = true;
+  }
+  return map_;
+} // ... color_map(...)
+
+
+std::string color(const std::string id)
+{
+  const auto search_result = color_map().find(id);
+  if (search_result != color_map().end())
+    return search_result->second;
+  else
+    return "";
+}
+
+
 std::string backcolor(int i)
 {
   return "\033[38;5;" + std::to_string(i) + "m";

@@ -9,8 +9,9 @@
 #define DUNE_COMMON_COLOR_HH
 
 #include <sstream>
-#include <assert.h>
 #include <iostream>
+#include <map>
+#include <string>
 
 #ifdef __GNUC__
 #include <cxxabi.h>
@@ -100,6 +101,10 @@ struct StreamModifiers
  * @returns A string describing a color code.
  */
 std::string color(int i);
+
+std::map<std::string, std::string>& color_map();
+
+std::string color(const std::string id);
 
 /**
  * @brief Chooses a color from a 256 color map for a background color.
