@@ -7,6 +7,7 @@
 #define DUNE_STUFF_MEMORY_HH
 
 #include <memory>
+#include <boost/noncopyable.hpp>
 
 namespace Dune {
 namespace Stuff {
@@ -20,6 +21,14 @@ std::unique_ptr<T> make_unique(Args&&... args)
   return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
 
+//! just like boost::noncopyable, but for move assign/ctor
+struct nonmoveable
+{
+  constexpr nonmoveable() = default;
+  ~nonmoveable() = default;
+  nonmoveable& operator=(nonmoveable&& source) = delete;
+  nonmoveable(nonmoveable&& source) = delete;
+};
 
 namespace internal {
 
@@ -36,8 +45,9 @@ public:
 }; // class ConstAccessInterface
 
 
+//! \note could do noncopy/move in base, but this is more explicit imo
 template <class T>
-class ConstAccessByReference : public ConstAccessInterface<T>
+class ConstAccessByReference : public ConstAccessInterface<T>, public boost::noncopyable, public nonmoveable
 {
 public:
   ConstAccessByReference(const T& tt)
@@ -45,17 +55,9 @@ public:
   {
   }
 
-  ConstAccessByReference(const ConstAccessByReference<T>& other) = delete;
-
-  ConstAccessByReference(ConstAccessByReference<T>&& source) = delete;
-
   virtual ~ConstAccessByReference()
   {
   }
-
-  ConstAccessByReference<T>& operator=(const ConstAccessByReference<T>& other) = delete;
-
-  ConstAccessByReference<T>& operator=(ConstAccessByReference<T>&& source) = delete;
 
   virtual const T& access() const
   {
@@ -68,7 +70,7 @@ private:
 
 
 template <class T>
-class ConstAccessByPointer : public ConstAccessInterface<T>
+class ConstAccessByPointer : public ConstAccessInterface<T>, public boost::noncopyable, public nonmoveable
 {
 public:
   ConstAccessByPointer(const T* tt)
@@ -86,17 +88,9 @@ public:
   {
   }
 
-  ConstAccessByPointer(const ConstAccessByPointer<T>& other) = delete;
-
-  ConstAccessByPointer(ConstAccessByPointer<T>&& source) = delete;
-
   virtual ~ConstAccessByPointer()
   {
   }
-
-  ConstAccessByPointer<T>& operator=(const ConstAccessByPointer<T>& other) = delete;
-
-  ConstAccessByPointer<T>& operator=(ConstAccessByPointer<T>&& source) = delete;
 
   virtual const T& access() const
   {
@@ -123,7 +117,7 @@ public:
 
 
 template <class T>
-class AccessByReference : public AccessInterface<T>
+class AccessByReference : public AccessInterface<T>, public boost::noncopyable, public nonmoveable
 {
 public:
   AccessByReference(T& tt)
@@ -131,17 +125,9 @@ public:
   {
   }
 
-  AccessByReference(const AccessByReference<T>& other) = delete;
-
-  AccessByReference(AccessByReference<T>&& source) = delete;
-
   virtual ~AccessByReference()
   {
   }
-
-  AccessByReference<T>& operator=(const AccessByReference<T>& other) = delete;
-
-  AccessByReference<T>& operator=(AccessByReference<T>&& source) = delete;
 
   virtual T& access()
   {
@@ -159,7 +145,7 @@ private:
 
 
 template <class T>
-class AccessByPointer : public AccessInterface<T>
+class AccessByPointer : public AccessInterface<T>, public boost::noncopyable, public nonmoveable
 {
 public:
   AccessByPointer(T* tt)
@@ -177,17 +163,9 @@ public:
   {
   }
 
-  AccessByPointer(const AccessByPointer<T>& other) = delete;
-
-  AccessByPointer(AccessByPointer<T>&& source) = delete;
-
   virtual ~AccessByPointer()
   {
   }
-
-  AccessByPointer<T>& operator=(const AccessByPointer<T>& other) = delete;
-
-  AccessByPointer<T>& operator=(AccessByPointer<T>&& source) = delete;
 
   virtual T& access()
   {
@@ -208,7 +186,7 @@ private:
 
 
 template <class T>
-class ConstStorageProvider
+class ConstStorageProvider : public boost::noncopyable, public nonmoveable
 {
 public:
   ConstStorageProvider(const T& tt)
@@ -231,17 +209,6 @@ public:
   {
   }
 
-  /**
-   * Since the intended behaviour is unknown, call ConstStorageProvider(new T(tt)) or ConstStorageProvider(tt) manually!
-   */
-  ConstStorageProvider(const ConstStorageProvider<T>& other) = delete;
-
-  ConstStorageProvider(ConstStorageProvider<T>&& source) = delete;
-
-  ConstStorageProvider<T> operator=(const ConstStorageProvider<T>& other) = delete;
-
-  ConstStorageProvider<T> operator=(ConstStorageProvider<T>&& source) = delete;
-
   const T& storage_access() const
   {
     return provide_->access();
@@ -253,7 +220,7 @@ private:
 
 
 template <class T>
-class StorageProvider
+class StorageProvider : public boost::noncopyable, public nonmoveable
 {
 public:
   StorageProvider(T& tt)
@@ -275,17 +242,6 @@ public:
     : provide_(make_unique<internal::AccessByPointer<T>>(tt))
   {
   }
-
-  /**
-   * Since the intended behaviour is unknown, call StorageProvider(new T(tt)) or StorageProvider(tt) manually!
-   */
-  StorageProvider(const StorageProvider<T>& other) = delete;
-
-  StorageProvider(StorageProvider<T>&& source) = delete;
-
-  StorageProvider<T> operator=(const StorageProvider<T>& other) = delete;
-
-  StorageProvider<T> operator=(StorageProvider<T>&& source) = delete;
 
   T& storage_access()
   {
