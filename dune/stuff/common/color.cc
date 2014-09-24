@@ -30,7 +30,6 @@ const char* Colors::lightblue   = "\033[1;34m";
 const char* Colors::lightpurple = "\033[1;35m";
 const char* Colors::lightcyan   = "\033[1;36m";
 const char* Colors::white       = "\033[1;37m";
-
 // background colors
 const char* Colors::bblack     = "\033[40m";
 const char* Colors::bred       = "\033[41m";
@@ -49,6 +48,7 @@ const char* Colors::blightblue   = "\033[1;44m";
 const char* Colors::blightpurple = "\033[1;45m";
 const char* Colors::blightcyan   = "\033[1;46m";
 const char* Colors::bwhite       = "\033[1;47m";
+
 // modifiers
 const char* StreamModifiers::normal       = "\033[0m";
 const char* StreamModifiers::bold         = "\033[1m";
@@ -60,6 +60,24 @@ const char* StreamModifiers::enditalic    = "\033[22m";
 const char* StreamModifiers::endunderline = "\033[24m";
 const char* StreamModifiers::endblink     = "\033[25m";
 const char* StreamModifiers::endreverse   = "\033[27m";
+
+
+std::string color(int i)
+{
+  return "\033[38;5;" + std::to_string(i) + "m";
+}
+
+
+std::string backcolor(int i)
+{
+  return "\033[38;5;" + std::to_string(i) + "m";
+}
+
+
+int templateColorChooser(int i)
+{
+  return i % 256;
+}
 
 
 /**
@@ -78,7 +96,7 @@ bool terminal_supports_color()
 } // ... terminal_supports_color(...)
 
 
-std::string highlightTemplate(std::string str, int maxlevel /*= 10000*/)
+std::string highlightTemplate(std::string str, int maxlevel)
 {
   if (maxlevel < 0)
     maxlevel        = 0;
@@ -108,7 +126,14 @@ std::string highlightTemplate(std::string str, int maxlevel /*= 10000*/)
   return str;
 } // highlightTemplate
 
-std::string highlightSearchString(std::string str, std::string substr, int colornr /*= 0*/)
+
+std::string highlightString(std::string str, int colornr)
+{
+  return "\033[38;5;" + std::to_string(colornr % 256) + "m" + str + "\033[0m"; //"\033[38;5;0m";
+}
+
+
+std::string highlightSearchString(std::string str, std::string substr, int colornr)
 {
   long index = long(str.find(substr, 0));
 

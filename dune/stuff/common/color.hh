@@ -21,6 +21,10 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
+
+#define DS_CONST_CHAR const char *
+
+
 /**
  * @brief namespace to define color constants that can be
  * used to print colored text in an output stream.
@@ -30,9 +34,6 @@ namespace Common {
  */
 struct Colors
 {
-
-#define DS_CONST_CHAR const char *
-
   // foreground colors
   static DS_CONST_CHAR black;
   static DS_CONST_CHAR red;
@@ -70,7 +71,9 @@ struct Colors
   static DS_CONST_CHAR blightpurple;
   static DS_CONST_CHAR blightcyan;
   static DS_CONST_CHAR bwhite;
-};
+}; // struct Colors
+
+
 // modifiers
 struct StreamModifiers
 {
@@ -84,8 +87,11 @@ struct StreamModifiers
   static DS_CONST_CHAR endunderline;
   static DS_CONST_CHAR endblink;
   static DS_CONST_CHAR endreverse;
+}; // struct StreamModifiers
+
+
 #undef DS_CONST_CHAR
-};
+
 
 /**
  * @brief Chooses a color from a 256 color map for a foreground color.
@@ -93,10 +99,7 @@ struct StreamModifiers
  * @param i The color number between 0 and 255.
  * @returns A string describing a color code.
  */
-inline std::string color(int i)
-{
-  return "\033[38;5;" + std::to_string(i) + "m";
-}
+std::string color(int i);
 
 /**
  * @brief Chooses a color from a 256 color map for a background color.
@@ -104,17 +107,10 @@ inline std::string color(int i)
  * @param i The color number between 0 and 255.
  * @returns A string describing a color code.
  */
-inline std::string backcolor(int i)
-{
-  return "\033[38;5;" + std::to_string(i) + "m";
-}
+std::string backcolor(int i);
 
-inline // maybe you want to choose your own color
-    int
-    templateColorChooser(int i)
-{
-  return i % 256;
-}
+// maybe you want to choose your own color
+int templateColorChooser(int i);
 
 
 bool terminal_supports_color();
@@ -136,10 +132,7 @@ std::string highlightTemplate(std::string str, int maxlevel = 10000);
  * @param colornr A color number from a 256 color map between 0 and 255.
  * @returns The highlighted string.
  */
-inline std::string highlightString(std::string str, int colornr = 0)
-{
-  return "\033[38;5;" + std::to_string(colornr % 256) + "m" + str + "\033[0m"; //"\033[38;5;0m";
-}
+std::string highlightString(std::string str, int colornr = 0);
 
 std::string colorString(const std::string str, const std::string clr = Colors::brown);
 
