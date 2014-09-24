@@ -110,6 +110,11 @@ protected:
 }; // class EmptyBuffer
 
 
+/**
+ * \brief A stream buffer to be used in TimedPrefixedLogStream.
+ *
+ * \note Most likely you do not want to use this class directly, but TimedPrefixedLogStream instead.
+ */
 class TimedPrefixedStreamBuffer : public std::basic_stringbuf<char, std::char_traits<char>>
 {
   typedef std::basic_stringbuf<char, std::char_traits<char>> BaseType;
@@ -176,6 +181,29 @@ public:
 }; // LogStream
 
 
+/**
+ * \brief A std::ostream compatible stream that begins every line by printing elapsed time and prefix.
+ *
+ *        Given a Timer, a prefix and a std::ostream compatible stream this class prints any input to the given
+ *        stream prepending each line by the elapsed time and the given prefix:
+\code
+// the following code
+Timer timer;
+TimedPrefixedLogStream out(timer, "prefix: ", std::cout);
+out << "sample\nline" << std::flush;
+// .. do something that takes 2 seconds
+out << "\n" << 3 << "\n\nend" << std::endl;
+// should give the following output:
+00:00|prefix: sample
+00:00|prefix: line
+00:02|prefix: 3
+00:02|prefix:
+00:02|prefix: end
+
+\endcode
+ *
+ * \note This class is intended to be used by TimedLogManager.
+ */
 class TimedPrefixedLogStream : StorageProvider<TimedPrefixedStreamBuffer>,
                                public std::basic_ostream<char, std::char_traits<char>>
 {
