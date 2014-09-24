@@ -7,10 +7,11 @@
 
 #include <boost/format.hpp>
 
+#include <dune/common/unused.hh>
+
 #include "memory.hh"
 #include "exceptions.hh"
 #include "filesystem.hh"
-
 #include "logging.hh"
 
 namespace Dune {
@@ -132,26 +133,129 @@ void Logging::suspend(LogStream::PriorityType prio)
 } // suspend
 
 
-std::string elapsed_time()
+TimedLogManager::TimedLogManager(const Timer& timer, const std::string info_prefix, const std::string debug_prefix,
+                                 const std::string warning_prefix, const ssize_t max_info_level,
+                                 const ssize_t max_debug_level, const bool enable_warnings,
+                                 std::atomic<ssize_t>& current_level, std::ostream& disabled_out,
+                                 std::ostream& enabled_out, std::ostream& warn_out)
+  : timer_(timer)
+  , current_level_(current_level)
+  , info_(std::make_shared<TimedPrefixedLogStream>(timer_, info_prefix,
+                                                   current_level_ <= max_info_level ? enabled_out : disabled_out))
+  , debug_(std::make_shared<TimedPrefixedLogStream>(timer_, debug_prefix,
+#ifdef NDEBUG
+                                                    current_level_ <= max_debug_level ? enabled_out : dev_null))
+#else
+                                                    current_level_ <= max_debug_level ? enabled_out : disabled_out))
+#endif
+  , warn_(std::make_shared<TimedPrefixedLogStream>(timer_, warning_prefix, enable_warnings ? warn_out : disabled_out))
 {
-  const double secs_per_week = 604800;
-  const double secs_per_day  = 86400;
-  const double secs_per_hour = 3600;
-  const double elapsed = GlobalTimer().elapsed();
-  const size_t weeks(elapsed / secs_per_week);
-  const size_t days((elapsed - weeks * secs_per_week) / secs_per_day);
-  const size_t hours((elapsed - weeks * secs_per_week - days * secs_per_day) / 3600.0);
-  const size_t minutes((elapsed - weeks * secs_per_week - days * secs_per_day - hours * secs_per_hour) / 60.0);
-  const size_t seconds(elapsed - weeks * secs_per_week - days * secs_per_day - hours * secs_per_hour - minutes * 60);
-  if (elapsed > secs_per_week) // more than a week
-    return (boost::format("%02dw %02dd %02d:%02d:%02d|") % weeks % days % hours % minutes % seconds).str();
-  else if (elapsed > secs_per_day) // less than a week, more than a day
-    return (boost::format("%02dd %02d:%02d:%02d|") % days % hours % minutes % seconds).str();
-  else if (elapsed > secs_per_hour) // less than a day, more than one hour
-    return (boost::format("%02d:%02d:%02d|") % hours % minutes % seconds).str();
-  else // less than one hour
-    return (boost::format("%02d:%02d|") % minutes % seconds).str();
-} // ... elapsed_time(...)
+}
+
+TimedLogManager::~TimedLogManager()
+{
+  --current_level_;
+}
+
+std::ostream& TimedLogManager::info()
+{
+  return *info_;
+}
+
+std::ostream& TimedLogManager::debug()
+{
+  return *debug_;
+}
+
+std::ostream& TimedLogManager::warn()
+{
+  return *warn_;
+}
+
+
+TimedLogging::TimedLogging()
+  : max_info_level_(default_max_info_level)
+  , max_debug_level_(default_max_debug_level)
+  , enable_warnings_(default_enable_warnings)
+  , enable_colors_(default_enable_colors && terminal_supports_color())
+  , info_prefix_(enable_colors_ ? default_info_color() : "")
+  , debug_prefix_(enable_colors_ ? default_debug_color() : "")
+  , warning_prefix_(enable_colors_ ? default_warning_color() : "")
+  , info_suffix_(enable_colors_ ? StreamModifiers::normal : "")
+  , debug_suffix_(enable_colors_ ? StreamModifiers::normal : "")
+  , warning_suffix_(enable_colors_ ? StreamModifiers::normal : "")
+  , created_(false)
+  , current_level_(-1)
+{
+  update_colors();
+}
+
+void TimedLogging::create(const ssize_t max_info_level, const ssize_t max_debug_level, const bool enable_warnings,
+                          const bool enable_colors, const std::string info_color, const std::string debug_color,
+                          const std::string warning_color)
+{
+  std::lock_guard<std::mutex> DUNE_UNUSED(guard)(mutex_);
+  if (created_)
+    DUNE_THROW(Exceptions::you_are_using_this_wrong, "Do not call create() more than once!");
+  max_info_level_  = max_info_level;
+  max_debug_level_ = max_debug_level;
+  enable_warnings_ = enable_warnings;
+  enable_colors_   = enable_colors && terminal_supports_color();
+  info_prefix_     = enable_colors_ ? info_color : "";
+  debug_prefix_    = enable_colors_ ? debug_color : "";
+  warning_prefix_  = enable_colors_ ? warning_color : "";
+  created_         = true;
+  current_level_ = -1;
+  update_colors();
+} // ... create(...)
+
+TimedLogManager TimedLogging::get(const std::string id)
+{
+  std::lock_guard<std::mutex> DUNE_UNUSED(guard)(mutex_);
+  ++current_level_;
+  return TimedLogManager(timer_,
+                         info_prefix_ + (id.empty() ? "info" : id) + ": " + info_suffix_,
+                         debug_prefix_ + (id.empty() ? "debug" : id) + ": " + debug_suffix_,
+                         warning_prefix_ + (id.empty() ? "warn" : id) + ": " + warning_suffix_,
+                         max_info_level_,
+                         max_debug_level_,
+                         enable_warnings_,
+                         current_level_);
+}
+
+void TimedLogging::update_colors()
+{
+  if (enable_colors_) {
+    info_prefix_    = color(info_prefix_);
+    debug_prefix_   = color(debug_prefix_);
+    warning_prefix_ = color(warning_prefix_);
+    if (info_prefix_.empty())
+      info_suffix_ = "";
+    else {
+      info_prefix_ += StreamModifiers::bold;
+      info_suffix_ = StreamModifiers::normal;
+    }
+    if (debug_prefix_.empty())
+      debug_suffix_ = "";
+    else {
+      debug_prefix_ += StreamModifiers::bold;
+      debug_suffix_ = StreamModifiers::normal;
+    }
+    if (warning_prefix_.empty())
+      warning_suffix_ = "";
+    else {
+      warning_prefix_ += StreamModifiers::bold;
+      warning_suffix_ = StreamModifiers::normal;
+    }
+  }
+} // ... update_colors(...)
+
+
+TimedLogging& TimedLogger()
+{
+  static TimedLogging timed_logger;
+  return timed_logger;
+}
 
 
 } // namespace Common
