@@ -205,7 +205,7 @@ public:
   }
   static const std::string default_debug_color()
   {
-    return "lightgray";
+    return "darkgray";
   }
   static const std::string default_warning_color()
   {
@@ -334,7 +334,8 @@ int main()
   logger.warn() << "<- The 'warn' prefix left of this should be red!"   << std::endl;
 }
 \endcode
- * \note Debug logging is only enabled if NDEBUG is not defined.
+ * \note Debug logging is only enabled if NDEBUG is not defined but you might still want to guard calls to
+ *       logger.debug() for performance reasons.
  */
 TimedLogging& TimedLogger();
 
