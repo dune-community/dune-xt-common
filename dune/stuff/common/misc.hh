@@ -101,65 +101,6 @@ size_t arrayLength(T(&/*array*/)[N])
 }
 
 
-template <class ValueType>
-class ReferenceProvider
-{
-public:
-  virtual ~ReferenceProvider()
-  {
-  }
-
-  virtual ValueType& get() = 0;
-};
-
-
-template <class ValueType>
-class ReferenceProviderByReference : public ReferenceProvider<ValueType>
-{
-public:
-  ReferenceProviderByReference(ValueType& vec)
-    : value_ref_(vec)
-  {
-  }
-
-  virtual ~ReferenceProviderByReference()
-  {
-  }
-
-  virtual ValueType& get() DS_OVERRIDE DS_FINAL
-  {
-    return value_ref_;
-  }
-
-private:
-  ValueType& value_ref_;
-};
-
-
-template <class ValueType>
-class ReferenceProviderByPointer : public ReferenceProvider<ValueType>
-{
-public:
-  template <class... Args>
-  ReferenceProviderByPointer(Args&&... args)
-    : value_ptr_(new ValueType(std::forward<Args>(args)...))
-  {
-  }
-
-  virtual ~ReferenceProviderByPointer()
-  {
-  }
-
-  virtual ValueType& get() DS_OVERRIDE DS_FINAL
-  {
-    return *value_ptr_;
-  }
-
-private:
-  std::unique_ptr<ValueType> value_ptr_;
-};
-
-
 } // namespace Common
 } // namepspace Stuff
 } // namespace Dune
