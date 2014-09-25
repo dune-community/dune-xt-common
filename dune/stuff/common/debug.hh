@@ -28,26 +28,6 @@ inline char* charcopy(const char* s)
 
 #define __CLASS__ strtok(charcopy(__PRETTY_FUNCTION__), "<(")
 
-
-class assert_exception : public std::runtime_error
-{
-public:
-  assert_exception(std::string msg)
-    : std::runtime_error(msg)
-  {
-  }
-};
-
-class singlerun_abort_exception : public std::runtime_error
-{
-public:
-  singlerun_abort_exception(std::string msg)
-    : std::runtime_error(msg)
-  {
-  }
-};
-
-
 #define UNUSED(identifier) /* identifier */
 
 /*  some arguments are only used in debug mode, but unused in release one */
