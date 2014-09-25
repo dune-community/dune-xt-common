@@ -97,6 +97,7 @@ protected:
   }
   CRTPInterface& operator=(const CRTPInterface&)
   {
+    return *this;
   }
 
   mutable std::recursive_mutex crtp_mutex_;
