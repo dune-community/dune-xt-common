@@ -55,7 +55,6 @@ public:
   *program
    * instances.\n
    *  - Provides csv-conform output of process-averaged runtimes.
-   * \todo this could go into libdune-stuff
    **/
 class Profiler
 {

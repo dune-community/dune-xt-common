@@ -34,6 +34,8 @@ private:
   //  std::unique_ptr<tbb::task_scheduler_init> tbb_init_;
 };
 
+/** Automatic Storage of non-static, N thread-local values
+ **/
 template <class ValueImp>
 class PerThreadValue
 {

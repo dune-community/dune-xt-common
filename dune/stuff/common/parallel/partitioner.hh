@@ -6,6 +6,11 @@
 namespace Dune {
 namespace Stuff {
 
+/** \brief Partition that assigns each codim-0 entity in a \ref IndexSet a unique partition number,
+ * its index in the set
+ *
+ * usable with \ref Dune::SeedListPartitioning for example \ref Dune::PartitioningInterface
+ **/
 template <class GridViewType>
 struct IndexSetPartitioner
 {
