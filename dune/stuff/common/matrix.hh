@@ -35,32 +35,6 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-// \todo doc
-template <class MatrixImp>
-inline void DUNE_DEPRECATED_MSG("Use *= 0 instead!") clear(Dune::DenseMatrix<MatrixImp>& matrix)
-{
-  matrix *= typename Dune::DenseMatrix<MatrixImp>::value_type(0);
-}
-
-
-//! TODO
-template <class MatrixImp>
-struct DUNE_DEPRECATED_MSG("deprecated dune-fem util, use stuff/la instead") PrecondionWrapperDummy
-{
-  typedef typename MatrixImp::RowDiscreteFunctionType::DofStorageType X;
-  typedef typename MatrixImp::ColDiscreteFunctionType::DofStorageType Y;
-  void pre(X&, Y&)
-  {
-  }
-  void apply(X&, const Y&)
-  {
-  }
-  void post(X&)
-  {
-  }
-}; // struct PrecondionWrapperDummy
-
-
 /** \brief get the diagonal of a fieldMatrix into a fieldvector
    * \note While in principle this might do for SparseRowMatrix as well, don't do it! SparseRowMatrix has specialised
    *functions for this (putting the diagonal into DiscreteFunctions tho
