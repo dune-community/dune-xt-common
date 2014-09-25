@@ -5,7 +5,7 @@
 
 #include "main.hxx"
 
-#include <dune/stuff/common/logging.hh>
+#include <dune/stuff/common/timedlogging.hh>
 
 using namespace Dune;
 using namespace Dune::Stuff;

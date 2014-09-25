@@ -8,6 +8,7 @@ set(lib_dune_stuff_sources common/filesystem.cc
   common/convergence-study.cc
   common/localization-study.cc
   common/logging.cc
+  common/timedlogging.cc
   common/logstreams.cc
   common/profiler.cc
   common/configuration.cc
