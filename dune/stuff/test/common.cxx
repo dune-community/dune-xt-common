@@ -87,7 +87,7 @@ void check_eoc_study_for_success(const Dune::Stuff::Common::ConvergenceStudy& st
       const auto expected_result   = internal::convert_to_scientific(expected_results[ii], 2);
       const auto actual_exponent   = actual_result.second;
       const auto expected_exponent = expected_result.second;
-      EXPECT_EQ(actual_exponent, expected_exponent)
+      EXPECT_EQ(expected_exponent, actual_exponent)
           << "          Exponent comparison (in scientific notation, precision 2) failed for\n"
           << "          norm: " << norm << "\n"
           << "          actual_results[" << ii << "]   = " << actual_results[ii] << "\n"
@@ -96,7 +96,7 @@ void check_eoc_study_for_success(const Dune::Stuff::Common::ConvergenceStudy& st
         return;
       const auto actual_coefficient   = actual_result.first;
       const auto expected_coefficient = expected_result.first;
-      EXPECT_EQ(actual_coefficient, expected_coefficient)
+      EXPECT_EQ(expected_coefficient, actual_coefficient)
           << "          Coefficient comparison (in scientific notation, precision 2) failed for\n"
           << "          norm: " << norm << "\n"
           << "          actual_results[" << ii << "]   = " << actual_results[ii] << "\n"
