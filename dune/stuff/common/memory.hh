@@ -186,7 +186,7 @@ private:
 
 
 template <class T>
-class ConstStorageProvider : public boost::noncopyable, public nonmoveable
+class ConstStorageProvider : public boost::noncopyable
 {
 public:
   ConstStorageProvider(const T& tt)
@@ -208,6 +208,8 @@ public:
     : provide_(make_unique<internal::ConstAccessByPointer<T>>(tt))
   {
   }
+
+  ConstStorageProvider(ConstStorageProvider<T>&& source) = default;
 
   const T& storage_access() const
   {
