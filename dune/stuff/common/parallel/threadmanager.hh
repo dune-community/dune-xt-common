@@ -41,7 +41,7 @@ class PerThreadValue
 {
 public:
   typedef ValueImp ValueType;
-  static_assert(std::is_copy_assignable<ValueImp>::value || std::is_move_assignable<ValueImp>::value,
+  static_assert(std::is_copy_assignable<ValueImp>::value || std::is_move_constructible<ValueImp>::value,
                 "ValueImp not usable in a std::vector");
 
 private:
