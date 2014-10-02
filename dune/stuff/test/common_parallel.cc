@@ -80,8 +80,6 @@ TYPED_TEST(ThreadValueTest, All)
   const auto new_value = *foo;
   const PTVType bar(*foo);
   check_eq(bar, new_value);
-  const PTVType snafu = foo;
-  check_eq(snafu, new_value);
 }
 
 TEST(ThreadManagerTBB, All)

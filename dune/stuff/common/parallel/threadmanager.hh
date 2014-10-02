@@ -62,11 +62,6 @@ public:
     std::generate(values_.begin(), values_.end(), [=]() { return Common::make_unique<ValueType>(value); });
   }
 
-  FallbackPerThreadValue(const FallbackPerThreadValue<ValueType>& other) = default;
-  FallbackPerThreadValue(FallbackPerThreadValue<ValueType>&& other) = default;
-  FallbackPerThreadValue& operator=(const FallbackPerThreadValue<ValueType>& other) = default;
-  FallbackPerThreadValue& operator=(FallbackPerThreadValue<ValueType>&& other) = default;
-
   //! Initialization by in-place construction ValueType with \param ctor_args
   template <class... InitTypes>
   explicit FallbackPerThreadValue(InitTypes&&... ctor_args)
@@ -80,7 +75,6 @@ public:
     std::generate(values_.begin(), values_.end(), [=]() { return Common::make_unique<ValueType>(value); });
     return *this;
   }
-
 
   operator ValueType() const
   {
@@ -124,7 +118,7 @@ private:
   ContainerType values_;
 };
 
-#if 1 // HAVE_TBB
+#if HAVE_TBB
 /** Automatic Storage of non-static, N thread-local values
  **/
 template <class ValueImp>
@@ -184,11 +178,11 @@ public:
   }
 
   template <class BinaryOperation>
-  ValueType accumulate(ValueType /*init*/, BinaryOperation op) const
+  ValueType accumulate(ValueType init, BinaryOperation op) const
   {
     typedef const typename ContainerType::value_type ptr;
-    auto l = [&](ptr& a, ptr& b) { return op(*a, *b); };
-    return *values_->combine(l);
+    auto l = [&](ConstValueType& a, ptr& b) { return op(a, *b); };
+    return std::accumulate(values_->begin(), values_->end(), init, l);
   }
 
   ValueType sum() const
