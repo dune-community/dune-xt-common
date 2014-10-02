@@ -144,6 +144,26 @@ struct underlying_type
 #endif
 };
 
+//! gcc < 4.8 fires a static-assert if std::hash< T > () isn't implemented
+#if __GNUC__ == 4 && (__GNUC_MINOR__ < 8)
+template <typename>
+struct is_hashable : std::false_type
+{
+};
+#else
+//! implementation from https://gcc.gnu.org/ml/libstdc++/2013-03/msg00027.html
+template <typename, typename = void>
+struct is_hashable : std::false_type
+{
+};
+
+template <typename T>
+struct is_hashable<T, typename std::enable_if<!!sizeof(std::declval<std::hash<T>>()(std::declval<T>()))>::type>
+    : std::true_type
+{
+};
+#endif
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
