@@ -73,6 +73,13 @@ public:
   {
   }
 
+  ThisType& operator=(const ValueType& value)
+  {
+    values_ = ContainerType(ThreadManager::max_threads(), value);
+    return *this;
+  }
+
+
   operator ValueImp() const
   {
     return this->operator*();
