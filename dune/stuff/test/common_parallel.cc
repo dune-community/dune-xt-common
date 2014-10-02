@@ -6,6 +6,7 @@
 #include "main.hxx"
 
 #include <string>
+#include <memory>
 #include <array>
 #include <initializer_list>
 #include <vector>
@@ -16,28 +17,54 @@ using namespace Dune::Stuff;
 using namespace Dune::Stuff::Common;
 
 template <typename ThreadValue>
-void check_eq(const ThreadValue& foo, const typename ThreadValue::ValueType& value)
+void value_check(ThreadValue& foo, const typename ThreadValue::ValueType& value)
 {
   EXPECT_EQ(*foo, value);
   EXPECT_EQ(int(foo), value);
+  EXPECT_EQ(*(foo.operator->()), value);
 }
+
+template <typename ThreadValue,
+          bool = std::is_const<typename ThreadValue::ValueType>::value || std::is_const<ThreadValue>::value>
+struct Checker
+{
+  static void check_eq(ThreadValue& foo, const typename ThreadValue::ValueType& value)
+  {
+    auto& const_foo = static_cast<const ThreadValue&>(foo);
+    value_check(const_foo, value);
+  }
+};
+
+template <typename ThreadValue>
+struct Checker<ThreadValue, false /*valuetype is not const*/>
+{
+  static void check_eq(ThreadValue& foo, const typename ThreadValue::ValueType& value)
+  {
+    auto& const_foo = static_cast<const ThreadValue&>(foo);
+    value_check(const_foo, value);
+
+    const auto new_value                 = typename ThreadValue::ValueType(9);
+    typename ThreadValue::ValueType& bar = *foo;
+    bar = new_value;
+    value_check(const_foo, new_value);
+  }
+};
 
 template <typename ThreadValue>
 void check_eq(ThreadValue& foo, const typename ThreadValue::ValueType& value)
 {
-  auto& const_foo = static_cast<const ThreadValue&>(foo);
-  check_eq(const_foo, value);
-  const auto new_value = typename ThreadValue::ValueType(9);
-  *foo = new_value;
-  check_eq(const_foo, new_value);
+  Checker<ThreadValue>::check_eq(foo, value);
 }
 
-typedef testing::Types<PerThreadValue<int>, TBBPerThreadValue<int>, FallbackPerThreadValue<int>> TLSTypes;
+// typedef testing::Types< PerThreadValue<int>, TBBPerThreadValue<int>, FallbackPerThreadValue<int>> TLSTypes;
+typedef testing::Types<TBBPerThreadValue<const int>, FallbackPerThreadValue<const int>, PerThreadValue<const int>,
+                       TBBPerThreadValue<int>, FallbackPerThreadValue<int>, PerThreadValue<int>> TLSTypes;
 
 template <class T>
 struct ThreadValueTest : public testing::Test
 {
 };
+
 
 TYPED_TEST_CASE(ThreadValueTest, TLSTypes);
 TYPED_TEST(ThreadValueTest, All)

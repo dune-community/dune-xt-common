@@ -6,7 +6,7 @@
 #ifndef DUNE_STUFF_COMMON_THREADMANAGER_HH
 #define DUNE_STUFF_COMMON_THREADMANAGER_HH
 
-#include <vector>
+#include <deque>
 #include <algorithm>
 #include <type_traits>
 #if HAVE_TBB
@@ -15,6 +15,7 @@
 #include <boost/noncopyable.hpp>
 
 #include <dune/stuff/common/type_utils.hh>
+#include <dune/stuff/common/memory.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -47,18 +48,18 @@ class FallbackPerThreadValue : public boost::noncopyable
 {
 public:
   typedef ValueImp ValueType;
-  static_assert(std::is_copy_assignable<ValueImp>::value || std::is_move_constructible<ValueImp>::value,
-                "ValueImp not usable in a std::vector");
+  typedef typename std::conditional<std::is_const<ValueImp>::value, ValueImp, const ValueImp>::type ConstValueType;
 
 private:
   typedef FallbackPerThreadValue<ValueImp> ThisType;
-  typedef std::vector<ValueType> ContainerType;
+  typedef std::deque<std::unique_ptr<ValueType>> ContainerType;
 
 public:
   //! Initialization by copy construction of ValueType
-  explicit FallbackPerThreadValue(const ValueType& value)
-    : values_(ThreadManager::max_threads(), value)
+  explicit FallbackPerThreadValue(ConstValueType& value)
+    : values_(ThreadManager::max_threads())
   {
+    std::generate(values_.begin(), values_.end(), [=]() { return Common::make_unique<ValueType>(value); });
   }
 
   FallbackPerThreadValue(const FallbackPerThreadValue<ValueType>& other) = default;
@@ -69,40 +70,41 @@ public:
   //! Initialization by in-place construction ValueType with \param ctor_args
   template <class... InitTypes>
   explicit FallbackPerThreadValue(InitTypes&&... ctor_args)
-    : values_(ThreadManager::max_threads(), ValueType(std::forward<InitTypes>(ctor_args)...))
+    : values_(ThreadManager::max_threads())
   {
+    std::generate(values_.begin(), values_.end(), [=]() { return Common::make_unique<ValueType>(ctor_args...); });
   }
 
-  ThisType& operator=(const ValueType& value)
+  ThisType& operator=(ConstValueType&& value)
   {
-    values_ = ContainerType(ThreadManager::max_threads(), value);
+    std::generate(values_.begin(), values_.end(), [=]() { return Common::make_unique<ValueType>(value); });
     return *this;
   }
 
 
-  operator ValueImp() const
+  operator ValueType() const
   {
     return this->operator*();
   }
 
   ValueType& operator*()
   {
-    return values_[ThreadManager::thread()];
+    return *values_[ThreadManager::thread()];
   }
 
-  const ValueType& operator*() const
+  ConstValueType& operator*() const
   {
-    return values_[ThreadManager::thread()];
+    return *values_[ThreadManager::thread()];
   }
 
   ValueType* operator->()
   {
-    return &values_[ThreadManager::thread()];
+    return values_[ThreadManager::thread()].get();
   }
 
-  const ValueType* operator->() const
+  ConstValueType* operator->() const
   {
-    return &values_[ThreadManager::thread()];
+    return values_[ThreadManager::thread()].get();
   }
 
   template <class BinaryOperation>
@@ -120,7 +122,7 @@ private:
   ContainerType values_;
 };
 
-#if HAVE_TBB
+#if 1 // HAVE_TBB
 /** Automatic Storage of non-static, N thread-local values
  **/
 template <class ValueImp>
@@ -128,30 +130,33 @@ class TBBPerThreadValue : public boost::noncopyable
 {
 public:
   typedef ValueImp ValueType;
-  static_assert(std::is_copy_assignable<ValueImp>::value || std::is_move_constructible<ValueImp>::value,
-                "ValueImp not usable in a std::vector");
+  typedef typename std::conditional<std::is_const<ValueImp>::value, ValueImp, const ValueImp>::type ConstValueType;
 
 private:
   typedef TBBPerThreadValue<ValueImp> ThisType;
-  typedef tbb::enumerable_thread_specific<ValueType> ContainerType;
+  typedef tbb::enumerable_thread_specific<std::unique_ptr<ValueType>> ContainerType;
+
+  struct Init
+  {
+  };
 
 public:
   //! Initialization by copy construction of ValueType
-  explicit TBBPerThreadValue(const ValueType& value)
-    : values_(value)
+  explicit TBBPerThreadValue(ConstValueType& value)
+    : values_(new ContainerType([=]() { return Common::make_unique<ValueType>(value); }))
   {
   }
 
   //! Initialization by in-place construction ValueType with \param ctor_args
   template <class... InitTypes>
   explicit TBBPerThreadValue(InitTypes&&... ctor_args)
-    : values_(ValueType(std::forward<InitTypes>(ctor_args)...))
+    : values_(new ContainerType([=]() { return Common::make_unique<ValueType>(ctor_args...); }))
   {
   }
 
-  ThisType& operator=(const ValueType& value)
+  ThisType& operator=(ValueType&& value)
   {
-    values_ = ContainerType(value);
+    values_ = Common::make_unique<ContainerType>([=]() { return Common::make_unique<ValueType>(value); });
     return *this;
   }
 
@@ -162,37 +167,37 @@ public:
 
   ValueType& operator*()
   {
-    return values_.local();
+    return *values_->local();
   }
 
-  const ValueType& operator*() const
+  ConstValueType& operator*() const
   {
-    return values_.local();
+    return *values_->local();
   }
 
   ValueType* operator->()
   {
-    return &values_.local();
+    return values_->local().get();
   }
 
-  const ValueType* operator->() const
+  ConstValueType* operator->() const
   {
-    return &values_.local();
+    return values_->local().get();
   }
 
   template <class BinaryOperation>
   ValueType accumulate(ValueType /*init*/, BinaryOperation op) const
   {
-    return values_.combine(op);
+    return values_->combine(op);
   }
 
   ValueType sum() const
   {
-    return values_.combine(std::plus<ValueType>());
+    return values_->combine(std::plus<ValueType>());
   }
 
 private:
-  mutable ContainerType values_;
+  mutable std::unique_ptr<ContainerType> values_;
 };
 
 template <typename T>
