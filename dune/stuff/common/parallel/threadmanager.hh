@@ -110,7 +110,9 @@ public:
   template <class BinaryOperation>
   ValueType accumulate(ValueType init, BinaryOperation op) const
   {
-    return std::accumulate(values_.begin(), values_.end(), init, op);
+    typedef const typename ContainerType::value_type ptr;
+    auto l = [&](ConstValueType& a, ptr& b) { return op(a, *b); };
+    return std::accumulate(values_.begin(), values_.end(), init, l);
   }
 
   ValueType sum() const
@@ -135,10 +137,6 @@ public:
 private:
   typedef TBBPerThreadValue<ValueImp> ThisType;
   typedef tbb::enumerable_thread_specific<std::unique_ptr<ValueType>> ContainerType;
-
-  struct Init
-  {
-  };
 
 public:
   //! Initialization by copy construction of ValueType
@@ -188,12 +186,14 @@ public:
   template <class BinaryOperation>
   ValueType accumulate(ValueType /*init*/, BinaryOperation op) const
   {
-    return values_->combine(op);
+    typedef const typename ContainerType::value_type ptr;
+    auto l = [&](ptr& a, ptr& b) { return op(*a, *b); };
+    return *values_->combine(l);
   }
 
   ValueType sum() const
   {
-    return values_->combine(std::plus<ValueType>());
+    return accumulate(ValueType(), std::plus<ValueType>());
   }
 
 private:

@@ -32,6 +32,7 @@ struct Checker
   {
     auto& const_foo = static_cast<const ThreadValue&>(foo);
     value_check(const_foo, value);
+    EXPECT_GT(const_foo.sum(), 0);
   }
 };
 
@@ -42,6 +43,7 @@ struct Checker<ThreadValue, false /*valuetype is not const*/>
   {
     auto& const_foo = static_cast<const ThreadValue&>(foo);
     value_check(const_foo, value);
+    EXPECT_GT(const_foo.sum(), 0);
 
     const auto new_value                 = typename ThreadValue::ValueType(9);
     typename ThreadValue::ValueType& bar = *foo;
@@ -78,6 +80,8 @@ TYPED_TEST(ThreadValueTest, All)
   const auto new_value = *foo;
   const PTVType bar(*foo);
   check_eq(bar, new_value);
+  const PTVType snafu = foo;
+  check_eq(snafu, new_value);
 }
 
 TEST(ThreadManagerTBB, All)
