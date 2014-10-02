@@ -120,10 +120,10 @@ void Profiler::startTiming(const std::string section_name)
       return;
 
     section->second.first  = true; // set active, start with new
-    section->second.second = PerThreadValue<TimingData>(section_name);
+    section->second.second = TimingData(section_name);
   } else {
     // init new section
-    known_timers_map_[section_name] = std::make_pair(true, PerThreadValue<TimingData>(section_name));
+    known_timers_map_[section_name] = std::make_pair(true, TimingData(section_name));
   }
   DSC_LIKWID_BEGIN_SECTION(section_name)
 } // StartTiming

@@ -15,31 +15,42 @@
 using namespace Dune::Stuff;
 using namespace Dune::Stuff::Common;
 
-template <typename T>
-void check_eq(const PerThreadValue<T>& foo, const T& value)
+template <typename ThreadValue>
+void check_eq(const ThreadValue& foo, const typename ThreadValue::ValueType& value)
 {
   EXPECT_EQ(*foo, value);
   EXPECT_EQ(int(foo), value);
 }
 
-template <typename T>
-void check_eq(PerThreadValue<T>& foo, const T& value)
+template <typename ThreadValue>
+void check_eq(ThreadValue& foo, const typename ThreadValue::ValueType& value)
 {
-  check_eq(static_cast<const PerThreadValue<T>&>(foo), value);
-  const auto new_value = T(9);
+  auto& const_foo = static_cast<const ThreadValue&>(foo);
+  check_eq(const_foo, value);
+  const auto new_value = typename ThreadValue::ValueType(9);
   *foo = new_value;
-  check_eq(static_cast<const PerThreadValue<T>&>(foo), new_value);
+  check_eq(const_foo, new_value);
 }
 
-TEST(ThreadValueTest, All)
+typedef testing::Types<PerThreadValue<int>, TBBPerThreadValue<int>, FallbackPerThreadValue<int>> TLSTypes;
+
+template <class T>
+struct ThreadValueTest : public testing::Test
 {
-  typedef int T;
-  const T value(1);
-  PerThreadValue<T> foo(value);
+};
+
+TYPED_TEST_CASE(ThreadValueTest, TLSTypes);
+TYPED_TEST(ThreadValueTest, All)
+{
+  typedef TypeParam PTVType;
+  typename PTVType::ValueType value(1);
+  PTVType foo(value);
   check_eq(foo, value);
-  const auto new_value        = *foo;
-  const PerThreadValue<T> bar = foo;
+  const auto new_value = *foo;
+  const PTVType bar(*foo);
   check_eq(bar, new_value);
-  auto snafu = std::move(foo);
-  check_eq(snafu, new_value);
+}
+
+TEST(ThreadManagerTBB, All)
+{
 }
