@@ -18,8 +18,6 @@
 #include <boost/filesystem/fstream.hpp>
 
 #include <dune/stuff/common/logstreams.hh>
-//! \todo this should be removed asap, only here so splitting doesn't blow up right away
-#include <dune/stuff/common/timedlogging.hh>
 
 namespace Dune {
 namespace Stuff {
