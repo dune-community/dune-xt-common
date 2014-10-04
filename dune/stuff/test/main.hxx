@@ -20,6 +20,7 @@
 #include <map>
 #include <random>
 #include <fstream>
+#include <limits>
 
 #include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/float_cmp.hh>
@@ -36,6 +37,7 @@
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/common/configuration.hh>
 #include <dune/stuff/common/logging.hh>
+#include <dune/stuff/common/timedlogging.hh>
 #include <dune/stuff/common/convergence-study.hh>
 
 #include "common.hh"
@@ -92,6 +94,19 @@ int main(int argc, char** argv)
         "",
         "",
         "");
+
+    DSC::TimedLogger().create(
+#if DUNE_STUFF_TEST_MAIN_ENABLE_INFO_LOGGING
+        std::numeric_limits<ssize_t>::max(),
+#else
+      -1,
+#endif
+#if DUNE_STUFF_TEST_MAIN_ENABLE_DEBUG_LOGGING
+        std::numeric_limits<ssize_t>::max()
+#else
+      -1
+#endif
+            );
 #if HAVE_TBB
     tbb::task_scheduler_init tbb_init(DSC_CONFIG_GET("threading.max_count", 1));
 #endif
