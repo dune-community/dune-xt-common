@@ -68,8 +68,8 @@ namespace FloatCmp {
     return true;                                                                                                       \
   }                                                                                                                    \
   template <class F, class S, Dune::FloatCmp::CmpStyle style = Dune::FloatCmp::defaultCmpStyle>                        \
-  bool id(const Stuff::LA::VectorInterface<F>& first,                                                                  \
-          const Stuff::LA::VectorInterface<S>& second,                                                                 \
+  bool id(const Stuff::LA::VectorInterface<F, typename F::ScalarType>& first,                                          \
+          const Stuff::LA::VectorInterface<S, typename S::ScalarType>& second,                                         \
           typename Dune::FloatCmp::EpsilonType<typename F::ScalarType>::Type epsilon =                                 \
               Dune::FloatCmp::DefaultEpsilon<typename F::ScalarType, style>::value())                                  \
   {                                                                                                                    \
