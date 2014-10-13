@@ -29,10 +29,10 @@ inline void DUNE_DEPRECATED_MSG("Use *= 0 instead!") clear(Dune::DenseVector<Vec
   vector *= typename Dune::DenseVector<VectorImp>::value_type(0);
 }
 
-template <class T>
-inline void DUNE_DEPRECATED_MSG("Use *= 0 instead!") clear(LA::VectorInterface<T>& vector)
+template <class T, class S = double>
+inline void DUNE_DEPRECATED_MSG("Use *= 0 instead!") clear(LA::VectorInterface<T, S>& vector)
 {
-  vector *= typename LA::VectorInterface<T>::ScalarType(0);
+  vector *= typename LA::VectorInterface<T, S>::ScalarType(0);
 }
 
 
