@@ -14,6 +14,9 @@
 #ifndef DUNE_STUFF_TEST_MAIN_ENABLE_INFO_LOGGING
 #define DUNE_STUFF_TEST_MAIN_ENABLE_INFO_LOGGING 0
 #endif
+#ifndef DUNE_STUFF_TEST_MAIN_ENABLE_TIMED_LOGGING
+#define DUNE_STUFF_TEST_MAIN_ENABLE_TIMED_LOGGING 0
+#endif
 
 #include <string>
 #include <vector>
@@ -96,12 +99,12 @@ int main(int argc, char** argv)
         "");
 
     DSC::TimedLogger().create(
-#if DUNE_STUFF_TEST_MAIN_ENABLE_INFO_LOGGING
+#if DUNE_STUFF_TEST_MAIN_ENABLE_TIMED_LOGGING && DUNE_STUFF_TEST_MAIN_ENABLE_INFO_LOGGING
         std::numeric_limits<ssize_t>::max(),
 #else
       -1,
 #endif
-#if DUNE_STUFF_TEST_MAIN_ENABLE_DEBUG_LOGGING
+#if DUNE_STUFF_TEST_MAIN_ENABLE_TIMED_LOGGING && DUNE_STUFF_TEST_MAIN_ENABLE_DEBUG_LOGGING
         std::numeric_limits<ssize_t>::max()
 #else
       -1
