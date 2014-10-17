@@ -48,24 +48,32 @@ template <class T, class OutStreamType = std::ostream>
 void print(const std::vector<T>& vector, const std::string name = "vector", OutStreamType& out = std::cout,
            const std::string prefix = "")
 {
-  out << prefix << name << " = [";
-  for (unsigned int i = 0; i < (vector.size() - 1); ++i) {
-    out << vector[i] << ", ";
+  if (vector.size() == 1)
+    print(vector[0], name, out, prefix);
+  else {
+    out << prefix << name << " = [";
+    for (unsigned int i = 0; i < (vector.size() - 1); ++i) {
+      out << vector[i] << ", ";
+    }
+    out << vector[vector.size() - 1] << "];"
+        << "\n";
   }
-  out << vector[vector.size() - 1] << "];"
-      << "\n";
 } // void print(const std::vector< double >& ds, ...)
 
 template <class VectorImp, class OutStreamType = std::ostream>
 void print(const Dune::DenseVector<VectorImp>& vector, const std::string name = "DenseVector",
            OutStreamType& out = std::cout, const std::string prefix = "")
 {
-  out << prefix << name << " = [";
-  for (unsigned int i = 0; i < (vector.size() - 1); ++i) {
-    out << vector[i] << ", ";
+  if (vector.size() == 1)
+    print(vector[0], name, out, prefix);
+  else {
+    out << prefix << name << " = [";
+    for (unsigned int i = 0; i < (vector.size() - 1); ++i) {
+      out << vector[i] << ", ";
+    }
+    out << vector[vector.size() - 1] << "];"
+        << "\n";
   }
-  out << vector[vector.size() - 1] << "];"
-      << "\n";
 } // void print(const Dune::DenseVector< VectorImp >& vector, ...)
 
 template <class FieldImp, int size, class OutStreamType = std::ostream>
@@ -73,8 +81,12 @@ void print(const std::vector<Dune::FieldVector<FieldImp, size>>& vectors,
            const std::string name = "vector_of_FieldVector", OutStreamType& out = std::cout,
            const std::string prefix = "")
 {
-  for (unsigned int i = 0; i < vectors.size(); ++i) {
-    print(vectors[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
+  if (vectors.size() == 1)
+    print(vectors[0], name, out, prefix);
+  else {
+    for (unsigned int i = 0; i < vectors.size(); ++i) {
+      print(vectors[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
+    }
   }
 } // void print(const std::vector< Dune::FieldVector< FieldImp, size > >& vectors, ...)
 
@@ -86,8 +98,12 @@ template <class VectorImp, class OutStreamType = std::ostream>
 void print(const std::vector<Dune::DenseVector<VectorImp>>& vectors, const std::string name = "vector_of_DenseVector",
            OutStreamType& out = std::cout, const std::string prefix = "")
 {
-  for (unsigned int i = 0; i < vectors.size(); ++i) {
-    print(vectors[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
+  if (vectors.size() == 1)
+    print(vectors[0], name, out, prefix);
+  else {
+    for (unsigned int i = 0; i < vectors.size(); ++i) {
+      print(vectors[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
+    }
   }
 } // void print(const std::vector< const Dune::DenseVector< VectorImp > >& vectors, ...)
 
@@ -95,29 +111,33 @@ template <class MatrixImp, class OutStreamType = std::ostream>
 void print(const Dune::DenseMatrix<MatrixImp>& matrix, const std::string name = "DenseMatrix",
            OutStreamType& out = std::cout, const std::string prefix = "")
 {
-  out << prefix << name << " = [";
-  typedef typename Dune::DenseMatrix<MatrixImp>::const_row_reference RowType;
-  const RowType& firstRow = matrix[0];
-  for (unsigned int j = 0; j < (firstRow.size() - 1); ++j) {
-    out << firstRow[j] << ", ";
-  }
-  out << firstRow[firstRow.size() - 1];
-  if (matrix.rows() == 1)
-    out << "];"
-        << "\n";
-  else
-    out << ";"
-        << "\n";
-  for (unsigned int i = 1; i < matrix.rows(); ++i) {
-    out << prefix << whitespaceify(name + " = [");
-    const RowType& row = matrix[i];
-    for (unsigned int j = 0; j < (row.size() - 1); ++j) {
-      out << row[j] << ", ";
+  if (matrix.rows() == 1 && matrix.cols() == 1)
+    print(matrix[0][0], name, out, prefix);
+  else {
+    out << prefix << name << " = [";
+    typedef typename Dune::DenseMatrix<MatrixImp>::const_row_reference RowType;
+    const RowType& firstRow = matrix[0];
+    for (unsigned int j = 0; j < (firstRow.size() - 1); ++j) {
+      out << firstRow[j] << ", ";
     }
-    out << row[row.size() - 1];
-    if (i == matrix.rows() - 1)
-      out << "];";
-    out << "\n";
+    out << firstRow[firstRow.size() - 1];
+    if (matrix.rows() == 1)
+      out << "];"
+          << "\n";
+    else
+      out << ";"
+          << "\n";
+    for (unsigned int i = 1; i < matrix.rows(); ++i) {
+      out << prefix << whitespaceify(name + " = [");
+      const RowType& row = matrix[i];
+      for (unsigned int j = 0; j < (row.size() - 1); ++j) {
+        out << row[j] << ", ";
+      }
+      out << row[row.size() - 1];
+      if (i == matrix.rows() - 1)
+        out << "];";
+      out << "\n";
+    }
   }
 } // void print(const Dune::DenseMatrix< MatrixImp >& matrix, ...)
 
@@ -130,8 +150,12 @@ void print(const std::vector<Dune::FieldMatrix<FieldImp, rows, cols>>& matrices,
            const std::string name = "vector_of_FieldMatrix", OutStreamType& out = std::cout,
            const std::string prefix = "")
 {
-  for (unsigned int i = 0; i < matrices.size(); ++i) {
-    print(matrices[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
+  if (matrices.size() == 1)
+    print(matrices[0], name, out, prefix);
+  else {
+    for (unsigned int i = 0; i < matrices.size(); ++i) {
+      print(matrices[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
+    }
   }
 } // void print(const std::vector< Dune::FieldMatrix< FieldImp, rows, cols > >& matrices, ...)
 
@@ -139,8 +163,12 @@ template <class MatrixImp, class OutStreamType = std::ostream>
 void print(const std::vector<Dune::DenseMatrix<MatrixImp>>& matrices, const std::string name = "vector_of_DenseMatrix",
            OutStreamType& out = std::cout, const std::string prefix = "")
 {
-  for (unsigned int i = 0; i < matrices.size(); ++i) {
-    print(matrices[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
+  if (matrices.size() == 1)
+    print(matrices[0], name, out, prefix);
+  else {
+    for (unsigned int i = 0; i < matrices.size(); ++i) {
+      print(matrices[i], name + "[" + Dune::Stuff::Common::toString(i) + "]", out, prefix);
+    }
   }
 } // void print(const std::vector< Dune::DenseMatrix< MatrixImp > >& matrices, ...)
 
