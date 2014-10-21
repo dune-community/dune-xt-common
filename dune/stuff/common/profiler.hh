@@ -37,7 +37,7 @@ private:
 public:
   std::string name;
 
-  TimingData(const std::string _name = "blank");
+  explicit TimingData(const std::string _name = "blank");
 
   void stop();
 
