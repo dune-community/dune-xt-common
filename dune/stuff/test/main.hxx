@@ -111,7 +111,9 @@ int main(int argc, char** argv)
 #endif
             );
 #if HAVE_TBB
-    tbb::task_scheduler_init tbb_init(DSC_CONFIG_GET("threading.max_count", 1));
+    tbb::task_scheduler_init tbb_init(DSC_CONFIG.has_key("threading.max_count") // <- doing this so complicated to
+                                          ? DSC_CONFIG.get<int>("threading.max_count") //    silence the WARNING: ...
+                                          : 1);
 #endif
     return RUN_ALL_TESTS();
 
