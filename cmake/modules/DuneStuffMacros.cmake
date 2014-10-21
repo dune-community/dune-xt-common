@@ -80,17 +80,28 @@ SET( CMAKE_CXX_FLAGS_RELEASE CACHE STRING
 SET( CMAKE_CXX_FLAGS "-DDUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS=1 ${CMAKE_CXX_FLAGS}" )
 
 SET( CMAKE_CXX_FLAGS_DEBUG
-  "-O0 -DDNDEBUG -g3 -ggdb -Wunused-variable -Winline -fno-strict-aliasing -fPIC -Wall -Wextra -Wc++0x-compat -Wparentheses -pedantic -Wredundant-decls -Wshadow -Wundef -Wnon-virtual-dtor -ftemplate-backtrace-limit=0 ${CMAKE_CXX_FLAGS_DEBUG}")
+  "-O0 -DDNDEBUG -g3 -ggdb -Wunused-variable -fno-strict-aliasing -fPIC -Wall -Wextra -Wparentheses -pedantic  -Wshadow -Wundef -Wnon-virtual-dtor  ${CMAKE_CXX_FLAGS_DEBUG}")
+
+#aka anything but intel, but cmake has ident for icc
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  set( CMAKE_CXX_FLAGS_DEBUG CACHE STRING
+        " -Wc++0x-compat -Wredundant-decls -Winline  -ftemplate-backtrace-limit=0 ${CMAKE_CXX_FLAGS_DEBUG} "
+      )
+else ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  # for us effectively icc
+  set( CMAKE_CXX_FLAGS_DEBUG CACHE STRING 
+        "-Wcast-qual -Wformat=2 -Winit-self -Woverloaded-virtual -Wshadow -Wsign-conversion -Wsign-promo -Wundef  -Wno-unused ${CMAKE_CXX_FLAGS_DEBUG}")
+endif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-        set( CMAKE_CXX_FLAGS_DEBUG CACHE STRING
+  set( CMAKE_CXX_FLAGS_DEBUG CACHE STRING
         "-Wnon-literal-null-conversion -Wused-but-marked-unused -Wno-tautological-compare -Wfloat-equal -Wdisabled-macro-expansion -Wcovered-switch-default -Wswitch-enum -Wunreachable-code -Wshorten-64-to-32  ${CMAKE_CXX_FLAGS_DEBUG}"
-        )
+      )
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-        set( CMAKE_CXX_FLAGS_DEBUG CACHE STRING
+  set( CMAKE_CXX_FLAGS_DEBUG CACHE STRING
         "-Wlogical-op  ${CMAKE_CXX_FLAGS_DEBUG} "
-        )
-        ADD_IF_SUPPORTED("-Og")
+      )
+  ADD_IF_SUPPORTED("-Og") #only since 4.7
 endif()
 
 MACRO(INCLUDE_SYS_DIR)
