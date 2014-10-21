@@ -5,8 +5,8 @@
 //
 // Contributors: Stefan Girke
 
-#ifndef DUNE_STUFF_TUPLE_HH
-#define DUNE_STUFF_TUPLE_HH
+#ifndef DUNE_STUFF_COMMON_TUPLE_HH
+#define DUNE_STUFF_COMMON_TUPLE_HH
 
 #include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/tuples.hh>
@@ -309,4 +309,4 @@ struct Combine
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_TUPLE_HH
+#endif // DUNE_STUFF_COMMON_TUPLE_HH
