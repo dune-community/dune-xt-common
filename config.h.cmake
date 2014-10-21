@@ -28,8 +28,8 @@
 # define LIKWID_PERFMON 1
 #endif
 
-#define DS_OVERRIDE ${DS_OVERRIDE}
-#define DS_FINAL  ${DS_FINAL}
+#define DS_OVERRIDE ; static_assert(false, "Use override instead (21.10.2014)!");
+#define DS_FINAL    ; static_assert(false, "Use final instead (21.10.2014)!");
 #define HAVE_DUNE_FEM_PARAMETER_REPLACE 0
 
 #ifndef HAVE_ALUGRID
