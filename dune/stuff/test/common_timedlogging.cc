@@ -3,9 +3,16 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#include "main.hxx"
+#ifndef DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
+#define DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS 0
+#endif
 
+#include "config.h"
+
+#include <dune/stuff/test/gtest/gtest.h>
 #include <dune/stuff/common/timedlogging.hh>
+
+#include "common.hh"
 
 using namespace Dune;
 using namespace Dune::Stuff;
@@ -93,3 +100,25 @@ TEST(TimedLogger, fool_level_tracking)
   logger.warn() << "this warning should not be visible" << std::endl;
   fool_level_tracking();
 }
+
+
+int main(int argc, char** argv)
+{
+#if DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
+  try {
+#endif
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+#if DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
+  } catch (Dune::Exception& e) {
+    std::cerr << "\nDune reported error: " << e.what() << std::endl;
+    std::abort();
+  } catch (std::exception& e) {
+    std::cerr << "\n" << e.what() << std::endl;
+    std::abort();
+  } catch (...) {
+    std::cerr << "Unknown exception thrown!" << std::endl;
+    std::abort();
+  } // try
+#endif // DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
+} // ... main(...)
