@@ -28,7 +28,7 @@ TEST(FixedMapTest, All)
     EXPECT_EQ(i, too_big[toString(i)]);
     EXPECT_NE(too_big.find(toString(i)), too_big.end());
   }
-  for (int DUNE_UNUSED(i) : {3, 4, 5}) {
+  for (int i : {3, 4, 5}) {
     EXPECT_EQ(int(), too_big[std::string()]);
     EXPECT_EQ(too_big.find(toString(i)), too_big.end());
   }
