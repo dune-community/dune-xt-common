@@ -115,7 +115,7 @@ public:
                 const bool log_on_exit            = internal::configuration_log_on_exit,
                 const std::string logfile = internal::configuration_logfile);
 
-  explicit Configuration(const ParameterTree& tree_in, const std::string sub_id);
+  Configuration(const ParameterTree& tree_in, const std::string sub_id);
 
   Configuration(const Configuration& other);
 
@@ -125,8 +125,8 @@ public:
                 const std::string logfile = internal::configuration_logfile);
 
   //! read ParameterTree from file and call Configuration(const ParameterTree& tree)
-  explicit Configuration(const std::string filename, const bool record_defaults, const bool warn_on_default_access,
-                         const bool log_on_exit, const std::string logfile);
+  Configuration(const std::string filename, const bool record_defaults, const bool warn_on_default_access,
+                const bool log_on_exit, const std::string logfile);
 
   //! read ParameterTree from given arguments and call Configuration(const ParameterTree& tree)
   Configuration(int argc, char** argv, const bool record_defaults = internal::configuration_record_defaults,
