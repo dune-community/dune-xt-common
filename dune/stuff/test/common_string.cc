@@ -22,12 +22,8 @@
 #include <dune/stuff/common/fvector.hh>
 #include <dune/stuff/common/fmatrix.hh>
 #include <dune/stuff/la/container/common.hh>
-#if HAVE_EIGEN
 #include <dune/stuff/la/container/eigen.hh>
-#endif
-#if HAVE_DUNE_ISTL
 #include <dune/stuff/la/container/istl.hh>
-#endif
 
 using namespace Dune::Stuff::Common;
 using namespace std;
