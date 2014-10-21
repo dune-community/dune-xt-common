@@ -6,11 +6,9 @@
 #ifndef DUNE_STUFF_COMMON_EXCEPTIONS_HH
 #define DUNE_STUFF_COMMON_EXCEPTIONS_HH
 
-#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/exceptions.hh>
 #include <dune/common/parallel/mpihelper.hh>
 #include <dune/common/deprecated.hh>
-#include <dune/stuff/common/reenable_warnings.hh>
 
 #ifdef DUNE_THROW
 #undef DUNE_THROW

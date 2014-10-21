@@ -18,10 +18,8 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 
-#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/parallel/mpihelper.hh>
 #include <dune/common/timer.hh>
-#include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/stuff/common/logstreams.hh>
 #include <dune/stuff/common/color.hh>

@@ -14,9 +14,7 @@
 #include <boost/format.hpp>
 
 #include <dune/common/deprecated.hh>
-#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/parametertree.hh>
-#include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/common/parametertreeparser.hh>
 
 #include <dune/stuff/common/exceptions.hh>

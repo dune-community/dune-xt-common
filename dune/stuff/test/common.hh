@@ -11,10 +11,8 @@
 #include <vector>
 #include <utility>
 
-#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/tuples.hh>
 #include <dune/common/tupleutility.hh>
-#include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/stuff/common/convergence-study.hh>
 

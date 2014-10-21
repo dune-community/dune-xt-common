@@ -8,9 +8,7 @@
 #ifndef DUNE_STUFF_COMMON_TUPLE_HH
 #define DUNE_STUFF_COMMON_TUPLE_HH
 
-#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/tuples.hh>
-#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/typetraits.hh>
 
 #include <boost/mpl/if.hpp>

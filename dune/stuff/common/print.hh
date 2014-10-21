@@ -8,7 +8,6 @@
 #ifndef DUNESTUFF_PRINTING_HH_INCLUDED
 #define DUNESTUFF_PRINTING_HH_INCLUDED
 
-// system
 #include <string>
 #include <iostream>
 #include <iomanip>
@@ -16,16 +15,11 @@
 #include <limits>
 #include <vector>
 
-// boost
 #include <boost/format.hpp>
 
-// dune-common
-#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/densematrix.hh>
-#include <dune/stuff/common/reenable_warnings.hh>
 #include <dune/common/densevector.hh>
 
-// dune-stuff
 #include <dune/stuff/common/configuration.hh>
 #include <dune/stuff/common/filesystem.hh>
 #include <dune/stuff/common/string.hh>
