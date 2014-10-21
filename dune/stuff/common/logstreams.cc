@@ -136,8 +136,8 @@ LogStream& LogStream::flush()
 }
 
 
-TimedPrefixedLogStream::TimedPrefixedLogStream(const Timer& timer, const std::string prefix, std::ostream& out)
-  : StorageBaseType(new TimedPrefixedStreamBuffer(timer, prefix, out))
+TimedPrefixedLogStream::TimedPrefixedLogStream(const Timer& timer, const std::string prefix, std::ostream& outstream)
+  : StorageBaseType(new TimedPrefixedStreamBuffer(timer, prefix, outstream))
   , OstreamBaseType(&this->storage_access())
 {
 }
