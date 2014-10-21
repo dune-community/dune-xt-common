@@ -32,6 +32,10 @@
 #define DS_FINAL  ${DS_FINAL}
 #define HAVE_DUNE_FEM_PARAMETER_REPLACE 0
 
+#ifndef HAVE_ALUGRID
+#  define DUNE_FEM_DONT_WARN_IN_COMM_MANAGER 1
+#endif
+
 /*** Silence implicitly False evaluation of undefined macro warnings ****/
 #ifndef HAVE_DUNE_FEM
 # define HAVE_FUNE_FEM 0
