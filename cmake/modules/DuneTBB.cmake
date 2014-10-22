@@ -22,7 +22,7 @@ endif(TBB_FOUND)
 
 
 function(add_dune_tbb_flags _targets)
-  include_directories("${TBB_INCLUDE_DIRS}")
+  include_directories(SYSTEM "${TBB_INCLUDE_DIRS}")
   foreach(_target ${_targets})
     if(CMAKE_BUILD_TYPE MATCHES DEBUG)
       if(TBB_LIBRARY_DEBUG)
