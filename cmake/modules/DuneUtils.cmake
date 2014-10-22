@@ -109,8 +109,10 @@ MACRO( SET_CONFIGHEADER_VARS )
 	ENDIF( IS_DIRECTORY ${ALUGRID_BASE_PATH} )
 ENDMACRO( SET_CONFIGHEADER_VARS )
 
+set( DUNE_TEST_TIMEOUT 180 CACHE STRING "per-test timeout in seconds")
+
 macro(BEGIN_TESTCASES)
-	include_sys_dir(${DUNE_STUFF_TEST_DIR}/gtest )
+	include_directories(SYSTEM ${DUNE_STUFF_TEST_DIR}/gtest )
 	add_library(gtest_dune_stuff STATIC ${DUNE_STUFF_TEST_DIR}/gtest/gtest-all.cc)
   target_link_libraries(gtest_dune_stuff pthread)
 
@@ -135,7 +137,7 @@ macro(END_TESTCASES)
     endif()
     endforeach( test ${testnames} )
 	add_custom_target(test_binaries DEPENDS ${testnames})
-	add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
+	add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --timeout ${DUNE_TEST_TIMEOUT}
                   DEPENDS test_binaries)
 endmacro(END_TESTCASES)
 
