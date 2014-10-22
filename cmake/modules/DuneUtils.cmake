@@ -122,6 +122,8 @@ macro(BEGIN_TESTCASES)
     add_executable( test_${testname} ${source} ${COMMON_HEADER} )
     target_link_libraries( test_${testname} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_stuff )
     add_test( test_${testname} ${CMAKE_CURRENT_BINARY_DIR}/test_${testname} )
+    # currently property seems to have no effect
+    set_tests_properties(test_${testname} PROPERTIES TIMEOUT ${DUNE_TEST_TIMEOUT})
 		list(APPEND testnames test_${testname} )
 	endforeach( source )
 endmacro(BEGIN_TESTCASES)
