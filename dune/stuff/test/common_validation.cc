@@ -30,6 +30,7 @@ template <class T>
 struct ValidationTest : public testing::Test
 {
   typedef DefaultRNG<T> RNGType;
+  static const T eps;
   /** for some weird reason my compiler thinks ValidationTest is an abstract class
    * if I don't implement "void TestBody();"
    * \see common_math.cc testcases for why I think it's weird
@@ -41,9 +42,9 @@ struct ValidationTest : public testing::Test
     std::cout << "\tTesting Validators for type " << Typename<T>::value() << "\n\t\t" << samples
               << " random numbers ..." << std::endl;
     {
-      const T lower = std::numeric_limits<T>::min();
-      const T upper = std::numeric_limits<T>::max();
-      RNGType rng;
+      const T lower = std::numeric_limits<T>::min() + eps;
+      const T upper = std::numeric_limits<T>::max() - eps;
+      RNGType rng(lower, upper);
       for (int i = samples; i > 0; --i) {
         const T arg = rng();
         test(lower, upper, arg);
@@ -71,7 +72,7 @@ struct ValidationTest : public testing::Test
 
   void test(const T lower, const T upper, const T arg) const
   {
-    const T eps         = Epsilon<T>::value;
+
     const T clamped_arg = clamp(arg, T(lower + eps), T(upper - eps));
     EXPECT_TRUE(ValidateAny<T>()(arg));
     EXPECT_TRUE(ValidateLess<T>(clamped_arg)(upper));
@@ -81,6 +82,9 @@ struct ValidationTest : public testing::Test
     EXPECT_FALSE(ValidateNone<T>()(arg));
   }
 };
+
+template <typename T>
+const T ValidationTest<T>::eps = Epsilon<T>::value;
 
 TYPED_TEST_CASE(ValidationTest, MathTestTypes);
 TYPED_TEST(ValidationTest, All)
