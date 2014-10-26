@@ -12,6 +12,7 @@
 #include <sstream>
 
 #include <boost/format.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 
 #include <dune/common/deprecated.hh>
 #include <dune/common/parametertree.hh>
@@ -520,6 +521,27 @@ public:
   /**
    * \}
    */
+
+  /**
+   *  \note this method is needed for the python bindings
+   */
+  template <class T>
+  T pb_get(const std::string key, const DUNE_STUFF_SSIZE_T size = 0) const
+  {
+    size_t sz = 0;
+    try {
+      sz = boost::numeric_cast<size_t>(size);
+    } catch (boost::bad_numeric_cast& ee) {
+      DUNE_THROW(Exceptions::external_error,
+                 "There was an error in boost converting '" << size << "' from '"
+                                                            << Typename<DUNE_STUFF_SSIZE_T>::value()
+                                                            << "' to '"
+                                                            << Typename<size_t>::value()
+                                                            << ":\n"
+                                                            << ee.what());
+    }
+    return get<T>(key, sz);
+  } // ... get(...)
 
 private:
   void setup_();
