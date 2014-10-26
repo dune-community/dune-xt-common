@@ -10,6 +10,7 @@
 
 #include <set>
 #include <sstream>
+#include <functional>
 
 #include <boost/format.hpp>
 #include <boost/numeric/conversion/cast.hpp>
@@ -458,6 +459,8 @@ public:
   //! store output of report(..., prefix) in std::string
   std::string report_string(const std::string& prefix = "") const;
 
+  std::map<std::string, std::string> flatten() const;
+
   /** get parameters from parameter file or key-value pairs given on the command line and store in Configuration (and
   load into fem parameter, if available) */
   void read_command_line(int argc, char* argv[]);
@@ -643,6 +646,32 @@ inline Configuration& Config()
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
+namespace std {
+
+
+template <>
+struct less<Dune::ParameterTree>
+{
+  typedef bool result_type;
+  typedef Dune::ParameterTree first_argument_type;
+  typedef Dune::ParameterTree second_argument_type;
+
+  bool operator()(const Dune::ParameterTree& lhs, const Dune::ParameterTree& rhs) const;
+}; // struct less< ParameterTree >
+
+
+template <>
+struct less<Dune::Stuff::Common::Configuration>
+{
+  typedef bool result_type;
+  typedef Dune::Stuff::Common::Configuration first_argument_type;
+  typedef Dune::Stuff::Common::Configuration second_argument_type;
+
+  bool operator()(const Dune::Stuff::Common::Configuration& lhs, const Dune::Stuff::Common::Configuration& rhs) const;
+}; // struct less< ParameterTree >
+
+
+} // namespace std
 
 
 #define DSC_CONFIG Dune::Stuff::Common::Config()

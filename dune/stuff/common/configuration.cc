@@ -583,12 +583,44 @@ void Configuration::report_flatly(const BaseType& subtree, const std::string& pr
 } // ... report_flatly(...)
 
 
+std::map<std::string, std::string> Configuration::flatten() const
+{
+  std::map<std::string, std::string> ret;
+  for (const auto& kk : valueKeys)
+    ret[kk] = get<std::string>(kk);
+  for (const auto& ss : subKeys) {
+    const auto flat_sub = sub(ss).flatten();
+    for (const auto& element : flat_sub)
+      ret[ss + "." + element.first] = element.second;
+  }
+  return ret;
+} // ... flatten(...)
+
+
 std::ostream& operator<<(std::ostream& out, const Configuration& config)
 {
   config.report(out);
   return out;
 }
 
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
+namespace std {
+
+
+bool less<Dune::ParameterTree>::operator()(const Dune::ParameterTree& lhs, const Dune::ParameterTree& rhs) const
+{
+  return Dune::Stuff::Common::Configuration(lhs).flatten() < Dune::Stuff::Common::Configuration(rhs).flatten();
+}
+
+
+bool less<Dune::Stuff::Common::Configuration>::operator()(const Dune::Stuff::Common::Configuration& lhs,
+                                                          const Dune::Stuff::Common::Configuration& rhs) const
+{
+  return lhs.flatten() < rhs.flatten();
+}
+
+
+} // namespace std
