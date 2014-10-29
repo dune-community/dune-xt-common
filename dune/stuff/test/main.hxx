@@ -113,7 +113,7 @@ int main(int argc, char** argv)
 #if HAVE_TBB
     tbb::task_scheduler_init tbb_init(DSC_CONFIG.has_key("threading.max_count") // <- doing this so complicated to
                                           ? DSC_CONFIG.get<int>("threading.max_count") //    silence the WARNING: ...
-                                          : 1);
+                                          : std::thread::hardware_concurrency());
 #endif
     return RUN_ALL_TESTS();
 
