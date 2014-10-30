@@ -18,6 +18,7 @@
 #include <boost/timer/timer.hpp>
 
 #include <dune/stuff/common/parallel/threadmanager.hh>
+#include <dune/stuff/common/parallel/threadstorage.hh>
 
 namespace Dune {
 namespace Stuff {
