@@ -15,6 +15,10 @@
 #include <dune/fem/misc/threads/threadmanager.hh>
 #endif
 
+#if HAVE_EIGEN
+#include <Eigen/Core>
+#endif
+
 #if HAVE_TBB
 
 #include <tbb/compat/thread>
@@ -45,8 +49,22 @@ unsigned int Dune::Stuff::ThreadManager::thread()
 
 void Dune::Stuff::ThreadManager::set_max_threads(const unsigned int count)
 {
-  DSC_CONFIG.set("threading.max_count", count, true /*overwrite*/);
+  max_threads_ = count;
   WITH_DUNE_FEM(Dune::Fem::ThreadManager::setMaxNumberThreads(count);)
+  tbb_init_->terminate();
+  tbb_init_->initialize(count);
+}
+
+Dune::Stuff::ThreadManager::ThreadManager()
+  : max_threads_(1)
+  , tbb_init_(nullptr)
+{
+#if HAVE_EIGEN
+  // must be called before tbb threads are created via tbb::task_scheduler_init object ctor
+  Eigen::initParallel();
+#endif
+  tbb_init_ = Common::make_unique<tbb::task_scheduler_init>(max_threads_);
+  set_max_threads(std::thread::hardware_concurrency());
 }
 
 #else // if HAVE_TBB
@@ -70,6 +88,11 @@ void Dune::Stuff::ThreadManager::set_max_threads(const unsigned int count)
 {
   if (count > 1)
     DUNE_THROW(InvalidStateException, "Trying to use more than one thread w/o TBB");
+}
+
+Dune::Stuff::ThreadManager::ThreadManager()
+  : max_threads_(1)
+{
 }
 
 #endif // HAVE_DUNE_FEM

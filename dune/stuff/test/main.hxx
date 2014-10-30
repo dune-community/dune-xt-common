@@ -42,13 +42,10 @@
 #include <dune/stuff/common/logging.hh>
 #include <dune/stuff/common/timedlogging.hh>
 #include <dune/stuff/common/convergence-study.hh>
+#include <dune/stuff/common/parallel/threadmanager.hh>
 
 #include "common.hh"
 
-#if HAVE_TBB
-#include <thread>
-#include <tbb/task_scheduler_init.h>
-#endif
 
 class DUNE_DEPRECATED_MSG("Use the expectation macros of the gtest test suite (20.08.2014)!") errors_are_not_as_expected
     : public Dune::Exception
@@ -110,11 +107,11 @@ int main(int argc, char** argv)
       -1
 #endif
             );
-#if HAVE_TBB
-    tbb::task_scheduler_init tbb_init(DSC_CONFIG.has_key("threading.max_count") // <- doing this so complicated to
-                                          ? DSC_CONFIG.get<int>("threading.max_count") //    silence the WARNING: ...
-                                          : std::thread::hardware_concurrency());
-#endif
+    const auto threads = DSC_CONFIG.has_key("threading.max_count") // <- doing this so complicated to
+                             ? DSC_CONFIG.get<int>("threading.max_count") //    silence the WARNING: ...
+                             : std::thread::hardware_concurrency();
+    DS::threadManager().set_max_threads(threads);
+
     return RUN_ALL_TESTS();
 
 #if DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS

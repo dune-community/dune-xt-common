@@ -38,7 +38,7 @@ private:
 public:
   //! Initialization by copy construction of ValueType
   explicit FallbackPerThreadValue(ConstValueType& value)
-    : values_(ThreadManager::max_threads())
+    : values_(threadManager().max_threads())
   {
     std::generate(values_.begin(), values_.end(), [=]() { return Common::make_unique<ValueType>(value); });
   }
@@ -46,7 +46,7 @@ public:
   //! Initialization by in-place construction ValueType with \param ctor_args
   template <class... InitTypes>
   explicit FallbackPerThreadValue(InitTypes&&... ctor_args)
-    : values_(ThreadManager::max_threads())
+    : values_(threadManager().max_threads())
   {
 #if __GNUC__
     // cannot unpack in lambda due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=47226
@@ -70,22 +70,22 @@ public:
 
   ValueType& operator*()
   {
-    return *values_[ThreadManager::thread()];
+    return *values_[threadManager().thread()];
   }
 
   ConstValueType& operator*() const
   {
-    return *values_[ThreadManager::thread()];
+    return *values_[threadManager().thread()];
   }
 
   ValueType* operator->()
   {
-    return values_[ThreadManager::thread()].get();
+    return values_[threadManager().thread()].get();
   }
 
   ConstValueType* operator->() const
   {
-    return values_[ThreadManager::thread()].get();
+    return values_[threadManager().thread()].get();
   }
 
   template <class BinaryOperation>

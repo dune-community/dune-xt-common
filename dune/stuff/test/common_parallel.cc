@@ -11,6 +11,7 @@
 #include <initializer_list>
 #include <vector>
 #include <dune/stuff/common/parallel/threadmanager.hh>
+#include <dune/stuff/common/parallel/threadstorage.hh>
 #include <dune/stuff/common/parallel/helper.hh>
 
 using namespace Dune::Stuff;

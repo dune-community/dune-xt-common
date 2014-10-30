@@ -6,50 +6,53 @@
 #ifndef DUNE_STUFF_COMMON_THREADMANAGER_HH
 #define DUNE_STUFF_COMMON_THREADMANAGER_HH
 
-#include <deque>
-#include <algorithm>
-#include <type_traits>
+#include <thread>
 #if HAVE_TBB
-#include <tbb/enumerable_thread_specific.h>
+#include <tbb/task_scheduler_init.h>
 #endif
-#include <boost/noncopyable.hpp>
-
-#include <dune/stuff/common/type_utils.hh>
-#include <dune/stuff/common/memory.hh>
 
 namespace Dune {
 namespace Stuff {
 
+struct ThreadManager;
+//! global singleton ThreadManager
+ThreadManager& threadManager();
+
 /** abstractions of threading functionality
- *  currently forwads to dune-fem if possible, falls back to single-thread dummy imp
+ *  currently controls tbb and forwards to dune-fem if possible, falls back to single-thread dummy imp
  **/
 struct ThreadManager
 {
   //! return maximal number of threads possbile in the current run
-  static unsigned int max_threads();
+  unsigned int max_threads();
 
   //! return number of current threads
-  static unsigned int current_threads();
+  unsigned int current_threads();
 
   //! return thread number
-  static unsigned int thread();
+  unsigned int thread();
 
   //! set maximal number of threads available during run
-  static void set_max_threads(const unsigned int count);
+  void set_max_threads(const unsigned int count);
+
+  ~ThreadManager() = default;
 
 private:
-  //  std::unique_ptr<tbb::task_scheduler_init> tbb_init_;
-};
+  friend ThreadManager& threadManager();
+  //! init tbb with given thread count, prepare Eigen for smp if possible
+  ThreadManager();
 
-friend ThreadManager& threadManager();
-//! init tbb with given thread count, prepare Eigen for smp if possible
-ThreadManager(unsigned int max_threads = std::thread::hardware_concurrency());
-
-unsigned int max_threads_;
+  unsigned int max_threads_;
 #if HAVE_TBB
-tbb::task_scheduler_init tbb_init_;
+  std::unique_ptr<tbb::task_scheduler_init> tbb_init_;
 #endif
 };
+
+inline ThreadManager& threadManager()
+{
+  static ThreadManager tm;
+  return tm;
+}
 }
 }
 
