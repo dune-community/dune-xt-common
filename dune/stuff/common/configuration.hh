@@ -74,10 +74,6 @@ bool strictRequestCompare(const Request& a, const Request& b);
 
 std::ostream& operator<<(std::ostream& out, const Request& r);
 
-class DUNE_DEPRECATED_MSG("Use configuration_error instead!") InvalidParameter : public Exceptions::configuration_error
-{
-};
-
 
 namespace internal {
 
@@ -489,37 +485,6 @@ public:
 
   //! print all keys that were requested with at least two different default values and their respective Requests
   void print_mismatched_defaults(std::ostream& out) const;
-
-  /**
-   * \defgroup deprecated ´´These methods are deprecated.``
-   * \{
-   */
-
-  void DUNE_DEPRECATED_MSG("Use 'read_command_line' instead!") readCommandLine(int argc, char* argv[]);
-
-  void DUNE_DEPRECATED_MSG("Use 'read_options' instead!") readOptions(int argc, char* argv[]);
-
-  void DUNE_DEPRECATED_MSG("Use 'print_requests' instead!") printRequests(std::ostream& out) const;
-
-  RequestMapType DUNE_DEPRECATED_MSG("Use 'get_mismatched_defaults_map' instead!") getMismatchedDefaultsMap() const;
-
-  std::set<Request> DUNE_DEPRECATED_MSG("Use 'get_mismatched_defaults' instead!")
-      getMismatchedDefaults(RequestMapType::value_type pair) const;
-
-  void DUNE_DEPRECATED_MSG("Use 'print_mismatched_defaults' instead!") printMismatchedDefaults(std::ostream& out) const;
-
-  /**
-     *  Control if the value map is filled with default values for missing entries
-     *  Initially false
-     **/
-  void DUNE_DEPRECATED_MSG("Use 'set_record_defaults' instead!") setRecordDefaults(bool record);
-
-  //! return tree_
-  const DUNE_DEPRECATED_MSG("Use *this instead!") Configuration& tree() const;
-
-  /**
-   * \}
-   */
 
 private:
   void setup_();

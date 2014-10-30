@@ -209,11 +209,6 @@ void Configuration::set_logfile(const std::string logfile)
     testCreateDirectory(directoryOnly(logfile_));
 }
 
-std::set<Request> Configuration::getMismatchedDefaults(Configuration::RequestMapType::value_type pair) const
-{
-  return get_mismatched_defaults(pair);
-}
-
 std::set<Request> Configuration::get_mismatched_defaults(Configuration::RequestMapType::value_type pair) const
 {
   typedef bool (*func)(const Request&, const Request&);
@@ -320,11 +315,6 @@ Configuration& Configuration::operator=(const Configuration& other)
   return *this;
 } // ... operator=(...)
 
-const Configuration& Configuration::tree() const
-{
-  return *this;
-}
-
 const typename Configuration::RequestMapType& Configuration::requests_map() const
 {
   return requests_map_;
@@ -361,11 +351,6 @@ std::string Configuration::report_string(const std::string& prefix) const
   return stream.str();
 } // ... report_string(...)
 
-void Configuration::readCommandLine(int argc, char* argv[])
-{
-  read_command_line(argc, argv);
-}
-
 void Configuration::read_command_line(int argc, char* argv[])
 {
   if (argc < 2) {
@@ -385,16 +370,6 @@ void Configuration::read_options(int argc, char* argv[])
   Dune::ParameterTreeParser::readOptions(argc, argv, *this);
 }
 
-void Configuration::readOptions(int argc, char* argv[])
-{
-  read_options(argc, argv);
-}
-
-void Configuration::printRequests(std::ostream& out) const
-{
-  print_requests(out);
-}
-
 void Configuration::print_requests(std::ostream& out) const
 {
   if (!requests_map_.empty()) {
@@ -409,11 +384,6 @@ void Configuration::print_requests(std::ostream& out) const
   }
 }
 
-Configuration::RequestMapType Configuration::getMismatchedDefaultsMap() const
-{
-  return get_mismatched_defaults_map();
-}
-
 Configuration::RequestMapType Configuration::get_mismatched_defaults_map() const
 {
   RequestMapType ret;
@@ -423,11 +393,6 @@ Configuration::RequestMapType Configuration::get_mismatched_defaults_map() const
       ret[pair.first] = mismatches;
   }
   return ret;
-}
-
-void Configuration::printMismatchedDefaults(std::ostream& out) const
-{
-  print_mismatched_defaults(out);
 }
 
 void Configuration::print_mismatched_defaults(std::ostream& out) const
@@ -442,11 +407,6 @@ void Configuration::print_mismatched_defaults(std::ostream& out) const
       out << "\n";
     }
   }
-}
-
-void Configuration::setRecordDefaults(bool record)
-{
-  set_record_defaults(record);
 }
 
 void Configuration::setup_()
