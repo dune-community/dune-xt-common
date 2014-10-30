@@ -134,6 +134,7 @@ macro(END_TESTCASES)
     foreach( test ${testnames} )
       add_dune_mpi_flags(${test})
       add_dune_alugrid_flags(${test})
+      add_dune_superlu_flags(${test})
       if(COMMAND add_dune_tbb_flags)
         add_dune_tbb_flags(${test})
       endif()
@@ -148,11 +149,5 @@ add_custom_target( config_refresh
 				)
 
 execute_process(COMMAND ${CMAKE_C_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
-
-#find_package(SuperLU)
-#if(SUPERLU_FOUND)
-  #include_directories(${SUPERLU_INCLUDES})
-  #link_directories(${SUPERLU_LIBRARY_DIRS})
-#endif(SUPERLU_FOUND)
 
 ENABLE_TESTING()
