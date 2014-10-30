@@ -130,3 +130,8 @@ int main(int argc, char** argv)
   } // try
 #endif // DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
 } // ... main(...)
+
+size_t dsc_grid_elements()
+{
+  return DSC_CONFIG.get<size_t>("test.gridelements", 3u, DSC::ValidateLess<size_t>(2u));
+}
