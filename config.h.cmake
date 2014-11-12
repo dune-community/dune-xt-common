@@ -77,10 +77,6 @@
 # define ENABLE_PETSC 0
 #endif
 
-#ifndef BOOST_CLANG
-# define BOOST_CLANG 0
-#endif
-
 #ifndef ENABLE_MPI
 # define ENABLE_MPI 0
 #endif
