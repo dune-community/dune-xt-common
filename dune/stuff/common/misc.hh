@@ -34,7 +34,9 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
+#include <dune/stuff/common/disable_warnings.hh>
 #include <boost/algorithm/string.hpp>
+#include <dune/stuff/common/reenable_warnings.hh>
 
 namespace Dune {
 namespace Stuff {
