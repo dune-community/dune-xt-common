@@ -136,8 +136,11 @@ TEST(StringTest, ConvertTo)
   EXPECT_EQ("P", toString(fromString<char>("P")));
   EXPECT_EQ(double(0.1), fromString<double>(toString<double>(0.1)));
   EXPECT_EQ("0.100006", toString(fromString<double>("0.1000055511151231257827021181583404541015625")));
+  EXPECT_EQ(1e-14, fromString<double>("1e-14"));
+  EXPECT_EQ(1e-14, fromString<double>("1E-14"));
   EXPECT_EQ("1", toString(fromString<bool>("1")));
   EXPECT_EQ("0", toString(fromString<bool>("0")));
+
   EXPECT_EQ("-1", toString(fromString<long>("-1")));
 }
 
