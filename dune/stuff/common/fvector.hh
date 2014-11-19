@@ -89,6 +89,14 @@ public:
     return *this;
   }
 
+  operator std::vector<K>() const
+  {
+    std::vector<K> ret(SIZE);
+    for (size_t ii = 0; ii < SIZE; ++ii)
+      ret[ii] = this->operator[](ii);
+    return ret;
+  }
+
   using BaseType::operator*;
 
   ThisType operator*(const K& scalar) const
