@@ -6,8 +6,8 @@
 #ifndef DUNE_STUFF_COMMON_FVECTOR_HH
 #define DUNE_STUFF_COMMON_FVECTOR_HH
 
-#include <vector>
 #include <initializer_list>
+#include <vector>
 
 #include <dune/common/fvector.hh>
 
@@ -23,6 +23,8 @@ namespace Common {
 template <class K, int SIZE>
 class FieldVector : public Dune::FieldVector<K, SIZE>
 {
+  static_assert(SIZE >= 0, "Really?");
+
   typedef Dune::FieldVector<K, SIZE> BaseType;
   typedef FieldVector<K, SIZE> ThisType;
 
