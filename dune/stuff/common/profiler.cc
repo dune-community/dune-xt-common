@@ -222,20 +222,20 @@ void Profiler::outputAveraged(const int refineLevel, const long numDofs, const d
   }
 
   // outputs column names
-  csv << "refine" << csv_sep << "processes" << csv_sep << "numDofs" << csv_sep << "L1 error" << csv_sep;
+  csv << "refine" << csv_sep_ << "processes" << csv_sep_ << "numDofs" << csv_sep_ << "L1 error" << csv_sep_;
   for (const auto& avg_item : averages_map) {
-    csv << avg_item.first << csv_sep;
+    csv << avg_item.first << csv_sep_;
   }
-  csv << "Speedup (total)" << csv_sep << "Speedup (ohne Solver)" << std::endl;
+  csv << "Speedup (total)" << csv_sep_ << "Speedup (ohne Solver)" << std::endl;
 
   // outputs column values
-  csv << refineLevel << csv_sep << comm.size() << csv_sep << numDofs << csv_sep << 0 << csv_sep;
+  csv << refineLevel << csv_sep_ << comm.size() << csv_sep_ << numDofs << csv_sep_ << 0 << csv_sep_;
   for (const auto& avg_item : averages_map) {
     long clock_count = avg_item.second;
     clock_count = long(comm.sum(clock_count) / double(scale_factor * numProce));
-    csv << clock_count / double(datamaps_.size()) << csv_sep;
+    csv << clock_count / double(datamaps_.size()) << csv_sep_;
   }
-  csv << "=I$2/I2" << csv_sep << "=SUM(E$2:G$2)/SUM(E2:G2)" << std::endl;
+  csv << "=I$2/I2" << csv_sep_ << "=SUM(E$2:G$2)/SUM(E2:G2)" << std::endl;
   csv.close();
 } // OutputAveraged
 
@@ -269,8 +269,8 @@ void Profiler::outputTimingsAll(std::ostream& out) const
 
   stash << "run";
   for (const auto& section : datamaps_[0]) {
-    stash << csv_sep << section.first << "_avg_usr" << csv_sep << section.first << "_max_usr" << csv_sep
-          << section.first << "_avg_wall" << csv_sep << section.first << "_max_wall";
+    stash << csv_sep_ << section.first << "_avg_usr" << csv_sep_ << section.first << "_max_usr" << csv_sep_
+          << section.first << "_avg_wall" << csv_sep_ << section.first << "_max_wall";
   }
   int i             = 0;
   const auto weight = 1 / float(comm.size());
@@ -284,7 +284,8 @@ void Profiler::outputTimingsAll(std::ostream& out) const
       auto wall_max = comm.max(wall);
       auto usr_max  = comm.max(usr);
 
-      stash << csv_sep << usr_sum * weight << csv_sep << usr_max << csv_sep << wall_sum * weight << csv_sep << wall_max;
+      stash << csv_sep_ << usr_sum * weight << csv_sep_ << usr_max << csv_sep_ << wall_sum * weight << csv_sep_
+            << wall_max;
     }
   }
   stash << std::endl;
@@ -299,20 +300,20 @@ void Profiler::outputTimings(std::ostream& out) const
   // csv header:
   out << "run";
   for (const auto& section : datamaps_[0]) {
-    out << csv_sep << section.first;
+    out << csv_sep_ << section.first;
   }
   int i = 0;
   for (const auto& datamap : datamaps_) {
     out << std::endl << i;
     for (const auto& section : datamap) {
-      out << csv_sep << section.second.first;
+      out << csv_sep_ << section.second.first;
     }
     out << std::endl;
   }
 }
 
 Profiler::Profiler()
-  : csv_sep(",")
+  : csv_sep_(",")
 {
   DSC_LIKWID_INIT;
   reset(1);
