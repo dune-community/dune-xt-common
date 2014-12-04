@@ -10,6 +10,7 @@
 #include <dune/common/fvector.hh>
 #include <dune/common/dynvector.hh>
 
+#include <dune/stuff/common/fvector.hh>
 #include <dune/stuff/la/container/interfaces.hh>
 
 #include <type_traits>
@@ -17,6 +18,61 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
+namespace internal {
+
+
+static inline double default_epsilon()
+{
+  return std::pow(2, 4) * std::numeric_limits<double>::epsilon();
+}
+
+
+} // namespace internal
+
+
+template <class T>
+typename std::enable_if<std::is_arithmetic<T>::value, bool>::type
+float_cmp(const T& xx, const T& yy, const double& rtol = internal::default_epsilon(),
+          const double& atol = internal::default_epsilon())
+{
+  return std::abs(xx - yy) <= atol + std::abs(yy) * rtol;
+}
+
+
+namespace internal {
+
+
+template <class VecType>
+bool vec_float_cmp(const VecType& xx, const VecType& yy, const double& rtol, const double& atol)
+{
+  for (size_t ii = 0; ii < std::min(xx.size(), yy.size()); ++ii)
+    if (!float_cmp(xx[ii], yy[ii], rtol, atol))
+      return false;
+  return true;
+} // ... vec_float_cmp(...)
+
+
+} // namespace internal
+
+
+template <class K, int SIZE>
+typename std::enable_if<std::is_arithmetic<K>::value, bool>::type
+float_cmp(const Dune::FieldVector<K, SIZE>& xx, const Dune::FieldVector<K, SIZE>& yy,
+          const double& rtol = internal::default_epsilon(), const double& atol = internal::default_epsilon())
+{
+  return internal::vec_float_cmp(xx, yy, rtol, atol);
+}
+
+
+template <class K, int SIZE>
+typename std::enable_if<std::is_arithmetic<K>::value, bool>::type
+float_cmp(const Dune::Stuff::Common::FieldVector<K, SIZE>& xx, const Dune::Stuff::Common::FieldVector<K, SIZE>& yy,
+          const double& rtol = internal::default_epsilon(), const double& atol = internal::default_epsilon())
+{
+  return internal::vec_float_cmp(xx, yy, rtol, atol);
+}
+
+
 namespace FloatCmp {
 
 
