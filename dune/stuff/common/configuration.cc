@@ -603,9 +603,32 @@ std::ostream& operator<<(std::ostream& out, const Configuration& config)
   return out;
 }
 
+bool operator==(const Configuration& left, const Configuration& right)
+{
+  return left.flatten() == right.flatten();
+}
+
+bool operator!=(const Configuration& left, const Configuration& right)
+{
+  return !(left == right);
+}
+
 
 } // namespace Common
 } // namespace Stuff
+
+
+bool operator==(const ParameterTree& left, const ParameterTree& right)
+{
+  return Stuff::Common::Configuration(left).flatten() == Stuff::Common::Configuration(right).flatten();
+}
+
+bool operator!=(const ParameterTree& left, const ParameterTree& right)
+{
+  return !(left == right);
+}
+
+
 } // namespace Dune
 namespace std {
 

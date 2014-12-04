@@ -634,6 +634,10 @@ private:
 
 std::ostream& operator<<(std::ostream& out, const Configuration& config);
 
+bool operator==(const Configuration& left, const Configuration& right);
+
+bool operator!=(const Configuration& left, const Configuration& right);
+
 
 //! global Configuration instance
 inline Configuration& Config()
@@ -645,6 +649,13 @@ inline Configuration& Config()
 
 } // namespace Common
 } // namespace Stuff
+
+
+bool operator==(const ParameterTree& left, const ParameterTree& right);
+
+bool operator!=(const ParameterTree& left, const ParameterTree& right);
+
+
 } // namespace Dune
 namespace std {
 
