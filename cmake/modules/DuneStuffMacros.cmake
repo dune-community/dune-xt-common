@@ -6,37 +6,10 @@
 # Contributors: Sven Kaulmann
 
 INCLUDE (CheckIncludeFileCXX)
+include(TestCXXAcceptsFlag)
 CHECK_INCLUDE_FILE_CXX("tr1/array" HAVE_TR1_ARRAY)
 CHECK_INCLUDE_FILE_CXX("malloc.h" HAVE_MALLOC_H)
 
-# try to use compiler flag -std=c++11
-include(TestCXXAcceptsFlag)
-CHECK_CXX_ACCEPTS_FLAG("-std=c++11" CXX_FLAG_CXX11)
-if(CXX_FLAG_CXX11)
-  set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -std=c++11")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 ")
-  set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++11 ")
-  set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} -std=c++11 ")
-  set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++11 ")
-  set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -std=c++11 ")
-  set(CXX_STD0X_FLAGS "-std=c++11")
-else()
-  # try to use compiler flag -std=c++0x for older compilers
-  CHECK_CXX_ACCEPTS_FLAG("-std=c++0x" CXX_FLAG_CXX0X)
-  if(CXX_FLAG_CXX0X)
-    set(CMAKE_REQUIRED_FLAGS "${CMAKE_REQUIRED_FLAGS} -std=c++0x" )
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x ")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -std=c++0x ")
-    set(CMAKE_CXX_FLAGS_MINSIZEREL "${CMAKE_CXX_FLAGS_MINSIZEREL} -std=c++0x ")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -std=c++0x ")
-    set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -std=c++0x ")
-  set(CXX_STD0X_FLAGS "-std=c++0x")
-  endif(CXX_FLAG_CXX0X)
-endif(CXX_FLAG_CXX11)
-
-if(NOT CXX_STD0X_FLAGS)
-    message(FATAL "you need a c++11 compatible compiler")
-endif()
 
 CHECK_CXX_SOURCE_COMPILES("
    int main(void)

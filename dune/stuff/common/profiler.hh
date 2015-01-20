@@ -18,6 +18,7 @@
 #include <boost/timer/timer.hpp>
 
 #include <dune/stuff/common/parallel/threadmanager.hh>
+#include <dune/stuff/common/parallel/threadstorage.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -149,7 +150,7 @@ private:
   std::map<int, int> counters_;
 
   KnownTimersMap known_timers_map_;
-  const std::string csv_sep;
+  const std::string csv_sep_;
   std::mutex mutex_;
 
   static Profiler& instance()
