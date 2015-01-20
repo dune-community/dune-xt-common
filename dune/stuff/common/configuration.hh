@@ -101,48 +101,52 @@ class Configuration : public Dune::ParameterTree
   typedef std::map<std::string, std::set<Request>> RequestMapType;
 
 public:
-  Configuration(const bool record_defaults = internal::configuration_record_defaults,
-                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit            = internal::configuration_log_on_exit,
-                const std::string logfile = internal::configuration_logfile);
+  // This ctor has to be marked explicit!
+  explicit Configuration(const bool record_defaults = internal::configuration_record_defaults,
+                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                         const bool log_on_exit            = internal::configuration_log_on_exit,
+                         const std::string logfile = internal::configuration_logfile);
 
+  // This ctor must not be marked explicit (needed internally)!
   Configuration(const ParameterTree& tree, const bool record_defaults = internal::configuration_record_defaults,
                 const bool warn_on_default_access = internal::configuration_warn_on_default_access,
                 const bool log_on_exit            = internal::configuration_log_on_exit,
                 const std::string logfile = internal::configuration_logfile);
 
+  // This ctor must not be marked explicit (needed internally)!
   Configuration(const ParameterTree& tree_in, const std::string sub_id);
 
   Configuration(const Configuration& other);
 
-  Configuration(std::istream& in, const bool record_defaults = internal::configuration_record_defaults,
-                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit            = internal::configuration_log_on_exit,
-                const std::string logfile = internal::configuration_logfile);
+  explicit Configuration(std::istream& in, // <- does not matter
+                         const bool record_defaults        = internal::configuration_record_defaults,
+                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                         const bool log_on_exit            = internal::configuration_log_on_exit,
+                         const std::string logfile = internal::configuration_logfile);
 
   //! read ParameterTree from file and call Configuration(const ParameterTree& tree)
   Configuration(const std::string filename, const bool record_defaults, const bool warn_on_default_access,
                 const bool log_on_exit, const std::string logfile);
 
   //! read ParameterTree from given arguments and call Configuration(const ParameterTree& tree)
-  Configuration(int argc, char** argv, const bool record_defaults = internal::configuration_record_defaults,
-                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit            = internal::configuration_log_on_exit,
-                const std::string logfile = internal::configuration_logfile);
+  explicit Configuration(int argc, char** argv, const bool record_defaults = internal::configuration_record_defaults,
+                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                         const bool log_on_exit            = internal::configuration_log_on_exit,
+                         const std::string logfile = internal::configuration_logfile);
 
   //! read ParameterTree from given arguments and file and call Configuration(const ParameterTree& tree)
-  Configuration(int argc, char** argv, const std::string filename,
-                const bool record_defaults        = internal::configuration_record_defaults,
-                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit            = internal::configuration_log_on_exit,
-                const std::string logfile = internal::configuration_logfile);
+  explicit Configuration(int argc, char** argv, const std::string filename,
+                         const bool record_defaults        = internal::configuration_record_defaults,
+                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                         const bool log_on_exit            = internal::configuration_log_on_exit,
+                         const std::string logfile = internal::configuration_logfile);
 
   template <class T>
-  Configuration(const std::string key, const T& value,
-                const bool record_defaults        = internal::configuration_record_defaults,
-                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit            = internal::configuration_log_on_exit,
-                const std::string logfile = internal::configuration_logfile)
+  explicit Configuration(const std::string key, const T& value,
+                         const bool record_defaults        = internal::configuration_record_defaults,
+                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                         const bool log_on_exit            = internal::configuration_log_on_exit,
+                         const std::string logfile = internal::configuration_logfile)
     : BaseType()
     , requests_map_()
     , record_defaults_(record_defaults)
@@ -154,25 +158,25 @@ public:
     setup_();
   }
 
-  Configuration(const std::string key, const char* value,
-                const bool record_defaults        = internal::configuration_record_defaults,
-                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit            = internal::configuration_log_on_exit,
-                const std::string logfile = internal::configuration_logfile);
+  explicit Configuration(const std::string key, const char* value,
+                         const bool record_defaults        = internal::configuration_record_defaults,
+                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                         const bool log_on_exit            = internal::configuration_log_on_exit,
+                         const std::string logfile = internal::configuration_logfile);
 
-  Configuration(const char* key, const char* value,
-                const bool record_defaults        = internal::configuration_record_defaults,
-                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit            = internal::configuration_log_on_exit,
-                const std::string logfile = internal::configuration_logfile);
+  explicit Configuration(const char* key, const char* value,
+                         const bool record_defaults        = internal::configuration_record_defaults,
+                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                         const bool log_on_exit            = internal::configuration_log_on_exit,
+                         const std::string logfile = internal::configuration_logfile);
 
   //! operator[](keys[ii]) = values[ii] for 0 <= ii <= keys.size()
   template <class T>
-  Configuration(const std::vector<std::string> keys, const std::vector<T> values_in,
-                const bool record_defaults        = internal::configuration_record_defaults,
-                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit            = internal::configuration_log_on_exit,
-                const std::string logfile = internal::configuration_logfile)
+  explicit Configuration(const std::vector<std::string> keys, const std::vector<T> values_in,
+                         const bool record_defaults        = internal::configuration_record_defaults,
+                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                         const bool log_on_exit            = internal::configuration_log_on_exit,
+                         const std::string logfile = internal::configuration_logfile)
     : BaseType()
     , requests_map_()
     , record_defaults_(record_defaults)
@@ -192,21 +196,21 @@ public:
   /** creates std::vector< T > from value_list and then behaves exactly like
    * Configuration(const std::vector< std::string > keys, const std::vector< T > values_in) */
   template <class T>
-  Configuration(const std::vector<std::string> keys, const std::initializer_list<T> value_list,
-                const bool record_defaults        = internal::configuration_record_defaults,
-                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit            = internal::configuration_log_on_exit,
-                const std::string logfile = internal::configuration_logfile)
+  explicit Configuration(const std::vector<std::string> keys, const std::initializer_list<T> value_list,
+                         const bool record_defaults        = internal::configuration_record_defaults,
+                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                         const bool log_on_exit            = internal::configuration_log_on_exit,
+                         const std::string logfile = internal::configuration_logfile)
     : Configuration(keys, std::vector<T>(value_list), record_defaults, warn_on_default_access, log_on_exit, logfile)
   {
   }
 
-  // explicit specialization of the constructor above
-  Configuration(const std::vector<std::string> keys, const std::initializer_list<std::string> value_list,
-                const bool record_defaults        = internal::configuration_record_defaults,
-                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit            = internal::configuration_log_on_exit,
-                const std::string logfile = internal::configuration_logfile);
+  // specialization of the constructor above for std::string
+  explicit Configuration(const std::vector<std::string> keys, const std::initializer_list<std::string> value_list,
+                         const bool record_defaults        = internal::configuration_record_defaults,
+                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                         const bool log_on_exit            = internal::configuration_log_on_exit,
+                         const std::string logfile = internal::configuration_logfile);
 
   ~Configuration();
 
