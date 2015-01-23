@@ -171,4 +171,33 @@ operator!=(const L& lhs, const R& rhs)
 }
 
 
+template <class S, class V>
+typename std::enable_if<std::is_arithmetic<S>::value && Dune::Stuff::Common::is_vector<V>::value, V>::type
+operator*(const S& scalar, const V& vec)
+{
+  V result(vec);
+  for (size_t ii = 0; ii < vec.size(); ++ii)
+    result[ii] *= scalar;
+  return result;
+} // ... operator*(...)
+
+
+template <class L, class R>
+typename std::enable_if<Dune::Stuff::Common::is_vector<L>::value && Dune::Stuff::Common::is_vector<R>::value
+                            && std::is_same<typename Dune::Stuff::Common::VectorAbstraction<L>::S,
+                                            typename Dune::Stuff::Common::VectorAbstraction<R>::S>::value,
+                        L>::type
+operator+(const L& left, const R& right)
+{
+  const auto sz = left.size();
+  if (right.size() != sz)
+    DUNE_THROW(Dune::Stuff::Exceptions::shapes_do_not_match,
+               "left.size() = " << sz << "\nright.size() = " << right.size());
+  L result(left);
+  for (size_t ii = 0; ii < sz; ++ii)
+    result[ii] += right[ii];
+  return result;
+} // ... operator*(...)
+
+
 #endif // DUNE_STUFF_TOOLS_COMMON_VECTOR_HH
