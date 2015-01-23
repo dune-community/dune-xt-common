@@ -153,7 +153,7 @@ TEST(OtherMath, FloatCmp)
 
   Dune::FieldVector<double, 2> other(1.);
   other[1] = 0;
-  EXPECT_TRUE(DSC::FloatCmp::vec_ne(dones, other));
+  EXPECT_TRUE(DSC::FloatCmp::ne(dones, other));
   other = 2;
   EXPECT_TRUE(DSC::FloatCmp::lt(dones, other));
   EXPECT_TRUE(DSC::FloatCmp::lt(ones, twos));
