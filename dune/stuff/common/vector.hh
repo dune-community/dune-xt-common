@@ -3,8 +3,8 @@
 // Copyright holders: Rene Milk, Felix Schindler
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
-#ifndef DUNE_STUFF_TOOLS_COMMON_VEECTOR_HH
-#define DUNE_STUFF_TOOLS_COMMON_VEECTOR_HH
+#ifndef DUNE_STUFF_TOOLS_COMMON_VECTOR_HH
+#define DUNE_STUFF_TOOLS_COMMON_VECTOR_HH
 
 #include <iostream>
 
@@ -39,4 +39,4 @@ inline void DUNE_DEPRECATED_MSG("Use *= 0 instead!") clear(LA::VectorInterface<T
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_TOOLS_COMMON_VEECTOR_HH
+#endif // DUNE_STUFF_TOOLS_COMMON_VECTOR_HH
