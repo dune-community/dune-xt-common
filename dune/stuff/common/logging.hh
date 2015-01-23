@@ -14,8 +14,10 @@
 #include <string>
 #include <mutex>
 
+#include <dune/stuff/common/disable_warnings.hh>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
+#include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/stuff/common/logstreams.hh>
 

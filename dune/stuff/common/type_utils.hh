@@ -168,6 +168,88 @@ struct is_hashable<T, typename std::enable_if<!!sizeof(std::declval<std::hash<T>
 } // namespace Stuff
 } // namespace Dune
 
+
+/**
+  * \brief Helper macro to be used before DSC_has_typedef.
+  *
+  *        Taken from
+  *        http://stackoverflow.com/questions/7834226/detecting-typedef-at-compile-time-template-metaprogramming
+  */
+#define DSC_has_typedef_initialize_once(tpdef)                                                                         \
+  template <typename T>                                                                                                \
+  struct DSC_has_typedef_helper_##tpdef                                                                                \
+  {                                                                                                                    \
+    template <typename TT>                                                                                             \
+    struct void_                                                                                                       \
+    {                                                                                                                  \
+      typedef void type;                                                                                               \
+    };                                                                                                                 \
+                                                                                                                       \
+    template <typename TT, typename = void>                                                                            \
+    struct helper                                                                                                      \
+    {                                                                                                                  \
+      static const bool value = false;                                                                                 \
+    };                                                                                                                 \
+                                                                                                                       \
+    template <typename TT>                                                                                             \
+    struct helper<TT, typename void_<typename TT::tpdef>::type>                                                        \
+    {                                                                                                                  \
+      static const bool value = true;                                                                                  \
+    };                                                                                                                 \
+                                                                                                                       \
+    static const bool value = helper<T>::value;                                                                        \
+  };
+
+/**
+  * \brief Macro to statically check a type for a typedef.
+  *
+  *        To check if a type Foo defines a typedef Bar, put this code somewhere, where a generated helper struct
+  *        may be defined (obviously only once for each typedef name!):
+\code
+DSC_has_typedef_initialize_once(Bar)
+\endcode
+  *        You can then check for Bar (this will give you a static const bool):
+\code
+DSC_has_typedef(Bar)< Foo >::value
+\endcode
+  */
+#define DSC_has_typedef(tpdf) DSC_has_typedef_helper_##tpdf
+
+
+/**
+  * \brief Helper macro to be used before DSC_has_static_member.
+  *
+  *        Taken from http://stackoverflow.com/questions/11927032/sfinae-check-for-static-member-using-decltype
+  */
+#define DSC_has_static_member_initialize_once(mmbr)                                                                    \
+  template <class T>                                                                                                   \
+  struct DSC_has_static_member_helper_##mmbr                                                                           \
+  {                                                                                                                    \
+    template <class U, class = typename std::enable_if<!std::is_member_pointer<decltype(&U::mmbr)>::value>::type>      \
+    static std::true_type helper(int);                                                                                 \
+                                                                                                                       \
+    template <class>                                                                                                   \
+    static std::false_type helper(...);                                                                                \
+                                                                                                                       \
+    static const bool value = decltype(helper<T>(0))::value;                                                           \
+  };
+
+/**
+  * \brief Macro to statically check a class or struct for a static member.
+  *
+  *        To check if a class or struct Foo has a static member bar, put this code somewhere, where a generated helper
+  *        struct may be defined (obviously only once for each member name!):
+\code
+DSC_has_static_member_initialize_once(bar)
+\endcode
+  *        You can then check for bar (this will give you a static const bool):
+\code
+DSC_has_static_member(bar)< Foo >::value
+\endcode
+  */
+#define DSC_has_static_member(mmbr) DSC_has_static_member_helper_##mmbr
+
+
 STUFF_TYPENAME(int)
 STUFF_TYPENAME(double)
 STUFF_TYPENAME(float)

@@ -23,9 +23,11 @@
 #include <ctime>
 #include <iostream>
 
+#include <dune/stuff/common/disable_warnings.hh>
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/numeric/conversion/cast.hpp>
+#include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/common/array.hh>
 #include <dune/common/deprecated.hh>

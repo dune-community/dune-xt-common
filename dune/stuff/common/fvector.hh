@@ -6,8 +6,8 @@
 #ifndef DUNE_STUFF_COMMON_FVECTOR_HH
 #define DUNE_STUFF_COMMON_FVECTOR_HH
 
-#include <vector>
 #include <initializer_list>
+#include <vector>
 
 #include <dune/common/fvector.hh>
 
@@ -23,6 +23,8 @@ namespace Common {
 template <class K, int SIZE>
 class FieldVector : public Dune::FieldVector<K, SIZE>
 {
+  static_assert(SIZE >= 0, "Really?");
+
   typedef Dune::FieldVector<K, SIZE> BaseType;
   typedef FieldVector<K, SIZE> ThisType;
 
@@ -85,6 +87,14 @@ public:
   {
     BaseType::operator=(other);
     return *this;
+  }
+
+  operator std::vector<K>() const
+  {
+    std::vector<K> ret(SIZE);
+    for (size_t ii = 0; ii < SIZE; ++ii)
+      ret[ii] = this->operator[](ii);
+    return ret;
   }
 
   using BaseType::operator*;
