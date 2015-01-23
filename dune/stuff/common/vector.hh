@@ -22,18 +22,6 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-template <class VectorImp>
-inline void DUNE_DEPRECATED_MSG("Use *= 0 instead!") clear(Dune::DenseVector<VectorImp>& vector)
-{
-  vector *= typename Dune::DenseVector<VectorImp>::value_type(0);
-}
-
-template <class T, class S = double>
-inline void DUNE_DEPRECATED_MSG("Use *= 0 instead!") clear(LA::VectorInterface<T, S>& vector)
-{
-  vector *= typename LA::VectorInterface<T, S>::ScalarType(0);
-}
-
 
 } // namespace Common
 } // namespace Stuff
