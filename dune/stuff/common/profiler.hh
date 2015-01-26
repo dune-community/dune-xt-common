@@ -51,6 +51,9 @@ public:
   DeltaType delta() const;
 };
 
+//! a utility class to time a limited scope of code
+class ScopedTiming;
+
 /** \brief simple inline profiling class
    *  - User can set as many (even nested) named sections whose total (=system+user) time will be computed across all
   *program
@@ -129,7 +132,7 @@ public:
     const std::string section_name_;
 
   public:
-    inline ScopedTiming(const std::string& section_name)
+    inline DUNE_DEPRECATED_MSG("Has moved into DSC namespace directly.") ScopedTiming(const std::string& section_name)
       : section_name_(section_name)
     {
       Profiler::instance().startTiming(section_name_);
@@ -165,6 +168,23 @@ inline Profiler& profiler()
 {
   return Profiler::instance();
 }
+
+class ScopedTiming : public boost::noncopyable
+{
+  const std::string section_name_;
+
+public:
+  inline ScopedTiming(const std::string& section_name)
+    : section_name_(section_name)
+  {
+    profiler().startTiming(section_name_);
+  }
+
+  inline ~ScopedTiming()
+  {
+    profiler().stopTiming(section_name_);
+  }
+};
 
 } // namespace Common
 } // namespace Stuff
