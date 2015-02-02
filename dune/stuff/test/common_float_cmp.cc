@@ -480,31 +480,32 @@ typedef testing::Types<std::vector<double>, Dune::FieldVector<double, vec_size>,
 #endif
                        > VectorTypes;
 
-// TYPED_TEST_CASE(FloatCmpVector, VectorTypes);
-// TYPED_TEST(FloatCmpVector, eq)
-//{
-//  this->check_eq();
-//}
-// TYPED_TEST(FloatCmpVector, ne)
-//{
-//  this->check_ne();
-//}
-// TYPED_TEST(FloatCmpVector, gt)
-//{
-//  this->check_gt();
-//}
-// TYPED_TEST(FloatCmpVector, lt)
-//{
-//  this->check_lt();
-//}
-// TYPED_TEST(FloatCmpVector, ge)
-//{
-//  this->check_ge();
-//}
-// TYPED_TEST(FloatCmpVector, le)
-//{
-//  this->check_le();
-//}
+TYPED_TEST_CASE(FloatCmpVector, VectorTypes);
+TYPED_TEST(FloatCmpVector, eq)
+{
+  this->check_eq();
+}
+TYPED_TEST(FloatCmpVector, ne)
+{
+  this->check_ne();
+}
+TYPED_TEST(FloatCmpVector, gt)
+{
+  this->check_gt();
+}
+TYPED_TEST(FloatCmpVector, lt)
+{
+  this->check_lt();
+}
+TYPED_TEST(FloatCmpVector, ge)
+{
+  this->check_ge();
+}
+TYPED_TEST(FloatCmpVector, le)
+{
+  this->check_le();
+}
+
 
 #if !HAVE_DUNE_ISTL
 
