@@ -21,11 +21,12 @@
 
 using namespace Dune;
 using Stuff::Common::create;
-using Stuff::Common::FloatCmp::Style::numpy;
-using Stuff::Common::FloatCmp::Style::relativeWeak;
-using Stuff::Common::FloatCmp::Style::relativeStrong;
-using Stuff::Common::FloatCmp::Style::absolute;
-using Stuff::Common::FloatCmp::Style::defaultStyle;
+using Stuff::Common::FloatCmp::Style;
+static const Style numpy          = Style::numpy;
+static const Style relativeWeak   = Style::relativeWeak;
+static const Style relativeStrong = Style::relativeStrong;
+static const Style absolute       = Style::absolute;
+static const Style defaultStyle   = Style::defaultStyle;
 
 static const unsigned int vec_size = 4;
 
