@@ -14,7 +14,7 @@ const int wait_ms = 142;
 
 void scoped_busywait(const std::string& name, int ms)
 {
-  Profiler::ScopedTiming scopedTiming(name);
+  ScopedTiming scopedTiming(name);
   busywait(ms);
 }
 
