@@ -58,7 +58,7 @@ std::string demangledTypeId(T& obj)
 
 //! create output for demangled typeid
 template <class T>
-void realTypeId(T& obj, std::string name = "", int maxlevel = 10000)
+void realTypeId(T& obj, std::string name = "", size_t maxlevel = 10000)
 {
   std::cout << name << (name == "" ? "" : "'s type is ") << highlightTemplate(demangledTypeId(obj), maxlevel)
             << std::endl;
