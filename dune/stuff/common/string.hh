@@ -715,7 +715,7 @@ std::string whitespaceify(const T& t, const char whitespace = ' ')
 {
   const std::string s = toString(t);
   std::string ret = "";
-  for (unsigned int i = 0; i < s.size(); ++i) {
+  for (size_t i = 0; i < s.size(); ++i) {
     ret += whitespace;
   }
   return ret;
@@ -781,7 +781,7 @@ namespace String {
 inline char** vectorToMainArgs(const std::vector<std::string> args)
 {
   char** argv = new char*[args.size()];
-  for (unsigned int ii = 0; ii < args.size(); ++ii) {
+  for (size_t ii = 0; ii < args.size(); ++ii) {
     argv[ii] = new char[args[ii].length() + 1];
     strcpy(argv[ii], args[ii].c_str());
   }
