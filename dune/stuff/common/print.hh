@@ -373,10 +373,10 @@ public:
   void operator()(const Entity& en, const Entity& ne, const size_t en_idx, const size_t ne_idx)
   {
     typename GlobalMatrix::LocalMatrixType localMatrix = matrix_.localMatrix(en, ne);
-    const auto rows                                    = localMatrix.rows();
-    const auto cols                                    = localMatrix.columns();
     stream_ << "\nlocal_" << name_ << "_Matrix_" << en_idx << "_" << ne_idx << " = ["
             << "\n";
+    const auto rows = localMatrix.rows();
+    const auto cols = localMatrix.columns();
     for (auto i : valueRange(rows)) {
       for (auto j : valueRange(cols)) {
         stream_ << std::setw(8) << std::setprecision(2) << localMatrix.get(i, j);
