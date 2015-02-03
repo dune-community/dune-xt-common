@@ -156,7 +156,7 @@ long Profiler::stopTiming(const std::string section_name, const bool use_walltim
 long Profiler::getTiming(const std::string section_name, const bool use_walltime) const
 {
   assert(current_run_number_ < datamaps_.size());
-  return getTimingIdx(section_name, current_run_number_, use_walltime);
+  return getTimingIdx(section_name, boost::numeric_cast<int>(current_run_number_), use_walltime);
 }
 
 long Profiler::getTimingIdx(const std::string section_name, const int run_number, const bool use_walltime) const
