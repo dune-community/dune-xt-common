@@ -146,7 +146,7 @@ public:
 
 private:
   DatamapVector datamaps_;
-  unsigned int current_run_number_;
+  size_t current_run_number_;
   //! runtime tables etc go there
   std::string output_dir_;
   // debug counter, only outputted in debug mode
