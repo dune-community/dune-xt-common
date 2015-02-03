@@ -14,7 +14,7 @@
 #include <cstring>
 #include <ctime>
 #include <map>
-#include <assert.h>
+#include <cassert>
 #include <algorithm>
 #include <ostream>
 #include <iomanip>
