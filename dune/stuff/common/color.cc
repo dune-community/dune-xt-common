@@ -62,7 +62,7 @@ const char* StreamModifiers::endblink     = "\033[25m";
 const char* StreamModifiers::endreverse   = "\033[27m";
 
 
-std::string color(int i)
+std::string color(size_t i)
 {
   return "\033[38;5;" + std::to_string(i) + "m";
 }
@@ -105,13 +105,13 @@ std::string color(const std::string id)
 }
 
 
-std::string backcolor(int i)
+std::string backcolor(size_t i)
 {
   return "\033[38;5;" + std::to_string(i) + "m";
 }
 
 
-int templateColorChooser(int i)
+size_t templateColorChooser(size_t i)
 {
   return i % 256;
 }
@@ -133,12 +133,12 @@ bool terminal_supports_color()
 } // ... terminal_supports_color(...)
 
 
-std::string highlightTemplate(std::string str, int maxlevel)
+std::string highlightTemplate(std::string str, size_t maxlevel)
 {
   if (maxlevel < 0)
     maxlevel        = 0;
   size_t startindex = 0;
-  int level = 0;
+  size_t level = 0;
   for (size_t i = 0; i < str.size(); i++) {
     if (str[i] == '<') {
       level++;
@@ -164,13 +164,13 @@ std::string highlightTemplate(std::string str, int maxlevel)
 } // highlightTemplate
 
 
-std::string highlightString(std::string str, int colornr)
+std::string highlightString(std::string str, size_t colornr)
 {
   return "\033[38;5;" + std::to_string(colornr % 256) + "m" + str + "\033[0m"; //"\033[38;5;0m";
 }
 
 
-std::string highlightSearchString(std::string str, std::string substr, int colornr)
+std::string highlightSearchString(std::string str, std::string substr, size_t colornr)
 {
   long index = long(str.find(substr, 0));
 

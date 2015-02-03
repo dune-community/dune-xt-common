@@ -28,9 +28,9 @@ namespace Common {
 
 /**
  * @brief namespace to define color constants that can be
- * used to print colored text in an output stream.
+ * used to prsize_t colored text in an output stream.
  *
- * * \todo this could go into libdune-stuff
+ * * \todo this could go size_to libdune-stuff
  * @warning Some color codes might be unsupported by your terminal.
  */
 struct Colors
@@ -100,7 +100,7 @@ struct StreamModifiers
  * @param i The color number between 0 and 255.
  * @returns A string describing a color code.
  */
-std::string color(int i);
+std::string color(size_t i);
 
 std::map<std::string, std::string>& color_map();
 
@@ -112,10 +112,10 @@ std::string color(const std::string id);
  * @param i The color number between 0 and 255.
  * @returns A string describing a color code.
  */
-std::string backcolor(int i);
+std::string backcolor(size_t i);
 
 // maybe you want to choose your own color
-int templateColorChooser(int i);
+size_t templateColorChooser(size_t i);
 
 
 bool terminal_supports_color();
@@ -128,7 +128,7 @@ bool terminal_supports_color();
  * @param maxlevel The maximal template-level the string is reduced to.
  * @returns A colored template string.
  */
-std::string highlightTemplate(std::string str, int maxlevel = 10000);
+std::string highlightTemplate(std::string str, size_t maxlevel = 10000);
 
 /**
  * @brief A simple function highlighting a whole string in a specified foreground color.
@@ -137,7 +137,7 @@ std::string highlightTemplate(std::string str, int maxlevel = 10000);
  * @param colornr A color number from a 256 color map between 0 and 255.
  * @returns The highlighted string.
  */
-std::string highlightString(std::string str, int colornr = 0);
+std::string highlightString(std::string str, size_t colornr = 0);
 
 std::string colorString(const std::string str, const std::string clr = Colors::brown);
 
@@ -151,7 +151,7 @@ std::string colorStringRed(const std::string str);
  * @param colornr A color number from a 256 color map between 0 and 255.
  * @returns The highlighted string.
  */
-std::string highlightSearchString(std::string str, std::string substr, int colornr = 0);
+std::string highlightSearchString(std::string str, std::string substr, size_t colornr = 0);
 
 } // namespace Common
 } // namespace Stuff
