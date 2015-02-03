@@ -17,10 +17,10 @@
 
 #include "common.hh"
 
-void busywait(const int ms)
+void busywait(const size_t ms)
 {
   // "round" up to next full 10 ms to align with native timer res
-  const int milliseconds = (ms / 10) * 10 + 10;
+  const size_t milliseconds = (ms / 10) * 10 + 10;
   timeval start, end;
   gettimeofday(&start, NULL);
   do {
