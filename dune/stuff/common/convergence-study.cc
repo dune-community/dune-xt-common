@@ -170,7 +170,7 @@ std::map<std::string, std::vector<double>> ConvergenceStudy::run(const bool rela
     // print time
     if (print_timings) {
       if (elapsed < 1.0)
-        out << "  (solve took " << int(1000 * elapsed) << "ms)";
+        out << "  (solve took " << ssize_t(1000 * elapsed) << "ms)";
       else
         out << "  (solve took " << std::setprecision(2) << std::fixed << elapsed << "s)";
     }
