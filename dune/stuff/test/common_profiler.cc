@@ -10,11 +10,11 @@
 #include <dune/stuff/common/ranges.hh>
 
 using namespace Dune::Stuff::Common;
-const int wait_ms = 142;
+const size_t wait_ms = 142;
 
-void scoped_busywait(const std::string& name, int ms)
+void scoped_busywait(const std::string& name, size_t ms)
 {
-  ScopedTiming scopedTiming(name);
+  ScopedTiming DUNE_UNUSED(scopedTiming)(name);
   busywait(ms);
 }
 
