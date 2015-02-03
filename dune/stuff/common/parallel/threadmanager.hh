@@ -24,16 +24,16 @@ ThreadManager& threadManager();
 struct ThreadManager
 {
   //! return maximal number of threads possbile in the current run
-  unsigned int max_threads();
+  size_t max_threads();
 
   //! return number of current threads
-  unsigned int current_threads();
+  size_t current_threads();
 
   //! return thread number
-  unsigned int thread();
+  size_t thread();
 
   //! set maximal number of threads available during run
-  void set_max_threads(const unsigned int count);
+  void set_max_threads(const size_t count);
 
   ~ThreadManager() = default;
 
@@ -42,7 +42,7 @@ private:
   //! init tbb with given thread count, prepare Eigen for smp if possible
   ThreadManager();
 
-  unsigned int max_threads_;
+  size_t max_threads_;
 #if HAVE_TBB
   std::unique_ptr<tbb::task_scheduler_init> tbb_init_;
 #endif

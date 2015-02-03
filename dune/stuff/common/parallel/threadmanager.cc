@@ -23,31 +23,31 @@
 
 #include <tbb/compat/thread>
 
-unsigned int Dune::Stuff::ThreadManager::max_threads()
+size_t Dune::Stuff::ThreadManager::max_threads()
 {
   const auto threads = DSC_CONFIG_GET("threading.max_count", 1);
   WITH_DUNE_FEM(assert(Dune::Fem::ThreadManager::maxThreads() == threads);)
   return threads;
 }
 
-unsigned int Dune::Stuff::ThreadManager::current_threads()
+size_t Dune::Stuff::ThreadManager::current_threads()
 {
   const auto threads = max_threads();
   WITH_DUNE_FEM(assert(long(Dune::Fem::ThreadManager::currentThreads()) == long(threads));)
   return threads;
 }
 
-unsigned int Dune::Stuff::ThreadManager::thread()
+size_t Dune::Stuff::ThreadManager::thread()
 {
   const auto tbb_id = tbb::this_tbb_thread::get_id();
-  static std::map<decltype(tbb_id), unsigned int> thread_ids;
+  static std::map<decltype(tbb_id), size_t> thread_ids;
   const auto it = thread_ids.find(tbb_id);
   if (it == thread_ids.end())
     thread_ids.emplace(tbb_id, thread_ids.size());
   return thread_ids.at(tbb_id);
 }
 
-void Dune::Stuff::ThreadManager::set_max_threads(const unsigned int count)
+void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
 {
   max_threads_ = count;
   WITH_DUNE_FEM(Dune::Fem::ThreadManager::setMaxNumberThreads(count);)
@@ -73,22 +73,22 @@ Dune::Stuff::ThreadManager::ThreadManager()
 
 #else // if HAVE_TBB
 
-unsigned int Dune::Stuff::ThreadManager::max_threads()
+size_t Dune::Stuff::ThreadManager::max_threads()
 {
   return 1;
 }
 
-unsigned int Dune::Stuff::ThreadManager::current_threads()
+size_t Dune::Stuff::ThreadManager::current_threads()
 {
   return 1;
 }
 
-unsigned int Dune::Stuff::ThreadManager::thread()
+size_t Dune::Stuff::ThreadManager::thread()
 {
   return 1;
 }
 
-void Dune::Stuff::ThreadManager::set_max_threads(const unsigned int count)
+void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
 {
   if (count > 1)
     DUNE_THROW(InvalidStateException, "Trying to use more than one thread w/o TBB");
