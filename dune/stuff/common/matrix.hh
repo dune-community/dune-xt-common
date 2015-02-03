@@ -12,6 +12,7 @@
 
 #include <dune/stuff/common/debug.hh>
 #include <dune/stuff/common/math.hh>
+#include <dune/stuff/common/ranges.hh>
 
 #if HAVE_DUNE_ISTL && HAVE_DUNE_FEM
 // for dune-istl
@@ -43,7 +44,7 @@ public:
     static_assert(FieldMatrixType::rows == FieldMatrixType::cols, "Matrix must be square!");
     // CompileTimeChecker< FieldMatrixType::rows == FieldMatrixType::cols > matrix_must_be_square;
 
-    for (size_t i = 0; i < FieldMatrixType::rows; i++)
+    for (auto i : valueRange(FieldMatrixType::rows))
       (*this)[i] = matrix[i][i];
   }
 }; // class MatrixDiagonal
@@ -54,7 +55,7 @@ typename FieldMatrixType::field_type matrixTrace(const FieldMatrixType& matrix)
 {
   MatrixDiagonal<FieldMatrixType> diag(matrix);
   typename FieldMatrixType::field_type trace = typename FieldMatrixType::field_type(0);
-  for (size_t i = 0; i < FieldMatrixType::rows; i++)
+  for (auto i : valueRange(FieldMatrixType::rows))
     trace += diag[i];
   return trace;
 } // typename FieldMatrixType::field_type matrixTrace(const FieldMatrixType& matrix)
@@ -88,7 +89,7 @@ void setMatrixDiag(MatrixType& matrix, DiscFuncType& diag)
   //! the size of the matrix
   DofIteratorType it = diag.dbegin();
 
-  for (size_t row = 0; row < matrix.rows(); row++) {
+  for (auto row : valueRange(matrix.rows())) {
     if (*it != 0.0)
       matrix.set(row, row, *it);
     ++it;
@@ -103,8 +104,8 @@ bool areTransposed(const MatrixType& a, const MatrixType& b, const double tolera
   if ((a.rows() != b.cols()) || (b.rows() != a.cols()))
     return false;
 
-  for (decltype(a.rows()) row = 0; row < a.rows(); ++row) {
-    for (decltype(a.cols()) col = 0; col < a.cols(); ++col) {
+  for (auto row : valueRange(a.rows())) {
+    for (auto col : valueRange(a.cols())) {
       if (std::fabs(a(row, col) - b(col, row)) > tolerance)
         return false;
     }
@@ -116,8 +117,8 @@ bool areTransposed(const MatrixType& a, const MatrixType& b, const double tolera
 template <class MatrixType>
 void addMatrix(MatrixType& dest, const MatrixType& arg, const double eps = 1e-14)
 {
-  for (decltype(arg.rows()) i = 0; i < arg.rows(); ++i)
-    for (decltype(arg.cols()) j = 0; j < arg.cols(); ++j) {
+  for (auto i : valueRange(arg.rows()))
+    for (auto j : valueRange(arg.cols())) {
       const double value = arg(i, j);
       if (std::fabs(value) > eps)
         dest.add(i, j, value);
@@ -133,11 +134,8 @@ void addMatrix(MatrixType& dest, const MatrixType& arg, const double eps = 1e-14
 template <class SparseMatrixImpl, class Output>
 void writeSparseMatrix(const SparseMatrixImpl& matrix, Output& out)
 {
-  const auto nRows = matrix.rows();
-  const auto nCols = matrix.cols();
-
-  for (decltype(nRows) i = 0; i != nRows; ++i) {
-    for (decltype(nCols) j = 0; j != nCols; ++j) {
+  for (auto i : valueRange(matrix.rows())) {
+    for (auto j : valueRange(matrix.cols())) {
       if (matrix.find(i, j)) {
         out << i << "," << j << ",";
         out.precision(12);
@@ -236,8 +234,8 @@ void forceTranspose(const M& arg, M& dest)
   assert(arg.cols() == dest.rows());
   assert(dest.cols() == arg.rows());
   // dest.clear();
-  for (decltype(arg.cols()) i = 0; i < arg.cols(); ++i)
-    for (decltype(arg.rows()) j = 0; j < arg.rows(); ++j)
+  for (auto i : valueRange(arg.cols()))
+    for (auto j : valueRange(arg.rows()))
       dest.set(j, i, arg(i, j));
 } // forceTranspose
 
