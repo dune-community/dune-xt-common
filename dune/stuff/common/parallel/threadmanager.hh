@@ -42,7 +42,7 @@ private:
   //! init tbb with given thread count, prepare Eigen for smp if possible
   ThreadManager();
 
-  size_t max_threads_;
+  int max_threads_;
 #if HAVE_TBB
   std::unique_ptr<tbb::task_scheduler_init> tbb_init_;
 #endif
