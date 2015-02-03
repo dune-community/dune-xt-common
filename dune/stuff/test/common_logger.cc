@@ -21,7 +21,7 @@ void balh(std::ostream& out)
 void do_something_that_takes_long(std::ostream& out)
 {
   out << "  there should appear five dots, but not too fast:" << std::flush;
-  for (unsigned int i = 0; i < 5; ++i) {
+  for (size_t i = 0; i < 5; ++i) {
     busywait(666);
     out << "." << std::flush;
   }
