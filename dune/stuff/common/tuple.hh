@@ -239,7 +239,7 @@ using boost::mpl::next;
 using boost::mpl::if_;
 using boost::mpl::deref;
 
-unsigned int total_recursions = 0;
+size_t total_recursions = 0;
 
 struct end_of_recursion_tag
 {
