@@ -42,6 +42,7 @@
 #include <dune/stuff/common/fvector.hh>
 #include <dune/stuff/common/fmatrix.hh>
 #include <dune/stuff/common/debug.hh>
+#include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/la/container/interfaces.hh>
 #include <dune/stuff/la/container/common.hh>
 #include <dune/stuff/la/container/eigen.hh>
@@ -603,7 +604,7 @@ inline std::string toString(const std::string s)
   inline std::string toString(const VectorType<S> vector)                                                              \
   {                                                                                                                    \
     std::string str = "[";                                                                                             \
-    for (size_t ii = 0; ii < vector.size(); ++ii) {                                                                    \
+    for (auto ii : valueRange(vector.size())) {                                                                        \
       if (ii > 0)                                                                                                      \
         str += " ";                                                                                                    \
       str += toString(vector[ii]);                                                                                     \
@@ -631,7 +632,7 @@ DSC_VECTORTOSTR(LA::IstlDenseVector)
   inline std::string toString(const FieldVectorType<S, SIZE> vector)                                                   \
   {                                                                                                                    \
     std::string str = "[";                                                                                             \
-    for (size_t ii = 0; ii < SIZE; ++ii) {                                                                             \
+    for (auto ii : valueRange(SIZE)) {                                                                                 \
       if (ii > 0)                                                                                                      \
         str += " ";                                                                                                    \
       str += toString(vector[ii]);                                                                                     \
@@ -651,10 +652,10 @@ DSC_FIELDVECTORTOSTR(Dune::FieldVector)
   inline std::string toString(const MatrixType<S> matrix)                                                              \
   {                                                                                                                    \
     std::string str = "[";                                                                                             \
-    for (size_t rr = 0; rr < matrix.rows(); ++rr) {                                                                    \
+    for (auto rr : valueRange(matrix.rows())) {                                                                        \
       if (rr > 0)                                                                                                      \
         str += "; ";                                                                                                   \
-      for (size_t cc = 0; cc < matrix.cols(); ++cc) {                                                                  \
+      for (auto cc : valueRange(matrix.cols())) {                                                                      \
         if (cc > 0)                                                                                                    \
           str += " ";                                                                                                  \
         str +=                                                                                                         \
@@ -680,10 +681,10 @@ DSC_MATRIXTOSTR(LA::EigenDenseMatrix)
   inline std::string toString(const FieldMatrixType<S, ROWS, COLS> matrix)                                             \
   {                                                                                                                    \
     std::string str = "[";                                                                                             \
-    for (size_t rr = 0; rr < ROWS; ++rr) {                                                                             \
+    for (auto rr : valueRange(ROWS)) {                                                                                 \
       if (rr > 0)                                                                                                      \
         str += "; ";                                                                                                   \
-      for (size_t cc = 0; cc < COLS; ++cc) {                                                                           \
+      for (auto cc : valueRange(COLS)) {                                                                               \
         if (cc > 0)                                                                                                    \
           str += " ";                                                                                                  \
         str += toString(                                                                                               \
@@ -715,7 +716,7 @@ std::string whitespaceify(const T& t, const char whitespace = ' ')
 {
   const std::string s = toString(t);
   std::string ret = "";
-  for (size_t i = 0; i < s.size(); ++i) {
+  for (auto DUNE_UNUSED(ii) : valueRange(s.size())) {
     ret += whitespace;
   }
   return ret;
@@ -781,7 +782,7 @@ namespace String {
 inline char** vectorToMainArgs(const std::vector<std::string> args)
 {
   char** argv = new char*[args.size()];
-  for (size_t ii = 0; ii < args.size(); ++ii) {
+  for (auto ii : valueRange(args.size())) {
     argv[ii] = new char[args[ii].length() + 1];
     strcpy(argv[ii], args[ii].c_str());
   }
