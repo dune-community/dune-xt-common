@@ -28,7 +28,7 @@ static const Style relativeStrong = Style::relativeStrong;
 static const Style absolute       = Style::absolute;
 static const Style defaultStyle   = Style::defaultStyle;
 
-static const unsigned int vec_size = 4;
+static const size_t vec_size = 4;
 
 
 struct FloatCmpBase : public testing::Test
