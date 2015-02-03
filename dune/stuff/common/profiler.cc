@@ -7,6 +7,8 @@
 
 #include "config.h"
 
+#include <boost/numeric/conversion/cast.hpp>
+
 #include <dune/common/version.hh>
 
 #include "profiler.hh"
@@ -159,7 +161,7 @@ long Profiler::getTiming(const std::string section_name, const bool use_walltime
 
 long Profiler::getTimingIdx(const std::string section_name, const int run_number, const bool use_walltime) const
 {
-  assert(run_number < int(datamaps_.size()));
+  assert(run_number < boost::numeric_cast<int>(datamaps_.size()));
   const Datamap& data             = datamaps_[run_number];
   Datamap::const_iterator section = data.find(section_name);
   if (section == data.end()) {
@@ -275,7 +277,7 @@ void Profiler::outputTimingsAll(std::ostream& out) const
     stash << csv_sep_ << section.first << "_avg_usr" << csv_sep_ << section.first << "_max_usr" << csv_sep_
           << section.first << "_avg_wall" << csv_sep_ << section.first << "_max_wall";
   }
-  int i             = 0;
+  size_t i          = 0;
   const auto weight = 1 / float(comm.size());
   for (const auto& datamap : datamaps_) {
     stash << std::endl << i++;
@@ -305,7 +307,7 @@ void Profiler::outputTimings(std::ostream& out) const
   for (const auto& section : datamaps_[0]) {
     out << csv_sep_ << section.first;
   }
-  int i = 0;
+  size_t i = 0;
   for (const auto& datamap : datamaps_) {
     out << std::endl << i;
     for (const auto& section : datamap) {
