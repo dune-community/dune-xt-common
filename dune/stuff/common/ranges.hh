@@ -303,7 +303,7 @@ public:
 template <int codim, class DiscreteFunctionspaceType, class EntityType>
 LagrangePointSetRange<typename DiscreteFunctionspaceType::GridPartType, DiscreteFunctionspaceType::polynomialOrder,
                       codim>
-lagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& entity, const int subEntity)
+lagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& entity, const size_t subEntity)
 {
   return LagrangePointSetRange<typename DiscreteFunctionspaceType::GridPartType,
                                DiscreteFunctionspaceType::polynomialOrder,
