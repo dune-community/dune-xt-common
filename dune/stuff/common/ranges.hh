@@ -272,19 +272,19 @@ class LagrangePointSetRange
   typedef Dune::Fem::LagrangePointSet<GridPartType, order> LagrangePointSetType;
   typedef typename LagrangePointSetType::template Codim<faceCodim>::SubEntityIteratorType SubEntityIteratorType;
   const LagrangePointSetType& lp_set_;
-  const unsigned int subEntity_;
+  const size_t subEntity_;
 
 public:
   /** the template isn't lazyness here, the underlying set is templated on it too
    */
   template <class DiscreteFunctionspaceType, class EntityType>
-  LagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& entity, const unsigned int subEntity)
+  LagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& entity, const size_t subEntity)
     : lp_set_(space.lagrangePointSet(entity))
     , subEntity_(subEntity)
   {
   }
 
-  LagrangePointSetRange(const LagrangePointSetType& lp_set, const unsigned int subEntity)
+  LagrangePointSetRange(const LagrangePointSetType& lp_set, const size_t subEntity)
     : lp_set_(lp_set)
     , subEntity_(subEntity)
   {
