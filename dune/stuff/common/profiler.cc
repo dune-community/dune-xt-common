@@ -71,10 +71,11 @@ TimingData::DeltaType TimingData::delta() const
 {
   const auto scale   = 1.0 / double(boost::timer::nanosecond_type(1e6));
   const auto elapsed = timer_->elapsed();
-  return {(elapsed.user + elapsed.system) * scale / double(threadManager().current_threads()),
-          elapsed.wall * scale,
-          elapsed.user * scale,
-          elapsed.system * scale};
+  const auto cast = [=](double var) { return static_cast<typename TimingData::DeltaType::value_type>(var); };
+  return {{cast((elapsed.user + elapsed.system) * scale / double(threadManager().current_threads())),
+           cast(elapsed.wall * scale),
+           cast(elapsed.user * scale),
+           cast(elapsed.system * scale)}};
 }
 
 void Profiler::startTiming(const std::string section_name, const int i)
@@ -109,7 +110,7 @@ void Profiler::resetTiming(const std::string section_name)
     // ok, timer simply wasn't running
   }
   Datamap& current_data      = datamaps_[current_run_number_];
-  current_data[section_name] = TimingData::DeltaType({0, 0, 0, 0});
+  current_data[section_name] = {{0, 0, 0, 0}};
 }
 
 void Profiler::startTiming(const std::string section_name)
@@ -273,7 +274,7 @@ void Profiler::outputTimingsAll(std::ostream& out) const
 
   std::stringstream stash;
 
-  stash << "run";
+  stash << "run" << csv_sep_ << "threads" << csv_sep_ << "ranks";
   for (const auto& section : datamaps_[0]) {
     stash << csv_sep_ << section.first << "_avg_mix" << csv_sep_ << section.first << "_max_mix" << csv_sep_
           << section.first << "_avg_usr" << csv_sep_ << section.first << "_max_usr" << csv_sep_ << section.first
@@ -283,7 +284,7 @@ void Profiler::outputTimingsAll(std::ostream& out) const
   int i             = 0;
   const auto weight = 1 / double(comm.size());
   for (const auto& datamap : datamaps_) {
-    stash << std::endl << i++;
+    stash << std::endl << i++ << csv_sep_ << DS::threadManager().max_threads() << csv_sep_ << comm.size();
     for (const auto& section : datamap) {
       const auto timings  = section.second;
       auto wall           = timings[1];
