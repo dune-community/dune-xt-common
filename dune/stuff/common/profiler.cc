@@ -7,8 +7,6 @@
 
 #include "config.h"
 
-#include <boost/numeric/conversion/cast.hpp>
-
 #include <dune/common/version.hh>
 
 #include "profiler.hh"
@@ -76,25 +74,25 @@ TimingData::DeltaType TimingData::delta() const
                         timer_->elapsed().wall * weight);
 }
 
-void Profiler::startTiming(const std::string section_name, const int i)
+void Profiler::startTiming(const std::string section_name, const size_t i)
 {
   const std::string section = section_name + toString(i);
   startTiming(section);
 }
 
-long Profiler::stopTiming(const std::string section_name, const int i, const bool use_walltime)
+long Profiler::stopTiming(const std::string section_name, const size_t i, const bool use_walltime)
 {
   const std::string section = section_name + toString(i);
   return stopTiming(section, use_walltime);
 }
 
-long Profiler::getTiming(const std::string section_name, const int i, const bool use_walltime) const
+long Profiler::getTiming(const std::string section_name, const size_t i, const bool use_walltime) const
 {
   const std::string section = section_name + toString(i);
   return getTiming(section, use_walltime);
 }
 
-void Profiler::resetTiming(const std::string section_name, const int i)
+void Profiler::resetTiming(const std::string section_name, const size_t i)
 {
   const std::string section = section_name + toString(i);
   return resetTiming(section);
@@ -156,12 +154,12 @@ long Profiler::stopTiming(const std::string section_name, const bool use_walltim
 long Profiler::getTiming(const std::string section_name, const bool use_walltime) const
 {
   assert(current_run_number_ < datamaps_.size());
-  return getTimingIdx(section_name, boost::numeric_cast<int>(current_run_number_), use_walltime);
+  return getTimingIdx(section_name, current_run_number_, use_walltime);
 }
 
-long Profiler::getTimingIdx(const std::string section_name, const int run_number, const bool use_walltime) const
+long Profiler::getTimingIdx(const std::string section_name, const size_t run_number, const bool use_walltime) const
 {
-  assert(run_number < boost::numeric_cast<int>(datamaps_.size()));
+  assert(run_number < datamaps_.size());
   const Datamap& data             = datamaps_[run_number];
   Datamap::const_iterator section = data.find(section_name);
   if (section == data.end()) {
@@ -175,7 +173,7 @@ long Profiler::getTimingIdx(const std::string section_name, const int run_number
 } // GetTiming
 
 
-void Profiler::reset(const int numRuns)
+void Profiler::reset(const size_t numRuns)
 {
   if (!(numRuns > 0))
     DUNE_THROW(Dune::RangeError, "preparing the profiler for 0 runs is moronic");
@@ -184,7 +182,7 @@ void Profiler::reset(const int numRuns)
   current_run_number_ = 0;
 } // Reset
 
-void Profiler::addCount(const int num)
+void Profiler::addCount(const size_t num)
 {
   counters_[num] += 1;
 }

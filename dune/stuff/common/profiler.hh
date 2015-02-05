@@ -75,18 +75,18 @@ private:
   typedef std::vector<Datamap> DatamapVector;
 
   //! appends int to section name
-  long stopTiming(const std::string section_name, const int i, const bool use_walltime);
+  long stopTiming(const std::string section_name, const size_t i, const bool use_walltime);
 
   //! appends int to section name
-  void startTiming(const std::string section_name, const int i);
+  void startTiming(const std::string section_name, const size_t i);
 
   //! appends int to section name
-  void resetTiming(const std::string section_name, const int i);
+  void resetTiming(const std::string section_name, const size_t i);
 
   //! appends int to section name
-  long getTiming(const std::string section_name, const int i, const bool use_walltime) const;
+  long getTiming(const std::string section_name, const size_t i, const bool use_walltime) const;
   //! get runtime of section in run run_number in milliseconds
-  long getTimingIdx(const std::string section_name, const int run_number, const bool use_walltime) const;
+  long getTimingIdx(const std::string section_name, const size_t run_number, const bool use_walltime) const;
 
 public:
   //! set this to begin a named section
@@ -115,10 +115,10 @@ public:
      *  if you're planning on doing more than one iteration of your code
      *  called once fromm ctor with numRuns=1
      **/
-  void reset(const int numRuns);
+  void reset(const size_t numRuns);
 
   //! simple counter, usable to count how often a single piece of code is called
-  void addCount(const int num);
+  void addCount(const size_t num);
 
   //! call this after one iteration of your code has finished. increments current run number and puts new timing data
   // into the vector
@@ -150,7 +150,7 @@ private:
   //! runtime tables etc go there
   std::string output_dir_;
   // debug counter, only outputted in debug mode
-  std::map<int, int> counters_;
+  std::map<size_t, size_t> counters_;
 
   KnownTimersMap known_timers_map_;
   const std::string csv_sep_;
