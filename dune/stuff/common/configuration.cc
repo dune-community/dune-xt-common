@@ -215,7 +215,7 @@ std::set<Request> Configuration::get_mismatched_defaults(Configuration::RequestM
   std::set<Request, func> mismatched(&strictRequestCompare);
   mismatched.insert(pair.second.begin(), pair.second.end());
   if (mismatched.size() <= std::size_t(1))
-    return *(new std::set<Request>);
+    return std::set<Request>();
   else
     return std::set<Request>(std::begin(mismatched), std::end(mismatched));
 }
