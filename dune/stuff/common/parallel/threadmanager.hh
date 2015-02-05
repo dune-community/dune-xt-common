@@ -33,7 +33,7 @@ struct ThreadManager
   size_t thread();
 
   //! set maximal number of threads available during run
-  void set_max_threads(const size_t count);
+  void set_max_threads(const int count);
 
   ~ThreadManager() = default;
 

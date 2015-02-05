@@ -47,7 +47,7 @@ size_t Dune::Stuff::ThreadManager::thread()
   return thread_ids.at(tbb_id);
 }
 
-void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
+void Dune::Stuff::ThreadManager::set_max_threads(const int count)
 {
   max_threads_ = count;
   WITH_DUNE_FEM(Dune::Fem::ThreadManager::setMaxNumberThreads(count);)
