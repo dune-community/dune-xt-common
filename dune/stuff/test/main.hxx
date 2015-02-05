@@ -25,7 +25,6 @@
 #include <fstream>
 #include <limits>
 
-#include <dune/stuff/common/disable_warnings.hh>
 #include <dune/common/float_cmp.hh>
 #include <dune/common/fvector.hh>
 #include <dune/common/fmatrix.hh>
@@ -34,7 +33,6 @@
 #if HAVE_DUNE_FEM
 #include <dune/fem/misc/mpimanager.hh>
 #endif
-#include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/stuff/test/gtest/gtest.h>
 #include <dune/stuff/aliases.hh>
