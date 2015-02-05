@@ -5,6 +5,8 @@
 
 #include "config.h"
 
+#include <boost/numeric/conversion/cast.hpp>
+
 #include "threadmanager.hh"
 
 #include <dune/stuff/common/configuration.hh>
@@ -47,15 +49,15 @@ size_t Dune::Stuff::ThreadManager::thread()
   return thread_ids.at(tbb_id);
 }
 
-void Dune::Stuff::ThreadManager::set_max_threads(const int count)
+void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
 {
   max_threads_ = count;
   WITH_DUNE_FEM(Dune::Fem::ThreadManager::setMaxNumberThreads(count);)
 #if HAVE_EIGEN
-  Eigen::setNbThreads(count);
+  Eigen::setNbThreads(boost::numeric_cast<int>(count));
 #endif
   tbb_init_->terminate();
-  tbb_init_->initialize(count);
+  tbb_init_->initialize(boost::numeric_cast<int>(count));
 }
 
 Dune::Stuff::ThreadManager::ThreadManager()
@@ -67,7 +69,7 @@ Dune::Stuff::ThreadManager::ThreadManager()
   Eigen::initParallel();
   Eigen::setNbThreads(1);
 #endif
-  tbb_init_ = Common::make_unique<tbb::task_scheduler_init>(max_threads_);
+  tbb_init_ = Common::make_unique<tbb::task_scheduler_init>(boost::numeric_cast<int>(max_threads_));
   set_max_threads(std::thread::hardware_concurrency());
 }
 
