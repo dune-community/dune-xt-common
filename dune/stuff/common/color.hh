@@ -28,7 +28,7 @@ namespace Common {
 
 /**
  * @brief namespace to define color constants that can be
- * used to prsize_t colored text in an output stream.
+ * used to print colored text in an output stream.
  *
  * * \todo this could go size_to libdune-stuff
  * @warning Some color codes might be unsupported by your terminal.
