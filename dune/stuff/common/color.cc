@@ -135,8 +135,6 @@ bool terminal_supports_color()
 
 std::string highlightTemplate(std::string str, size_t maxlevel)
 {
-  if (maxlevel < 0)
-    maxlevel        = 0;
   size_t startindex = 0;
   size_t level = 0;
   for (size_t i = 0; i < str.size(); i++) {
