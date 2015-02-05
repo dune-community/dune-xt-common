@@ -178,9 +178,8 @@ Configuration::~Configuration()
 {
   if (log_on_exit_ && !empty()) {
     testCreateDirectory(directoryOnly(logfile_));
-    std::unique_ptr<boost::filesystem::ofstream> out(DSC::make_ofstream(logfile_));
-    report(*out);
-    print_requests(*out);
+    report(*DSC::make_ofstream(logfile_));
+    print_mismatched_defaults(*DSC::make_ofstream(logfile_ + ".requests"));
   }
 }
 
@@ -215,7 +214,7 @@ std::set<Request> Configuration::get_mismatched_defaults(Configuration::RequestM
   std::set<Request, func> mismatched(&strictRequestCompare);
   mismatched.insert(pair.second.begin(), pair.second.end());
   if (mismatched.size() <= std::size_t(1))
-    return *(new std::set<Request>);
+    return std::set<Request>();
   else
     return std::set<Request>(std::begin(mismatched), std::end(mismatched));
 }
@@ -389,7 +388,7 @@ Configuration::RequestMapType Configuration::get_mismatched_defaults_map() const
   RequestMapType ret;
   for (const auto& pair : requests_map_) {
     auto mismatches = get_mismatched_defaults(pair);
-    if (mismatches.size())
+    if (mismatches.size() > 1)
       ret[pair.first] = mismatches;
   }
   return ret;
@@ -399,7 +398,7 @@ void Configuration::print_mismatched_defaults(std::ostream& out) const
 {
   for (const auto& pair : requests_map_) {
     auto mismatched = get_mismatched_defaults(pair);
-    if (mismatched.size()) {
+    if (mismatched.size() > 1) {
       out << "Mismatched uses for key " << pair.first << ": ";
       for (const auto& req : mismatched) {
         out << "\n\t" << req;
