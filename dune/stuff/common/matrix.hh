@@ -8,9 +8,11 @@
 #ifndef DUNE_STUFF_COMMON_MATRIX_HH
 #define DUNE_STUFF_COMMON_MATRIX_HH
 
-#include <dune/common/densematrix.hh>
+#include <dune/common/dynmatrix.hh>
+#include <dune/common/fmatrix.hh>
 
 #include <dune/stuff/common/debug.hh>
+#include <dune/stuff/common/fmatrix.hh>
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/common/ranges.hh>
 
@@ -30,6 +32,149 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
+
+
+/**
+ * \brief Traits to statically extract the scalar type of a (mathematical) vector-
+ *
+ *        If you want your vector class to benefit from the operators defined in this header you have to manually
+ *        specify a specialization of this class in your code with is_matrix defined to true and an appropriate
+ *        static create() method (see the specializations below).
+ */
+template <class MatType>
+struct MatrixAbstraction
+{
+  typedef MatType MatrixType;
+  typedef MatType ScalarType;
+  typedef MatType S;
+
+  static const bool is_matrix = false;
+};
+
+template <class K>
+struct MatrixAbstraction<Dune::DynamicMatrix<K>>
+{
+  typedef Dune::DynamicMatrix<K> MatrixType;
+  typedef K ScalarType;
+  typedef ScalarType S;
+
+  static const bool is_matrix = true;
+
+  static MatrixType create(const size_t rows, const size_t cols, const ScalarType& val = ScalarType(0))
+  {
+    return MatrixType(rows, cols, val);
+  }
+
+  static size_t rows(const MatrixType& mat)
+  {
+    return mat.rows();
+  }
+
+  static size_t cols(const MatrixType& mat)
+  {
+    return mat.cols();
+  }
+
+  static void set_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)
+  {
+    mat[row][col] = val;
+  }
+
+  static ScalarType get_entry(const MatrixType& mat, const size_t row, const size_t col)
+  {
+    return mat[row][col];
+  }
+};
+
+template <class K, int N, int M>
+struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
+{
+  typedef Dune::FieldMatrix<K, N, M> MatrixType;
+  typedef K ScalarType;
+  typedef ScalarType S;
+
+  static const bool is_matrix = true;
+
+  static MatrixType create(const size_t rows, const size_t cols, const ScalarType& val = ScalarType(0))
+  {
+    if (rows != N)
+      DUNE_THROW(Dune::Stuff::Exceptions::shapes_do_not_match, "rows = " << rows << "\nN = " << int(N));
+    if (cols != M)
+      DUNE_THROW(Dune::Stuff::Exceptions::shapes_do_not_match, "cols = " << cols << "\nM = " << int(M));
+    return MatrixType(val);
+  }
+
+  static size_t rows(const MatrixType& /*mat*/)
+  {
+    return N;
+  }
+
+  static size_t cols(const MatrixType& /*mat*/)
+  {
+    return M;
+  }
+
+  static void set_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)
+  {
+    mat[row][col] = val;
+  }
+
+  static ScalarType get_entry(const MatrixType& mat, const size_t row, const size_t col)
+  {
+    return mat[row][col];
+  }
+};
+
+template <class K, int N, int M>
+struct MatrixAbstraction<Dune::Stuff::Common::FieldMatrix<K, N, M>>
+{
+  typedef Dune::Stuff::Common::FieldMatrix<K, N, M> MatrixType;
+  typedef K ScalarType;
+  typedef ScalarType S;
+
+  static const bool is_matrix = true;
+
+  static MatrixType create(const size_t rows, const size_t cols, const ScalarType& val = ScalarType(0))
+  {
+    return MatrixType(rows, cols, val);
+  }
+
+  static size_t rows(const MatrixType& /*mat*/)
+  {
+    return N;
+  }
+
+  static size_t cols(const MatrixType& /*mat*/)
+  {
+    return M;
+  }
+
+  static void set_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)
+  {
+    mat[row][col] = val;
+  }
+
+  static ScalarType get_entry(const MatrixType& mat, const size_t row, const size_t col)
+  {
+    return mat[row][col];
+  }
+};
+
+
+template <class MatrixType>
+struct is_matrix
+{
+  static const bool value = MatrixAbstraction<MatrixType>::is_matrix;
+};
+
+
+template <class MatrixType>
+typename std::enable_if<is_matrix<MatrixType>::value, MatrixType>::type
+create(const size_t sz, const typename MatrixAbstraction<MatrixType>::S& val)
+{
+  return MatrixAbstraction<MatrixType>::create(sz, val);
+}
+
 
 /** \brief get the diagonal of a fieldMatrix into a fieldvector
    * \note While in principle this might do for SparseRowMatrix as well, don't do it! SparseRowMatrix has specialised
