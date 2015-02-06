@@ -56,7 +56,7 @@ inline int getIdx(const StlSequence& ct, const typename StlSequence::value_type&
 /** this allows subscription indices to wrap around
    * \example N=4: wraparound_array[4] == wraparound_array[0] && wraparound_array[-1] == wraparound_array[3]
    **/
-template <class T, int N>
+template <class T, size_t N>
 struct wraparound_array : public Dune::array<T, N>
 {
   typedef Dune::array<T, N> BaseType;

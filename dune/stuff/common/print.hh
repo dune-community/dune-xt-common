@@ -71,7 +71,7 @@ void print(const Dune::DenseVector<VectorImp>& vector, const std::string name = 
   }
 } // void print(const Dune::DenseVector< VectorImp >& vector, ...)
 
-template <class FieldImp, int size, class OutStreamType = std::ostream>
+template <class FieldImp, size_t size, class OutStreamType = std::ostream>
 void print(const std::vector<Dune::FieldVector<FieldImp, size>>& vectors,
            const std::string name = "vector_of_FieldVector", OutStreamType& out = std::cout,
            const std::string prefix = "")
@@ -140,7 +140,7 @@ void print(const Dune::DenseMatrix<MatrixImp>& matrix, const std::string name = 
  *  \attention  I'm not sure why we need this, print< const std::vector< Dune::DenseMatrix< MatrixImp > >& >
  *              does not seem to work for Dune::FieldMatrix.
  */
-template <class FieldImp, int rows, int cols, class OutStreamType = std::ostream>
+template <class FieldImp, size_t rows, size_t cols, class OutStreamType = std::ostream>
 void print(const std::vector<Dune::FieldMatrix<FieldImp, rows, cols>>& matrices,
            const std::string name = "vector_of_FieldMatrix", OutStreamType& out = std::cout,
            const std::string prefix = "")
