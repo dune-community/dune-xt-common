@@ -48,7 +48,7 @@ struct VectorAbstraction<std::vector<T>>
 
   static const bool is_vector = true;
 
-  static VectorType create(const size_t sz, const ScalarType& val)
+  static VectorType create(const size_t sz, const ScalarType& val = ScalarType(0))
   {
     return VectorType(sz, val);
   }
@@ -63,7 +63,7 @@ struct VectorAbstraction<Dune::DynamicVector<K>>
 
   static const bool is_vector = true;
 
-  static VectorType create(const size_t sz, const ScalarType& val)
+  static VectorType create(const size_t sz, const ScalarType& val = ScalarType(0))
   {
     return VectorType(sz, val);
   }
@@ -78,7 +78,7 @@ struct VectorAbstraction<Dune::FieldVector<K, SIZE>>
 
   static const bool is_vector = true;
 
-  static VectorType create(const size_t sz, const ScalarType& val)
+  static VectorType create(const size_t sz, const ScalarType& val = ScalarType(0))
   {
     if (sz != SIZE)
       DUNE_THROW(Dune::Stuff::Exceptions::shapes_do_not_match, "sz = " << sz << "\nSIZE = " << int(SIZE));
@@ -95,7 +95,7 @@ struct VectorAbstraction<Dune::Stuff::Common::FieldVector<K, SIZE>>
 
   static const bool is_vector = true;
 
-  static VectorType create(const size_t sz, const ScalarType& val)
+  static VectorType create(const size_t sz, const ScalarType& val = ScalarType(0))
   {
     return VectorType(sz, val);
   }
@@ -111,7 +111,8 @@ struct is_vector
 
 template <class VectorType>
 typename std::enable_if<is_vector<VectorType>::value, VectorType>::type
-create(const size_t sz, const typename VectorAbstraction<VectorType>::S& val)
+create(const size_t sz,
+       const typename VectorAbstraction<VectorType>::S& val = typename VectorAbstraction<VectorType>::S(0))
 {
   return VectorAbstraction<VectorType>::create(sz, val);
 }
