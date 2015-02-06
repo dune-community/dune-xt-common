@@ -43,7 +43,7 @@ public:
   void stop();
 
   typedef boost::timer::nanosecond_type TimeType;
-  typedef std::pair<TimeType, TimeType> DeltaType;
+  typedef std::array<TimeType, 4> DeltaType;
 
   /** \return time elapsed since object construction in milliseconds
    *  \note since typical resolutions for user+system time are 10-15ms the nanosecond results are scaled accordingly

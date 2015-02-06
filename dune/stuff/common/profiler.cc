@@ -31,6 +31,7 @@
 #endif
 
 #include <dune/stuff/common/string.hh>
+#include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/common/filesystem.hh>
 #include <dune/stuff/common/parallel/threadmanager.hh>
 
@@ -68,10 +69,13 @@ void TimingData::stop()
 
 TimingData::DeltaType TimingData::delta() const
 {
-  const auto weight = 1.0 / double(boost::timer::nanosecond_type(1e6));
-  return std::make_pair((timer_->elapsed().user + timer_->elapsed().system) * weight
-                            / double(threadManager().current_threads()),
-                        timer_->elapsed().wall * weight);
+  const auto scale   = 1.0 / double(boost::timer::nanosecond_type(1e6));
+  const auto elapsed = timer_->elapsed();
+  const auto cast = [=](double var) { return static_cast<typename TimingData::DeltaType::value_type>(var); };
+  return {{cast((elapsed.user + elapsed.system) * scale / double(threadManager().current_threads())),
+           cast(elapsed.wall * scale),
+           cast(elapsed.user * scale),
+           cast(elapsed.system * scale)}};
 }
 
 void Profiler::startTiming(const std::string section_name, const size_t i)
@@ -106,7 +110,7 @@ void Profiler::resetTiming(const std::string section_name)
     // ok, timer simply wasn't running
   }
   Datamap& current_data      = datamaps_[current_run_number_];
-  current_data[section_name] = TimingData::DeltaType(0, 0);
+  current_data[section_name] = {{0, 0, 0, 0}};
 }
 
 void Profiler::startTiming(const std::string section_name)
@@ -140,15 +144,15 @@ long Profiler::stopTiming(const std::string section_name, const bool use_walltim
   known_timers_map_[section_name].first = false; // marks as not running
   TimingData& timing = *(known_timers_map_[section_name].second);
   timing.stop();
-  auto delta            = timing.delta();
+  const auto delta      = timing.delta();
   Datamap& current_data = datamaps_[current_run_number_];
   if (current_data.find(section_name) == current_data.end())
     current_data[section_name] = delta;
   else {
-    current_data[section_name].first += delta.first;
-    current_data[section_name].second += delta.second;
+    for (auto i : valueRange(delta.size()))
+      current_data[section_name][i] += delta[i];
   }
-  return use_walltime ? delta.second : delta.first;
+  return use_walltime ? delta[1] : delta[0];
 } // StopTiming
 
 long Profiler::getTiming(const std::string section_name, const bool use_walltime) const
@@ -157,9 +161,9 @@ long Profiler::getTiming(const std::string section_name, const bool use_walltime
   return getTimingIdx(section_name, current_run_number_, use_walltime);
 }
 
-long Profiler::getTimingIdx(const std::string section_name, const size_t run_number, const bool use_walltime) const
+long Profiler::getTimingIdx(const std::string section_name, const int run_number, const bool use_walltime) const
 {
-  assert(run_number < datamaps_.size());
+  assert(run_number < int(datamaps_.size()));
   const Datamap& data             = datamaps_[run_number];
   Datamap::const_iterator section = data.find(section_name);
   if (section == data.end()) {
@@ -167,9 +171,9 @@ long Profiler::getTimingIdx(const std::string section_name, const size_t run_num
     const auto& timer_it = known_timers_map_.find(section_name);
     if (timer_it == known_timers_map_.end())
       DUNE_THROW(Dune::InvalidStateException, "no timer found: " + section_name);
-    return use_walltime ? timer_it->second.second->delta().second : timer_it->second.second->delta().first;
+    return use_walltime ? timer_it->second.second->delta()[1] : timer_it->second.second->delta()[0];
   }
-  return use_walltime ? section->second.second : section->second.first;
+  return use_walltime ? section->second[1] : section->second[0];
 } // GetTiming
 
 
@@ -270,25 +274,34 @@ void Profiler::outputTimingsAll(std::ostream& out) const
 
   std::stringstream stash;
 
-  stash << "run";
+  stash << "run" << csv_sep_ << "threads" << csv_sep_ << "ranks";
   for (const auto& section : datamaps_[0]) {
-    stash << csv_sep_ << section.first << "_avg_usr" << csv_sep_ << section.first << "_max_usr" << csv_sep_
-          << section.first << "_avg_wall" << csv_sep_ << section.first << "_max_wall";
+    stash << csv_sep_ << section.first << "_avg_mix" << csv_sep_ << section.first << "_max_mix" << csv_sep_
+          << section.first << "_avg_usr" << csv_sep_ << section.first << "_max_usr" << csv_sep_ << section.first
+          << "_avg_wall" << csv_sep_ << section.first << "_max_wall" << csv_sep_ << section.first << "_avg_sys"
+          << csv_sep_ << section.first << "_max_sys";
   }
-  size_t i          = 0;
-  const auto weight = 1 / float(comm.size());
+  int i             = 0;
+  const auto weight = 1 / double(comm.size());
   for (const auto& datamap : datamaps_) {
-    stash << std::endl << i++;
+    stash << std::endl << i++ << csv_sep_ << DS::threadManager().max_threads() << csv_sep_ << comm.size();
     for (const auto& section : datamap) {
-      auto wall     = section.second.second;
-      auto usr      = section.second.first;
-      auto wall_sum = comm.sum(wall);
-      auto usr_sum  = comm.sum(usr);
-      auto wall_max = comm.max(wall);
-      auto usr_max  = comm.max(usr);
-
-      stash << csv_sep_ << usr_sum * weight << csv_sep_ << usr_max << csv_sep_ << wall_sum * weight << csv_sep_
-            << wall_max;
+      const auto timings  = section.second;
+      auto wall           = timings[1];
+      auto usr            = timings[2];
+      auto sys            = timings[3];
+      auto mix            = timings[0];
+      const auto wall_sum = comm.sum(wall);
+      const auto wall_max = comm.max(wall);
+      const auto usr_sum  = comm.sum(usr);
+      const auto usr_max  = comm.max(usr);
+      const auto sys_sum  = comm.sum(sys);
+      const auto sys_max  = comm.max(sys);
+      const auto mix_sum  = comm.sum(mix);
+      const auto mix_max  = comm.max(mix);
+      stash << csv_sep_ << mix_sum * weight << csv_sep_ << mix_max << csv_sep_ << usr_sum * weight << csv_sep_
+            << usr_max << csv_sep_ << wall_sum * weight << csv_sep_ << wall_max << csv_sep_ << sys_sum * weight
+            << csv_sep_ << sys_max;
     }
   }
   stash << std::endl;
@@ -309,7 +322,7 @@ void Profiler::outputTimings(std::ostream& out) const
   for (const auto& datamap : datamaps_) {
     out << std::endl << i;
     for (const auto& section : datamap) {
-      out << csv_sep_ << section.second.first;
+      out << csv_sep_ << section.second[0];
     }
     out << std::endl;
   }
