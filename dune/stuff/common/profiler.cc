@@ -161,9 +161,9 @@ long Profiler::getTiming(const std::string section_name, const bool use_walltime
   return getTimingIdx(section_name, current_run_number_, use_walltime);
 }
 
-long Profiler::getTimingIdx(const std::string section_name, const int run_number, const bool use_walltime) const
+long Profiler::getTimingIdx(const std::string section_name, const size_t run_number, const bool use_walltime) const
 {
-  assert(run_number < int(datamaps_.size()));
+  assert(run_number < datamaps_.size());
   const Datamap& data             = datamaps_[run_number];
   Datamap::const_iterator section = data.find(section_name);
   if (section == data.end()) {
