@@ -197,7 +197,7 @@ operator+(const L& left, const R& right)
   for (size_t ii = 0; ii < sz; ++ii)
     result[ii] += right[ii];
   return result;
-} // ... operator*(...)
+} // ... operator+(...)
 
 
 #endif // DUNE_STUFF_TOOLS_COMMON_VECTOR_HH

@@ -26,8 +26,7 @@
 #include <dune/istl/operators.hh>
 #include <dune/fem/operator/matrix/istlmatrix.hh>
 #include <dune/fem/operator/matrix/preconditionerwrapper.hh>
-#endif // if HAVE_DUNE_ISTL && HAVE_DUNE_FEM
-
+#endif // HAVE_DUNE_ISTL && HAVE_DUNE_FEM
 
 namespace Dune {
 namespace Stuff {
