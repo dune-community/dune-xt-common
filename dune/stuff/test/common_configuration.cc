@@ -4,7 +4,7 @@
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 // This one has to come first (includes the config.h)!
-#include <dune/stuff/test/main.hxx>
+#include "main.hxx"
 
 #include <dune/stuff/common/validation.hh>
 #include <dune/stuff/common/configuration.hh>
@@ -177,48 +177,27 @@ struct ConfigTest : public testing::Test
 template <class ConfigurationCreator>
 struct ConfigurationTest : public ::testing::Test
 {
-
   template <class VectorType>
   static void check_vector(const Configuration& config)
   {
     VectorType vec = config.get("vector", VectorType(), 1);
-    if (vec.size() != 1)
-      DUNE_THROW(results_are_not_as_expected,
-                 vec.size() << " vs. 1 with VectorType = " << Typename<VectorType>::value());
-    if (FloatCmp::ne(vec[0], 0.0))
-      DUNE_THROW(results_are_not_as_expected, vec[0] << " vs. 0 with VectorType = " << Typename<VectorType>::value());
+    EXPECT_EQ(1, vec.size());
+    EXPECT_FLOAT_EQ(0.0, vec[0]);
     vec = config.get("vector", VectorType(), 2);
-    if (vec.size() != 2)
-      DUNE_THROW(results_are_not_as_expected,
-                 vec.size() << " vs. 2 with VectorType = " << Typename<VectorType>::value());
+    EXPECT_EQ(2, vec.size());
     for (auto ii : {0.0, 1.0})
-      if (FloatCmp::ne(vec[ii], ii))
-        DUNE_THROW(results_are_not_as_expected,
-                   vec[ii] << " vs. " << ii << " with VectorType = " << Typename<VectorType>::value());
-
+      EXPECT_FLOAT_EQ(ii, vec[ii]);
     vec = config.get<VectorType>("vector", 1);
-    if (vec.size() != 1)
-      DUNE_THROW(results_are_not_as_expected,
-                 vec.size() << " vs. 1 with VectorType = " << Typename<VectorType>::value());
-    if (FloatCmp::ne(vec[0], 0.0))
-      DUNE_THROW(results_are_not_as_expected, vec[0] << " vs. 0 with VectorType = " << Typename<VectorType>::value());
+    EXPECT_EQ(1, vec.size());
+    EXPECT_FLOAT_EQ(0.0, vec[0]);
     vec = config.get<VectorType>("vector", 2);
-    if (vec.size() != 2)
-      DUNE_THROW(results_are_not_as_expected,
-                 vec.size() << " vs. 2 with VectorType = " << Typename<VectorType>::value());
+    EXPECT_EQ(2, vec.size());
     for (auto ii : {0.0, 1.0})
-      if (FloatCmp::ne(vec[ii], ii))
-        DUNE_THROW(results_are_not_as_expected,
-                   vec[ii] << " vs. " << ii << " with VectorType = " << Typename<VectorType>::value());
-
+      EXPECT_FLOAT_EQ(ii, vec[ii]);
     vec = config.get<VectorType>("vector");
-    if (vec.size() != 2)
-      DUNE_THROW(results_are_not_as_expected,
-                 vec.size() << " vs. 2 with VectorType = " << Typename<VectorType>::value());
+    EXPECT_EQ(2, vec.size());
     for (auto ii : {0.0, 1.0})
-      if (FloatCmp::ne(vec[ii], ii))
-        DUNE_THROW(results_are_not_as_expected,
-                   vec[ii] << " vs. " << ii << " with VectorType = " << Typename<VectorType>::value());
+      EXPECT_FLOAT_EQ(ii, vec[ii]);
   } // ... check_vector< ... >(...)
 
   template <class K, int d>
@@ -226,9 +205,7 @@ struct ConfigurationTest : public ::testing::Test
   {
     typedef FieldVector<K, d> VectorType;
     VectorType vec = config.get("vector", VectorType(), d);
-    if (vec.size() != d)
-      DUNE_THROW(results_are_not_as_expected,
-                 vec.size() << " vs. 2 with VectorType = " << Typename<VectorType>::value());
+    EXPECT_EQ(d, vec.size());
     for (size_t ii = 0; ii < d; ++ii)
       if (FloatCmp::ne(vec[ii], double(ii)))
         DUNE_THROW(results_are_not_as_expected,
@@ -237,7 +214,7 @@ struct ConfigurationTest : public ::testing::Test
     vec = config.get<VectorType>("vector", d);
     if (vec.size() != d)
       DUNE_THROW(results_are_not_as_expected,
-                 vec.size() << " vs. 2 with VectorType = " << Typename<VectorType>::value());
+                 vec.size() << " vs. d with VectorType = " << Typename<VectorType>::value());
     for (size_t ii = 0; ii < d; ++ii)
       if (FloatCmp::ne(vec[ii], double(ii)))
         DUNE_THROW(results_are_not_as_expected,
@@ -246,7 +223,7 @@ struct ConfigurationTest : public ::testing::Test
     vec = config.get<VectorType>("vector");
     if (vec.size() != d)
       DUNE_THROW(results_are_not_as_expected,
-                 vec.size() << " vs. 2 with VectorType = " << Typename<VectorType>::value());
+                 vec.size() << " vs. d with VectorType = " << Typename<VectorType>::value());
     for (size_t ii = 0; ii < d; ++ii)
       if (FloatCmp::ne(vec[ii], double(ii))) {
         DUNE_THROW(results_are_not_as_expected,
@@ -564,7 +541,7 @@ struct ConfigurationTest : public ::testing::Test
   static void behaves_correctly()
   {
     const Configuration config = ConfigurationCreator::create();
-    //    config.report(); // <- this works as well but will produce output
+    config.report(); // <- this works as well but will produce output
     config.report(test_out);
     config.report(test_out, "'prefix '");
     test_out << config << std::endl;
