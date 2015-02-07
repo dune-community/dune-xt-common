@@ -37,6 +37,20 @@ struct VectorAbstraction
   typedef VecType S;
 
   static const bool is_vector = false;
+
+  static const bool has_static_size = false;
+
+  static const size_t static_size = std::numeric_limits<size_t>::max();
+
+  static inline /*VectorType*/ void create(const size_t /*sz*/)
+  {
+    static_assert(AlwaysFalse<VecType>::value, "Do not call me if is_vector is false!");
+  }
+
+  static inline /*VectorType*/ void create(const size_t /*sz*/, const ScalarType& /*val*/)
+  {
+    static_assert(AlwaysFalse<VecType>::value, "Do not call me if is_vector is false!");
+  }
 };
 
 template <class T>
@@ -48,7 +62,16 @@ struct VectorAbstraction<std::vector<T>>
 
   static const bool is_vector = true;
 
-  static VectorType create(const size_t sz, const ScalarType& val = ScalarType(0))
+  static const bool has_static_size = false;
+
+  static const size_t static_size = std::numeric_limits<size_t>::max();
+
+  static inline VectorType create(const size_t sz)
+  {
+    return VectorType(sz);
+  }
+
+  static inline VectorType create(const size_t sz, const ScalarType& val)
   {
     return VectorType(sz, val);
   }
@@ -63,7 +86,19 @@ struct VectorAbstraction<Dune::DynamicVector<K>>
 
   static const bool is_vector = true;
 
-  static VectorType create(const size_t sz, const ScalarType& val = ScalarType(0))
+  static const bool has_static_size = false;
+
+  static inline size_t static_size()
+  {
+    static_assert(AlwaysFalse<K>::value, "Do not call me when has_static_size is false!");
+  }
+
+  static inline VectorType create(const size_t sz)
+  {
+    return VectorType(sz);
+  }
+
+  static inline VectorType create(const size_t sz, const ScalarType& val)
   {
     return VectorType(sz, val);
   }
@@ -78,7 +113,18 @@ struct VectorAbstraction<Dune::FieldVector<K, SIZE>>
 
   static const bool is_vector = true;
 
-  static VectorType create(const size_t sz, const ScalarType& val = ScalarType(0))
+  static const bool has_static_size = true;
+
+  static const size_t static_size = SIZE;
+
+  static inline VectorType create(const size_t sz)
+  {
+    if (sz != SIZE)
+      DUNE_THROW(Dune::Stuff::Exceptions::shapes_do_not_match, "sz = " << sz << "\nSIZE = " << int(SIZE));
+    return VectorType();
+  }
+
+  static inline VectorType create(const size_t sz, const ScalarType& val)
   {
     if (sz != SIZE)
       DUNE_THROW(Dune::Stuff::Exceptions::shapes_do_not_match, "sz = " << sz << "\nSIZE = " << int(SIZE));
@@ -95,7 +141,16 @@ struct VectorAbstraction<Dune::Stuff::Common::FieldVector<K, SIZE>>
 
   static const bool is_vector = true;
 
-  static VectorType create(const size_t sz, const ScalarType& val = ScalarType(0))
+  static const bool has_static_size = true;
+
+  static const size_t static_size = SIZE;
+
+  static inline VectorType create(const size_t sz)
+  {
+    return VectorType(sz);
+  }
+
+  static inline VectorType create(const size_t sz, const ScalarType& val)
   {
     return VectorType(sz, val);
   }
