@@ -19,6 +19,7 @@
 #include <dune/common/parametertree.hh>
 #include <dune/common/parametertreeparser.hh>
 
+#include <dune/stuff/aliases.hh>
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/color.hh>
 #include <dune/stuff/common/logging.hh>

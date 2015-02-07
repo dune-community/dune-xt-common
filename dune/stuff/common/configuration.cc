@@ -6,6 +6,7 @@
 // Contributors: Sven Kaulmann
 
 #include "config.h"
+
 #include "configuration.hh"
 
 #if HAVE_DUNE_FEM
