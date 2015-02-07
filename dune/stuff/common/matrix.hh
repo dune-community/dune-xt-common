@@ -15,6 +15,7 @@
 #include <dune/stuff/common/fmatrix.hh>
 #include <dune/stuff/common/math.hh>
 #include <dune/stuff/common/ranges.hh>
+#include <dune/stuff/common/type_utils.hh>
 
 #if HAVE_DUNE_ISTL && HAVE_DUNE_FEM
 // for dune-istl
@@ -48,6 +49,43 @@ struct MatrixAbstraction
   typedef MatType S;
 
   static const bool is_matrix = false;
+
+  static const bool has_static_size = false;
+
+  static const size_t static_rows = std::numeric_limits<size_t>::max();
+
+  static const size_t static_cols = std::numeric_limits<size_t>::max();
+
+  static inline /*MatrixType*/ void create(const size_t /*rows*/, const size_t /*cols*/)
+  {
+    static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
+  }
+
+  static inline /*MatrixType*/ void create(const size_t /*rows*/, const size_t /*cols*/, const ScalarType& /*val*/)
+  {
+    static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
+  }
+
+  static inline size_t rows(const MatrixType& /*mat*/)
+  {
+    static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
+  }
+
+  static inline size_t cols(const MatrixType& /*mat*/)
+  {
+    static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
+  }
+
+  static inline void set_entry(MatrixType& /*mat*/, const size_t /*row*/, const size_t /*col*/,
+                               const ScalarType& /*val*/)
+  {
+    static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
+  }
+
+  static inline /*ScalarType*/ void get_entry(const MatrixType& /*mat*/, const size_t /*row*/, const size_t /*col*/)
+  {
+    static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
+  }
 };
 
 template <class K>
@@ -59,27 +97,38 @@ struct MatrixAbstraction<Dune::DynamicMatrix<K>>
 
   static const bool is_matrix = true;
 
-  static MatrixType create(const size_t rows, const size_t cols, const ScalarType& val = ScalarType(0))
+  static const bool has_static_size = false;
+
+  static const size_t static_rows = std::numeric_limits<size_t>::max();
+
+  static const size_t static_cols = std::numeric_limits<size_t>::max();
+
+  static inline MatrixType create(const size_t rows, const size_t cols)
+  {
+    return MatrixType(rows, cols);
+  }
+
+  static inline MatrixType create(const size_t rows, const size_t cols, const ScalarType& val)
   {
     return MatrixType(rows, cols, val);
   }
 
-  static size_t rows(const MatrixType& mat)
+  static inline size_t rows(const MatrixType& mat)
   {
     return mat.rows();
   }
 
-  static size_t cols(const MatrixType& mat)
+  static inline size_t cols(const MatrixType& mat)
   {
     return mat.cols();
   }
 
-  static void set_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)
+  static inline void set_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)
   {
     mat[row][col] = val;
   }
 
-  static ScalarType get_entry(const MatrixType& mat, const size_t row, const size_t col)
+  static inline ScalarType get_entry(const MatrixType& mat, const size_t row, const size_t col)
   {
     return mat[row][col];
   }
@@ -94,7 +143,22 @@ struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
 
   static const bool is_matrix = true;
 
-  static MatrixType create(const size_t rows, const size_t cols, const ScalarType& val = ScalarType(0))
+  static const bool has_static_size = true;
+
+  static const size_t static_rows = N;
+
+  static const size_t static_cols = M;
+
+  static inline MatrixType create(const size_t rows, const size_t cols)
+  {
+    if (rows != N)
+      DUNE_THROW(Dune::Stuff::Exceptions::shapes_do_not_match, "rows = " << rows << "\nN = " << int(N));
+    if (cols != M)
+      DUNE_THROW(Dune::Stuff::Exceptions::shapes_do_not_match, "cols = " << cols << "\nM = " << int(M));
+    return MatrixType();
+  }
+
+  static inline MatrixType create(const size_t rows, const size_t cols, const ScalarType& val)
   {
     if (rows != N)
       DUNE_THROW(Dune::Stuff::Exceptions::shapes_do_not_match, "rows = " << rows << "\nN = " << int(N));
@@ -103,22 +167,22 @@ struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
     return MatrixType(val);
   }
 
-  static size_t rows(const MatrixType& /*mat*/)
+  static inline size_t rows(const MatrixType& /*mat*/)
   {
     return N;
   }
 
-  static size_t cols(const MatrixType& /*mat*/)
+  static inline size_t cols(const MatrixType& /*mat*/)
   {
     return M;
   }
 
-  static void set_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)
+  static inline void set_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)
   {
     mat[row][col] = val;
   }
 
-  static ScalarType get_entry(const MatrixType& mat, const size_t row, const size_t col)
+  static inline ScalarType get_entry(const MatrixType& mat, const size_t row, const size_t col)
   {
     return mat[row][col];
   }
@@ -133,27 +197,38 @@ struct MatrixAbstraction<Dune::Stuff::Common::FieldMatrix<K, N, M>>
 
   static const bool is_matrix = true;
 
-  static MatrixType create(const size_t rows, const size_t cols, const ScalarType& val = ScalarType(0))
+  static const bool has_static_size = true;
+
+  static const size_t static_rows = N;
+
+  static const size_t static_cols = M;
+
+  static inline MatrixType create(const size_t rows, const size_t cols)
+  {
+    return MatrixType(rows, cols);
+  }
+
+  static inline MatrixType create(const size_t rows, const size_t cols, const ScalarType& val)
   {
     return MatrixType(rows, cols, val);
   }
 
-  static size_t rows(const MatrixType& /*mat*/)
+  static inline size_t rows(const MatrixType& /*mat*/)
   {
     return N;
   }
 
-  static size_t cols(const MatrixType& /*mat*/)
+  static inline size_t cols(const MatrixType& /*mat*/)
   {
     return M;
   }
 
-  static void set_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)
+  static inline void set_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)
   {
     mat[row][col] = val;
   }
 
-  static ScalarType get_entry(const MatrixType& mat, const size_t row, const size_t col)
+  static inline ScalarType get_entry(const MatrixType& mat, const size_t row, const size_t col)
   {
     return mat[row][col];
   }
