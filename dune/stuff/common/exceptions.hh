@@ -113,6 +113,10 @@ class configuration_error : public Dune::Exception
 {
 };
 
+class conversion_error : public Dune::Exception
+{
+};
+
 class results_are_not_as_expected : public Dune::Exception
 {
 };
