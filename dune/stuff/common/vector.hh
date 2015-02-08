@@ -88,10 +88,7 @@ struct VectorAbstraction<Dune::DynamicVector<K>>
 
   static const bool has_static_size = false;
 
-  static inline size_t static_size()
-  {
-    static_assert(AlwaysFalse<K>::value, "Do not call me when has_static_size is false!");
-  }
+  static const size_t static_size = std::numeric_limits<size_t>::max();
 
   static inline VectorType create(const size_t sz)
   {
