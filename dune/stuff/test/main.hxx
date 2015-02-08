@@ -66,13 +66,10 @@ std::vector<double> DUNE_DEPRECATED_MSG("Use the expectation macros of the gtest
 } // ... truncate_vector(...)
 
 
-size_t dsc_grid_elements()
+unsigned int DUNE_DEPRECATED_MSG() dsc_grid_elements()
 {
-  return DSC_CONFIG.has_key("test.gridelements") // <- doing this so complicated to
-             ? DSC_CONFIG.get<size_t>(
-                   "test.gridelements", 3u, DSC::ValidateLess<size_t>(2u)) //    silence the WARNING: ...
-             : 3u;
-} // ... dsc_grid_elements(...)
+  return Dune::Stuff::Test::grid_elements();
+}
 
 
 int main(int argc, char** argv)

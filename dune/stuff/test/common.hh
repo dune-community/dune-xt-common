@@ -78,6 +78,10 @@ void print_collected_eoc_study_results(const std::map<std::string, std::vector<d
                                        std::ostream& out = std::cout);
 
 
+// returns unsigned int on purpose, see GridProvider
+unsigned int grid_elements();
+
+
 } // namespace Test
 } // namespace Stuff
 } // namespace Dune
