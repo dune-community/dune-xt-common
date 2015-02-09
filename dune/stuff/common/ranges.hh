@@ -26,7 +26,6 @@
 #endif // HAVE_DUNE_FEM
 
 #include <dune/stuff/common/math.hh>
-#include <dune/stuff/fem/namespace.hh>
 
 namespace Dune {
 
