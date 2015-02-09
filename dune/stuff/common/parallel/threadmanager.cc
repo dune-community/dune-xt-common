@@ -12,7 +12,7 @@
 #include <dune/stuff/common/configuration.hh>
 #include <dune/common/exceptions.hh>
 
-#include <dune/stuff/fem/namespace.hh>
+#include <dune/stuff/fem.hh>
 #if HAVE_DUNE_FEM
 #include <dune/fem/misc/threads/threadmanager.hh>
 #endif
