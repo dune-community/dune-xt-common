@@ -63,7 +63,9 @@ namespace Common {
 
 /** \todo DOCME **/
 template <class SomeRangeType, class OtherRangeType>
-static double colonProduct(const SomeRangeType& arg1, const OtherRangeType& arg2)
+static double DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on "
+                                  "https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+    colonProduct(const SomeRangeType& arg1, const OtherRangeType& arg2)
 {
   static_assert(SomeRangeType::cols == SomeRangeType::rows && OtherRangeType::cols == OtherRangeType::rows
                     && ssize_t(OtherRangeType::cols) == ssize_t(SomeRangeType::rows),
@@ -170,7 +172,9 @@ typename absretval<T>::type abs(const T& val)
    *			RangeType1 should be fieldmatrix, RangeType2 fieldvector
    **/
 template <class RangeType1, class RangeType2>
-static RangeType1 dyadicProduct(const RangeType2& arg1, const RangeType2& arg2)
+static RangeType1 DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on "
+                                      "https://github.com/wwu-numerik/dune-stuff/issues if you need this (09.02.2015)!")
+    dyadicProduct(const RangeType2& arg1, const RangeType2& arg2)
 {
   RangeType1 ret(0.0);
 
