@@ -281,7 +281,8 @@ typename FieldMatrixType::field_type matrixTrace(const FieldMatrixType& matrix)
 
 //! produces a NxN Identity matrix compatible with parent type
 template <class MatrixType>
-class IdentityMatrix : public MatrixType
+class DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if "
+                          "you need this (09.02.2015)!") IdentityMatrix : public MatrixType
 {
 public:
   IdentityMatrix(size_t N)
