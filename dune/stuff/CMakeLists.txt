@@ -25,12 +25,12 @@ dune_add_library("dunestuff" ${lib_dune_stuff_sources}
   ADD_LIBS ${DUNE_LIBS})
 add_dune_mpi_flags(dunestuff)
 add_dune_tbb_flags(dunestuff)
-add_dune_superlu_flags(dunestuff)
 
-target_link_dune_default_libraries(dunestuff)
 if(dune-grid_FOUND)
+  add_dune_superlu_flags(dunestuff)
   add_dune_alugrid_flags(dunestuff)
 endif(dune-grid_FOUND)
+target_link_dune_default_libraries(dunestuff)
 
 add_analyze(${lib_dune_stuff_sources})
 
