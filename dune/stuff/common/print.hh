@@ -17,6 +17,7 @@
 
 #include <boost/format.hpp>
 
+#include <dune/common/deprecated.hh>
 #include <dune/common/densematrix.hh>
 #include <dune/common/densevector.hh>
 
@@ -185,7 +186,9 @@ void print(const std::vector<Dune::DenseMatrix<MatrixImp>>& matrices, const std:
    *          prefix to be printed before every line
    **/
 template <class T, class stream>
-void printFieldVector(T& arg, std::string name, stream& out, std::string prefix = "")
+void DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if "
+                         "you need this (09.02.2015)!")
+    printFieldVector(T& arg, std::string name, stream& out, std::string prefix = "")
 {
   out << "\n" << prefix << "printing " << name << " (Dune::FieldVector)"
       << "\n";
@@ -214,7 +217,9 @@ void printFieldVector(T& arg, std::string name, stream& out, std::string prefix 
    *          prefix to be printed before every line
    **/
 template <class T, class stream>
-void printFieldMatrix(T& arg, std::string name, stream& out, std::string prefix = "")
+void DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if "
+                         "you need this (09.02.2015)!")
+    printFieldMatrix(T& arg, std::string name, stream& out, std::string prefix = "")
 {
   out << "\n" << prefix << "printing " << name << " (Dune::FieldMatrix)";
   size_t row = 1;
@@ -230,8 +235,10 @@ void printFieldMatrix(T& arg, std::string name, stream& out, std::string prefix 
    * \ingroup Matlab
    **/
 template <class T, class stream>
-void printSparseRowMatrixMatlabStyle(const T& arg, std::string name, stream& out,
-                                     const double eps = Config().get("eps", 1e-14))
+void DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if "
+                         "you need this (09.02.2015)!")
+    printSparseRowMatrixMatlabStyle(const T& arg, std::string name, stream& out,
+                                    const double eps = Config().get("eps", 1e-14))
 {
   name = std::string("fem.") + name;
   out << boost::format("\n%s =sparse( %d, %d );") % name % arg.rows() % arg.cols() << "\n";
@@ -249,8 +256,10 @@ void printSparseRowMatrixMatlabStyle(const T& arg, std::string name, stream& out
    * \ingroup Matlab
    **/
 template <class MatrixType, class stream>
-void printISTLMatrixMatlabStyle(const MatrixType& arg, std::string name, stream& out,
-                                const double eps = Config().get("eps", 1e-14))
+void DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if "
+                         "you need this (09.02.2015)!")
+    printISTLMatrixMatlabStyle(const MatrixType& arg, std::string name, stream& out,
+                               const double eps = Config().get("eps", 1e-14))
 {
   name         = std::string("istl.") + name;
   const auto I = arg.N();
@@ -281,7 +290,9 @@ void printISTLMatrixMatlabStyle(const MatrixType& arg, std::string name, stream&
    * \ingroup Matlab
    **/
 template <class T, class stream>
-void printDiscreteFunctionMatlabStyle(const T& arg, const std::string name, stream& out)
+void DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if "
+                         "you need this (09.02.2015)!")
+    printDiscreteFunctionMatlabStyle(const T& arg, const std::string name, stream& out)
 {
   out << "\n" << name << " = [ "
       << "\n";
@@ -298,7 +309,9 @@ void printDiscreteFunctionMatlabStyle(const T& arg, const std::string name, stre
    * \ingroup Matlab
    **/
 template <class T, class stream>
-void printDoubleVectorMatlabStyle(const T* arg, const size_t size, const std::string name, stream& out)
+void DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if "
+                         "you need this (09.02.2015)!")
+    printDoubleVectorMatlabStyle(const T* arg, const size_t size, const std::string name, stream& out)
 {
   out << "\n" << name << " = [ "
       << "\n";
@@ -313,7 +326,9 @@ void printDoubleVectorMatlabStyle(const T* arg, const size_t size, const std::st
 
 //! simple vector to stream print
 template <class Type>
-void printDoubleVec(std::ostream& stream, const Type* vec, const size_t N)
+void DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if "
+                         "you need this (09.02.2015)!")
+    printDoubleVec(std::ostream& stream, const Type* vec, const size_t N)
 {
   stream << "\n [ " << std::setw(5);
   for (auto i : valueRange(N))
@@ -325,7 +340,8 @@ void printDoubleVec(std::ostream& stream, const Type* vec, const size_t N)
 
 //! simple discrete function to stream print
 template <class DiscFunc>
-void oneLinePrint(std::ostream& stream, const DiscFunc& func)
+void DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if "
+                         "you need this (09.02.2015)!") oneLinePrint(std::ostream& stream, const DiscFunc& func)
 {
   typedef typename DiscFunc::ConstDofIteratorType DofIteratorType;
   DofIteratorType it = func.dbegin();
@@ -348,7 +364,8 @@ void oneLinePrint(std::ostream& stream, const DiscFunc& func)
    * \ingroup GridWalk
    **/
 template <class GlobalMatrix>
-class LocalMatrixPrintFunctor
+class DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if "
+                          "you need this (09.02.2015)!") LocalMatrixPrintFunctor
 {
 public:
   LocalMatrixPrintFunctor(const GlobalMatrix& m, std::ostream& stream, const std::string name)
@@ -397,7 +414,8 @@ private:
    * \ingroup GridWalk
    **/
 template <class DiscreteFunctionType, class QuadratureType>
-class LocalFunctionPrintFunctor
+class DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if "
+                          "you need this (09.02.2015)!") LocalFunctionPrintFunctor
 {
 public:
   LocalFunctionPrintFunctor(const DiscreteFunctionType& discrete_function, std::ostream& stream)
@@ -441,7 +459,8 @@ private:
    * \ingroup GridWalk
    **/
 template <class DiscreteFunctionType>
-class LocalFunctionVerbatimPrintFunctor
+class DUNE_DEPRECATED_MSG("Will be removed soon, file an issue on https://github.com/wwu-numerik/dune-stuff/issues if "
+                          "you need this (09.02.2015)!") LocalFunctionVerbatimPrintFunctor
 {
 public:
   LocalFunctionVerbatimPrintFunctor(const DiscreteFunctionType& discrete_function, std::ostream& stream)
