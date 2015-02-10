@@ -171,3 +171,8 @@ macro(add_format)
         message(WARNING "not adding format target because clang-format is missing")
     endif(EXISTS ${FORMAT})
 endmacro(add_format)
+
+macro(add_forced_doxygen_target)
+  add_doxygen_target()
+  add_custom_command(TARGET doxygen_${ProjectName} PRE_BUILD COMMAND rm -rf ${CMAKE_CURRENT_BINARY_DIR}/html )
+endmacro(add_forced_doxygen_target)
