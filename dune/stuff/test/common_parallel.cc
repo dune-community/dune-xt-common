@@ -59,9 +59,11 @@ void check_eq(ThreadValue& foo, const typename ThreadValue::ValueType& value)
   Checker<ThreadValue>::check_eq(foo, value);
 }
 
-// typedef testing::Types< PerThreadValue<int>, TBBPerThreadValue<int>, FallbackPerThreadValue<int>> TLSTypes;
-typedef testing::Types<TBBPerThreadValue<const int>, FallbackPerThreadValue<const int>, PerThreadValue<const int>,
-                       TBBPerThreadValue<int>, FallbackPerThreadValue<int>, PerThreadValue<int>> TLSTypes;
+typedef testing::Types<FallbackPerThreadValue<int>, PerThreadValue<int>,
+#if HAVE_TBB
+                       TBBPerThreadValue<int>, TBBPerThreadValue<const int>,
+#endif
+                       FallbackPerThreadValue<const int>, PerThreadValue<const int>> TLSTypes;
 
 template <class T>
 struct ThreadValueTest : public testing::Test
