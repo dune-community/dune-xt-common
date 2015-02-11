@@ -174,5 +174,6 @@ endmacro(add_format)
 
 macro(add_forced_doxygen_target)
   add_doxygen_target()
-  add_custom_command(TARGET doxygen_${ProjectName} PRE_BUILD COMMAND rm -rf ${CMAKE_CURRENT_BINARY_DIR}/html )
+  add_custom_target(doxygen_${ProjectName}_pre_build COMMAND rm -rf ${CMAKE_CURRENT_BINARY_DIR}/html )
+  add_dependencies(doxygen_${ProjectName} doxygen_${ProjectName}_pre_build)
 endmacro(add_forced_doxygen_target)
