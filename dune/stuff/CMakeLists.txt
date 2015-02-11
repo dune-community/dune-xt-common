@@ -24,7 +24,9 @@ set(lib_dune_stuff_sources common/filesystem.cc
 dune_add_library("dunestuff" ${lib_dune_stuff_sources}
   ADD_LIBS ${DUNE_LIBS})
 add_dune_mpi_flags(dunestuff)
-add_dune_tbb_flags(dunestuff)
+if(TBB_FOUND)
+  add_dune_tbb_flags(dunestuff)
+endif(TBB_FOUND)
 
 if(dune-grid_FOUND)
   add_dune_superlu_flags(dunestuff)
