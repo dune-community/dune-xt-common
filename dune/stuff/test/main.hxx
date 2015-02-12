@@ -111,9 +111,13 @@ int main(int argc, char** argv)
       -1
 #endif
             );
-    const auto threads = DSC_CONFIG.has_key("threading.max_count") // <- doing this so complicated to
-                             ? DSC_CONFIG.get<int>("threading.max_count") //    silence the WARNING: ...
-                             : std::thread::hardware_concurrency();
+    const size_t threads = DSC_CONFIG.has_key("threading.max_count") // <- doing this so complicated to
+                               ? DSC_CONFIG.get<size_t>("threading.max_count") //    silence the WARNING: ...
+#if HAVE_TBB
+                               : std::thread::hardware_concurrency();
+#else
+                             : 1u;
+#endif
     DS::threadManager().set_max_threads(threads);
 
     return RUN_ALL_TESTS();
