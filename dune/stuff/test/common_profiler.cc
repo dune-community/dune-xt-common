@@ -54,7 +54,6 @@ TEST(ProfilerTest, OutputConstness)
 TEST(ProfilerTest, ExpectedFailures)
 {
   EXPECT_THROW(DSC_PROFILER.reset(0), Dune::RangeError);
-  EXPECT_THROW(DSC_PROFILER.reset(-1), Dune::RangeError);
   EXPECT_THROW(DSC_PROFILER.stopTiming("This_section_was_never_started"), Dune::RangeError);
 }
 
