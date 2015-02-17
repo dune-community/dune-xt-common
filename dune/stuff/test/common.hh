@@ -15,13 +15,7 @@
 #include <dune/common/tupleutility.hh>
 
 #include <dune/stuff/common/convergence-study.hh>
-
-// gtest impl of disabling for ICC seems broken
-#if not defined(__INTEL_COMPILER)
-#define DS_COMPILE_DISABLED_TESTS 1
-#else
-#define DS_COMPILE_DISABLED_TESTS 0
-#endif
+#include <dune/stuff/common/compiler.hh>
 
 template <template <class> class Test>
 struct TestRunner
