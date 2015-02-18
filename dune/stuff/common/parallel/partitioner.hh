@@ -1,7 +1,7 @@
 #ifndef DUNE_STUFF_COMMON_PARALLEL_PARTITIONER_HH
 #define DUNE_STUFF_COMMON_PARALLEL_PARTITIONER_HH
 
-#include <dune/grid/common/gridview.hh>
+#include <cstddef>
 
 namespace Dune {
 namespace Stuff {
