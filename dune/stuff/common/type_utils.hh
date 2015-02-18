@@ -13,7 +13,7 @@
 
 #include <dune/common/version.hh>
 // static_assert/AlwaysFalse redirect to avoid warnings
-#if DUNE_VERSION_NEWER(DUNE_COMMON, 2, 3) // post 2.3 release
+#if DUNE_VERSION_NEWER(DUNE_COMMON, 2, 4) // post 2.3 release
 #include <dune/common/typetraits.hh>
 #else
 #include <dune/common/static_assert.hh>
