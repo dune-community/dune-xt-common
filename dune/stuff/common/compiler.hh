@@ -14,12 +14,4 @@
 #endif
 #endif
 
-// gtest impl of disabling tests via prefixed name
-// seems broken for ICC and gcc < 4.9
-#if defined(__INTEL_COMPILER) or (DS_GNUC_VERSION < 40900)
-#define DS_COMPILE_DISABLED_TESTS 0
-#else
-#define DS_COMPILE_DISABLED_TESTS 1
-#endif
-
 #endif // DUNE_STUFF_COMMON_COMPILER_HH
