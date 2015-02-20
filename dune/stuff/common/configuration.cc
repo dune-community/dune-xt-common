@@ -281,7 +281,7 @@ void Configuration::add(const Configuration& other, const std::string sub_id, co
   add_tree_(other, sub_id, overwrite);
   for (auto pair : other.requests_map_)
     for (auto request : pair.second)
-      requests_map_[pair.first].insert(request);
+      requests_map_insert(request, pair.first);
 } // ... add(...)
 
 void Configuration::add(const ParameterTree& other, const std::string sub_id, const bool overwrite)
@@ -369,6 +369,17 @@ void Configuration::read_options(int argc, char* argv[])
 {
   Dune::ParameterTreeParser::readOptions(argc, argv, *this);
 }
+
+#ifdef DSC_CONFIGURATION_DEBUG
+void Configuration::requests_map_insert(Request request, std::string name)
+{
+  requests_map_[key] = request;
+}
+#else
+void Configuration::requests_map_insert(Request /*request*/, std::string /*name*/)
+{
+}
+#endif
 
 void Configuration::print_requests(std::ostream& out) const
 {

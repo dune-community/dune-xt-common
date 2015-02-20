@@ -540,7 +540,7 @@ private:
   T get_(const std::string& key, const T& def, const ValidatorInterface<T, Validator>& validator,
          const Request& request, const size_t size, const size_t cols, const bool def_provided)
   {
-    requests_map_[key].insert(request);
+    requests_map_insert(request, key);
 #ifndef NDEBUG
     if (warn_on_default_access_ && !has_key(key)) {
       std::cerr << DSC::colorString("WARNING:", DSC::Colors::brown) << " using default value for parameter \"" << key
@@ -569,6 +569,9 @@ private:
   std::string find_common_prefix(const BaseType& subtree, const std::string previous_prefix) const;
 
   void report_flatly(const BaseType& subtree, const std::string& prefix, std::ostream& out) const;
+
+  //! unless DSC_CONFIGURATION_DEBUG is defined this is a noop, thereby avoiding needless synchronisation
+  void requests_map_insert(Request request, std::string name);
 
   //! config key -> requests map
   RequestMapType requests_map_;
