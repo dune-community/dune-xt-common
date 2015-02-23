@@ -373,7 +373,8 @@ void Configuration::read_options(int argc, char* argv[])
 #ifdef DSC_CONFIGURATION_DEBUG
 void Configuration::requests_map_insert(Request request, std::string name)
 {
-  requests_map_[key] = request;
+  std::lock_guard<std::mutex> guard(requests_mutex_);
+  requests_map_[name].insert(request);
 }
 #else
 void Configuration::requests_map_insert(Request /*request*/, std::string /*name*/)
