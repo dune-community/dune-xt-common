@@ -575,6 +575,7 @@ private:
 
   //! config key -> requests map
   RequestMapType requests_map_;
+  std::mutex requests_mutex_;
   bool record_defaults_;
   bool warn_on_default_access_;
   bool log_on_exit_;
