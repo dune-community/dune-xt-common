@@ -171,6 +171,16 @@ struct ConfigTest : public testing::Test
     DSC_CONFIG.set(key, T());
     EXPECT_THROW(DSC_CONFIG.get(key, T(), ValidateNone<T>()), Dune::Stuff::Exceptions::configuration_error);
   }
+
+  void issue_42()
+  {
+    using namespace DSC;
+    using namespace std;
+    Configuration empty;
+    Configuration to_add(vector<string>{"subsection.key"}, {0l});
+    empty.add(to_add, "", true);
+    EXPECT_TRUE(empty.has_sub("subsection"));
+  }
 }; // struct ConfigTest
 
 
@@ -610,6 +620,7 @@ TYPED_TEST(ConfigTest, Set)
 TYPED_TEST(ConfigTest, Other)
 {
   this->other();
+  this->issue_42();
 }
 
 TYPED_TEST_CASE(ConfigurationTest, ConfigurationCreators);
