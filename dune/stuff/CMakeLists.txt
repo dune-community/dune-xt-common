@@ -16,7 +16,6 @@ set(lib_dune_stuff_sources common/filesystem.cc
   common/math.cc
   common/parallel/threadmanager.cc
   common/parallel/helper.cc
-  grid/fakeentity.cc 
   functions/expression/mathexpr.cc
   la/container/pattern.cc
   test/common.cxx)
