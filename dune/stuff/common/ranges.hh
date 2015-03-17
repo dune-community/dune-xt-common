@@ -93,27 +93,6 @@ public:
   }
 }; // class EntityRange
 
-
-template <class GridPartViewType, size_t codim = 0>
-class DUNE_DEPRECATED_MSG("Use EntityRange instead (22.09.2014)!") ViewRange
-    : public EntityRange<GridPartViewType, codim>
-{
-public:
-  template <class... Args>
-  ViewRange(Args&&... args)
-    : EntityRange<GridPartViewType, codim>(std::forward<Args>(args)...)
-  {
-  }
-}; // class ViewRange
-
-
-template <class GridViewTraits, size_t codim = 0>
-EntityRange<Dune::GridView<GridViewTraits>, codim> DUNE_DEPRECATED_MSG("Use entityRange instead (22.09.2014)!")
-    viewRange(const Dune::GridView<GridViewTraits>& view)
-{
-  return EntityRange<Dune::GridView<GridViewTraits>, codim>(view);
-}
-
 template <class GridViewTraits, size_t codim = 0>
 EntityRange<Dune::GridView<GridViewTraits>, codim> entityRange(const Dune::GridView<GridViewTraits>& view)
 {
@@ -122,14 +101,6 @@ EntityRange<Dune::GridView<GridViewTraits>, codim> entityRange(const Dune::GridV
 
 
 #if HAVE_DUNE_FEM
-
-
-template <class GP, size_t codim = 0>
-EntityRange<Dune::Fem::GridPartInterface<GP>, codim> DUNE_DEPRECATED_MSG("Use entityRange instead (22.09.2014)!")
-    viewRange(const Dune::Fem::GridPartInterface<GP>& part)
-{
-  return EntityRange<Dune::Fem::GridPartInterface<GP>, codim>(part);
-}
 
 template <class GP, size_t codim = 0>
 EntityRange<Dune::Fem::GridPartInterface<GP>, codim> entityRange(const Dune::Fem::GridPartInterface<GP>& part)
