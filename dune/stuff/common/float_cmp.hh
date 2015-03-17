@@ -304,17 +304,6 @@ DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR(ge)
 DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR(le)
 #undef DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR
 
-
-template< class T, int size, Dune::FloatCmp::CmpStyle style = Dune::FloatCmp::defaultCmpStyle >
-  DUNE_DEPRECATED_MSG("Use FloatCmp::ne(first, second, epsilon) instead (21.01.2015)!")
-bool vec_ne(const Dune::FieldVector< T, size >& first,
-            const Dune::FieldVector< T, size >& second,
-            typename Dune::FloatCmp::EpsilonType< T >::Type epsilon = Dune::FloatCmp::DefaultEpsilon< T, style >::value())
-{
-  return !Dune::Stuff::Common::FloatCmp::eq(first, second, epsilon);
-}
-
-
 } // namespace FloatCmp
 } // namespace Common
 } // namespace Stuff
