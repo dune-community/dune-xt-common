@@ -42,19 +42,6 @@ struct VectorMath : public testing::Test
   }
 };
 
-TYPED_TEST_CASE(VectorMath, TestTypes);
-TYPED_TEST(VectorMath, dyadicProduct)
-{
-  typedef typename VectorMath<TypeParam>::Matrix Matrix;
-  EXPECT_EQ(dyadicProduct<Matrix>(this->a, this->a), this->aa);
-  EXPECT_EQ(dyadicProduct<Matrix>(this->a, this->b), this->ab);
-}
-TYPED_TEST(VectorMath, colonProduct)
-{
-  EXPECT_TRUE(Dune::FloatCmp::eq(colonProduct(this->c, this->d), 0.0));
-  EXPECT_TRUE(Dune::FloatCmp::eq(colonProduct(this->c, this->c), 2.0));
-}
-
 template <class T>
 struct ClampTest : public testing::Test
 {
