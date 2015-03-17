@@ -30,7 +30,6 @@
 #include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/common/array.hh>
-#include <dune/common/deprecated.hh>
 #include <dune/common/fmatrix.hh>
 #include <dune/common/densematrix.hh>
 #include <dune/common/fvector.hh>

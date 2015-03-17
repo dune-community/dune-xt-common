@@ -15,8 +15,6 @@
 #include <iostream>
 #include <type_traits>
 
-#include <dune/common/deprecated.hh>
-
 #include <dune/stuff/common/disable_warnings.hh>
 #include <boost/static_assert.hpp>
 #include <boost/fusion/include/void.hpp>

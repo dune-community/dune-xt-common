@@ -8,7 +8,6 @@
 #ifndef DUNE_STUFF_COMMON_MATRIX_HH
 #define DUNE_STUFF_COMMON_MATRIX_HH
 
-#include <dune/common/deprecated.hh>
 #include <dune/common/dynmatrix.hh>
 #include <dune/common/fmatrix.hh>
 
