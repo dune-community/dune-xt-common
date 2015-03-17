@@ -126,24 +126,6 @@ public:
 
   void setOutputdir(const std::string dir);
 
-  //! a utility class to time a limited scope of code
-  class ScopedTiming : public boost::noncopyable
-  {
-    const std::string section_name_;
-
-  public:
-    inline DUNE_DEPRECATED_MSG("Has moved into DSC namespace directly.") ScopedTiming(const std::string& section_name)
-      : section_name_(section_name)
-    {
-      Profiler::instance().startTiming(section_name_);
-    }
-
-    inline ~ScopedTiming()
-    {
-      Profiler::instance().stopTiming(section_name_);
-    }
-  };
-
 private:
   DatamapVector datamaps_;
   size_t current_run_number_;
