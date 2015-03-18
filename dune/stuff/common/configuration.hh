@@ -15,7 +15,6 @@
 #include <boost/format.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
-#include <dune/common/deprecated.hh>
 #include <dune/common/parametertree.hh>
 #include <dune/common/parametertreeparser.hh>
 

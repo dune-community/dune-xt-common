@@ -16,46 +16,6 @@ using namespace Dune::Stuff::Common;
 typedef testing::Types<double, int> TestTypes;
 
 template <class T>
-struct VectorMath : public testing::Test
-{
-  typedef Dune::FieldVector<double, 2> Vector;
-  typedef Dune::FieldMatrix<double, 2, 2> Matrix;
-  Vector a, b;
-  Matrix c, d, aa, ab;
-
-  VectorMath()
-    : a(0)
-    , b(0)
-    , c(0)
-    , d(0)
-    , aa(0)
-    , ab(0)
-  {
-    a[0]     = 1;
-    b[1]     = 1;
-    aa[0][0] = 1;
-    ab[0][1] = 1;
-    c[0][0]  = 1;
-    c[1][1]  = 1;
-    d[1][0]  = 1;
-    d[0][1]  = 1;
-  }
-};
-
-TYPED_TEST_CASE(VectorMath, TestTypes);
-TYPED_TEST(VectorMath, dyadicProduct)
-{
-  typedef typename VectorMath<TypeParam>::Matrix Matrix;
-  EXPECT_EQ(dyadicProduct<Matrix>(this->a, this->a), this->aa);
-  EXPECT_EQ(dyadicProduct<Matrix>(this->a, this->b), this->ab);
-}
-TYPED_TEST(VectorMath, colonProduct)
-{
-  EXPECT_TRUE(Dune::FloatCmp::eq(colonProduct(this->c, this->d), 0.0));
-  EXPECT_TRUE(Dune::FloatCmp::eq(colonProduct(this->c, this->c), 2.0));
-}
-
-template <class T>
 struct ClampTest : public testing::Test
 {
   const T lower;
@@ -139,6 +99,14 @@ TEST(OtherMath, Sign)
   EXPECT_EQ(DSC::sign(-1), -1);
   EXPECT_EQ(DSC::sign(1.), 1);
   EXPECT_EQ(DSC::sign(-1.), -1);
+}
+
+TEST(OtherMath, AbsoluteValue)
+{
+  EXPECT_EQ(DSC::abs(1.0f), 1.0f);
+  EXPECT_EQ(DSC::abs(-1l), 1l);
+  EXPECT_EQ(DSC::abs(0u), 0u);
+  EXPECT_EQ(DSC::abs(0), 0);
 }
 
 TEST(OtherMath, FloatCmp)

@@ -434,36 +434,19 @@ void Configuration::setup_()
 
 void Configuration::add_tree_(const Configuration& other, const std::string sub_id, const bool overwrite)
 {
-  if (sub_id.empty()) {
-    const auto& keys = other.getValueKeys();
-    for (const std::string& key : keys) {
-      if (has_key(key) && !overwrite)
-        DUNE_THROW(Exceptions::configuration_error,
-                   "While adding 'other' to this (see below), the key '"
-                       << key
-                       << "' already exists and you requested no overwrite!"
-                       << "\n==== this ============\n"
-                       << report_string()
-                       << "\n==== other ===========\n"
-                       << other.report_string());
-      set(key, other.get<std::string>(key), overwrite);
-    }
-  } else {
-    if (has_key(sub_id) && !overwrite)
+  for (const auto& element : other.flatten()) {
+    auto key = element.first;
+    if (!sub_id.empty())
+      key = sub_id + "." + key;
+    try {
+      set(key, element.second, overwrite);
+    } catch (Exceptions::configuration_error& ee) {
       DUNE_THROW(Exceptions::configuration_error,
-                 "While adding 'other' to this (see below), the key '"
-                     << sub_id
-                     << "' already exists and you requested no overwrite!"
-                     << "\n==== this ============\n"
-                     << report_string()
-                     << "\n==== other ===========\n"
-                     << other.report_string());
-    else if (has_sub(sub_id)) {
-      Configuration sub_tree = BaseType::sub(sub_id);
-      sub_tree.add(other, "", overwrite);
-      BaseType::sub(sub_id) = sub_tree;
-    } else
-      BaseType::sub(sub_id) = other;
+                 "There was an error adding other (see below) to this:\n\n" << ee.what() << "\n\n"
+                                                                            << "======================\n"
+                                                                            << other.report_string()
+                                                                            << "\n");
+    }
   }
 } // ... add_tree_(...)
 

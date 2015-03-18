@@ -21,7 +21,6 @@ namespace Common {
 
 //! strip filename from \path if present, return empty string if only filename present
 std::string directoryOnly(std::string _path);
-std::string DUNE_DEPRECATED_MSG("Use directoryOnly instead!") pathOnly(std::string _path);
 
 //! return everything after the last slash
 std::string filenameOnly(const std::string& _path);
