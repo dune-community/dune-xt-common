@@ -153,6 +153,7 @@ inline Profiler& profiler()
 
 class ScopedTiming : public boost::noncopyable
 {
+protected:
   const std::string section_name_;
 
 public:
@@ -166,6 +167,16 @@ public:
   {
     profiler().stopTiming(section_name_);
   }
+};
+
+struct OutputScopedTiming : public ScopedTiming
+{
+  OutputScopedTiming(const std::string& section_name, std::ostream& out);
+
+  ~OutputScopedTiming();
+
+protected:
+  std::ostream& out_;
 };
 
 } // namespace Common
