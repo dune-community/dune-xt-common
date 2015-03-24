@@ -343,6 +343,18 @@ Profiler::~Profiler()
   DSC_LIKWID_CLOSE;
 }
 
+OutputScopedTiming::OutputScopedTiming(const std::string& section_name, std::ostream& out)
+  : ScopedTiming(section_name)
+  , out_(out)
+{
+}
+
+OutputScopedTiming::~OutputScopedTiming()
+{
+  const auto duration = profiler().stopTiming(section_name_);
+  out_ << "Executing " << section_name_ << " took " << duration / 1000.f << "s\n";
+}
+
 
 } // namespace Common
 } // namespace Stuff
