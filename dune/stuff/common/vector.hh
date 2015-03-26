@@ -142,9 +142,9 @@ struct VectorAbstraction<Dune::Stuff::Common::FieldVector<K, SIZE>>
 
   static const size_t static_size = SIZE;
 
-  static inline VectorType create(const size_t /*sz*/)
+  static inline VectorType create(const size_t sz)
   {
-    return VectorType();
+    return VectorType(sz);
   }
 
   static inline VectorType create(const size_t sz, const ScalarType& val)
