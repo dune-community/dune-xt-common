@@ -14,10 +14,70 @@
 #include <dune/stuff/common/filesystem.hh>
 #include <dune/stuff/common/ranges.hh>
 #include <dune/stuff/common/string.hh>
+#include <dune/stuff/common/vector.hh>
+#include <dune/stuff/common/matrix.hh>
 
 namespace Dune {
 namespace Stuff {
 namespace Common {
+
+
+template <class V>
+typename std::enable_if<Dune::Stuff::Common::is_vector<V>::value, void>::type
+print(const V& vec, const std::string name, std::ostream& out, const std::string prefix = "")
+{
+  out << prefix << name << " = ";
+  if (vec.size() == 0)
+    out << "[]";
+  else if (vec.size() == 1)
+    out << vec[0];
+  else {
+    out << "[" << vec[0];
+    for (decltype(vec.size()) ii = 1; ii < vec.size(); ++ii)
+      out << " " << vec[ii];
+    out << "]";
+  }
+  return out;
+} // ... print(...)
+
+
+template <class M>
+typename std::enable_if<Dune::Stuff::Common::is_matrix<M>::value, void>::type
+print(const M& mat, const std::string name, std::ostream& out, const std::string prefix = "")
+{
+  typedef MatrixAbstraction<M> MM;
+  const size_t rows = MM::rows(mat);
+  const size_t cols = MM::cols(mat);
+  out << prefix << name << " = ";
+  if (rows == 0 && cols == 0)
+    out << "[]";
+  else if (rows == 1) {
+    out << "[" << MM::get_entry(mat, 0, 0);
+    for (size_t jj = 1; jj < cols; ++jj)
+      out << " " << MM::get_entry(mat, 0, jj);
+    out << "]";
+  } else if (cols == 1) {
+    out << "[" << MM::get_entry(mat, 0, 0);
+    for (size_t ii = 1; ii < rows; ++ii)
+      out << " " << MM::get_entry(mat, ii, 0);
+    out << "]";
+  } else {
+    out << "[";
+    auto local_prefix = prefix + " ";
+    for (size_t ii = 0; ii < rows - 1; ++ii) {
+      out << MM::get_entry(mat, ii, 0);
+      for (size_t jj = 1; jj < cols; ++jj)
+        out << " " << MM::get_entry(mat, ii, jj);
+      out << ";\n" << local_prefix;
+    }
+    out << MM::get_entry(mat, rows - 1, 0);
+    for (size_t jj = 1; jj < cols; ++jj)
+      out << " " << MM::get_entry(mat, rows - 1, jj);
+    out << "]";
+  }
+  return out;
+} // ... print(...)
+
 
 //! useful for visualizing sparsity patterns of matrices
 template <class Matrix>
@@ -46,7 +106,8 @@ inline std::string dimToAxisName(const size_t dim, const bool capitalize = false
   if (capitalize)
     c -= 32;
   return std::string() += c;
-} // dimToAxisName
+} // matrixToGnuplotStream
+
 
 } // namespace Common
 } // namespace Stuff
