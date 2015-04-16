@@ -24,11 +24,11 @@ namespace Common {
 
 
 /**
- * \brief Traits to statically extract the scalar type of a (mathematical) vector.
+ * \brief Traits to statically extract information of a (mathematical) vector.
  *
  *        If you want your vector class to benefit from the operators defined in this header you have to manually
  *        specify a specialization of this class in your code with is_vector defined to true and an appropriate
- *        static create() method (see the specializations below).
+ *        static methods and members (see the specializations below).
  */
 template <class VecType>
 struct VectorAbstraction
