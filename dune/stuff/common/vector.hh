@@ -7,6 +7,7 @@
 #define DUNE_STUFF_TOOLS_COMMON_VECTOR_HH
 
 #include <vector>
+#include <ostream>
 
 #include <dune/common/dynvector.hh>
 #include <dune/common/fvector.hh>
@@ -23,7 +24,7 @@ namespace Common {
 
 
 /**
- * \brief Traits to statically extract the scalar type of a (mathematical) vector-
+ * \brief Traits to statically extract the scalar type of a (mathematical) vector.
  *
  *        If you want your vector class to benefit from the operators defined in this header you have to manually
  *        specify a specialization of this class in your code with is_vector defined to true and an appropriate
@@ -251,6 +252,24 @@ operator+(const L& left, const R& right)
     result[ii] += right[ii];
   return result;
 } // ... operator+(...)
+
+
+template <class V>
+typename std::enable_if<Dune::Stuff::Common::is_vector<V>::value, std::ostream&>::type operator<<(std::ostream& out,
+                                                                                                  const V& vec)
+{
+  if (vec.size() == 0)
+    out << "[]";
+  else if (vec.size() == 1)
+    out << vec[0];
+  else {
+    out << "[" << vec[0];
+    for (decltype(vec.size()) ii = 1; ii < vec.size(); ++ii)
+      out << " " << vec[ii];
+    out << "]";
+  }
+  return out;
+} // ... operator<<(...)
 
 
 #endif // DUNE_STUFF_TOOLS_COMMON_VECTOR_HH
