@@ -8,26 +8,14 @@
 #ifndef DUNE_STUFF_COMMON_MATRIX_HH
 #define DUNE_STUFF_COMMON_MATRIX_HH
 
+#include <boost/numeric/conversion/cast.hpp>
+
 #include <dune/common/dynmatrix.hh>
 #include <dune/common/fmatrix.hh>
 
-#include <dune/stuff/common/debug.hh>
+#include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/fmatrix.hh>
-#include <dune/stuff/common/math.hh>
-#include <dune/stuff/common/ranges.hh>
-#include <dune/stuff/common/type_utils.hh>
-
-#if HAVE_DUNE_ISTL && HAVE_DUNE_FEM
-// for dune-istl
-#if defined(HAVE_BOOST)
-#undef HAVE_BOOST
-#define HAVE_BOOST 1
-#endif
-#include <dune/fem/operator/matrix/spmatrix.hh>
-#include <dune/istl/operators.hh>
-#include <dune/fem/operator/matrix/istlmatrix.hh>
-#include <dune/fem/operator/matrix/preconditionerwrapper.hh>
-#endif // HAVE_DUNE_ISTL && HAVE_DUNE_FEM
+#include <dune/stuff/common/vector.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -35,11 +23,11 @@ namespace Common {
 
 
 /**
- * \brief Traits to statically extract the scalar type of a (mathematical) vector-
+ * \brief Traits to statically extract the information of a (mathematical) matrix.
  *
- *        If you want your vector class to benefit from the operators defined in this header you have to manually
+ *        If you want your matrix class to benefit from the operators defined in this header you have to manually
  *        specify a specialization of this class in your code with is_matrix defined to true and an appropriate
- *        static create() method (see the specializations below).
+ *        static methods and members (see the specializations below).
  */
 template <class MatType>
 struct MatrixAbstraction
@@ -169,12 +157,12 @@ struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
 
   static inline size_t rows(const MatrixType& /*mat*/)
   {
-    return N;
+    return boost::numeric_cast<size_t>(N);
   }
 
   static inline size_t cols(const MatrixType& /*mat*/)
   {
-    return M;
+    return boost::numeric_cast<size_t>(M);
   }
 
   static inline void set_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)
@@ -249,8 +237,10 @@ create(const size_t sz, const typename MatrixAbstraction<MatrixType>::S& val)
   return MatrixAbstraction<MatrixType>::create(sz, val);
 }
 
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
+
 
 #endif // DUNE_STUFF_COMMON_MATRIX_HH
