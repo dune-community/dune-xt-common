@@ -1,0 +1,55 @@
+# This file is part of the dune-stuff project:
+#   https://github.com/wwu-numerik/dune-stuff
+# Copyright holders: Rene Milk, Felix Schindler
+# License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+# Module providing a convenience method to add ALUGrid compile flags.
+#
+# Provides add_dune_alugrid_compile_flags(target1 target2 ...), which
+# adds ALUGrid flags to the targets for compilation only (see
+# add_dune_alugrid_flags in dune-grid for compilation and linking).
+# This function is essentially copied from AddALUGridFlags.cmake
+#
+# This is needed if you define an object like
+#
+#     add_library(obj_foo
+#                 OBJECT
+#                 EXCLUDE_FROM_ALL
+#                 foo.cc)
+#
+# to be used in a library
+#
+#     add_library(lib_foo
+#                 STATIC
+#                 EXCLUDE_FROM_ALL
+#                 $<TARGET_OBJECTS:obj_foo>
+#
+# that is used by a target
+#
+#     target_link_libraries(bar lib_foo)
+#
+# becaus while we ca use add_dune_alugrid_flags on lib_foo we can not use it
+# on obj_foo. Instead we can use
+#
+#     add_dune_alugrid_compile_flags(obj_foo)
+#
+# to make it compile.
+
+function(add_dune_alugrid_compile_flags)
+  if(ALUGRID_FOUND)
+    cmake_parse_arguments(ADD_ALU "SOURCE_ONLY;OBJECT" "" "" ${ARGN})
+    if(ADD_ALU_SOURCE_ONLY)
+      set(_prefix SOURCE)
+      set(_source_only SOURCE_ONLY)
+    else()
+      if(ADD_ALU_OBJECT)
+        set(_object OBJECT)
+      endif(ADD_ALU_OBJECT)
+      set(_prefix TARGET)
+    endif()
+    include_directories(${ALUGRID_INCLUDES})
+    set_property(${_prefix} ${ADD_ALU_UNPARSED_ARGUMENTS}
+                 APPEND PROPERTY
+                 COMPILE_DEFINITIONS ENABLE_ALUGRID=1)
+  endif(ALUGRID_FOUND)
+endfunction(add_dune_alugrid_compile_flags)
+
