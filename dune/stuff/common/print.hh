@@ -37,7 +37,6 @@ print(const V& vec, const std::string name, std::ostream& out, const std::string
       out << " " << vec[ii];
     out << "]";
   }
-  return out;
 } // ... print(...)
 
 
@@ -75,7 +74,6 @@ print(const M& mat, const std::string name, std::ostream& out, const std::string
       out << " " << MM::get_entry(mat, rows - 1, jj);
     out << "]";
   }
-  return out;
 } // ... print(...)
 
 
