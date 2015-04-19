@@ -492,6 +492,27 @@ public:
   //! print all keys that were requested with at least two different default values and their respective Requests
   void print_mismatched_defaults(std::ostream& out) const;
 
+  /**
+   *  \note this method is needed for the python bindings
+   */
+  template <class T>
+  T pb_get(const std::string key, const DUNE_STUFF_SSIZE_T size = 0) const
+  {
+    size_t sz = 0;
+    try {
+      sz = boost::numeric_cast<size_t>(size);
+    } catch (boost::bad_numeric_cast& ee) {
+      DUNE_THROW(Exceptions::external_error,
+                 "There was an error in boost converting '" << size << "' from '"
+                                                            << Typename<DUNE_STUFF_SSIZE_T>::value()
+                                                            << "' to '"
+                                                            << Typename<size_t>::value()
+                                                            << ":\n"
+                                                            << ee.what());
+    }
+    return get<T>(key, sz);
+  } // ... get(...)
+
 private:
   void setup_();
 
