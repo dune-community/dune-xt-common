@@ -414,7 +414,7 @@ public:
    */
 
   /**
-   * \defgroup add ´´These methods allow merge trees.``
+   * \defgroup add ´´These methods allow to merge trees.``
    * \{
    */
 
