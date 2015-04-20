@@ -206,7 +206,7 @@ from_string(const std::string& ss, const size_t size, const size_t UNUSED_UNLESS
     const size_t automatic_size = (size == 0 ? 1 : size);
     const size_t actual_size =
         VectorAbstraction<VectorType>::has_static_size ? VectorAbstraction<VectorType>::static_size : automatic_size;
-    if (actual_size > automatic_size)
+    if (actual_size > automatic_size && automatic_size != 1)
       DUNE_THROW(Exceptions::conversion_error,
                  "Vector expression (see below) has only " << automatic_size << " elements but " << actual_size
                                                            << " elements are required for this VectorType ("
