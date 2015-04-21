@@ -401,10 +401,9 @@ public:
   {
     if (has_key(key) && !overwrite)
       DUNE_THROW(Exceptions::configuration_error,
-                 "While adding '" << key << "' = '" << value << "' to this (see below), the key '" << key
-                                  << "' already exists and you requested no overwrite!"
-                                  << "\n======================\n"
-                                  << report_string());
+                 "While setting '" << key << "' in this configuration (see below), it already exists and you requested "
+                                   << "no overwrite!\n======================\n"
+                                   << report_string());
     BaseType::operator[](key) = toString(value);
   } // ... set(..., T, ...)
 
@@ -415,7 +414,7 @@ public:
    */
 
   /**
-   * \defgroup add ´´These methods allow merge trees.``
+   * \defgroup add ´´These methods allow to merge trees.``
    * \{
    */
 
@@ -491,6 +490,27 @@ public:
 
   //! print all keys that were requested with at least two different default values and their respective Requests
   void print_mismatched_defaults(std::ostream& out) const;
+
+  /**
+   *  \note this method is needed for the python bindings
+   */
+  template <class T>
+  T pb_get(const std::string key, const DUNE_STUFF_SSIZE_T size = 0) const
+  {
+    size_t sz = 0;
+    try {
+      sz = boost::numeric_cast<size_t>(size);
+    } catch (boost::bad_numeric_cast& ee) {
+      DUNE_THROW(Exceptions::external_error,
+                 "There was an error in boost converting '" << size << "' from '"
+                                                            << Typename<DUNE_STUFF_SSIZE_T>::value()
+                                                            << "' to '"
+                                                            << Typename<size_t>::value()
+                                                            << ":\n"
+                                                            << ee.what());
+    }
+    return get<T>(key, sz);
+  } // ... get(...)
 
 private:
   void setup_();
