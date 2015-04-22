@@ -103,7 +103,7 @@ size_t arrayLength(T(&/*array*/)[N])
 }
 
 //! writes process environment to file
-void dump_environment(boost::filesystem::ofstream& file);
+void dump_environment(boost::filesystem::ofstream& file, std::string csv_sep = ",");
 
 } // namespace Common
 } // namepspace Stuff
