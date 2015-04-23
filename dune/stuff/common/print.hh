@@ -106,6 +106,54 @@ inline std::string dimToAxisName(const size_t dim, const bool capitalize = false
   return std::string() += c;
 } // matrixToGnuplotStream
 
+/** Outputiterator to emulate python's str.join(iterable)
+ * \see http://codereview.stackexchange.com/questions/30132/comma-formatted-stl-vectors/30181#30181
+ * \example std::copy(strings.begin(), strings.end(), PrefixOutputIterator<string>(ostream, ","));
+ **/
+template <typename T>
+class PrefixOutputIterator
+{
+  std::ostream& ostream;
+  std::string prefix;
+  bool first;
+
+public:
+  typedef std::size_t difference_type;
+  typedef T value_type;
+  typedef T* pointer;
+  typedef T reference;
+  typedef std::output_iterator_tag iterator_category;
+
+  PrefixOutputIterator(std::ostream& o, std::string const& p = "")
+    : ostream(o)
+    , prefix(p)
+    , first(true)
+  {
+  }
+
+  PrefixOutputIterator& operator*()
+  {
+    return *this;
+  }
+  PrefixOutputIterator& operator++()
+  {
+    return *this;
+  }
+  PrefixOutputIterator& operator++(int)
+  {
+    return *this;
+  }
+
+  void operator=(T const& value)
+  {
+    if (first) {
+      ostream << value;
+      first = false;
+    } else {
+      ostream << prefix << value;
+    }
+  }
+};
 
 } // namespace Common
 } // namespace Stuff

@@ -14,6 +14,7 @@ set(lib_dune_stuff_sources common/filesystem.cc
   common/configuration.cc
   common/signals.cc
   common/math.cc
+  common/misc.cc
   common/parallel/threadmanager.cc
   common/parallel/helper.cc
   grid/fakeentity.cc 
@@ -35,5 +36,7 @@ endif(dune-grid_FOUND)
 target_link_dune_default_libraries(dunestuff)
 
 add_analyze(${lib_dune_stuff_sources})
+FILE( GLOB_RECURSE _header "${CMAKE_CURRENT_SOURCE_DIR}/*.hh" )
+add_format(${lib_dune_stuff_sources} ${_header})
 
 add_subdirectory(test EXCLUDE_FROM_ALL)

@@ -36,6 +36,7 @@
 #include <dune/stuff/common/disable_warnings.hh>
 #include <boost/algorithm/string.hpp>
 #include <dune/stuff/common/reenable_warnings.hh>
+#include <boost/filesystem/fstream.hpp>
 
 namespace Dune {
 namespace Stuff {
@@ -101,6 +102,8 @@ size_t arrayLength(T(&/*array*/)[N])
   return N;
 }
 
+//! writes process environment to file
+void dump_environment(boost::filesystem::ofstream& file, std::string csv_sep = ",");
 
 } // namespace Common
 } // namepspace Stuff
