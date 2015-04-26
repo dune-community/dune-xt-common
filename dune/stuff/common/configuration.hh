@@ -423,14 +423,14 @@ public:
    *  \param sub_id if not empty, other.tree_ is merged in as a sub "sub_id" of tree_
    *  \param overwrite if true, existing values are overwritten by other's values to the same key
    */
-  void add(const Configuration& other, const std::string sub_id = "", const bool overwrite = false);
+  Configuration& add(const Configuration& other, const std::string sub_id = "", const bool overwrite = false);
 
   /** \brief add a Dune::ParameterTree paramtree to this (merge tree_ and paramtree)
    *  \param paramtree ParameterTree to add
    *  \param sub_id if not empty, paramtree is merged in as a sub "sub_id" of tree_
    *  \param overwrite if true, existing values are overwritten by paramtree's values to the same key
    */
-  void add(const ParameterTree& other, const std::string sub_id = "", const bool overwrite = false);
+  Configuration& add(const ParameterTree& other, const std::string sub_id = "", const bool overwrite = false);
 
   //! add another Configuration to this (merge tree_s and requests_map_s)
   Configuration& operator+=(Configuration& other);

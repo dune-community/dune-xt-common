@@ -276,17 +276,19 @@ void Configuration::set(const std::string& key, const char* value, const bool ov
   set(key, std::string(value), overwrite);
 }
 
-void Configuration::add(const Configuration& other, const std::string sub_id, const bool overwrite)
+Configuration& Configuration::add(const Configuration& other, const std::string sub_id, const bool overwrite)
 {
   add_tree_(other, sub_id, overwrite);
   for (auto pair : other.requests_map_)
     for (auto request : pair.second)
       requests_map_insert(request, pair.first);
+  return *this;
 } // ... add(...)
 
-void Configuration::add(const ParameterTree& other, const std::string sub_id, const bool overwrite)
+Configuration& Configuration::add(const ParameterTree& other, const std::string sub_id, const bool overwrite)
 {
   add_tree_(other, sub_id, overwrite);
+  return *this;
 } // ... add(...)
 
 Configuration& Configuration::operator+=(Configuration& other)
