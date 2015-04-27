@@ -533,12 +533,20 @@ private:
       DUNE_THROW(Exceptions::external_error,
                  "Error in boost while converting the string '" << valstring << "' to type '" << Typename<T>::value()
                                                                 << "':\n"
-                                                                << e.what());
+                                                                << e.what()
+                                                                << "\non accessing key "
+                                                                << key
+                                                                << " with default "
+                                                                << toString(def));
     } catch (std::exception& e) {
       DUNE_THROW(Exceptions::external_error,
                  "Error in the stl while converting the string '" << valstring << "' to type '" << Typename<T>::value()
                                                                   << "':\n"
-                                                                  << e.what());
+                                                                  << e.what()
+                                                                  << "\non accessing key "
+                                                                  << key
+                                                                  << " with default "
+                                                                  << toString(def));
     }
   } // ... get_valid_value(...)
 
