@@ -6,6 +6,10 @@
 #ifndef DUNE_STUFF_PROFILER_HH_INCLUDED
 #define DUNE_STUFF_PROFILER_HH_INCLUDED
 
+#ifndef DUNE_STUFF_ENABLE_PROFILE_SCOPE
+#define DUNE_STUFF_ENABLE_PROFILE_SCOPE 0
+#endif
+
 #include <string>
 #include <map>
 #include <vector>
@@ -16,6 +20,8 @@
 
 #include <boost/noncopyable.hpp>
 #include <boost/timer/timer.hpp>
+
+#include <dune/common/unused.hh>
 
 #include <dune/stuff/common/parallel/threadmanager.hh>
 #include <dune/stuff/common/parallel/threadstorage.hh>
@@ -185,5 +191,13 @@ protected:
 
 
 #define DSC_PROFILER Dune::Stuff::Common::profiler()
+
+
+#if DUNE_STUFF_ENABLE_PROFILE_SCOPE
+#define DUNE_STUFF_PROFILE_SCOPE(section_name) Dune::Stuff::Common::ScopedTiming DUNE_UNUSED(timer)(section_name)
+#else
+#define DUNE_STUFF_PROFILE_SCOPE(section_name)
+#endif
+
 
 #endif // DUNE_STUFF_PROFILER_HH_INCLUDED
