@@ -121,7 +121,7 @@ public:
   void addCount(const size_t num);
 
   //! call this after one iteration of your code has finished. increments current run number and puts new timing data
-  // into the vector
+  //! into the vector
   void nextRun();
 
   void setOutputdir(const std::string dir);
@@ -182,6 +182,7 @@ protected:
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
+
 
 #define DSC_PROFILER Dune::Stuff::Common::profiler()
 
