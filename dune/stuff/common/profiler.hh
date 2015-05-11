@@ -9,13 +9,6 @@
 #ifndef DUNE_STUFF_DO_PROFILE
 #define DUNE_STUFF_DO_PROFILE 0
 #endif
-#if DUNE_STUFF_DO_PROFILE
-#define DUNE_STUFF_ENABLE_PROFILE_SCOPE 1
-#endif
-
-#ifndef DUNE_STUFF_ENABLE_PROFILE_SCOPE
-#define DUNE_STUFF_ENABLE_PROFILE_SCOPE 0
-#endif
 
 #include <string>
 #include <map>
@@ -200,7 +193,7 @@ protected:
 #define DSC_PROFILER Dune::Stuff::Common::profiler()
 
 
-#if DUNE_STUFF_ENABLE_PROFILE_SCOPE
+#if DUNE_STUFF_DO_PROFILE
 #define DUNE_STUFF_PROFILE_SCOPE(section_name) Dune::Stuff::Common::ScopedTiming DUNE_UNUSED(timer)(section_name)
 #else
 #define DUNE_STUFF_PROFILE_SCOPE(section_name)
