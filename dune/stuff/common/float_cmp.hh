@@ -7,6 +7,7 @@
 #define DUNE_STUFF_COMMON_FLOAT_CMP_HH
 
 #include <type_traits>
+#include <complex>
 
 #include <dune/common/float_cmp.hh>
 
@@ -100,8 +101,8 @@ typename std::enable_if<std::is_arithmetic<T>::value, bool>::type float_cmp(cons
 
 template <class XType, class YType, class TolType>
 typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value && std::is_arithmetic<TolType>::value
-                            && std::is_same<typename VectorAbstraction<XType>::S, TolType>::value
-                            && std::is_same<typename VectorAbstraction<YType>::S, TolType>::value,
+                            && std::is_same<typename VectorAbstraction<XType>::R, TolType>::value
+                            && std::is_same<typename VectorAbstraction<YType>::R, TolType>::value,
                         bool>::type
 float_cmp(const XType& xx, const YType& yy, const TolType& rtol, const TolType& atol)
 {
@@ -109,7 +110,8 @@ float_cmp(const XType& xx, const YType& yy, const TolType& rtol, const TolType& 
   if (yy.size() != sz)
     return false;
   for (size_t ii = 0; ii < sz; ++ii)
-    if (!float_cmp(xx[ii], yy[ii], rtol, atol))
+    if (!float_cmp(std::real(xx[ii]), std::real(yy[ii]), rtol, atol)
+        || !float_cmp(std::imag(xx[ii]), std::imag(yy[ii]), rtol, atol))
       return false;
   return true;
 } // ... float_cmp(...)
@@ -123,8 +125,8 @@ typename std::enable_if<std::is_arithmetic<T>::value, bool>::type dune_float_cmp
 
 template <Dune::FloatCmp::CmpStyle style, class XType, class YType, class EpsType>
 typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value && std::is_arithmetic<EpsType>::value
-                            && std::is_same<typename VectorAbstraction<XType>::S, EpsType>::value
-                            && std::is_same<typename VectorAbstraction<YType>::S, EpsType>::value,
+                            && std::is_same<typename VectorAbstraction<XType>::R, EpsType>::value
+                            && std::is_same<typename VectorAbstraction<YType>::R, EpsType>::value,
                         bool>::type
 dune_float_cmp(const XType& xx, const YType& yy, const EpsType& eps)
 {
@@ -260,12 +262,12 @@ struct Call<FirstType, SecondType, ToleranceType, Style::numpy>
   template <Style style,                                                                                               \
             class FirstType,                                                                                           \
             class SecondType,                                                                                          \
-            class ToleranceType = typename VectorAbstraction<FirstType>::S>                                            \
+            class ToleranceType = typename VectorAbstraction<FirstType>::R>                                            \
   typename std::enable_if<(std::is_arithmetic<FirstType>::value && std::is_same<FirstType, SecondType>::value)         \
                               || (std::is_arithmetic<ToleranceType>::value && is_vector<FirstType>::value              \
                                   && is_vector<SecondType>::value                                                      \
-                                  && std::is_same<ToleranceType, typename VectorAbstraction<FirstType>::S>::value      \
-                                  && std::is_same<ToleranceType, typename VectorAbstraction<SecondType>::S>::value),   \
+                                  && std::is_same<ToleranceType, typename VectorAbstraction<FirstType>::R>::value      \
+                                  && std::is_same<ToleranceType, typename VectorAbstraction<SecondType>::R>::value),   \
                           bool>::type                                                                                  \
   id(const FirstType& first,                                                                                           \
      const SecondType& second,                                                                                         \
@@ -278,12 +280,12 @@ struct Call<FirstType, SecondType, ToleranceType, Style::numpy>
         id(first, second, rtol, atol);                                                                                 \
   }                                                                                                                    \
                                                                                                                        \
-  template <class FirstType, class SecondType, class ToleranceType = typename VectorAbstraction<FirstType>::S>         \
+  template <class FirstType, class SecondType, class ToleranceType = typename VectorAbstraction<FirstType>::R>         \
   typename std::enable_if<(std::is_arithmetic<FirstType>::value && std::is_same<FirstType, SecondType>::value)         \
                               || (std::is_arithmetic<ToleranceType>::value && is_vector<FirstType>::value              \
                                   && is_vector<SecondType>::value                                                      \
-                                  && std::is_same<ToleranceType, typename VectorAbstraction<FirstType>::S>::value      \
-                                  && std::is_same<ToleranceType, typename VectorAbstraction<SecondType>::S>::value),   \
+                                  && std::is_same<ToleranceType, typename VectorAbstraction<FirstType>::R>::value      \
+                                  && std::is_same<ToleranceType, typename VectorAbstraction<SecondType>::R>::value),   \
                           bool>::type                                                                                  \
   id(const FirstType& first,                                                                                           \
      const SecondType& second,                                                                                         \
