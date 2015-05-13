@@ -36,6 +36,7 @@ struct VectorAbstraction
 {
   typedef VecType VectorType;
   typedef VecType ScalarType;
+  typedef VecType RealType;
   typedef VecType S;
   typedef VecType R;
 
@@ -60,11 +61,10 @@ template <class T>
 struct VectorAbstraction<std::vector<T>>
 {
   typedef std::vector<T> VectorType;
-  // typedef typename Dune::FieldTraits< T >::field_type ScalarType;
-  typedef T ScalarType;
+  typedef typename Dune::FieldTraits<T>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<T>::real_type RealType;
   typedef ScalarType S;
-  // typedef typename Dune::FieldTraits< T >::real_type RealScalarType;
-  // typedef typename RealScalarType R;
+  typedef RealType R;
 
   static const bool is_vector = true;
 
@@ -88,9 +88,9 @@ struct VectorAbstraction<Dune::DynamicVector<K>>
 {
   typedef Dune::DynamicVector<K> VectorType;
   typedef typename Dune::FieldTraits<K>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<K>::real_type RealType;
   typedef ScalarType S;
-  typedef typename Dune::FieldTraits<K>::real_type RealScalarType;
-  typedef RealScalarType R;
+  typedef RealType R;
 
   static const bool is_vector = true;
 
@@ -114,9 +114,9 @@ struct VectorAbstraction<Dune::FieldVector<K, SIZE>>
 {
   typedef Dune::FieldVector<K, SIZE> VectorType;
   typedef typename Dune::FieldTraits<K>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<K>::real_type RealType;
   typedef ScalarType S;
-  typedef typename Dune::FieldTraits<K>::real_type RealScalarType;
-  typedef RealScalarType R;
+  typedef RealType R;
 
   static const bool is_vector = true;
 
@@ -144,9 +144,9 @@ struct VectorAbstraction<Dune::Stuff::Common::FieldVector<K, SIZE>>
 {
   typedef Dune::Stuff::Common::FieldVector<K, SIZE> VectorType;
   typedef typename Dune::FieldTraits<K>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<K>::real_type RealType;
   typedef ScalarType S;
-  typedef typename Dune::FieldTraits<K>::real_type RealScalarType;
-  typedef RealScalarType R;
+  typedef RealType R;
 
   static const bool is_vector = true;
 
