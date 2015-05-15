@@ -157,8 +157,8 @@ typename std::enable_if<std::is_arithmetic<T>::value, bool>::type dune_float_cmp
 
 template <Dune::FloatCmp::CmpStyle style, class XType, class YType, class EpsType>
 typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value && std::is_arithmetic<EpsType>::value
-                            && std::is_same<typename VectorAbstraction<XType>::R, EpsType>::value
-                            && std::is_same<typename VectorAbstraction<YType>::R, EpsType>::value,
+                            && std::is_same<typename VectorAbstraction<XType>::S, EpsType>::value
+                            && std::is_same<typename VectorAbstraction<YType>::S, EpsType>::value,
                         bool>::type
 dune_float_cmp(const XType& xx, const YType& yy, const EpsType& eps)
 {
