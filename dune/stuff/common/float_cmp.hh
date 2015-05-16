@@ -11,10 +11,11 @@
 
 #include <dune/common/float_cmp.hh>
 
+#include <dune/stuff/common/type_utils.hh>
+
 namespace Dune {
 namespace Stuff {
 namespace Common {
-
 namespace internal {
 
 
