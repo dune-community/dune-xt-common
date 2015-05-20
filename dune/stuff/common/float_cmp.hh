@@ -296,7 +296,8 @@ struct Call<FirstType, SecondType, ToleranceType, Style::numpy>
             class FirstType,                                                                                           \
             class SecondType,                                                                                          \
             class ToleranceType = typename VectorAbstraction<FirstType>::R>                                            \
-  typename std::enable_if<(std::is_arithmetic<FirstType>::value && std::is_same<FirstType, SecondType>::value)         \
+  typename std::enable_if<((std::is_arithmetic<FirstType>::value || is_complex<FirstType>::value)                      \
+                           && std::is_same<FirstType, SecondType>::value)                                              \
                               || (std::is_arithmetic<ToleranceType>::value && is_vector<FirstType>::value              \
                                   && is_vector<SecondType>::value                                                      \
                                   && std::is_same<ToleranceType, typename VectorAbstraction<FirstType>::R>::value      \
@@ -314,7 +315,8 @@ struct Call<FirstType, SecondType, ToleranceType, Style::numpy>
   }                                                                                                                    \
                                                                                                                        \
   template <class FirstType, class SecondType, class ToleranceType = typename VectorAbstraction<FirstType>::R>         \
-  typename std::enable_if<(std::is_arithmetic<FirstType>::value && std::is_same<FirstType, SecondType>::value)         \
+  typename std::enable_if<((std::is_arithmetic<FirstType>::value || is_complex<FirstType>::value)                      \
+                           && std::is_same<FirstType, SecondType>::value)                                              \
                               || (std::is_arithmetic<ToleranceType>::value && is_vector<FirstType>::value              \
                                   && is_vector<SecondType>::value                                                      \
                                   && std::is_same<ToleranceType, typename VectorAbstraction<FirstType>::R>::value      \
