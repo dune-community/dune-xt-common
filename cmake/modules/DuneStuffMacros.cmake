@@ -49,8 +49,6 @@ SET( CMAKE_EXPORT_COMPILE_COMMANDS "ON" )
 SET( CMAKE_CXX_FLAGS_RELEASE CACHE STRING
   "-DDNDEBUG -DNDEBUG -O2 -fPIC ${CMAKE_CXX_FLAGS_RELEASE}")
 
-# exp grid extensions needed for boundaryId stuff
-SET( CMAKE_CXX_FLAGS "-DDUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS=1 ${CMAKE_CXX_FLAGS}" )
 
 SET( CMAKE_CXX_FLAGS_DEBUG
   "-O0 -DDNDEBUG -g3 -ggdb -Wunused-variable -fno-strict-aliasing -fPIC -Wall -Wextra -Wparentheses -pedantic  -Wshadow -Wundef -Wnon-virtual-dtor  ${CMAKE_CXX_FLAGS_DEBUG}")
