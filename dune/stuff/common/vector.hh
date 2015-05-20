@@ -37,8 +37,8 @@ struct VectorAbstraction
   typedef VecType VectorType;
   typedef VecType ScalarType;
   typedef VecType RealType;
-  typedef VecType S;
-  typedef VecType R;
+  typedef typename Dune::FieldTraits<VecType>::field_type S;
+  typedef typename Dune::FieldTraits<VecType>::real_type R;
 
   static const bool is_vector = false;
 
