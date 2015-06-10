@@ -102,11 +102,20 @@ size_t arrayLength(T(&/*array*/)[N])
   return N;
 }
 
+//! get a non-zero initialised array
+template <class T, size_t N>
+std::array<T, N> make_array(const T& v)
+{
+  std::array<T, N> ret;
+  ret.fill(v);
+  return ret;
+}
+
 //! writes process environment to file
 void dump_environment(boost::filesystem::ofstream& file, std::string csv_sep = ",");
 
 } // namespace Common
-} // namepspace Stuff
+} // namespace Stuff
 } // namespace Dune
 
 #endif // DUNE_STUFF_COMMON_MISC_HH
