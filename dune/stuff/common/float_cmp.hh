@@ -39,8 +39,27 @@ struct DefaultEpsilon
   }
 };
 
+//! we use the scalar field's type from std::complex for its epsilon
+template <class T, Style style>
+struct DefaultEpsilon<std::complex<T>, style>
+{
+  static typename Dune::FloatCmp::EpsilonType<T>::Type value()
+  {
+    return Dune::FloatCmp::DefaultEpsilon<T, internal::ConvertStyle<style>::value>::value();
+  }
+};
+
 template <class T>
 struct DefaultEpsilon<T, Style::numpy>
+{
+  static typename Dune::FloatCmp::EpsilonType<T>::Type value()
+  {
+    return Dune::FloatCmp::DefaultEpsilon<T, Dune::FloatCmp::relativeStrong>::value();
+  }
+};
+
+template <class T>
+struct DefaultEpsilon<std::complex<T>, Style::numpy>
 {
   static typename Dune::FloatCmp::EpsilonType<T>::Type value()
   {

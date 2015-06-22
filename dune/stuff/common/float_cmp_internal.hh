@@ -15,6 +15,14 @@
 #include "float_cmp_style.hh"
 
 namespace Dune {
+namespace FloatCmp {
+template <class T>
+struct EpsilonType<std::complex<T>>
+{
+  //! The epsilon type corresponding to value type std::vector<T, A>
+  typedef EpsilonType<T> Type;
+};
+}
 namespace Stuff {
 namespace Common {
 namespace FloatCmp {
@@ -65,10 +73,17 @@ typename std::enable_if<std::is_arithmetic<T>::value, bool>::type dune_float_cmp
   return Dune::FloatCmp::eq<T, style>(xx, yy, eps);
 }
 
+template <Dune::FloatCmp::CmpStyle style, class T>
+bool dune_float_cmp_eq(const std::complex<T>& xx, const std::complex<T>& yy, const T& eps)
+{
+  return Dune::FloatCmp::eq<T, style>(xx.real(), yy.real(), eps)
+         && Dune::FloatCmp::eq<T, style>(xx.imag(), yy.imag(), eps);
+}
+
 template <Dune::FloatCmp::CmpStyle style, class XType, class YType, class EpsType>
 typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value && std::is_arithmetic<EpsType>::value
-                            && std::is_same<typename VectorAbstraction<XType>::S, EpsType>::value
-                            && std::is_same<typename VectorAbstraction<YType>::S, EpsType>::value,
+                            && std::is_same<typename VectorAbstraction<XType>::R, EpsType>::value
+                            && std::is_same<typename VectorAbstraction<YType>::R, EpsType>::value,
                         bool>::type
 dune_float_cmp_eq(const XType& xx, const YType& yy, const EpsType& eps)
 {
@@ -84,7 +99,16 @@ dune_float_cmp_eq(const XType& xx, const YType& yy, const EpsType& eps)
 template <class T>
 typename std::enable_if<std::is_arithmetic<T>::value, bool>::type cmp_gt(const T& xx, const T& yy)
 {
-  return xx > yy;
+  return std::greater<T>()(xx, yy);
+}
+
+template <class T>
+bool cmp_gt(const std::complex<T>& xx, const std::complex<T>& yy)
+{
+  T x = std::abs(xx);
+  T y = std::abs(yy);
+  static_assert(std::is_arithmetic<T>::value, "");
+  return std::greater<double>()(x, y);
 }
 
 template <class XType, class YType>
@@ -98,7 +122,7 @@ cmp_gt(const XType& xx, const YType& yy)
   if (yy.size() != sz)
     return false;
   for (size_t ii = 0; ii < sz; ++ii)
-    if (!(xx[ii] > yy[ii]))
+    if (!(cmp_gt(xx[ii], yy[ii])))
       return false;
   return true;
 } // ... cmp_gt(...)
@@ -107,7 +131,13 @@ cmp_gt(const XType& xx, const YType& yy)
 template <class T>
 typename std::enable_if<std::is_arithmetic<T>::value, bool>::type cmp_lt(const T& xx, const T& yy)
 {
-  return xx < yy;
+  return std::less<T>()(xx, yy);
+}
+
+template <class T>
+bool cmp_lt(const std::complex<T>& xx, const std::complex<T>& yy)
+{
+  return std::less<T>()(std::abs(xx), std::abs(yy));
 }
 
 template <class XType, class YType>
@@ -121,7 +151,7 @@ cmp_lt(const XType& xx, const YType& yy)
   if (yy.size() != sz)
     return false;
   for (size_t ii = 0; ii < sz; ++ii)
-    if (!(xx[ii] < yy[ii]))
+    if (!(cmp_lt(xx[ii], yy[ii])))
       return false;
   return true;
 } // ... cmp_lt(...)
