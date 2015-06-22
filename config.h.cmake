@@ -36,6 +36,11 @@
 #  define DUNE_FEM_DONT_WARN_IN_COMM_MANAGER 1
 #endif
 
+/* needed in dune/stuff/common/profiler.hh */
+#ifndef DUNE_STUFF_DO_PROFILE
+# define DUNE_STUFF_DO_PROFILE 0
+#endif
+
 /*** Silence implicitly False evaluation of undefined macro warnings ****/
 #ifndef HAVE_DUNE_FEM
 # define HAVE_FUNE_FEM 0
