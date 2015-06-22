@@ -58,13 +58,6 @@ float_cmp_eq(const XType& xx, const YType& yy, const TolType& rtol, const TolTyp
   return true;
 } // ... float_cmp(...)
 
-template <class XType, class YType, class TolType>
-bool DUNE_DEPRECATED_MSG("misnamed function, use float_cmp_eq instead")
-    float_cmp(const XType& xx, const YType& yy, const TolType& rtol, const TolType& atol)
-{
-  return float_cmp_eq(xx, yy, rtol, atol);
-}
-
 template <Dune::FloatCmp::CmpStyle style, class T>
 typename std::enable_if<std::is_arithmetic<T>::value, bool>::type dune_float_cmp_eq(const T& xx, const T& yy,
                                                                                     const T& eps)
@@ -87,13 +80,6 @@ dune_float_cmp_eq(const XType& xx, const YType& yy, const EpsType& eps)
       return false;
   return true;
 } // ... dune_float_cmp(...)
-
-template <Dune::FloatCmp::CmpStyle style, class T>
-bool DUNE_DEPRECATED_MSG("misnamed function, use dune_float_cmp_eq instead")
-    dune_float_cmp(const T& xx, const T& yy, const T& eps)
-{
-  return dune_float_cmp_eq(xx, yy, eps);
-}
 
 template <class T>
 typename std::enable_if<std::is_arithmetic<T>::value, bool>::type cmp_gt(const T& xx, const T& yy)
