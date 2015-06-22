@@ -258,4 +258,44 @@ STUFF_TYPENAME(unsigned int)
 STUFF_TYPENAME(unsigned long)
 STUFF_TYPENAME(char)
 
+namespace Dune {
+namespace Stuff {
+namespace Common {
+
+namespace internal {
+template <class Tt>
+struct is_complex_helper
+{
+  DSC_has_typedef_initialize_once(value_type)
+
+      static const bool is_candidate = DSC_has_typedef(value_type)<Tt>::value;
+}; // class is_complex_helper
+} // namespace internal
+
+
+template <class T, bool candidate = internal::is_complex_helper<T>::is_candidate>
+/// TODO this should move to type_utils
+struct is_complex : public std::is_base_of<std::complex<typename T::value_type>, T>
+{
+};
+
+template <class T>
+/// TODO this should move to type_utils
+struct is_complex<T, false> : public std::false_type
+{
+};
+
+template <class VecType>
+struct VectorAbstraction;
+
+template <class VectorType>
+struct is_vector
+{
+  static const bool value = VectorAbstraction<VectorType>::is_vector;
+};
+
+
+} // namespace Common
+} // namespace Stuff
+} // namespace Dune
 #endif // DUNE_STUFF_TYPENAMES_HH

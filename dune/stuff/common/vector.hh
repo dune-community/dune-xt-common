@@ -165,14 +165,6 @@ struct VectorAbstraction<Dune::Stuff::Common::FieldVector<K, SIZE>>
   }
 };
 
-
-template <class VectorType>
-struct is_vector
-{
-  static const bool value = VectorAbstraction<VectorType>::is_vector;
-};
-
-
 template <class VectorType>
 typename std::enable_if<is_vector<VectorType>::value, VectorType>::type
 create(const size_t sz,
