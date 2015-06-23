@@ -8,6 +8,7 @@
 
 #include "color.hh"
 
+#include <complex>
 #include <memory>
 #include <type_traits>
 
