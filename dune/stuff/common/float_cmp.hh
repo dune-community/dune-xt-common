@@ -33,7 +33,8 @@ namespace FloatCmp {
 template <class T, Style style = Style::defaultStyle>
 struct DefaultEpsilon
 {
-  static typename Dune::FloatCmp::EpsilonType<T>::Type value()
+  typedef typename Dune::FloatCmp::EpsilonType<T>::Type Type;
+  static Type value()
   {
     return Dune::FloatCmp::DefaultEpsilon<T, internal::ConvertStyle<style>::value>::value();
   }
@@ -43,7 +44,8 @@ struct DefaultEpsilon
 template <class T, Style style>
 struct DefaultEpsilon<std::complex<T>, style>
 {
-  static typename Dune::FloatCmp::EpsilonType<T>::Type value()
+  typedef typename Dune::FloatCmp::EpsilonType<T>::Type Type;
+  static Type value()
   {
     return Dune::FloatCmp::DefaultEpsilon<T, internal::ConvertStyle<style>::value>::value();
   }
@@ -52,7 +54,8 @@ struct DefaultEpsilon<std::complex<T>, style>
 template <class T>
 struct DefaultEpsilon<T, Style::numpy>
 {
-  static typename Dune::FloatCmp::EpsilonType<T>::Type value()
+  typedef typename Dune::FloatCmp::EpsilonType<T>::Type Type;
+  static Type value()
   {
     return Dune::FloatCmp::DefaultEpsilon<T, Dune::FloatCmp::relativeStrong>::value();
   }
@@ -61,7 +64,8 @@ struct DefaultEpsilon<T, Style::numpy>
 template <class T>
 struct DefaultEpsilon<std::complex<T>, Style::numpy>
 {
-  static typename Dune::FloatCmp::EpsilonType<T>::Type value()
+  typedef typename Dune::FloatCmp::EpsilonType<T>::Type Type;
+  static Type value()
   {
     return Dune::FloatCmp::DefaultEpsilon<T, Dune::FloatCmp::relativeStrong>::value();
   }
