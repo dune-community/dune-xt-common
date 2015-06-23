@@ -29,6 +29,7 @@
 #include <dune/stuff/common/reenable_warnings.hh>
 
 #include <dune/stuff/common/type_utils.hh>
+#include <dune/common/deprecated.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -177,9 +178,20 @@ T clamp(const T var, const T min, const T max)
 }
 
 //! no-branch sign function
-inline long sign(long x)
+inline long DUNE_DEPRECATED_MSG("Please consider the type safe signum function instead") sign(long x)
 {
   return long(x != 0) | (long(x >= 0) - 1);
+}
+
+/**
+ * \returns: -1 iff val < 0
+ *            0 iff val == 0
+ *            1 iff val > 0
+ */
+template <typename T>
+int signum(T val)
+{
+  return (T(0) < val) - (val < T(0));
 }
 
 /** enable us to use DSC::numeric_limits for all types, even when no specialization is avaliable.

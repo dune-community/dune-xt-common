@@ -11,6 +11,8 @@
 #include <string>
 #include <iostream>
 
+#include <dune/stuff/common/logging.hh>
+
 namespace Dune {
 namespace Stuff {
 namespace Common {
@@ -50,7 +52,7 @@ public:
 
   std::vector<std::string> used_norms() const;
 
-  std::map<std::string, std::vector<double>> run(const bool relative = false, std::ostream& out = std::cout,
+  std::map<std::string, std::vector<double>> run(const bool relative = false, std::ostream& out = DSC_LOG_INFO_0,
                                                  const bool print_timings = true);
 
   virtual std::vector<double> expected_results(const std::string /*type*/) const;
