@@ -294,23 +294,8 @@ struct is_complex<T, false> : public std::false_type
 {
 };
 
-
-// forward, include is below
-template <class VecType>
-struct VectorAbstraction;
-
-
-template <class VectorType>
-struct is_vector
-{
-  static const bool value = VectorAbstraction<VectorType>::is_vector;
-};
-
-
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
-
-#include <dune/stuff/common/vector.hh>
 
 #endif // DUNE_STUFF_TYPENAMES_HH

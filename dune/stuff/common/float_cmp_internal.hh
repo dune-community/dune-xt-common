@@ -12,14 +12,15 @@
 #include <dune/common/float_cmp.hh>
 
 #include <dune/stuff/common/type_utils.hh>
-#include "float_cmp_style.hh"
+#include <dune/stuff/common/float_cmp_style.hh>
+#include <dune/stuff/common/vector.hh>
 
 namespace Dune {
 namespace FloatCmp {
 template <class T>
 struct EpsilonType<std::complex<T>>
 {
-  //! The epsilon type corresponding to value type std::vector<T, A>
+  //! The epsilon type corresponding to value type std::complex<T>
   typedef EpsilonType<T> Type;
 };
 }

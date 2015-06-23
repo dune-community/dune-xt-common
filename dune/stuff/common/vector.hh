@@ -23,6 +23,15 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
+template <class VecType>
+struct VectorAbstraction;
+
+//! logically and structurally this belongs in type_utils.hh, but the dependent implementation prohibits that
+template <class VectorType>
+struct is_vector
+{
+  static const bool value = VectorAbstraction<VectorType>::is_vector;
+};
 
 /**
  * \brief Traits to statically extract information of a (mathematical) vector.

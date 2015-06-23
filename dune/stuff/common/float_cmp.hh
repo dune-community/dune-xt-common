@@ -12,20 +12,13 @@
 #include <dune/common/float_cmp.hh>
 
 #include <dune/stuff/common/type_utils.hh>
+#include <dune/stuff/common/vector.hh>
 #include "float_cmp_style.hh"
 #include "float_cmp_internal.hh"
 
 namespace Dune {
 namespace Stuff {
 namespace Common {
-
-
-// forwards (include is below)
-template <class VecType>
-struct VectorAbstraction;
-
-template <class VectorType>
-struct is_vector;
 
 
 namespace FloatCmp {
@@ -114,7 +107,5 @@ DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR(le)
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
-
-#include <dune/stuff/common/vector.hh>
 
 #endif // DUNE_STUFF_COMMON_FLOAT_CMP_HH
