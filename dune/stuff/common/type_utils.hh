@@ -263,9 +263,9 @@ STUFF_TYPENAME(char)
 namespace Dune {
 namespace Stuff {
 namespace Common {
-
-
 namespace internal {
+
+
 template <class Tt>
 struct is_complex_helper
 {
@@ -273,6 +273,8 @@ struct is_complex_helper
 
       static const bool is_candidate = DSC_has_typedef(value_type)<Tt>::value;
 }; // class is_complex_helper
+
+
 } // namespace internal
 
 
