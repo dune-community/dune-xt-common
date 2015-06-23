@@ -176,28 +176,28 @@ struct is_hashable<T, typename std::enable_if<!!sizeof(std::declval<std::hash<T>
   *        http://stackoverflow.com/questions/7834226/detecting-typedef-at-compile-time-template-metaprogramming
   */
 #define DSC_has_typedef_initialize_once(tpdef)                                                                         \
-  template <typename T>                                                                                                \
+  template <typename T_local>                                                                                          \
   struct DSC_has_typedef_helper_##tpdef                                                                                \
   {                                                                                                                    \
-    template <typename TT>                                                                                             \
+    template <typename TT_local>                                                                                       \
     struct void_                                                                                                       \
     {                                                                                                                  \
       typedef void type;                                                                                               \
     };                                                                                                                 \
                                                                                                                        \
-    template <typename TT, typename = void>                                                                            \
+    template <typename TT_local, typename = void>                                                                      \
     struct helper                                                                                                      \
     {                                                                                                                  \
       static const bool value = false;                                                                                 \
     };                                                                                                                 \
                                                                                                                        \
-    template <typename TT>                                                                                             \
-    struct helper<TT, typename void_<typename TT::tpdef>::type>                                                        \
+    template <typename TT_local>                                                                                       \
+    struct helper<TT_local, typename void_<typename TT_local::tpdef>::type>                                            \
     {                                                                                                                  \
       static const bool value = true;                                                                                  \
     };                                                                                                                 \
                                                                                                                        \
-    static const bool value = helper<T>::value;                                                                        \
+    static const bool value = helper<T_local>::value;                                                                  \
   };
 
 /**
@@ -222,16 +222,17 @@ DSC_has_typedef(Bar)< Foo >::value
   *        Taken from http://stackoverflow.com/questions/11927032/sfinae-check-for-static-member-using-decltype
   */
 #define DSC_has_static_member_initialize_once(mmbr)                                                                    \
-  template <class T>                                                                                                   \
+  template <class T_local>                                                                                             \
   struct DSC_has_static_member_helper_##mmbr                                                                           \
   {                                                                                                                    \
-    template <class U, class = typename std::enable_if<!std::is_member_pointer<decltype(&U::mmbr)>::value>::type>      \
+    template <class TT_local,                                                                                          \
+              class = typename std::enable_if<!std::is_member_pointer<decltype(&TT_local::mmbr)>::value>::type>        \
     static std::true_type helper(int);                                                                                 \
                                                                                                                        \
     template <class>                                                                                                   \
     static std::false_type helper(...);                                                                                \
                                                                                                                        \
-    static const bool value = decltype(helper<T>(0))::value;                                                           \
+    static const bool value = decltype(helper<T_local>(0))::value;                                                     \
   };
 
 /**
