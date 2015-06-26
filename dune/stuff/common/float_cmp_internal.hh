@@ -13,7 +13,6 @@
 
 #include <dune/stuff/common/type_utils.hh>
 #include <dune/stuff/common/float_cmp_style.hh>
-//#include <dune/stuff/common/vector.hh>
 
 namespace Dune {
 namespace FloatCmp {
