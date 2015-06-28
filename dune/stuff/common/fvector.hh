@@ -13,6 +13,7 @@
 
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/debug.hh>
+#include <dune/stuff/common/vector.hh>
 
 
 namespace Dune {
@@ -122,6 +123,35 @@ public:
   }
 
 }; // class FieldVector
+
+
+//! Specialization of VectorAbstraction for Dune::Stuff::Common::FieldVector
+template <class K, int SIZE>
+struct VectorAbstraction<Dune::Stuff::Common::FieldVector<K, SIZE>>
+{
+  typedef Dune::Stuff::Common::FieldVector<K, SIZE> VectorType;
+  typedef typename Dune::FieldTraits<K>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<K>::real_type RealType;
+  typedef ScalarType S;
+  typedef RealType R;
+
+  static const bool is_vector = true;
+
+  static const bool has_static_size = true;
+
+  static const size_t static_size = SIZE;
+
+  static inline VectorType create(const size_t sz)
+  {
+    return VectorType(sz);
+  }
+
+  static inline VectorType create(const size_t sz, const ScalarType& val)
+  {
+    return VectorType(sz, val);
+  }
+};
+
 
 } // namespace Common
 } // namespace Stuff

@@ -14,7 +14,6 @@
 #include <dune/common/ftraits.hh>
 
 #include <dune/stuff/common/exceptions.hh>
-#include <dune/stuff/common/fvector.hh>
 #include <dune/stuff/common/type_utils.hh>
 
 
@@ -144,32 +143,6 @@ struct VectorAbstraction<Dune::FieldVector<K, SIZE>>
     if (sz != SIZE)
       DUNE_THROW(Dune::Stuff::Exceptions::shapes_do_not_match, "sz = " << sz << "\nSIZE = " << int(SIZE));
     return VectorType(val);
-  }
-};
-
-template <class K, int SIZE>
-struct VectorAbstraction<Dune::Stuff::Common::FieldVector<K, SIZE>>
-{
-  typedef Dune::Stuff::Common::FieldVector<K, SIZE> VectorType;
-  typedef typename Dune::FieldTraits<K>::field_type ScalarType;
-  typedef typename Dune::FieldTraits<K>::real_type RealType;
-  typedef ScalarType S;
-  typedef RealType R;
-
-  static const bool is_vector = true;
-
-  static const bool has_static_size = true;
-
-  static const size_t static_size = SIZE;
-
-  static inline VectorType create(const size_t sz)
-  {
-    return VectorType(sz);
-  }
-
-  static inline VectorType create(const size_t sz, const ScalarType& val)
-  {
-    return VectorType(sz, val);
   }
 };
 
