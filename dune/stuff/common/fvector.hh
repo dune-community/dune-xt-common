@@ -108,6 +108,7 @@ public:
   }
 }; // class FieldVector
 
+
 template <class K, int SIZE, K value>
 class ValueInitFieldVector : public Dune::Stuff::Common::FieldVector<K, SIZE>
 {
@@ -118,7 +119,6 @@ public:
     : BaseType(value)
   {
   }
-
 }; // class FieldVector
 
 
