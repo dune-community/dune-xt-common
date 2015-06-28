@@ -21,6 +21,7 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
+
 template <class VecType>
 struct VectorAbstraction;
 
@@ -30,6 +31,7 @@ struct is_vector
 {
   static const bool value = VectorAbstraction<VectorType>::is_vector;
 };
+
 
 /**
  * \brief Traits to statically extract information of a (mathematical) vector.
