@@ -111,10 +111,7 @@ public:
 template <class K, int SIZE, K value>
 class ValueInitFieldVector : public Dune::Stuff::Common::FieldVector<K, SIZE>
 {
-  static_assert(SIZE >= 0, "Really?");
-
   typedef Dune::Stuff::Common::FieldVector<K, SIZE> BaseType;
-  typedef ValueInitFieldVector<K, SIZE, value> ThisType;
 
 public:
   ValueInitFieldVector()
