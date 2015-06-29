@@ -6,18 +6,22 @@
 #ifndef DUNE_STUFF_TYPENAMES_HH
 #define DUNE_STUFF_TYPENAMES_HH
 
-#include "color.hh"
 
+#include <complex>
 #include <memory>
 #include <type_traits>
 
 #include <dune/common/version.hh>
+
 // static_assert/AlwaysFalse redirect to avoid warnings
 #if DUNE_VERSION_NEWER(DUNE_COMMON, 2, 4) // post 2.3 release
 #include <dune/common/typetraits.hh>
 #else
 #include <dune/common/static_assert.hh>
 #endif
+
+#include <dune/stuff/common/color.hh>
+
 
 /** use this to define Typename specializations in the GLOBAL namespace ONLY **/
 #define STUFF_TYPENAME(NAME)                                                                                           \
@@ -39,6 +43,7 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
+
 
 inline std::string demangleTypename(const std::string& mangled_name)
 {
@@ -164,6 +169,7 @@ struct is_hashable<T, typename std::enable_if<!!sizeof(std::declval<std::hash<T>
 };
 #endif
 
+
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
@@ -176,28 +182,28 @@ struct is_hashable<T, typename std::enable_if<!!sizeof(std::declval<std::hash<T>
   *        http://stackoverflow.com/questions/7834226/detecting-typedef-at-compile-time-template-metaprogramming
   */
 #define DSC_has_typedef_initialize_once(tpdef)                                                                         \
-  template <typename T>                                                                                                \
+  template <typename T_local>                                                                                          \
   struct DSC_has_typedef_helper_##tpdef                                                                                \
   {                                                                                                                    \
-    template <typename TT>                                                                                             \
+    template <typename TT_local>                                                                                       \
     struct void_                                                                                                       \
     {                                                                                                                  \
       typedef void type;                                                                                               \
     };                                                                                                                 \
                                                                                                                        \
-    template <typename TT, typename = void>                                                                            \
+    template <typename TT_local, typename = void>                                                                      \
     struct helper                                                                                                      \
     {                                                                                                                  \
       static const bool value = false;                                                                                 \
     };                                                                                                                 \
                                                                                                                        \
-    template <typename TT>                                                                                             \
-    struct helper<TT, typename void_<typename TT::tpdef>::type>                                                        \
+    template <typename TT_local>                                                                                       \
+    struct helper<TT_local, typename void_<typename TT_local::tpdef>::type>                                            \
     {                                                                                                                  \
       static const bool value = true;                                                                                  \
     };                                                                                                                 \
                                                                                                                        \
-    static const bool value = helper<T>::value;                                                                        \
+    static const bool value = helper<T_local>::value;                                                                  \
   };
 
 /**
@@ -222,16 +228,17 @@ DSC_has_typedef(Bar)< Foo >::value
   *        Taken from http://stackoverflow.com/questions/11927032/sfinae-check-for-static-member-using-decltype
   */
 #define DSC_has_static_member_initialize_once(mmbr)                                                                    \
-  template <class T>                                                                                                   \
+  template <class T_local>                                                                                             \
   struct DSC_has_static_member_helper_##mmbr                                                                           \
   {                                                                                                                    \
-    template <class U, class = typename std::enable_if<!std::is_member_pointer<decltype(&U::mmbr)>::value>::type>      \
+    template <class TT_local,                                                                                          \
+              class = typename std::enable_if<!std::is_member_pointer<decltype(&TT_local::mmbr)>::value>::type>        \
     static std::true_type helper(int);                                                                                 \
                                                                                                                        \
     template <class>                                                                                                   \
     static std::false_type helper(...);                                                                                \
                                                                                                                        \
-    static const bool value = decltype(helper<T>(0))::value;                                                           \
+    static const bool value = decltype(helper<T_local>(0))::value;                                                     \
   };
 
 /**
@@ -257,5 +264,38 @@ STUFF_TYPENAME(long)
 STUFF_TYPENAME(unsigned int)
 STUFF_TYPENAME(unsigned long)
 STUFF_TYPENAME(char)
+
+
+namespace Dune {
+namespace Stuff {
+namespace Common {
+namespace internal {
+
+
+template <class Tt>
+struct is_complex_helper
+{
+  DSC_has_typedef_initialize_once(value_type)
+
+      static const bool is_candidate = DSC_has_typedef(value_type)<Tt>::value;
+}; // class is_complex_helper
+
+
+} // namespace internal
+
+
+template <class T, bool candidate = internal::is_complex_helper<T>::is_candidate>
+struct is_complex : public std::is_base_of<std::complex<typename T::value_type>, T>
+{
+};
+
+template <class T>
+struct is_complex<T, false> : public std::false_type
+{
+};
+
+} // namespace Common
+} // namespace Stuff
+} // namespace Dune
 
 #endif // DUNE_STUFF_TYPENAMES_HH

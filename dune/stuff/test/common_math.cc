@@ -14,6 +14,7 @@
 
 using namespace Dune::Stuff::Common;
 typedef testing::Types<double, int> TestTypes;
+typedef testing::Types<std::complex<double>, double, int> ComplexTestTypes;
 
 template <class T>
 struct ClampTest : public testing::Test
@@ -107,6 +108,8 @@ TEST(OtherMath, AbsoluteValue)
   EXPECT_EQ(DSC::abs(-1l), 1l);
   EXPECT_EQ(DSC::abs(0u), 0u);
   EXPECT_EQ(DSC::abs(0), 0);
+  EXPECT_EQ(DSC::abs(std::complex<int>(0)), 0);
+  EXPECT_EQ(DSC::abs(std::complex<int>(-1)), 1);
 }
 
 TEST(OtherMath, FloatCmp)

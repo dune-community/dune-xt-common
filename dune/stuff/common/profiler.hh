@@ -6,6 +6,10 @@
 #ifndef DUNE_STUFF_PROFILER_HH_INCLUDED
 #define DUNE_STUFF_PROFILER_HH_INCLUDED
 
+#ifndef DUNE_STUFF_DO_PROFILE
+#define DUNE_STUFF_DO_PROFILE 0
+#endif
+
 #include <string>
 #include <map>
 #include <vector>
@@ -16,6 +20,8 @@
 
 #include <boost/noncopyable.hpp>
 #include <boost/timer/timer.hpp>
+
+#include <dune/common/unused.hh>
 
 #include <dune/stuff/common/parallel/threadmanager.hh>
 #include <dune/stuff/common/parallel/threadstorage.hh>
@@ -121,7 +127,7 @@ public:
   void addCount(const size_t num);
 
   //! call this after one iteration of your code has finished. increments current run number and puts new timing data
-  // into the vector
+  //! into the vector
   void nextRun();
 
   void setOutputdir(const std::string dir);
@@ -183,6 +189,15 @@ protected:
 } // namespace Stuff
 } // namespace Dune
 
+
 #define DSC_PROFILER Dune::Stuff::Common::profiler()
+
+
+#if DUNE_STUFF_DO_PROFILE
+#define DUNE_STUFF_PROFILE_SCOPE(section_name) Dune::Stuff::Common::ScopedTiming DUNE_UNUSED(timer)(section_name)
+#else
+#define DUNE_STUFF_PROFILE_SCOPE(section_name)
+#endif
+
 
 #endif // DUNE_STUFF_PROFILER_HH_INCLUDED

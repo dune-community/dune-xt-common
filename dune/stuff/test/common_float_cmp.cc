@@ -78,12 +78,12 @@ struct FloatCmpBase : public testing::Test
     EXPECT_TRUE(Stuff::Common::FloatCmp::eq<absolute>(one, one + 1.1 * epsilon)); /* <- NOTE */
     EXPECT_TRUE(Stuff::Common::FloatCmp::eq<defaultStyle>(one, one + 1.1 * epsilon)); /* <- NOTE */
 
-    EXPECT_FALSE(Stuff::Common::FloatCmp::eq(one, 2 * one));
-    EXPECT_FALSE(Stuff::Common::FloatCmp::eq<numpy>(one, 2 * one));
-    EXPECT_FALSE(Stuff::Common::FloatCmp::eq<relativeWeak>(one, 2 * one));
-    EXPECT_FALSE(Stuff::Common::FloatCmp::eq<relativeStrong>(one, 2 * one));
-    EXPECT_FALSE(Stuff::Common::FloatCmp::eq<absolute>(one, 2 * one));
-    EXPECT_FALSE(Stuff::Common::FloatCmp::eq<defaultStyle>(one, 2 * one));
+    EXPECT_FALSE(Stuff::Common::FloatCmp::eq(one, 2. * one));
+    EXPECT_FALSE(Stuff::Common::FloatCmp::eq<numpy>(one, 2. * one));
+    EXPECT_FALSE(Stuff::Common::FloatCmp::eq<relativeWeak>(one, 2. * one));
+    EXPECT_FALSE(Stuff::Common::FloatCmp::eq<relativeStrong>(one, 2. * one));
+    EXPECT_FALSE(Stuff::Common::FloatCmp::eq<absolute>(one, 2. * one));
+    EXPECT_FALSE(Stuff::Common::FloatCmp::eq<defaultStyle>(one, 2. * one));
   } // ... check_eq(...)
 
   template <class Z, class E, class O>
@@ -131,12 +131,12 @@ struct FloatCmpBase : public testing::Test
     EXPECT_FALSE(Stuff::Common::FloatCmp::ne<absolute>(one, one + 1.1 * epsilon)); /* <- NOTE */
     EXPECT_FALSE(Stuff::Common::FloatCmp::ne<defaultStyle>(one, one + 1.1 * epsilon)); /* <- NOTE */
 
-    EXPECT_TRUE(Stuff::Common::FloatCmp::ne(one, 2 * one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::ne<numpy>(one, 2 * one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::ne<relativeWeak>(one, 2 * one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::ne<relativeStrong>(one, 2 * one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::ne<absolute>(one, 2 * one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::ne<defaultStyle>(one, 2 * one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::ne(one, 2. * one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::ne<numpy>(one, 2. * one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::ne<relativeWeak>(one, 2. * one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::ne<relativeStrong>(one, 2. * one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::ne<absolute>(one, 2. * one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::ne<defaultStyle>(one, 2. * one));
   } // ... check_ne(...)
 
   template <class Z, class E, class O>
@@ -184,12 +184,12 @@ struct FloatCmpBase : public testing::Test
     EXPECT_FALSE(Stuff::Common::FloatCmp::gt<absolute>(one + 1.1 * epsilon, one)); /* <- NOTE */
     EXPECT_FALSE(Stuff::Common::FloatCmp::gt<defaultStyle>(one + 1.1 * epsilon, one)); /* <- NOTE */
 
-    EXPECT_TRUE(Stuff::Common::FloatCmp::gt(2 * one, one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::gt<numpy>(2 * one, one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::gt<relativeWeak>(2 * one, one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::gt<relativeStrong>(2 * one, one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::gt<absolute>(2 * one, one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::gt<defaultStyle>(2 * one, one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::gt(2. * one, one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::gt<numpy>(2. * one, one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::gt<relativeWeak>(2. * one, one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::gt<relativeStrong>(2. * one, one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::gt<absolute>(2. * one, one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::gt<defaultStyle>(2. * one, one));
   } // ... check_gt(...)
 
   template <class Z, class E, class O>
@@ -237,12 +237,12 @@ struct FloatCmpBase : public testing::Test
     EXPECT_FALSE(Stuff::Common::FloatCmp::lt<absolute>(one, one + 1.1 * epsilon)); /* <- NOTE */
     EXPECT_FALSE(Stuff::Common::FloatCmp::lt<defaultStyle>(one, one + 1.1 * epsilon)); /* <- NOTE */
 
-    EXPECT_TRUE(Stuff::Common::FloatCmp::lt(one, 2 * one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::lt<numpy>(one, 2 * one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::lt<relativeWeak>(one, 2 * one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::lt<relativeStrong>(one, 2 * one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::lt<absolute>(one, 2 * one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::lt<defaultStyle>(one, 2 * one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::lt(one, 2. * one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::lt<numpy>(one, 2. * one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::lt<relativeWeak>(one, 2. * one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::lt<relativeStrong>(one, 2. * one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::lt<absolute>(one, 2. * one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::lt<defaultStyle>(one, 2. * one));
   } // ... check_lt(...)
 
   template <class Z, class E, class O>
@@ -290,12 +290,12 @@ struct FloatCmpBase : public testing::Test
     EXPECT_TRUE(Stuff::Common::FloatCmp::ge<absolute>(one + 1.1 * epsilon, one));
     EXPECT_TRUE(Stuff::Common::FloatCmp::ge<defaultStyle>(one + 1.1 * epsilon, one));
 
-    EXPECT_TRUE(Stuff::Common::FloatCmp::ge(2 * one, one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::ge<numpy>(2 * one, one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::ge<relativeWeak>(2 * one, one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::ge<relativeStrong>(2 * one, one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::ge<absolute>(2 * one, one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::ge<defaultStyle>(2 * one, one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::ge(2. * one, one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::ge<numpy>(2. * one, one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::ge<relativeWeak>(2. * one, one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::ge<relativeStrong>(2. * one, one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::ge<absolute>(2. * one, one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::ge<defaultStyle>(2. * one, one));
   } // ... check_ge(...)
 
   template <class Z, class E, class O>
@@ -343,12 +343,12 @@ struct FloatCmpBase : public testing::Test
     EXPECT_TRUE(Stuff::Common::FloatCmp::le<absolute>(one, one + 1.1 * epsilon));
     EXPECT_TRUE(Stuff::Common::FloatCmp::le<defaultStyle>(one, one + 1.1 * epsilon));
 
-    EXPECT_TRUE(Stuff::Common::FloatCmp::le(one, 2 * one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::le<numpy>(one, 2 * one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::le<relativeWeak>(one, 2 * one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::le<relativeStrong>(one, 2 * one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::le<absolute>(one, 2 * one));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::le<defaultStyle>(one, 2 * one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::le(one, 2. * one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::le<numpy>(one, 2. * one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::le<relativeWeak>(one, 2. * one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::le<relativeStrong>(one, 2. * one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::le<absolute>(one, 2. * one));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::le<defaultStyle>(one, 2. * one));
   } // ... check_le(...)
 }; // struct FloatCmpBase
 
@@ -436,7 +436,7 @@ struct FloatCmpVector : public FloatCmpBase
 }; // struct FloatCmpVector
 
 
-typedef testing::Types<double
+typedef testing::Types<double, std::complex<double>
                        //                      , long double // <- this requires a patch in dune/common/float_cmp.cc
                        //                      (bc. of std::max and 1e-6)
                        > ScalarTypes;
@@ -478,6 +478,21 @@ typedef testing::Types<std::vector<double>, Dune::FieldVector<double, vec_size>,
 #if HAVE_EIGEN
                        ,
                        Dune::Stuff::LA::EigenDenseVector<double>, Dune::Stuff::LA::EigenMappedDenseVector<double>
+#endif
+                       ,
+                       std::vector<std::complex<double>>, Dune::FieldVector<std::complex<double>, vec_size>,
+                       Dune::Stuff::Common::FieldVector<std::complex<double>, vec_size>,
+                       Dune::DynamicVector<std::complex<double>>,
+                       Dune::Stuff::LA::CommonDenseVector<std::complex<double>>
+#if HAVE_DUNE_ISTL
+                       ,
+                       Dune::Stuff::LA::IstlDenseVector<std::complex<double>>
+#endif
+#if HAVE_EIGEN
+                       ,
+                       Dune::Stuff::LA::EigenDenseVector<std::complex<double>>
+//                    complex just isn't possible with mapped vector
+//                      , Dune::Stuff::LA::EigenMappedDenseVector< std::complex<double> >
 #endif
                        > VectorTypes;
 
