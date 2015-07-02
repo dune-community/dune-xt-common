@@ -207,22 +207,22 @@ class ConstStorageProvider
 {
 public:
   explicit ConstStorageProvider(const T& tt)
-    : storage_(make_unique<internal::ConstAccessByReference<T>>(tt))
+    : storage_(std::make_shared<internal::ConstAccessByReference<T>>(tt))
   {
   }
 
   explicit ConstStorageProvider(const T* tt)
-    : storage_(make_unique<internal::ConstAccessByPointer<T>>(tt))
+    : storage_(std::make_shared<internal::ConstAccessByPointer<T>>(tt))
   {
   }
 
   explicit ConstStorageProvider(std::unique_ptr<const T>&& tt)
-    : storage_(make_unique<internal::ConstAccessByPointer<T>>(tt))
+    : storage_(std::make_shared<internal::ConstAccessByPointer<T>>(tt))
   {
   }
 
   explicit ConstStorageProvider(std::shared_ptr<const T> tt)
-    : storage_(make_unique<internal::ConstAccessByPointer<T>>(tt))
+    : storage_(std::make_shared<internal::ConstAccessByPointer<T>>(tt))
   {
   }
 
@@ -252,22 +252,22 @@ class StorageProvider
 {
 public:
   explicit StorageProvider(T& tt)
-    : storage_(make_unique<internal::AccessByReference<T>>(tt))
+    : storage_(std::make_shared<internal::AccessByReference<T>>(tt))
   {
   }
 
   explicit StorageProvider(T* tt)
-    : storage_(make_unique<internal::AccessByPointer<T>>(tt))
+    : storage_(std::make_shared<internal::AccessByPointer<T>>(tt))
   {
   }
 
   explicit StorageProvider(std::unique_ptr<T>&& tt)
-    : storage_(make_unique<internal::AccessByPointer<T>>(tt))
+    : storage_(std::make_shared<internal::AccessByPointer<T>>(tt))
   {
   }
 
   explicit StorageProvider(std::shared_ptr<T> tt)
-    : storage_(make_unique<internal::AccessByPointer<T>>(tt))
+    : storage_(std::make_shared<internal::AccessByPointer<T>>(tt))
   {
   }
 
