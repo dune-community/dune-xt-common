@@ -436,7 +436,7 @@ struct FloatCmpVector : public FloatCmpBase
 }; // struct FloatCmpVector
 
 
-typedef testing::Types<double, std::complex<double>
+typedef testing::Types<double, std::complex<double>, float,
                        //                      , long double // <- this requires a patch in dune/common/float_cmp.cc
                        //                      (bc. of std::max and 1e-6)
                        > ScalarTypes;
