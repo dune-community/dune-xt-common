@@ -51,6 +51,7 @@ size_t Dune::Stuff::ThreadManager::thread()
 
 void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
 {
+  DSC_CONFIG.set("threading.max_count", count, true);
   max_threads_ = count;
   WITH_DUNE_FEM(Dune::Fem::ThreadManager::setMaxNumberThreads(boost::numeric_cast<int>(count));)
 #if HAVE_EIGEN
