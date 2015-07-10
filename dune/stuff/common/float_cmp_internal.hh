@@ -116,7 +116,7 @@ template <class T>
 bool cmp_gt(const std::complex<T>& xx, const std::complex<T>& yy)
 {
   using namespace std;
-  return cmp_gt({real(xx), real(yy)}, {imag(xx), imag(yy)});
+  return cmp_gt(real(xx), real(yy)) && cmp_gt(imag(xx), imag(yy));
 }
 
 template <class XType, class YType>
@@ -146,7 +146,7 @@ template <class T>
 bool cmp_lt(const std::complex<T>& xx, const std::complex<T>& yy)
 {
   using namespace std;
-  return cmp_lt({real(xx), real(yy)}, {imag(xx), imag(yy)});
+  return cmp_lt(real(xx), real(yy)) && cmp_lt(imag(xx), imag(yy));
 }
 
 template <class XType, class YType>
