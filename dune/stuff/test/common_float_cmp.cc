@@ -356,36 +356,45 @@ struct FloatCmpBase : public testing::Test
 template <class S>
 struct FloatCmpScalar : public FloatCmpBase
 {
+
+  static const S zero;
+  static const S one;
+
   static void check_eq()
   {
-    FloatCmpBase::check_eq(S(0), S(Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()), S(1));
+    FloatCmpBase::check_eq(zero, S(Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()), one);
   }
 
   static void check_ne()
   {
-    FloatCmpBase::check_ne(S(0), S(Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()), S(1));
+    FloatCmpBase::check_ne(zero, S(Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()), one);
   }
 
   static void check_gt()
   {
-    FloatCmpBase::check_gt(S(0), S(Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()), S(1));
+    FloatCmpBase::check_gt(zero, S(Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()), one);
   }
 
   static void check_lt()
   {
-    FloatCmpBase::check_lt(S(0), S(Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()), S(1));
+    FloatCmpBase::check_lt(zero, S(Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()), one);
   }
 
   static void check_ge()
   {
-    FloatCmpBase::check_ge(S(0), S(Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()), S(1));
+    FloatCmpBase::check_ge(zero, S(Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()), one);
   }
 
   static void check_le()
   {
-    FloatCmpBase::check_le(S(0), S(Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()), S(1));
+    FloatCmpBase::check_le(zero, S(Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()), one);
   }
 }; // struct FloatCmpScalar
+
+template <class S>
+const S FloatCmpScalar<S>::zero = create<S>(0, 0);
+template <class S>
+const S FloatCmpScalar<S>::one = create<S>(0, 1);
 
 template <class V>
 struct FloatCmpVector : public FloatCmpBase
