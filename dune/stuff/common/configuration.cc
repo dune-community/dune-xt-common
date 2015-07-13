@@ -330,9 +330,9 @@ bool Configuration::empty() const
 void Configuration::report(std::ostream& out, const std::string& prefix) const
 {
   if (!empty()) {
-    if (subKeys.size() == 0) {
+    if (getSubKeys().size() == 0) {
       report_as_sub(out, prefix, "");
-    } else if (valueKeys.size() == 0) {
+    } else if (getValueKeys().size() == 0) {
       const std::string common_prefix = find_common_prefix(*this, "");
       if (!common_prefix.empty()) {
         out << prefix << "[" << common_prefix << "]" << std::endl;
@@ -499,13 +499,14 @@ ParameterTree Configuration::initialize(int argc, char** argv, std::string filen
 
 void Configuration::report_as_sub(std::ostream& out, const std::string& prefix, const std::string& sub_path) const
 {
-  for (auto pair : values)
-    out << prefix << pair.first << " = " << pair.second << std::endl;
-  for (auto pair : subs) {
-    Configuration sub_tree(pair.second);
+  for (const auto& key : getValueKeys()) {
+    out << prefix << key << " = " << ParameterTree::get<std::string>(key) << std::endl;
+  }
+  for (const auto& subkey : getSubKeys()) {
+    Configuration sub_tree(sub(subkey));
     if (sub_tree.getValueKeys().size())
-      out << prefix << "[" << sub_path << pair.first << "]" << std::endl;
-    sub_tree.report_as_sub(out, prefix, sub_path + pair.first + ".");
+      out << prefix << "[" << sub_path << subkey << "]" << std::endl;
+    sub_tree.report_as_sub(out, prefix, sub_path + subkey + ".");
   }
 } // ... report_as_sub(...)
 
@@ -543,9 +544,9 @@ void Configuration::report_flatly(const BaseType& subtree, const std::string& pr
 std::map<std::string, std::string> Configuration::flatten() const
 {
   std::map<std::string, std::string> ret;
-  for (const auto& kk : valueKeys)
+  for (const auto& kk : getValueKeys())
     ret[kk] = get<std::string>(kk);
-  for (const auto& ss : subKeys) {
+  for (const auto& ss : getSubKeys()) {
     const auto flat_sub = sub(ss).flatten();
     for (const auto& element : flat_sub)
       ret[ss + "." + element.first] = element.second;
