@@ -231,9 +231,9 @@ operator+(const L& left, const R& right)
 } // ... operator+(...)
 
 
-template <class V>
-typename std::enable_if<Dune::Stuff::Common::is_vector<V>::value, std::ostream&>::type operator<<(std::ostream& out,
-                                                                                                  const V& vec)
+template <class V, class CharType, class CharTraits>
+typename std::enable_if<Dune::Stuff::Common::is_vector<V>::value, std::basic_ostream<CharType, CharTraits>&>::type
+operator<<(std::basic_ostream<CharType, CharTraits>& out, const V& vec)
 {
   if (vec.size() == 0)
     out << "[]";
