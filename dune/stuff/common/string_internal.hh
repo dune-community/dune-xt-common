@@ -144,8 +144,22 @@ template <class V>
 static inline typename std::enable_if<is_complex<V>::value, V>::type
 from_string(std::string ss, const size_t /*size*/ = 0, const size_t /*cols*/ = 0)
 {
-  DUNE_THROW(NotImplemented, "");
-  return V();
+  boost::algorithm::trim(ss);
+  if (ss.size() < 1)
+    DUNE_THROW(Exceptions::conversion_error, "Error converting " << ss << " (too short)");
+  using namespace std;
+  typedef typename V::value_type T;
+  T re(0), im(0);
+  const auto sign_pos = ss.find("+", 1) != string::npos ? ss.find("+", 1) : ss.find("-", 1);
+  re = from_string<T>(ss.substr(0, sign_pos));
+  if (sign_pos != string::npos) {
+    ss                = ss.substr(sign_pos);
+    const auto im_pos = ss.find("i");
+    if (im_pos == string::npos)
+      DUNE_THROW(Exceptions::conversion_error, "Error converting " << ss << " no imaginary unit");
+    im = from_string<T>(ss.substr(0, im_pos));
+  }
+  return V(re, im);
 }
 
 template <class VectorType>
@@ -329,7 +343,7 @@ static inline std::string to_string(const std::complex<T>& val)
   using namespace std;
   stringstream os;
   const auto im     = imag(val);
-  const string sign = Dune::Stuff::Common::signum(im) < 0 ? "-" : "+";
+  const string sign = Dune::Stuff::Common::signum(im) < 0 ? "" : "+";
   os << real(val) << sign << imag(val) << "i";
   return os.str();
 }
