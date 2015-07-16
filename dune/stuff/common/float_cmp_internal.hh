@@ -20,7 +20,7 @@ template <class T>
 struct EpsilonType<std::complex<T>>
 {
   //! The epsilon type corresponding to value type std::complex<T>
-  typedef EpsilonType<T> Type;
+  typedef std::complex<T> Type;
 };
 }
 namespace Stuff {
