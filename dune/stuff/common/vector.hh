@@ -153,7 +153,7 @@ template <class T>
 struct VectorAbstraction<std::complex<T>>
 {
   typedef std::complex<T> VectorType;
-  typedef T ScalarType;
+  typedef std::complex<T> ScalarType;
   typedef T RealType;
   typedef ScalarType S;
   typedef RealType R;
@@ -170,6 +170,10 @@ struct VectorAbstraction<std::complex<T>>
   }
 
   static inline VectorType create(const size_t /*sz*/, const ScalarType& val)
+  {
+    return VectorType(val);
+  }
+  static inline VectorType create(const size_t /*sz*/, const RealType& val)
   {
     return VectorType(val, val);
   }

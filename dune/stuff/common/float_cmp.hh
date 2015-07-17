@@ -17,36 +17,8 @@
 #include "float_cmp_internal.hh"
 
 namespace Dune {
-namespace FloatCmp {
-template <class T>
-struct DefaultEpsilon<std::complex<T>, relativeWeak>
-{
-  static typename EpsilonType<std::complex<T>>::Type value()
-  {
-    return std::numeric_limits<typename EpsilonType<std::complex<T>>::Type>::epsilon() * 8.;
-  }
-};
-template <class T>
-struct DefaultEpsilon<std::complex<T>, relativeStrong>
-{
-  static typename EpsilonType<std::complex<T>>::Type value()
-  {
-    return std::numeric_limits<typename EpsilonType<std::complex<T>>::Type>::epsilon() * 8.;
-  }
-};
-template <class T>
-struct DefaultEpsilon<std::complex<T>, absolute>
-{
-  static typename EpsilonType<std::complex<T>>::Type value()
-  {
-    return std::max(std::numeric_limits<typename EpsilonType<std::complex<T>>::Type>::epsilon(), 1e-6);
-  }
-};
-}
 namespace Stuff {
 namespace Common {
-
-
 namespace FloatCmp {
 
 template <class T, Style style = Style::defaultStyle>
@@ -93,32 +65,37 @@ struct DefaultEpsilon<std::complex<T>, Style::numpy>
   }
 };
 
+template <class V>
+struct MT
+{
+  typedef typename VectorAbstraction<V>::S T;
+};
 
 #define DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR(id)                                                                      \
-  template <Style style,                                                                                               \
-            class FirstType,                                                                                           \
-            class SecondType,                                                                                          \
-            class ToleranceType = typename VectorAbstraction<FirstType>::R>                                            \
-  typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool>::type id(       \
-      const FirstType& first,                                                                                          \
-      const SecondType& second,                                                                                        \
-      const typename Dune::FloatCmp::EpsilonType<ToleranceType>::Type& rtol =                                          \
-          DefaultEpsilon<ToleranceType, style>::value(),                                                               \
-      const typename Dune::FloatCmp::EpsilonType<ToleranceType>::Type& atol =                                          \
-          DefaultEpsilon<ToleranceType, style>::value())                                                               \
+  template <Style style, class FirstType, class SecondType>                                                            \
+  typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, typename MT<FirstType>::T>::value,           \
+                          bool>::type                                                                                  \
+  id(const FirstType& first,                                                                                           \
+     const SecondType& second,                                                                                         \
+     const typename Dune::FloatCmp::EpsilonType<typename MT<FirstType>::T>::Type& rtol =                               \
+         DefaultEpsilon<typename MT<FirstType>::T, style>::value(),                                                    \
+     const typename Dune::FloatCmp::EpsilonType<typename MT<FirstType>::T>::Type& atol =                               \
+         DefaultEpsilon<typename MT<FirstType>::T, style>::value())                                                    \
   {                                                                                                                    \
-    return internal::Call<FirstType, SecondType, typename Dune::FloatCmp::EpsilonType<ToleranceType>::Type, style>::   \
-        id(first, second, rtol, atol);                                                                                 \
+    return internal::                                                                                                  \
+        Call<FirstType, SecondType, typename Dune::FloatCmp::EpsilonType<typename MT<FirstType>::T>::Type, style>::id( \
+            first, second, rtol, atol);                                                                                \
   }                                                                                                                    \
                                                                                                                        \
-  template <class FirstType, class SecondType, class ToleranceType = typename VectorAbstraction<FirstType>::R>         \
-  typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool>::type id(       \
-      const FirstType& first,                                                                                          \
-      const SecondType& second,                                                                                        \
-      const typename Dune::FloatCmp::EpsilonType<ToleranceType>::Type& rtol =                                          \
-          DefaultEpsilon<ToleranceType, Style::defaultStyle>::value(),                                                 \
-      const typename Dune::FloatCmp::EpsilonType<ToleranceType>::Type& atol =                                          \
-          DefaultEpsilon<ToleranceType, Style::defaultStyle>::value())                                                 \
+  template <class FirstType, class SecondType>                                                                         \
+  typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, typename MT<FirstType>::T>::value,           \
+                          bool>::type                                                                                  \
+  id(const FirstType& first,                                                                                           \
+     const SecondType& second,                                                                                         \
+     const typename Dune::FloatCmp::EpsilonType<typename MT<FirstType>::T>::Type& rtol =                               \
+         DefaultEpsilon<typename MT<FirstType>::T, Style::defaultStyle>::value(),                                      \
+     const typename Dune::FloatCmp::EpsilonType<typename MT<FirstType>::T>::Type& atol =                               \
+         DefaultEpsilon<typename MT<FirstType>::T, Style::defaultStyle>::value())                                      \
   {                                                                                                                    \
     return id<Style::defaultStyle>(first, second, rtol, atol);                                                         \
   }

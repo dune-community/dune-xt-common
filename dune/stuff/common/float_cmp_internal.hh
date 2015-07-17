@@ -52,18 +52,19 @@ typename std::enable_if<std::is_arithmetic<T>::value, bool>::type float_cmp_eq(c
 
 
 template <class T>
-typename std::enable_if<is_complex<T>::value, bool>::type
-float_cmp_eq(const T& xx, const T& yy, const typename T::value_type& rtol, const typename T::value_type& atol)
+typename std::enable_if<is_complex<T>::value, bool>::type float_cmp_eq(const T& xx, const T& yy, const T& rtol,
+                                                                       const T& atol)
 {
-  return (float_cmp_eq(std::real(xx), std::real(yy), rtol, atol)
-          && float_cmp_eq(std::imag(xx), std::imag(yy), rtol, atol));
+  using namespace std;
+  return (float_cmp_eq(real(xx), real(yy), real(rtol), real(atol))
+          && float_cmp_eq(imag(xx), imag(yy), imag(rtol), imag(atol)));
 }
 
 
 template <class XType, class YType, class TolType>
-typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value && std::is_arithmetic<TolType>::value
-                            && std::is_same<typename VectorAbstraction<XType>::R, TolType>::value
-                            && std::is_same<typename VectorAbstraction<YType>::R, TolType>::value,
+typename std::enable_if<!is_complex<XType>::value && is_vector<XType>::value && is_vector<YType>::value
+                            && std::is_same<typename VectorAbstraction<XType>::S, TolType>::value
+                            && std::is_same<typename VectorAbstraction<YType>::S, TolType>::value,
                         bool>::type
 float_cmp_eq(const XType& xx, const YType& yy, const TolType& rtol, const TolType& atol)
 {
@@ -84,16 +85,17 @@ typename std::enable_if<std::is_arithmetic<T>::value, bool>::type dune_float_cmp
 }
 
 template <Dune::FloatCmp::CmpStyle style, class T>
-bool dune_float_cmp_eq(const std::complex<T>& xx, const std::complex<T>& yy, const T& eps)
+typename std::enable_if<is_complex<T>::value, bool>::type dune_float_cmp_eq(const T& xx, const T& yy, const T& eps)
 {
-  return Dune::FloatCmp::eq<T, style>(xx.real(), yy.real(), eps)
-         && Dune::FloatCmp::eq<T, style>(xx.imag(), yy.imag(), eps);
+  using namespace std;
+  return Dune::FloatCmp::eq<typename T::value_type, style>(real(xx), real(yy), real(eps))
+         && Dune::FloatCmp::eq<typename T::value_type, style>(imag(xx), imag(yy), imag(eps));
 }
 
 template <Dune::FloatCmp::CmpStyle style, class XType, class YType, class EpsType>
-typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value && std::is_arithmetic<EpsType>::value
-                            && std::is_same<typename VectorAbstraction<XType>::R, EpsType>::value
-                            && std::is_same<typename VectorAbstraction<YType>::R, EpsType>::value,
+typename std::enable_if<!is_complex<XType>::value && is_vector<XType>::value && is_vector<YType>::value
+                            && std::is_same<typename VectorAbstraction<XType>::S, EpsType>::value
+                            && std::is_same<typename VectorAbstraction<YType>::S, EpsType>::value,
                         bool>::type
 dune_float_cmp_eq(const XType& xx, const YType& yy, const EpsType& eps)
 {
@@ -234,15 +236,14 @@ struct Call<FirstType, SecondType, ToleranceType, Style::numpy>
   }
 };
 
-template <class FirstType, class SecondType, class ToleranceType = typename VectorAbstraction<FirstType>::R>
+template <class FirstType, class SecondType, class ToleranceType>
 struct cmp_type_check
 {
   static constexpr bool is_ok_scalar = (std::is_arithmetic<FirstType>::value || is_complex<FirstType>::value)
                                        && std::is_same<FirstType, SecondType>::value;
-  static constexpr bool is_ok_vector = std::is_arithmetic<ToleranceType>::value && is_vector<FirstType>::value
-                                       && is_vector<SecondType>::value
-                                       && std::is_same<ToleranceType, typename VectorAbstraction<FirstType>::R>::value
-                                       && std::is_same<ToleranceType, typename VectorAbstraction<SecondType>::R>::value;
+  static constexpr bool is_ok_vector = is_vector<FirstType>::value && is_vector<SecondType>::value
+                                       && std::is_same<ToleranceType, typename VectorAbstraction<FirstType>::S>::value
+                                       && std::is_same<ToleranceType, typename VectorAbstraction<SecondType>::S>::value;
   static constexpr bool value = is_ok_scalar || is_ok_vector;
 };
 
