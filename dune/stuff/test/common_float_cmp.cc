@@ -30,11 +30,24 @@ static const Style defaultStyle   = Style::defaultStyle;
 
 static const size_t vec_size = 4;
 
-
+template <typename V, size_t s_size>
 struct FloatCmpBase : public testing::Test
 {
-  template <class Z, class E, class O>
-  static void check_eq(const Z& zero, const E& epsilon, const O& one)
+
+  typedef typename DSC::VectorAbstraction<V>::ScalarType S;
+
+  FloatCmpBase()
+    : zero(create<V>(s_size, 0))
+    , one(create<V>(s_size, 1))
+    , epsilon(create<V>(s_size, Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()))
+  {
+  }
+
+  const V zero;
+  const V one;
+  const V epsilon;
+
+  void check_eq()
   {
     EXPECT_TRUE(Stuff::Common::FloatCmp::eq(zero, zero));
     EXPECT_TRUE(Stuff::Common::FloatCmp::eq<numpy>(zero, zero));
@@ -64,12 +77,13 @@ struct FloatCmpBase : public testing::Test
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq<absolute>(zero, one));
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq<defaultStyle>(zero, one));
 
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq(one, one + 0.9 * epsilon));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<numpy>(one, one + 0.9 * epsilon));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<relativeWeak>(one, one + 0.9 * epsilon));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<relativeStrong>(one, one + 0.9 * epsilon));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<absolute>(one, one + 0.9 * epsilon));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<defaultStyle>(one, one + 0.9 * epsilon));
+    const auto eps_plus = one + 0.9 * epsilon;
+    EXPECT_TRUE(Stuff::Common::FloatCmp::eq(one, eps_plus));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<numpy>(one, eps_plus));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<relativeWeak>(one, eps_plus));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<relativeStrong>(one, eps_plus));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<absolute>(one, eps_plus));
+    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<defaultStyle>(one, eps_plus));
 
     EXPECT_TRUE(Stuff::Common::FloatCmp::eq(one, one + 1.1 * epsilon)); /* <- NOTE */
     EXPECT_TRUE(Stuff::Common::FloatCmp::eq<numpy>(one, one + 1.1 * epsilon)); /* <- NOTE */
@@ -84,10 +98,9 @@ struct FloatCmpBase : public testing::Test
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq<relativeStrong>(one, 2. * one));
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq<absolute>(one, 2. * one));
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq<defaultStyle>(one, 2. * one));
-  } // ... check_eq(...)
+  }
 
-  template <class Z, class E, class O>
-  static void check_ne(const Z& zero, const E& epsilon, const O& one)
+  void check_ne()
   {
     EXPECT_FALSE(Stuff::Common::FloatCmp::ne(zero, zero));
     EXPECT_FALSE(Stuff::Common::FloatCmp::ne<numpy>(zero, zero));
@@ -137,10 +150,9 @@ struct FloatCmpBase : public testing::Test
     EXPECT_TRUE(Stuff::Common::FloatCmp::ne<relativeStrong>(one, 2. * one));
     EXPECT_TRUE(Stuff::Common::FloatCmp::ne<absolute>(one, 2. * one));
     EXPECT_TRUE(Stuff::Common::FloatCmp::ne<defaultStyle>(one, 2. * one));
-  } // ... check_ne(...)
+  }
 
-  template <class Z, class E, class O>
-  static void check_gt(const Z& zero, const E& epsilon, const O& one)
+  void check_gt()
   {
     EXPECT_FALSE(Stuff::Common::FloatCmp::gt(zero, zero));
     EXPECT_FALSE(Stuff::Common::FloatCmp::gt<numpy>(zero, zero));
@@ -190,10 +202,9 @@ struct FloatCmpBase : public testing::Test
     EXPECT_TRUE(Stuff::Common::FloatCmp::gt<relativeStrong>(2. * one, one));
     EXPECT_TRUE(Stuff::Common::FloatCmp::gt<absolute>(2. * one, one));
     EXPECT_TRUE(Stuff::Common::FloatCmp::gt<defaultStyle>(2. * one, one));
-  } // ... check_gt(...)
+  }
 
-  template <class Z, class E, class O>
-  static void check_lt(const Z& zero, const E& epsilon, const O& one)
+  void check_lt()
   {
     EXPECT_FALSE(Stuff::Common::FloatCmp::lt(zero, zero));
     EXPECT_FALSE(Stuff::Common::FloatCmp::lt<numpy>(zero, zero));
@@ -243,10 +254,9 @@ struct FloatCmpBase : public testing::Test
     EXPECT_TRUE(Stuff::Common::FloatCmp::lt<relativeStrong>(one, 2. * one));
     EXPECT_TRUE(Stuff::Common::FloatCmp::lt<absolute>(one, 2. * one));
     EXPECT_TRUE(Stuff::Common::FloatCmp::lt<defaultStyle>(one, 2. * one));
-  } // ... check_lt(...)
+  }
 
-  template <class Z, class E, class O>
-  static void check_ge(const Z& zero, const E& epsilon, const O& one)
+  void check_ge()
   {
     EXPECT_TRUE(Stuff::Common::FloatCmp::ge(zero, zero));
     EXPECT_TRUE(Stuff::Common::FloatCmp::ge<numpy>(zero, zero));
@@ -296,10 +306,9 @@ struct FloatCmpBase : public testing::Test
     EXPECT_TRUE(Stuff::Common::FloatCmp::ge<relativeStrong>(2. * one, one));
     EXPECT_TRUE(Stuff::Common::FloatCmp::ge<absolute>(2. * one, one));
     EXPECT_TRUE(Stuff::Common::FloatCmp::ge<defaultStyle>(2. * one, one));
-  } // ... check_ge(...)
+  }
 
-  template <class Z, class E, class O>
-  static void check_le(const Z& zero, const E& epsilon, const O& one)
+  void check_le()
   {
     EXPECT_TRUE(Stuff::Common::FloatCmp::le(zero, zero));
     EXPECT_TRUE(Stuff::Common::FloatCmp::le<numpy>(zero, zero));
@@ -349,100 +358,19 @@ struct FloatCmpBase : public testing::Test
     EXPECT_TRUE(Stuff::Common::FloatCmp::le<relativeStrong>(one, 2. * one));
     EXPECT_TRUE(Stuff::Common::FloatCmp::le<absolute>(one, 2. * one));
     EXPECT_TRUE(Stuff::Common::FloatCmp::le<defaultStyle>(one, 2. * one));
-  } // ... check_le(...)
+  }
 }; // struct FloatCmpBase
 
 
 template <class S>
-struct FloatCmpScalar : public FloatCmpBase
+struct FloatCmpScalar : public FloatCmpBase<S, 0>
 {
-
-  static const S zero;
-  static const S one;
-
-  static void check_eq()
-  {
-    FloatCmpBase::check_eq(zero, S(Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()), one);
-  }
-
-  static void check_ne()
-  {
-    FloatCmpBase::check_ne(zero, S(Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()), one);
-  }
-
-  static void check_gt()
-  {
-    FloatCmpBase::check_gt(zero, S(Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()), one);
-  }
-
-  static void check_lt()
-  {
-    FloatCmpBase::check_lt(zero, S(Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()), one);
-  }
-
-  static void check_ge()
-  {
-    FloatCmpBase::check_ge(zero, S(Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()), one);
-  }
-
-  static void check_le()
-  {
-    FloatCmpBase::check_le(zero, S(Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()), one);
-  }
-}; // struct FloatCmpScalar
-
-template <class S>
-const S FloatCmpScalar<S>::zero = create<S>(0, 0);
-template <class S>
-const S FloatCmpScalar<S>::one = create<S>(0, 1);
+};
 
 template <class V>
-struct FloatCmpVector : public FloatCmpBase
+struct FloatCmpVector : public FloatCmpBase<V, vec_size>
 {
-  typedef typename DSC::VectorAbstraction<V>::ScalarType S;
-
-  static void check_eq()
-  {
-    FloatCmpBase::check_eq(create<V>(vec_size, 0),
-                           create<V>(vec_size, Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()),
-                           create<V>(vec_size, 1));
-  }
-
-  static void check_ne()
-  {
-    FloatCmpBase::check_ne(create<V>(vec_size, 0),
-                           create<V>(vec_size, Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()),
-                           create<V>(vec_size, 1));
-  }
-
-  static void check_gt()
-  {
-    FloatCmpBase::check_gt(create<V>(vec_size, 0),
-                           create<V>(vec_size, Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()),
-                           create<V>(vec_size, 1));
-  }
-
-  static void check_lt()
-  {
-    FloatCmpBase::check_lt(create<V>(vec_size, 0),
-                           create<V>(vec_size, Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()),
-                           create<V>(vec_size, 1));
-  }
-
-  static void check_ge()
-  {
-    FloatCmpBase::check_ge(create<V>(vec_size, 0),
-                           create<V>(vec_size, Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()),
-                           create<V>(vec_size, 1));
-  }
-
-  static void check_le()
-  {
-    FloatCmpBase::check_le(create<V>(vec_size, 0),
-                           create<V>(vec_size, Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()),
-                           create<V>(vec_size, 1));
-  }
-}; // struct FloatCmpVector
+};
 
 
 typedef testing::Types<double, std::complex<double> //, float
