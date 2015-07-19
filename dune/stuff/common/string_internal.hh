@@ -44,6 +44,13 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
+
+// forward
+template <class T>
+inline std::vector<T> tokenize(const std::string& msg, const std::string& separators,
+                               const boost::algorithm::token_compress_mode_type mode);
+
+
 namespace internal {
 
 
