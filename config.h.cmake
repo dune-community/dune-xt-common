@@ -22,6 +22,8 @@
 /* Define to 1 if threading building blocks were found, else 0 */
 #define HAVE_TBB ${HAVE_TBB}
 
+#cmakedefine HAS_WORKING_UNUSED_ATTRIBUTE  1
+
 #define HAVE_LIKWID ${HAVE_LIKWID}
 #define ENABLE_PERFMON ${ENABLE_PERFMON}
 #if ENABLE_PERFMON && HAVE_LIKWID

@@ -33,6 +33,14 @@ CHECK_CXX_SOURCE_COMPILES("
 "  HAS_STD_BEGIN_END
 )
 
+CHECK_CXX_SOURCE_COMPILES("
+    int main(void)
+    {
+      int a __attribute__((unused)) = 0;
+    };
+"  HAS_WORKING_UNUSED_ATTRIBUTE
+)
+
 Macro(ADD_IF_SUPPORTED dest)
   FOREACH(flag ${ARGN})
     CHECK_CXX_ACCEPTS_FLAG("${flag}" has_${flag})
