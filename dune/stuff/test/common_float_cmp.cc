@@ -37,8 +37,8 @@ struct FloatCmpBase : public testing::Test
   typedef typename DSC::VectorAbstraction<V>::ScalarType S;
 
   FloatCmpBase()
-    : zero(create<V>(s_size, 0))
-    , one(create<V>(s_size, 1))
+    : zero(create<V>(s_size, create<S>(0, 0)))
+    , one(create<V>(s_size, create<S>(0, 1)))
     , epsilon(create<V>(s_size, Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()))
   {
   }
@@ -362,18 +362,29 @@ struct FloatCmpBase : public testing::Test
 }; // struct FloatCmpBase
 
 
+template <class V, bool = Dune::Stuff::Common::VectorAbstraction<V>::has_static_size>
+struct TestSize
+{
+  static constexpr size_t size = Dune::Stuff::Common::VectorAbstraction<V>::static_size;
+};
+template <class V>
+struct TestSize<V, false>
+{
+  static constexpr size_t size = vec_size;
+};
+
 template <class S>
 struct FloatCmpScalar : public FloatCmpBase<S, 0>
 {
 };
 
 template <class V>
-struct FloatCmpVector : public FloatCmpBase<V, vec_size>
+struct FloatCmpVector : public FloatCmpBase<V, TestSize<V>::size>
 {
 };
 
 
-typedef testing::Types<double, std::complex<double> //, float
+typedef testing::Types<double //, float
                        //                      , long double // <- this requires a patch in dune/common/float_cmp.cc
                        //                      (bc. of std::max and 1e-6)
                        > ScalarTypes;
@@ -416,7 +427,7 @@ typedef testing::Types<std::vector<double>, Dune::FieldVector<double, vec_size>,
                        ,
                        Dune::Stuff::LA::EigenDenseVector<double>, Dune::Stuff::LA::EigenMappedDenseVector<double>
 #endif
-                       ,
+                                                                      std::complex<double>,
                        std::vector<std::complex<double>>, Dune::FieldVector<std::complex<double>, vec_size>,
                        Dune::Stuff::Common::FieldVector<std::complex<double>, vec_size>,
                        Dune::DynamicVector<std::complex<double>>,
