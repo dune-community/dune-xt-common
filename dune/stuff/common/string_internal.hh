@@ -139,7 +139,7 @@ DUNE_STUFF_COMMON_STRING_GENERATE_HELPER(long double, ld)
 #undef DUNE_STUFF_COMMON_STRING_GENERATE_HELPER
 
 
-// variant for everything that is not a matrix or a vector
+// variant for everything that is not a matrix or a vector or complex value
 template <class T>
 static inline typename std::enable_if<!is_vector<T>::value && !is_matrix<T>::value && !is_complex<T>::value, T>::type
 from_string(std::string ss, const size_t UNUSED_UNLESS_DEBUG(rows) = 0, const size_t UNUSED_UNLESS_DEBUG(cols) = 0)
@@ -172,7 +172,7 @@ from_string(std::string ss, const size_t /*size*/ = 0, const size_t /*cols*/ = 0
 }
 
 template <class VectorType>
-static inline typename std::enable_if<is_vector<VectorType>::value && !is_complex<VectorType>::value, VectorType>::type
+static inline typename std::enable_if<is_vector<VectorType>::value, VectorType>::type
 from_string(std::string ss, const size_t size, const size_t UNUSED_UNLESS_DEBUG(cols) = 0)
 {
   auto vector_str = ss;
