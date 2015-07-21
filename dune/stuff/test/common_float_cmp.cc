@@ -416,33 +416,32 @@ TYPED_TEST(FloatCmpScalar, le)
 }
 
 
-typedef testing::Types<std::vector<double>, Dune::FieldVector<double, vec_size>,
-                       Dune::Stuff::Common::FieldVector<double, vec_size>, Dune::DynamicVector<double>,
-                       Dune::Stuff::LA::CommonDenseVector<double>
+typedef testing::
+    Types<std::vector<double>, Dune::FieldVector<double, vec_size>, Dune::Stuff::Common::FieldVector<double, vec_size>,
+          Dune::DynamicVector<double>, Dune::Stuff::LA::CommonDenseVector<double>
 #if HAVE_DUNE_ISTL
-                       ,
-                       Dune::Stuff::LA::IstlDenseVector<double>
+          ,
+          Dune::Stuff::LA::IstlDenseVector<double>
 #endif
 #if HAVE_EIGEN
-                       ,
-                       Dune::Stuff::LA::EigenDenseVector<double>, Dune::Stuff::LA::EigenMappedDenseVector<double>
+          ,
+          Dune::Stuff::LA::EigenDenseVector<double>, Dune::Stuff::LA::EigenMappedDenseVector<double>
 #endif
-                                                                      std::complex<double>,
-                       std::vector<std::complex<double>>, Dune::FieldVector<std::complex<double>, vec_size>,
-                       Dune::Stuff::Common::FieldVector<std::complex<double>, vec_size>,
-                       Dune::DynamicVector<std::complex<double>>,
-                       Dune::Stuff::LA::CommonDenseVector<std::complex<double>>
+          ,
+          std::complex<double>, std::vector<std::complex<double>>, Dune::FieldVector<std::complex<double>, vec_size>,
+          Dune::Stuff::Common::FieldVector<std::complex<double>, vec_size>, Dune::DynamicVector<std::complex<double>>,
+          Dune::Stuff::LA::CommonDenseVector<std::complex<double>>
 #if HAVE_DUNE_ISTL
-                       ,
-                       Dune::Stuff::LA::IstlDenseVector<std::complex<double>>
+          ,
+          Dune::Stuff::LA::IstlDenseVector<std::complex<double>>
 #endif
 #if HAVE_EIGEN
-                       ,
-                       Dune::Stuff::LA::EigenDenseVector<std::complex<double>>
+          ,
+          Dune::Stuff::LA::EigenDenseVector<std::complex<double>>
 //                    complex just isn't possible with mapped vector
 //                      , Dune::Stuff::LA::EigenMappedDenseVector< std::complex<double> >
 #endif
-                       > VectorTypes;
+          > VectorTypes;
 
 TYPED_TEST_CASE(FloatCmpVector, VectorTypes);
 TYPED_TEST(FloatCmpVector, eq)
