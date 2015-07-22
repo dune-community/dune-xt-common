@@ -109,7 +109,7 @@ void Profiler::startTiming(const std::string section_name)
   DSC_LIKWID_BEGIN_SECTION(section_name)
 } // StartTiming
 
-long Profiler::stopTiming(const std::string section_name, const bool /*use_walltime*/)
+long Profiler::stopTiming(const std::string section_name)
 {
   DSC_LIKWID_END_SECTION(section_name)
   assert(current_run_number_ < datamaps_.size());
@@ -130,10 +130,15 @@ long Profiler::stopTiming(const std::string section_name, const bool /*use_wallt
   return delta[0];
 } // StopTiming
 
-long Profiler::getTiming(const std::string section_name, const bool /*use_walltime*/) const
+long Profiler::getTiming(const std::string section_name) const
+{
+  return get_delta(section_name)[0];
+}
+
+TimingData::DeltaType Profiler::get_delta(const std::string section_name) const
 {
   assert(current_run_number_ < datamaps_.size());
-  return getTimingIdx(section_name, current_run_number_)[0];
+  return getTimingIdx(section_name, current_run_number_);
 }
 
 TimingData::DeltaType Profiler::getTimingIdx(const std::string section_name, const size_t run_number) const
