@@ -80,17 +80,6 @@ private:
   //! "Run idx" -> Datamap = section name -> seconds
   typedef std::vector<Datamap> DatamapVector;
 
-  //! appends int to section name
-  long stopTiming(const std::string section_name, const size_t i, const bool use_walltime);
-
-  //! appends int to section name
-  void startTiming(const std::string section_name, const size_t i);
-
-  //! appends int to section name
-  void resetTiming(const std::string section_name, const size_t i);
-
-  //! appends int to section name
-  long getTiming(const std::string section_name, const size_t i, const bool use_walltime) const;
   //! get runtime of section in run run_number in milliseconds
   TimingData::DeltaType getTimingIdx(const std::string section_name, const size_t run_number) const;
 
