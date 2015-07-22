@@ -177,12 +177,6 @@ T clamp(const T var, const T min, const T max)
   return (var < min) ? min : (var > max) ? max : var;
 }
 
-//! no-branch sign function
-inline long DUNE_DEPRECATED_MSG("Please consider the type safe signum function instead") sign(long x)
-{
-  return long(x != 0) | (long(x >= 0) - 1);
-}
-
 /**
  * \returns: -1 iff val < 0
  *            0 iff val == 0
