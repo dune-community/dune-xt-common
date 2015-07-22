@@ -49,7 +49,7 @@ public:
   void stop();
 
   typedef boost::timer::nanosecond_type TimeType;
-  typedef std::array<TimeType, 4> DeltaType;
+  typedef std::array<TimeType, 3> DeltaType;
 
   /** \return time elapsed since object construction in milliseconds
    *  \note since typical resolutions for user+system time are 10-15ms the nanosecond results are scaled accordingly
@@ -92,20 +92,20 @@ private:
   //! appends int to section name
   long getTiming(const std::string section_name, const size_t i, const bool use_walltime) const;
   //! get runtime of section in run run_number in milliseconds
-  long getTimingIdx(const std::string section_name, const size_t run_number, const bool use_walltime) const;
+  TimingData::DeltaType getTimingIdx(const std::string section_name, const size_t run_number) const;
 
 public:
   //! set this to begin a named section
   void startTiming(const std::string section_name);
 
   //! stop named section's counter
-  long stopTiming(const std::string section_name, const bool use_walltime = true);
+  long stopTiming(const std::string section_name, const bool /*use_walltime*/ = true);
 
   //! set elapsed time back to 0 for section_name
   void resetTiming(const std::string section_name);
 
   //! get runtime of section in current run in milliseconds
-  long getTiming(const std::string section_name, const bool use_walltime = true) const;
+  long getTiming(const std::string section_name, const bool /*use_walltime*/ = true) const;
 
   /** output to currently pre-defined (csv) file, does not output individual run results, but average over all recorded
    * results

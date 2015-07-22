@@ -74,10 +74,7 @@ TimingData::DeltaType TimingData::delta() const
   const auto scale   = 1.0 / double(boost::timer::nanosecond_type(1e6));
   const auto elapsed = timer_->elapsed();
   const auto cast = [=](double var) { return static_cast<typename TimingData::DeltaType::value_type>(var); };
-  return {{cast((elapsed.user + elapsed.system) * scale / double(threadManager().current_threads())),
-           cast(elapsed.wall * scale),
-           cast(elapsed.user * scale),
-           cast(elapsed.system * scale)}};
+  return {{cast(elapsed.wall * scale), cast(elapsed.user * scale), cast(elapsed.system * scale)}};
 }
 
 void Profiler::startTiming(const std::string section_name, const size_t i)
@@ -112,7 +109,7 @@ void Profiler::resetTiming(const std::string section_name)
     // ok, timer simply wasn't running
   }
   Datamap& current_data      = datamaps_[current_run_number_];
-  current_data[section_name] = {{0, 0, 0, 0}};
+  current_data[section_name] = {{0, 0, 0}};
 }
 
 void Profiler::startTiming(const std::string section_name)
@@ -136,7 +133,7 @@ void Profiler::startTiming(const std::string section_name)
   DSC_LIKWID_BEGIN_SECTION(section_name)
 } // StartTiming
 
-long Profiler::stopTiming(const std::string section_name, const bool use_walltime)
+long Profiler::stopTiming(const std::string section_name, const bool /*use_walltime*/)
 {
   DSC_LIKWID_END_SECTION(section_name)
   assert(current_run_number_ < datamaps_.size());
@@ -154,16 +151,16 @@ long Profiler::stopTiming(const std::string section_name, const bool use_walltim
     for (auto i : valueRange(delta.size()))
       current_data[section_name][i] += delta[i];
   }
-  return use_walltime ? delta[1] : delta[0];
+  return delta[0];
 } // StopTiming
 
-long Profiler::getTiming(const std::string section_name, const bool use_walltime) const
+long Profiler::getTiming(const std::string section_name, const bool /*use_walltime*/) const
 {
   assert(current_run_number_ < datamaps_.size());
-  return getTimingIdx(section_name, current_run_number_, use_walltime);
+  return getTimingIdx(section_name, current_run_number_)[0];
 }
 
-long Profiler::getTimingIdx(const std::string section_name, const size_t run_number, const bool use_walltime) const
+TimingData::DeltaType Profiler::getTimingIdx(const std::string section_name, const size_t run_number) const
 {
   assert(run_number < datamaps_.size());
   const Datamap& data             = datamaps_[run_number];
@@ -173,9 +170,9 @@ long Profiler::getTimingIdx(const std::string section_name, const size_t run_num
     const auto& timer_it = known_timers_map_.find(section_name);
     if (timer_it == known_timers_map_.end())
       DUNE_THROW(Dune::InvalidStateException, "no timer found: " + section_name);
-    return use_walltime ? timer_it->second.second->delta()[1] : timer_it->second.second->delta()[0];
+    return timer_it->second.second->delta();
   }
-  return use_walltime ? section->second[1] : section->second[0];
+  return section->second;
 } // GetTiming
 
 
