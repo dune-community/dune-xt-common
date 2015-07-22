@@ -99,13 +99,13 @@ public:
   void startTiming(const std::string section_name);
 
   //! stop named section's counter
-  long stopTiming(const std::string section_name, const bool use_walltime = false);
+  long stopTiming(const std::string section_name, const bool use_walltime = true);
 
   //! set elapsed time back to 0 for section_name
   void resetTiming(const std::string section_name);
 
   //! get runtime of section in current run in milliseconds
-  long getTiming(const std::string section_name, const bool use_walltime = false) const;
+  long getTiming(const std::string section_name, const bool use_walltime = true) const;
 
   /** output to currently pre-defined (csv) file, does not output individual run results, but average over all recorded
    * results
