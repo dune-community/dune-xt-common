@@ -45,6 +45,7 @@
 #include <dune/stuff/common/timedlogging.hh>
 #include <dune/stuff/common/convergence-study.hh>
 #include <dune/stuff/common/parallel/threadmanager.hh>
+#include <dune/stuff/common/vector.hh>
 
 #include "common.hh"
 
