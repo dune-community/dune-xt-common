@@ -17,6 +17,7 @@
 #include <dune/stuff/la/container.hh>
 #include <dune/stuff/common/matrix.hh>
 #include <dune/stuff/common/tuple.hh>
+#include <dune/stuff/test/float_cmp.hh>
 
 #include <array>
 #include <ostream>
@@ -115,11 +116,34 @@ struct CreateByParameterTree
 };
 
 
-typedef testing::Types<double, float, std::string, int, unsigned int, unsigned long, long long, char> TestTypes;
+typedef testing::Types<double, float, std::string, std::complex<double>, int, unsigned int, unsigned long, long long,
+                       char> TestTypes;
 
 typedef testing::Types<CreateByOperator, CreateByKeyAndValueAndAddConfiguration, CreateByKeyAndValueAndAddParameterTree,
                        CreateByKeysAndValues, CreateByParameterTree, CreateByOperatorAndAssign> ConfigurationCreators;
 
+template <class T>
+static DefaultRNG<T> rng_setup()
+{
+  return DefaultRNG<T>();
+}
+
+template <>
+DefaultRNG<std::complex<double>> rng_setup()
+{
+  return DefaultRNG<std::complex<double>>(-2, 2);
+}
+
+template <class T>
+static void val_compare_eq(const T& aa, const T& bb)
+{
+  DSC_EXPECT_FLOAT_EQ(aa, bb);
+}
+
+static void val_compare_eq(const std::string& aa, const std::string& bb)
+{
+  EXPECT_EQ(aa, bb);
+}
 
 template <class T>
 struct ConfigTest : public testing::Test
@@ -132,9 +156,14 @@ struct ConfigTest : public testing::Test
   boost::array<T, count> values;
   boost::array<std::string, count> keys;
   ConfigTest()
-    : key_gen(8)
+    : rng(rng_setup<T>())
+    , key_gen(8)
     , values(boost::assign::list_of<T>().repeat_fun(values.size() - 1, rng))
     , keys(boost::assign::list_of<std::string>().repeat_fun(values.size() - 1, key_gen))
+  {
+  }
+
+  virtual ~ConfigTest()
   {
   }
 
@@ -143,7 +172,7 @@ struct ConfigTest : public testing::Test
     std::set<std::string> uniq_keys;
     for (T val : values) {
       auto key = key_gen();
-      EXPECT_EQ(val, DSC_CONFIG_GET(key, val));
+      val_compare_eq(val, DSC_CONFIG_GET(key, val));
       uniq_keys.insert(key);
     }
     const auto mismatches = DSC_CONFIG.get_mismatched_defaults_map();
@@ -161,7 +190,7 @@ struct ConfigTest : public testing::Test
       DSC_CONFIG.set(key, val);
       // get with default diff from expected
       auto re = DSC_CONFIG.get(key, T(val + Dune::Stuff::Common::Epsilon<T>::value));
-      EXPECT_EQ(re, val);
+      val_compare_eq(re, val);
     }
   }
 
@@ -199,7 +228,7 @@ struct StaticCheck
     const auto check = [&r, &c](const MatrixType& mat) {
       for (size_t cc = 0; cc < c; ++cc) {
         for (size_t rr = 0; rr < r; ++rr) {
-          EXPECT_TRUE(FloatCmp::eq(MT::get_entry(mat, rr, cc), double(rr + cc)));
+          val_compare_eq(MT::get_entry(mat, rr, cc), double(rr + cc));
         }
       }
     };
