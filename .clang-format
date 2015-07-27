@@ -1,5 +1,5 @@
----
-# BasedOnStyle:  LLVM
+# http://clang.llvm.org/docs/ClangFormatStyleOptions.html
+BasedOnStyle:  LLVM
 AccessModifierOffset: -2
 ConstructorInitializerIndentWidth: 2
 AlignEscapedNewlinesLeft: false
@@ -13,7 +13,7 @@ BreakBeforeBinaryOperators: false
 BreakConstructorInitializersBeforeComma: true
 BinPackParameters: true
 ColumnLimit:     120
-ConstructorInitializerAllOnOneLineOrOnePerLine: false
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
 DerivePointerBinding: false
 ExperimentalAutoDetectBinPacking: false
 IndentCaseLabels: true
@@ -38,5 +38,6 @@ SpacesInParentheses: false
 SpaceInEmptyParentheses: false
 SpacesInCStyleCastParentheses: false
 SpaceAfterControlStatementKeyword: true
-...
-
+IndentWrappedFunctionNames: true
+Language: Cpp
+Standard: LS_Cpp11
