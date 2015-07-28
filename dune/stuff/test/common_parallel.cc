@@ -85,6 +85,9 @@ TYPED_TEST(ThreadValueTest, All)
   check_eq(bar, new_value);
 }
 
-TEST(ThreadManagerTBB, All)
+TEST(ThreadManager, All)
 {
+  auto& tm = DS::threadManager();
+  EXPECT_LT(tm.current_threads(), tm.max_threads());
+  EXPECT_LT(tm.thread(), tm.current_threads());
 }
