@@ -6,12 +6,11 @@
 // Contributors: Sven Kaulmann
 
 #include "config.h"
+#include "profiler.hh"
 
 #include <dune/common/version.hh>
-
 #include <dune/stuff/aliases.hh>
 
-#include "profiler.hh"
 
 #if HAVE_LIKWID && ENABLE_PERFMON
 #include <likwid.h>

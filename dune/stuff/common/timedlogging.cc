@@ -4,6 +4,7 @@
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 #include "config.h"
+#include "timedlogging.hh"
 
 #include <boost/format.hpp>
 
@@ -12,7 +13,7 @@
 #include "memory.hh"
 #include "exceptions.hh"
 #include "filesystem.hh"
-#include "timedlogging.hh"
+
 
 namespace Dune {
 namespace Stuff {

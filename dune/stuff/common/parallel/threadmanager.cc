@@ -4,10 +4,9 @@
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 #include "config.h"
+#include "threadmanager.hh"
 
 #include <boost/numeric/conversion/cast.hpp>
-
-#include "threadmanager.hh"
 
 #include <dune/stuff/common/configuration.hh>
 #include <dune/common/exceptions.hh>

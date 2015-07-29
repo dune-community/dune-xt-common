@@ -4,6 +4,7 @@
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 #include "config.h"
+#include "convergence-study.hh"
 
 #include <algorithm>
 #include <boost/io/ios_state.hpp>
@@ -11,8 +12,6 @@
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/common/color.hh>
-
-#include "convergence-study.hh"
 
 namespace Dune {
 namespace Stuff {

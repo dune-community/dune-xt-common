@@ -4,12 +4,12 @@
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 #include "config.h"
+#include "localization-study.hh"
 
 #include <boost/io/ios_state.hpp>
 
 #include <dune/stuff/common/string.hh>
 
-#include "localization-study.hh"
 
 namespace Dune {
 namespace Stuff {
