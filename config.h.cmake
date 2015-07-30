@@ -136,6 +136,10 @@
 # define ENABLE_ALUGRID 0
 #endif
 
+#ifndef DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS
+# define DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS 0
+#endif
+
 /*** End: Silence implicitly False evaluation of undefined macro warnings ****/
 
 /* end dune-stuff */
