@@ -26,6 +26,7 @@
 #include <dune/stuff/common/misc.hh>
 #include <dune/stuff/common/validation.hh>
 #include <dune/stuff/common/type_utils.hh>
+#include <dune/stuff/common/algorithm.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -119,25 +120,21 @@ public:
     setup_();
   }
 
-  template <class T>
-  Configuration(const std::vector<std::string> keys, const std::initializer_list<T> values_in,
+  Configuration(const std::vector<std::string> keys, const std::vector<std::string> values_in,
                 const bool /*record_defaults*/    = internal::configuration_record_defaults,
                 const bool warn_on_default_access = internal::configuration_warn_on_default_access,
                 const bool log_on_exit            = internal::configuration_log_on_exit,
+                const std::string logfile = internal::configuration_logfile);
+
+  template <class T>
+  Configuration(const std::vector<std::string> keys, const std::initializer_list<T> values_in,
+                const bool record_defaults        = internal::configuration_record_defaults,
+                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                const bool log_on_exit            = internal::configuration_log_on_exit,
                 const std::string logfile = internal::configuration_logfile)
-    : BaseType()
-    , warn_on_default_access_(warn_on_default_access)
-    , log_on_exit_(log_on_exit)
-    , logfile_(logfile)
+    : Configuration(keys, make_string_sequence(values_in.begin(), values_in.end()), record_defaults,
+                    warn_on_default_access, log_on_exit, logfile)
   {
-    if (keys.size() != values_in.size())
-      DUNE_THROW(Exceptions::shapes_do_not_match,
-                 "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' (" << values_in.size()
-                                        << ")!");
-    size_t ii = 0;
-    for (auto value : values_in)
-      set(keys[ii++], value);
-    setup_();
   }
 
   ~Configuration();

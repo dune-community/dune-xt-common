@@ -22,7 +22,7 @@ namespace Stuff {
 namespace Common {
 
 
-Configuration::Configuration(const Dune::ParameterTree& tree_in, const bool record_defaults,
+Configuration::Configuration(const Dune::ParameterTree& tree_in, const bool /*record_defaults*/,
                              const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
   : BaseType(tree_in)
   , warn_on_default_access_(warn_on_default_access)
@@ -395,6 +395,24 @@ bool operator==(const Configuration& left, const Configuration& right)
 bool operator!=(const Configuration& left, const Configuration& right)
 {
   return !(left == right);
+}
+
+Configuration::Configuration(const std::vector<std::string> keys, const std::vector<std::string> values_in,
+                             const bool /*record_defaults*/, const bool warn_on_default_access, const bool log_on_exit,
+                             const std::string logfile)
+  : BaseType()
+  , warn_on_default_access_(warn_on_default_access)
+  , log_on_exit_(log_on_exit)
+  , logfile_(logfile)
+{
+  if (keys.size() != values_in.size())
+    DUNE_THROW(Exceptions::shapes_do_not_match,
+               "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' (" << values_in.size()
+                                      << ")!");
+  size_t ii = 0;
+  for (auto value : values_in)
+    set(keys[ii++], value);
+  setup_();
 }
 
 
