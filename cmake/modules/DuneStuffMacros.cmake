@@ -142,7 +142,7 @@ if(ENABLE_MPI AND ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
   endif(MPI_FOUND)
 endif(ENABLE_MPI AND ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
-find_package(TBB OPTIONAL_COMPONENTS cpf allocator)
+include(DuneTBB)
 
 macro(add_analyze)
     find_program(ANALYZER clang-check)

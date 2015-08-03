@@ -17,14 +17,10 @@
 #define DUNE_STUFF_VERSION_REVISION ${DUNE_STUFF_VERSION_REVISION}
 
 /* Define to 1 if eigen was found, else 0 */
-#ifndef HAVE_EIGEN
-# define HAVE_EIGEN ${HAVE_EIGEN}
-#endif
+#define HAVE_EIGEN ${HAVE_EIGEN}
 
 /* Define to 1 if threading building blocks were found, else 0 */
-#ifndef HAVE_TBB
-# define HAVE_TBB ${HAVE_TBB}
-#endif
+#define HAVE_TBB ${HAVE_TBB}
 
 #cmakedefine HAS_WORKING_UNUSED_ATTRIBUTE  1
 
