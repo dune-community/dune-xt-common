@@ -27,14 +27,16 @@ LocalizationStudy::~LocalizationStudy()
 
 std::vector<std::string> LocalizationStudy::used_indicators() const
 {
-  using namespace std;
-  const auto selectors = only_these_indicators_.empty() ? provided_indicators() : only_these_indicators_;
-  vector<string> ret;
-  copy_if(begin(provided_indicators()),
-          end(provided_indicators()),
-          back_inserter(ret),
-          [&selectors](const string& norm) { return find(begin(selectors), end(selectors), norm) != end(selectors); });
-  return ret;
+  if (only_these_indicators_.empty())
+    return provided_indicators();
+  else {
+    std::vector<std::string> ret;
+    for (auto indicator : provided_indicators())
+      if (std::find(only_these_indicators_.begin(), only_these_indicators_.end(), indicator)
+          != only_these_indicators_.end())
+        ret.push_back(indicator);
+    return ret;
+  }
 } // ... used_indicators(...)
 
 void LocalizationStudy::run(std::ostream& out)

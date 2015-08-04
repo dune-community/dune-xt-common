@@ -25,14 +25,15 @@ ConvergenceStudy::ConvergenceStudy(const std::vector<std::string> only_these_nor
 
 std::vector<std::string> ConvergenceStudy::used_norms() const
 {
-  using namespace std;
-  const auto selectors = only_these_norms_.empty() ? provided_norms() : only_these_norms_;
-  vector<string> ret;
-  copy_if(begin(provided_norms()),
-          end(provided_norms()),
-          back_inserter(ret),
-          [&selectors](const string& norm) { return find(begin(selectors), end(selectors), norm) != end(selectors); });
-  return ret;
+  if (only_these_norms_.empty())
+    return provided_norms();
+  else {
+    std::vector<std::string> ret;
+    for (auto norm : provided_norms())
+      if (std::find(only_these_norms_.begin(), only_these_norms_.end(), norm) != only_these_norms_.end())
+        ret.push_back(norm);
+    return ret;
+  }
 } // ... used_norms(...)
 
 std::map<std::string, std::vector<double>> ConvergenceStudy::run(const bool relative, std::ostream& out,
