@@ -88,6 +88,6 @@ TYPED_TEST(ThreadValueTest, All)
 TEST(ThreadManager, All)
 {
   auto& tm = DS::threadManager();
-  EXPECT_LT(tm.current_threads(), tm.max_threads());
+  EXPECT_LE(tm.current_threads(), tm.max_threads());
   EXPECT_LT(tm.thread(), tm.current_threads());
 }
