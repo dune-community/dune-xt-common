@@ -375,8 +375,9 @@ private:
    *  def if key does not exist in Configuration
    */
   template <typename T, class Validator>
-  T get_(const std::string& key, T def, const ValidatorInterface<T, Validator>& validator, const size_t size,
-         const size_t cols) const
+  typename internal::Typer<T>::type get_(const std::string& key, typename internal::Typer<T>::type def,
+                                         const ValidatorInterface<T, Validator>& validator, const size_t size,
+                                         const size_t cols) const
   {
 #ifndef NDEBUG
     if (warn_on_default_access_ && !has_key(key)) {
@@ -467,13 +468,23 @@ struct less<Dune::Stuff::Common::Configuration>
 #define DSC_CONFIG Dune::Stuff::Common::Config()
 
 template <typename T>
-static T DSC_CONFIG_GET(std::string key, T def)
+static auto DSC_CONFIG_GET(std::string key, T def) -> decltype(DSC_CONFIG.get(key, def))
 {
   return DSC_CONFIG.get(key, def);
 }
 
-#define DSC_CONFIG_GETV(key, def, validator) DSC_CONFIG.get(key, def, validator)
+template <typename T, class V>
+static auto DSC_CONFIG_GETV(std::string key, T def,
+                            const DSC::ValidatorInterface<typename DSC::internal::Typer<T>::type, V>& v)
+    -> decltype(DSC_CONFIG.get(key, def, v))
+{
+  return DSC_CONFIG.get(key, def, v);
+}
+template <typename T>
+static auto DSC_CONFIG_GETB(std::string key, T def, bool b) -> decltype(DSC_CONFIG.get(key, def, b))
+{
+  return DSC_CONFIG.get(key, def);
+}
 
-#define DSC_CONFIG_GETB(key, def, use_logger) DSC_CONFIG.get(key, def, use_logger)
 
 #endif // DUNE_STUFF_COMMON_CONFIGURATION_HH
