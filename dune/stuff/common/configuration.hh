@@ -480,11 +480,6 @@ static auto DSC_CONFIG_GETV(std::string key, T def,
 {
   return DSC_CONFIG.get(key, def, v);
 }
-template <typename T>
-static auto DSC_CONFIG_GETB(std::string key, T def, bool b) -> decltype(DSC_CONFIG.get(key, def, b))
-{
-  return DSC_CONFIG.get(key, def);
-}
 
 
 #endif // DUNE_STUFF_COMMON_CONFIGURATION_HH
