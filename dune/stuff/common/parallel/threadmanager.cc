@@ -22,7 +22,7 @@
 
 #if HAVE_TBB
 
-#include <tbb/compat/thread>
+#include <thread>
 
 size_t Dune::Stuff::ThreadManager::max_threads()
 {
@@ -40,7 +40,7 @@ size_t Dune::Stuff::ThreadManager::current_threads()
 
 size_t Dune::Stuff::ThreadManager::thread()
 {
-  const auto tbb_id = tbb::this_tbb_thread::get_id();
+  const auto tbb_id = std::this_thread::get_id();
   static std::map<decltype(tbb_id), size_t> thread_ids;
   const auto it = thread_ids.find(tbb_id);
   if (it == thread_ids.end())
