@@ -3,6 +3,7 @@ BasedOnStyle: LLVM
 AccessModifierOffset: -2
 AlignEscapedNewlinesLeft: false
 AlignTrailingComments: true
+AlignConsecutiveAssignments: true
 AllowAllParametersOfDeclarationOnNextLine: true
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
