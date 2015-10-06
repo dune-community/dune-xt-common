@@ -38,6 +38,5 @@ SpacesBeforeTrailingComments: 1
 SpacesInCStyleCastParentheses: false
 SpacesInParentheses: false
 Standard: Cpp11
-Standard: LS_Cpp11
 TabWidth: 2
 UseTab: false
