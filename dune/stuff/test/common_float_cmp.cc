@@ -361,7 +361,6 @@ struct FloatCmpBase : public testing::Test
   }
 }; // struct FloatCmpBase
 
-
 template <class V, bool = Dune::Stuff::Common::VectorAbstraction<V>::has_static_size>
 struct TestSize
 {
@@ -382,7 +381,6 @@ template <class V>
 struct FloatCmpVector : public FloatCmpBase<V, TestSize<V>::size>
 {
 };
-
 
 typedef testing::Types<double //, float
                        //                      , long double // <- this requires a patch in dune/common/float_cmp.cc
@@ -414,7 +412,6 @@ TYPED_TEST(FloatCmpScalar, le)
 {
   this->check_le();
 }
-
 
 typedef testing::
     Types<std::vector<double>, Dune::FieldVector<double, vec_size>, Dune::Stuff::Common::FieldVector<double, vec_size>,
@@ -468,7 +465,6 @@ TYPED_TEST(FloatCmpVector, le)
 {
   this->check_le();
 }
-
 
 #if !HAVE_DUNE_ISTL
 

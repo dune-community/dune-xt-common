@@ -21,7 +21,6 @@
 namespace Dune {
 namespace Stuff {
 
-
 /** Automatic Storage of non-static, N thread-local values
  **/
 template <class ValueImp>

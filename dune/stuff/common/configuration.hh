@@ -34,12 +34,10 @@ namespace Common {
 
 namespace internal {
 
-
 static const bool configuration_record_defaults        = false;
 static const bool configuration_warn_on_default_access = false;
 static const bool configuration_log_on_exit            = false;
 static const std::string configuration_logfile         = "data/log/dsc_parameter.log";
-
 
 template <class T>
 struct Typer
@@ -48,7 +46,6 @@ struct Typer
 };
 
 } // namespace internal
-
 
 class Configuration : public Dune::ParameterTree
 {
@@ -411,13 +408,11 @@ private:
   std::string logfile_;
 }; // class Configuration
 
-
 std::ostream& operator<<(std::ostream& out, const Configuration& config);
 
 bool operator==(const Configuration& left, const Configuration& right);
 
 bool operator!=(const Configuration& left, const Configuration& right);
-
 
 //! global Configuration instance
 inline Configuration& Config()
@@ -426,19 +421,15 @@ inline Configuration& Config()
   return parameters;
 }
 
-
 } // namespace Common
 } // namespace Stuff
-
 
 bool operator==(const ParameterTree& left, const ParameterTree& right);
 
 bool operator!=(const ParameterTree& left, const ParameterTree& right);
 
-
 } // namespace Dune
 namespace std {
-
 
 template <>
 struct less<Dune::ParameterTree>
@@ -450,7 +441,6 @@ struct less<Dune::ParameterTree>
   bool operator()(const Dune::ParameterTree& lhs, const Dune::ParameterTree& rhs) const;
 }; // struct less< ParameterTree >
 
-
 template <>
 struct less<Dune::Stuff::Common::Configuration>
 {
@@ -461,9 +451,7 @@ struct less<Dune::Stuff::Common::Configuration>
   bool operator()(const Dune::Stuff::Common::Configuration& lhs, const Dune::Stuff::Common::Configuration& rhs) const;
 }; // struct less< ParameterTree >
 
-
 } // namespace std
-
 
 #define DSC_CONFIG Dune::Stuff::Common::Config()
 
@@ -480,6 +468,5 @@ static auto DSC_CONFIG_GETV(std::string key, T def,
 {
   return DSC_CONFIG.get(key, def, v);
 }
-
 
 #endif // DUNE_STUFF_COMMON_CONFIGURATION_HH

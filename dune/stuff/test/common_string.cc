@@ -26,7 +26,6 @@
 using namespace Dune::Stuff::Common;
 using namespace std;
 
-
 // define types and expected values for the typed tests
 template <class MatrixType>
 struct MatrixStringTestDouble : public ::testing::Test

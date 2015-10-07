@@ -39,49 +39,39 @@ struct TestRunner
   }
 }; // struct TestRunner
 
-
 template <int i>
 struct Int
 {
   static const int value = i;
 };
 
-
 typedef Dune::tuple<double, float
                     //                   , Dune::bigunsignedint
                     ,
                     int, unsigned int, unsigned long, long long, char> BasicTypes;
 
-
 //! where sleep only counts toward wall time, this wastes actual cpu time
 void busywait(const size_t ms);
-
 
 namespace Dune {
 namespace Stuff {
 namespace Test {
 namespace internal {
 
-
 std::pair<size_t, ssize_t> convert_to_scientific(const double number, const size_t precision = 2);
 
 std::string print_vector(const std::vector<double>& vec);
 
-
 } // namespace internal
-
 
 void check_eoc_study_for_success(const Dune::Stuff::Common::ConvergenceStudy& study,
                                  const std::map<std::string, std::vector<double>>& errors_map);
 
-
 void print_collected_eoc_study_results(const std::map<std::string, std::vector<double>>& results,
                                        std::ostream& out = std::cout);
 
-
 // returns unsigned int on purpose, see GridProvider
 unsigned int grid_elements();
-
 
 } // namespace Test
 } // namespace Stuff

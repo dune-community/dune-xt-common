@@ -21,7 +21,6 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-
 Configuration::Configuration(const Dune::ParameterTree& tree_in, const bool /*record_defaults*/,
                              const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
   : BaseType(tree_in)
@@ -322,7 +321,6 @@ ParameterTree Configuration::initialize(int argc, char** argv, std::string filen
   return param_tree;
 } // ... initialize(...)
 
-
 void Configuration::report_as_sub(std::ostream& out, const std::string& prefix, const std::string& sub_path) const
 {
   for (const auto& key : getValueKeys()) {
@@ -366,7 +364,6 @@ void Configuration::report_flatly(const BaseType& subtree, const std::string& pr
   }
 } // ... report_flatly(...)
 
-
 std::map<std::string, std::string> Configuration::flatten() const
 {
   std::map<std::string, std::string> ret;
@@ -379,7 +376,6 @@ std::map<std::string, std::string> Configuration::flatten() const
   }
   return ret;
 } // ... flatten(...)
-
 
 std::ostream& operator<<(std::ostream& out, const Configuration& config)
 {
@@ -415,10 +411,8 @@ Configuration::Configuration(const std::vector<std::string> keys, const std::vec
   setup_();
 }
 
-
 } // namespace Common
 } // namespace Stuff
-
 
 bool operator==(const ParameterTree& left, const ParameterTree& right)
 {
@@ -430,22 +424,18 @@ bool operator!=(const ParameterTree& left, const ParameterTree& right)
   return !(left == right);
 }
 
-
 } // namespace Dune
 namespace std {
-
 
 bool less<Dune::ParameterTree>::operator()(const Dune::ParameterTree& lhs, const Dune::ParameterTree& rhs) const
 {
   return Dune::Stuff::Common::Configuration(lhs).flatten() < Dune::Stuff::Common::Configuration(rhs).flatten();
 }
 
-
 bool less<Dune::Stuff::Common::Configuration>::operator()(const Dune::Stuff::Common::Configuration& lhs,
                                                           const Dune::Stuff::Common::Configuration& rhs) const
 {
   return lhs.flatten() < rhs.flatten();
 }
-
 
 } // namespace std

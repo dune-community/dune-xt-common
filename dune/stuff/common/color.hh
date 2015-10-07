@@ -22,9 +22,7 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-
 #define DS_CONST_CHAR const char *
-
 
 /**
  * @brief namespace to define color constants that can be
@@ -74,7 +72,6 @@ struct Colors
   static DS_CONST_CHAR bwhite;
 }; // struct Colors
 
-
 // modifiers
 struct StreamModifiers
 {
@@ -90,9 +87,7 @@ struct StreamModifiers
   static DS_CONST_CHAR endreverse;
 }; // struct StreamModifiers
 
-
 #undef DS_CONST_CHAR
-
 
 /**
  * @brief Chooses a color from a 256 color map for a foreground color.
@@ -117,9 +112,7 @@ std::string backcolor(size_t i);
 // maybe you want to choose your own color
 size_t templateColorChooser(size_t i);
 
-
 bool terminal_supports_color();
-
 
 /**
  * @brief Highlights templates depending on the "template"-level.

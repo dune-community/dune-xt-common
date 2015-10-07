@@ -145,7 +145,6 @@ public:
   }
 };
 
-
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune

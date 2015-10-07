@@ -8,7 +8,6 @@
 #include <dune/stuff/test/gtest/gtest.h>
 #include <dune/stuff/common/float_cmp.hh>
 
-
 #define DUNE_STUFF_COMMON_FLOAT_TEST_CMP_GENERATOR(ID, id)                                                             \
   template <DSCFl::Style style, class FirstType, class SecondType>                                                     \
   typename std::                                                                                                       \

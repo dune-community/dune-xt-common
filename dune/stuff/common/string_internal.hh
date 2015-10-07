@@ -55,7 +55,6 @@ tokenize(const std::string& msg, const std::string& separators,
 
 namespace internal {
 
-
 static inline std::string trim_copy_safely(std::string str_in)
 {
   const std::string str_out = boost::algorithm::trim_copy(str_in);
@@ -69,7 +68,6 @@ static inline std::string trim_copy_safely(std::string str_in)
                    << "or if you are missing the white space after the ';' in a matrix expression!\n");
   return str_out;
 } // ... trim_copy_safely(...)
-
 
 template <class T>
 static inline T convert_safely(std::string ss)
@@ -87,7 +85,6 @@ static inline T convert_safely(std::string ss)
   }
 } // ... convert_safely(...)
 
-
 // unspecialized variant
 template <class T, bool anything = true>
 struct Helper
@@ -97,7 +94,6 @@ struct Helper
     return convert_safely<T>(ss);
   }
 }; // struct Helper
-
 
 // variant for bool, to correctly parse true and false
 template <bool anything>
@@ -137,7 +133,6 @@ DUNE_STUFF_COMMON_STRING_GENERATE_HELPER(double, d)
 DUNE_STUFF_COMMON_STRING_GENERATE_HELPER(long double, ld)
 
 #undef DUNE_STUFF_COMMON_STRING_GENERATE_HELPER
-
 
 // variant for everything that is not a matrix or a vector or complex value
 template <class T>
@@ -336,7 +331,6 @@ from_string(std::string matrix_str, const size_t rows, const size_t cols)
     return ret;
   }
 } // ... from_string(...)
-
 
 // variant for everything that is not a matrix, a vector or any of the types specified below
 template <class T>

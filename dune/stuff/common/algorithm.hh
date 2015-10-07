@@ -41,5 +41,4 @@ SequenceType make_string_sequence(InputIt first, InputIt last)
 } // namespace Stuff
 } // namespace Dune
 
-
 #endif // DUNE_STUFF_ALGORITHM_HH

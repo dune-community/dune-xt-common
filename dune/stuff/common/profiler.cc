@@ -11,7 +11,6 @@
 #include <dune/common/version.hh>
 #include <dune/stuff/aliases.hh>
 
-
 #if HAVE_LIKWID && ENABLE_PERFMON
 #include <likwid.h>
 #define DSC_LIKWID_BEGIN_SECTION(name) LIKWID_MARKER_START(name.c_str());
@@ -50,7 +49,6 @@
 #include <boost/config.hpp>
 #include <boost/timer/timer.hpp>
 #include <dune/stuff/common/reenable_warnings.hh>
-
 
 namespace Dune {
 namespace Stuff {
@@ -155,7 +153,6 @@ TimingData::DeltaType Profiler::getTimingIdx(const std::string section_name, con
   return section->second;
 } // GetTiming
 
-
 void Profiler::reset(const size_t numRuns)
 {
   if (!(numRuns > 0))
@@ -224,7 +221,6 @@ void Profiler::outputAveraged(const int refineLevel, const long numDofs, const d
   csv << "=I$2/I2" << csv_sep_ << "=SUM(E$2:G$2)/SUM(E2:G2)" << std::endl;
   csv.close();
 } // OutputAveraged
-
 
 void Profiler::setOutputdir(const std::string dir)
 {
@@ -331,7 +327,6 @@ OutputScopedTiming::~OutputScopedTiming()
   const auto duration = profiler().stopTiming(section_name_);
   out_ << "Executing " << section_name_ << " took " << duration / 1000.f << "s\n";
 }
-
 
 } // namespace Common
 } // namespace Stuff

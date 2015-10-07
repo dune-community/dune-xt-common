@@ -6,7 +6,6 @@
 #ifndef DUNE_STUFF_TYPENAMES_HH
 #define DUNE_STUFF_TYPENAMES_HH
 
-
 #include <complex>
 #include <memory>
 #include <type_traits>
@@ -21,7 +20,6 @@
 #endif
 
 #include <dune/stuff/common/color.hh>
-
 
 /** use this to define Typename specializations in the GLOBAL namespace ONLY **/
 #define STUFF_TYPENAME(NAME)                                                                                           \
@@ -43,7 +41,6 @@
 namespace Dune {
 namespace Stuff {
 namespace Common {
-
 
 inline std::string demangleTypename(const std::string& mangled_name)
 {
@@ -82,7 +79,6 @@ struct Typename
 #endif
   }
 };
-
 
 template <class T>
 std::string getTypename(const T&)
@@ -169,11 +165,9 @@ struct is_hashable<T, typename std::enable_if<!!sizeof(std::declval<std::hash<T>
 };
 #endif
 
-
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
-
 
 /**
   * \brief Helper macro to be used before DSC_has_typedef.
@@ -221,7 +215,6 @@ DSC_has_typedef(Bar)< Foo >::value
   */
 #define DSC_has_typedef(tpdf) DSC_has_typedef_helper_##tpdf
 
-
 /**
   * \brief Helper macro to be used before DSC_has_static_member.
   *
@@ -256,7 +249,6 @@ DSC_has_static_member(bar)< Foo >::value
   */
 #define DSC_has_static_member(mmbr) DSC_has_static_member_helper_##mmbr
 
-
 STUFF_TYPENAME(int)
 STUFF_TYPENAME(double)
 STUFF_TYPENAME(float)
@@ -265,12 +257,10 @@ STUFF_TYPENAME(unsigned int)
 STUFF_TYPENAME(unsigned long)
 STUFF_TYPENAME(char)
 
-
 namespace Dune {
 namespace Stuff {
 namespace Common {
 namespace internal {
-
 
 template <class Tt>
 struct is_complex_helper
@@ -280,9 +270,7 @@ struct is_complex_helper
       static const bool is_candidate = DSC_has_typedef(value_type)<Tt>::value;
 }; // class is_complex_helper
 
-
 } // namespace internal
-
 
 template <class T, bool candidate = internal::is_complex_helper<T>::is_candidate>
 struct is_complex : public std::is_base_of<std::complex<typename T::value_type>, T>

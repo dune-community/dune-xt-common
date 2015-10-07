@@ -33,7 +33,6 @@ namespace Dune {
 
 namespace Fem {
 
-
 template <class DiscreteFunctionTraits>
 auto begin(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> decltype(func.dbegin())
 {
@@ -58,7 +57,6 @@ auto end(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> 
   return func.dend();
 }
 
-
 } // namespace Fem
 
 #endif // HAVE_DUNE_FEM
@@ -67,7 +65,6 @@ namespace Stuff {
 namespace Common {
 
 #if HAVE_DUNE_GRID
-
 
 //! adapter enabling view usage in range-based for
 template <class GridPartViewType, size_t codim = 0>
@@ -98,7 +95,6 @@ EntityRange<Dune::GridView<GridViewTraits>, codim> entityRange(const Dune::GridV
   return EntityRange<Dune::GridView<GridViewTraits>, codim>(view);
 }
 
-
 #if HAVE_DUNE_FEM
 
 template <class GP, size_t codim = 0>
@@ -107,9 +103,7 @@ EntityRange<Dune::Fem::GridPartInterface<GP>, codim> entityRange(const Dune::Fem
   return EntityRange<Dune::Fem::GridPartInterface<GP>, codim>(part);
 }
 
-
 #endif // HAVE_DUNE_FEM
-
 
 /** adapter enabling intersectionniterator usage in range-based for
  * works for GridParts and GridViews
