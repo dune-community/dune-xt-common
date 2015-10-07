@@ -96,10 +96,10 @@ TEST(OtherMath, Range)
 
 TEST(OtherMath, Sign)
 {
-  EXPECT_EQ(DSC::sign(1), 1);
-  EXPECT_EQ(DSC::sign(-1), -1);
-  EXPECT_EQ(DSC::sign(1.), 1);
-  EXPECT_EQ(DSC::sign(-1.), -1);
+  EXPECT_EQ(DSC::signum(1), 1);
+  EXPECT_EQ(DSC::signum(-1), -1);
+  EXPECT_EQ(DSC::signum(1.), 1);
+  EXPECT_EQ(DSC::signum(-1.), -1);
 }
 
 TEST(OtherMath, AbsoluteValue)

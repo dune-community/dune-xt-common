@@ -13,8 +13,8 @@
 #include <dune/common/fvector.hh>
 
 #include <dune/stuff/common/float_cmp.hh>
+#include <dune/stuff/test/float_cmp.hh>
 #include <dune/stuff/common/fvector.hh>
-#include <dune/stuff/common/vector.hh>
 #include <dune/stuff/la/container/common.hh>
 #include <dune/stuff/la/container/eigen.hh>
 #include <dune/stuff/la/container/istl.hh>
@@ -37,8 +37,8 @@ struct FloatCmpBase : public testing::Test
   typedef typename DSC::VectorAbstraction<V>::ScalarType S;
 
   FloatCmpBase()
-    : zero(create<V>(s_size, 0))
-    , one(create<V>(s_size, 1))
+    : zero(create<V>(s_size, create<S>(0, 0)))
+    , one(create<V>(s_size, create<S>(0, 1)))
     , epsilon(create<V>(s_size, Stuff::Common::FloatCmp::DefaultEpsilon<S>::value()))
   {
   }
@@ -49,25 +49,25 @@ struct FloatCmpBase : public testing::Test
 
   void check_eq()
   {
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq(zero, zero));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<numpy>(zero, zero));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<relativeWeak>(zero, zero));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<relativeStrong>(zero, zero));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<absolute>(zero, zero));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<defaultStyle>(zero, zero));
+    DSC_EXPECT_FLOAT_EQ(zero, zero);
+    DSC_EXPECT_FLOAT_EQ<numpy>(zero, zero);
+    DSC_EXPECT_FLOAT_EQ<relativeWeak>(zero, zero);
+    DSC_EXPECT_FLOAT_EQ<relativeStrong>(zero, zero);
+    DSC_EXPECT_FLOAT_EQ<absolute>(zero, zero);
+    DSC_EXPECT_FLOAT_EQ<defaultStyle>(zero, zero);
 
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq(zero, 0.9 * epsilon));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<numpy>(zero, 0.9 * epsilon));
+    DSC_EXPECT_FLOAT_EQ(zero, 0.9 * epsilon);
+    DSC_EXPECT_FLOAT_EQ<numpy>(zero, 0.9 * epsilon);
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq<relativeWeak>(zero, 0.9 * epsilon)); /* <- NOTE */
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq<relativeStrong>(zero, 0.9 * epsilon)); /* <- NOTE */
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<absolute>(zero, 0.9 * epsilon));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<defaultStyle>(zero, 0.9 * epsilon));
+    DSC_EXPECT_FLOAT_EQ<absolute>(zero, 0.9 * epsilon);
+    DSC_EXPECT_FLOAT_EQ<defaultStyle>(zero, 0.9 * epsilon);
 
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq(zero, 1.1 * epsilon));
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq<numpy>(zero, 1.1 * epsilon));
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq<relativeWeak>(zero, 1.1 * epsilon));
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq<relativeStrong>(zero, 1.1 * epsilon));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<absolute>(zero, 1.1 * epsilon)); /* <- NOTE */
+    DSC_EXPECT_FLOAT_EQ<absolute>(zero, 1.1 * epsilon); /* <- NOTE */
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq<defaultStyle>(zero, 1.1 * epsilon));
 
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq(zero, one));
@@ -78,19 +78,19 @@ struct FloatCmpBase : public testing::Test
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq<defaultStyle>(zero, one));
 
     const auto eps_plus = one + 0.9 * epsilon;
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq(one, eps_plus));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<numpy>(one, eps_plus));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<relativeWeak>(one, eps_plus));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<relativeStrong>(one, eps_plus));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<absolute>(one, eps_plus));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<defaultStyle>(one, eps_plus));
+    DSC_EXPECT_FLOAT_EQ(one, eps_plus);
+    DSC_EXPECT_FLOAT_EQ<numpy>(one, eps_plus);
+    DSC_EXPECT_FLOAT_EQ<relativeWeak>(one, eps_plus);
+    DSC_EXPECT_FLOAT_EQ<relativeStrong>(one, eps_plus);
+    DSC_EXPECT_FLOAT_EQ<absolute>(one, eps_plus);
+    DSC_EXPECT_FLOAT_EQ<defaultStyle>(one, eps_plus);
 
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq(one, one + 1.1 * epsilon)); /* <- NOTE */
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<numpy>(one, one + 1.1 * epsilon)); /* <- NOTE */
+    DSC_EXPECT_FLOAT_EQ(one, one + 1.1 * epsilon); /* <- NOTE */
+    DSC_EXPECT_FLOAT_EQ<numpy>(one, one + 1.1 * epsilon); /* <- NOTE */
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq<relativeWeak>(one, one + 1.1 * epsilon));
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq<relativeStrong>(one, one + 1.1 * epsilon));
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<absolute>(one, one + 1.1 * epsilon)); /* <- NOTE */
-    EXPECT_TRUE(Stuff::Common::FloatCmp::eq<defaultStyle>(one, one + 1.1 * epsilon)); /* <- NOTE */
+    DSC_EXPECT_FLOAT_EQ<absolute>(one, one + 1.1 * epsilon); /* <- NOTE */
+    DSC_EXPECT_FLOAT_EQ<defaultStyle>(one, one + 1.1 * epsilon); /* <- NOTE */
 
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq(one, 2. * one));
     EXPECT_FALSE(Stuff::Common::FloatCmp::eq<numpy>(one, 2. * one));
@@ -362,18 +362,29 @@ struct FloatCmpBase : public testing::Test
 }; // struct FloatCmpBase
 
 
+template <class V, bool = Dune::Stuff::Common::VectorAbstraction<V>::has_static_size>
+struct TestSize
+{
+  static constexpr size_t size = Dune::Stuff::Common::VectorAbstraction<V>::static_size;
+};
+template <class V>
+struct TestSize<V, false>
+{
+  static constexpr size_t size = vec_size;
+};
+
 template <class S>
 struct FloatCmpScalar : public FloatCmpBase<S, 0>
 {
 };
 
 template <class V>
-struct FloatCmpVector : public FloatCmpBase<V, vec_size>
+struct FloatCmpVector : public FloatCmpBase<V, TestSize<V>::size>
 {
 };
 
 
-typedef testing::Types<double, std::complex<double> //, float
+typedef testing::Types<double //, float
                        //                      , long double // <- this requires a patch in dune/common/float_cmp.cc
                        //                      (bc. of std::max and 1e-6)
                        > ScalarTypes;
@@ -405,33 +416,32 @@ TYPED_TEST(FloatCmpScalar, le)
 }
 
 
-typedef testing::Types<std::vector<double>, Dune::FieldVector<double, vec_size>,
-                       Dune::Stuff::Common::FieldVector<double, vec_size>, Dune::DynamicVector<double>,
-                       Dune::Stuff::LA::CommonDenseVector<double>
+typedef testing::
+    Types<std::vector<double>, Dune::FieldVector<double, vec_size>, Dune::Stuff::Common::FieldVector<double, vec_size>,
+          Dune::DynamicVector<double>, Dune::Stuff::LA::CommonDenseVector<double>
 #if HAVE_DUNE_ISTL
-                       ,
-                       Dune::Stuff::LA::IstlDenseVector<double>
+          ,
+          Dune::Stuff::LA::IstlDenseVector<double>
 #endif
 #if HAVE_EIGEN
-                       ,
-                       Dune::Stuff::LA::EigenDenseVector<double>, Dune::Stuff::LA::EigenMappedDenseVector<double>
+          ,
+          Dune::Stuff::LA::EigenDenseVector<double>, Dune::Stuff::LA::EigenMappedDenseVector<double>
 #endif
-                       ,
-                       std::vector<std::complex<double>>, Dune::FieldVector<std::complex<double>, vec_size>,
-                       Dune::Stuff::Common::FieldVector<std::complex<double>, vec_size>,
-                       Dune::DynamicVector<std::complex<double>>,
-                       Dune::Stuff::LA::CommonDenseVector<std::complex<double>>
+          ,
+          std::complex<double>, std::vector<std::complex<double>>, Dune::FieldVector<std::complex<double>, vec_size>,
+          Dune::Stuff::Common::FieldVector<std::complex<double>, vec_size>, Dune::DynamicVector<std::complex<double>>,
+          Dune::Stuff::LA::CommonDenseVector<std::complex<double>>
 #if HAVE_DUNE_ISTL
-                       ,
-                       Dune::Stuff::LA::IstlDenseVector<std::complex<double>>
+          ,
+          Dune::Stuff::LA::IstlDenseVector<std::complex<double>>
 #endif
 #if HAVE_EIGEN
-                       ,
-                       Dune::Stuff::LA::EigenDenseVector<std::complex<double>>
+          ,
+          Dune::Stuff::LA::EigenDenseVector<std::complex<double>>
 //                    complex just isn't possible with mapped vector
 //                      , Dune::Stuff::LA::EigenMappedDenseVector< std::complex<double> >
 #endif
-                       > VectorTypes;
+          > VectorTypes;
 
 TYPED_TEST_CASE(FloatCmpVector, VectorTypes);
 TYPED_TEST(FloatCmpVector, eq)

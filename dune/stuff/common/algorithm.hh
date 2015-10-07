@@ -7,6 +7,10 @@
 #define DUNE_STUFF_ALGORITHM_HH
 
 #include <utility>
+#include <iterator>
+#include <algorithm>
+
+#include <dune/stuff/common/string.hh>
 
 namespace Dune {
 namespace Stuff {
@@ -22,6 +26,15 @@ OutputIt move_if(InputIt first, InputIt last, OutputIt d_first, UnaryPredicate p
     first++;
   }
   return d_first;
+}
+
+template <class InputIt, class SequenceType = std::vector<std::string>>
+SequenceType make_string_sequence(InputIt first, InputIt last)
+{
+  SequenceType ret;
+  const auto to_str = [](const typename std::iterator_traits<InputIt>::value_type& val) { return toString(val); };
+  std::transform(first, last, std::back_inserter(ret), to_str);
+  return ret;
 }
 
 } // namespace Common

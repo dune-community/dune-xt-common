@@ -45,36 +45,9 @@
 #include <dune/stuff/common/timedlogging.hh>
 #include <dune/stuff/common/convergence-study.hh>
 #include <dune/stuff/common/parallel/threadmanager.hh>
+#include <dune/stuff/common/vector.hh>
 
 #include "common.hh"
-
-
-class DUNE_DEPRECATED_MSG("Use the expectation macros of the gtest test suite (20.08.2014)!") errors_are_not_as_expected
-    : public Dune::Exception
-{
-};
-
-
-std::vector<double> DUNE_DEPRECATED_MSG("Use the expectation macros of the gtest test suite (20.08.2014)!")
-    truncate_vector(const std::vector<double>& in, const size_t size)
-{
-  assert(size <= in.size());
-  if (size == in.size())
-    return in;
-  else {
-    std::vector<double> ret(size);
-    for (size_t ii = 0; ii < size; ++ii)
-      ret[ii] = in[ii];
-    return ret;
-  }
-} // ... truncate_vector(...)
-
-
-unsigned int DUNE_DEPRECATED_MSG() dsc_grid_elements()
-{
-  return Dune::Stuff::Test::grid_elements();
-}
-
 
 int main(int argc, char** argv)
 {

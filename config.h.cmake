@@ -17,10 +17,16 @@
 #define DUNE_STUFF_VERSION_REVISION ${DUNE_STUFF_VERSION_REVISION}
 
 /* Define to 1 if eigen was found, else 0 */
+#ifndef HAVE_EIGEN
 #define HAVE_EIGEN ${HAVE_EIGEN}
+#endif
 
 /* Define to 1 if threading building blocks were found, else 0 */
+#ifndef HAVE_TBB
 #define HAVE_TBB ${HAVE_TBB}
+#endif
+
+#cmakedefine HAS_WORKING_UNUSED_ATTRIBUTE  1
 
 #define HAVE_LIKWID ${HAVE_LIKWID}
 #define ENABLE_PERFMON ${ENABLE_PERFMON}
@@ -132,6 +138,10 @@
 
 #ifndef ENABLE_ALUGRID
 # define ENABLE_ALUGRID 0
+#endif
+
+#ifndef DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS
+# define DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS 0
 #endif
 
 /*** End: Silence implicitly False evaluation of undefined macro warnings ****/

@@ -4,14 +4,14 @@
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 #include "config.h"
+#include "convergence-study.hh"
 
 #include <algorithm>
+#include <boost/io/ios_state.hpp>
 
 #include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/string.hh>
 #include <dune/stuff/common/color.hh>
-
-#include "convergence-study.hh"
 
 namespace Dune {
 namespace Stuff {
@@ -39,6 +39,7 @@ std::vector<std::string> ConvergenceStudy::used_norms() const
 std::map<std::string, std::vector<double>> ConvergenceStudy::run(const bool relative, std::ostream& out,
                                                                  const bool print_timings)
 {
+  boost::io::ios_all_saver guard(out);
   if (provided_norms().size() == 0)
     DUNE_THROW(Dune::InvalidStateException, "You have to provide at least one norm!");
   const auto actually_used_norms = used_norms();

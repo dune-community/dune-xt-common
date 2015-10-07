@@ -79,7 +79,6 @@ public:
   EntityRange(const GridPartViewType& part_view)
     : part_view_(part_view)
   {
-    BOOST_STATIC_WARNING(codim == 0 && "unnecessary EntityRange usage with codim 0");
   }
 
   auto begin() const -> decltype(part_view_.template begin<codim>())

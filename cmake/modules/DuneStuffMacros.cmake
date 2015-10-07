@@ -33,6 +33,14 @@ CHECK_CXX_SOURCE_COMPILES("
 "  HAS_STD_BEGIN_END
 )
 
+CHECK_CXX_SOURCE_COMPILES("
+    int main(void)
+    {
+      int a __attribute__((unused)) = 0;
+    };
+"  HAS_WORKING_UNUSED_ATTRIBUTE
+)
+
 Macro(ADD_IF_SUPPORTED dest)
   FOREACH(flag ${ARGN})
     CHECK_CXX_ACCEPTS_FLAG("${flag}" has_${flag})
@@ -172,6 +180,8 @@ endmacro(add_format)
 
 macro(add_forced_doxygen_target)
   add_doxygen_target()
-  add_custom_target(doxygen_${ProjectName}_pre_build COMMAND rm -rf ${CMAKE_CURRENT_BINARY_DIR}/html )
-  add_dependencies(doxygen_${ProjectName} doxygen_${ProjectName}_pre_build)
+  if(TARGET doxygen_${ProjectName})
+    add_custom_target(doxygen_${ProjectName}_pre_build COMMAND rm -rf ${CMAKE_CURRENT_BINARY_DIR}/html )
+    add_dependencies(doxygen_${ProjectName} doxygen_${ProjectName}_pre_build)
+  endif()
 endmacro(add_forced_doxygen_target)

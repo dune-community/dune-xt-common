@@ -50,11 +50,11 @@ struct VectorAbstraction
   typedef typename Dune::FieldTraits<VecType>::field_type S;
   typedef typename Dune::FieldTraits<VecType>::real_type R;
 
-  static const bool is_vector = false;
+  static constexpr bool is_vector = false;
 
-  static const bool has_static_size = false;
+  static constexpr bool has_static_size = false;
 
-  static const size_t static_size = std::numeric_limits<size_t>::max();
+  static constexpr size_t static_size = std::numeric_limits<size_t>::max();
 
   static inline /*VectorType*/ void create(const size_t /*sz*/)
   {
@@ -76,11 +76,11 @@ struct VectorAbstraction<std::vector<T>>
   typedef ScalarType S;
   typedef RealType R;
 
-  static const bool is_vector = true;
+  static constexpr bool is_vector = true;
 
-  static const bool has_static_size = false;
+  static constexpr bool has_static_size = false;
 
-  static const size_t static_size = std::numeric_limits<size_t>::max();
+  static constexpr size_t static_size = std::numeric_limits<size_t>::max();
 
   static inline VectorType create(const size_t sz)
   {
@@ -102,11 +102,11 @@ struct VectorAbstraction<Dune::DynamicVector<K>>
   typedef ScalarType S;
   typedef RealType R;
 
-  static const bool is_vector = true;
+  static constexpr bool is_vector = true;
 
-  static const bool has_static_size = false;
+  static constexpr bool has_static_size = false;
 
-  static const size_t static_size = std::numeric_limits<size_t>::max();
+  static constexpr size_t static_size = std::numeric_limits<size_t>::max();
 
   static inline VectorType create(const size_t sz)
   {
@@ -128,11 +128,11 @@ struct VectorAbstraction<Dune::FieldVector<K, SIZE>>
   typedef ScalarType S;
   typedef RealType R;
 
-  static const bool is_vector = true;
+  static constexpr bool is_vector = true;
 
-  static const bool has_static_size = true;
+  static constexpr bool has_static_size = true;
 
-  static const size_t static_size = SIZE;
+  static constexpr size_t static_size = SIZE;
 
   static inline VectorType create(const size_t sz)
   {
@@ -158,11 +158,11 @@ struct VectorAbstraction<std::complex<T>>
   typedef ScalarType S;
   typedef RealType R;
 
-  static const bool is_vector = true;
+  static constexpr bool is_vector = false;
 
-  static const bool has_static_size = true;
+  static constexpr bool has_static_size = true;
 
-  static const size_t static_size = 2u;
+  static constexpr size_t static_size = 2u;
 
   static inline VectorType create(const size_t /*sz*/)
   {
@@ -187,10 +187,11 @@ create(const size_t sz,
   return VectorAbstraction<VectorType>::create(sz, val);
 }
 
-template <class T>
-std::complex<T> create(const size_t sz, const T& val = T(0))
+template <class T, class SR>
+typename std::enable_if<is_complex<T>::value, T>::type create(const size_t /*sz*/,
+                                                              const SR& val = typename VectorAbstraction<T>::R(0))
 {
-  return VectorAbstraction<std::complex<T>>::create(sz, val);
+  return VectorAbstraction<T>::create(0, val);
 }
 
 template <class VectorType>
@@ -252,5 +253,15 @@ operator<<(std::basic_ostream<CharType, CharTraits>& out, const V& vec)
   return out;
 } // ... operator<<(...)
 
+namespace std {
+/// clang 3.6 does not consider the overload in the ns for some reason during resultion of a call in gtest
+template <class V, class Alloc, class CharType, class CharTraits>
+std::basic_ostream<CharType, CharTraits>& operator<<(std::basic_ostream<CharType, CharTraits>& out,
+                                                     const std::vector<V, Alloc>& vec)
+{
+  ::operator<<(out, vec);
+  return out;
+} // ... operator<<(...)
+}
 
 #endif // DUNE_STUFF_COMMON_VECTOR_HH

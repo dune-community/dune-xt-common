@@ -4,10 +4,12 @@
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 #include "config.h"
+#include "localization-study.hh"
+
+#include <boost/io/ios_state.hpp>
 
 #include <dune/stuff/common/string.hh>
 
-#include "localization-study.hh"
 
 namespace Dune {
 namespace Stuff {
@@ -39,6 +41,7 @@ std::vector<std::string> LocalizationStudy::used_indicators() const
 
 void LocalizationStudy::run(std::ostream& out)
 {
+  boost::io::ios_all_saver guard(out);
   if (provided_indicators().size() == 0)
     DUNE_THROW(Dune::InvalidStateException, "You have to provide at least one indicator!");
   const auto actually_used_indicators = used_indicators();

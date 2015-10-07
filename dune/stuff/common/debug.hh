@@ -9,6 +9,7 @@
 #include <cstring>
 #include <boost/assert.hpp>
 #include <boost/format.hpp>
+#include "unused.hh"
 
 #define SEGFAULT                                                                                                       \
   {                                                                                                                    \
@@ -28,14 +29,6 @@ inline char* charcopy(const char* s)
 
 #define __CLASS__ strtok(charcopy(__PRETTY_FUNCTION__), "<(")
 
-#define UNUSED(identifier) /* identifier */
-
-/*  some arguments are only used in debug mode, but unused in release one */
-#ifndef NDEBUG
-#define UNUSED_UNLESS_DEBUG(param) param
-#else
-#define UNUSED_UNLESS_DEBUG(param) UNUSED(param)
-#endif // ifndef NDEBUG
 
 #ifndef ASSERT_LT
 #define ASSERT_LT(expt, actual)                                                                                        \

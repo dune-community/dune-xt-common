@@ -4,10 +4,10 @@
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
 #include "config.h"
+#include "logstreams.hh"
 
 #include <dune/common/unused.hh>
 
-#include "logstreams.hh"
 
 namespace Dune {
 namespace Stuff {
