@@ -11,7 +11,7 @@ AlwaysBreakBeforeMultilineStrings: false
 AlwaysBreakTemplateDeclarations: true
 BinPackParameters: true
 BreakBeforeBinaryOperators: false
-BreakBeforeBraces: Attach
+BreakBeforeBraces: Mozilla
 BreakConstructorInitializersBeforeComma: true
 ColumnLimit: 120
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
