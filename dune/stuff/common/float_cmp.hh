@@ -97,7 +97,6 @@ struct MT
     return id<Style::defaultStyle>(first, second, rtol, atol);                                                         \
   }
 
-
 DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR(eq)
 DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR(ne)
 DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR(gt)

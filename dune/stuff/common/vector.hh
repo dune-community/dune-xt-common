@@ -17,11 +17,9 @@
 #include <dune/stuff/common/type_utils.hh>
 #include <dune/stuff/common/float_cmp.hh>
 
-
 namespace Dune {
 namespace Stuff {
 namespace Common {
-
 
 template <class VecType>
 struct VectorAbstraction;
@@ -32,7 +30,6 @@ struct is_vector
 {
   static const bool value = VectorAbstraction<VectorType>::is_vector;
 };
-
 
 /**
  * \brief Traits to statically extract information of a (mathematical) vector.
@@ -206,7 +203,6 @@ create(const size_t /*sz*/,
 } // namespace Stuff
 } // namespace Dune
 
-
 template <class S, class V>
 typename std::enable_if<std::is_arithmetic<S>::value && Dune::Stuff::Common::is_vector<V>::value, V>::type
 operator*(const S& scalar, const V& vec)
@@ -216,7 +212,6 @@ operator*(const S& scalar, const V& vec)
     result[ii] *= scalar;
   return result;
 } // ... operator*(...)
-
 
 template <class L, class R>
 typename std::enable_if<Dune::Stuff::Common::is_vector<L>::value && Dune::Stuff::Common::is_vector<R>::value
@@ -234,7 +229,6 @@ operator+(const L& left, const R& right)
     result[ii] += right[ii];
   return result;
 } // ... operator+(...)
-
 
 template <class V, class CharType, class CharTraits>
 typename std::enable_if<Dune::Stuff::Common::is_vector<V>::value, std::basic_ostream<CharType, CharTraits>&>::type

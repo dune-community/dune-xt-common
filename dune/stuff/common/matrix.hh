@@ -21,7 +21,6 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-
 /**
  * \brief Traits to statically extract the information of a (mathematical) matrix.
  *
@@ -222,13 +221,11 @@ struct MatrixAbstraction<Dune::Stuff::Common::FieldMatrix<K, N, M>>
   }
 };
 
-
 template <class MatrixType>
 struct is_matrix
 {
   static const bool value = MatrixAbstraction<MatrixType>::is_matrix;
 };
-
 
 template <class MatrixType>
 typename std::enable_if<is_matrix<MatrixType>::value, MatrixType>::type
@@ -237,10 +234,8 @@ create(const size_t sz, const typename MatrixAbstraction<MatrixType>::S& val)
   return MatrixAbstraction<MatrixType>::create(sz, val);
 }
 
-
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
-
 
 #endif // DUNE_STUFF_COMMON_MATRIX_HH

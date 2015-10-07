@@ -22,7 +22,6 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-
 enum LogFlags
 {
   LOG_NONE    = 1,
@@ -33,7 +32,6 @@ enum LogFlags
   LOG_FILE    = 32,
   LOG_NEXT    = 64
 };
-
 
 class SuspendableStrBuffer : public std::basic_stringbuf<char, std::char_traits<char>>
 {
@@ -78,7 +76,6 @@ private:
   std::mutex mutex_;
 }; // class SuspendableStrBuffer
 
-
 class FileBuffer : public SuspendableStrBuffer
 {
 public:
@@ -96,7 +93,6 @@ protected:
   virtual int sync();
 }; // class FileBuffer
 
-
 class EmptyBuffer : public SuspendableStrBuffer
 {
 public:
@@ -108,7 +104,6 @@ public:
 protected:
   virtual int sync();
 }; // class EmptyBuffer
-
 
 /**
  * \brief A stream buffer to be used in TimedPrefixedLogStream.
@@ -135,7 +130,6 @@ private:
   bool prefix_needed_;
   std::mutex mutex_;
 }; // class TimedPrefixedStreamBuffer
-
 
 class LogStream : StorageProvider<SuspendableStrBuffer>, public std::basic_ostream<char, std::char_traits<char>>
 {
@@ -180,7 +174,6 @@ public:
   } // Resume
 }; // LogStream
 
-
 /**
  * \brief A std::ostream compatible stream that begins every line by printing elapsed time and prefix.
  *
@@ -216,7 +209,6 @@ public:
   virtual ~TimedPrefixedLogStream();
 }; // TimedPrefixedLogStream
 
-
 //! ostream compatible class wrapping file and console output
 class FileLogStream : public LogStream
 {
@@ -226,7 +218,6 @@ public:
   {
   }
 }; // class FileLogStream
-
 
 //! /dev/null
 class EmptyLogStream : public LogStream
@@ -238,12 +229,10 @@ public:
   }
 }; // class EmptyLogStream
 
-
 namespace {
 int dev_null_logflag;
 EmptyLogStream dev_null(dev_null_logflag);
 }
-
 
 } // namespace Common
 } // namespace Stuff

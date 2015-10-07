@@ -18,7 +18,6 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-
 class LocalizationStudy
 {
 public:
@@ -41,7 +40,6 @@ public:
 private:
   const std::vector<std::string> only_these_indicators_;
 }; // class LocalizationStudy
-
 
 } // namespace Common
 } // namespace Stuff

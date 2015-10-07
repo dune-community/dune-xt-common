@@ -62,12 +62,10 @@ const char* StreamModifiers::endunderline = "\033[24m";
 const char* StreamModifiers::endblink     = "\033[25m";
 const char* StreamModifiers::endreverse   = "\033[27m";
 
-
 std::string color(size_t i)
 {
   return "\033[38;5;" + std::to_string(i) + "m";
 }
-
 
 std::map<std::string, std::string>& color_map()
 {
@@ -95,7 +93,6 @@ std::map<std::string, std::string>& color_map()
   return map_;
 } // ... color_map(...)
 
-
 std::string color(const std::string id)
 {
   const auto search_result = color_map().find(id);
@@ -105,18 +102,15 @@ std::string color(const std::string id)
     return "";
 }
 
-
 std::string backcolor(size_t i)
 {
   return "\033[38;5;" + std::to_string(i) + "m";
 }
 
-
 size_t templateColorChooser(size_t i)
 {
   return i % 256;
 }
-
 
 /**
  * This is taken from gtest-all.cc!
@@ -132,7 +126,6 @@ bool terminal_supports_color()
            || term_str == "linux" || term_str == "cygwin";
   }
 } // ... terminal_supports_color(...)
-
 
 std::string highlightTemplate(std::string str, size_t maxlevel)
 {
@@ -162,12 +155,10 @@ std::string highlightTemplate(std::string str, size_t maxlevel)
   return str;
 } // highlightTemplate
 
-
 std::string highlightString(std::string str, size_t colornr)
 {
   return "\033[38;5;" + std::to_string(colornr % 256) + "m" + str + "\033[0m"; //"\033[38;5;0m";
 }
-
 
 std::string highlightSearchString(std::string str, std::string substr, size_t colornr)
 {
@@ -195,7 +186,6 @@ std::string colorStringRed(const std::string str)
 {
   return colorString(str, Colors::red);
 }
-
 
 } // namespace Common
 } // namespace Stuff

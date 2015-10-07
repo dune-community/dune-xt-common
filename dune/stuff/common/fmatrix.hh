@@ -17,7 +17,6 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-
 template <class K, int ROWS, int COLS>
 class FieldMatrix : public Dune::FieldMatrix<K, ROWS, COLS>
 {
@@ -72,7 +71,6 @@ public:
   } // ... operator*(...)
 
 }; // class FieldMatrix
-
 
 template <class K>
 class FieldMatrix<K, 1, 1> : public Dune::FieldMatrix<K, 1, 1>
@@ -134,7 +132,6 @@ public:
   } // ... operator*(...)
 
 }; // class FieldMatrix
-
 
 } // namespace Common
 } // namespace Stuff

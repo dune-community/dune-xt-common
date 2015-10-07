@@ -15,11 +15,9 @@
 #include <dune/stuff/common/debug.hh>
 #include <dune/stuff/common/vector.hh>
 
-
 namespace Dune {
 namespace Stuff {
 namespace Common {
-
 
 template <class K, int SIZE>
 class FieldVector : public Dune::FieldVector<K, SIZE>
@@ -108,7 +106,6 @@ public:
   }
 }; // class FieldVector
 
-
 template <class K, int SIZE, K value>
 class ValueInitFieldVector : public Dune::Stuff::Common::FieldVector<K, SIZE>
 {
@@ -120,7 +117,6 @@ public:
   {
   }
 }; // class FieldVector
-
 
 //! Specialization of VectorAbstraction for Dune::Stuff::Common::FieldVector
 template <class K, int SIZE>
@@ -148,7 +144,6 @@ struct VectorAbstraction<Dune::Stuff::Common::FieldVector<K, SIZE>>
     return VectorType(sz, val);
   }
 };
-
 
 } // namespace Common
 } // namespace Stuff

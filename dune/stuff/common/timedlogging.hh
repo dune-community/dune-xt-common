@@ -58,7 +58,6 @@ private:
   std::shared_ptr<std::ostream> warn_;
 }; // class TimedLogManager
 
-
 /**
  * \brief A logger that provides colored and prefixed streams.
  *
@@ -122,7 +121,6 @@ private:
   Timer timer_;
   std::mutex mutex_;
 }; // class TimedLogging
-
 
 /**
  * \brief Global instance of the timed logger.
@@ -211,10 +209,8 @@ int main()
  */
 TimedLogging& TimedLogger();
 
-
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
-
 
 #endif // DUNE_STUFF_COMMON_TIMED_LOGGING_HH

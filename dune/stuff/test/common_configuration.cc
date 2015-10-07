@@ -24,11 +24,9 @@
 #include <boost/assign/list_of.hpp>
 #include <boost/array.hpp>
 
-
 // uncomment this for output
 // std::ostream& test_out = std::cout;
 std::ostream& test_out = DSC_LOG.devnull();
-
 
 using namespace Dune::Stuff::Common;
 using Dune::Stuff::Exceptions::results_are_not_as_expected;
@@ -114,7 +112,6 @@ struct CreateByParameterTree
     return Configuration(paramtree);
   }
 };
-
 
 typedef testing::Types<double, float, std::string, std::complex<double>, int, unsigned int, unsigned long, long long,
                        char> TestTypes;
@@ -394,7 +391,6 @@ struct ConfigurationTest : public ::testing::Test
 
   } // ... behaves_correctly(...)
 }; // struct ConfigurationTest
-
 
 TYPED_TEST_CASE(ConfigTest, TestTypes);
 TYPED_TEST(ConfigTest, Get)

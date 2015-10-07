@@ -68,7 +68,6 @@ const T Epsilon<T, true>::value = 1;
 template <class T>
 const T Epsilon<T, false>::value = std::numeric_limits<T>::epsilon();
 
-
 /**
  *  Helper struct to compute absolute values of signed and unsigned values,
  *  std::abs is only defined for signed types.

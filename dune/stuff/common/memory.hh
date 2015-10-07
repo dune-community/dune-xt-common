@@ -13,7 +13,6 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-
 //! make_unique implementation via herb sutter: http://herbsutter.com/gotw/_102/
 template <typename T, typename... Args>
 std::unique_ptr<T> make_unique(Args&&... args)
@@ -30,9 +29,7 @@ struct nonmoveable
   nonmoveable(nonmoveable&& source) = delete;
 };
 
-
 namespace internal {
-
 
 template <class T>
 class ConstAccessInterface
@@ -47,7 +44,6 @@ public:
 
   virtual const T& access() const = 0;
 }; // class ConstAccessInterface
-
 
 template <class T>
 class ConstAccessByReference : public ConstAccessInterface<T>
@@ -73,7 +69,6 @@ public:
 private:
   const T& tt_;
 }; // class ConstAccessByReference
-
 
 template <class T>
 class ConstAccessByPointer : public ConstAccessInterface<T>
@@ -110,7 +105,6 @@ private:
   std::shared_ptr<const T> tt_;
 }; // class ConstAccessByPointer
 
-
 template <class T>
 class AccessInterface
 {
@@ -125,7 +119,6 @@ public:
   virtual T& access() = 0;
   virtual const T& access() const = 0;
 }; // class AccessInterface
-
 
 template <class T>
 class AccessByReference : public AccessInterface<T>
@@ -156,7 +149,6 @@ public:
 private:
   T& tt_;
 }; // class AccessByReference
-
 
 template <class T>
 class AccessByPointer : public AccessInterface<T>
@@ -198,9 +190,7 @@ private:
   std::shared_ptr<T> tt_;
 }; // class AccessByPointer
 
-
 } // namespace internal
-
 
 template <class T>
 class ConstStorageProvider
@@ -245,7 +235,6 @@ public:
 private:
   std::shared_ptr<internal::ConstAccessInterface<T>> storage_;
 }; // class ConstStorageProvider
-
 
 template <class T>
 class StorageProvider
@@ -300,7 +289,6 @@ public:
 private:
   std::shared_ptr<internal::AccessInterface<T>> storage_;
 }; // class StorageProvider
-
 
 } // namespace Common
 } // namespace Stuff
