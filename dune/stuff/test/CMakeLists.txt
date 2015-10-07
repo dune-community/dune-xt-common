@@ -10,6 +10,7 @@ DEPENDENCYCHECK( ${stuff} )
 set_source_files_properties( ${DUNE_HEADERS} PROPERTIES HEADER_FILE_ONLY 1 )
 
 BEGIN_TESTCASES(dunestuff)
+
 find_program(LATEX_FOUND latex)
 if (LATEX_FOUND)
   include(UseLATEX)
