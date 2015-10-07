@@ -17,7 +17,6 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-
 class ConvergenceStudy
 {
 public:
@@ -60,7 +59,6 @@ public:
 private:
   std::vector<std::string> only_these_norms_;
 }; // class ConvergenceStudy
-
 
 } // namespace Common
 } // namespace Stuff

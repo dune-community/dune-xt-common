@@ -50,7 +50,6 @@ void installSignalHandler(int signal, handler_type handler)
   sigaction(signal, &new_action, NULL);
 } // installSignalHandler
 
-
 } // namepsace Common
 } // namepsace Stuff
 } // namepsace Dune

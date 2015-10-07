@@ -26,7 +26,6 @@ struct EpsilonType<std::complex<T>>
 namespace Stuff {
 namespace Common {
 
-
 // forward, include is below
 template <class VecType>
 struct VectorAbstraction;
@@ -34,10 +33,8 @@ struct VectorAbstraction;
 template <class VecType>
 struct is_vector;
 
-
 namespace FloatCmp {
 namespace internal {
-
 
 /**
  * Taken from http://docs.pymor.org/en/latest/_modules/pymor/tools/floatcmp.html#float_cmp,
@@ -50,7 +47,6 @@ typename std::enable_if<std::is_arithmetic<T>::value, bool>::type float_cmp_eq(c
   return std::abs(xx - yy) <= atol + std::abs(yy) * rtol;
 }
 
-
 template <class T>
 typename std::enable_if<is_complex<T>::value, bool>::type float_cmp_eq(const T& xx, const T& yy, const T& rtol,
                                                                        const T& atol)
@@ -59,7 +55,6 @@ typename std::enable_if<is_complex<T>::value, bool>::type float_cmp_eq(const T& 
   return (float_cmp_eq(real(xx), real(yy), real(rtol), real(atol))
           && float_cmp_eq(imag(xx), imag(yy), imag(rtol), imag(atol)));
 }
-
 
 template <class XType, class YType, class TolType>
 typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value
@@ -137,7 +132,6 @@ cmp_gt(const XType& xx, const YType& yy)
   return true;
 } // ... cmp_gt(...)
 
-
 template <class T>
 typename std::enable_if<std::is_arithmetic<T>::value, bool>::type cmp_lt(const T& xx, const T& yy)
 {
@@ -166,7 +160,6 @@ cmp_lt(const XType& xx, const YType& yy)
       return false;
   return true;
 } // ... cmp_lt(...)
-
 
 template <class FirstType, class SecondType, class ToleranceType, Style style>
 struct Call

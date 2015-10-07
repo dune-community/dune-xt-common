@@ -29,12 +29,10 @@ void busywait(const size_t ms)
   } while (((end.tv_sec - start.tv_sec) * 1e6) + ((end.tv_usec - start.tv_usec)) < milliseconds * 1000);
 } // ... busywait(...)
 
-
 namespace Dune {
 namespace Stuff {
 namespace Test {
 namespace internal {
-
 
 std::pair<size_t, ssize_t> convert_to_scientific(const double number, const size_t precision)
 {
@@ -51,7 +49,6 @@ std::pair<size_t, ssize_t> convert_to_scientific(const double number, const size
   return std::make_pair(size_t(std::round(factor * coefficient)), exponent);
 } // ... convert_to_scientific(...)
 
-
 std::string print_vector(const std::vector<double>& vec)
 {
   if (vec.empty())
@@ -66,9 +63,7 @@ std::string print_vector(const std::vector<double>& vec)
   }
 } // ... print_vector(...)
 
-
 } // namespace internal
-
 
 void check_eoc_study_for_success(const Dune::Stuff::Common::ConvergenceStudy& study,
                                  const std::map<std::string, std::vector<double>>& results_map)
@@ -106,7 +101,6 @@ void check_eoc_study_for_success(const Dune::Stuff::Common::ConvergenceStudy& st
   }
 } // ... check_eoc_study_for_success(...)
 
-
 void print_collected_eoc_study_results(const std::map<std::string, std::vector<double>>& results, std::ostream& out)
 {
   if (results.empty())
@@ -126,7 +120,6 @@ void print_collected_eoc_study_results(const std::map<std::string, std::vector<d
   out << "return {};" << std::endl;
 } // ... print_collected_eoc_study_results(...)
 
-
 unsigned int grid_elements()
 {
   return DSC_CONFIG.has_key("test.gridelements") // <- doing this so complicated to
@@ -134,7 +127,6 @@ unsigned int grid_elements()
                    "test.gridelements", 3u, DSC::ValidateLess<unsigned int>(2u)) //    silence the WARNING: ...
              : 3u;
 } // ... grid_elements(...)
-
 
 } // namespace Test
 } // namespace Stuff

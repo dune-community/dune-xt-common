@@ -56,7 +56,6 @@
 namespace Dune {
 namespace Stuff {
 
-
 template <class InterfaceType, class Traits>
 class CRTPInterface
 {

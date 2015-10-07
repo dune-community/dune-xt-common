@@ -49,7 +49,6 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-
 // forward, std::string variant needed in internal::from_string
 
 /**
@@ -100,7 +99,6 @@ static inline std::string toString(const T& ss)
   return internal::to_string(ss);
 }
 
-
 /**
   \brief Returns a string of lengths t' whitespace (or whitespace chars).
   \param[in]  t          defines the length of the return string (after conversion to string)
@@ -117,7 +115,6 @@ std::string whitespaceify(const T& t, const char whitespace = ' ')
   }
   return ret;
 } // ... whitespaceify(...)
-
 
 template <class T>
 inline std::vector<T> tokenize(const std::string& msg, const std::string& separators,
@@ -142,13 +139,11 @@ inline std::vector<std::string> tokenize(const std::string& msg, const std::stri
   return strings;
 }
 
-
 //! returns string with local time in current locale's format
 inline std::string stringFromTime(time_t cur_time = time(NULL))
 {
   return ctime(&cur_time);
 }
-
 
 //! helper struct for lexical cast
 // see http://stackoverflow.com/a/2079728
@@ -168,7 +163,6 @@ struct HexToString
   }
 };
 
-
 static inline char** vectorToMainArgs(const std::vector<std::string>& args)
 {
   char** argv = new char*[args.size()];
@@ -178,7 +172,6 @@ static inline char** vectorToMainArgs(const std::vector<std::string>& args)
   }
   return argv;
 } // ... vectorToMainArgs(...)
-
 
 } // namespace Common
 } // namespace Stuff

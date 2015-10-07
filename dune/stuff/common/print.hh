@@ -21,7 +21,6 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-
 template <class V>
 typename std::enable_if<Dune::Stuff::Common::is_vector<V>::value, void>::type
 print(const V& vec, const std::string name, std::ostream& out, const std::string prefix = "")
@@ -38,7 +37,6 @@ print(const V& vec, const std::string name, std::ostream& out, const std::string
     out << "]";
   }
 } // ... print(...)
-
 
 template <class M>
 typename std::enable_if<Dune::Stuff::Common::is_matrix<M>::value, void>::type
@@ -75,7 +73,6 @@ print(const M& mat, const std::string name, std::ostream& out, const std::string
     out << "]";
   }
 } // ... print(...)
-
 
 //! useful for visualizing sparsity patterns of matrices
 template <class Matrix>

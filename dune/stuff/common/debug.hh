@@ -29,7 +29,6 @@ inline char* charcopy(const char* s)
 
 #define __CLASS__ strtok(charcopy(__PRETTY_FUNCTION__), "<(")
 
-
 #ifndef ASSERT_LT
 #define ASSERT_LT(expt, actual)                                                                                        \
   BOOST_ASSERT_MSG(                                                                                                    \

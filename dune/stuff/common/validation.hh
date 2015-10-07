@@ -18,7 +18,6 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-
 /** \brief Base class for all Validators
  *  the idea is from dune-fem, only our class is an actual interface
  **/
@@ -77,7 +76,6 @@ public:
     return "ValidateAny: all values should be valid... \n\n";
   }
 };
-
 
 //! validates arg iff in given list
 template <class T, class ListImp = std::vector<T>>

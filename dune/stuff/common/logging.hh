@@ -25,7 +25,6 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-
 class Logging;
 //! global Logging instance
 inline Logging& Logger();
@@ -149,7 +148,6 @@ inline Logging& Logger()
   return log;
 }
 
-
 } // namespace Common
 } // namespace Stuff
 } // namespace Dune
@@ -165,6 +163,5 @@ inline Logging& Logger()
   (Dune::MPIHelper::getCollectiveCommunication().rank() == 0 ? DSC_LOG.debug() : DSC_LOG.devnull())
 #define DSC_LOG_ERROR_0                                                                                                \
   (Dune::MPIHelper::getCollectiveCommunication().rank() == 0 ? DSC_LOG.error() : DSC_LOG.devnull())
-
 
 #endif // DUNE_STUFF_COMMON_LOGGING_HH

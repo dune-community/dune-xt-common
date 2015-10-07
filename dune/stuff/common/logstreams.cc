@@ -8,11 +8,9 @@
 
 #include <dune/common/unused.hh>
 
-
 namespace Dune {
 namespace Stuff {
 namespace Common {
-
 
 SuspendableStrBuffer::SuspendableStrBuffer(int loglevel, int& logflags)
   : logflags_(logflags)
@@ -71,7 +69,6 @@ int SuspendableStrBuffer::pubsync()
   return 0;
 }
 
-
 TimedPrefixedStreamBuffer::TimedPrefixedStreamBuffer(const Timer& timer, const std::string prefix, std::ostream& out)
   : timer_(timer)
   , prefix_(prefix)
@@ -127,14 +124,12 @@ std::string TimedPrefixedStreamBuffer::elapsed_time_str() const
     return (boost::format("%02d:%02d|") % minutes % seconds).str();
 } // ... elapsed_time(...)
 
-
 LogStream& LogStream::flush()
 {
   assert(&this->storage_access());
   this->storage_access().pubsync();
   return *this;
 }
-
 
 TimedPrefixedLogStream::TimedPrefixedLogStream(const Timer& timer, const std::string prefix, std::ostream& outstream)
   : StorageBaseType(new TimedPrefixedStreamBuffer(timer, prefix, outstream))
@@ -147,7 +142,6 @@ TimedPrefixedLogStream::~TimedPrefixedLogStream()
   flush();
 }
 
-
 int FileBuffer::sync()
 {
   // flush buffer into stream
@@ -159,7 +153,6 @@ int FileBuffer::sync()
   str("");
   return 0;
 }
-
 
 int EmptyBuffer::sync()
 {

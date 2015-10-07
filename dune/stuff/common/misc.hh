@@ -52,7 +52,6 @@ inline int getIdx(const StlSequence& ct, const typename StlSequence::value_type&
   return std::distance(ct.begin(), result);
 } // getIdx
 
-
 /** this allows subscription indices to wrap around
    * \example N=4: wraparound_array[4] == wraparound_array[0] && wraparound_array[-1] == wraparound_array[3]
    **/

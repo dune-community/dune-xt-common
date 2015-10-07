@@ -14,7 +14,6 @@
 #include "exceptions.hh"
 #include "filesystem.hh"
 
-
 namespace Dune {
 namespace Stuff {
 namespace Common {
@@ -57,7 +56,6 @@ std::ostream& TimedLogManager::warn()
 {
   return *warn_;
 }
-
 
 TimedLogging::TimedLogging()
   : max_info_level_(default_max_info_level)
@@ -136,13 +134,11 @@ void TimedLogging::update_colors()
   }
 } // ... update_colors(...)
 
-
 TimedLogging& TimedLogger()
 {
   static TimedLogging timed_logger;
   return timed_logger;
 }
-
 
 } // namespace Common
 } // namespace Stuff

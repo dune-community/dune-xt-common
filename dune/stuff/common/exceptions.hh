@@ -59,7 +59,6 @@ namespace Dune {
 namespace Stuff {
 namespace Exceptions {
 
-
 class CRTP_check_failed : public Dune::Exception
 {
 };

@@ -17,7 +17,6 @@
 namespace Dune {
 namespace Stuff {
 
-
 //! marker for sequential in MPI-enabled solver stuffs
 struct SequentialCommunication
 #if HAVE_DUNE_ISTL
@@ -25,7 +24,6 @@ struct SequentialCommunication
 #endif
 {
 };
-
 
 template <class GridCommImp>
 struct UseParallelCommunication

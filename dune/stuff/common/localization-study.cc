@@ -10,11 +10,9 @@
 
 #include <dune/stuff/common/string.hh>
 
-
 namespace Dune {
 namespace Stuff {
 namespace Common {
-
 
 LocalizationStudy::LocalizationStudy(const std::vector<std::string> only_these_indicators)
   : only_these_indicators_(only_these_indicators)
@@ -119,7 +117,6 @@ void LocalizationStudy::run(std::ostream& out)
     out << std::endl;
   } // loop over all indicators
 } // ... run(...)
-
 
 } // namespace Common
 } // namespace Stuff
