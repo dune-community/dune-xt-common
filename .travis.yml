@@ -1,0 +1,51 @@
+sudo: false
+language: cpp
+compiler:
+  - gcc
+  - clang
+
+addons:
+  apt:
+    sources:
+    - ubuntu-toolchain-r-test
+    - ppa:boost-latest/ppa
+    - ppa:george-edison55/precise-backports
+    - deb http://llvm.org/apt/precise/ llvm-toolchain-precise-3.7 main
+    packages:
+    - gcc-4.8
+    - g++-4.8
+    - clang
+
+before_install:
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+  - git clone --branch=travis http://users.dune-project.org/repositories/projects/dune-stuff-demos.git src
+  - cd src
+  - git submodule update --init --recursive
+  - ./dune-common/bin/dunecontrol --opts=config.opts/travis all
+
+# command to install dependencies
+install:
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+  - ./dune-common/bin/dunecontrol --opts=config.opts/travis make install
+
+# # command to run tests
+script:
+    - make -D ~/build/dune-stuff test -k
+    - make -D ~/build/dune-stuff headercheck -k
+
+notifications:
+  email: 
+    on_success: change
+    on_failure: change
+
+after_success:
+ - coveralls
+
+branches:
+  except:
+    - gh-pages
+
+cache:
+  directories:
+    - $HOME/dune
+    - $HOME/build
