@@ -47,7 +47,18 @@ branches:
   except:
     - gh-pages
 
+before_cache:
+  - rm -rf ~/build/dune-stuff
+
 cache:
   directories:
     - $HOME/dune
     - $HOME/build
+
+os:
+  - linux
+  - osx
+
+matrix:
+  allow_failures:
+    - os: osx
