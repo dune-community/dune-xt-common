@@ -8,15 +8,16 @@ addons:
   apt:
     sources:
     - ubuntu-toolchain-r-test
-    - ppa:boost-latest/ppa
-    - ppa:george-edison55/precise-backports
-    - deb http://llvm.org/apt/precise/ llvm-toolchain-precise-3.7 main
-    - ppa:kubuntu-ppa/backports
+    - boost-latest
+    - george-edison55-precise-backports
+    - llvm-toolchain-precise-3.7
     packages:
     - gcc-4.8
     - g++-4.8
     - clang
     - cmake
+    - doxygen
+    - texlive-base
 
 before_install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
