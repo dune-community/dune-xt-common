@@ -21,6 +21,8 @@ addons:
     - texlive-base
     - python-virtualenv
     - libboost1.55-all-dev
+    - python-pip
+    - python3-pip
 
 before_install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
@@ -44,8 +46,8 @@ notifications:
     on_success: change
     on_failure: change
 
-after_success:
- - coveralls
+#after_success:
+#- coveralls
 
 branches:
   except:
