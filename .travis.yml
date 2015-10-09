@@ -19,6 +19,8 @@ addons:
     - cmake-data
     - doxygen
     - texlive-base
+    - python-virtualenv
+    - libboost1.55-all-dev
 
 before_install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
