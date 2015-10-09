@@ -39,8 +39,8 @@ install:
 
 # # command to run tests
 script:
-    - make -D ~/build/dune-stuff test -k
-    - make -D ~/build/dune-stuff headercheck -k
+    - make -C ~/build/dune-stuff test -k
+    - make -C ~/build/dune-stuff headercheck -k
 
 notifications:
   email: 
