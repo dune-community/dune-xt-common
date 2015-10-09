@@ -23,18 +23,19 @@ addons:
     - libboost1.55-all-dev
     - python-pip
     - python3-pip
+    - libtbb-dev
 
 before_install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
   - git clone --branch=travis http://users.dune-project.org/repositories/projects/dune-stuff-demos.git src
   - cd src
   - git submodule update --init --recursive
-  - ./dune-common/bin/dunecontrol --opts=config.opts/travis all
+  - ./dune-common/bin/dunecontrol --opts=config.opts/travis --module=dune-stuff all
 
 # command to install dependencies
 install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
-  - ./dune-common/bin/dunecontrol --opts=config.opts/travis make install
+  - ./dune-common/bin/dunecontrol --opts=config.opts/travis --module=dune-stuff make install
 
 # # command to run tests
 script:
