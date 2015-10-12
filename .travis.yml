@@ -42,6 +42,7 @@ before_install:
 install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
   - cd $HOME/src
+  - pip install -U --user pip
   - ./dune-common/bin/dunecontrol --opts=config.opts/travis make install > /dev/null
   - rm -rf ~/{dune_build,src}
 
