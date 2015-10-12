@@ -43,7 +43,7 @@ install:
 
 # # command to run tests
 script:
-    - cd ~/wwu-numerik/
+    - cd ${TRAVIS_BUILD_DIR}
     - ~/dune/bin/dunecontrol --opts=~/src/config.opts/travis --only=dune-stuff all
     - ~/dune/bin/dunecontrol --opts=~/src/config.opts/travis --only=dune-stuff bexec make test -k
     - ~/dune/bin/dunecontrol --opts=~/src/config.opts/travis --only=dune-stuff bexec make headercheck -k
