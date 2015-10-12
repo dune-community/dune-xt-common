@@ -63,7 +63,7 @@ before_cache:
 cache:
   directories:
     - $HOME/dune
-    - $HOME/build
+    #- $HOME/build
 
 os:
   - linux
