@@ -38,7 +38,7 @@ before_install:
 install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
   - cd $HOME/src
-  - ./dune-common/bin/dunecontrol --opts=config.opts/travis make install
+  - ./dune-common/bin/dunecontrol --opts=config.opts/travis make install > /dev/null
   - rm -rf ~/{build,src}
 
 # # command to run tests
