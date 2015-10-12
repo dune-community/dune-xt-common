@@ -38,12 +38,14 @@ before_install:
 install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
   - cd $HOME/src
-  - ~/dune/bin/dunecontrol --opts=~/src/config.opts/travis --module=dune-stuff make install
+  - ./dune-common/bin/dunecontrol --opts=config.opts/travis make install
+  - rm -rf ~/build
 
 # # command to run tests
 script:
-    - make -C ~/build/dune-stuff test -k
-    - make -C ~/build/dune-stuff headercheck -k
+    - ~/dune/bin/dunecontrol --opts=~/src/config.opts/travis --only=dune-stuff all
+    - ~/dune/bin/dunecontrol --opts=~/src/config.opts/travis --only=dune-stuff bexec make test -k
+    - ~/dune/bin/dunecontrol --opts=~/src/config.opts/travis --only=dune-stuff bexec make headercheck -k
 
 notifications:
   email: 
@@ -63,7 +65,6 @@ before_cache:
 cache:
   directories:
     - $HOME/dune
-    #- $HOME/build
 
 os:
   - linux
