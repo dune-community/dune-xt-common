@@ -3,6 +3,8 @@
 # Copyright holders: Rene Milk, Felix Schindler
 # License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 
+[![Build Status](https://travis-ci.org/wwu-numerik/dune-stuff.svg?branch=travis)](https://travis-ci.org/wwu-numerik/dune-stuff)
+
 dune-stuff is a DUNE (http://www.dune-project.org) module which provides a wide
 collection of ... stuff! This includes (but is not limited to) a logger, a
 profiler, string conversion, LA container and solver, ...
