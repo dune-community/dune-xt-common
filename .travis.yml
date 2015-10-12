@@ -31,8 +31,12 @@ before_install:
   - test -d src || git clone --branch=travis http://users.dune-project.org/repositories/projects/dune-stuff-demos.git src
   - cd src
   - git submodule update --init --recursive
-  - rm -rf dune-{testtools,stuff}
-  - ./dune-common/bin/dunecontrol --opts=config.opts/travis all
+  - cp config.opts/travis ~/travis.opts
+  - echo "removing modules ${MODULES_TO_DELETE}"
+  - test x${MODULES_TO_DELETE} = x || rm -r ${MODULES_TO_DELETE}
+  # ensures dune-stuff from travis own checkout is used
+  - rm -rf dune-stuff
+  - ./dune-common/bin/dunecontrol --opts=~/travis.opts all
 
 # command to install dependencies
 install:
@@ -44,12 +48,12 @@ install:
 # # command to run tests
 script:
     - cd ${TRAVIS_BUILD_DIR}
-    - ~/dune/bin/dunecontrol --opts=~/src/config.opts/travis --only=dune-stuff all
-    - ~/dune/bin/dunecontrol --opts=~/src/config.opts/travis --only=dune-stuff bexec make test -k
-    - ~/dune/bin/dunecontrol --opts=~/src/config.opts/travis --only=dune-stuff bexec make headercheck -k
+    - ~/dune/bin/dunecontrol --opts=~/travis.opts --only=dune-stuff all
+    - ~/dune/bin/dunecontrol --opts=~/travis.opts --only=dune-stuff bexec make test -k
+    - ~/dune/bin/dunecontrol --opts=~/travis.opts --only=dune-stuff bexec make headercheck -k
 
 notifications:
-  email: 
+  email:
     on_success: change
     on_failure: change
 
@@ -74,3 +78,11 @@ os:
 matrix:
   allow_failures:
     - os: osx
+
+env:
+  global:
+    #- CAMPFIRE_TOKEN=abc123
+  matrix:
+    - MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree dune-grid dune-istl dune-python dune-testtools"
+    - MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree"
+    - USE_ALL_MODULES_IN_SUPER_REPO
