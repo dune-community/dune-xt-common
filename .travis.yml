@@ -37,6 +37,9 @@ before_install:
   - echo removing modules ${MODULES_TO_DELETE}
   # ensures dune-stuff from travis own checkout is used
   - rm -rf ${MODULES_TO_DELETE} dune-stuff
+  - ./dune-common/bin/dunecontrol --opts=~/travis.opts --module=dune-python configure
+  - /home/travis/dune_build/dune-python/python2-env/bin/pip install -U pip
+  - /home/travis/dune_build/dune-python/python3-env/bin/pip install -U pip
   - ./dune-common/bin/dunecontrol --opts=~/travis.opts all
 
 # command to install dependencies
