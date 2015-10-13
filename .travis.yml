@@ -39,6 +39,8 @@ before_install:
   - ./dune-common/bin/dunecontrol --opts=~/travis.opts --module=dune-python all
   - /home/travis/dune_build/dune-python/python2-env/bin/pip install -U pip || true
   - /home/travis/dune_build/dune-python/python3-env/bin/pip install -U pip || true
+  - /home/travis/dune_build/dune-python/python2-env/bin/pip install -U distribute six || true
+  - /home/travis/dune_build/dune-python/python3-env/bin/pip install -U distribute six || true
   - ./dune-common/bin/dunecontrol --opts=~/travis.opts all
 
 # command to install dependencies
@@ -86,6 +88,6 @@ env:
   global:
     #- CAMPFIRE_TOKEN=abc123
   matrix:
-    - MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree dune-grid dune-istl dune-python dune-testtools"
+    - MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree dune-grid dune-istl dune-testtools"
     - MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree"
     - USE_ALL_MODULES_IN_SUPER_REPO
