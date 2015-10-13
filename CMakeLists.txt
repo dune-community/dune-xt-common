@@ -65,8 +65,9 @@ set( COMMON_HEADER ${stuff} ${DUNE_HEADERS} )
 
 # add header of dependent modules for header listing
 foreach(_mod ${ALL_DEPENDENCIES})
-file(GLOB_RECURSE HEADER_LIST "${CMAKE_CURRENT_SOURCE_DIR}/../${_mod}/*.hh")
-list(APPEND COMMON_HEADER ${HEADER_LIST})
+    file(GLOB_RECURSE HEADER_LIST "${CMAKE_CURRENT_SOURCE_DIR}/../${_mod}/*.hh")
+    list(APPEND COMMON_HEADER ${HEADER_LIST})
+    message(STATUS "MOD ${_mod}")
 endforeach(_mod DEPENDENCIES)
 set_source_files_properties(${COMMON_HEADER} PROPERTIES HEADER_FILE_ONLY 1)
 

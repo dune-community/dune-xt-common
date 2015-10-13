@@ -14,7 +14,9 @@ addons:
     packages:
     - gcc-4.8
     - g++-4.8
-    - clang
+    - clang-3.7
+    - clang-format-3.7
+    - clang-modernize-3.7
     - cmake
     - cmake-data
     - doxygen
@@ -26,25 +28,21 @@ addons:
 
 before_install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+  - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.7" CC="clang-3.7"; fi
   - cd $HOME
   - test -d src || git clone --branch=travis http://users.dune-project.org/repositories/projects/dune-stuff-demos.git src
   - cd src
   - git submodule update --init --recursive
   - cp config.opts/travis ~/travis.opts
-  - echo "removing modules ${MODULES_TO_DELETE}"
-  - test x${MODULES_TO_DELETE} = x || rm -r ${MODULES_TO_DELETE}
+  - echo removing modules ${MODULES_TO_DELETE}
   # ensures dune-stuff from travis own checkout is used
-  - rm -rf dune-stuff
-  - ./dune-common/bin/dunecontrol --opts=~/travis.opts --module=dune-python all
-  - /home/travis/dune_build/dune-python/python2-env/bin/pip install -U pip || true
-  - /home/travis/dune_build/dune-python/python3-env/bin/pip install -U pip || true
-  - /home/travis/dune_build/dune-python/python2-env/bin/pip install -U distribute six || true
-  - /home/travis/dune_build/dune-python/python3-env/bin/pip install -U distribute six || true
+  - rm -rf ${MODULES_TO_DELETE} dune-stuff
   - ./dune-common/bin/dunecontrol --opts=~/travis.opts all
 
 # command to install dependencies
 install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+  - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.7" CC="clang-3.7"; fi
   - cd $HOME/src
   - ./dune-common/bin/dunecontrol --opts=config.opts/travis make install > /dev/null
   - rm -rf ~/{dune_build,src}
