@@ -75,16 +75,16 @@ cache:
 
 os:
   - linux
-  - osx
+  #- osx
 
 matrix:
   allow_failures:
     - os: osx
 
-env:
-  global:
-    #- CAMPFIRE_TOKEN=abc123
-  matrix:
-    - MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree dune-grid dune-istl dune-testtools"
-    - MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree"
-    - USE_ALL_MODULES_IN_SUPER_REPO
+#env:
+  #global:
+    ##- CAMPFIRE_TOKEN=abc123
+  #matrix:
+    #- MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree dune-grid dune-istl dune-testtools"
+    #- MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree"
+    #- USE_ALL_MODULES_IN_SUPER_REPO
