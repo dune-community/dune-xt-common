@@ -14,6 +14,10 @@ addons:
     packages:
     - gcc-4.8
     - g++-4.8
+    - gcc-4.9
+    - g++-4.9
+    - gcc-5
+    - g++-5
     - clang-3.7
     - clang-format-3.7
     - clang-modernize-3.7
@@ -29,7 +33,7 @@ addons:
 
 before_install:
   - export PATH=/usr/lib/ccache:$PATH
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
   - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.7" CC="clang-3.7"; fi
   - cd $HOME
   - test -d src || git clone --branch=travis http://users.dune-project.org/repositories/projects/dune-stuff-demos.git src
@@ -48,7 +52,7 @@ before_install:
 
 # command to install dependencies
 install:
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
   - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.7" CC="clang-3.7"; fi
   - cd $HOME/src
   - ./dune-common/bin/dunecontrol --opts=config.opts/travis make install > /dev/null
