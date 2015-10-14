@@ -60,7 +60,7 @@ install:
 # # command to run tests
 script:
     - cd ${TRAVIS_BUILD_DIR}
-    - ~/dune/bin/dunecontrol --builddir=${DUNE_BUILD_DIR} --opts=~/travis.opts --only=dune-stuff all
+    - ~/dune/bin/dunecontrol --builddir=${DUNE_BUILD_DIR} --opts=~/travis.opts --only=dune-stuff configure
     - ~/dune/bin/dunecontrol --builddir=${DUNE_BUILD_DIR} --opts=~/travis.opts --only=dune-stuff bexec ctest --output-on-failure -S ${TRAVIS_BUILD_DIR}/.travis.ctest
     - ~/dune/bin/dunecontrol --builddir=${DUNE_BUILD_DIR} --opts=~/travis.opts --only=dune-stuff bexec make headercheck -k
 
