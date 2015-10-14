@@ -12,8 +12,6 @@ addons:
     - george-edison55-precise-backports
     - llvm-toolchain-precise-3.7
     packages:
-    - gcc-4.8
-    - g++-4.8
     - gcc-4.9
     - g++-4.9
     - gcc-5
@@ -44,10 +42,11 @@ before_install:
   # ensures dune-stuff from travis own checkout is used
   - rm -rf ${MODULES_TO_DELETE} dune-stuff
   - ./dune-common/bin/dunecontrol --opts=~/travis.opts --module=dune-python configure
-  - /home/travis/dune_build/dune-python/python2-env/bin/pip install -U pip
-  - /home/travis/dune_build/dune-python/python3-env/bin/pip install -U pip
-  - /home/travis/dune_build/dune-python/python2-env/bin/pip install -U distribute six
-  - /home/travis/dune_build/dune-python/python3-env/bin/pip install -U distribute six
+  - ${DUNE_BUILD_DIR}/dune-python/python2-env/bin/pip install -U pip
+  - ${DUNE_BUILD_DIR}/dune-python/python3-env/bin/pip install -U pip
+  - ${DUNE_BUILD_DIR}/dune-python/python2-env/bin/pip install -U distribute six
+  - ${DUNE_BUILD_DIR}/dune-python/python3-env/bin/pip install -U distribute six
+  - pip install --user cpp-coveralls
   - ./dune-common/bin/dunecontrol --opts=~/travis.opts all
 
 # command to install dependencies
@@ -61,9 +60,9 @@ install:
 # # command to run tests
 script:
     - cd ${TRAVIS_BUILD_DIR}
-    - ~/dune/bin/dunecontrol --opts=~/travis.opts --only=dune-stuff all
-    - ~/dune/bin/dunecontrol --opts=~/travis.opts --only=dune-stuff bexec make test -k
-    - ~/dune/bin/dunecontrol --opts=~/travis.opts --only=dune-stuff bexec make headercheck -k
+    - ~/dune/bin/dunecontrol --builddir=${DUNE_BUILD_DIR} --opts=~/travis.opts --only=dune-stuff all
+    - ~/dune/bin/dunecontrol --builddir=${DUNE_BUILD_DIR} --opts=~/travis.opts --only=dune-stuff bexec ctest --output-on-failure -S ${TRAVIS_BUILD_DIR}/.travis.ctest
+    - ~/dune/bin/dunecontrol --builddir=${DUNE_BUILD_DIR} --opts=~/travis.opts --only=dune-stuff bexec make headercheck -k
 
 notifications:
   email:
@@ -76,9 +75,6 @@ notifications:
 branches:
   except:
     - gh-pages
-
-before_cache:
-  - rm -rf ~/build/dune-stuff
 
 cache:
   directories:
@@ -93,9 +89,9 @@ matrix:
   allow_failures:
     - os: osx
 
-#env:
-  #global:
-    ##- CAMPFIRE_TOKEN=abc123
+env:
+  global:
+    - DUNE_BUILD_DIR=${HOME}/dune_build/
   #matrix:
     #- MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree dune-grid dune-istl dune-testtools"
     #- MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree"

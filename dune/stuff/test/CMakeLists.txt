@@ -34,3 +34,4 @@ if (LATEX_FOUND)
 endif()
 
 END_TESTCASES()
+
