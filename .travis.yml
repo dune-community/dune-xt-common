@@ -41,20 +41,20 @@ before_install:
   - echo removing modules ${MODULES_TO_DELETE}
   # ensures dune-stuff from travis own checkout is used
   - rm -rf ${MODULES_TO_DELETE} dune-stuff
-  - ./dune-common/bin/dunecontrol --opts=~/travis.opts --module=dune-python configure
+  - ./dune-common/bin/dunecontrol --builddir=${DUNE_BUILD_DIR}  --opts=~/travis.opts --module=dune-python configure
   - ${DUNE_BUILD_DIR}/dune-python/python2-env/bin/pip install -U pip
   - ${DUNE_BUILD_DIR}/dune-python/python3-env/bin/pip install -U pip
   - ${DUNE_BUILD_DIR}/dune-python/python2-env/bin/pip install -U distribute six
   - ${DUNE_BUILD_DIR}/dune-python/python3-env/bin/pip install -U distribute six
   - pip install --user cpp-coveralls
-  - ./dune-common/bin/dunecontrol --opts=~/travis.opts all
+  - ./dune-common/bin/dunecontrol --builddir=${DUNE_BUILD_DIR} --opts=~/travis.opts all
 
 # command to install dependencies
 install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
   - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.7" CC="clang-3.7"; fi
   - cd $HOME/src
-  - ./dune-common/bin/dunecontrol --opts=config.opts/travis make install > /dev/null
+  - ./dune-common/bin/dunecontrol --builddir=${DUNE_BUILD_DIR} --opts=config.opts/travis make install > /dev/null
   - rm -rf ~/{dune_build,src}
 
 # # command to run tests
