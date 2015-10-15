@@ -37,7 +37,7 @@ before_install:
   - test -d src || git clone --branch=travis http://users.dune-project.org/repositories/projects/dune-stuff-demos.git src
   - cd src
   - git submodule update --init --recursive
-  - cp config.opts/travis ~/travis.opts
+  - cp config.opts/travis $HOME/travis.opts && export DCONTROL_ARG="--opts=--builddir=${DUNE_BUILD_DIR} ${HOME}/travis.opts"
   - echo removing modules ${MODULES_TO_DELETE}
   # ensures dune-stuff from travis own checkout is used
   - rm -rf ${MODULES_TO_DELETE} dune-stuff
@@ -46,23 +46,21 @@ before_install:
   - ${DUNE_BUILD_DIR}/dune-python/python3-env/bin/pip install -U pip
   - ${DUNE_BUILD_DIR}/dune-python/python2-env/bin/pip install -U distribute six
   - ${DUNE_BUILD_DIR}/dune-python/python3-env/bin/pip install -U distribute six
-  - pip install --user cpp-coveralls
-  - ./dune-common/bin/dunecontrol --builddir=${DUNE_BUILD_DIR} --opts=~/travis.opts all
 
 # command to install dependencies
 install:
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
-  - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.7" CC="clang-3.7"; fi
   - cd $HOME/src
-  - ./dune-common/bin/dunecontrol --builddir=${DUNE_BUILD_DIR} --opts=config.opts/travis make install > /dev/null
+    - pip install --user cpp-coveralls
+  - ./dune-common/bin/dunecontrol ${DCONTROL_ARG} all
+  - ./dune-common/bin/dunecontrol ${DCONTROL_ARG} make install > /dev/null
   - rm -rf ~/{dune_build,src}
 
 # # command to run tests
 script:
     - cd ${TRAVIS_BUILD_DIR}
-    - ~/dune/bin/dunecontrol --builddir=${DUNE_BUILD_DIR} --opts=~/travis.opts --only=dune-stuff configure
-    - ~/dune/bin/dunecontrol --builddir=${DUNE_BUILD_DIR} --opts=~/travis.opts --only=dune-stuff bexec ctest --output-on-failure -S ${TRAVIS_BUILD_DIR}/.travis.ctest
-    - ~/dune/bin/dunecontrol --builddir=${DUNE_BUILD_DIR} --opts=~/travis.opts --only=dune-stuff bexec make headercheck -k
+    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=dune-stuff configure
+    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=dune-stuff bexec ctest --output-on-failure -S ${TRAVIS_BUILD_DIR}/.travis.ctest
+    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=dune-stuff bexec make headercheck -k
 
 notifications:
   email:
