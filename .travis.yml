@@ -45,9 +45,12 @@ before_install:
   - echo removing modules ${MODULES_TO_DELETE}
   # ensures dune-stuff from travis own checkout is used
   - rm -rf ${MODULES_TO_DELETE} dune-stuff
+  # install Eigen
   - mkdir -p ${DUNE_BUILD_DIR}/eigen/build
-    wget -qO- http://bitbucket.org/eigen/eigen/get/3.2.4.tar.gz | tar xvz -C ${DUNE_BUILD_DIR}/eigen --strip-components=1
-    cd ${DUNE_BUILD_DIR}/eigen/build && cmake .. -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} && make install
+  - wget -qO- http://bitbucket.org/eigen/eigen/get/3.2.4.tar.gz | tar xvz -C ${DUNE_BUILD_DIR}/eigen --strip-components=1
+  - cd ${DUNE_BUILD_DIR}/eigen/build
+  - cmake .. -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
+  - make install
   # workarounds for dune-testtools issue
   - cd $HOME/src
   - ./dune-common/bin/dunecontrol ${DCONTROL_ARG} --module=dune-python configure
