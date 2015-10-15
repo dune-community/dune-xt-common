@@ -34,8 +34,9 @@ addons:
     - curl
 
 before_install:
+  - cmake --version
   - export PATH=/usr/lib/ccache:$PATH
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="gcc-4.9"; fi
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="/usr/bin/gcc-4.9"; fi
   - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.7" CC="clang-3.7"; fi
   - cd $HOME
   - test -d src || git clone --branch=travis http://users.dune-project.org/repositories/projects/dune-stuff-demos.git src
@@ -47,7 +48,7 @@ before_install:
   - rm -rf ${MODULES_TO_DELETE} dune-stuff
   # install Eigen
   - mkdir -p ${DUNE_BUILD_DIR}/eigen/build
-  - wget -qO- http://bitbucket.org/eigen/eigen/get/3.2.4.tar.gz | tar xvz -C ${DUNE_BUILD_DIR}/eigen --strip-components=1
+  - wget -qO- http://bitbucket.org/eigen/eigen/get/3.2.4.tar.gz | tar xz -C ${DUNE_BUILD_DIR}/eigen --strip-components=1
   - cd ${DUNE_BUILD_DIR}/eigen/build
   - cmake .. -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
   - make install
