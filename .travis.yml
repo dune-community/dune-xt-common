@@ -1,7 +1,7 @@
 sudo: false
 language: cpp
 compiler:
-  - gcc
+  #- gcc
   - clang
 
 addons:
@@ -28,6 +28,10 @@ addons:
     - python-pip
     - libtbb-dev
     - ccache
+    - libparmetis-dev
+    - libsuitesparse-dev
+    - lcov
+    - curl
 
 before_install:
   - export PATH=/usr/lib/ccache:$PATH
@@ -41,7 +45,11 @@ before_install:
   - echo removing modules ${MODULES_TO_DELETE}
   # ensures dune-stuff from travis own checkout is used
   - rm -rf ${MODULES_TO_DELETE} dune-stuff
-  - ./dune-common/bin/dunecontrol --builddir=${DUNE_BUILD_DIR}  --opts=~/travis.opts --module=dune-python configure
+  - mkdir -p ${DUNE_BUILD_DIR}/eigen/build
+    wget -qO- http://bitbucket.org/eigen/eigen/get/3.2.4.tar.gz | tar xvz -C ${DUNE_BUILD_DIR}/eigen --strip-components=1
+    cd ${DUNE_BUILD_DIR}/eigen/build && cmake .. -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR} && make install ; cd -
+  # workarounds for dune-testtools issue
+  - ./dune-common/bin/dunecontrol ${DCONTROL_ARG} --module=dune-python configure
   - ${DUNE_BUILD_DIR}/dune-python/python2-env/bin/pip install -U pip
   - ${DUNE_BUILD_DIR}/dune-python/python3-env/bin/pip install -U pip
   - ${DUNE_BUILD_DIR}/dune-python/python2-env/bin/pip install -U distribute six
@@ -91,7 +99,7 @@ matrix:
 
 env:
   global:
-    - DUNE_BUILD_DIR=${HOME}/dune_build/
+    - DUNE_BUILD_DIR=${HOME}/dune_build/ INSTALL_DIR=$HOME/dune
   #matrix:
     #- MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree dune-grid dune-istl dune-testtools"
     #- MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree"
