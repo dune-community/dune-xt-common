@@ -64,10 +64,12 @@ before_install:
 install:
   - cd $HOME/src
     - pip install --user cpp-coveralls
-  - grep -R $HOME/src/dune-grid ${DUNE_BUILD_DIR}
+  - grep -R $HOME/src/dune-grid ${DUNE_BUILD_DIR} || echo no $HOME/src/dune-grid pre-make
   - ./dune-common/bin/dunecontrol ${DCONTROL_ARG} all
+  - grep -R $HOME/src/dune-grid ${DUNE_BUILD_DIR} || echo no $HOME/src/dune-grid post-make
   - ./dune-common/bin/dunecontrol ${DCONTROL_ARG} make install > /dev/null
-  - rm -rf ~/{dune_build,src}
+  - grep -R $HOME/src/dune-grid ${DUNE_BUILD_DIR} || echo no $HOME/src/dune-grid post-install
+  - rm -rf ${DUNE_BUILD_DIR} $HOME/src
 
 # # command to run tests
 script:
