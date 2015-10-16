@@ -113,6 +113,7 @@ set( DUNE_TEST_TIMEOUT 180 CACHE STRING "per-test timeout in seconds")
 
 include(CTest)
 macro(BEGIN_TESTCASES)
+# https://cmake.org/cmake/help/v3.0/module/FindGTest.html
 	include_directories(SYSTEM ${DUNE_STUFF_TEST_DIR}/gtest )
 	add_library(gtest_dune_stuff STATIC ${DUNE_STUFF_TEST_DIR}/gtest/gtest-all.cc)
   target_link_libraries(gtest_dune_stuff pthread)
