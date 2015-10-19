@@ -113,6 +113,6 @@ env:
   global:
     - DUNE_BUILD_DIR=${HOME}/dune_build/ INSTALL_DIR=$HOME/dune
   #matrix:
-    #- MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree dune-grid dune-istl dune-testtools"
-    #- MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree"
-    #- USE_ALL_MODULES_IN_SUPER_REPO
+    - MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree dune-grid dune-istl"
+    - MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree"
+    - USE_ALL_MODULES_IN_SUPER_REPO
