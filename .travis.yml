@@ -44,8 +44,8 @@ before_install:
   - git submodule update --init --recursive
   - cp config.opts/travis $HOME/travis.opts && export DCONTROL_ARG="--builddir=${DUNE_BUILD_DIR}  --opts=${HOME}/travis.opts"
   - echo removing modules ${MODULES_TO_DELETE}
-  # ensures dune-stuff from travis own checkout is used
-  - rm -rf ${MODULES_TO_DELETE} dune-stuff
+  # ensures ${MY_MODULE} from travis own checkout is used
+  - rm -rf ${MODULES_TO_DELETE} ${MY_MODULE}
   # install Eigen
   - mkdir -p ${DUNE_BUILD_DIR}/eigen/build
   - wget -qO- http://bitbucket.org/eigen/eigen/get/3.2.4.tar.gz | tar xz -C ${DUNE_BUILD_DIR}/eigen --strip-components=1
@@ -71,16 +71,16 @@ install:
 # # command to run tests
 script:
     - cd ${TRAVIS_BUILD_DIR}
-    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=dune-stuff configure
-    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=dune-stuff bexec make
-    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=dune-stuff bexec make test_binaries
-    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=dune-stuff bexec make test
-    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=dune-stuff bexec make headercheck -k
+    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} configure
+    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make
+    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make test_binaries
+    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make test
+    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make headercheck -k
     # reset for ctest
-    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=dune-stuff bexec make clean
+    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make clean
     - export CTEST_ARG="--output-on-failure -S ${TRAVIS_BUILD_DIR}/.travis.ctest"
     # ctest errors on coverage gathering, this should NOT fail our entire build
-    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=dune-stuff bexec ctest ${CTEST_ARG} || echo "CTest Failed"
+    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec ctest ${CTEST_ARG} || echo "CTest Failed"
 
 notifications:
   email:
@@ -111,7 +111,7 @@ matrix:
 
 env:
   global:
-    - DUNE_BUILD_DIR=${HOME}/dune_build/ INSTALL_DIR=$HOME/dune
+    - MY_MODULE=dune-stuff DUNE_BUILD_DIR=${HOME}/dune_build/ INSTALL_DIR=$HOME/dune
   #matrix:
     - MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree dune-grid dune-istl"
     - MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree"
