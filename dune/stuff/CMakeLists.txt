@@ -42,3 +42,17 @@ ds_headercheck(${_header})
 
 add_subdirectory(test EXCLUDE_FROM_ALL)
 add_format(${lib_dune_stuff_sources} ${test_sources} ${_header})
+
+include_directories(SYSTEM ${DUNE_STUFF_TEST_DIR}/gtest )
+install(DIRECTORY ${DUNE_STUFF_TEST_DIR}/gtest
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/stuff/test/
+        FILES_MATCHING PATTERN "*")
+install(FILES ${DUNE_STUFF_TEST_DIR}/main.hxx
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/stuff/test/)
+dune_add_library(gtest_dune_stuff
+                 ${DUNE_STUFF_TEST_DIR}/gtest/gtest-all.cc
+                 ADD_LIBS ${DUNE_LIBS})
+install(TARGETS gtest_dune_stuff
+        LIBRARY
+        ARCHIVE DESTINATION lib
+        LIBRARY DESTINATION lib)
