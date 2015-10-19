@@ -17,7 +17,7 @@ endif(CMAKE_WITH_AUTOTOOLS)
 # this assumes that we run dunecontrol with the --use-cmake option
 
 # cmake specific
-cmake_minimum_required( VERSION 2.8 )
+cmake_minimum_required( VERSION 2.8.12 )
 
 set( CMAKE_COLOR_MAKEFILE ON)
 
