@@ -111,7 +111,9 @@ ENDMACRO( SET_CONFIGHEADER_VARS )
 
 set( DUNE_TEST_TIMEOUT 180 CACHE STRING "per-test timeout in seconds")
 
+include(CTest)
 macro(BEGIN_TESTCASES)
+# https://cmake.org/cmake/help/v3.0/module/FindGTest.html
 	include_directories(SYSTEM ${DUNE_STUFF_TEST_DIR}/gtest )
 	add_library(gtest_dune_stuff STATIC ${DUNE_STUFF_TEST_DIR}/gtest/gtest-all.cc)
   target_link_libraries(gtest_dune_stuff pthread)
@@ -121,7 +123,8 @@ macro(BEGIN_TESTCASES)
 		get_filename_component(testname ${source} NAME_WE)
     add_executable( test_${testname} ${source} ${COMMON_HEADER} )
     target_link_libraries( test_${testname} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_stuff )
-    add_test( test_${testname} ${CMAKE_CURRENT_BINARY_DIR}/test_${testname} )
+    add_test( NAME test_${testname} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/test_${testname}
+                   --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/test_${testname}.xml )
     # currently property seems to have no effect
     set_tests_properties(test_${testname} PROPERTIES TIMEOUT ${DUNE_TEST_TIMEOUT})
 		list(APPEND testnames test_${testname} )
