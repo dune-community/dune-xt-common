@@ -35,6 +35,11 @@ endif()
 
 END_TESTCASES()
 
+install(DIRECTORY gtest
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/
+        FILES_MATCHING PATTERN "*.hh")
+#         EXCLUDE PATTERN "stuff/test/*")
+
 # link grid files
 foreach (filename
          "gmsh_2d_simplices.msh"
