@@ -42,7 +42,9 @@ before_install:
   - test -d src || git clone http://users.dune-project.org/repositories/projects/dune-stuff-demos.git src
   - cd $HOME/src
   - git submodule update --init --recursive
-  - cp config.opts/travis $HOME/travis.opts && export DCONTROL_ARG="--builddir=${DUNE_BUILD_DIR}  --opts=${HOME}/travis.opts"
+  - cp config.opts/travis $HOME/travis.opts
+  - export OPTS=${HOME}/travis.opts
+  - export DCONTROL_ARG="--builddir=${DUNE_BUILD_DIR}  --opts=${OPTS}"
   - echo removing modules ${MODULES_TO_DELETE}
   # ensures ${MY_MODULE} from travis own checkout is used
   - rm -rf ${MODULES_TO_DELETE} ${MY_MODULE}
