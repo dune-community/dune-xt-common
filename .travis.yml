@@ -90,7 +90,6 @@ branches:
 
 cache:
   directories:
-    - $HOME/dune
     - $HOME/.ccache
 
 os:
