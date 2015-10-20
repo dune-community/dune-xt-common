@@ -41,6 +41,7 @@
 #include <dune/stuff/test/gtest/gtest.h>
 #include <dune/stuff/aliases.hh>
 #include <dune/stuff/common/configuration.hh>
+#include <dune/stuff/common/exceptions.hh>
 #include <dune/stuff/common/logging.hh>
 #include <dune/stuff/common/timedlogging.hh>
 #include <dune/stuff/common/convergence-study.hh>
