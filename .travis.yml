@@ -39,7 +39,7 @@ before_install:
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.9" CC="/usr/bin/gcc-4.9"; fi
   - if [ "$CXX" = "clang++" ]; then export CXX="clang++-3.7" CC="clang-3.7"; fi
   - cd $HOME
-  - test -d src || git clone --branch=travis http://users.dune-project.org/repositories/projects/dune-stuff-demos.git src
+  - test -d src || git clone http://users.dune-project.org/repositories/projects/dune-stuff-demos.git src
   - cd $HOME/src
   - git submodule update --init --recursive
   - cp config.opts/travis $HOME/travis.opts && export DCONTROL_ARG="--builddir=${DUNE_BUILD_DIR}  --opts=${HOME}/travis.opts"
@@ -52,14 +52,6 @@ before_install:
   - cd ${DUNE_BUILD_DIR}/eigen/build
   - cmake .. -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
   - make install
-  # workarounds for dune-testtools issue
-  - cd $HOME/src
-  - ./dune-common/bin/dunecontrol ${DCONTROL_ARG} --module=dune-python configure
-  - ${DUNE_BUILD_DIR}/dune-python/python2-env/bin/pip install -U pip
-  - ${DUNE_BUILD_DIR}/dune-python/python3-env/bin/pip install -U pip
-  - ${DUNE_BUILD_DIR}/dune-python/python2-env/bin/pip install -U distribute six
-  - ${DUNE_BUILD_DIR}/dune-python/python3-env/bin/pip install -U distribute six
-
 # command to install dependencies
 install:
   - cd $HOME/src
