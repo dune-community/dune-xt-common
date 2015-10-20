@@ -46,12 +46,9 @@ before_install:
   - echo removing modules ${MODULES_TO_DELETE}
   # ensures ${MY_MODULE} from travis own checkout is used
   - rm -rf ${MODULES_TO_DELETE} ${MY_MODULE}
-  # install Eigen
-  - mkdir -p ${DUNE_BUILD_DIR}/eigen/build
-  - wget -qO- http://bitbucket.org/eigen/eigen/get/3.2.4.tar.gz | tar xz -C ${DUNE_BUILD_DIR}/eigen --strip-components=1
-  - cd ${DUNE_BUILD_DIR}/eigen/build
-  - cmake .. -DCMAKE_INSTALL_PREFIX=${INSTALL_DIR}
-  - make install
+  - ./local/bin/download_external_libraries.py
+  - ./local/bin/build_external_libraries.py
+
 # command to install dependencies
 install:
   - cd $HOME/src
@@ -102,7 +99,7 @@ matrix:
 
 env:
   global:
-    - MY_MODULE=dune-stuff DUNE_BUILD_DIR=${HOME}/dune_build/ INSTALL_DIR=$HOME/dune
+    - MY_MODULE=dune-stuff DUNE_BUILD_DIR=${HOME}/dune_build/ INSTALL_PREFIX=$HOME/dune
   matrix:
     - MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree dune-grid dune-istl"
     - MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree"
