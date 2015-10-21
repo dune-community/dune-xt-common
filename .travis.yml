@@ -45,11 +45,11 @@ before_install:
   - cp config.opts/travis $HOME/travis.opts
   - export OPTS=${HOME}/travis.opts
   - export DCONTROL_ARG="--builddir=${DUNE_BUILD_DIR}  --opts=${OPTS}"
-  - echo removing modules ${MODULES_TO_DELETE}
-  # ensures ${MY_MODULE} from travis own checkout is used
-  - rm -rf ${MODULES_TO_DELETE} ${MY_MODULE}
   - ./local/bin/download_external_libraries.py
   - ./local/bin/build_external_libraries.py
+  # ensures ${MY_MODULE} from travis own checkout is used
+  - echo removing modules ${MODULES_TO_DELETE}
+  - rm -rf ${MODULES_TO_DELETE} ${MY_MODULE}
 
 # command to install dependencies
 install:
