@@ -131,6 +131,13 @@ DefaultRNG<std::complex<double>> rng_setup()
   return DefaultRNG<std::complex<double>>(-2, 2);
 }
 
+template <>
+DefaultRNG<double> rng_setup()
+{
+  return DefaultRNG<double>(-2, 2);
+}
+
+
 template <class T>
 static void val_compare_eq(const T& aa, const T& bb)
 {
