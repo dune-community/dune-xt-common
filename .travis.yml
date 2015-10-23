@@ -67,6 +67,8 @@ script:
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make test_binaries
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make test
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make headercheck -k
+    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make install
+    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make package_source
     # reset for ctest
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make clean
     - export CTEST_ARG="--output-on-failure -S ${TRAVIS_BUILD_DIR}/.travis.ctest"
