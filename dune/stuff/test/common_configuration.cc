@@ -175,8 +175,12 @@ struct ConfigTest : public testing::Test
   {
     std::set<std::string> uniq_keys;
     for (T val : values) {
-      auto key = key_gen();
-      val_compare_eq(val, DSC_CONFIG_GET(key, val));
+      const auto key     = key_gen();
+      const auto got_val = DSC_CONFIG_GET(key, val);
+      // since the value invariably goes through string conversion, we need to adjust the expected value as well
+      const T adjusted_val = DSC::fromString<T>(DSC::toString(val));
+      val_compare_eq(adjusted_val, got_val);
+      //! TODO add a float compare check that makes sure introduced error is only due to limited precision in str conv
       uniq_keys.insert(key);
     }
     EXPECT_EQ(values.size(), uniq_keys.size());
