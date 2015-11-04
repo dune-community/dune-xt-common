@@ -335,60 +335,66 @@ from_string(std::string matrix_str, const size_t rows, const size_t cols)
 // variant for everything that is not a matrix, a vector or any of the types specified below
 template <class T>
 static inline typename std::enable_if<!is_vector<T>::value && !is_matrix<T>::value, std::string>::type
-to_string(const T& ss)
+to_string(const T& ss, const std::size_t precision)
 {
-  return std::to_string(ss);
+  std::ostringstream out;
+  out << std::setprecision(precision) << ss;
+  return out.str();
 }
 
 template <typename T>
-static inline std::string to_string(const std::complex<T>& val)
+static inline std::string to_string(const std::complex<T>& val, const std::size_t precision)
 {
   using namespace std;
   stringstream os;
-  const auto im     = imag(val);
-  const string sign = Dune::Stuff::Common::signum(im) < 0 ? "" : "+";
-  os << real(val) << sign << imag(val) << "i";
+  const auto im       = imag(val);
+  const string sign   = Dune::Stuff::Common::signum(im) < 0 ? "" : "+";
+  const auto real_str = Dune::Stuff::Common::internal::to_string(real(val), precision);
+  const auto imag_str = Dune::Stuff::Common::internal::to_string(im, precision);
+  os << real_str << sign << imag_str << "i";
   return os.str();
 }
 
 template <int size>
-static inline std::string to_string(const Dune::bigunsignedint<size>& ss)
+static inline std::string to_string(const Dune::bigunsignedint<size>& ss, const std::size_t /*precision*/)
 {
   std::stringstream os;
   os << ss;
   return os.str();
 }
 
-inline std::string to_string(const char* ss)
+inline std::string to_string(const char* ss, const std::size_t /*precision*/)
 {
   return std::string(ss);
 }
 
-inline std::string to_string(char ss)
+inline std::string to_string(char ss, const std::size_t /*precision*/)
 {
   return std::string(1, ss);
 }
 
-inline std::string to_string(const std::string ss)
+inline std::string to_string(const std::string ss, const std::size_t /*precision*/)
 {
   return std::string(ss);
 }
 
 template <class V>
-static inline typename std::enable_if<is_vector<V>::value, std::string>::type to_string(const V& vec)
+static inline typename std::enable_if<is_vector<V>::value, std::string>::type to_string(const V& vec,
+                                                                                        const std::size_t precision)
 {
   std::string ret = "[";
   for (auto ii : valueRange(vec.size())) {
     if (ii > 0)
       ret += " ";
-    ret += to_string(vec[ii]);
+    ret += Dune::Stuff::Common::internal::to_string(vec[ii], precision);
   }
   ret += "]";
   return ret;
 } // ... to_string(...)
 
 template <class M>
-static inline typename std::enable_if<is_matrix<M>::value, std::string>::type to_string(const M& mat)
+static inline typename std::enable_if<is_matrix<M>::value, std::string>::type to_string(const M& mat,
+                                                                                        const std::size_t precision)
 {
   std::string ret = "[";
   for (auto rr : valueRange(MatrixAbstraction<M>::rows(mat))) {
@@ -397,7 +403,7 @@ static inline typename std::enable_if<is_matrix<M>::value, std::string>::type to
     for (auto cc : valueRange(MatrixAbstraction<M>::cols(mat))) {
       if (cc > 0)
         ret += " ";
-      ret += to_string(MatrixAbstraction<M>::get_entry(mat, rr, cc));
+      ret += Dune::Stuff::Common::internal::to_string(MatrixAbstraction<M>::get_entry(mat, rr, cc), precision);
     }
   }
   ret += "]";
