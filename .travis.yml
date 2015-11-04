@@ -1,13 +1,12 @@
 sudo: false
 language: cpp
 
-
 addons:
   apt:
-    sources:
+    sources: &commonsources
     - boost-latest
     - george-edison55-precise-backports
-    packages:
+    packages: &commonpackages
     - cmake
     - cmake-data
     - doxygen
@@ -84,11 +83,7 @@ cache:
 
 env:
   global:
-    - MY_MODULE=dune-stuff DUNE_BUILD_DIR=${HOME}/dune_build/ INSTALL_DIR=$HOME/dune MINIMAL_MODULES=
-  matrix:
-    - MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree dune-grid dune-istl"
-    - MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree"
-    - USE_ALL_MODULES_IN_SUPER_REPO
+    - MY_MODULE=dune-stuff DUNE_BUILD_DIR=${HOME}/dune_build/ INSTALL_DIR=$HOME/dune
 
 matrix:
   include:
@@ -96,8 +91,12 @@ matrix:
       compiler: gcc
       addons: &gcc49
         apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-4.9', 'gcc-4.9']
+          sources:
+          - &commonsources
+          - 'ubuntu-toolchain-r-test'
+          packages:
+          - *commonpackages
+          - ['g++-4.9', 'gcc-4.9']
       env: CXX_COMPILER=g++-4.9 COMPILER=gcc-4.9
     - os: linux
       compiler: gcc
@@ -112,8 +111,12 @@ matrix:
       compiler: gcc
       addons:
         apt:
-          sources: ['ubuntu-toolchain-r-test']
-          packages: ['g++-5', 'gcc-5']
+          sources:
+          - &commonsources
+          - 'ubuntu-toolchain-r-test'
+          packages:
+          - *commonpackages
+          - ['g++-5', 'gcc-5']
       env: CXX_COMPILER=g++-5 COMPILER=gcc-5
 
     - os: linux
