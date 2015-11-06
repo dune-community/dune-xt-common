@@ -31,7 +31,9 @@ endif(TBB_FOUND)
 
 if(dune-grid_FOUND)
   add_dune_superlu_flags(dunestuff)
+  add_dune_alberta_flags(dunestuff)
   add_dune_alugrid_flags(dunestuff)
+  add_dune_ug_flags(dunestuff)
 endif(dune-grid_FOUND)
 target_link_dune_default_libraries(dunestuff)
 
