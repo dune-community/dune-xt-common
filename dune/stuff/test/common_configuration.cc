@@ -190,10 +190,12 @@ struct ConfigTest : public testing::Test
   {
     for (T val : values) {
       auto key = key_gen();
+      // since the value invariably goes through string conversion, we need to adjust the expected value as well
+      const T adjusted_val = DSC::fromString<T>(DSC::toString(val));
       DSC_CONFIG.set(key, val);
       // get with default diff from expected
       auto re = DSC_CONFIG.get(key, T(val + Dune::Stuff::Common::Epsilon<T>::value));
-      val_compare_eq(re, val);
+      val_compare_eq(re, adjusted_val);
     }
   }
 
