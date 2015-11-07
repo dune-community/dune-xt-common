@@ -55,7 +55,7 @@ script:
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make test_binaries
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make test
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make headercheck -k
-    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make install
+    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make install | grep -v "Installing"
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make package_source
     # reset for ctest
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make clean
@@ -130,3 +130,15 @@ matrix:
           - *commonpackages
           - ['clang-3.7']
       env: CXX_COMPILER=clang++-3.7 COMPILER=clang-3.7
+
+    - os: linux
+      compiler: clang
+      addons:
+        apt:
+          sources:
+          - *commonsources
+          - ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.8']
+          packages:
+          - *commonpackages
+          - ['clang-3.8']
+      env: CXX_COMPILER=clang++-3.8 COMPILER=clang-3.8
