@@ -8,6 +8,7 @@
 
 #include <random>
 #include <limits>
+#include <complex>
 
 #include <boost/assign/list_of.hpp>
 #include <boost/numeric/conversion/cast.hpp>
