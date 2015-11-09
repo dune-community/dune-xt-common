@@ -54,6 +54,7 @@ script:
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make test_binaries
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make test
+    - ${TRAVIS_BUILD_DIR}/scripts/upload_test_logs.bash ${DUNE_BUILD_DIR}/dune-stuff/
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make headercheck -k
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make install | grep -v "Installing"
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make package_source
