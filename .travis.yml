@@ -85,6 +85,7 @@ cache:
 env:
   global:
     - MY_MODULE=dune-stuff DUNE_BUILD_DIR=${HOME}/dune_build/ INSTALL_DIR=$HOME/dune
+    - secure: "iuWrq6nisl/ssnp8JadXWJLwdr2GDu+b0BMvTWALRjbXJWxZEEaKCnK+sGgAVqdsdvntWo9jmoGQ5O5z2KNXpAGcgLfDfG1sTS2/JYkaoRKqv/rBuqOWkmpSHzQvGCfQMC637+YHhILEzlcR9MSlbvZg00WYNQgYwOssCcRfmIY="
 
 matrix:
   include:
