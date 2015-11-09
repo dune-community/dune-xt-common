@@ -1,10 +1,8 @@
 #! /bin/bash
-set -u
-set -x
 
-BRANCH=${TRAVIS_BRANCH}
-if [ "x${TRAVIS_PULL_REQUEST}" -ne "xfalse" ] ; then
-    BRANCH=PR_${TRAVIS_PULL_REQUEST}_to_${TRAVIS_BRANCH}
+BRANCH=PR_${TRAVIS_PULL_REQUEST}_to_${TRAVIS_BRANCH}
+if [ "x${TRAVIS_PULL_REQUEST}" == "xfalse" ] ; then
+    BRANCH=${TRAVIS_BRANCH}
 fi
 cd
 rm -rf logs
@@ -13,7 +11,8 @@ cd logs
 git checkout ${BRANCH}
 DIR=${CXX_COMPILER}__wo_${MODULES_TO_DELETE// /_}
 rm -rf ${DIR}
-rsync -a ${DUNE_BUILD_DIR}/dune/stuff/test/*xml ${DIR}
+mkdir ${DIR}
+rsync -a ${DUNE_BUILD_DIR}/dune-stuff/dune/stuff/test/*xml ${DIR}
 printenv | sort > ${DIR}/env
 git add .
 git config user.name "Travis-CI"

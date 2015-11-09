@@ -54,7 +54,7 @@ script:
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make test_binaries
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make test
-    - ${TRAVIS_BUILD_DIR}/scripts/upload_test_logs.bash ${DUNE_BUILD_DIR}/dune-stuff/
+    - ${TRAVIS_BUILD_DIR}/scripts/upload_test_logs.bash
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make headercheck -k
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make install | grep -v "Installing"
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make package_source
@@ -85,7 +85,7 @@ cache:
 env:
   global:
     - MY_MODULE=dune-stuff DUNE_BUILD_DIR=${HOME}/dune_build/ INSTALL_DIR=$HOME/dune
-    - secure: "iuWrq6nisl/ssnp8JadXWJLwdr2GDu+b0BMvTWALRjbXJWxZEEaKCnK+sGgAVqdsdvntWo9jmoGQ5O5z2KNXpAGcgLfDfG1sTS2/JYkaoRKqv/rBuqOWkmpSHzQvGCfQMC637+YHhILEzlcR9MSlbvZg00WYNQgYwOssCcRfmIY="
+    - secure: "LTY7Jr3Wyb6/4f0/Wo43CXRJ5u9H+Amb2x8Krq0JKVGUzabJKGTNgc5qbfupcAJPv0E24mqfua7meuDKiDBtFA0u20P+gHzEFzM81Fs4GSKhjLWit7Vj7END99a2McV9nxtT02hdummCsFKFXKc/fAYWSuj4Jb050bdjxhJKUh4="
 
 matrix:
   include:
