@@ -34,6 +34,8 @@
 # define LIKWID_PERFMON 1
 #endif
 
+#cmakedefine HAVE_MAP_EMPLACE 1
+
 #define DS_OVERRIDE ; static_assert(false, "Use override instead (21.10.2014)!");
 #define DS_FINAL    ; static_assert(false, "Use final instead (21.10.2014)!");
 #define HAVE_DUNE_FEM_PARAMETER_REPLACE 0
@@ -142,6 +144,10 @@
 
 #ifndef DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS
 # define DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS 0
+#endif
+
+#ifndef HAVE_MAP_EMPLACE
+#define HAVE_MAP_EMPLACE 0
 #endif
 
 /*** End: Silence implicitly False evaluation of undefined macro warnings ****/

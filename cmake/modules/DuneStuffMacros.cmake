@@ -41,6 +41,17 @@ CHECK_CXX_SOURCE_COMPILES("
 "  HAS_WORKING_UNUSED_ATTRIBUTE
 )
 
+CHECK_CXX_SOURCE_COMPILES("
+    #include <map>
+    int main(void)
+    {
+      std::map<int, int> a;
+      a.emplace(2, 2);
+      return 0;
+    };
+"  HAVE_MAP_EMPLACE
+)
+
 Macro(ADD_IF_SUPPORTED dest)
   FOREACH(flag ${ARGN})
     CHECK_CXX_ACCEPTS_FLAG("${flag}" has_${flag})

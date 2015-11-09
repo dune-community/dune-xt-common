@@ -44,7 +44,7 @@ size_t Dune::Stuff::ThreadManager::thread()
   static std::map<decltype(tbb_id), size_t> thread_ids;
   const auto it = thread_ids.find(tbb_id);
   if (it == thread_ids.end())
-    thread_ids.emplace(tbb_id, thread_ids.size());
+    DSC::map_emplace(thread_ids, tbb_id, thread_ids.size());
   return thread_ids.at(tbb_id);
 }
 

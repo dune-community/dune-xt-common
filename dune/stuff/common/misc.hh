@@ -38,6 +38,8 @@
 #include <dune/stuff/common/reenable_warnings.hh>
 #include <boost/filesystem/fstream.hpp>
 
+#include <dune/stuff/common/logging.hh>
+
 namespace Dune {
 namespace Stuff {
 namespace Common {
@@ -112,6 +114,34 @@ std::array<T, N> make_array(const T& v)
 
 //! writes process environment to file
 void dump_environment(boost::filesystem::ofstream& file, std::string csv_sep = ",");
+
+/** abstraction for stdlibs w/o map.emplace
+ * This isn't covering the full emplace spec, and the piecewise case potentially improper,
+ * but we only need this in an Intel MIC setup with weird lib versioning.
+ * Normally we'd depend on the full gcc 4.8 stack atm and do not use the insert fallback
+ **/
+template <typename Key, typename T, typename MapType>
+std::pair<typename MapType::iterator, bool> map_emplace(MapType& map_in, Key key, T value)
+{
+#if HAVE_MAP_EMPLACE
+  return map_in.emplace(key, value);
+#else
+  DSC_LOG_DEBUG_0 << "using map.insert fallback instead of emplace\n";
+  return map_in.insert(typename MapType::value_type(key, value));
+#endif
+}
+
+template <typename K, typename V, typename MapType>
+std::pair<typename MapType::iterator, bool> map_emplace(MapType& map_in, std::piecewise_construct_t pcw, K&& keys,
+                                                        V&& values)
+{
+#if HAVE_MAP_EMPLACE
+  return map_in.emplace(pcw, keys, values);
+#else
+  DSC_LOG_DEBUG_0 << "using map.insert fallback instead of emplace\n";
+  return map_in.insert(typename MapType::value_type(pcw, keys, values));
+#endif
+}
 
 } // namespace Common
 } // namespace Stuff
