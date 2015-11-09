@@ -166,10 +166,7 @@ TEST(StringTest, ConvertFrom)
 // Hex, whitespacify, tokenize, stringFromTime tests
 TEST(StringTest, Hex)
 {
-// disabled the following test for Intel anc clang compiler because it causes compilation failures for no obvious reason
-#if !(defined __INTEL_COMPILER || BOOST_CLANG)
-  EXPECT_GT(boost::lexical_cast<HexToString<unsigned long>>(cout), 0u);
-#endif
+  EXPECT_GT(boost::lexical_cast<HexToString<unsigned long>>(&cout), 0u);
   EXPECT_EQ(boost::lexical_cast<HexToString<unsigned long>>("0x00000F"), 15u);
 }
 
