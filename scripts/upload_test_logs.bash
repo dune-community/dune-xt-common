@@ -3,7 +3,7 @@ set -u
 set -x
 
 BRANCH=${TRAVIS_BRANCH}
-if [ x${TRAVIS_PULL_REQUEST} -ne xfalse ] ; then
+if [ "x${TRAVIS_PULL_REQUEST}" -ne "xfalse" ] ; then
     BRANCH=PR_${TRAVIS_PULL_REQUEST}_to_${TRAVIS_BRANCH}
 fi
 cd
