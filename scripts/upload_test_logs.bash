@@ -1,4 +1,5 @@
 #! /bin/bash
+set -x
 
 BRANCH=PR_${TRAVIS_PULL_REQUEST}_to_${TRAVIS_BRANCH}
 if [ "x${TRAVIS_PULL_REQUEST}" == "xfalse" ] ; then
@@ -18,4 +19,4 @@ git add .
 git config user.name "Travis-CI"
 git config user.email "travis@travis-ci.org"
 git commit -m "Testlogs for Job ${TRAVIS_JOB_NUMBER} - ${TRAVIS_COMMIT_RANGE}"
-git push origin https://${GH_TOKEN}@github.com/wwu-numerik/dune-stuff-testlogs.git ${BRANCH}:${BRANCH} > /dev/null 2>&1
+git push origin https://${GH_TOKEN}@github.com/wwu-numerik/dune-stuff-testlogs.git ${BRANCH}:${BRANCH} #> /dev/null 2>&1
