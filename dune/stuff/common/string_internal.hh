@@ -338,7 +338,7 @@ static inline typename std::enable_if<!is_vector<T>::value && !is_matrix<T>::val
 to_string(const T& ss, const std::size_t precision)
 {
   std::ostringstream out;
-  out << std::setprecision(precision) << ss;
+  out << std::setprecision(boost::numeric_cast<int>(precision)) << ss;
   return out.str();
 }
 
