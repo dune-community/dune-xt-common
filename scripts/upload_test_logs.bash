@@ -8,7 +8,7 @@ if [ "x${TRAVIS_PULL_REQUEST}" -ne "xfalse" ] ; then
 fi
 cd
 rm -rf logs
-git clone https://${GH_TOKEN}@github.com/wwu-numerik/dune-stuff-testlogs.git logs
+git clone https://github.com/wwu-numerik/dune-stuff-testlogs.git logs
 cd logs
 git checkout ${BRANCH}
 DIR=${CXX_COMPILER}__wo_${MODULES_TO_DELETE// /_}
@@ -19,4 +19,4 @@ git add .
 git config user.name "Travis-CI"
 git config user.email "travis@travis-ci.org"
 git commit -m "Testlogs for Job ${TRAVIS_JOB_NUMBER} - ${TRAVIS_COMMIT_RANGE}"
-git push origin ${BRANCH}
+git push origin https://${GH_TOKEN}@github.com/wwu-numerik/dune-stuff-testlogs.git ${BRANCH}:${BRANCH} > /dev/null 2>&1
