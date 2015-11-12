@@ -1,15 +1,18 @@
 #! /bin/bash
 
-BRANCH=PR_${TRAVIS_PULL_REQUEST}_to_${TRAVIS_BRANCH}
-if [ "x${TRAVIS_PULL_REQUEST}" == "xfalse" ] ; then
-    BRANCH=${TRAVIS_BRANCH}
+BRANCH=${TRAVIS_BRANCH}
+if [ "x${TRAVIS_PULL_REQUEST}" != "xfalse" ] ; then
+    BRANCH=PR_${TRAVIS_PULL_REQUEST}_to_${BRANCH}
 fi
 cd
 rm -rf logs
 git clone https://github.com/wwu-numerik/dune-stuff-testlogs.git logs
 cd logs
 git checkout -B ${BRANCH}
-DIR=${CXX_COMPILER}__wo_${MODULES_TO_DELETE// /_}
+DIR=${CXX_COMPILER}
+if [ "x${MODULES_TO_DELETE}" != "x"] ; then
+    DIR=${DIR}__wo_${MODULES_TO_DELETE// /_}
+fi
 rm -rf ${DIR}
 mkdir ${DIR}
 rsync -a ${DUNE_BUILD_DIR}/dune-stuff/dune/stuff/test/*xml ${DIR}
