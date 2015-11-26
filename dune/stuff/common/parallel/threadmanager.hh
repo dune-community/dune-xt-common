@@ -23,6 +23,8 @@ ThreadManager& threadManager();
  **/
 struct ThreadManager
 {
+  static size_t default_max_threads();
+
   //! return maximal number of threads possbile in the current run
   size_t max_threads();
 
@@ -44,7 +46,7 @@ private:
 
   size_t max_threads_;
 #if HAVE_TBB
-  std::unique_ptr<tbb::task_scheduler_init> tbb_init_;
+  tbb::task_scheduler_init tbb_init_;
 #endif
 };
 

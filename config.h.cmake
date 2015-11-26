@@ -36,6 +36,8 @@
 
 #cmakedefine HAVE_MAP_EMPLACE 1
 
+#define DS_MAX_MIC_THREADS ${DS_MAX_MIC_THREADS}
+
 #define DS_OVERRIDE ; static_assert(false, "Use override instead (21.10.2014)!");
 #define DS_FINAL    ; static_assert(false, "Use final instead (21.10.2014)!");
 #define HAVE_DUNE_FEM_PARAMETER_REPLACE 0

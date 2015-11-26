@@ -201,3 +201,5 @@ macro(add_forced_doxygen_target)
     add_dependencies(doxygen_${ProjectName} doxygen_${ProjectName}_pre_build)
   endif()
 endmacro(add_forced_doxygen_target)
+
+set(DS_MAX_MIC_THREADS CACHE INTEGER 120)
