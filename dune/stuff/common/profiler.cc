@@ -235,9 +235,13 @@ void Profiler::outputTimings(const std::string csv) const
   boost::filesystem::path filename = dir / (boost::format("%s_p%08d.csv") % csv % comm.rank()).str();
   boost::filesystem::ofstream out(filename);
   outputTimings(out);
-  boost::filesystem::path a_filename = dir / (boost::format("%s.csv") % csv).str();
-  boost::filesystem::ofstream a_out(a_filename);
-  outputTimingsAll(a_out);
+  std::stringstream tmp_out;
+  outputTimingsAll(tmp_out);
+  if (comm.rank() == 0) {
+    boost::filesystem::path a_filename = dir / (boost::format("%s.csv") % csv).str();
+    boost::filesystem::ofstream a_out(a_filename);
+    a_out << tmp_out.str() << std::endl;
+  }
 }
 
 void Profiler::outputTimingsAll(std::ostream& out) const
