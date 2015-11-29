@@ -151,6 +151,16 @@ TimingData::DeltaType Profiler::getTimingIdx(const std::string section_name, con
     return timer_it->second.second->delta();
   }
   return section->second;
+}
+
+void Profiler::stopAll()
+{
+  for (auto&& section : known_timers_map_) {
+    try {
+      stopTiming(section.first);
+    } catch (Dune::RangeError) {
+    }
+  }
 } // GetTiming
 
 void Profiler::reset(const size_t numRuns)

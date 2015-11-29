@@ -84,6 +84,8 @@ private:
   TimingData::DeltaType getTimingIdx(const std::string section_name, const size_t run_number) const;
 
 public:
+  void stopAll();
+
   //! set this to begin a named section
   void startTiming(const std::string section_name);
 
