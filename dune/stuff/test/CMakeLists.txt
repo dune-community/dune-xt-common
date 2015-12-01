@@ -50,3 +50,16 @@ foreach (filename
         )
   execute_process(COMMAND ln -s "${CMAKE_CURRENT_SOURCE_DIR}/${filename}" "${CMAKE_CURRENT_BINARY_DIR}/${filename}")
 endforeach (filename)
+
+add_dune_system_test(SOURCE grid_periodicview.cc
+	             INIFILE grid_periodicview.mini
+	             BASENAME test_grid_periodicview
+	             CREATED_TARGETS targetlist
+		     ${DEBUG_MACRO_TESTS})
+
+set(testnames ${testnames} ${targetlist})
+
+foreach(_exe ${targetlist})
+  target_link_libraries(${_exe} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_stuff dunestuff)
+  add_dune_mpi_flags(${_exe})
+endforeach()
