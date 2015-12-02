@@ -24,7 +24,7 @@ Logging::Logging()
   , emptyLogStream_(logflags_)
 {
   for (const auto id : streamIDs_)
-    streammap_[id] = make_unique<EmptyLogStream>(logflags_);
+    streammap_[id] = Dune::Stuff::Common::make_unique<EmptyLogStream>(logflags_);
 }
 
 void Logging::deinit()
@@ -61,7 +61,7 @@ void Logging::create(int logflags, const std::string logfile, const std::string 
 
   for (const auto id : streamIDs_) {
     flagmap_[id]   = logflags;
-    streammap_[id] = make_unique<FileLogStream>(id, flagmap_[id], logfile_);
+    streammap_[id] = Dune::Stuff::Common::make_unique<FileLogStream>(id, flagmap_[id], logfile_);
   }
 } // create
 
@@ -114,7 +114,7 @@ int Logging::addStream(int flags)
   int streamID = streamID_int;
   streamIDs_.push_back(streamID);
   flagmap_[streamID]   = (flags | streamID);
-  streammap_[streamID] = make_unique<FileLogStream>(streamID, flagmap_[streamID], logfile_);
+  streammap_[streamID] = Dune::Stuff::Common::make_unique<FileLogStream>(streamID, flagmap_[streamID], logfile_);
   return streamID_int;
 } // addStream
 
