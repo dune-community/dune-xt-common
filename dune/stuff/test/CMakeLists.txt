@@ -65,6 +65,12 @@ dune_add_system_test(SOURCE functions_functions.cc
 	             CREATED_TARGETS targetlist
 		     ${DEBUG_MACRO_TESTS})
 
+dune_add_system_test(SOURCE functions_constant.cc
+                     INIFILE functions_functions.mini
+                     BASENAME test_functions_constant
+                     CREATED_TARGETS targetlist
+                     ${DEBUG_MACRO_TESTS})
+
 foreach(_exe ${targetlist})
   target_link_libraries(${_exe} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_stuff dunestuff)
   add_dune_mpi_flags(${_exe})
