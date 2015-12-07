@@ -38,6 +38,13 @@ before_install:
   - echo removing modules ${MODULES_TO_DELETE}
   # ensures ${MY_MODULE} from travis own checkout is used
   - rm -rf ${MODULES_TO_DELETE} ${MY_MODULE}
+  -  # workarounds for dune-testtools issue
+  - cd $HOME/src
+  - ./dune-common/bin/dunecontrol ${DCONTROL_ARG} --module=dune-python configure
+  - ${DUNE_BUILD_DIR}/dune-python/python2-env/bin/pip install -U pip
+  - ${DUNE_BUILD_DIR}/dune-python/python3-env/bin/pip install -U pip
+  - ${DUNE_BUILD_DIR}/dune-python/python2-env/bin/pip install -U distribute six
+  - ${DUNE_BUILD_DIR}/dune-python/python3-env/bin/pip install -U distribute six
 
 # command to install dependencies
 install:
