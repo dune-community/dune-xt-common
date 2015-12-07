@@ -26,7 +26,7 @@ before_install:
   - export PATH=/usr/lib/ccache:$PATH
   - export CXX=${CXX_COMPILER} CC=${COMPILER}
   - cd $HOME
-  - test -d src || git clone https://github.com/wwu-numerik/dune-stuff-demos.git src
+  - test -d src || git clone --branch=testtools https://github.com/wwu-numerik/dune-stuff-demos.git src
   - cd $HOME/src
   - git submodule update --init --recursive
   - cp config.opts/travis $HOME/travis.opts
