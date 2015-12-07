@@ -71,6 +71,8 @@ struct CreateByKeyAndValueAndAddConfiguration
     config.set("sub2.size_t", 1);
     config.add(Configuration("vector", "[0 1]"), "sub2.subsub1");
     config.add(Configuration("matrix", "[0 1; 1 2]"), "sub2.subsub1");
+    Configuration config_1("bool", true);
+    Configuration config_2("int", int(1));
     return config;
   }
 };
