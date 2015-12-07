@@ -27,13 +27,13 @@ foreach (filename
   execute_process(COMMAND ln -s "${CMAKE_CURRENT_SOURCE_DIR}/${filename}" "${CMAKE_CURRENT_BINARY_DIR}/${filename}")
 endforeach (filename)
 
-add_dune_system_test(SOURCE grid_periodicview.cc
+dune_add_system_test(SOURCE grid_periodicview.cc
 	             INIFILE grid_periodicview.mini
 	             BASENAME test_grid_periodicview
 	             CREATED_TARGETS targetlist
 		     ${DEBUG_MACRO_TESTS})
 
-add_dune_system_test(SOURCE functions_functions.cc
+dune_add_system_test(SOURCE functions_functions.cc
 	             INIFILE functions_functions.mini
 	             BASENAME test_functions_functions
 	             CREATED_TARGETS targetlist
