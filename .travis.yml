@@ -63,7 +63,7 @@ script:
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make clean
     - export CTEST_ARG="--output-on-failure -S ${TRAVIS_BUILD_DIR}/.travis.ctest"
     # ctest errors on coverage gathering, this should NOT fail our entire build
-    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec ctest ${CTEST_ARG} || echo "CTest Failed"
+    #- ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec ctest ${CTEST_ARG} || echo "CTest Failed"
 
 notifications:
   email:
