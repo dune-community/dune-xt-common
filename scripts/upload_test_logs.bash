@@ -10,7 +10,7 @@ git clone https://github.com/wwu-numerik/dune-stuff-testlogs.git logs
 cd logs
 git checkout -B ${BRANCH}
 DIR=${CXX_COMPILER}
-if [ "x${MODULES_TO_DELETE}" != "x"] ; then
+if [ "x${MODULES_TO_DELETE}" != "x" ] ; then
     DIR=${DIR}__wo_${MODULES_TO_DELETE// /_}
 fi
 rm -rf ${DIR}
