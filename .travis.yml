@@ -13,18 +13,16 @@ addons:
     - doxygen
     - texlive-base
     - python-virtualenv
-    - python3-venv
-    - python3-virtualenv
     - libboost1.55-all-dev
     - python-pip
     - libtbb-dev
     - ccache
-    - libparmetis-dev
     - libsuitesparse-dev
     - lcov
     - curl
 
 before_install:
+  - sudo apt-get install -y -qq python3.4-venv libparmetis-dev 
   - cmake --version
   - export PATH=/usr/lib/ccache:$PATH
   - export CXX=${CXX_COMPILER} CC=${COMPILER}
