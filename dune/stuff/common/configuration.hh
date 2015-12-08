@@ -56,7 +56,8 @@ public:
    * enable_if trick to disambiguate const char* (which is implicitly convertible to bool/string) ctors
    **/
   template <typename T = bool>
-  explicit Configuration(const T /*record_defaults*/ = internal::configuration_record_defaults,
+  explicit Configuration(const typename std::enable_if<std::is_same<T, bool>::value, bool>::type /*record_defaults*/ =
+                             internal::configuration_record_defaults,
                          const bool warn_on_default_access = internal::configuration_warn_on_default_access,
                          const typename std::enable_if<!std::is_same<T, const char*>::value, bool>::type log_on_exit =
                              internal::configuration_log_on_exit,
