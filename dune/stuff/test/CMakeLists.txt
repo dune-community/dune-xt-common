@@ -53,23 +53,60 @@ endif()
 
 END_TESTCASES()
 
-dune_add_system_test(SOURCE grid_periodicview.cc
-	             INIFILE grid_periodicview.mini
-	             BASENAME test_grid_periodicview
-	             CREATED_TARGETS targetlist
-		     ${DEBUG_MACRO_TESTS})
-
-dune_add_system_test(SOURCE functions_functions.cc
-	             INIFILE functions_functions.mini
-	             BASENAME test_functions_functions
-	             CREATED_TARGETS targetlist
-		     ${DEBUG_MACRO_TESTS})
+dune_add_system_test(SOURCE functions_checkerboard.cc
+                     INIFILE functions_checkerboard.mini
+                     BASENAME test_functions_checkerboard
+                     CREATED_TARGETS targetlist
+                     ${DEBUG_MACRO_TESTS})
 
 dune_add_system_test(SOURCE functions_constant.cc
-                     INIFILE functions_functions.mini
+                     INIFILE functions_constant.mini
                      BASENAME test_functions_constant
                      CREATED_TARGETS targetlist
                      ${DEBUG_MACRO_TESTS})
+
+dune_add_system_test(SOURCE functions_ESV2007.cc
+                     INIFILE functions_ESV2007.mini
+                     BASENAME test_functions_ESV2007
+                     CREATED_TARGETS targetlist
+                     ${DEBUG_MACRO_TESTS})
+
+dune_add_system_test(SOURCE functions_expression.cc
+                     INIFILE functions_expression.mini
+                     BASENAME test_functions_expression
+                     CREATED_TARGETS targetlist
+                     ${DEBUG_MACRO_TESTS})
+
+dune_add_system_test(SOURCE functions_functions.cc
+                     INIFILE functions_functions.mini
+                     BASENAME test_functions_functions
+                     CREATED_TARGETS targetlist
+                     ${DEBUG_MACRO_TESTS})
+
+dune_add_system_test(SOURCE functions_global.cc
+                     INIFILE functions_global.mini
+                     BASENAME test_functions_global
+                     CREATED_TARGETS targetlist
+                     ${DEBUG_MACRO_TESTS})
+
+dune_add_system_test(SOURCE functions_indicator.cc
+                     INIFILE functions_indicator.mini
+                     BASENAME test_functions_indicator
+                     CREATED_TARGETS targetlist
+                     ${DEBUG_MACRO_TESTS})
+
+dune_add_system_test(SOURCE functions_spe10.cc
+                     INIFILE functions_spe10.mini
+                     BASENAME test_functions_spe10
+                     CREATED_TARGETS targetlist
+                     ${DEBUG_MACRO_TESTS})
+
+dune_add_system_test(SOURCE grid_periodicview.cc
+                     INIFILE grid_periodicview.mini
+                     BASENAME test_grid_periodicview
+                     CREATED_TARGETS targetlist
+                     ${DEBUG_MACRO_TESTS})
+
 
 foreach(_exe ${targetlist})
   target_link_libraries(${_exe} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_stuff dunestuff)
