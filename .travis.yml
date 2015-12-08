@@ -22,9 +22,9 @@ addons:
     - curl
 
 before_install:
-  - sudo apt-get install -y -q python-pip python3-pip
-  - sudo pip3 install virtualenv
-  - sudo pip install virtualenv
+  - sudo -E apt-get install -y -q python-pip python3-pip
+  - sudo -E pip3 install virtualenv
+  - sudo -E pip install virtualenv
   - cmake --version
   - export PATH=/usr/lib/ccache:$PATH
   - export CXX=${CXX_COMPILER} CC=${COMPILER}
