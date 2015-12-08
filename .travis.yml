@@ -1,4 +1,5 @@
-sudo: false
+sudo: required
+dist: trusty
 language: cpp
 
 addons:
@@ -16,17 +17,19 @@ addons:
     - python-pip
     - libtbb-dev
     - ccache
-    - libparmetis-dev
     - libsuitesparse-dev
     - lcov
     - curl
 
 before_install:
+  - sudo apt-get install -y -q python-pip python3-pip
+  - sudo pip3 install virtualenv
+  - sudo pip install virtualenv
   - cmake --version
   - export PATH=/usr/lib/ccache:$PATH
   - export CXX=${CXX_COMPILER} CC=${COMPILER}
   - cd $HOME
-  - test -d src || git clone https://github.com/wwu-numerik/dune-stuff-demos.git src
+  - test -d src || git clone --branch=testtools https://github.com/wwu-numerik/dune-stuff-demos.git src
   - cd $HOME/src
   - git submodule update --init --recursive
   - cp config.opts/travis $HOME/travis.opts
@@ -62,7 +65,7 @@ script:
     - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make clean
     - export CTEST_ARG="--output-on-failure -S ${TRAVIS_BUILD_DIR}/.travis.ctest"
     # ctest errors on coverage gathering, this should NOT fail our entire build
-    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec ctest ${CTEST_ARG} || echo "CTest Failed"
+    #- ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec ctest ${CTEST_ARG} || echo "CTest Failed"
 
 notifications:
   email:
