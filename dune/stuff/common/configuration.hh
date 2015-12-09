@@ -124,7 +124,7 @@ public:
                 const std::string logfile = internal::configuration_logfile);
 
   template <class T>
-  Configuration(const std::vector<std::string> keys, const std::vector<T> values_in,
+  Configuration(const std::vector<std::string> keys, const std::initializer_list<T> values_in,
                 const bool record_defaults        = internal::configuration_record_defaults,
                 const bool warn_on_default_access = internal::configuration_warn_on_default_access,
                 const bool log_on_exit            = internal::configuration_log_on_exit,

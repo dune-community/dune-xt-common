@@ -92,6 +92,20 @@ struct CreateByKeyAndValueAndAddParameterTree
   }
 };
 
+struct CreateByKeyAndValueVectorsAndAddParameterTree
+{
+  static Configuration create()
+  {
+    Configuration config(std::vector<std::string>({"string", "sub1.int"}), std::vector<std::string>({"string", "1"}));
+    config.set("sub2.size_t", 1);
+    Dune::ParameterTree paramtree;
+    paramtree["vector"] = "[0 1]";
+    paramtree["matrix"] = "[0 1; 1 2]";
+    config.add(paramtree, "sub2.subsub1");
+    return config;
+  }
+};
+
 struct CreateByKeysAndValues
 {
   static Configuration create()
@@ -119,7 +133,8 @@ typedef testing::Types<double, float, std::string, std::complex<double>, int, un
                        char> TestTypes;
 
 typedef testing::Types<CreateByOperator, CreateByKeyAndValueAndAddConfiguration, CreateByKeyAndValueAndAddParameterTree,
-                       CreateByKeysAndValues, CreateByParameterTree, CreateByOperatorAndAssign> ConfigurationCreators;
+                       CreateByKeyAndValueVectorsAndAddParameterTree, CreateByKeysAndValues, CreateByParameterTree,
+                       CreateByOperatorAndAssign> ConfigurationCreators;
 
 template <class T>
 static DefaultRNG<T> rng_setup()
@@ -138,7 +153,6 @@ DefaultRNG<double> rng_setup()
 {
   return DefaultRNG<double>(-2, 2);
 }
-
 
 template <class T>
 static void val_compare_eq(const T& aa, const T& bb)
