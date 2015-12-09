@@ -117,15 +117,28 @@ macro(BEGIN_TESTCASES)
 
 	file( GLOB test_sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cc" )
 	foreach( source ${test_sources} )
-		get_filename_component(testname ${source} NAME_WE)
-    add_executable( test_${testname} ${source} ${COMMON_HEADER} )
-    target_link_libraries( test_${testname} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_stuff )
-    add_test( NAME test_${testname} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/test_${testname}
-                   --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/test_${testname}.xml )
-    # currently property seems to have no effect
-    set_tests_properties(test_${testname} PROPERTIES TIMEOUT ${DUNE_TEST_TIMEOUT})
-		list(APPEND testnames test_${testname} )
-	endforeach( source )
+		get_filename_component(testbase ${source} NAME_WE)
+                if( EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.mini )
+		    set( inifile ${testbase}.mini)
+    		    dune_add_system_test(SOURCE ${testbase}.cc
+                                         INIFILE ${inifile}
+                                         BASENAME test_${testbase}
+                                         CREATED_TARGETS targetlist_${testbase}
+                                         ${DEBUG_MACRO_TESTS})
+		foreach(testname ${targetlist_${testbase}})
+    		    target_link_libraries( ${testname} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_stuff )
+		    list(APPEND testnames ${testname} )
+                endforeach(testname)
+                else( EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.mini )
+                    add_executable( test_${testbase} ${source} ${COMMON_HEADER} )
+                    target_link_libraries( test_${testbase} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_stuff )
+                    add_test( NAME test_${testbase} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/test_${testbase}
+                                          --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/test_${testbase}.xml )
+                    # currently property seems to have no effect
+                    set_tests_properties(test_${testbase} PROPERTIES TIMEOUT ${DUNE_TEST_TIMEOUT})
+                    list(APPEND testnames test_${testbase} )
+	        endif( EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.mini )
+        endforeach( source )
 endmacro(BEGIN_TESTCASES)
 
 macro(END_TESTCASES)
