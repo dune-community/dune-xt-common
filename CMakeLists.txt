@@ -82,7 +82,6 @@ endforeach(_mod DEPENDENCIES)
 
 add_subdirectory(dune)
 add_subdirectory("cmake/modules")
-add_subdirectory("cmake/scripts")
 add_subdirectory(doc/doxygen)
 
 finalize_dune_project(GENERATE_CONFIG_H_CMAKE)
