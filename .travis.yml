@@ -47,7 +47,6 @@ install:
   - export INST_DCTRL=$HOME/dune/bin/dunecontrol
   - export SRC_DCTRL=$PWD/dune-common/bin/dunecontrol
   - ./dune-common/bin/dunecontrol ${DCTRL_ARG} all
-  - rm -rf ${DUNE_BUILD_DIR} $HOME/src
 
 # # command to run tests
 script:
