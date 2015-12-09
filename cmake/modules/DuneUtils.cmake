@@ -8,7 +8,7 @@ include(CheckCXXSourceCompiles)
 
 include(DuneStuffMacros)
 
-set(DUNE_STUFF_ROOT ${PROJECT_SOURCE_DIR}/../dune-stuff
+set(DUNE_STUFF_ROOT ${dune-stuff_SOURCE_DIR}/
 		CACHE STRING "path to dune-stuff module root" )
 set(DUNE_STUFF_TEST_DIR ${DUNE_STUFF_ROOT}/dune/stuff/test 
 		CACHE STRING "path to dir containing gtest subdir")
