@@ -23,15 +23,15 @@ addons:
 
 before_install:
   - sudo -E apt-get install -y -q python-pip python3-pip
-  - sudo -E pip3 install virtualenv
-  - sudo -E pip install virtualenv
-  - cmake --version
+  - sudo -E pip3 install virtualenv cpp-coveralls
+  - sudo -E pip install virtualenv cpp-coveralls
   - export PATH=/usr/lib/ccache:$PATH
   - export CXX=${CXX_COMPILER} CC=${COMPILER}
   - cd $HOME
   - test -d src || git clone --branch=testtools https://github.com/wwu-numerik/dune-stuff-demos.git src
   - cd $HOME/src
   - git submodule update --init --recursive
+  - git submodule status
   - cp config.opts/travis $HOME/travis.opts
   - export OPTS=${HOME}/travis.opts
   - export DCONTROL_ARG="--builddir=${DUNE_BUILD_DIR}  --opts=${OPTS}"
@@ -39,13 +39,11 @@ before_install:
   - ./local/bin/build_external_libraries.py
   # ensures ${MY_MODULE} from travis own checkout is used
   - echo removing modules ${MODULES_TO_DELETE}
-  # ensures ${MY_MODULE} from travis own checkout is used
   - rm -rf ${MODULES_TO_DELETE} ${MY_MODULE}
 
 # command to install dependencies
 install:
   - cd $HOME/src
-  - pip install --user cpp-coveralls
   - ./dune-common/bin/dunecontrol ${DCONTROL_ARG} --only=dune-common all ':' make install ':' bexec "rm -rf *" ':' exec "rm -rf *" > /dev/null
   - ~/dune/bin/dunecontrol ${DCONTROL_ARG} all ':' make install ':' bexec "rm -rf *" ':' exec "rm -rf *" > /dev/null
   - rm -rf ${DUNE_BUILD_DIR} $HOME/src
