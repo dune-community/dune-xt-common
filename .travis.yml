@@ -34,7 +34,7 @@ before_install:
   - git submodule status
   - cp config.opts/travis $HOME/travis.opts
   - export OPTS=${HOME}/travis.opts
-  - export DCONTROL_ARG="--builddir=${DUNE_BUILD_DIR}  --opts=${OPTS}"
+  - export DCTRL_ARG="--builddir=${DUNE_BUILD_DIR}  --opts=${OPTS}"
   - ./local/bin/download_external_libraries.py
   - ./local/bin/build_external_libraries.py
   # ensures ${MY_MODULE} from travis own checkout is used
@@ -44,26 +44,28 @@ before_install:
 # command to install dependencies
 install:
   - cd $HOME/src
-  - ./dune-common/bin/dunecontrol ${DCONTROL_ARG} --only=dune-common all ':' make install ':' bexec "rm -rf *" ':' exec "rm -rf *" > /dev/null
-  - ~/dune/bin/dunecontrol ${DCONTROL_ARG} all ':' make install ':' bexec "rm -rf *" ':' exec "rm -rf *" > /dev/null
-  - rm -rf ${DUNE_BUILD_DIR} $HOME/src
+  #- export INST_DCTRL=$HOME/dune/bin/dunecontrol
+  - export SRC_DCTRL=$PWD/dune-common/bin/dunecontrol
+  - ${SRC_DCTRL} ${DCTRL_ARG} all
 
 # # command to run tests
 script:
-    - cd ${TRAVIS_BUILD_DIR}
-    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} configure
-    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make
-    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make -k test_binaries
-    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make test
+    - cd $HOME/src
+    # move my travis checkout into this source tree
+    - mv ${TRAVIS_BUILD_DIR} .
+    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} configure
+    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec make
+    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec make -k test_binaries
+    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec make test
     - ${TRAVIS_BUILD_DIR}/scripts/upload_test_logs.bash
-    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make headercheck -k
-    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make install | grep -v "Installing"
-    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make package_source
+    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec make headercheck -k
+    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec make install | grep -v "Installing"
+    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec make package_source
     # reset for ctest
-    - ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec make clean
+    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec make clean
     - export CTEST_ARG="--output-on-failure -S ${TRAVIS_BUILD_DIR}/.travis.ctest"
     # ctest errors on coverage gathering, this should NOT fail our entire build
-    #- ~/dune/bin/dunecontrol ${DCONTROL_ARG} --only=${MY_MODULE} bexec ctest ${CTEST_ARG} || echo "CTest Failed"
+    #- ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ctest ${CTEST_ARG} || echo "CTest Failed"
 
 notifications:
   email:
