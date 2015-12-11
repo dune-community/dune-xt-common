@@ -47,20 +47,23 @@ install:
   #- export INST_DCTRL=$HOME/dune/bin/dunecontrol
   - export SRC_DCTRL=$PWD/dune-common/bin/dunecontrol
   - ${SRC_DCTRL} ${DCTRL_ARG} all
+  # move my travis checkout into this source tree
+  - mv ${TRAVIS_BUILD_DIR} .
 
-# # command to run tests
-script:
-    - cd $HOME/src
-    # move my travis checkout into this source tree
-    - mv ${TRAVIS_BUILD_DIR} .
+before_script:
     - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} configure
-    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec make
-    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec make -k test_binaries
-    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec make test
+    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${MAKE}
+    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${MAKE} -k test_binaries
+
+script:
+    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${MAKE} test
     - ${TRAVIS_BUILD_DIR}/scripts/upload_test_logs.bash
-    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec make headercheck -k
-    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec make install | grep -v "Installing"
-    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec make package_source
+    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${MAKE} headercheck -k
+    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${MAKE} install | grep -v "Installing"
+    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${MAKE} package_source
+
+# runs independent of 'script' failure/success
+after_script:
     # reset for ctest
     - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec make clean
     - export CTEST_ARG="--output-on-failure -S ${TRAVIS_BUILD_DIR}/.travis.ctest"
@@ -87,7 +90,7 @@ cache:
 
 env:
   global:
-    - MY_MODULE=dune-stuff DUNE_BUILD_DIR=${HOME}/dune_build/ INSTALL_DIR=$HOME/dune
+    - MY_MODULE=dune-stuff DUNE_BUILD_DIR=${HOME}/dune_build/ INSTALL_DIR=$HOME/dune MAKE="make -j2"
 
 matrix:
   include:
