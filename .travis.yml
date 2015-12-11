@@ -151,6 +151,7 @@ matrix:
           - *commonpackages
           - ['clang-3.7']
       env: OPTS_FILE=config.opts/travis.make MAKE="make -j2" CXX_COMPILER=clang++-3.7 COMPILER=clang-3.7
+      
     #- os: linux
       #compiler: clang
       #addons:
