@@ -57,7 +57,7 @@ int main(int argc, char** argv)
 #endif
 
     testing::InitGoogleTest(&argc, argv);
-    if (argc > 2)
+    if (argc > 1)
       DSC_CONFIG.read_command_line(argc, argv);
 #if HAVE_DUNE_FEM
     Dune::Fem::MPIManager::initialize(argc, argv);
