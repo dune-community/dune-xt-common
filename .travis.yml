@@ -20,8 +20,11 @@ addons:
     - libsuitesparse-dev
     - lcov
     - curl
+    - ninja-build
 
 before_install:
+  - : ${OPTS_FILE:="config.opts/travis.ninja"}
+  - : ${MAKE:="ninja"}
   - sudo -E apt-get install -y -q python-pip python3-pip
   - sudo -E pip3 install virtualenv cpp-coveralls
   - sudo -E pip install virtualenv cpp-coveralls
@@ -32,9 +35,8 @@ before_install:
   - cd $HOME/src
   - git submodule update --init --recursive
   - git submodule status
-  - cp config.opts/travis $HOME/travis.opts
-  - export OPTS=${HOME}/travis.opts
-  - export DCTRL_ARG="--builddir=${DUNE_BUILD_DIR}  --opts=${OPTS}"
+  - cp ${OPTS_FILE} $HOME/travis.opts
+  - export DCTRL_ARG="--builddir=${DUNE_BUILD_DIR}  --opts=${HOME}/travis.opts"
   - ./local/bin/download_external_libraries.py
   - ./local/bin/build_external_libraries.py
   # ensures ${MY_MODULE} from travis own checkout is used
@@ -138,6 +140,17 @@ matrix:
           - ['clang-3.7']
       env: CXX_COMPILER=clang++-3.7 COMPILER=clang-3.7
 
+    - os: linux
+      compiler: clang
+      addons:
+        apt:
+          sources:
+          - *commonsources
+          - ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.7']
+          packages:
+          - *commonpackages
+          - ['clang-3.7']
+      env: OPTS_FILE=config.opts/travis.make MAKE="make -j2" CXX_COMPILER=clang++-3.7 COMPILER=clang-3.7
     #- os: linux
       #compiler: clang
       #addons:
