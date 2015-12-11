@@ -1,3 +1,10 @@
+# This file is part of the dune-stuff project:
+#   https://github.com/wwu-numerik/dune-stuff
+# The copyright lies with the authors of this file (see below).
+# License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+# Authors:
+#   Rene Milk (2014 - 2015)
+#
 # Locate Intel Threading Building Blocks include paths and libraries
 #
 # TBB is a little special because there are three different ways to provide it:

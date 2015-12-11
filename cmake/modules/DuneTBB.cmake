@@ -1,3 +1,10 @@
+# This file is part of the dune-stuff project:
+#   https://github.com/wwu-numerik/dune-stuff
+# The copyright lies with the authors of this file (see below).
+# License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+# Authors:
+#   Rene Milk (2014 - 2015)
+#
 # Searches for Intel's Thread Building Blocks library
 #
 # The following function is defined:
@@ -6,7 +13,7 @@
 #
 # Adds the above flags and libraries to the specified targets.
 # tries to link _debug libraries if cmake build mode matches DEBUG
-#
+
 find_package(TBB)
 
 #add all TBB related flags to ALL_PKG_FLAGS, this must happen regardless of a target using add_dune_tbb_flags

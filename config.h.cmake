@@ -1,3 +1,12 @@
+// This file is part of the dune-stuff project:
+//   https://github.com/wwu-numerik/dune-stuff
+// The copyright lies with the authors of this file (see below).
+// License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Authors:
+//   Felix Schindler (2013 - 2015)
+//   Rene Milk       (2013 - 2015)
+//   Tobias Leibner  (2014)
+
 /* begin dune-stuff */
 // NEVER delete/alter above comment, dune's cmake crap relies on it
 
