@@ -1,7 +1,10 @@
 # This file is part of the dune-stuff project:
 #   https://github.com/wwu-numerik/dune-stuff
-# Copyright holders: Rene Milk, Felix Schindler
+# The copyright lies with the authors of this file (see below).
 # License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+# Authors:
+#   Felix Schindler (2014)
+#   Rene Milk       (2010, 2012, 2015)
 
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions

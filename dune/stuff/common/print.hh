@@ -1,9 +1,12 @@
 // This file is part of the dune-stuff project:
 //   https://github.com/wwu-numerik/dune-stuff
-// Copyright holders: Rene Milk, Felix Schindler
+// The copyright lies with the authors of this file (see below).
 // License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
-//
-// Contributors: Sven Kaulmann
+// Authors:
+//   Felix Schindler (2010, 2012 - 2015)
+//   Rene Milk       (2009 - 2015)
+//   Sven Kaulmann   (2011 - 2012)
+//   Tobias Leibner  (2014)
 
 #ifndef DUNESTUFF_PRINTING_HH_INCLUDED
 #define DUNESTUFF_PRINTING_HH_INCLUDED
