@@ -24,7 +24,7 @@ addons:
 
 before_install:
   - |-
-    : ${OPTS_FILE:="config.opts/travis.ninja"}
+    : ${OPTS}:="config.opts/travis.ninja"}
   - |-
     : ${MAKE:="ninja"}
   - sudo -E apt-get install -y -q python-pip python3-pip
@@ -37,8 +37,8 @@ before_install:
   - cd $HOME/src
   - git submodule update --init --recursive
   - git submodule status
-  - cp ${OPTS_FILE} $HOME/travis.opts
-  - export DCTRL_ARG="--builddir=${DUNE_BUILD_DIR}  --opts=${HOME}/travis.opts"
+  - export DCTRL_ARG="--builddir=${DUNE_BUILD_DIR}  --opts=${OPTS}"
+  # our local scripts look for an OPTS env entry
   - ./local/bin/download_external_libraries.py
   - ./local/bin/build_external_libraries.py
   # ensures ${MY_MODULE} from travis own checkout is used
