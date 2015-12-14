@@ -27,7 +27,8 @@ before_install:
     : ${OPTS:="config.opts/travis.ninja"}
   - |-
     : ${MAKE:="ninja"}
-  - travis_retry sudo apt-get update -qq
+  # workaround for https://github.com/travis-ci/travis-ci/issues/5285
+  - sudo sed -i 's/us-central1.gce/us-central1.gce.clouds/' /etc/apt/sources.list && sudo apt-get update 
   - sudo -E apt-get install -y -q python-pip python3-pip
   - sudo -E pip3 install virtualenv cpp-coveralls
   - sudo -E pip install virtualenv cpp-coveralls
