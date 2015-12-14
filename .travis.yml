@@ -24,9 +24,10 @@ addons:
 
 before_install:
   - |-
-    : ${OPTS}:="config.opts/travis.ninja"}
+    : ${OPTS:="config.opts/travis.ninja"}
   - |-
     : ${MAKE:="ninja"}
+  - travis_retry sudo apt-get update -qq
   - sudo -E apt-get install -y -q python-pip python3-pip
   - sudo -E pip3 install virtualenv cpp-coveralls
   - sudo -E pip install virtualenv cpp-coveralls
@@ -95,7 +96,7 @@ cache:
 
 env:
   global:
-    - MY_MODULE=dune-stuff DUNE_BUILD_DIR=${HOME}/dune_build/ INSTALL_DIR=$HOME/dune MAKE="make -j2"
+    - MY_MODULE=dune-stuff DUNE_BUILD_DIR=${HOME}/dune_build/ INSTALL_DIR=$HOME/dune
 
 matrix:
   include:
