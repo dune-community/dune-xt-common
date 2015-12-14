@@ -22,7 +22,7 @@ addons:
 
 before_install:
   - |-
-    : ${OPTS:="config.opts/travis.ninja"}
+    : ${OPTS:="travis.ninja"}
   - |-
     : ${MAKE:="ninja"}
   # workaround for https://github.com/travis-ci/travis-ci/issues/5285
@@ -37,7 +37,7 @@ before_install:
   - cd $HOME/src
   - git submodule update --init --recursive
   - git submodule status
-  - export DCTRL_ARG="--builddir=${DUNE_BUILD_DIR}  --opts=${OPTS}"
+  - export DCTRL_ARG="--builddir=${DUNE_BUILD_DIR}  --opts=config.opts/${OPTS}"
   # our local scripts look for an OPTS env entry
   - ./local/bin/download_external_libraries.py
   - ./local/bin/build_external_libraries.py
