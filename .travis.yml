@@ -38,6 +38,7 @@ before_install:
   - git submodule update --init --recursive
   - git submodule status
   - export DCTRL_ARG="--builddir=${DUNE_BUILD_DIR}  --opts=${OPTS}"
+  - echo DEBUG ${DCTRL_ARG} ${OPTS} ${MAKE}
   # our local scripts look for an OPTS env entry
   - ./local/bin/download_external_libraries.py
   - ./local/bin/build_external_libraries.py
