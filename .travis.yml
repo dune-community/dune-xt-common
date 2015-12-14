@@ -23,8 +23,10 @@ addons:
     - ninja-build
 
 before_install:
-  - : ${OPTS_FILE:="config.opts/travis.ninja"}
-  - : ${MAKE:="ninja"}
+  - |-
+    : ${OPTS_FILE:="config.opts/travis.ninja"}
+  - |-
+    : ${MAKE:="ninja"}
   - sudo -E apt-get install -y -q python-pip python3-pip
   - sudo -E pip3 install virtualenv cpp-coveralls
   - sudo -E pip install virtualenv cpp-coveralls
@@ -151,7 +153,7 @@ matrix:
           - *commonpackages
           - ['clang-3.7']
       env: OPTS_FILE=config.opts/travis.make MAKE="make -j2" CXX_COMPILER=clang++-3.7 COMPILER=clang-3.7
-      
+
     #- os: linux
       #compiler: clang
       #addons:
