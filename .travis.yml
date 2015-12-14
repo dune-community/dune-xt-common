@@ -31,8 +31,8 @@ addons:
     - ninja-build
 
 before_install:
-  - : ${OPTS_FILE:="config.opts/travis.ninja"}
-  - : ${MAKE:="ninja"}
+  - export OPTS_FILE="config.opts/travis.ninja"
+  - export MAKE="ninja"
   - sudo -E apt-get install -y -q python-pip python3-pip
   - sudo -E pip3 install virtualenv cpp-coveralls
   - sudo -E pip install virtualenv cpp-coveralls
