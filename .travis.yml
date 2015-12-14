@@ -5,8 +5,6 @@ language: generic
 addons:
   apt:
     sources: &commonsources
-    - boost-latest
-    - george-edison55-precise-backports
     packages: &commonpackages
     - cmake
     - cmake-data
@@ -28,7 +26,7 @@ before_install:
   - |-
     : ${MAKE:="ninja"}
   # workaround for https://github.com/travis-ci/travis-ci/issues/5285
-  - sudo sed -i 's/us-central1.gce/us-central1.gce.clouds/' /etc/apt/sources.list && sudo apt-get update 
+  - sudo sed -i 's/us-central1.gce/us-central1.gce.clouds/' /etc/apt/sources.list && sudo apt-get update
   - sudo -E apt-get install -y -q python-pip python3-pip
   - sudo -E pip3 install virtualenv cpp-coveralls
   - sudo -E pip install virtualenv cpp-coveralls
@@ -40,7 +38,6 @@ before_install:
   - git submodule update --init --recursive
   - git submodule status
   - export DCTRL_ARG="--builddir=${DUNE_BUILD_DIR}  --opts=${OPTS}"
-  - echo DEBUG ${DCTRL_ARG} ${OPTS} ${MAKE}
   # our local scripts look for an OPTS env entry
   - ./local/bin/download_external_libraries.py
   - ./local/bin/build_external_libraries.py
@@ -65,6 +62,7 @@ before_script:
 script:
     - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${MAKE} test
     - ${TRAVIS_BUILD_DIR}/scripts/upload_test_logs.bash
+    - $HOME/src/scripts/python/
     - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${MAKE} headercheck -k
     - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${MAKE} install | grep -v "Installing"
     - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${MAKE} package_source
