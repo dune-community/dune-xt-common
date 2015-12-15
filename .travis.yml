@@ -62,7 +62,8 @@ before_script:
 script:
     - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${BUILD_CMD} test
     - ${TRAVIS_BUILD_DIR}/scripts/upload_test_logs.bash
-    - $HOME/src/scripts/python/
+    # this'll get extended to produce a new travis PR/Commit status instead of a hard failure
+    - $HOME/src/scripts/python/format_check.py dune-stuff/
     - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${BUILD_CMD} headercheck
     - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${BUILD_CMD} install | grep -v "Installing"
     - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${BUILD_CMD} package_source
