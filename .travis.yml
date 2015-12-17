@@ -1,11 +1,3 @@
-# This file is part of the dune-stuff project:
-#   https://github.com/wwu-numerik/dune-stuff
-# The copyright lies with the authors of this file (see below).
-# License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
-# Authors:
-#   Felix Schindler (2015)
-#   Rene Milk       (2015)
-
 sudo: required
 dist: trusty
 language: generic
@@ -13,8 +5,6 @@ language: generic
 addons:
   apt:
     sources: &commonsources
-    - boost-latest
-    - george-edison55-precise-backports
     packages: &commonpackages
     - cmake
     - cmake-data
@@ -29,22 +19,26 @@ addons:
     - lcov
     - curl
     - ninja-build
+    - python3-requests
 
 before_install:
-  - export OPTS_FILE="config.opts/travis.ninja"
-  - export MAKE="ninja"
+  - |-
+    : ${OPTS:="config.opts/travis.ninja"} && export OPTS
+  - |-
+    : ${BUILD_CMD:="ninja -k 10000 -j 2"} && export BUILD_CMD
+  # workaround for https://github.com/travis-ci/travis-ci/issues/5285
+  - sudo sed -i 's/us-central1.gce/us-central1.gce.clouds/' /etc/apt/sources.list && sudo apt-get update
   - sudo -E apt-get install -y -q python-pip python3-pip
   - sudo -E pip3 install virtualenv cpp-coveralls
   - sudo -E pip install virtualenv cpp-coveralls
   - export PATH=/usr/lib/ccache:$PATH
-  - export CXX=${CXX_COMPILER} CC=${COMPILER}
   - cd $HOME
   - test -d src || git clone --branch=testtools https://github.com/wwu-numerik/dune-stuff-demos.git src
   - cd $HOME/src
   - git submodule update --init --recursive
   - git submodule status
-  - cp ${OPTS_FILE} $HOME/travis.opts
-  - export DCTRL_ARG="--builddir=${DUNE_BUILD_DIR}  --opts=${HOME}/travis.opts"
+  - export DCTRL_ARG="--builddir=${DUNE_BUILD_DIR}  --opts=${OPTS}"
+  # our local scripts look for an OPTS env entry
   - ./local/bin/download_external_libraries.py
   - ./local/bin/build_external_libraries.py
   # ensures ${MY_MODULE} from travis own checkout is used
@@ -58,19 +52,21 @@ install:
   - export SRC_DCTRL=$PWD/dune-common/bin/dunecontrol
   - ${SRC_DCTRL} ${DCTRL_ARG} all
   # move my travis checkout into this source tree
-  - mv ${TRAVIS_BUILD_DIR} .
+  - cp -ra ${TRAVIS_BUILD_DIR} .
 
 before_script:
     - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} configure
-    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${MAKE}
-    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${MAKE} -k test_binaries
+    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${BUILD_CMD}
+    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${BUILD_CMD} test_binaries
 
 script:
-    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${MAKE} test
+    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${BUILD_CMD} test
     - ${TRAVIS_BUILD_DIR}/scripts/upload_test_logs.bash
-    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${MAKE} headercheck -k
-    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${MAKE} install | grep -v "Installing"
-    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${MAKE} package_source
+
+    - PYTHONPATH=$HOME/src/scripts/python/ python3 -c "import travis_report as tp; tp.clang_format_status(\"${TRAVIS_BUILD_DIR}\")"
+    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${BUILD_CMD} headercheck
+    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${BUILD_CMD} install | grep -v "Installing"
+    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${BUILD_CMD} package_source
 
 # runs independent of 'script' failure/success
 after_script:
@@ -100,7 +96,7 @@ cache:
 
 env:
   global:
-    - MY_MODULE=dune-stuff DUNE_BUILD_DIR=${HOME}/dune_build/ INSTALL_DIR=$HOME/dune MAKE="make -j2"
+    - MY_MODULE=dune-stuff DUNE_BUILD_DIR=${HOME}/dune_build/ INSTALL_DIR=$HOME/dune
 
 matrix:
   include:
@@ -114,15 +110,15 @@ matrix:
           packages:
           - *commonpackages
           - ['g++-4.9', 'gcc-4.9']
-      env: CXX_COMPILER=g++-4.9 COMPILER=gcc-4.9
+      env: CXX=g++-4.9 CC=gcc-4.9
     - os: linux
       compiler: gcc
       addons: *gcc49
-      env: CXX_COMPILER=g++-4.9 COMPILER=gcc-4.9 MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree dune-grid dune-istl"
+      env: CXX=g++-4.9 CC=gcc-4.9 MODULES_TO_DELETE="dune-fem dune-pdelab dune-typetree dune-grid dune-istl"
     - os: linux
       compiler: gcc
       addons: *gcc49
-      env: CXX_COMPILER=g++-4.9 COMPILER=gcc-4.9 MODULES_TO_DELETE="dune-fem dune-pdelab"
+      env: CXX=g++-4.9 CC=gcc-4.9 MODULES_TO_DELETE="dune-fem dune-pdelab"
 
     - os: linux
       compiler: gcc
@@ -134,7 +130,7 @@ matrix:
           packages:
           - *commonpackages
           - ['g++-5', 'gcc-5']
-      env: CXX_COMPILER=g++-5 COMPILER=gcc-5
+      env: CXX=g++-5 CC=gcc-5
 
     - os: linux
       compiler: clang
@@ -146,7 +142,7 @@ matrix:
           packages:
           - *commonpackages
           - ['clang-3.7']
-      env: CXX_COMPILER=clang++-3.7 COMPILER=clang-3.7
+      env: CXX=clang++-3.7 CC=clang-3.7
 
     - os: linux
       compiler: clang
@@ -158,8 +154,8 @@ matrix:
           packages:
           - *commonpackages
           - ['clang-3.7']
-      env: OPTS_FILE=config.opts/travis.make MAKE="make -j2" CXX_COMPILER=clang++-3.7 COMPILER=clang-3.7
-      
+      env: OPTS=config.opts/travis.make BUILD_CMD="make -k -j2" CXX=clang++-3.7 CC=clang-3.7
+
     #- os: linux
       #compiler: clang
       #addons:
@@ -170,4 +166,4 @@ matrix:
           #packages:
           #- *commonpackages
           #- ['clang-3.8']
-      #env: CXX_COMPILER=clang++-3.8 COMPILER=clang-3.8
+      #env: CXX=clang++-3.8 CC=clang-3.8
