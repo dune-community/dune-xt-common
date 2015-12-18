@@ -25,7 +25,7 @@ rm -rf ${DIR}
 mkdir ${DIR}
 rsync -a ${DUNE_BUILD_DIR}/dune-stuff/dune/stuff/test/*xml ${DIR}
 printenv | grep -v GH_TOKEN | sort > ${DIR}/env
-git add .
+git add --all .
 git config user.name "Travis-CI"
 git config user.email "travis@travis-ci.org"
 git commit -m "Testlogs for Job ${TRAVIS_JOB_NUMBER} - ${TRAVIS_COMMIT_RANGE}"
