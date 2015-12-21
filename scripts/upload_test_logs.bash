@@ -14,11 +14,11 @@ if [ "x${TRAVIS_PULL_REQUEST}" != "xfalse" ] ; then
 fi
 cd
 rm -rf logs
-git clone https://github.com/wwu-numerik/dune-stuff-testlogs.git logs
+TESTLOGS_URL=https://github.com/wwu-numerik/dune-stuff-testlogs.git
+git clone ${TESTLOGS_URL} logs
 cd logs
-# check if branch exists, see http://stackoverflow.com/questions/5167957/is-there-a-better-way-to-find-out-if-a-local-git-branch-exists
-git show-ref --verify --quiet refs/heads/${BRANCH}
-if [ $? -eq 0 ] ; then
+# check if branch exists, see http://stackoverflow.com/questions/8223906/how-to-check-if-remote-branch-exists-on-a-given-remote-repository
+if [ `git ls-remote --heads ${TESTLOGS_URL} ${BRANCH} | wc -l` -ne 0 ] ; then
 git checkout ${BRANCH}
 else
 git checkout -b ${BRANCH}
