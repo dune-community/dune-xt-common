@@ -16,7 +16,13 @@ cd
 rm -rf logs
 git clone https://github.com/wwu-numerik/dune-stuff-testlogs.git logs
 cd logs
-git checkout -B ${BRANCH}
+# check if branch exists, see http://stackoverflow.com/questions/5167957/is-there-a-better-way-to-find-out-if-a-local-git-branch-exists
+git show-ref --verify --quiet refs/heads/${BRANCH}
+if [ $? -eq 0 ] ; then
+git checkout ${BRANCH}
+else
+git checkout -b ${BRANCH}
+fi
 DIR=${CXX}
 if [ "x${MODULES_TO_DELETE}" != "x" ] ; then
     DIR=${DIR}__wo_${MODULES_TO_DELETE// /_}
