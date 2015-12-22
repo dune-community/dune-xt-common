@@ -128,6 +128,7 @@ macro(BEGIN_TESTCASES)
                                          INIFILE ${inifile}
                                          BASENAME test_${testbase}
                                          CREATED_TARGETS targetlist_${testbase}
+                                         SCRIPT ${DUNE_STUFF_ROOT}/scripts/dune_execute.py
                                          ${DEBUG_MACRO_TESTS})
 		foreach(testname ${targetlist_${testbase}})
     		    target_link_libraries( ${testname} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_stuff )
