@@ -107,28 +107,12 @@ MACRO(INCLUDE_SYS_DIR)
     ENDFOREACH( ARG )
 ENDMACRO(INCLUDE_SYS_DIR)
 
-FIND_PACKAGE( PkgConfig )
+FIND_PACKAGE(PkgConfig)
 FIND_PACKAGE(Boost 1.48.0 COMPONENTS system thread filesystem date_time timer chrono REQUIRED)
-foreach(_lib ${Boost_SYSTEM_LIBRARY} ${Boost_FILESYSTEM_LIBRARY} 
-                ${Boost_THREAD_LIBRARY} ${Boost_TIMER_LIBRARY} 
-                ${Boost_DATE_TIME_LIBRARY} ${Boost_CHRONO_LIBRARY})
-list(APPEND DUNE_DEFAULT_LIBS "${_lib}")
-endforeach(_lib)
-
-include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
-link_directories(${Boost_LIBRARY_DIRS})
-
-#dune-common doesn't add it's deps correctly atm
-if(HAVE_LAPACK)
-	list(APPEND DUNE_DEFAULT_LIBS ${LAPACK_LIBRARIES})
-endif(HAVE_LAPACK)
-if(HAVE_BLAS)
-	list(APPEND DUNE_DEFAULT_LIBS ${BLAS_LIBRARIES})
-endif(HAVE_BLAS)
 
 find_package(Eigen3 3.2.0)
 if(EIGEN3_FOUND)  
-  include_directories(SYSTEM ${EIGEN3_INCLUDE_DIR})
+  include_sys_dir(SYSTEM ${EIGEN3_INCLUDE_DIR})
   set(HAVE_EIGEN 1)
 else(EIGEN3_FOUND)
   set(HAVE_EIGEN 0)
@@ -146,19 +130,6 @@ else()
     set(HAVE_LIKWID 0)
 endif()
 set(ENABLE_PERFMON 0 CACHE STRING "enable likwid performance monitoring API usage")
-
-if(ENABLE_MPI AND ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-  find_package(MPI REQUIRED)
-  if(MPI_FOUND)
-    message(STATUS "Enabling mpi features, mac style!")
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${MPI_CXX_COMPILE_FLAGS} -pthread -DMPIPP_H -DENABLE_MPI=1" )
-    include_directories(SYSTEM ${MPI_CXX_INCLUDE_PATH})
-    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${MPI_CXX_LINK_FLAGS} -pthread")
-    LIST( APPEND PARALIBS ${MPI_LIBRARY} ${MPI_EXTRA_LIBRARY})
-  else(MPI_FOUND)
-    message(FATAL "mpi requested but not found")
-  endif(MPI_FOUND)
-endif(ENABLE_MPI AND ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 
 include(DuneTBB)
 
