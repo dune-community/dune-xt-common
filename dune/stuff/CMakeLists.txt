@@ -25,20 +25,7 @@ set(lib_dune_stuff_sources common/filesystem.cc
   la/container/pattern.cc
   test/common.cxx)
 
-dune_add_library("dunestuff" ${lib_dune_stuff_sources}
-  ADD_LIBS ${DUNE_LIBS})
-add_dune_mpi_flags(dunestuff)
-if(TBB_FOUND)
-  add_dune_tbb_flags(dunestuff)
-endif(TBB_FOUND)
-
-if(dune-grid_FOUND)
-  add_dune_superlu_flags(dunestuff)
-  add_dune_alberta_flags(dunestuff)
-  add_dune_alugrid_flags(dunestuff)
-  add_dune_ug_flags(dunestuff)
-endif(dune-grid_FOUND)
-target_link_dune_default_libraries(dunestuff)
+dune_library_add_sources(dunestuff SOURCES ${lib_dune_stuff_sources})
 
 add_analyze(${lib_dune_stuff_sources})
 FILE( GLOB_RECURSE _header "${CMAKE_CURRENT_SOURCE_DIR}/*.hh" )
@@ -54,10 +41,6 @@ install(DIRECTORY ${DUNE_STUFF_TEST_DIR}/gtest
         FILES_MATCHING PATTERN "*")
 install(FILES ${DUNE_STUFF_TEST_DIR}/main.hxx
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/stuff/test/)
-dune_add_library(gtest_dune_stuff
-                 ${DUNE_STUFF_TEST_DIR}/gtest/gtest-all.cc
-                 ADD_LIBS ${DUNE_LIBS})
-install(TARGETS gtest_dune_stuff
-        LIBRARY
-        ARCHIVE DESTINATION lib
-        LIBRARY DESTINATION lib)
+dune_library_add_sources(gtest_dune_stuff
+                 SOURCES test/gtest/gtest-all.cc)
+

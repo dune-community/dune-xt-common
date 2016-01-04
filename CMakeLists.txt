@@ -14,14 +14,8 @@ set( ENV{PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../local/bin:$ENV{PATH}" )
 set( ENV{LD_LIBRARY_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../local/lib:$ENV{LD_LIBRARY_PATH}" )
 set( ENV{PKG_CONFIG_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../local/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}" )
 
-if(CMAKE_WITH_AUTOTOOLS)
-  message(FATAL_ERROR "combining autotools with cmake builds is no longer supported")
-endif(CMAKE_WITH_AUTOTOOLS)
-
-# this assumes that we run dunecontrol with the --use-cmake option
-
 # cmake specific
-cmake_minimum_required( VERSION 2.8.12 )
+cmake_minimum_required( VERSION 3.1 )
 
 set( CMAKE_COLOR_MAKEFILE ON)
 
@@ -50,18 +44,57 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
 # General Settings
 #----------------------------------------------------------------------------------------------------
 execute_process(
-COMMAND ${CMAKE_SOURCE_DIR}/getRevision.sh
-OUTPUT_VARIABLE COMMIT
-ERROR_VARIABLE shell_error
-OUTPUT_STRIP_TRAILING_WHITESPACE
+    COMMAND ${CMAKE_SOURCE_DIR}/getRevision.sh
+    OUTPUT_VARIABLE COMMIT
+    ERROR_VARIABLE shell_error
+    OUTPUT_STRIP_TRAILING_WHITESPACE
 )
+
+SET( DS_FLAGS_Release CACHE STRING
+  "-O2 -fPIC ${CMAKE_CXX_FLAGS_RELEASE}")
+set(DS_FLAGS_RelWithDebInfo ${DS_FLAGS_Release})
+
+SET( DS_FLAGS_Debug
+  "-O0 -g3 -ggdb -Wunused-variable -fno-strict-aliasing -fPIC -Wall -Wextra -Wparentheses -pedantic  -Wshadow -Wundef -Wnon-virtual-dtor")
+
+#aka anything but intel, but cmake has identifier for icc
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  set( DS_FLAGS_Debug CACHE STRING
+        " -Wc++0x-compat -Wredundant-decls -Winline  -ftemplate-backtrace-limit=0 ${DS_FLAGS_Debug} "
+      )
+else ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  # for us effectively icc
+  set( DS_FLAGS_Debug CACHE STRING
+        "-Wcast-qual -Wformat=2 -Winit-self -Woverloaded-virtual -Wshadow -Wsign-conversion -Wsign-promo -Wundef  -Wno-unused ${DS_FLAGS_Debug}")
+endif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+
+if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+  set( DS_FLAGS_Debug CACHE STRING
+        "-Wnon-literal-null-conversion -Wused-but-marked-unused -Wno-tautological-compare -Wfloat-equal -Wdisabled-macro-expansion -Wcovered-switch-default -Wswitch-enum -Wunreachable-code -Wshorten-64-to-32  ${DS_FLAGS_Debug}"
+      )
+elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
+  set( DS_FLAGS_Debug CACHE STRING
+        "-Wlogical-op  -Og ${DS_FLAGS_Debug} "
+      )
+endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL Debug)
+    set(DS_COMPILE_OPTIONS ${DS_FLAGS_Debug})
+else(CMAKE_BUILD_TYPE STREQUAL Debug)
+    set(DS_COMPILE_OPTIONS ${DS_FLAGS_Debug})
+endif(CMAKE_BUILD_TYPE STREQUAL Debug)
+
+
+message(STATUS ${DS_FLAGS_${CMAKE_BUILD_TYPE}})
+dune_enable_all_packages(INCLUDE_DIRS ${dune-stuff_SOURCE_DIR}/dune
+                         COMPILE_DEFINITIONS DNDEBUG DDNDEBUG
+                         COMPILE_OPTIONS ${DS_FLAGS_${CMAKE_BUILD_TYPE}}
+                         MODULE_LIBRARIES dunestuff gtest_dune_stuff
+                         VERBOSE
+                         )
 
 include(DuneUtils)
 include(GridUtils)
-# configure_file( ${CMAKE_CURRENT_SOURCE_DIR}/cmake/cmake_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/cmake_config.h )
-
-
-link_directories( "/usr/lib" ${CCGNU_LIBRARY_DIRS} )
 
 # header
 file( GLOB_RECURSE stuff "${CMAKE_CURRENT_SOURCE_DIR}/dune/*.hh" )
