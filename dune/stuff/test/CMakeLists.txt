@@ -12,8 +12,26 @@ DEPENDENCYCHECK( ${stuff} )
 
 set_source_files_properties( ${DUNE_HEADERS} PROPERTIES HEADER_FILE_ONLY 1 )
 
-BEGIN_TESTCASES(dunestuff)
 
+
+install(DIRECTORY gtest
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/
+        FILES_MATCHING PATTERN "*.hh")
+#         EXCLUDE PATTERN "stuff/test/*")
+
+# link grid files
+foreach (filename
+         "gmsh_2d_simplices.msh"
+         "dgf_1d_interval.dgf"
+         "dgf_2d_interval.dgf"
+         "dgf_3d_interval.dgf"
+         "dgf_4d_interval.dgf"
+        )
+  execute_process(COMMAND ln -s "${CMAKE_CURRENT_SOURCE_DIR}/${filename}" "${CMAKE_CURRENT_BINARY_DIR}/${filename}")
+endforeach (filename)
+
+BEGIN_TESTCASES(dunestuff)
+ 
 find_program(LATEX_FOUND latex)
 if (LATEX_FOUND)
   include(UseLATEX)
@@ -37,19 +55,3 @@ if (LATEX_FOUND)
 endif()
 
 END_TESTCASES()
-
-install(DIRECTORY gtest
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/
-        FILES_MATCHING PATTERN "*.hh")
-#         EXCLUDE PATTERN "stuff/test/*")
-
-# link grid files
-foreach (filename
-         "gmsh_2d_simplices.msh"
-         "dgf_1d_interval.dgf"
-         "dgf_2d_interval.dgf"
-         "dgf_3d_interval.dgf"
-         "dgf_4d_interval.dgf"
-        )
-  execute_process(COMMAND ln -s "${CMAKE_CURRENT_SOURCE_DIR}/${filename}" "${CMAKE_CURRENT_BINARY_DIR}/${filename}")
-endforeach (filename)
