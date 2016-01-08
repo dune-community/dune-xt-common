@@ -7,11 +7,14 @@
 //   Rene Milk       (2015)
 
 #include "config.h"
-#include "localization-study.hh"
+
+#include <limits>
 
 #include <boost/io/ios_state.hpp>
 
 #include <dune/xt/common/string.hh>
+
+#include "localization-study.hh"
 
 namespace Dune {
 namespace XT {
@@ -107,12 +110,13 @@ void LocalizationStudy::run(std::ostream& out)
                                               << ")!");
     const auto difference = reference_indicators - indicators;
     // compute L^2 difference
-    out << std::setw(18) << std::setprecision(2) << std::scientific << difference.l2_norm() << std::flush;
+    out << std::setw(18) << std::setprecision(2) << std::scientific << difference.two_norm() << std::flush;
     // compute L^oo difference
-    out << " | " << std::setw(18) << std::setprecision(2) << std::scientific << difference.sup_norm() << std::flush;
-    // compute standard deviation
-    out << " | " << std::setw(18) << std::setprecision(2) << std::scientific << difference.standard_deviation()
+    out << " | " << std::setw(18) << std::setprecision(2) << std::scientific << difference.infinity_norm()
         << std::flush;
+    // compute standard deviation
+    out << " | " << std::setw(18) << std::setprecision(2) << std::scientific
+        << /*difference.standard_deviation()*/ std::numeric_limits<double>::infinity() << std::flush;
     if (ind < (actually_used_indicators.size() - 1))
       out << "\n" << thin_delimiter;
     out << std::endl;

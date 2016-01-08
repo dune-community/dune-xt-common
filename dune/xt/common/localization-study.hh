@@ -14,8 +14,9 @@
 #include <string>
 #include <iostream>
 
+#include <dune/common/dynvector.hh>
+
 #include <dune/xt/common/exceptions.hh>
-#include <dune/xt/la/container/common.hh>
 
 namespace Dune {
 namespace XT {
@@ -30,11 +31,11 @@ public:
 
   virtual std::string identifier() const = 0;
 
-  virtual LA::CommonDenseVector<double> compute_reference_indicators() const = 0;
+  virtual DynamicVector<double> compute_reference_indicators() const = 0;
 
   virtual std::vector<std::string> provided_indicators() const = 0;
 
-  virtual LA::CommonDenseVector<double> compute_indicators(const std::string type) const = 0;
+  virtual DynamicVector<double> compute_indicators(const std::string type) const = 0;
 
   std::vector<std::string> used_indicators() const;
 
