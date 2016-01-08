@@ -39,11 +39,12 @@ struct FloatCmpBase : public testing::Test
 {
 
   typedef typename VectorAbstraction<V>::ScalarType S;
+  typedef typename VectorAbstraction<V>::RealType R;
 
   FloatCmpBase()
     : zero(create<V>(s_size, create<S>(0, 0)))
     , one(create<V>(s_size, create<S>(0, 1)))
-    , epsilon(create<V>(s_size, DefaultEpsilon<S>::value()))
+    , epsilon(create<V>(s_size, DefaultEpsilon<R>::value()))
   {
   }
 
