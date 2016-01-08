@@ -18,16 +18,16 @@
 #include <dune/common/dynvector.hh>
 #include <dune/common/densevector.hh>
 
-#include <dune/stuff/common/string.hh>
-#include <dune/stuff/common/logstreams.hh>
-#include <dune/stuff/common/exceptions.hh>
-#include <dune/stuff/common/fvector.hh>
-#include <dune/stuff/common/fmatrix.hh>
-#include <dune/stuff/la/container/common.hh>
-#include <dune/stuff/la/container/eigen.hh>
-#include <dune/stuff/la/container/istl.hh>
+#include <dune/xt/common/string.hh>
+#include <dune/xt/common/logstreams.hh>
+#include <dune/xt/common/exceptions.hh>
+#include <dune/xt/common/fvector.hh>
+#include <dune/xt/common/fmatrix.hh>
+#include <dune/xt/la/container/common.hh>
+#include <dune/xt/la/container/eigen.hh>
+#include <dune/xt/la/container/istl.hh>
 
-using namespace Dune::Stuff::Common;
+using namespace Dune::XT::Common;
 using namespace std;
 
 // define types and expected values for the typed tests
@@ -37,7 +37,7 @@ struct MatrixStringTestDouble : public ::testing::Test
   void check() const
   {
     EXPECT_EQ("[1 2; 3 4]", toString(fromString<MatrixType>("[1.0 2; 3.0 4]")));
-    EXPECT_THROW(fromString<MatrixType>("[1 2; 3 4]", 3, 3), Dune::Stuff::Exceptions::conversion_error);
+    EXPECT_THROW(fromString<MatrixType>("[1 2; 3 4]", 3, 3), Exceptions::conversion_error);
   }
 };
 
@@ -47,7 +47,7 @@ struct MatrixStringTestChar : public ::testing::Test
   void check() const
   {
     EXPECT_EQ("[1 2; 3 4]", toString(fromString<MatrixType>("[1 2; 3 4]")));
-    EXPECT_THROW(fromString<MatrixType>("[1 2; 3 4]", 3, 3), Dune::Stuff::Exceptions::conversion_error);
+    EXPECT_THROW(fromString<MatrixType>("[1 2; 3 4]", 3, 3), Exceptions::conversion_error);
   }
 };
 
@@ -57,7 +57,7 @@ struct VectorStringTestDouble : public ::testing::Test
   void check() const
   {
     EXPECT_EQ("[1 2 3]", toString(fromString<VectorType>("[1.0 2 3.0]")));
-    EXPECT_THROW(fromString<VectorType>("[1.0 2 3.0]", 4), Dune::Stuff::Exceptions::conversion_error);
+    EXPECT_THROW(fromString<VectorType>("[1.0 2 3.0]", 4), Exceptions::conversion_error);
   }
 };
 
@@ -67,40 +67,40 @@ struct VectorStringTestInt : public ::testing::Test
   void check() const
   {
     EXPECT_EQ("[1 2 3]", toString(fromString<VectorType>("[1 2 3]")));
-    EXPECT_THROW(fromString<VectorType>("[1 2 3]", 4), Dune::Stuff::Exceptions::conversion_error);
+    EXPECT_THROW(fromString<VectorType>("[1 2 3]", 4), Exceptions::conversion_error);
   }
 };
 
-typedef testing::Types<std::vector<double>, Dune::Stuff::LA::CommonDenseVector<double>, Dune::DynamicVector<double>,
-                       Dune::FieldVector<double, 3>, Dune::Stuff::Common::FieldVector<double, 3>
+typedef testing::Types<std::vector<double>, Dune::XT::LA::CommonDenseVector<double>, Dune::DynamicVector<double>,
+                       Dune::FieldVector<double, 3>, FieldVector<double, 3>
 #if HAVE_EIGEN
                        ,
-                       Dune::Stuff::LA::EigenDenseVector<double>, Dune::Stuff::LA::EigenMappedDenseVector<double>
+                       Dune::XT::LA::EigenDenseVector<double>, Dune::XT::LA::EigenMappedDenseVector<double>
 #endif
 #if HAVE_DUNE_ISTL
                        ,
-                       Dune::Stuff::LA::IstlDenseVector<double>
+                       Dune::XT::LA::IstlDenseVector<double>
 #endif
                        > VectorTypesDouble;
 
-typedef testing::Types<std::vector<int>, Dune::Stuff::LA::CommonDenseVector<int>, Dune::DynamicVector<int>,
-                       Dune::FieldVector<int, 3>, Dune::Stuff::Common::FieldVector<int, 3>
+typedef testing::Types<std::vector<int>, Dune::XT::LA::CommonDenseVector<int>, Dune::DynamicVector<int>,
+                       Dune::FieldVector<int, 3>, FieldVector<int, 3>
 #if HAVE_DUNE_ISTL
                        ,
-                       Dune::Stuff::LA::IstlDenseVector<int>
+                       Dune::XT::LA::IstlDenseVector<int>
 #endif
                        > VectorTypesInt;
 
-typedef testing::Types<Dune::DynamicMatrix<double>, Dune::Stuff::LA::CommonDenseMatrix<double>,
-                       Dune::Stuff::Common::FieldMatrix<double, 2, 2>, Dune::FieldMatrix<double, 2, 2>
+typedef testing::Types<Dune::DynamicMatrix<double>, Dune::XT::LA::CommonDenseMatrix<double>, FieldMatrix<double, 2, 2>,
+                       Dune::FieldMatrix<double, 2, 2>
 #if HAVE_EIGEN
                        ,
-                       Dune::Stuff::LA::EigenDenseMatrix<double>
+                       Dune::XT::LA::EigenDenseMatrix<double>
 #endif
                        > MatrixTypesDouble;
 
-typedef testing::Types<Dune::DynamicMatrix<char>, Dune::Stuff::Common::FieldMatrix<char, 2, 2>,
-                       Dune::FieldMatrix<char, 2, 2>> MatrixTypesChar;
+typedef testing::Types<Dune::DynamicMatrix<char>, FieldMatrix<char, 2, 2>, Dune::FieldMatrix<char, 2, 2>>
+    MatrixTypesChar;
 
 // fromString/toString tests for vector and matrix types
 TYPED_TEST_CASE(MatrixStringTestDouble, MatrixTypesDouble);
@@ -153,7 +153,7 @@ TEST(StringTest, ConvertFrom)
   EXPECT_EQ(0, fromString<int>("0"));
   EXPECT_EQ('p', fromString<char>(toString('p')));
   EXPECT_EQ(-1, fromString<char>(toString(char(-1))));
-  EXPECT_THROW(fromString<char>("sd"), Dune::Stuff::Exceptions::conversion_error);
+  EXPECT_THROW(fromString<char>("sd"), Exceptions::conversion_error);
   EXPECT_EQ(true, fromString<bool>("1"));
   EXPECT_EQ(true, fromString<bool>("true"));
   EXPECT_EQ(true, fromString<bool>("True"));

@@ -7,9 +7,9 @@
 
 #include "main.hxx"
 
-#include <dune/stuff/common/print.hh>
+#include <dune/xt/common/print.hh>
 
-using namespace DSC;
+using namespace Dune::XT::Common;
 using namespace std;
 
 TEST(OutputIterator, All)

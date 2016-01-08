@@ -25,11 +25,11 @@
 #include <dune/common/parallel/mpihelper.hh>
 #include <dune/common/timer.hh>
 
-#include <dune/stuff/common/logstreams.hh>
-#include <dune/stuff/common/color.hh>
+#include <dune/xt/common/logstreams.hh>
+#include <dune/xt/common/color.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 /**
@@ -214,7 +214,7 @@ int main()
 TimedLogging& TimedLogger();
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_TIMED_LOGGING_HH

@@ -9,10 +9,6 @@
 //   Sven Kaulmann   (2011 - 2012)
 //   Tobias Leibner  (2014)
 
-/**
-   *  \file   stuff.hh
-   *  \brief  contains some stuff
-   **/
 #ifndef DUNE_XT_COMMON_MISC_HH
 #define DUNE_XT_COMMON_MISC_HH
 
@@ -39,15 +35,15 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#include <dune/stuff/common/disable_warnings.hh>
+#include <dune/xt/common/disable_warnings.hh>
 #include <boost/algorithm/string.hpp>
-#include <dune/stuff/common/reenable_warnings.hh>
+#include <dune/xt/common/reenable_warnings.hh>
 #include <boost/filesystem/fstream.hpp>
 
-#include <dune/stuff/common/logging.hh>
+#include <dune/xt/common/logging.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 //! element-index-in-container search
@@ -132,7 +128,7 @@ std::pair<typename MapType::iterator, bool> map_emplace(MapType& map_in, Key key
 #if HAVE_MAP_EMPLACE
   return map_in.emplace(key, value);
 #else
-  DSC_LOG_DEBUG_0 << "using map.insert fallback instead of emplace\n";
+  DXTC_LOG_DEBUG_0 << "using map.insert fallback instead of emplace\n";
   return map_in.insert(typename MapType::value_type(key, value));
 #endif
 }
@@ -144,7 +140,7 @@ std::pair<typename MapType::iterator, bool> map_emplace(MapType& map_in, std::pi
 #if HAVE_MAP_EMPLACE
   return map_in.emplace(pcw, keys, values);
 #else
-  DSC_LOG_DEBUG_0 << "using map.insert fallback instead of emplace\n";
+  DXTC_LOG_DEBUG_0 << "using map.insert fallback instead of emplace\n";
   return map_in.insert(typename MapType::value_type(pcw, keys, values));
 #endif
 }
@@ -156,7 +152,7 @@ struct remove_const_reference
 };
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_MISC_HH

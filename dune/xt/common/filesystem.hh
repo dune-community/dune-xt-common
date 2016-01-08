@@ -20,7 +20,7 @@
 #include <boost/filesystem/fstream.hpp>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 //! strip filename from \path if present, return empty string if only filename present
@@ -45,10 +45,10 @@ boost::filesystem::ifstream* make_ifstream(const boost::filesystem::path& path,
 void fileToStreamFiltered(std::ostream& stream, std::string filename, std::string filter);
 
 //! output programs mem usage stats by reading from /proc
-void meminfo(Dune::Stuff::Common::LogStream& stream);
+void meminfo(LogStream& stream);
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_FILESYSTEM_HH

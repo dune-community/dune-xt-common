@@ -5,19 +5,19 @@
 // Authors:
 //   Rene Milk (2015)
 
-#ifndef DUNE_XT_COMMON_UNUSED_HH
-#define DUNE_XT_COMMON_UNUSED_HH
+#ifndef DXTC_UNUSED_HH
+#define DXTC_UNUSED_HH
 
 #ifdef HAS_WORKING_UNUSED_ATTRIBUTE
-#define DSC_UNUSED(identifier) identifier __attribute__((unused))
+#define DXTC_UNUSED(identifier) identifier __attribute__((unused))
 #else
-#define DSC_UNUSED(identifier) /*identifier*/
+#define DXTC_UNUSED(identifier) /*identifier*/
 #endif
 
 #ifndef NDEBUG
-#define DSC_DEBUG_ONLY(param) param
+#define DXTC_DEBUG_ONLY(param) param
 #else
-#define DSC_DEBUG_ONLY(param) DSC_UNUSED(param)
+#define DXTC_DEBUG_ONLY(param) DXTC_UNUSED(param)
 #endif
 
 /*** LEGACY MACROS ****/
@@ -31,4 +31,4 @@
 #endif // ifndef NDEBUG
 /*** LEGACY MACROS ****/
 
-#endif // DUNE_XT_COMMON_UNUSED_HH
+#endif // DXTC_UNUSED_HH

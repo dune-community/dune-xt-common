@@ -11,7 +11,7 @@
 #include "helper.hh"
 #include <dune/common/parallel/mpihelper.hh>
 
-int Dune::Stuff::abort_all_mpi_processes()
+int Dune::XT::abort_all_mpi_processes()
 {
 #if HAVE_MPI
   if (MPIHelper::getCollectiveCommunication().size() > 1)

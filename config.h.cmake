@@ -7,23 +7,23 @@
 //   Rene Milk       (2013 - 2015)
 //   Tobias Leibner  (2014)
 
-/* begin dune-stuff */
+/* begin dune-xt-common */
 // NEVER delete/alter above comment, dune's cmake crap relies on it
 
 /* We need this for the python bindings (there is no unsigned in python). */
-#define DUNE_STUFF_SSIZE_T long int
+#define DUNE_XT_COMMON_SSIZE_T long int
 
-/* Define to the version of dune-stuff */
-#define DUNE_STUFF_VERSION "${DUNE_STUFF_VERSION}"
+/* Define to the version of dune-xt-common */
+#define DUNE_XT_COMMON_VERSION ${DUNE_XT_COMMON_VERSION}
 
-/* Define to the major version of dune-stuff */
-#define DUNE_STUFF_VERSION_MAJOR ${DUNE_STUFF_VERSION_MAJOR}
+/* Define to the major version of dune-xt-common */
+#define DUNE_XT_COMMON_VERSION_MAJOR ${DUNE_XT_COMMON_VERSION_MAJOR}
 
-/* Define to the minor version of dune-stuff */
-#define DUNE_STUFF_VERSION_MINOR ${DUNE_STUFF_VERSION_MINOR}
+/* Define to the minor version of dune-xt-common */
+#define DUNE_XT_COMMON_VERSION_MINOR ${DUNE_XT_COMMON_VERSION_MINOR}
 
-/* Define to the revision of dune-stuff */
-#define DUNE_STUFF_VERSION_REVISION ${DUNE_STUFF_VERSION_REVISION}
+/* Define to the revision of dune-xt-common */
+#define DUNE_XT_COMMON_VERSION_REVISION ${DUNE_XT_COMMON_VERSION_REVISION}
 
 /* Define to 1 if eigen was found, else 0 */
 #ifndef HAVE_EIGEN
@@ -55,9 +55,9 @@
 #  define DUNE_FEM_DONT_WARN_IN_COMM_MANAGER 1
 #endif
 
-/* needed in dune/stuff/common/profiler.hh */
-#ifndef DUNE_STUFF_DO_PROFILE
-# define DUNE_STUFF_DO_PROFILE 0
+/* needed in dune/xt/common/profiler.hh */
+#ifndef DUNE_XT_COMMON_DO_PROFILE
+# define DUNE_XT_COMMON_DO_PROFILE 0
 #endif
 
 /*** Silence implicitly False evaluation of undefined macro warnings ****/
@@ -163,5 +163,5 @@
 
 /*** End: Silence implicitly False evaluation of undefined macro warnings ****/
 
-/* end dune-stuff */
+/* end dune-xt-common */
 // NEVER delete/alter above comment, dune's cmake crap relies on it

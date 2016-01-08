@@ -23,7 +23,7 @@
 #include "string.hh"
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 enum LogFlags
@@ -239,7 +239,7 @@ EmptyLogStream dev_null(dev_null_logflag);
 }
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // LOGSTREAMS_HH

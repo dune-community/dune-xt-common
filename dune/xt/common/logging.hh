@@ -18,15 +18,15 @@
 #include <string>
 #include <mutex>
 
-#include <dune/stuff/common/disable_warnings.hh>
+#include <dune/xt/common/disable_warnings.hh>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
-#include <dune/stuff/common/reenable_warnings.hh>
+#include <dune/xt/common/reenable_warnings.hh>
 
-#include <dune/stuff/common/logstreams.hh>
+#include <dune/xt/common/logstreams.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 class Logging;
@@ -49,7 +49,7 @@ public:
      *  \param logflags any OR'd combination of flags
      *  \param logfile filename for log, can contain paths, but creation will fail if dir is non-existant
      **/
-  void create(int logflags = (LOG_FILE | LOG_CONSOLE | LOG_ERROR), const std::string logfile = "dune_stuff_log",
+  void create(int logflags = (LOG_FILE | LOG_CONSOLE | LOG_ERROR), const std::string logfile = "dune_xt_common_log",
               const std::string datadir = "data", const std::string _logdir = std::string("log"));
 
   //! \attention This will probably not do wht we want it to!
@@ -153,19 +153,20 @@ inline Logging& Logger()
 }
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
-#define DSC_LOG Dune::Stuff::Common::Logger()
-#define DSC_LOG_INFO DSC_LOG.info()
-#define DSC_LOG_DEBUG DSC_LOG.debug()
-#define DSC_LOG_ERROR DSC_LOG.error()
-#define DSC_LOG_DEVNULL DSC_LOG.devnull()
+#define DXTC_LOG Dune::XT::Common::Logger()
+#define DXTC_LOG_INFO DXTC_LOG.info()
+#define DXTC_LOG_DEBUG DXTC_LOG.debug()
+#define DXTC_LOG_ERROR DXTC_LOG.error()
+#define DXTC_LOG_DEVNULL DXTC_LOG.devnull()
 
-#define DSC_LOG_INFO_0 (Dune::MPIHelper::getCollectiveCommunication().rank() == 0 ? DSC_LOG.info() : DSC_LOG.devnull())
-#define DSC_LOG_DEBUG_0                                                                                                \
-  (Dune::MPIHelper::getCollectiveCommunication().rank() == 0 ? DSC_LOG.debug() : DSC_LOG.devnull())
-#define DSC_LOG_ERROR_0                                                                                                \
-  (Dune::MPIHelper::getCollectiveCommunication().rank() == 0 ? DSC_LOG.error() : DSC_LOG.devnull())
+#define DXTC_LOG_INFO_0                                                                                                \
+  (Dune::MPIHelper::getCollectiveCommunication().rank() == 0 ? DXTC_LOG.info() : DXTC_LOG.devnull())
+#define DXTC_LOG_DEBUG_0                                                                                               \
+  (Dune::MPIHelper::getCollectiveCommunication().rank() == 0 ? DXTC_LOG.debug() : DXTC_LOG.devnull())
+#define DXTC_LOG_ERROR_0                                                                                               \
+  (Dune::MPIHelper::getCollectiveCommunication().rank() == 0 ? DXTC_LOG.error() : DXTC_LOG.devnull())
 
 #endif // DUNE_XT_COMMON_LOGGING_HH

@@ -12,9 +12,9 @@
 #include <dune/common/dynmatrix.hh>
 #include <dune/common/tupleutility.hh>
 
-#include <dune/stuff/common/math.hh>
-#include <dune/stuff/common/ranges.hh>
-#include <dune/stuff/common/tuple.hh>
+#include <dune/xt/common/math.hh>
+#include <dune/xt/common/ranges.hh>
+#include <dune/xt/common/tuple.hh>
 
 class A
 {
@@ -52,7 +52,7 @@ TEST(TypeTransform, All)
 
 TEST(Product, All)
 {
-  using namespace DSC::TupleProduct;
+  using namespace Dune::XT::Common::TupleProduct;
   typedef boost::mpl::vector<Int<1>, Int<2>> u_types;
   typedef boost::mpl::vector<Int<3>, Int<4>> v_types;
   typedef Combine<u_types, v_types, print_value>::Generate<> base_generator_type;

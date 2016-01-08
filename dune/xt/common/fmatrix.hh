@@ -13,12 +13,12 @@
 #include <dune/common/fmatrix.hh>
 #include <dune/common/fvector.hh>
 
-#include <dune/stuff/common/exceptions.hh>
-#include <dune/stuff/common/debug.hh>
-#include <dune/stuff/common/fvector.hh>
+#include <dune/xt/common/exceptions.hh>
+#include <dune/xt/common/debug.hh>
+#include <dune/xt/common/fvector.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 template <class K, int ROWS, int COLS>
@@ -110,7 +110,7 @@ public:
   {
   }
 
-  FieldMatrix(const Dune::Stuff::Common::FieldVector<K, 1>& other)
+  FieldMatrix(const Dune::XT::Common::FieldVector<K, 1>& other)
     : BaseType(other[0])
   {
   }
@@ -138,7 +138,7 @@ public:
 }; // class FieldMatrix
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_FMATRIX_HH

@@ -11,12 +11,12 @@
 
 #include <iostream>
 
-#include <dune/stuff/common/type_utils.hh>
-#include <dune/stuff/common/validation.hh>
+#include <dune/xt/common/type_utils.hh>
+#include <dune/xt/common/validation.hh>
 
-STUFF_TYPENAME(Dune::MPIHelper)
+DUNE_XT_COMMON_TYPENAME(Dune::MPIHelper)
 
-using namespace Dune::Stuff::Common;
+using namespace Dune::XT::Common;
 using namespace std;
 
 TEST(Typename, Knowns)
@@ -45,7 +45,7 @@ TEST(Typename, Extended)
     using namespace Dune;
     EXPECT_EQ(Typename<MPIHelper>::value(), string("Dune::MPIHelper"));
   }
-  typedef Dune::Stuff::Common::ValidateAny<int> Valid;
+  typedef ValidateAny<int> Valid;
   Valid v;
-  EXPECT_EQ(getTypename(v), string("Dune::Stuff::Common::Parameter::ValidateAny<T>"));
+  EXPECT_EQ(getTypename(v), string("Parameter::ValidateAny<T>"));
 }

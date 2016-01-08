@@ -14,11 +14,11 @@
 #include <string>
 #include <iostream>
 
-#include <dune/stuff/common/exceptions.hh>
-#include <dune/stuff/la/container/common.hh>
+#include <dune/xt/common/exceptions.hh>
+#include <dune/xt/la/container/common.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 class LocalizationStudy
@@ -45,7 +45,7 @@ private:
 }; // class LocalizationStudy
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_LOCALIZATION_STUDY_HH

@@ -15,9 +15,9 @@
 #include <string>
 #include <sstream>
 
-#include <dune/stuff/test/gtest/gtest.h>
-#include <dune/stuff/common/configuration.hh>
-#include <dune/stuff/common/exceptions.hh>
+#include <dune/xt/test/gtest/gtest.h>
+#include <dune/xt/common/configuration.hh>
+#include <dune/xt/common/exceptions.hh>
 
 #include "common.hh"
 
@@ -33,7 +33,7 @@ void busywait(const size_t ms)
 } // ... busywait(...)
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Test {
 namespace internal {
 
@@ -68,7 +68,7 @@ std::string print_vector(const std::vector<double>& vec)
 
 } // namespace internal
 
-void check_eoc_study_for_success(const Dune::Stuff::Common::ConvergenceStudy& study,
+void check_eoc_study_for_success(const Common::ConvergenceStudy& study,
                                  const std::map<std::string, std::vector<double>>& results_map)
 {
   for (const auto& norm : study.used_norms()) {
@@ -107,7 +107,7 @@ void check_eoc_study_for_success(const Dune::Stuff::Common::ConvergenceStudy& st
 void print_collected_eoc_study_results(const std::map<std::string, std::vector<double>>& results, std::ostream& out)
 {
   if (results.empty())
-    DUNE_THROW(Exceptions::wrong_input_given, "Given results must not be empty!");
+    DUNE_THROW(Common::Exceptions::wrong_input_given, "Given results must not be empty!");
   std::vector<std::string> actually_used_norms;
   for (const auto& element : results)
     actually_used_norms.push_back(element.first);
@@ -125,12 +125,12 @@ void print_collected_eoc_study_results(const std::map<std::string, std::vector<d
 
 unsigned int grid_elements()
 {
-  return DSC_CONFIG.has_key("test.gridelements") // <- doing this so complicated to
-             ? DSC_CONFIG.get<unsigned int>(
-                   "test.gridelements", 3u, DSC::ValidateLess<unsigned int>(2u)) //    silence the WARNING: ...
+  return DXTC_CONFIG.has_key("test.gridelements") // <- doing this so complicated to
+             ? DXTC_CONFIG.get<unsigned int>(
+                   "test.gridelements", 3u, Common::ValidateLess<unsigned int>(2u)) //    silence the WARNING: ...
              : 3u;
 } // ... grid_elements(...)
 
 } // namespace Test
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune

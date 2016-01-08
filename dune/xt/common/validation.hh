@@ -14,12 +14,12 @@
 #include <string>
 #include <boost/format.hpp>
 
-#include <dune/stuff/common/misc.hh>
-#include <dune/stuff/common/string.hh>
-#include <dune/stuff/common/type_utils.hh>
+#include <dune/xt/common/misc.hh>
+#include <dune/xt/common/string.hh>
+#include <dune/xt/common/type_utils.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 /** \brief Base class for all Validators
@@ -229,16 +229,16 @@ struct Typename<ValidateAny<T>>
 {
   static std::string value()
   {
-    return "Dune::Stuff::Common::Parameter::ValidateAny<T>";
+    return "Parameter::ValidateAny<T>";
   }
 };
 
 } // end namespace Common
-} // end namespace Stuff
+} // end namespace XT
 } // end namespace Dune
 
 template <class T, class Validator>
-std::ostream operator<<(std::ostream& out, const Dune::Stuff::Common::ValidatorInterface<T, Validator>& validator)
+std::ostream operator<<(std::ostream& out, const Dune::XT::Common::ValidatorInterface<T, Validator>& validator)
 {
   return out << validator.msg();
 }

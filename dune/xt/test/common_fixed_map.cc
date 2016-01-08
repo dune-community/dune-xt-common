@@ -13,11 +13,11 @@
 #include <array>
 #include <initializer_list>
 #include <vector>
-#include <dune/stuff/common/fixed_map.hh>
-#include <dune/stuff/common/string.hh>
-#include <dune/stuff/common/ranges.hh>
+#include <dune/xt/common/fixed_map.hh>
+#include <dune/xt/common/string.hh>
+#include <dune/xt/common/ranges.hh>
 
-using namespace Dune::Stuff::Common;
+using namespace Dune::XT::Common;
 
 TEST(FixedMapTest, All)
 {

@@ -21,18 +21,17 @@
 #include <dune/common/parametertree.hh>
 #include <dune/common/parametertreeparser.hh>
 
-#include <dune/stuff/aliases.hh>
-#include <dune/stuff/common/exceptions.hh>
-#include <dune/stuff/common/color.hh>
-#include <dune/stuff/common/logging.hh>
-#include <dune/stuff/common/filesystem.hh>
-#include <dune/stuff/common/misc.hh>
-#include <dune/stuff/common/validation.hh>
-#include <dune/stuff/common/type_utils.hh>
-#include <dune/stuff/common/algorithm.hh>
+#include <dune/xt/common/exceptions.hh>
+#include <dune/xt/common/color.hh>
+#include <dune/xt/common/logging.hh>
+#include <dune/xt/common/filesystem.hh>
+#include <dune/xt/common/misc.hh>
+#include <dune/xt/common/validation.hh>
+#include <dune/xt/common/type_utils.hh>
+#include <dune/xt/common/algorithm.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 namespace internal {
@@ -40,7 +39,7 @@ namespace internal {
 static const bool configuration_record_defaults        = false;
 static const bool configuration_warn_on_default_access = false;
 static const bool configuration_log_on_exit            = false;
-static const std::string configuration_logfile         = "data/log/dsc_parameter.log";
+static const std::string configuration_logfile         = "data/log/dxtc_parameter.log";
 
 template <class T>
 struct Typer
@@ -305,7 +304,7 @@ public:
    *  \note this method is needed for the python bindings
    */
   template <class T>
-  T pb_get(std::string key, const DUNE_STUFF_SSIZE_T size = 0) const
+  T pb_get(std::string key, const DUNE_XT_COMMON_SSIZE_T size = 0) const
   {
     size_t sz = 0;
     try {
@@ -313,7 +312,7 @@ public:
     } catch (boost::bad_numeric_cast& ee) {
       DUNE_THROW(Exceptions::external_error,
                  "There was an error in boost converting '" << size << "' from '"
-                                                            << Typename<DUNE_STUFF_SSIZE_T>::value()
+                                                            << Typename<DUNE_XT_COMMON_SSIZE_T>::value()
                                                             << "' to '"
                                                             << Typename<size_t>::value()
                                                             << ":\n"
@@ -381,8 +380,8 @@ private:
   {
 #ifndef NDEBUG
     if (warn_on_default_access_ && !has_key(key)) {
-      std::cerr << DSC::colorString("WARNING:", DSC::Colors::brown) << " using default value for parameter \"" << key
-                << "\"" << std::endl;
+      std::cerr << colorString("WARNING:", Colors::brown) << " using default value for parameter \"" << key << "\""
+                << std::endl;
     }
 #endif // ifndef NDEBUG
     return get_valid_value(key, def, validator, size, cols);
@@ -425,7 +424,7 @@ inline Configuration& Config()
 }
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 
 bool operator==(const ParameterTree& left, const ParameterTree& right);
 
@@ -445,31 +444,32 @@ struct less<Dune::ParameterTree>
 }; // struct less< ParameterTree >
 
 template <>
-struct less<Dune::Stuff::Common::Configuration>
+struct less<Dune::XT::Common::Configuration>
 {
   typedef bool result_type;
-  typedef Dune::Stuff::Common::Configuration first_argument_type;
-  typedef Dune::Stuff::Common::Configuration second_argument_type;
+  typedef Dune::XT::Common::Configuration first_argument_type;
+  typedef Dune::XT::Common::Configuration second_argument_type;
 
-  bool operator()(const Dune::Stuff::Common::Configuration& lhs, const Dune::Stuff::Common::Configuration& rhs) const;
+  bool operator()(const Dune::XT::Common::Configuration& lhs, const Dune::XT::Common::Configuration& rhs) const;
 }; // struct less< ParameterTree >
 
 } // namespace std
 
-#define DSC_CONFIG Dune::Stuff::Common::Config()
+#define DXTC_CONFIG Dune::XT::Common::Config()
 
 template <typename T>
-static auto DSC_CONFIG_GET(std::string key, T def) -> decltype(DSC_CONFIG.get(key, def))
+static auto DXTC_CONFIG_GET(std::string key, T def) -> decltype(DXTC_CONFIG.get(key, def))
 {
-  return DSC_CONFIG.get(key, def);
+  return DXTC_CONFIG.get(key, def);
 }
 
 template <typename T, class V>
-static auto DSC_CONFIG_GETV(std::string key, T def,
-                            const DSC::ValidatorInterface<typename DSC::internal::Typer<T>::type, V>& v)
-    -> decltype(DSC_CONFIG.get(key, def, v))
+static auto DXTC_CONFIG_GETV(
+    std::string key, T def,
+    const Dune::XT::Common::ValidatorInterface<typename Dune::XT::Common::internal::Typer<T>::type, V>& v)
+    -> decltype(DXTC_CONFIG.get(key, def, v))
 {
-  return DSC_CONFIG.get(key, def, v);
+  return DXTC_CONFIG.get(key, def, v);
 }
 
 #endif // DUNE_XT_COMMON_CONFIGURATION_HH

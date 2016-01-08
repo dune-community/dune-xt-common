@@ -13,7 +13,7 @@
 #include <boost/noncopyable.hpp>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 //! make_unique implementation via herb sutter: http://herbsutter.com/gotw/_102/
@@ -294,7 +294,7 @@ private:
 }; // class StorageProvider
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_MEMORY_HH

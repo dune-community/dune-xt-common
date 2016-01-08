@@ -28,7 +28,7 @@
 #include <dune/fem/space/lagrange/lagrangepoints.hh>
 #endif // HAVE_DUNE_FEM
 
-#include <dune/stuff/common/math.hh>
+#include <dune/xt/common/math.hh>
 
 namespace Dune {
 
@@ -64,7 +64,7 @@ auto end(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> 
 
 #endif // HAVE_DUNE_FEM
 
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 #if HAVE_DUNE_GRID
@@ -305,7 +305,7 @@ typename std::enable_if<!std::is_enum<T>::value, sequence>::type valueRange(cons
   // sadly, no overloaded version of std::abs is available for
   // unsigned long long, so we compute the absolute value of increment
   // ourselves
-  const auto incrementAbs = Dune::Stuff::Common::abs(increment);
+  const auto incrementAbs = abs(increment);
   assert(incrementAbs > 0);
   sequence ret(typename sequence::size_type(((end > start) ? end - start : start - end) / incrementAbs), start);
   typename sequence::size_type i = 0;
@@ -338,7 +338,7 @@ typename std::enable_if<std::is_enum<T>::value, sequence>::type valueRange(const
 }
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_RANGES_HH

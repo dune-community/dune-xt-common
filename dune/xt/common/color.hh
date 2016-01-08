@@ -22,7 +22,7 @@
 #include <string>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 #define DS_CONST_CHAR const char *
@@ -31,7 +31,7 @@ namespace Common {
  * @brief namespace to define color constants that can be
  * used to print colored text in an output stream.
  *
- * * \todo this could go size_to libdune-stuff
+ * * \todo this could go size_to libdunextcommon
  * @warning Some color codes might be unsupported by your terminal.
  */
 struct Colors
@@ -150,7 +150,7 @@ std::string colorStringRed(const std::string str);
 std::string highlightSearchString(std::string str, std::string substr, size_t colornr = 0);
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // end of DUNE_XT_COMMON_COLOR_HH

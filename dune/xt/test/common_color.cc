@@ -9,9 +9,9 @@
 //   Tobias Leibner  (2014)
 
 #include "main.hxx"
-#include <dune/stuff/common/color.hh>
+#include <dune/xt/common/color.hh>
 
-using namespace Dune::Stuff::Common;
+using namespace Dune::XT::Common;
 
 TEST(Color, All)
 {

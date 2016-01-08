@@ -21,7 +21,7 @@
 #include <dune/common/nullptr.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 //! custom iterator for \ref FixedMap
@@ -228,12 +228,12 @@ template <class K, class T, std::size_t nin>
 const std::size_t FixedMap<K, T, nin>::N = nin;
 
 } // namespace Common
-} // namepspace Stuff
+} // namespace XT
 } // namespace Dune
 
 namespace std {
 template <class key_imp, class T, std::size_t nin>
-inline ostream& operator<<(ostream& out, const Dune::Stuff::Common::FixedMap<key_imp, T, nin>& map)
+inline ostream& operator<<(ostream& out, const Dune::XT::Common::FixedMap<key_imp, T, nin>& map)
 {
   map.print(out);
   return out;

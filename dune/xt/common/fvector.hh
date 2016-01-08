@@ -15,12 +15,12 @@
 
 #include <dune/common/fvector.hh>
 
-#include <dune/stuff/common/exceptions.hh>
-#include <dune/stuff/common/debug.hh>
-#include <dune/stuff/common/vector.hh>
+#include <dune/xt/common/exceptions.hh>
+#include <dune/xt/common/debug.hh>
+#include <dune/xt/common/vector.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 template <class K, int SIZE>
@@ -111,9 +111,9 @@ public:
 }; // class FieldVector
 
 template <class K, int SIZE, K value>
-class ValueInitFieldVector : public Dune::Stuff::Common::FieldVector<K, SIZE>
+class ValueInitFieldVector : public Dune::XT::Common::FieldVector<K, SIZE>
 {
-  typedef Dune::Stuff::Common::FieldVector<K, SIZE> BaseType;
+  typedef Dune::XT::Common::FieldVector<K, SIZE> BaseType;
 
 public:
   ValueInitFieldVector()
@@ -122,11 +122,11 @@ public:
   }
 }; // class FieldVector
 
-//! Specialization of VectorAbstraction for Dune::Stuff::Common::FieldVector
+//! Specialization of VectorAbstraction for Dune::XT::Common::FieldVector
 template <class K, int SIZE>
-struct VectorAbstraction<Dune::Stuff::Common::FieldVector<K, SIZE>>
+struct VectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>>
 {
-  typedef Dune::Stuff::Common::FieldVector<K, SIZE> VectorType;
+  typedef Dune::XT::Common::FieldVector<K, SIZE> VectorType;
   typedef typename Dune::FieldTraits<K>::field_type ScalarType;
   typedef typename Dune::FieldTraits<K>::real_type RealType;
   typedef ScalarType S;
@@ -150,7 +150,7 @@ struct VectorAbstraction<Dune::Stuff::Common::FieldVector<K, SIZE>>
 };
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_FVECTOR_HH

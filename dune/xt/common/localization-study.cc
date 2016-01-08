@@ -11,10 +11,10 @@
 
 #include <boost/io/ios_state.hpp>
 
-#include <dune/stuff/common/string.hh>
+#include <dune/xt/common/string.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 LocalizationStudy::LocalizationStudy(const std::vector<std::string> only_these_indicators)
@@ -65,18 +65,16 @@ void LocalizationStudy::run(std::ostream& out)
   header_line = std::string(" ") + first_column_str + header_line;
   // print table header
   if (identifier().size() > header_line.size())
-    out << Stuff::Common::whitespaceify(identifier(), '=') << "\n";
+    out << whitespaceify(identifier(), '=') << "\n";
   else
-    out << Stuff::Common::whitespaceify(header_line, '=') << "\n";
+    out << whitespaceify(header_line, '=') << "\n";
   out << header_line << "\n";
-  const std::string thin_delimiter = Stuff::Common::whitespaceify(" " + first_column_str + " ", '-') + "++"
-                                     + Stuff::Common::whitespaceify("   L^2 difference   ", '-') + "+"
-                                     + Stuff::Common::whitespaceify("   L^oo difference  ", '-') + "+"
-                                     + Stuff::Common::whitespaceify(" standard deviation ", '-');
-  const std::string thick_delimiter = Stuff::Common::whitespaceify(" " + first_column_str + " ", '=') + "++"
-                                      + Stuff::Common::whitespaceify("   L^2 difference   ", '=') + "+"
-                                      + Stuff::Common::whitespaceify("   L^oo difference  ", '=') + "+"
-                                      + Stuff::Common::whitespaceify(" standard deviation ", '=');
+  const std::string thin_delimiter =
+      whitespaceify(" " + first_column_str + " ", '-') + "++" + whitespaceify("   L^2 difference   ", '-') + "+"
+      + whitespaceify("   L^oo difference  ", '-') + "+" + whitespaceify(" standard deviation ", '-');
+  const std::string thick_delimiter =
+      whitespaceify(" " + first_column_str + " ", '=') + "++" + whitespaceify("   L^2 difference   ", '=') + "+"
+      + whitespaceify("   L^oo difference  ", '=') + "+" + whitespaceify(" standard deviation ", '=');
   out << thick_delimiter << std::endl;
   // comput reference indicators
   const auto reference_indicators = compute_reference_indicators();
@@ -122,5 +120,5 @@ void LocalizationStudy::run(std::ostream& out)
 } // ... run(...)
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune

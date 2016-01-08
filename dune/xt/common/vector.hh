@@ -19,12 +19,12 @@
 #include <dune/common/fvector.hh>
 #include <dune/common/ftraits.hh>
 
-#include <dune/stuff/common/exceptions.hh>
-#include <dune/stuff/common/type_utils.hh>
-#include <dune/stuff/common/float_cmp.hh>
+#include <dune/xt/common/exceptions.hh>
+#include <dune/xt/common/type_utils.hh>
+#include <dune/xt/common/float_cmp.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 template <class VecType>
@@ -140,14 +140,14 @@ struct VectorAbstraction<Dune::FieldVector<K, SIZE>>
   static inline VectorType create(const size_t sz)
   {
     if (sz != SIZE)
-      DUNE_THROW(Dune::Stuff::Exceptions::shapes_do_not_match, "sz = " << sz << "\nSIZE = " << int(SIZE));
+      DUNE_THROW(Exceptions::shapes_do_not_match, "sz = " << sz << "\nSIZE = " << int(SIZE));
     return VectorType();
   }
 
   static inline VectorType create(const size_t sz, const ScalarType& val)
   {
     if (sz != SIZE)
-      DUNE_THROW(Dune::Stuff::Exceptions::shapes_do_not_match, "sz = " << sz << "\nSIZE = " << int(SIZE));
+      DUNE_THROW(Exceptions::shapes_do_not_match, "sz = " << sz << "\nSIZE = " << int(SIZE));
     return VectorType(val);
   }
 };
@@ -206,11 +206,11 @@ create(const size_t /*sz*/,
 }
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 template <class S, class V>
-typename std::enable_if<std::is_arithmetic<S>::value && Dune::Stuff::Common::is_vector<V>::value, V>::type
+typename std::enable_if<std::is_arithmetic<S>::value && Dune::XT::Common::is_vector<V>::value, V>::type
 operator*(const S& scalar, const V& vec)
 {
   V result(vec);
@@ -220,15 +220,15 @@ operator*(const S& scalar, const V& vec)
 } // ... operator*(...)
 
 template <class L, class R>
-typename std::enable_if<Dune::Stuff::Common::is_vector<L>::value && Dune::Stuff::Common::is_vector<R>::value
-                            && std::is_same<typename Dune::Stuff::Common::VectorAbstraction<L>::S,
-                                            typename Dune::Stuff::Common::VectorAbstraction<R>::S>::value,
+typename std::enable_if<Dune::XT::Common::is_vector<L>::value && Dune::XT::Common::is_vector<R>::value
+                            && std::is_same<typename Dune::XT::Common::VectorAbstraction<L>::S,
+                                            typename Dune::XT::Common::VectorAbstraction<R>::S>::value,
                         L>::type
 operator+(const L& left, const R& right)
 {
   const auto sz = left.size();
   if (right.size() != sz)
-    DUNE_THROW(Dune::Stuff::Exceptions::shapes_do_not_match,
+    DUNE_THROW(Dune::XT::Common::Exceptions::shapes_do_not_match,
                "left.size() = " << sz << "\nright.size() = " << right.size());
   L result(left);
   for (size_t ii = 0; ii < sz; ++ii)
@@ -237,7 +237,7 @@ operator+(const L& left, const R& right)
 } // ... operator+(...)
 
 template <class V, class CharType, class CharTraits>
-typename std::enable_if<Dune::Stuff::Common::is_vector<V>::value, std::basic_ostream<CharType, CharTraits>&>::type
+typename std::enable_if<Dune::XT::Common::is_vector<V>::value, std::basic_ostream<CharType, CharTraits>&>::type
 operator<<(std::basic_ostream<CharType, CharTraits>& out, const V& vec)
 {
   if (vec.size() == 0)

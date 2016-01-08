@@ -12,12 +12,12 @@
 #include <array>
 #include <initializer_list>
 #include <vector>
-#include <dune/stuff/common/parallel/threadmanager.hh>
-#include <dune/stuff/common/parallel/threadstorage.hh>
-#include <dune/stuff/common/parallel/helper.hh>
+#include <dune/xt/common/parallel/threadmanager.hh>
+#include <dune/xt/common/parallel/threadstorage.hh>
+#include <dune/xt/common/parallel/helper.hh>
 
-using namespace Dune::Stuff;
-using namespace Dune::Stuff::Common;
+using namespace Dune::XT;
+using namespace Dune::XT::Common;
 
 template <typename ThreadValue>
 void value_check(ThreadValue& foo, const typename ThreadValue::ValueType& value)
@@ -88,7 +88,7 @@ TYPED_TEST(ThreadValueTest, All)
 
 TEST(ThreadManager, All)
 {
-  auto& tm = DS::threadManager();
+  auto& tm = Dune::XT::Common::threadManager();
   EXPECT_LE(tm.current_threads(), tm.max_threads());
   EXPECT_LT(tm.thread(), tm.current_threads());
 }

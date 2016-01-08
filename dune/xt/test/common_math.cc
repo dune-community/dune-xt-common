@@ -12,11 +12,11 @@
 #include <dune/common/dynmatrix.hh>
 #include <dune/common/tupleutility.hh>
 
-#include <dune/stuff/common/math.hh>
-#include <dune/stuff/common/float_cmp.hh>
-#include <dune/stuff/common/ranges.hh>
+#include <dune/xt/common/math.hh>
+#include <dune/xt/common/float_cmp.hh>
+#include <dune/xt/common/ranges.hh>
 
-using namespace Dune::Stuff::Common;
+using namespace Dune::XT::Common;
 typedef testing::Types<double, int> TestTypes;
 typedef testing::Types<std::complex<double>, double, int> ComplexTestTypes;
 
@@ -100,20 +100,20 @@ TEST(OtherMath, Range)
 
 TEST(OtherMath, Sign)
 {
-  EXPECT_EQ(DSC::signum(1), 1);
-  EXPECT_EQ(DSC::signum(-1), -1);
-  EXPECT_EQ(DSC::signum(1.), 1);
-  EXPECT_EQ(DSC::signum(-1.), -1);
+  EXPECT_EQ(signum(1), 1);
+  EXPECT_EQ(signum(-1), -1);
+  EXPECT_EQ(signum(1.), 1);
+  EXPECT_EQ(signum(-1.), -1);
 }
 
 TEST(OtherMath, AbsoluteValue)
 {
-  EXPECT_EQ(DSC::abs(1.0f), 1.0f);
-  EXPECT_EQ(DSC::abs(-1l), 1l);
-  EXPECT_EQ(DSC::abs(0u), 0u);
-  EXPECT_EQ(DSC::abs(0), 0);
-  EXPECT_EQ(DSC::abs(std::complex<int>(0)), 0);
-  EXPECT_EQ(DSC::abs(std::complex<int>(-1)), 1);
+  EXPECT_EQ(abs(1.0f), 1.0f);
+  EXPECT_EQ(abs(-1l), 1l);
+  EXPECT_EQ(abs(0u), 0u);
+  EXPECT_EQ(abs(0), 0);
+  EXPECT_EQ(abs(std::complex<int>(0)), 0);
+  EXPECT_EQ(abs(std::complex<int>(-1)), 1);
 }
 
 TEST(OtherMath, FloatCmp)
@@ -121,16 +121,16 @@ TEST(OtherMath, FloatCmp)
   std::vector<double> ones{1., 1.};
   std::vector<double> twos{2., 2.};
   Dune::FieldVector<double, 2> dones(1.);
-  EXPECT_TRUE(DSC::FloatCmp::eq(ones, ones));
-  EXPECT_TRUE(DSC::FloatCmp::eq(dones, dones));
-  EXPECT_FALSE(DSC::FloatCmp::ne(ones, ones));
-  EXPECT_FALSE(DSC::FloatCmp::ne(dones, dones));
+  EXPECT_TRUE(FloatCmp::eq(ones, ones));
+  EXPECT_TRUE(FloatCmp::eq(dones, dones));
+  EXPECT_FALSE(FloatCmp::ne(ones, ones));
+  EXPECT_FALSE(FloatCmp::ne(dones, dones));
 
   Dune::FieldVector<double, 2> other(1.);
   other[1] = 0;
-  EXPECT_TRUE(DSC::FloatCmp::ne(dones, other));
+  EXPECT_TRUE(FloatCmp::ne(dones, other));
   other = 2;
-  EXPECT_TRUE(DSC::FloatCmp::lt(dones, other));
-  EXPECT_TRUE(DSC::FloatCmp::lt(ones, twos));
-  EXPECT_TRUE(DSC::FloatCmp::gt(twos, ones));
+  EXPECT_TRUE(FloatCmp::lt(dones, other));
+  EXPECT_TRUE(FloatCmp::lt(ones, twos));
+  EXPECT_TRUE(FloatCmp::gt(twos, ones));
 }

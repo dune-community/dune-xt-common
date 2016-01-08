@@ -13,7 +13,7 @@
 #include <dune/common/unused.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 SuspendableStrBuffer::SuspendableStrBuffer(int loglevel, int& logflags)
@@ -165,5 +165,5 @@ int EmptyBuffer::sync()
 }
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune

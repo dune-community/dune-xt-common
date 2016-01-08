@@ -14,10 +14,10 @@
 #include <string>
 #include <iostream>
 
-#include <dune/stuff/common/logging.hh>
+#include <dune/xt/common/logging.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 class ConvergenceStudy
@@ -54,7 +54,7 @@ public:
 
   std::vector<std::string> used_norms() const;
 
-  std::map<std::string, std::vector<double>> run(const bool relative = false, std::ostream& out = DSC_LOG_INFO_0,
+  std::map<std::string, std::vector<double>> run(const bool relative = false, std::ostream& out = DXTC_LOG_INFO_0,
                                                  const bool print_timings = true);
 
   virtual std::vector<double> expected_results(const std::string /*type*/) const;
@@ -64,7 +64,7 @@ private:
 }; // class ConvergenceStudy
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_CONVERGENCE_STUDY_HH

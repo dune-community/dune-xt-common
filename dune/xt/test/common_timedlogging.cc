@@ -6,20 +6,20 @@
 //   Felix Schindler (2014)
 //   Rene Milk       (2014 - 2015)
 
-#ifndef DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
-#define DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS 0
+#ifndef DUNE_XT_COMMON_TEST_MAIN_CATCH_EXCEPTIONS
+#define DUNE_XT_COMMON_TEST_MAIN_CATCH_EXCEPTIONS 0
 #endif
 
 #include "config.h"
 
-#include <dune/stuff/test/gtest/gtest.h>
-#include <dune/stuff/common/timedlogging.hh>
+#include <dune/xt/test/gtest/gtest.h>
+#include <dune/xt/common/timedlogging.hh>
 
 #include "common.hh"
 
 using namespace Dune;
-using namespace Dune::Stuff;
-using namespace Dune::Stuff::Common;
+using namespace Dune::XT;
+using namespace Dune::XT::Common;
 
 void before_create()
 {
@@ -99,12 +99,12 @@ TEST(TimedLogger, fool_level_tracking)
 
 int main(int argc, char** argv)
 {
-#if DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
+#if DUNE_XT_COMMON_TEST_MAIN_CATCH_EXCEPTIONS
   try {
 #endif
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();
-#if DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
+#if DUNE_XT_COMMON_TEST_MAIN_CATCH_EXCEPTIONS
   } catch (Dune::Exception& e) {
     std::cerr << "\nDune reported error: " << e.what() << std::endl;
     std::abort();
@@ -115,5 +115,5 @@ int main(int argc, char** argv)
     std::cerr << "Unknown exception thrown!" << std::endl;
     std::abort();
   } // try
-#endif // DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS
+#endif // DUNE_XT_COMMON_TEST_MAIN_CATCH_EXCEPTIONS
 } // ... main(...)

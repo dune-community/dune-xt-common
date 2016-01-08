@@ -10,18 +10,18 @@
 // This one has to come first (includes the config.h)!
 #include "main.hxx"
 
-#include <dune/stuff/common/validation.hh>
-#include <dune/stuff/common/configuration.hh>
-#include <dune/stuff/common/random.hh>
-#include <dune/stuff/common/math.hh>
-#include <dune/stuff/common/logging.hh>
-#include <dune/stuff/common/exceptions.hh>
-#include <dune/stuff/common/type_utils.hh>
-#include <dune/stuff/common/float_cmp.hh>
-#include <dune/stuff/la/container.hh>
-#include <dune/stuff/common/matrix.hh>
-#include <dune/stuff/common/tuple.hh>
-#include <dune/stuff/test/float_cmp.hh>
+#include <dune/xt/common/validation.hh>
+#include <dune/xt/common/configuration.hh>
+#include <dune/xt/common/random.hh>
+#include <dune/xt/common/math.hh>
+#include <dune/xt/common/logging.hh>
+#include <dune/xt/common/exceptions.hh>
+#include <dune/xt/common/type_utils.hh>
+#include <dune/xt/common/float_cmp.hh>
+#include <dune/xt/la/container.hh>
+#include <dune/xt/common/matrix.hh>
+#include <dune/xt/common/tuple.hh>
+#include <dune/xt/test/float_cmp.hh>
 
 #include <array>
 #include <ostream>
@@ -30,11 +30,11 @@
 
 // uncomment this for output
 // std::ostream& test_out = std::cout;
-std::ostream& test_out = DSC_LOG.devnull();
+std::ostream& test_out = DXTC_LOG.devnull();
 
-using namespace Dune::Stuff::Common;
-using Dune::Stuff::Exceptions::results_are_not_as_expected;
-using namespace Dune::Stuff::Common::FloatCmp;
+using namespace Dune::XT::Common;
+using Dune::XT::Common::Exceptions::results_are_not_as_expected;
+using namespace Dune::XT::Common::FloatCmp;
 
 struct CreateByOperator
 {
@@ -161,7 +161,7 @@ DefaultRNG<double> rng_setup()
 template <class T>
 static void val_compare_eq(const T& aa, const T& bb)
 {
-  DSC_EXPECT_FLOAT_EQ(aa, bb);
+  DXTC_EXPECT_FLOAT_EQ(aa, bb);
 }
 
 static void val_compare_eq(const std::string& aa, const std::string& bb)
@@ -196,9 +196,9 @@ struct ConfigTest : public testing::Test
     std::set<std::string> uniq_keys;
     for (T val : values) {
       const auto key     = key_gen();
-      const auto got_val = DSC_CONFIG_GET(key, val);
+      const auto got_val = DXTC_CONFIG_GET(key, val);
       // since the value invariably goes through string conversion, we need to adjust the expected value as well
-      const T adjusted_val = DSC::fromString<T>(DSC::toString(val));
+      const T adjusted_val = fromString<T>(toString(val));
       val_compare_eq(adjusted_val, got_val);
       //! TODO add a float compare check that makes sure introduced error is only due to limited precision in str conv
       uniq_keys.insert(key);
@@ -211,10 +211,10 @@ struct ConfigTest : public testing::Test
     for (T val : values) {
       auto key = key_gen();
       // since the value invariably goes through string conversion, we need to adjust the expected value as well
-      const T adjusted_val = DSC::fromString<T>(DSC::toString(val));
-      DSC_CONFIG.set(key, val);
+      const T adjusted_val = fromString<T>(toString(val));
+      DXTC_CONFIG.set(key, val);
       // get with default diff from expected
-      auto re = DSC_CONFIG.get(key, T(val + Dune::Stuff::Common::Epsilon<T>::value));
+      auto re = DXTC_CONFIG.get(key, T(val + Epsilon<T>::value));
       val_compare_eq(re, adjusted_val);
     }
   }
@@ -222,13 +222,13 @@ struct ConfigTest : public testing::Test
   void other()
   {
     auto key = this->key_gen();
-    DSC_CONFIG.set(key, T());
-    EXPECT_THROW(DSC_CONFIG.get(key, T(), ValidateNone<T>()), Dune::Stuff::Exceptions::configuration_error);
+    DXTC_CONFIG.set(key, T());
+    EXPECT_THROW(DXTC_CONFIG.get(key, T(), ValidateNone<T>()), Exceptions::configuration_error);
   }
 
   void issue_42()
   {
-    using namespace DSC;
+    using namespace Dune::XT::Common;
     using namespace std;
     Configuration empty;
     Configuration to_add(vector<string>{"subsection.key"}, {0l});
@@ -244,7 +244,7 @@ struct StaticCheck
   template <class MatrixType>
   static void check_matrix_static_size(const Configuration& config)
   {
-    typedef DSC::MatrixAbstraction<MatrixType> MT;
+    typedef MatrixAbstraction<MatrixType> MT;
     const auto r = MT::rows(MatrixType());
     const auto c = MT::cols(MatrixType());
 
@@ -263,11 +263,11 @@ struct StaticCheck
   }
 
   template <class U, class V>
-  static void run(const DSC::Configuration& config)
+  static void run(const Configuration& config)
   {
     const auto rows = U::value;
     const auto cols = V::value;
-    check_matrix_static_size<Dune::Stuff::Common::FieldMatrix<double, rows, cols>>(config);
+    check_matrix_static_size<FieldMatrix<double, rows, cols>>(config);
     check_matrix_static_size<Dune::FieldMatrix<double, rows, cols>>(config);
   }
 };
@@ -324,7 +324,7 @@ struct ConfigurationTest : public ::testing::Test
   static void check_matrix(const Configuration& config)
   {
     MatrixType mat = config.get("matrix", MatrixType(), 1, 1);
-    typedef DSC::MatrixAbstraction<MatrixType> MT;
+    typedef MatrixAbstraction<MatrixType> MT;
     EXPECT_FALSE(MT::rows(mat) != 1 || MT::cols(mat) != 1);
     EXPECT_TRUE(FloatCmp::eq(MT::get_entry(mat, 0, 0), 0.0));
     mat = config.get("matrix", MatrixType(), 1, 2);
@@ -408,19 +408,19 @@ struct ConfigurationTest : public ::testing::Test
     check_field_vector<double, 1>(subsub1);
     check_field_vector<double, 2>(subsub1);
     check_vector<Dune::DynamicVector<double>>(subsub1);
-    check_vector<Dune::Stuff::LA::CommonDenseVector<double>>(subsub1);
+    check_vector<Dune::XT::LA::CommonDenseVector<double>>(subsub1);
 #if HAVE_DUNE_ISTL
-    check_vector<Dune::Stuff::LA::IstlDenseVector<double>>(subsub1);
+    check_vector<Dune::XT::LA::IstlDenseVector<double>>(subsub1);
 #endif
 #if HAVE_EIGEN
-    check_vector<Dune::Stuff::LA::EigenDenseVector<double>>(subsub1);
-    check_vector<Dune::Stuff::LA::EigenMappedDenseVector<double>>(subsub1);
-    check_matrix<Dune::Stuff::LA::EigenDenseMatrix<double>>(subsub1);
+    check_vector<Dune::XT::LA::EigenDenseVector<double>>(subsub1);
+    check_vector<Dune::XT::LA::EigenMappedDenseVector<double>>(subsub1);
+    check_matrix<Dune::XT::LA::EigenDenseMatrix<double>>(subsub1);
 #endif // HAVE_EIGEN
     check_matrix<Dune::DynamicMatrix<double>>(subsub1);
-    check_matrix<Dune::Stuff::LA::CommonDenseMatrix<double>>(subsub1);
+    check_matrix<Dune::XT::LA::CommonDenseMatrix<double>>(subsub1);
 
-    DSC::TupleProduct::Combine<StaticCheck::Ints, StaticCheck::Ints, StaticCheck>::Generate<>::Run(subsub1);
+    TupleProduct::Combine<StaticCheck::Ints, StaticCheck::Ints, StaticCheck>::Generate<>::Run(subsub1);
 
   } // ... behaves_correctly(...)
 }; // struct ConfigurationTest

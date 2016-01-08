@@ -29,11 +29,11 @@
 #include <ctime>
 #include <iostream>
 
-#include <dune/stuff/common/disable_warnings.hh>
+#include <dune/xt/common/disable_warnings.hh>
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/numeric/conversion/cast.hpp>
-#include <dune/stuff/common/reenable_warnings.hh>
+#include <dune/xt/common/reenable_warnings.hh>
 
 #include <dune/common/array.hh>
 #include <dune/common/bigunsignedint.hh>
@@ -44,15 +44,15 @@
 #include <dune/common/dynvector.hh>
 #include <dune/common/densevector.hh>
 
-#include <dune/stuff/common/exceptions.hh>
-#include <dune/stuff/common/debug.hh>
-#include <dune/stuff/common/ranges.hh>
-#include <dune/stuff/common/type_utils.hh>
-#include <dune/stuff/common/vector.hh>
-#include <dune/stuff/la/container/interfaces.hh>
+#include <dune/xt/common/exceptions.hh>
+#include <dune/xt/common/debug.hh>
+#include <dune/xt/common/ranges.hh>
+#include <dune/xt/common/type_utils.hh>
+#include <dune/xt/common/vector.hh>
+#include <dune/xt/la/container/interfaces.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 // forward, std::string variant needed in internal::from_string
@@ -71,13 +71,13 @@ tokenize(const std::string& msg, const std::string& separators,
          const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off);
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #include "string_internal.hh"
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 static constexpr const std::size_t default_to_string_precision = 6u;
@@ -118,7 +118,7 @@ std::string whitespaceify(const T& t, const char whitespace = ' ')
 {
   const std::string s = toString(t);
   std::string ret = "";
-  for (auto DSC_UNUSED(ii) : valueRange(s.size())) {
+  for (auto DXTC_UNUSED(ii) : valueRange(s.size())) {
     ret += whitespace;
   }
   return ret;
@@ -182,7 +182,7 @@ static inline char** vectorToMainArgs(const std::vector<std::string>& args)
 } // ... vectorToMainArgs(...)
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_STRING_HH

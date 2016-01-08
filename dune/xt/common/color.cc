@@ -14,7 +14,7 @@
 #include <string>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 // foreground colors
@@ -192,5 +192,5 @@ std::string colorStringRed(const std::string str)
 }
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune

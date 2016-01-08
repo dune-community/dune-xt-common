@@ -23,7 +23,7 @@
  *
  *  Example:
 \code
-#include <dune/stuff/common/exceptions.hh>
+#include <dune/xt/common/exceptions.hh>
 
 if (a.size() != b.size())
   DUNE_THROW(Exceptions::shapes_do_not_match,
@@ -60,7 +60,8 @@ if (a.size() != b.size())
 // DUNE_THROW
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
+namespace Common {
 namespace Exceptions {
 
 class CRTP_check_failed : public Dune::Exception
@@ -116,7 +117,8 @@ class you_have_to_implement_this : public Dune::NotImplemented
 };
 
 } // namespace Exceptions
-} // namespace Stuff
+} // namespace Common
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_EXCEPTIONS_HH

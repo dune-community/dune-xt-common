@@ -14,8 +14,8 @@
 
 #include <dune/common/float_cmp.hh>
 
-#include <dune/stuff/common/type_utils.hh>
-#include <dune/stuff/common/float_cmp_style.hh>
+#include <dune/xt/common/type_utils.hh>
+#include <dune/xt/common/float_cmp_style.hh>
 
 namespace Dune {
 namespace FloatCmp {
@@ -26,7 +26,7 @@ struct EpsilonType<std::complex<T>>
   typedef std::complex<T> Type;
 };
 }
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 // forward, include is below
@@ -246,9 +246,9 @@ struct cmp_type_check
 } // namespace internal
 } // namespace FloatCmp
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
-#include <dune/stuff/common/vector.hh>
+#include <dune/xt/common/vector.hh>
 
 #endif // DUNE_XT_COMMON_FLOAT_CMP_INTERNAL_HH

@@ -14,19 +14,19 @@
 #include <string>
 #include <iostream>
 
-#include <dune/stuff/common/filesystem.hh>
-#include <dune/stuff/common/ranges.hh>
-#include <dune/stuff/common/string.hh>
-#include <dune/stuff/common/vector.hh>
-#include <dune/stuff/common/matrix.hh>
+#include <dune/xt/common/filesystem.hh>
+#include <dune/xt/common/ranges.hh>
+#include <dune/xt/common/string.hh>
+#include <dune/xt/common/vector.hh>
+#include <dune/xt/common/matrix.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 template <class V>
-typename std::enable_if<Dune::Stuff::Common::is_vector<V>::value, void>::type
-print(const V& vec, const std::string name, std::ostream& out, const std::string prefix = "")
+typename std::enable_if<is_vector<V>::value, void>::type print(const V& vec, const std::string name, std::ostream& out,
+                                                               const std::string prefix = "")
 {
   out << prefix << name << " = ";
   if (vec.size() == 0)
@@ -42,8 +42,8 @@ print(const V& vec, const std::string name, std::ostream& out, const std::string
 } // ... print(...)
 
 template <class M>
-typename std::enable_if<Dune::Stuff::Common::is_matrix<M>::value, void>::type
-print(const M& mat, const std::string name, std::ostream& out, const std::string prefix = "")
+typename std::enable_if<is_matrix<M>::value, void>::type print(const M& mat, const std::string name, std::ostream& out,
+                                                               const std::string prefix = "")
 {
   typedef MatrixAbstraction<M> MM;
   const size_t rows = MM::rows(mat);
@@ -156,7 +156,7 @@ public:
 };
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_PRINT_HH

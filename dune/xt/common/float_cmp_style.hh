@@ -12,10 +12,10 @@
 #include <complex>
 
 #include <dune/common/float_cmp.hh>
-#include <dune/stuff/common/type_utils.hh>
+#include <dune/xt/common/type_utils.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 namespace FloatCmp {
 
@@ -55,7 +55,7 @@ struct ConvertStyle<Style::absolute>
 
 } // namespace FloatCmp
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_FLOAT_CMP_STYLE_HH

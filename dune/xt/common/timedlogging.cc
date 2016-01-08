@@ -18,7 +18,7 @@
 #include "filesystem.hh"
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 TimedLogManager::TimedLogManager(const Timer& timer, const std::string info_prefix, const std::string debug_prefix,
@@ -144,5 +144,5 @@ TimedLogging& TimedLogger()
 }
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune

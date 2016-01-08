@@ -21,7 +21,7 @@
 #endif
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 Configuration::Configuration(const Dune::ParameterTree& tree_in, const bool /*record_defaults*/,
@@ -84,7 +84,7 @@ Configuration::~Configuration()
 {
   if (log_on_exit_ && !empty()) {
     testCreateDirectory(directoryOnly(logfile_));
-    report(*DSC::make_ofstream(logfile_));
+    report(*make_ofstream(logfile_));
   }
 }
 
@@ -415,11 +415,11 @@ Configuration::Configuration(const std::vector<std::string> keys, const std::vec
 }
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 
 bool operator==(const ParameterTree& left, const ParameterTree& right)
 {
-  return Stuff::Common::Configuration(left).flatten() == Stuff::Common::Configuration(right).flatten();
+  return Dune::XT::Common::Configuration(left).flatten() == Dune::XT::Common::Configuration(right).flatten();
 }
 
 bool operator!=(const ParameterTree& left, const ParameterTree& right)
@@ -432,11 +432,11 @@ namespace std {
 
 bool less<Dune::ParameterTree>::operator()(const Dune::ParameterTree& lhs, const Dune::ParameterTree& rhs) const
 {
-  return Dune::Stuff::Common::Configuration(lhs).flatten() < Dune::Stuff::Common::Configuration(rhs).flatten();
+  return Dune::XT::Common::Configuration(lhs).flatten() < Dune::XT::Common::Configuration(rhs).flatten();
 }
 
-bool less<Dune::Stuff::Common::Configuration>::operator()(const Dune::Stuff::Common::Configuration& lhs,
-                                                          const Dune::Stuff::Common::Configuration& rhs) const
+bool less<Dune::XT::Common::Configuration>::operator()(const Dune::XT::Common::Configuration& lhs,
+                                                       const Dune::XT::Common::Configuration& rhs) const
 {
   return lhs.flatten() < rhs.flatten();
 }

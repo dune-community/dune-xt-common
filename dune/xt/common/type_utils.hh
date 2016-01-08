@@ -22,12 +22,12 @@
 #include <dune/common/static_assert.hh>
 #endif
 
-#include <dune/stuff/common/color.hh>
+#include <dune/xt/common/color.hh>
 
 /** use this to define Typename specializations in the GLOBAL namespace ONLY **/
-#define STUFF_TYPENAME(NAME)                                                                                           \
+#define DUNE_XT_COMMON_TYPENAME(NAME)                                                                                  \
   namespace Dune {                                                                                                     \
-  namespace Stuff {                                                                                                    \
+  namespace XT {                                                                                                       \
   namespace Common {                                                                                                   \
   template <>                                                                                                          \
   struct Typename<NAME>                                                                                                \
@@ -42,7 +42,7 @@
   }
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 inline std::string demangleTypename(const std::string& mangled_name)
@@ -169,18 +169,18 @@ struct is_hashable<T, typename std::enable_if<!!sizeof(std::declval<std::hash<T>
 #endif
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 /**
-  * \brief Helper macro to be used before DSC_has_typedef.
+  * \brief Helper macro to be used before DXTC_has_typedef.
   *
   *        Taken from
   *        http://stackoverflow.com/questions/7834226/detecting-typedef-at-compile-time-template-metaprogramming
   */
-#define DSC_has_typedef_initialize_once(tpdef)                                                                         \
+#define DXTC_has_typedef_initialize_once(tpdef)                                                                        \
   template <typename T_local>                                                                                          \
-  struct DSC_has_typedef_helper_##tpdef                                                                                \
+  struct DXTC_has_typedef_helper_##tpdef                                                                               \
   {                                                                                                                    \
     template <typename TT_local>                                                                                       \
     struct void_                                                                                                       \
@@ -209,23 +209,23 @@ struct is_hashable<T, typename std::enable_if<!!sizeof(std::declval<std::hash<T>
   *        To check if a type Foo defines a typedef Bar, put this code somewhere, where a generated helper struct
   *        may be defined (obviously only once for each typedef name!):
 \code
-DSC_has_typedef_initialize_once(Bar)
+DXTC_has_typedef_initialize_once(Bar)
 \endcode
   *        You can then check for Bar (this will give you a static const bool):
 \code
-DSC_has_typedef(Bar)< Foo >::value
+DXTC_has_typedef(Bar)< Foo >::value
 \endcode
   */
-#define DSC_has_typedef(tpdf) DSC_has_typedef_helper_##tpdf
+#define DXTC_has_typedef(tpdf) DXTC_has_typedef_helper_##tpdf
 
 /**
-  * \brief Helper macro to be used before DSC_has_static_member.
+  * \brief Helper macro to be used before DXTC_has_static_member.
   *
   *        Taken from http://stackoverflow.com/questions/11927032/sfinae-check-for-static-member-using-decltype
   */
-#define DSC_has_static_member_initialize_once(mmbr)                                                                    \
+#define DXTC_has_static_member_initialize_once(mmbr)                                                                   \
   template <class T_local>                                                                                             \
-  struct DSC_has_static_member_helper_##mmbr                                                                           \
+  struct DXTC_has_static_member_helper_##mmbr                                                                          \
   {                                                                                                                    \
     template <class TT_local,                                                                                          \
               class = typename std::enable_if<!std::is_member_pointer<decltype(&TT_local::mmbr)>::value>::type>        \
@@ -243,34 +243,34 @@ DSC_has_typedef(Bar)< Foo >::value
   *        To check if a class or struct Foo has a static member bar, put this code somewhere, where a generated helper
   *        struct may be defined (obviously only once for each member name!):
 \code
-DSC_has_static_member_initialize_once(bar)
+DXTC_has_static_member_initialize_once(bar)
 \endcode
   *        You can then check for bar (this will give you a static const bool):
 \code
-DSC_has_static_member(bar)< Foo >::value
+DXTC_has_static_member(bar)< Foo >::value
 \endcode
   */
-#define DSC_has_static_member(mmbr) DSC_has_static_member_helper_##mmbr
+#define DXTC_has_static_member(mmbr) DXTC_has_static_member_helper_##mmbr
 
-STUFF_TYPENAME(int)
-STUFF_TYPENAME(double)
-STUFF_TYPENAME(float)
-STUFF_TYPENAME(long)
-STUFF_TYPENAME(unsigned int)
-STUFF_TYPENAME(unsigned long)
-STUFF_TYPENAME(char)
+DUNE_XT_COMMON_TYPENAME(int)
+DUNE_XT_COMMON_TYPENAME(double)
+DUNE_XT_COMMON_TYPENAME(float)
+DUNE_XT_COMMON_TYPENAME(long)
+DUNE_XT_COMMON_TYPENAME(unsigned int)
+DUNE_XT_COMMON_TYPENAME(unsigned long)
+DUNE_XT_COMMON_TYPENAME(char)
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 namespace internal {
 
 template <class Tt>
 struct is_complex_helper
 {
-  DSC_has_typedef_initialize_once(value_type)
+  DXTC_has_typedef_initialize_once(value_type)
 
-      static const bool is_candidate = DSC_has_typedef(value_type)<Tt>::value;
+      static const bool is_candidate = DXTC_has_typedef(value_type)<Tt>::value;
 }; // class is_complex_helper
 
 } // namespace internal
@@ -286,7 +286,7 @@ struct is_complex<T, false> : public std::false_type
 };
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_TYPENAMES_HH

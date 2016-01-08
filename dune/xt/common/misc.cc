@@ -13,14 +13,13 @@
 #include <stdio.h>
 #include <unordered_map>
 #include <algorithm>
-#include <dune/stuff/aliases.hh>
-#include <dune/stuff/common/string.hh>
-#include <dune/stuff/common/print.hh>
+#include <dune/xt/common/string.hh>
+#include <dune/xt/common/print.hh>
 
 extern char** environ;
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 void dump_environment(boost::filesystem::ofstream& file, std::string csv_sep)
@@ -29,7 +28,7 @@ void dump_environment(boost::filesystem::ofstream& file, std::string csv_sep)
   vector<string> header, values;
   for (char** current = environ; *current; current++) {
     string line(*current);
-    const auto tokens = DSC::tokenize(line, "=");
+    const auto tokens = tokenize(line, "=");
     if (tokens.size() == 2) {
       header.push_back(tokens[0]);
       values.push_back(tokens[1]);
@@ -41,5 +40,5 @@ void dump_environment(boost::filesystem::ofstream& file, std::string csv_sep)
 }
 
 } // namespace Common
-} // namepspace Stuff
+} // namespace XT
 } // namespace Dune

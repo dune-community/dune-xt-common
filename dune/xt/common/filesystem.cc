@@ -12,7 +12,7 @@
 #include "filesystem.hh"
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 //! strip filename from \path if present, return empty string if only filename present
@@ -71,7 +71,7 @@ void fileToStreamFiltered(std::ostream& stream, std::string filename, std::strin
 } // fileToStreamFiltered
 
 //! output programs mem usage stats by reading from /proc
-void meminfo(Dune::Stuff::Common::LogStream& stream)
+void meminfo(LogStream& stream)
 {
   stream << "Memory info: \n";
   stream.resume();
@@ -85,5 +85,5 @@ void meminfo(Dune::Stuff::Common::LogStream& stream)
 } // meminfo
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune

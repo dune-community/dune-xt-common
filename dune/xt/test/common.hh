@@ -17,8 +17,8 @@
 #include <dune/common/tuples.hh>
 #include <dune/common/tupleutility.hh>
 
-#include <dune/stuff/common/convergence-study.hh>
-#include <dune/stuff/common/compiler.hh>
+#include <dune/xt/common/convergence-study.hh>
+#include <dune/xt/common/compiler.hh>
 
 template <template <class> class Test>
 struct TestRunner
@@ -57,7 +57,7 @@ typedef Dune::tuple<double, float
 void busywait(const size_t ms);
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Test {
 namespace internal {
 
@@ -67,7 +67,7 @@ std::string print_vector(const std::vector<double>& vec);
 
 } // namespace internal
 
-void check_eoc_study_for_success(const Dune::Stuff::Common::ConvergenceStudy& study,
+void check_eoc_study_for_success(const Common::ConvergenceStudy& study,
                                  const std::map<std::string, std::vector<double>>& errors_map);
 
 void print_collected_eoc_study_results(const std::map<std::string, std::vector<double>>& results,
@@ -77,7 +77,7 @@ void print_collected_eoc_study_results(const std::map<std::string, std::vector<d
 unsigned int grid_elements();
 
 } // namespace Test
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_TEST_MAIN_COMMON_HH

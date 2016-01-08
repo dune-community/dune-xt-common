@@ -12,12 +12,12 @@
 #include <algorithm>
 #include <boost/io/ios_state.hpp>
 
-#include <dune/stuff/common/exceptions.hh>
-#include <dune/stuff/common/string.hh>
-#include <dune/stuff/common/color.hh>
+#include <dune/xt/common/exceptions.hh>
+#include <dune/xt/common/string.hh>
+#include <dune/xt/common/color.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 ConvergenceStudy::ConvergenceStudy(const std::vector<std::string> only_these_norms)
@@ -55,7 +55,7 @@ std::map<std::string, std::vector<double>> ConvergenceStudy::run(const bool rela
   // print table header
   out << identifier() << std::endl;
   if (identifier().size() > 22 * (actually_used_norms.size() + 1))
-    out << Stuff::Common::whitespaceify(identifier(), '=') << std::endl;
+    out << whitespaceify(identifier(), '=') << std::endl;
   else {
     out << "=====================";
     for (size_t nn = 0; nn < actually_used_norms.size(); ++nn)
@@ -161,11 +161,11 @@ std::map<std::string, std::vector<double>> ConvergenceStudy::run(const bool rela
         std::stringstream eoc_string;
         eoc_string << std::setw(8) << std::setprecision(2) << std::fixed << eoc_value;
         if (eoc_value > (0.9 * expected_rate(norm)))
-          out << Stuff::Common::colorString(eoc_string.str(), Stuff::Common::Colors::green) << std::flush;
+          out << colorString(eoc_string.str(), Colors::green) << std::flush;
         else if (eoc_value > 0.0)
-          out << Stuff::Common::colorString(eoc_string.str(), Stuff::Common::Colors::brown) << std::flush;
+          out << colorString(eoc_string.str(), Colors::brown) << std::flush;
         else
-          out << Stuff::Common::colorString(eoc_string.str(), Stuff::Common::Colors::red) << std::flush;
+          out << colorString(eoc_string.str(), Colors::red) << std::flush;
       }
       // update
       last_relative_error[norm] = relative_error;
@@ -193,5 +193,5 @@ std::vector<double> ConvergenceStudy::expected_results(const std::string /*type*
 }
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune

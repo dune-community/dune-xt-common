@@ -15,7 +15,8 @@
 #endif
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
+namespace Common {
 
 struct ThreadManager;
 //! global singleton ThreadManager
@@ -58,7 +59,9 @@ inline ThreadManager& threadManager()
   static ThreadManager tm;
   return tm;
 }
-}
-}
+
+} // namespace Common
+} // namespace XT
+} // namespace Dune
 
 #endif // DUNE_XT_COMMON_THREADMANAGER_HH

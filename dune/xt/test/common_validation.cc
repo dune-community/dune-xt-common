@@ -9,10 +9,10 @@
 
 #include "main.hxx"
 
-#include <dune/stuff/common/validation.hh>
-#include <dune/stuff/common/type_utils.hh>
-#include <dune/stuff/common/math.hh>
-#include <dune/stuff/common/random.hh>
+#include <dune/xt/common/validation.hh>
+#include <dune/xt/common/type_utils.hh>
+#include <dune/xt/common/math.hh>
+#include <dune/xt/common/random.hh>
 #include <dune/common/tuples.hh>
 #include <dune/common/tupleutility.hh>
 #include <dune/common/exceptions.hh>
@@ -25,7 +25,7 @@
 #include <boost/assign/list_of.hpp>
 #include <boost/array.hpp>
 
-using namespace Dune::Stuff::Common;
+using namespace Dune::XT::Common;
 
 typedef testing::Types<double, float, // Dune::bigunsignedint,
                        int, unsigned int, unsigned long, long long, char> MathTestTypes;

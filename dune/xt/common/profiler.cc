@@ -12,19 +12,18 @@
 #include "profiler.hh"
 
 #include <dune/common/version.hh>
-#include <dune/stuff/aliases.hh>
 
 #if HAVE_LIKWID && ENABLE_PERFMON
 #include <likwid.h>
-#define DSC_LIKWID_BEGIN_SECTION(name) LIKWID_MARKER_START(name.c_str());
-#define DSC_LIKWID_END_SECTION(name) LIKWID_MARKER_STOP(name.c_str());
-#define DSC_LIKWID_INIT LIKWID_MARKER_INIT
-#define DSC_LIKWID_CLOSE LIKWID_MARKER_CLOSE
+#define DXTC_LIKWID_BEGIN_SECTION(name) LIKWID_MARKER_START(name.c_str());
+#define DXTC_LIKWID_END_SECTION(name) LIKWID_MARKER_STOP(name.c_str());
+#define DXTC_LIKWID_INIT LIKWID_MARKER_INIT
+#define DXTC_LIKWID_CLOSE LIKWID_MARKER_CLOSE
 #else
-#define DSC_LIKWID_BEGIN_SECTION(name)
-#define DSC_LIKWID_END_SECTION(name)
-#define DSC_LIKWID_INIT
-#define DSC_LIKWID_CLOSE
+#define DXTC_LIKWID_BEGIN_SECTION(name)
+#define DXTC_LIKWID_END_SECTION(name)
+#define DXTC_LIKWID_INIT
+#define DXTC_LIKWID_CLOSE
 #endif
 
 #if DUNE_VERSION_NEWER(DUNE_COMMON, 2, 3)
@@ -33,15 +32,15 @@
 #include <dune/common/mpihelper.hh>
 #endif
 
-#include <dune/stuff/common/string.hh>
-#include <dune/stuff/common/ranges.hh>
-#include <dune/stuff/common/filesystem.hh>
-#include <dune/stuff/common/parallel/threadmanager.hh>
+#include <dune/xt/common/string.hh>
+#include <dune/xt/common/ranges.hh>
+#include <dune/xt/common/filesystem.hh>
+#include <dune/xt/common/parallel/threadmanager.hh>
 
 #include <map>
 #include <string>
 
-#include <dune/stuff/common/disable_warnings.hh>
+#include <dune/xt/common/disable_warnings.hh>
 #include <boost/foreach.hpp>
 #include <boost/format.hpp>
 #include <boost/filesystem.hpp>
@@ -51,10 +50,10 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/config.hpp>
 #include <boost/timer/timer.hpp>
-#include <dune/stuff/common/reenable_warnings.hh>
+#include <dune/xt/common/reenable_warnings.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 TimingData::TimingData(const std::string _name)
@@ -106,12 +105,12 @@ void Profiler::startTiming(const std::string section_name)
     // init new section
     known_timers_map_[section_name] = std::make_pair(true, TimingData(section_name));
   }
-  DSC_LIKWID_BEGIN_SECTION(section_name)
+  DXTC_LIKWID_BEGIN_SECTION(section_name)
 } // StartTiming
 
 long Profiler::stopTiming(const std::string section_name)
 {
-  DSC_LIKWID_END_SECTION(section_name)
+  DXTC_LIKWID_END_SECTION(section_name)
   assert(current_run_number_ < datamaps_.size());
   if (known_timers_map_.find(section_name) == known_timers_map_.end())
     DUNE_THROW(Dune::RangeError, "trying to stop timer " << section_name << " that wasn't started\n");
@@ -238,7 +237,7 @@ void Profiler::outputAveraged(const int refineLevel, const long numDofs, const d
 void Profiler::setOutputdir(const std::string dir)
 {
   output_dir_ = dir;
-  Dune::Stuff::Common::testCreateDirectory(output_dir_);
+  testCreateDirectory(output_dir_);
 }
 
 void Profiler::outputTimings(const std::string csv) const
@@ -276,7 +275,7 @@ void Profiler::outputTimingsAll(std::ostream& out) const
   int i             = 0;
   const auto weight = 1 / double(comm.size());
   for (const auto& datamap : datamaps_) {
-    stash << std::endl << i++ << csv_sep_ << DS::threadManager().max_threads() << csv_sep_ << comm.size();
+    stash << std::endl << i++ << csv_sep_ << threadManager().max_threads() << csv_sep_ << comm.size();
     for (const auto& section : datamap) {
       const auto timings  = section.second;
       auto wall           = timings[1];
@@ -323,14 +322,14 @@ void Profiler::outputTimings(std::ostream& out) const
 Profiler::Profiler()
   : csv_sep_(",")
 {
-  DSC_LIKWID_INIT;
+  DXTC_LIKWID_INIT;
   reset(1);
   setOutputdir("./profiling");
 }
 
 Profiler::~Profiler()
 {
-  DSC_LIKWID_CLOSE;
+  DXTC_LIKWID_CLOSE;
 }
 
 OutputScopedTiming::OutputScopedTiming(const std::string& section_name, std::ostream& out)
@@ -346,5 +345,5 @@ OutputScopedTiming::~OutputScopedTiming()
 }
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune

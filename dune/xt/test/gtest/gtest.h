@@ -54,7 +54,7 @@
 #include <limits>
 #include <ostream>
 #include <vector>
-#include <dune/stuff/common/disable_warnings.hh>
+#include <dune/xt/common/disable_warnings.hh>
 // Copyright 2005, Google Inc.
 // All rights reserved.
 //
@@ -20057,5 +20057,5 @@ int RUN_ALL_TESTS() GTEST_MUST_USE_RESULT_;
 inline int RUN_ALL_TESTS() {
   return ::testing::UnitTest::GetInstance()->Run();
 }
-#include <dune/stuff/common/reenable_warnings.hh>
+#include <dune/xt/common/reenable_warnings.hh>
 #endif  // GTEST_INCLUDE_GTEST_GTEST_H_

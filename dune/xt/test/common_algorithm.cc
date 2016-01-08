@@ -8,9 +8,9 @@
 #include "main.hxx"
 
 #include <vector>
-#include <dune/stuff/common/algorithm.hh>
+#include <dune/xt/common/algorithm.hh>
 
-using namespace Dune::Stuff::Common;
+using namespace Dune::XT::Common;
 
 struct Moveable
 {

@@ -10,11 +10,11 @@
 
 #include "signals.hh"
 
-#include <dune/stuff/common/logging.hh>
-#include <dune/stuff/common/string.hh>
+#include <dune/xt/common/logging.hh>
+#include <dune/xt/common/string.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 //! reset given signal to default handler
@@ -31,7 +31,7 @@ void resetSignal(int signal)
 //! example signal handler
 void handleInterrupt(int signal)
 {
-  DSC_LOG_INFO << "forcefully terminated at " << stringFromTime() << std::endl;
+  DXTC_LOG_INFO << "forcefully terminated at " << stringFromTime() << std::endl;
   // reset signal handler and commit suicide
   resetSignal(signal);
   kill(getpid(), signal);
@@ -54,5 +54,5 @@ void installSignalHandler(int signal, handler_type handler)
 } // installSignalHandler
 
 } // namepsace Common
-} // namepsace Stuff
+} // namespace XT
 } // namepsace Dune

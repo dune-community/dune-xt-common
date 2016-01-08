@@ -10,9 +10,9 @@
 
 #if defined(__GNUC__)
 #if defined(__GNUC_PATCHLEVEL__)
-#define DS_GNUC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
+#define DXTC_GNUC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
 #else
-#define DS_GNUC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100)
+#define DXTC_GNUC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100)
 #endif
 #endif
 

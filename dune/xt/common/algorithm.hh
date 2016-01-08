@@ -13,10 +13,10 @@
 #include <iterator>
 #include <algorithm>
 
-#include <dune/stuff/common/string.hh>
+#include <dune/xt/common/string.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 //! same as std::copy_if, but with move
@@ -41,7 +41,7 @@ SequenceType make_string_sequence(InputIt first, InputIt last)
 }
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_ALGORITHM_HH

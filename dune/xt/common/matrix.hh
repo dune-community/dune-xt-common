@@ -17,12 +17,12 @@
 #include <dune/common/dynmatrix.hh>
 #include <dune/common/fmatrix.hh>
 
-#include <dune/stuff/common/exceptions.hh>
-#include <dune/stuff/common/fmatrix.hh>
-#include <dune/stuff/common/vector.hh>
+#include <dune/xt/common/exceptions.hh>
+#include <dune/xt/common/fmatrix.hh>
+#include <dune/xt/common/vector.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 /**
@@ -143,18 +143,18 @@ struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
   static inline MatrixType create(const size_t rows, const size_t cols)
   {
     if (rows != N)
-      DUNE_THROW(Dune::Stuff::Exceptions::shapes_do_not_match, "rows = " << rows << "\nN = " << int(N));
+      DUNE_THROW(Exceptions::shapes_do_not_match, "rows = " << rows << "\nN = " << int(N));
     if (cols != M)
-      DUNE_THROW(Dune::Stuff::Exceptions::shapes_do_not_match, "cols = " << cols << "\nM = " << int(M));
+      DUNE_THROW(Exceptions::shapes_do_not_match, "cols = " << cols << "\nM = " << int(M));
     return MatrixType();
   }
 
   static inline MatrixType create(const size_t rows, const size_t cols, const ScalarType& val)
   {
     if (rows != N)
-      DUNE_THROW(Dune::Stuff::Exceptions::shapes_do_not_match, "rows = " << rows << "\nN = " << int(N));
+      DUNE_THROW(Exceptions::shapes_do_not_match, "rows = " << rows << "\nN = " << int(N));
     if (cols != M)
-      DUNE_THROW(Dune::Stuff::Exceptions::shapes_do_not_match, "cols = " << cols << "\nM = " << int(M));
+      DUNE_THROW(Exceptions::shapes_do_not_match, "cols = " << cols << "\nM = " << int(M));
     return MatrixType(val);
   }
 
@@ -180,9 +180,9 @@ struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
 };
 
 template <class K, int N, int M>
-struct MatrixAbstraction<Dune::Stuff::Common::FieldMatrix<K, N, M>>
+struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
 {
-  typedef Dune::Stuff::Common::FieldMatrix<K, N, M> MatrixType;
+  typedef Dune::XT::Common::FieldMatrix<K, N, M> MatrixType;
   typedef K ScalarType;
   typedef ScalarType S;
 
@@ -239,7 +239,7 @@ create(const size_t sz, const typename MatrixAbstraction<MatrixType>::S& val)
 }
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_MATRIX_HH

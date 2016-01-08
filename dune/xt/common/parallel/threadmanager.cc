@@ -12,10 +12,10 @@
 
 #include <boost/numeric/conversion/cast.hpp>
 
-#include <dune/stuff/common/configuration.hh>
+#include <dune/xt/common/configuration.hh>
 #include <dune/common/exceptions.hh>
 
-#include <dune/stuff/fem.hh>
+#include <dune/xt/common/fem.hh>
 #if HAVE_DUNE_FEM
 #include <dune/fem/misc/threads/threadmanager.hh>
 #endif
@@ -36,32 +36,32 @@
 #include <thread>
 #include <tbb/task_scheduler_init.h>
 
-size_t Dune::Stuff::ThreadManager::max_threads()
+size_t Dune::XT::Common::ThreadManager::max_threads()
 {
-  const auto threads = DSC_CONFIG_GET("threading.max_count", 1);
+  const auto threads = DXTC_CONFIG_GET("threading.max_count", 1);
   WITH_DUNE_FEM_AND_THREADING(assert(Dune::Fem::ThreadManager::maxThreads() == threads);)
   return threads;
 }
 
-size_t Dune::Stuff::ThreadManager::current_threads()
+size_t Dune::XT::Common::ThreadManager::current_threads()
 {
   const auto threads = max_threads();
   WITH_DUNE_FEM_AND_THREADING(assert(long(Dune::Fem::ThreadManager::currentThreads()) == long(threads));)
   return threads;
 }
 
-size_t Dune::Stuff::ThreadManager::thread()
+size_t Dune::XT::Common::ThreadManager::thread()
 {
   const auto tbb_id = std::this_thread::get_id();
   static std::map<decltype(tbb_id), size_t> thread_ids;
   const auto it = thread_ids.find(tbb_id);
   if (it == thread_ids.end())
-    DSC::map_emplace(thread_ids, tbb_id, thread_ids.size());
+    map_emplace(thread_ids, tbb_id, thread_ids.size());
   return thread_ids.at(tbb_id);
 }
 
 //! both std::hw_concur and intel's default_thread_count fail for mic
-size_t Dune::Stuff::ThreadManager::default_max_threads()
+size_t Dune::XT::Common::ThreadManager::default_max_threads()
 {
 #ifndef __MIC__
   return std::thread::hardware_concurrency();
@@ -70,11 +70,11 @@ size_t Dune::Stuff::ThreadManager::default_max_threads()
 #endif
 }
 
-void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
+void Dune::XT::Common::ThreadManager::set_max_threads(const size_t count)
 {
-  DSC_CONFIG.set("threading.max_count", count, true);
+  DXTC_CONFIG.set("threading.max_count", count, true);
   if (tbb_init_.is_active()) {
-    DSC_LOG_DEBUG << (boost::format("Re-initializing TBB from %d to %d threads") % max_threads_ % count).str();
+    DXTC_LOG_DEBUG << (boost::format("Re-initializing TBB from %d to %d threads") % max_threads_ % count).str();
     tbb_init_.terminate();
   }
   max_threads_        = count;
@@ -86,7 +86,7 @@ void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
   tbb_init_.initialize(int_count);
 }
 
-Dune::Stuff::ThreadManager::ThreadManager()
+Dune::XT::Common::ThreadManager::ThreadManager()
   : max_threads_(default_max_threads())
   , tbb_init_(tbb::task_scheduler_init::deferred)
 {
@@ -100,33 +100,33 @@ Dune::Stuff::ThreadManager::ThreadManager()
 
 #else // if HAVE_TBB
 
-size_t Dune::Stuff::ThreadManager::max_threads()
+size_t Dune::XT::Common::ThreadManager::max_threads()
 {
   return 1;
 }
 
-size_t Dune::Stuff::ThreadManager::current_threads()
+size_t Dune::XT::Common::ThreadManager::current_threads()
 {
   return 1;
 }
 
-size_t Dune::Stuff::ThreadManager::thread()
+size_t Dune::XT::Common::ThreadManager::thread()
 {
   return 0;
 }
 
-void Dune::Stuff::ThreadManager::set_max_threads(const size_t count)
+void Dune::XT::Common::ThreadManager::set_max_threads(const size_t count)
 {
   if (count > 1)
     DUNE_THROW(InvalidStateException, "Trying to use more than one thread w/o TBB");
 }
 
-size_t Dune::Stuff::ThreadManager::default_max_threads()
+size_t Dune::XT::Common::ThreadManager::default_max_threads()
 {
   return 1;
 }
 
-Dune::Stuff::ThreadManager::ThreadManager()
+Dune::XT::Common::ThreadManager::ThreadManager()
   : max_threads_(1)
 {
 }

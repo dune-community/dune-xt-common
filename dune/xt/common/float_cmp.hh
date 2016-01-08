@@ -16,13 +16,13 @@
 
 #include <dune/common/float_cmp.hh>
 
-#include <dune/stuff/common/type_utils.hh>
-#include <dune/stuff/common/vector.hh>
+#include <dune/xt/common/type_utils.hh>
+#include <dune/xt/common/vector.hh>
 #include "float_cmp_style.hh"
 #include "float_cmp_internal.hh"
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 namespace FloatCmp {
 
@@ -77,7 +77,7 @@ struct MT
   typedef typename Dune::FloatCmp::EpsilonType<typename MT<V>::T>::Type Eps;
 };
 
-#define DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR(id)                                                                      \
+#define DUNE_XT_COMMON_FLOAT_CMP_GENERATOR(id)                                                                         \
   template <Style style, class FirstType, class SecondType>                                                            \
   typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, typename MT<FirstType>::T>::value,           \
                           bool>::type                                                                                  \
@@ -102,17 +102,17 @@ struct MT
     return id<Style::defaultStyle>(first, second, rtol, atol);                                                         \
   }
 
-DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR(eq)
-DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR(ne)
-DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR(gt)
-DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR(lt)
-DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR(ge)
-DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR(le)
-#undef DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR
+DUNE_XT_COMMON_FLOAT_CMP_GENERATOR(eq)
+DUNE_XT_COMMON_FLOAT_CMP_GENERATOR(ne)
+DUNE_XT_COMMON_FLOAT_CMP_GENERATOR(gt)
+DUNE_XT_COMMON_FLOAT_CMP_GENERATOR(lt)
+DUNE_XT_COMMON_FLOAT_CMP_GENERATOR(ge)
+DUNE_XT_COMMON_FLOAT_CMP_GENERATOR(le)
+#undef DUNE_XT_COMMON_FLOAT_CMP_GENERATOR
 
 } // namespace FloatCmp
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_FLOAT_CMP_HH

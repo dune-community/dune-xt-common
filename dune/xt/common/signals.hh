@@ -12,7 +12,7 @@
 #include <signal.h>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 //! POSIX signal management utils
@@ -30,7 +30,7 @@ typedef void handler_type(int);
 void installSignalHandler(int signal = SIGINT, handler_type handler = handleInterrupt);
 
 } // namepsace Common
-} // namepsace Stuff
+} // namespace XT
 } // namepsace Dune
 
 #endif // DUNE_XT_COMMON_SIGNALS

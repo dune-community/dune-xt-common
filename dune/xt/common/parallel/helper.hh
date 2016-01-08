@@ -19,7 +19,7 @@
 #endif
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 
 //! marker for sequential in MPI-enabled solver stuffs
 struct SequentialCommunication
@@ -45,7 +45,7 @@ struct UseParallelCommunication
  **/
 int abort_all_mpi_processes();
 
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_PARALLEL_HELPER_HH

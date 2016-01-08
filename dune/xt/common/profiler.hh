@@ -10,8 +10,8 @@
 #ifndef DUNE_XT_COMMON_PROFILER_HH
 #define DUNE_XT_COMMON_PROFILER_HH
 
-#ifndef DUNE_STUFF_DO_PROFILE
-#define DUNE_STUFF_DO_PROFILE 0
+#ifndef DUNE_XT_COMMON_DO_PROFILE
+#define DUNE_XT_COMMON_DO_PROFILE 0
 #endif
 
 #include <string>
@@ -27,16 +27,16 @@
 
 #include <dune/common/unused.hh>
 
-#include <dune/stuff/common/parallel/threadmanager.hh>
-#include <dune/stuff/common/parallel/threadstorage.hh>
+#include <dune/xt/common/parallel/threadmanager.hh>
+#include <dune/xt/common/parallel/threadstorage.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 class Profiler;
 
-//! Stuff::Profiler global instance
+//! XT::Profiler global instance
 Profiler& profiler();
 
 //! wraps name, start- and end time for one timing section
@@ -182,15 +182,15 @@ protected:
 };
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
-#define DSC_PROFILER Dune::Stuff::Common::profiler()
+#define DXTC_PROFILER profiler()
 
-#if DUNE_STUFF_DO_PROFILE
-#define DUNE_STUFF_PROFILE_SCOPE(section_name) Dune::Stuff::Common::ScopedTiming DSC_UNUSED(timer)(section_name)
+#if DUNE_XT_COMMON_DO_PROFILE
+#define DUNE_XT_COMMON_PROFILE_SCOPE(section_name) ScopedTiming DXTC_UNUSED(timer)(section_name)
 #else
-#define DUNE_STUFF_PROFILE_SCOPE(section_name)
+#define DUNE_XT_COMMON_PROFILE_SCOPE(section_name)
 #endif
 
 #endif // DUNE_XT_COMMON_PROFILER_HH

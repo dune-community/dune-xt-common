@@ -24,11 +24,11 @@
 #include <ctime>
 #include <iostream>
 
-#include <dune/stuff/common/disable_warnings.hh>
+#include <dune/xt/common/disable_warnings.hh>
 #include <boost/algorithm/string.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/numeric/conversion/cast.hpp>
-#include <dune/stuff/common/reenable_warnings.hh>
+#include <dune/xt/common/reenable_warnings.hh>
 
 #include <dune/common/array.hh>
 #include <dune/common/bigunsignedint.hh>
@@ -39,16 +39,17 @@
 #include <dune/common/dynvector.hh>
 #include <dune/common/densevector.hh>
 
-#include <dune/stuff/common/exceptions.hh>
-#include <dune/stuff/common/debug.hh>
-#include <dune/stuff/common/ranges.hh>
-#include <dune/stuff/common/type_utils.hh>
-#include <dune/stuff/common/vector.hh>
-#include <dune/stuff/common/math.hh>
-#include <dune/stuff/la/container/interfaces.hh>
+#include <dune/xt/common/exceptions.hh>
+#include <dune/xt/common/debug.hh>
+#include <dune/xt/common/ranges.hh>
+#include <dune/xt/common/type_utils.hh>
+#include <dune/xt/common/vector.hh>
+#include <dune/xt/common/matrix.hh>
+#include <dune/xt/common/math.hh>
+#include <dune/xt/la/container/interfaces.hh>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 #ifndef DUNE_XT_COMMON_STRING_HH
@@ -57,7 +58,7 @@ template <class T = std::string>
 inline std::vector<T>
 tokenize(const std::string& msg, const std::string& separators,
          const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off);
-#endif
+#endif // DUNE_XT_COMMON_STRING_HH
 
 namespace internal {
 
@@ -119,7 +120,7 @@ struct Helper<bool, anything>
 }; // struct Helper< bool, ... >
 
 // variant for all basic types supported by std::sto*
-#define DUNE_STUFF_COMMON_STRING_GENERATE_HELPER(tn, tns)                                                              \
+#define DUNE_XT_COMMON_STRING_GENERATE_HELPER(tn, tns)                                                                 \
   template <bool anything>                                                                                             \
   struct Helper<tn, anything>                                                                                          \
   {                                                                                                                    \
@@ -129,16 +130,16 @@ struct Helper<bool, anything>
     }                                                                                                                  \
   };
 
-DUNE_STUFF_COMMON_STRING_GENERATE_HELPER(int, i)
-DUNE_STUFF_COMMON_STRING_GENERATE_HELPER(long, l)
-DUNE_STUFF_COMMON_STRING_GENERATE_HELPER(long long, ll)
-DUNE_STUFF_COMMON_STRING_GENERATE_HELPER(unsigned long, ul)
-DUNE_STUFF_COMMON_STRING_GENERATE_HELPER(unsigned long long, ull)
-DUNE_STUFF_COMMON_STRING_GENERATE_HELPER(float, f)
-DUNE_STUFF_COMMON_STRING_GENERATE_HELPER(double, d)
-DUNE_STUFF_COMMON_STRING_GENERATE_HELPER(long double, ld)
+DUNE_XT_COMMON_STRING_GENERATE_HELPER(int, i)
+DUNE_XT_COMMON_STRING_GENERATE_HELPER(long, l)
+DUNE_XT_COMMON_STRING_GENERATE_HELPER(long long, ll)
+DUNE_XT_COMMON_STRING_GENERATE_HELPER(unsigned long, ul)
+DUNE_XT_COMMON_STRING_GENERATE_HELPER(unsigned long long, ull)
+DUNE_XT_COMMON_STRING_GENERATE_HELPER(float, f)
+DUNE_XT_COMMON_STRING_GENERATE_HELPER(double, d)
+DUNE_XT_COMMON_STRING_GENERATE_HELPER(long double, ld)
 
-#undef DUNE_STUFF_COMMON_STRING_GENERATE_HELPER
+#undef DUNE_XT_COMMON_STRING_GENERATE_HELPER
 
 // variant for everything that is not a matrix or a vector or complex value
 template <class T>
@@ -354,9 +355,9 @@ static inline std::string to_string(const std::complex<T>& val, const std::size_
   using namespace std;
   stringstream os;
   const auto im       = imag(val);
-  const string sign   = Dune::Stuff::Common::signum(im) < 0 ? "" : "+";
-  const auto real_str = Dune::Stuff::Common::internal::to_string(real(val), precision);
-  const auto imag_str = Dune::Stuff::Common::internal::to_string(im, precision);
+  const string sign   = signum(im) < 0 ? "" : "+";
+  const auto real_str = internal::to_string(real(val), precision);
+  const auto imag_str = internal::to_string(im, precision);
   os << real_str << sign << imag_str << "i";
   return os.str();
 }
@@ -392,7 +393,7 @@ static inline typename std::enable_if<is_vector<V>::value, std::string>::type to
   for (auto ii : valueRange(vec.size())) {
     if (ii > 0)
       ret += " ";
-    ret += Dune::Stuff::Common::internal::to_string(vec[ii], precision);
+    ret += internal::to_string(vec[ii], precision);
   }
   ret += "]";
   return ret;
@@ -409,7 +410,7 @@ static inline typename std::enable_if<is_matrix<M>::value, std::string>::type to
     for (auto cc : valueRange(MatrixAbstraction<M>::cols(mat))) {
       if (cc > 0)
         ret += " ";
-      ret += Dune::Stuff::Common::internal::to_string(MatrixAbstraction<M>::get_entry(mat, rr, cc), precision);
+      ret += internal::to_string(MatrixAbstraction<M>::get_entry(mat, rr, cc), precision);
     }
   }
   ret += "]";
@@ -418,7 +419,7 @@ static inline typename std::enable_if<is_matrix<M>::value, std::string>::type to
 
 } // namespace internal
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_STRING_INTERNAL_HH

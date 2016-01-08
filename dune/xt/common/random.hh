@@ -18,7 +18,7 @@
 #include <boost/numeric/conversion/cast.hpp>
 
 namespace Dune {
-namespace Stuff {
+namespace XT {
 namespace Common {
 
 //! Helper class to abstract away selecting an integer or real valued distribution
@@ -151,7 +151,7 @@ public:
 };
 
 } // namespace Common
-} // namespace Stuff
+} // namespace XT
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_RANDOM_HH
