@@ -49,7 +49,6 @@
 #include <dune/xt/common/ranges.hh>
 #include <dune/xt/common/type_utils.hh>
 #include <dune/xt/common/vector.hh>
-#include <dune/xt/la/container/interfaces.hh>
 
 namespace Dune {
 namespace XT {

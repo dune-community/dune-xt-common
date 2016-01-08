@@ -46,7 +46,6 @@
 #include <dune/xt/common/vector.hh>
 #include <dune/xt/common/matrix.hh>
 #include <dune/xt/common/math.hh>
-#include <dune/xt/la/container/interfaces.hh>
 
 namespace Dune {
 namespace XT {

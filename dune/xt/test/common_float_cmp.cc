@@ -18,9 +18,6 @@
 #include <dune/xt/common/float_cmp.hh>
 #include <dune/xt/test/float_cmp.hh>
 #include <dune/xt/common/fvector.hh>
-#include <dune/xt/la/container/common.hh>
-#include <dune/xt/la/container/eigen.hh>
-#include <dune/xt/la/container/istl.hh>
 
 using namespace Dune;
 using XT::Common::create;
@@ -419,30 +416,9 @@ TYPED_TEST(FloatCmpScalar, le)
 }
 
 typedef testing::Types<std::vector<double>, Dune::FieldVector<double, vec_size>, FieldVector<double, vec_size>,
-                       Dune::DynamicVector<double>, Dune::XT::LA::CommonDenseVector<double>
-#if HAVE_DUNE_ISTL
-                       ,
-                       Dune::XT::LA::IstlDenseVector<double>
-#endif
-#if HAVE_EIGEN
-                       ,
-                       Dune::XT::LA::EigenDenseVector<double>, Dune::XT::LA::EigenMappedDenseVector<double>
-#endif
-                       ,
-                       std::complex<double>, std::vector<std::complex<double>>,
+                       Dune::DynamicVector<double>, std::complex<double>, std::vector<std::complex<double>>,
                        Dune::FieldVector<std::complex<double>, vec_size>, FieldVector<std::complex<double>, vec_size>,
-                       Dune::DynamicVector<std::complex<double>>, Dune::XT::LA::CommonDenseVector<std::complex<double>>
-#if HAVE_DUNE_ISTL
-                       ,
-                       Dune::XT::LA::IstlDenseVector<std::complex<double>>
-#endif
-#if HAVE_EIGEN
-                       ,
-                       Dune::XT::LA::EigenDenseVector<std::complex<double>>
-//                    complex just isn't possible with mapped vector
-//                      , Dune::XT::LA::EigenMappedDenseVector< std::complex<double> >
-#endif
-                       > VectorTypes;
+                       Dune::DynamicVector<std::complex<double>>> VectorTypes;
 
 TYPED_TEST_CASE(FloatCmpVector, VectorTypes);
 TYPED_TEST(FloatCmpVector, eq)
@@ -469,66 +445,3 @@ TYPED_TEST(FloatCmpVector, le)
 {
   this->check_le();
 }
-
-#if !HAVE_DUNE_ISTL
-
-TEST(DISABLED_IstlDenseVector_FloatCmpVector, eq)
-{
-}
-TEST(DISABLED_IstlDenseVector_FloatCmpVector, ne)
-{
-}
-TEST(DISABLED_IstlDenseVector_FloatCmpVector, gt)
-{
-}
-TEST(DISABLED_IstlDenseVector_FloatCmpVector, lt)
-{
-}
-TEST(DISABLED_IstlDenseVector_FloatCmpVector, ge)
-{
-}
-TEST(DISABLED_IstlDenseVector_FloatCmpVector, le)
-{
-}
-
-#endif
-#if !HAVE_EIGEN
-
-TEST(DISABLED_EigenDenseVector_FloatCmpVector, eq)
-{
-}
-TEST(DISABLED_EigenDenseVector_FloatCmpVector, ne)
-{
-}
-TEST(DISABLED_EigenDenseVector_FloatCmpVector, gt)
-{
-}
-TEST(DISABLED_EigenDenseVector_FloatCmpVector, lt)
-{
-}
-TEST(DISABLED_EigenDenseVector_FloatCmpVector, ge)
-{
-}
-TEST(DISABLED_EigenDenseVector_FloatCmpVector, le)
-{
-}
-TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, eq)
-{
-}
-TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, ne)
-{
-}
-TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, gt)
-{
-}
-TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, lt)
-{
-}
-TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, ge)
-{
-}
-TEST(DISABLED_EigenMappedDenseVector_FloatCmpVector, le)
-{
-}
-
-#endif

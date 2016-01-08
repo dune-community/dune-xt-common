@@ -23,9 +23,6 @@
 #include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/fvector.hh>
 #include <dune/xt/common/fmatrix.hh>
-#include <dune/xt/la/container/common.hh>
-#include <dune/xt/la/container/eigen.hh>
-#include <dune/xt/la/container/istl.hh>
 
 using namespace Dune::XT::Common;
 using namespace std;
@@ -71,33 +68,14 @@ struct VectorStringTestInt : public ::testing::Test
   }
 };
 
-typedef testing::Types<std::vector<double>, Dune::XT::LA::CommonDenseVector<double>, Dune::DynamicVector<double>,
-                       Dune::FieldVector<double, 3>, FieldVector<double, 3>
-#if HAVE_EIGEN
-                       ,
-                       Dune::XT::LA::EigenDenseVector<double>, Dune::XT::LA::EigenMappedDenseVector<double>
-#endif
-#if HAVE_DUNE_ISTL
-                       ,
-                       Dune::XT::LA::IstlDenseVector<double>
-#endif
-                       > VectorTypesDouble;
+typedef testing::Types<std::vector<double>, Dune::DynamicVector<double>, Dune::FieldVector<double, 3>,
+                       FieldVector<double, 3>> VectorTypesDouble;
 
-typedef testing::Types<std::vector<int>, Dune::XT::LA::CommonDenseVector<int>, Dune::DynamicVector<int>,
-                       Dune::FieldVector<int, 3>, FieldVector<int, 3>
-#if HAVE_DUNE_ISTL
-                       ,
-                       Dune::XT::LA::IstlDenseVector<int>
-#endif
-                       > VectorTypesInt;
+typedef testing::Types<std::vector<int>, Dune::DynamicVector<int>, Dune::FieldVector<int, 3>, FieldVector<int, 3>>
+    VectorTypesInt;
 
-typedef testing::Types<Dune::DynamicMatrix<double>, Dune::XT::LA::CommonDenseMatrix<double>, FieldMatrix<double, 2, 2>,
-                       Dune::FieldMatrix<double, 2, 2>
-#if HAVE_EIGEN
-                       ,
-                       Dune::XT::LA::EigenDenseMatrix<double>
-#endif
-                       > MatrixTypesDouble;
+typedef testing::Types<Dune::DynamicMatrix<double>, FieldMatrix<double, 2, 2>, Dune::FieldMatrix<double, 2, 2>>
+    MatrixTypesDouble;
 
 typedef testing::Types<Dune::DynamicMatrix<char>, FieldMatrix<char, 2, 2>, Dune::FieldMatrix<char, 2, 2>>
     MatrixTypesChar;

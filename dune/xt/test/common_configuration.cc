@@ -18,7 +18,6 @@
 #include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/type_utils.hh>
 #include <dune/xt/common/float_cmp.hh>
-#include <dune/xt/la/container.hh>
 #include <dune/xt/common/matrix.hh>
 #include <dune/xt/common/tuple.hh>
 #include <dune/xt/test/float_cmp.hh>
@@ -408,17 +407,7 @@ struct ConfigurationTest : public ::testing::Test
     check_field_vector<double, 1>(subsub1);
     check_field_vector<double, 2>(subsub1);
     check_vector<Dune::DynamicVector<double>>(subsub1);
-    check_vector<Dune::XT::LA::CommonDenseVector<double>>(subsub1);
-#if HAVE_DUNE_ISTL
-    check_vector<Dune::XT::LA::IstlDenseVector<double>>(subsub1);
-#endif
-#if HAVE_EIGEN
-    check_vector<Dune::XT::LA::EigenDenseVector<double>>(subsub1);
-    check_vector<Dune::XT::LA::EigenMappedDenseVector<double>>(subsub1);
-    check_matrix<Dune::XT::LA::EigenDenseMatrix<double>>(subsub1);
-#endif // HAVE_EIGEN
     check_matrix<Dune::DynamicMatrix<double>>(subsub1);
-    check_matrix<Dune::XT::LA::CommonDenseMatrix<double>>(subsub1);
 
     TupleProduct::Combine<StaticCheck::Ints, StaticCheck::Ints, StaticCheck>::Generate<>::Run(subsub1);
 
