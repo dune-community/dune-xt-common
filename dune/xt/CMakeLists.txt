@@ -27,8 +27,6 @@ dune_library_add_sources(dunextcommon SOURCES ${lib_dune_xt_common_sources})
 add_analyze(${lib_dune_xt_common_sources})
 FILE( GLOB_RECURSE _header "${CMAKE_CURRENT_SOURCE_DIR}/*.hh" )
 
-ds_headercheck(${_header})
-
 add_subdirectory(test EXCLUDE_FROM_ALL)
 add_format(${lib_dune_xt_common_sources} ${test_sources} ${_header})
 

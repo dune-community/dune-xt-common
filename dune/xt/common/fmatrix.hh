@@ -33,7 +33,7 @@ public:
   {
   } // ... FieldMatrix(...)
 
-  FieldMatrix(const size_t UNUSED_UNLESS_DEBUG(rr), const size_t UNUSED_UNLESS_DEBUG(cc), const K kk = K(0))
+  FieldMatrix(const size_t DXTC_DEBUG_ONLY(rr), const size_t DXTC_DEBUG_ONLY(cc), const K kk = K(0))
     : BaseType(kk)
   {
 #ifndef NDEBUG
@@ -90,7 +90,7 @@ public:
   {
   }
 
-  FieldMatrix(const size_t UNUSED_UNLESS_DEBUG(rr), const size_t UNUSED_UNLESS_DEBUG(cc), const K kk = K(0))
+  FieldMatrix(const size_t DXTC_DEBUG_ONLY(rr), const size_t DXTC_DEBUG_ONLY(cc), const K kk = K(0))
     : BaseType(kk)
   {
 #ifndef NDEBUG

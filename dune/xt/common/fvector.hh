@@ -37,7 +37,7 @@ public:
   {
   }
 
-  FieldVector(const size_t UNUSED_UNLESS_DEBUG(sz), const K kk)
+  FieldVector(const size_t DXTC_DEBUG_ONLY(sz), const K kk)
     : BaseType(kk)
   {
 #ifndef NDEBUG

@@ -20,15 +20,4 @@
 #define DXTC_DEBUG_ONLY(param) DXTC_UNUSED(param)
 #endif
 
-/*** LEGACY MACROS ****/
-#define UNUSED(identifier) /* identifier */
-
-/*  some arguments are only used in debug mode, but unused in release one */
-#ifndef NDEBUG
-#define UNUSED_UNLESS_DEBUG(param) param
-#else
-#define UNUSED_UNLESS_DEBUG(param) UNUSED(param)
-#endif // ifndef NDEBUG
-/*** LEGACY MACROS ****/
-
 #endif // DXTC_UNUSED_HH

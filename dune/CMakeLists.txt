@@ -11,4 +11,3 @@ add_subdirectory(xt)
 install(DIRECTORY xt
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/
         FILES_MATCHING PATTERN "*.hh")
-#         EXCLUDE PATTERN "stuff/test/*")

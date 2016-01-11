@@ -144,7 +144,7 @@ DUNE_XT_COMMON_STRING_GENERATE_HELPER(long double, ld)
 // variant for everything that is not a matrix or a vector or complex value
 template <class T>
 static inline typename std::enable_if<!is_vector<T>::value && !is_matrix<T>::value && !is_complex<T>::value, T>::type
-from_string(std::string ss, const size_t UNUSED_UNLESS_DEBUG(rows) = 0, const size_t UNUSED_UNLESS_DEBUG(cols) = 0)
+from_string(std::string ss, const size_t DXTC_DEBUG_ONLY(rows) = 0, const size_t DXTC_DEBUG_ONLY(cols) = 0)
 {
   assert(rows == 0);
   assert(cols == 0);
@@ -175,7 +175,7 @@ from_string(std::string ss, const size_t /*size*/ = 0, const size_t /*cols*/ = 0
 
 template <class VectorType>
 static inline typename std::enable_if<is_vector<VectorType>::value, VectorType>::type
-from_string(std::string ss, const size_t size, const size_t UNUSED_UNLESS_DEBUG(cols) = 0)
+from_string(std::string ss, const size_t size, const size_t DXTC_DEBUG_ONLY(cols) = 0)
 {
   auto vector_str = ss;
   typedef typename VectorAbstraction<VectorType>::S S;

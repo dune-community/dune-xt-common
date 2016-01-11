@@ -8,7 +8,7 @@
 //   Tobias Leibner  (2014)
 
 /* begin dune-xt-common */
-// NEVER delete/alter above comment, dune's cmake crap relies on it
+// NEVER delete/alter above comment, dune's cmake relies on it
 
 /* We need this for the python bindings (there is no unsigned in python). */
 #define DUNE_XT_COMMON_SSIZE_T long int
@@ -47,8 +47,6 @@
 
 #define DS_MAX_MIC_THREADS ${DS_MAX_MIC_THREADS}
 
-#define DS_OVERRIDE ; static_assert(false, "Use override instead (21.10.2014)!");
-#define DS_FINAL    ; static_assert(false, "Use final instead (21.10.2014)!");
 #define HAVE_DUNE_FEM_PARAMETER_REPLACE 0
 
 #ifndef HAVE_ALUGRID
@@ -63,22 +61,6 @@
 /*** Silence implicitly False evaluation of undefined macro warnings ****/
 #ifndef HAVE_DUNE_FEM
 # define HAVE_FUNE_FEM 0
-#endif
-
-#ifndef HAVE_DUNE_PYMOR
-# define HAVE_DUNE_PYMOR 0
-#endif
-
-#ifndef HAVE_DUNE_GRID_MULTISCALE
-# define HAVE_DUNE_GRID_MULTISCALE 0
-#endif
-
-#ifndef HAVE_DUNE_GDT
-# define HAVE_DUNE_GDT 0
-#endif
-
-#ifndef HAVE_DUNE_HDD
-# define HAVE_DUNE_HDD 0
 #endif
 
 #ifndef HAVE_EMPLACE
@@ -109,52 +91,16 @@
 # define HAVE_MPI 0
 #endif
 
-#ifndef HAVE_FASP
-# define HAVE_FASP 0
-#endif
-
 #ifndef HAVE_CONSTEXPR
 # define HAVE_CONSTEXPR 0
 #endif
-
-#ifndef HAVE_DUNE_METAGRID
-# define HAVE_DUNE_METAGRID 0
-#endif 
-
-#ifndef HAVE_DUNE_SPGRID
-# define HAVE_DUNE_SPGRID 0
-#endif 
 
 #ifndef HAVE_PETSC
 # define HAVE_PETSC 0
 #endif
 
-#ifndef HAVE_ALUGRID
-# define HAVE_ALUGRID 0
-#endif
-
 #ifndef DUNE_FEM_COMPATIBILITY
 # define DUNE_FEM_COMPATIBILITY 0
-#endif
-
-#ifndef HAVE_ALBERTA
-# define HAVE_ALBERTA 0
-#endif
-
-#ifndef HAVE_UG
-# define HAVE_UG 0
-#endif
-
-#ifndef HAVE_GRAPE
-# define HAVE_GRAPE 0
-#endif
-
-#ifndef ENABLE_ALUGRID
-# define ENABLE_ALUGRID 0
-#endif
-
-#ifndef DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS
-# define DUNE_GRID_EXPERIMENTAL_GRID_EXTENSIONS 0
 #endif
 
 #ifndef HAVE_MAP_EMPLACE
@@ -164,4 +110,4 @@
 /*** End: Silence implicitly False evaluation of undefined macro warnings ****/
 
 /* end dune-xt-common */
-// NEVER delete/alter above comment, dune's cmake crap relies on it
+// NEVER delete/alter above comment, dune's cmake relies on it
