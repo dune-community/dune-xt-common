@@ -27,13 +27,13 @@ headertest*
 Makefile
 stamp-h1
 config.*
-dune-stuff.pc
+dune-xt-common.pc
 *.swp
 CMakeLists.txt.user
 demos
-dune/stuff/test/gtest/lib
+dune/xt/test/gtest/lib
 data
-!dune/stuff/data
+!dune/xt/data
 .libs
 *.o
 *.la

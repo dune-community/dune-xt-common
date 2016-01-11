@@ -6,5 +6,5 @@
 #   Rene Milk (2015)
 
 # Where to search and which files to use
-INPUT                 += @top_srcdir@/dune/stuff \
+INPUT                 += @top_srcdir@/dune/xt/common \
                           @srcdir@/mainpage 

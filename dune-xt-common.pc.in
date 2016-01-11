@@ -17,8 +17,8 @@ DEPENDENCIES=@REQUIRES@
 
 Name: @PACKAGE_NAME@
 Version: @VERSION@
-Description: misc support stuff for dune-[navier-]stokes
-URL: http://dune-project.uni-muenster.de/git/projects/dune-navier-stokes/
+Description: Extensions for dune-common
+URL: https://github.com/dune-community/dune-xt-common
 Requires: ${DEPENDENCIES}
-Libs: -L${libdir} -ldunestuff
+Libs: -L${libdir} -ldunextcommon
 Cflags: -I${includedir}
