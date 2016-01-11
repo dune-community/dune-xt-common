@@ -7,7 +7,7 @@
 #   Rene Milk       (2012 - 2013, 2015)
 
 install(FILES   AddALUGridCompileFlags.cmake
-                DuneStuffMacros.cmake
+                DuneXtCommonMacros.cmake
                 DuneTBB.cmake
                 DuneUtils.cmake
                 FindEigen3.cmake

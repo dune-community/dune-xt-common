@@ -8,7 +8,7 @@
 #   Sven Kaulmann   (2013)
 
 include(CheckCXXSourceCompiles)
-include(DuneStuffMacros)
+include(DuneXtCommonMacros)
 include(CTest)
 
 function(TO_LIST_SPACES _LIST_NAME OUTPUT_VAR)
@@ -26,7 +26,7 @@ MACRO( DEPENDENCYCHECK )
 		SET( TEST_NAME "dependenycheck_${fn}")
 		TO_LIST_SPACES( CMAKE_CXX_FLAGS TEST_NAME_FLAGS )
 		SET(XARGS ${TEST_NAME_FLAGS} -DHAVE_CONFIG_H -H -c ${HEADER} -w)
-		ADD_CUSTOM_TARGET( ${TEST_NAME} + ${dune-stuff_SOURCE_DIR}/cmake/dependencyinfo.py ${CMAKE_CXX_COMPILER} ${XARGS} ${CMAKE_CURRENT_SOURCE_DIR} ${fn}.dep)
+		ADD_CUSTOM_TARGET( ${TEST_NAME} + ${dune-xt-common_SOURCE_DIR}/cmake/dependencyinfo.py ${CMAKE_CXX_COMPILER} ${XARGS} ${CMAKE_CURRENT_SOURCE_DIR} ${fn}.dep)
 		add_dependencies( dependenycheck ${TEST_NAME} )
 	ENDFOREACH( HEADER )
 ENDMACRO( DEPENDENCYCHECK )
@@ -60,15 +60,15 @@ macro(BEGIN_TESTCASES)
                                          INIFILE ${inifile}
                                          BASENAME test_${testbase}
                                          CREATED_TARGETS targetlist_${testbase}
-                                         SCRIPT ${DUNE_STUFF_ROOT}/scripts/dune_execute.py
+                                         SCRIPT ${DUNE_XT_COMMON_ROOT}/bin/dune_execute.py
                                          ${DEBUG_MACRO_TESTS})
 		foreach(testname ${targetlist_${testbase}})
-    		    target_link_libraries( ${testname} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_stuff )
+                    target_link_libraries( ${testname} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common )
 		    list(APPEND testnames ${testname} )
                 endforeach(testname)
                 else( EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.mini )
                     add_executable( test_${testbase} ${source} ${COMMON_HEADER} )
-                    target_link_libraries( test_${testbase} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_stuff )
+                    target_link_libraries( test_${testbase} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common )
                     add_test( NAME test_${testbase} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/test_${testbase}
                                           --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/test_${testbase}.xml )
                     # currently property seems to have no effect

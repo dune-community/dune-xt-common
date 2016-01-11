@@ -6,7 +6,7 @@
 #   Felix Schindler (2013 - 2015)
 #   Rene Milk       (2012 - 2015)
 
-set(lib_dune_stuff_sources common/filesystem.cc 
+set(lib_dune_xt_common_sources common/filesystem.cc
   common/color.cc
   common/convergence-study.cc
   common/localization-study.cc
@@ -20,27 +20,24 @@ set(lib_dune_stuff_sources common/filesystem.cc
   common/misc.cc
   common/parallel/threadmanager.cc
   common/parallel/helper.cc
-  grid/fakeentity.cc 
-  functions/expression/mathexpr.cc
-  la/container/pattern.cc
   test/common.cxx)
 
-dune_library_add_sources(dunestuff SOURCES ${lib_dune_stuff_sources})
+dune_library_add_sources(dunextcommon SOURCES ${lib_dune_xt_common_sources})
 
-add_analyze(${lib_dune_stuff_sources})
+add_analyze(${lib_dune_xt_common_sources})
 FILE( GLOB_RECURSE _header "${CMAKE_CURRENT_SOURCE_DIR}/*.hh" )
 
 ds_headercheck(${_header})
 
 add_subdirectory(test EXCLUDE_FROM_ALL)
-add_format(${lib_dune_stuff_sources} ${test_sources} ${_header})
+add_format(${lib_dune_xt_common_sources} ${test_sources} ${_header})
 
-include_directories(SYSTEM ${DUNE_STUFF_TEST_DIR}/gtest )
-install(DIRECTORY ${DUNE_STUFF_TEST_DIR}/gtest
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/stuff/test/
+include_directories(SYSTEM ${DUNE_XT_COMMON_TEST_DIR}/gtest )
+install(DIRECTORY ${DUNE_XT_COMMON_TEST_DIR}/gtest
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/xt/test/
         FILES_MATCHING PATTERN "*")
-install(FILES ${DUNE_STUFF_TEST_DIR}/main.hxx
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/stuff/test/)
-dune_library_add_sources(gtest_dune_stuff
+install(FILES ${DUNE_XT_COMMON_TEST_DIR}/main.hxx
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/xt/test/)
+dune_library_add_sources(gtest_dune_xt_common
                  SOURCES test/gtest/gtest-all.cc)
 

@@ -8,7 +8,7 @@
 
 enable_testing()
 
-DEPENDENCYCHECK( ${stuff} )
+DEPENDENCYCHECK( ${xtcommon} )
 
 set_source_files_properties( ${DUNE_HEADERS} PROPERTIES HEADER_FILE_ONLY 1 )
 
@@ -30,7 +30,7 @@ foreach (filename
   execute_process(COMMAND ln -s "${CMAKE_CURRENT_SOURCE_DIR}/${filename}" "${CMAKE_CURRENT_BINARY_DIR}/${filename}")
 endforeach (filename)
 
-BEGIN_TESTCASES(dunestuff)
+BEGIN_TESTCASES(dunextcommon)
  
 find_program(LATEX_FOUND latex)
 if (LATEX_FOUND)

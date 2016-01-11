@@ -7,7 +7,7 @@
 #   Rene Milk       (2010 - 2015)
 #   Sven Kaulmann   (2013)
 
-project("dune-stuff" CXX)
+project("dune-xt-common" CXX)
 
 # local environment
 set( ENV{PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../local/bin:$ENV{PATH}" )
@@ -37,7 +37,7 @@ include(DuneMacros)
 # start a dune project with information from dune.module
 dune_project()
 
-# dune-stuff cmake includes
+# dune-xt-common cmake includes
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake )
 
 #----------------------------------------------------------------------------------------------------
@@ -86,10 +86,10 @@ endif(CMAKE_BUILD_TYPE STREQUAL Debug)
 
 
 message(STATUS ${DS_FLAGS_${CMAKE_BUILD_TYPE}})
-dune_enable_all_packages(INCLUDE_DIRS ${dune-stuff_SOURCE_DIR}/dune
+dune_enable_all_packages(INCLUDE_DIRS ${dune-xt-common_SOURCE_DIR}/dune
                          COMPILE_DEFINITIONS DNDEBUG DDNDEBUG
                          COMPILE_OPTIONS ${DS_FLAGS_${CMAKE_BUILD_TYPE}}
-                         MODULE_LIBRARIES dunestuff gtest_dune_stuff
+                         MODULE_LIBRARIES dunextcommon gtest_dune_xt_common
                          VERBOSE
                          )
 
@@ -97,8 +97,8 @@ include(DuneUtils)
 include(GridUtils)
 
 # header
-file( GLOB_RECURSE stuff "${CMAKE_CURRENT_SOURCE_DIR}/dune/*.hh" )
-set( COMMON_HEADER ${stuff} ${DUNE_HEADERS} )
+file( GLOB_RECURSE xtcommon "${CMAKE_CURRENT_SOURCE_DIR}/dune/*.hh" )
+set( COMMON_HEADER ${xtcommon} ${DUNE_HEADERS} )
 
 # add header of dependent modules for header listing
 foreach(_mod ${ALL_DEPENDENCIES})

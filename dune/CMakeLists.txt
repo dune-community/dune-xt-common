@@ -6,9 +6,9 @@
 #   Felix Schindler (2014)
 #   Rene Milk       (2012, 2015)
 
-add_subdirectory(stuff)
+add_subdirectory(xt)
 
-install(DIRECTORY stuff
+install(DIRECTORY xt
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/
         FILES_MATCHING PATTERN "*.hh")
 #         EXCLUDE PATTERN "stuff/test/*")

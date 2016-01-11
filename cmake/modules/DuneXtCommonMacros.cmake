@@ -157,7 +157,7 @@ include(DuneTBB)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
 set(DS_MAX_MIC_THREADS CACHE INTEGER 120)
-set(DUNE_STUFF_TEST_DIR ${dune-stuff_SOURCE_DIR}/dune/stuff/test/)
+set(DUNE_XT_COMMON_TEST_DIR ${dune-xt-common_SOURCE_DIR}/dune/xt/test/)
 set(DUNE_TEST_TIMEOUT 180 CACHE STRING "per-test timeout in seconds")
 set(ENABLE_PERFMON 0 CACHE STRING "enable likwid performance monitoring API usage")
 if(NOT DS_HEADERCHECK_DISABLE)
