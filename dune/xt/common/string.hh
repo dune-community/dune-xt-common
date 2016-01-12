@@ -91,7 +91,7 @@ static constexpr const std::size_t default_to_string_precision = 6u;
  *             ignored if T is a vector or scalar type).
  */
 template <class T>
-static inline T fromString(std::string ss, const size_t size = 0, const size_t cols = 0)
+static inline T from_string(std::string ss, const size_t size = 0, const size_t cols = 0)
 {
   return internal::from_string<T>(ss, size, cols);
 }
@@ -101,7 +101,7 @@ static inline T fromString(std::string ss, const size_t size = 0, const size_t c
  * \sa    internal::to_string for implementations
  */
 template <class T>
-static inline std::string toString(const T& ss, const size_t precision = default_to_string_precision)
+static inline std::string to_string(const T& ss, const size_t precision = default_to_string_precision)
 {
   return internal::to_string(ss, precision);
 }
@@ -115,9 +115,9 @@ static inline std::string toString(const T& ss, const size_t precision = default
 template <class T>
 std::string whitespaceify(const T& t, const char whitespace = ' ')
 {
-  const std::string s = toString(t);
+  const std::string s = to_string(t);
   std::string ret = "";
-  for (auto DXTC_UNUSED(ii) : valueRange(s.size())) {
+  for (auto DXTC_UNUSED(ii) : value_range(s.size())) {
     ret += whitespace;
   }
   return ret;
@@ -133,7 +133,7 @@ inline std::vector<T> tokenize(const std::string& msg, const std::string& separa
   size_t i = 0;
   // special case for empty strings to avoid non-default init
   std::generate(
-      std::begin(ret), std::end(ret), [&]() { return strings[i++].empty() ? T() : fromString<T>(strings[i - 1]); });
+      std::begin(ret), std::end(ret), [&]() { return strings[i++].empty() ? T() : from_string<T>(strings[i - 1]); });
   return ret;
 } // ... tokenize(...)
 
@@ -170,15 +170,15 @@ struct HexToString
   }
 };
 
-static inline char** vectorToMainArgs(const std::vector<std::string>& args)
+static inline char** vector_to_main_args(const std::vector<std::string>& args)
 {
   char** argv = new char*[args.size()];
-  for (auto ii : valueRange(args.size())) {
+  for (auto ii : value_range(args.size())) {
     argv[ii] = new char[args[ii].length() + 1];
     strcpy(argv[ii], args[ii].c_str());
   }
   return argv;
-} // ... vectorToMainArgs(...)
+} // ... vector_to_main_args(...)
 
 } // namespace Common
 } // namespace XT

@@ -161,11 +161,11 @@ std::map<std::string, std::vector<double>> ConvergenceStudy::run(const bool rela
         std::stringstream eoc_string;
         eoc_string << std::setw(8) << std::setprecision(2) << std::fixed << eoc_value;
         if (eoc_value > (0.9 * expected_rate(norm)))
-          out << colorString(eoc_string.str(), Colors::green) << std::flush;
+          out << color_string(eoc_string.str(), Colors::green) << std::flush;
         else if (eoc_value > 0.0)
-          out << colorString(eoc_string.str(), Colors::brown) << std::flush;
+          out << color_string(eoc_string.str(), Colors::brown) << std::flush;
         else
-          out << colorString(eoc_string.str(), Colors::red) << std::flush;
+          out << color_string(eoc_string.str(), Colors::red) << std::flush;
       }
       // update
       last_relative_error[norm] = relative_error;

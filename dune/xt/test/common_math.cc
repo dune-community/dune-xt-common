@@ -85,11 +85,11 @@ TYPED_TEST(MinMaxAvgTest, All)
 
 TEST(OtherMath, Range)
 {
-  EXPECT_EQ((std::vector<unsigned int>{0, 1, 2, 3}), valueRange(4u));
-  EXPECT_EQ((std::vector<int>{4, 3, 2, 1}), valueRange(4, 0, -1));
-  EXPECT_EQ((std::vector<int>{-1, 0, 1}), valueRange(-1, 2));
-  EXPECT_EQ((std::vector<float>()), valueRange(0.f));
-  EXPECT_EQ((std::vector<float>{0.f}), valueRange(Epsilon<float>::value));
+  EXPECT_EQ((std::vector<unsigned int>{0, 1, 2, 3}), value_range(4u));
+  EXPECT_EQ((std::vector<int>{4, 3, 2, 1}), value_range(4, 0, -1));
+  EXPECT_EQ((std::vector<int>{-1, 0, 1}), value_range(-1, 2));
+  EXPECT_EQ((std::vector<float>()), value_range(0.f));
+  EXPECT_EQ((std::vector<float>{0.f}), value_range(Epsilon<float>::value));
   Dune::FieldMatrix<double, 2, 2> fMatrix;
   fMatrix = 0.0;
   EXPECT_DOUBLE_EQ(fMatrix[1][1], 0.0);

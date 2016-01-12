@@ -85,33 +85,33 @@ private:
   typedef std::vector<Datamap> DatamapVector;
 
   //! get runtime of section in run run_number in milliseconds
-  TimingData::DeltaType getTimingIdx(const std::string section_name, const size_t run_number) const;
+  TimingData::DeltaType get_timing_idx(const std::string section_name, const size_t run_number) const;
 
 public:
-  void stopAll();
+  void stop_all();
 
   //! set this to begin a named section
-  void startTiming(const std::string section_name);
+  void start_timing(const std::string section_name);
 
   //! stop named section's counter
-  long stopTiming(const std::string section_name);
+  long stop_timing(const std::string section_name);
 
   //! set elapsed time back to 0 for section_name
-  void resetTiming(const std::string section_name);
+  void reset_timing(const std::string section_name);
 
   //! get runtime of section in current run in milliseconds
-  long getTiming(const std::string section_name) const;
+  long get_timing(const std::string section_name) const;
   TimingData::DeltaType get_delta(const std::string section_name) const;
 
   /** output to currently pre-defined (csv) file, does not output individual run results, but average over all recorded
    * results
      **/
-  void outputAveraged(const int refineLevel, const long numDofs, const double scale_factor = 1.0) const;
+  void output_averaged(const int refineLevel, const long numDofs, const double scale_factor = 1.0) const;
 
   //! file-output the named sections only
-  void outputTimings(const std::string filename) const;
-  void outputTimings(std::ostream& out = std::cout) const;
-  void outputTimingsAll(std::ostream& out = std::cout) const;
+  void output_timings(const std::string filename) const;
+  void output_timings(std::ostream& out = std::cout) const;
+  void output_timings_all(std::ostream& out = std::cout) const;
 
   /** call this with correct numRuns <b> before </b> starting any profiling
      *  if you're planning on doing more than one iteration of your code
@@ -120,13 +120,13 @@ public:
   void reset(const size_t numRuns);
 
   //! simple counter, usable to count how often a single piece of code is called
-  void addCount(const size_t num);
+  void add_count(const size_t num);
 
   //! call this after one iteration of your code has finished. increments current run number and puts new timing data
   //! into the vector
-  void nextRun();
+  void next_run();
 
-  void setOutputdir(const std::string dir);
+  void set_outputdir(const std::string dir);
 
 private:
   DatamapVector datamaps_;
@@ -162,12 +162,12 @@ public:
   inline ScopedTiming(const std::string& section_name)
     : section_name_(section_name)
   {
-    profiler().startTiming(section_name_);
+    profiler().start_timing(section_name_);
   }
 
   inline ~ScopedTiming()
   {
-    profiler().stopTiming(section_name_);
+    profiler().stop_timing(section_name_);
   }
 };
 

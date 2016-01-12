@@ -26,7 +26,7 @@ TEST(Typename, Knowns)
   EXPECT_EQ(Typename<int>::value(), "int");
   EXPECT_EQ(Typename<double>::value(), "double");
   EXPECT_EQ(Typename<float>::value(), "float");
-  EXPECT_EQ(getTypename(1.f), "float");
+  EXPECT_EQ(get_typename(1.f), "float");
   EXPECT_EQ(Typename<long>::value(), "long");
   EXPECT_EQ(Typename<unsigned int>::value(), "unsigned int");
   EXPECT_EQ(Typename<unsigned long>::value(), "unsigned long");
@@ -47,5 +47,5 @@ TEST(Typename, Extended)
   }
   typedef ValidateAny<int> Valid;
   Valid v;
-  EXPECT_EQ(getTypename(v), string("Parameter::ValidateAny<T>"));
+  EXPECT_EQ(get_typename(v), string("Parameter::ValidateAny<T>"));
 }

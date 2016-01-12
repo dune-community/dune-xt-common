@@ -77,7 +77,7 @@ const T Epsilon<T, false>::value = std::numeric_limits<T>::epsilon();
  *  std::abs is only defined for signed types.
  **/
 template <class T, bool isUnsigned = std::is_unsigned<T>::value>
-struct absoluteValue
+struct AbsoluteValue
 {
   static T result(const T& val)
   {
@@ -85,7 +85,7 @@ struct absoluteValue
   }
 };
 template <class T>
-struct absoluteValue<T, true>
+struct AbsoluteValue<T, true>
 {
   static T result(const T& val)
   {
@@ -94,22 +94,22 @@ struct absoluteValue<T, true>
 };
 
 template <class T, bool is_enum = std::is_enum<T>::value>
-struct absretval
+struct Absretval
 {
   typedef T type;
 };
 
 template <class T>
-struct absretval<T, true>
+struct Absretval<T, true>
 {
   typedef typename underlying_type<T>::type type;
 };
 
 template <class T>
-typename absretval<T>::type abs(const T& val)
+typename Absretval<T>::type abs(const T& val)
 {
-  typedef typename absretval<T>::type R;
-  return absoluteValue<R>::result(static_cast<R>(val));
+  typedef typename Absretval<T>::type R;
+  return AbsoluteValue<R>::result(static_cast<R>(val));
 }
 
 //! a vector wrapper for continiously updating min,max,avg of some element type vector

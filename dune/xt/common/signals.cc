@@ -18,7 +18,7 @@ namespace XT {
 namespace Common {
 
 //! reset given signal to default handler
-void resetSignal(int signal)
+void reset_signal(int signal)
 {
   struct sigaction new_action;
 
@@ -26,22 +26,22 @@ void resetSignal(int signal)
   sigemptyset(&new_action.sa_mask);
   new_action.sa_flags = 0;
   sigaction(signal, &new_action, NULL);
-} // resetSignal
+} // reset_signal
 
 //! example signal handler
-void handleInterrupt(int signal)
+void handle_interrupt(int signal)
 {
   DXTC_LOG_INFO << "forcefully terminated at " << stringFromTime() << std::endl;
   // reset signal handler and commit suicide
-  resetSignal(signal);
+  reset_signal(signal);
   kill(getpid(), signal);
-} // handleInterrupt
+} // handle_interrupt
 
 //! type of handler functions
 typedef void handler_type(int);
 
 //! calling this from your main() will install handler as callback when signal is received
-void installSignalHandler(int signal, handler_type handler)
+void install_signal_handler(int signal, handler_type handler)
 {
   struct sigaction new_action;
 
@@ -51,7 +51,7 @@ void installSignalHandler(int signal, handler_type handler)
   new_action.sa_flags = 0;
 
   sigaction(signal, &new_action, NULL);
-} // installSignalHandler
+} // install_signal_handler
 
 } // namepsace Common
 } // namespace XT

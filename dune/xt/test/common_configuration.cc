@@ -197,7 +197,7 @@ struct ConfigTest : public testing::Test
       const auto key     = key_gen();
       const auto got_val = DXTC_CONFIG_GET(key, val);
       // since the value invariably goes through string conversion, we need to adjust the expected value as well
-      const T adjusted_val = fromString<T>(toString(val));
+      const T adjusted_val = from_string<T>(to_string(val));
       val_compare_eq(adjusted_val, got_val);
       //! TODO add a float compare check that makes sure introduced error is only due to limited precision in str conv
       uniq_keys.insert(key);
@@ -210,7 +210,7 @@ struct ConfigTest : public testing::Test
     for (T val : values) {
       auto key = key_gen();
       // since the value invariably goes through string conversion, we need to adjust the expected value as well
-      const T adjusted_val = fromString<T>(toString(val));
+      const T adjusted_val = from_string<T>(to_string(val));
       DXTC_CONFIG.set(key, val);
       // get with default diff from expected
       auto re = DXTC_CONFIG.get(key, T(val + Epsilon<T>::value));

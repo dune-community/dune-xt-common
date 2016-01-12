@@ -165,7 +165,7 @@ struct TupleSerializer
             const typename T4::DiscreteVelocityFunctionType*, const typename T4::DiscretePressureFunctionType*>
           TupleType;
 
-  static TupleType& getTuple(T1& t1, T2& t2, T3& t3, T4& t4)
+  static TupleType& get_tuple(T1& t1, T2& t2, T3& t3, T4& t4)
   {
     // yay for dangling pointers, but using a local static here fubared sequential runs with diff grid
     TupleType* t = new TupleType(&(t1.discreteVelocity()),
@@ -178,9 +178,9 @@ struct TupleSerializer
                                  &(t4.discretePressure()));
 
     return *t;
-  } // getTuple
+  } // get_tuple
 
-  static TupleType& getTuple(T1& t1, T2& t2, T3& t3)
+  static TupleType& get_tuple(T1& t1, T2& t2, T3& t3)
   {
     // yay for dangling pointers, but using a local static here fubared sequential runs with diff grid
     TupleType* t = new TupleType(&(t1.discreteVelocity()),
@@ -193,9 +193,9 @@ struct TupleSerializer
                                  nullptr);
 
     return *t;
-  } // getTuple
+  } // get_tuple
 
-  static TupleType& getTuple(T1& t1, T2& t2)
+  static TupleType& get_tuple(T1& t1, T2& t2)
   {
     // yay for dangling pointers, but using a local static here fubared sequential runs with diff grid
     TupleType* t = new TupleType(&(t1.discreteVelocity()),
@@ -208,16 +208,16 @@ struct TupleSerializer
                                  nullptr);
 
     return *t;
-  } // getTuple
+  } // get_tuple
 
-  static TupleType& getTuple(T1& t1)
+  static TupleType& get_tuple(T1& t1)
   {
     // yay for dangling pointers, but using a local static here fubared sequential runs with diff grid
     TupleType* t = new TupleType(
         &(t1.discreteVelocity()), &(t1.discretePressure()), nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
 
     return *t;
-  } // getTuple
+  } // get_tuple
 };
 
 template <class T1, class T2 = T1, class T3 = T1, class T4 = T1, class T5 = T1, class T6 = T1, class T7 = T1,

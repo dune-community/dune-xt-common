@@ -38,8 +38,8 @@ TEST(LoggerTest, all)
   Logger().debug() << "dito\n";
   Logger().flush();
   for (int i : {LOG_INFO, LOG_DEBUG, LOG_ERROR}) {
-    const int id = Logger().addStream(LOG_CONSOLE | i);
-    Logger().getStream(id) << "Create a new stream with id: " << id << std::endl;
+    const int id = Logger().add_stream(LOG_CONSOLE | i);
+    Logger().get_stream(id) << "Create a new stream with id: " << id << std::endl;
   }
   DXTC_LOG_ERROR.suspend();
   DXTC_LOG_ERROR << "not in output\n";

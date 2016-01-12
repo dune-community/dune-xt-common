@@ -113,7 +113,7 @@ std::string color(const std::string id);
 std::string backcolor(size_t i);
 
 // maybe you want to choose your own color
-size_t templateColorChooser(size_t i);
+size_t template_color_chooser(size_t i);
 
 bool terminal_supports_color();
 
@@ -124,7 +124,7 @@ bool terminal_supports_color();
  * @param maxlevel The maximal template-level the string is reduced to.
  * @returns A colored template string.
  */
-std::string highlightTemplate(std::string str, size_t maxlevel = 10000);
+std::string highlight_template(std::string str, size_t maxlevel = 10000);
 
 /**
  * @brief A simple function highlighting a whole string in a specified foreground color.
@@ -133,11 +133,11 @@ std::string highlightTemplate(std::string str, size_t maxlevel = 10000);
  * @param colornr A color number from a 256 color map between 0 and 255.
  * @returns The highlighted string.
  */
-std::string highlightString(std::string str, size_t colornr = 0);
+std::string highlight_string(std::string str, size_t colornr = 0);
 
-std::string colorString(const std::string str, const std::string clr = Colors::brown);
+std::string color_string(const std::string str, const std::string clr = Colors::brown);
 
-std::string colorStringRed(const std::string str);
+std::string color_string_red(const std::string str);
 
 /**
  * @brief Highlights a substring of another string in a specified color.
@@ -147,7 +147,7 @@ std::string colorStringRed(const std::string str);
  * @param colornr A color number from a 256 color map between 0 and 255.
  * @returns The highlighted string.
  */
-std::string highlightSearchString(std::string str, std::string substr, size_t colornr = 0);
+std::string highlight_search_string(std::string str, std::string substr, size_t colornr = 0);
 
 } // namespace Common
 } // namespace XT

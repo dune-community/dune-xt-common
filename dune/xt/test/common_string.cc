@@ -33,8 +33,8 @@ struct MatrixStringTestDouble : public ::testing::Test
 {
   void check() const
   {
-    EXPECT_EQ("[1 2; 3 4]", toString(fromString<MatrixType>("[1.0 2; 3.0 4]")));
-    EXPECT_THROW(fromString<MatrixType>("[1 2; 3 4]", 3, 3), Exceptions::conversion_error);
+    EXPECT_EQ("[1 2; 3 4]", to_string(from_string<MatrixType>("[1.0 2; 3.0 4]")));
+    EXPECT_THROW(from_string<MatrixType>("[1 2; 3 4]", 3, 3), Exceptions::conversion_error);
   }
 };
 
@@ -43,8 +43,8 @@ struct MatrixStringTestChar : public ::testing::Test
 {
   void check() const
   {
-    EXPECT_EQ("[1 2; 3 4]", toString(fromString<MatrixType>("[1 2; 3 4]")));
-    EXPECT_THROW(fromString<MatrixType>("[1 2; 3 4]", 3, 3), Exceptions::conversion_error);
+    EXPECT_EQ("[1 2; 3 4]", to_string(from_string<MatrixType>("[1 2; 3 4]")));
+    EXPECT_THROW(from_string<MatrixType>("[1 2; 3 4]", 3, 3), Exceptions::conversion_error);
   }
 };
 
@@ -53,8 +53,8 @@ struct VectorStringTestDouble : public ::testing::Test
 {
   void check() const
   {
-    EXPECT_EQ("[1 2 3]", toString(fromString<VectorType>("[1.0 2 3.0]")));
-    EXPECT_THROW(fromString<VectorType>("[1.0 2 3.0]", 4), Exceptions::conversion_error);
+    EXPECT_EQ("[1 2 3]", to_string(from_string<VectorType>("[1.0 2 3.0]")));
+    EXPECT_THROW(from_string<VectorType>("[1.0 2 3.0]", 4), Exceptions::conversion_error);
   }
 };
 
@@ -63,8 +63,8 @@ struct VectorStringTestInt : public ::testing::Test
 {
   void check() const
   {
-    EXPECT_EQ("[1 2 3]", toString(fromString<VectorType>("[1 2 3]")));
-    EXPECT_THROW(fromString<VectorType>("[1 2 3]", 4), Exceptions::conversion_error);
+    EXPECT_EQ("[1 2 3]", to_string(from_string<VectorType>("[1 2 3]")));
+    EXPECT_THROW(from_string<VectorType>("[1 2 3]", 4), Exceptions::conversion_error);
   }
 };
 
@@ -80,7 +80,7 @@ typedef testing::Types<Dune::DynamicMatrix<double>, FieldMatrix<double, 2, 2>, D
 typedef testing::Types<Dune::DynamicMatrix<char>, FieldMatrix<char, 2, 2>, Dune::FieldMatrix<char, 2, 2>>
     MatrixTypesChar;
 
-// fromString/toString tests for vector and matrix types
+// from_string/to_string tests for vector and matrix types
 TYPED_TEST_CASE(MatrixStringTestDouble, MatrixTypesDouble);
 TYPED_TEST(MatrixStringTestDouble, CheckDouble)
 {
@@ -105,44 +105,44 @@ TYPED_TEST(VectorStringTestInt, CheckInt)
   this->check();
 }
 
-// Additional fromString/toString tests
+// Additional from_string/to_string tests
 TEST(StringTest, ConvertTo)
 {
-  EXPECT_EQ("9", toString(fromString<int>("9")));
-  EXPECT_EQ("P", toString(fromString<char>("P")));
-  EXPECT_EQ(double(0.1), fromString<double>(toString<double>(0.1)));
-  EXPECT_EQ("0.100006", toString(fromString<double>("0.1000055511151231257827021181583404541015625")));
-  EXPECT_EQ(1e-14, fromString<double>("1e-14"));
-  EXPECT_EQ(1e-14, fromString<double>("1E-14"));
-  EXPECT_EQ("1", toString(fromString<bool>("1")));
-  EXPECT_EQ("0", toString(fromString<bool>("0")));
+  EXPECT_EQ("9", to_string(from_string<int>("9")));
+  EXPECT_EQ("P", to_string(from_string<char>("P")));
+  EXPECT_EQ(double(0.1), from_string<double>(to_string<double>(0.1)));
+  EXPECT_EQ("0.100006", to_string(from_string<double>("0.1000055511151231257827021181583404541015625")));
+  EXPECT_EQ(1e-14, from_string<double>("1e-14"));
+  EXPECT_EQ(1e-14, from_string<double>("1E-14"));
+  EXPECT_EQ("1", to_string(from_string<bool>("1")));
+  EXPECT_EQ("0", to_string(from_string<bool>("0")));
 
-  EXPECT_EQ("-1", toString(fromString<long>("-1")));
+  EXPECT_EQ("-1", to_string(from_string<long>("-1")));
   typedef std::complex<double> Complex;
-  EXPECT_EQ("-1.3+0i", toString(fromString<Complex>("-1.3")));
-  EXPECT_EQ("-1.3+1i", toString(fromString<Complex>("-1.3+1i")));
-  EXPECT_EQ("1.3-1i", toString(fromString<Complex>("1.3-1i")));
-  EXPECT_EQ("0-1i", toString(fromString<Complex>("0-1i")));
+  EXPECT_EQ("-1.3+0i", to_string(from_string<Complex>("-1.3")));
+  EXPECT_EQ("-1.3+1i", to_string(from_string<Complex>("-1.3+1i")));
+  EXPECT_EQ("1.3-1i", to_string(from_string<Complex>("1.3-1i")));
+  EXPECT_EQ("0-1i", to_string(from_string<Complex>("0-1i")));
 }
 
 TEST(StringTest, ConvertFrom)
 {
-  EXPECT_EQ(9, fromString<int>("9"));
-  EXPECT_EQ(0, fromString<int>("0"));
-  EXPECT_EQ('p', fromString<char>(toString('p')));
-  EXPECT_EQ(-1, fromString<char>(toString(char(-1))));
-  EXPECT_THROW(fromString<char>("sd"), Exceptions::conversion_error);
-  EXPECT_EQ(true, fromString<bool>("1"));
-  EXPECT_EQ(true, fromString<bool>("true"));
-  EXPECT_EQ(true, fromString<bool>("True"));
-  EXPECT_EQ(false, fromString<bool>("0"));
-  EXPECT_EQ(false, fromString<bool>("false"));
-  EXPECT_EQ(false, fromString<bool>("False"));
-  EXPECT_THROW(fromString<int>(""), std::invalid_argument);
+  EXPECT_EQ(9, from_string<int>("9"));
+  EXPECT_EQ(0, from_string<int>("0"));
+  EXPECT_EQ('p', from_string<char>(to_string('p')));
+  EXPECT_EQ(-1, from_string<char>(to_string(char(-1))));
+  EXPECT_THROW(from_string<char>("sd"), Exceptions::conversion_error);
+  EXPECT_EQ(true, from_string<bool>("1"));
+  EXPECT_EQ(true, from_string<bool>("true"));
+  EXPECT_EQ(true, from_string<bool>("True"));
+  EXPECT_EQ(false, from_string<bool>("0"));
+  EXPECT_EQ(false, from_string<bool>("false"));
+  EXPECT_EQ(false, from_string<bool>("False"));
+  EXPECT_THROW(from_string<int>(""), std::invalid_argument);
   typedef std::complex<double> Complex;
-  EXPECT_EQ(Complex(1, -1), fromString<Complex>("+1-1i"));
-  EXPECT_EQ(Complex(1, 0), fromString<Complex>("+1"));
-  EXPECT_EQ(Complex(0, -1), fromString<Complex>("0-1i"));
+  EXPECT_EQ(Complex(1, -1), from_string<Complex>("+1-1i"));
+  EXPECT_EQ(Complex(1, 0), from_string<Complex>("+1"));
+  EXPECT_EQ(Complex(0, -1), from_string<Complex>("0-1i"));
 }
 
 // Hex, whitespacify, tokenize, stringFromTime tests

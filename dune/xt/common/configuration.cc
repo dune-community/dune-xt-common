@@ -83,7 +83,7 @@ Configuration::Configuration(int argc, char** argv, const std::string filename, 
 Configuration::~Configuration()
 {
   if (log_on_exit_ && !empty()) {
-    testCreateDirectory(directoryOnly(logfile_));
+    test_create_directory(directory_only(logfile_));
     report(*make_ofstream(logfile_));
   }
 }
@@ -96,7 +96,7 @@ void Configuration::set_warn_on_default_access(const bool value)
 void Configuration::set_log_on_exit(const bool value)
 {
   if (!log_on_exit_ && value)
-    testCreateDirectory(directoryOnly(logfile_));
+    test_create_directory(directory_only(logfile_));
   log_on_exit_ = value;
 }
 
@@ -105,7 +105,7 @@ void Configuration::set_logfile(const std::string logfile)
   if (logfile.empty())
     DUNE_THROW(Exceptions::wrong_input_given, "logfile must not be empty!");
   if (log_on_exit_)
-    testCreateDirectory(directoryOnly(logfile_));
+    test_create_directory(directory_only(logfile_));
 }
 
 /**
@@ -113,7 +113,7 @@ void Configuration::set_logfile(const std::string logfile)
  * \param tree ParameterTree to get values from.
  * \param pref Prefix that is added to each key and subkey (like this: pref.key), default is "".
  */
-void loadIntoFemParameter(const Dune::ParameterTree& tree, const std::string pref = "")
+void load_into_fem_parameter(const Dune::ParameterTree& tree, const std::string pref = "")
 {
 #if HAVE_DUNE_FEM_PARAMETER_REPLACE
   for (auto key : tree.getValueKeys()) {
@@ -123,7 +123,7 @@ void loadIntoFemParameter(const Dune::ParameterTree& tree, const std::string pre
   }
   for (auto subkey : tree.getSubKeys()) {
     const auto subpref = pref.empty() ? subkey : pref + "." + subkey;
-    loadIntoFemParameter(tree.sub(subkey), subpref);
+    load_into_fem_parameter(tree.sub(subkey), subpref);
   }
 #else
   (void)(tree);
@@ -240,7 +240,7 @@ void Configuration::read_command_line(int argc, char* argv[])
   }
   Dune::ParameterTreeParser::readINITree(argv[1], *this);
   Dune::ParameterTreeParser::readOptions(argc, argv, *this);
-  loadIntoFemParameter(*this);
+  load_into_fem_parameter(*this);
 
   // datadir and logdir may be given from the command line...
   setup_();

@@ -29,7 +29,7 @@ TEST(MoveIfTest, All)
   typedef Vec::value_type Ptr;
   const auto size = 6;
   Vec values;
-  for (int i : valueRange(size)) {
+  for (int i : value_range(size)) {
     values.emplace_back(new Moveable(i * 2));
   }
   Vec out;
@@ -38,11 +38,11 @@ TEST(MoveIfTest, All)
   EXPECT_EQ(out.size(), half_size);
   auto ctr = [](Ptr& ptr) { return ptr != nullptr; };
   EXPECT_EQ(std::count_if(values.begin(), values.end(), ctr), half_size);
-  for (auto i : valueRange(half_size)) {
+  for (auto i : value_range(half_size)) {
     EXPECT_NE(out[i], nullptr);
     EXPECT_EQ(i * 2, out[i]->v);
   }
-  for (auto i : valueRange(half_size)) {
+  for (auto i : value_range(half_size)) {
     EXPECT_EQ(nullptr, values[i]);
     EXPECT_EQ((i + half_size) * 2, values[i + half_size]->v);
   }

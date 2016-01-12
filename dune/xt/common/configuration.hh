@@ -212,13 +212,13 @@ public:
   //! get std::vector< T > from tree_
   template <typename T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
   std::vector<typename internal::Typer<T>::type>
-  getList(std::string key, T def = T(), const std::string separators = ";",
-          const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
-              ValidateAny<typename internal::Typer<T>::type>()) const
+  get_list(std::string key, T def = T(), const std::string separators = ";",
+           const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
+               ValidateAny<typename internal::Typer<T>::type>()) const
   {
     typedef typename internal::Typer<T>::type Tt;
     const auto def_t  = static_cast<Tt>(def);
-    const auto value  = get(key, toString(def_t), ValidateAny<std::string>());
+    const auto value  = get(key, to_string(def_t), ValidateAny<std::string>());
     const auto tokens = tokenize<Tt>(value, separators);
     for (auto token : tokens) {
       if (!validator(token)) {
@@ -228,7 +228,7 @@ public:
       }
     }
     return tokens;
-  } // ... getList(...)
+  } // ... get_list(...)
 
   /**
    * \defgroup set ´´These methods allow to set key: value pairs.``
@@ -244,7 +244,7 @@ public:
                  "While setting '" << key << "' in this configuration (see below), it already exists and you requested "
                                    << "no overwrite!\n======================\n"
                                    << report_string());
-    BaseType::operator[](key) = toString(value);
+    BaseType::operator[](key) = to_string(value);
   } // ... set(..., T, ...)
 
   void set(const std::string& key, const char* value, const bool overwrite = false);
@@ -332,9 +332,9 @@ private:
                     const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator,
                     const size_t size, const size_t cols) const
   {
-    std::string valstring = BaseType::get(key, toString(def));
+    std::string valstring = BaseType::get(key, to_string(def));
     try {
-      T val = fromString<T>(valstring, size, cols);
+      T val = from_string<T>(valstring, size, cols);
       if (validator(val))
         return val;
       else
@@ -347,7 +347,7 @@ private:
                                                                 << "\non accessing key "
                                                                 << key
                                                                 << " with default "
-                                                                << toString(def));
+                                                                << to_string(def));
     } catch (std::exception& e) {
       DUNE_THROW(Exceptions::external_error,
                  "Error in the stl while converting the string '" << valstring << "' to type '" << Typename<T>::value()
@@ -356,7 +356,7 @@ private:
                                                                   << "\non accessing key "
                                                                   << key
                                                                   << " with default "
-                                                                  << toString(def));
+                                                                  << to_string(def));
     }
   } // ... get_valid_value(...)
 
@@ -380,7 +380,7 @@ private:
   {
 #ifndef NDEBUG
     if (warn_on_default_access_ && !has_key(key)) {
-      std::cerr << colorString("WARNING:", Colors::brown) << " using default value for parameter \"" << key << "\""
+      std::cerr << color_string("WARNING:", Colors::brown) << " using default value for parameter \"" << key << "\""
                 << std::endl;
     }
 #endif // ifndef NDEBUG

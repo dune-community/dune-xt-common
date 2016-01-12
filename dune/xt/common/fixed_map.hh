@@ -152,7 +152,7 @@ public:
   {
   }
 
-  std::size_t getIdx(const key_type& key) const
+  std::size_t get_idx(const key_type& key) const
   {
     const auto it = std::find_if(map_.begin(), map_.end(), [&](const value_type& val) { return val.first == key; });
     if (it == map_.end())
@@ -162,7 +162,7 @@ public:
 
   const mapped_type& operator[](const key_type& key) const
   {
-    const auto it = getIdx(key);
+    const auto it = get_idx(key);
     if (it == N)
       DUNE_THROW(RangeError, "missing key '" << key << "' in FixedMap!");
     return map_[it].second;
@@ -170,7 +170,7 @@ public:
 
   mapped_type& operator[](const key_type& key)
   {
-    const auto it = getIdx(key);
+    const auto it = get_idx(key);
     if (it == N)
       DUNE_THROW(RangeError, "missing key '" << key << "' in FixedMap!");
     return map_[it].second;
@@ -178,12 +178,12 @@ public:
 
   const_iterator find(const key_type& key) const
   {
-    return const_iterator(this, getIdx(key));
+    return const_iterator(this, get_idx(key));
   }
 
   iterator find(const key_type& key)
   {
-    return iterator(this, getIdx(key));
+    return iterator(this, get_idx(key));
   }
 
   iterator begin()

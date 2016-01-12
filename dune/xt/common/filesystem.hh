@@ -24,13 +24,13 @@ namespace XT {
 namespace Common {
 
 //! strip filename from \path if present, return empty string if only filename present
-std::string directoryOnly(std::string _path);
+std::string directory_only(std::string _path);
 
 //! return everything after the last slash
-std::string filenameOnly(const std::string& _path);
+std::string filename_only(const std::string& _path);
 
 //! may include filename, will be stripped
-void testCreateDirectory(const std::string _path);
+void test_create_directory(const std::string _path);
 
 //! pure c++ emulation of system's touch binary
 bool touch(const std::string& _path);
@@ -42,7 +42,7 @@ boost::filesystem::ifstream* make_ifstream(const boost::filesystem::path& path,
                                            const std::ios_base::openmode mode = std::ios_base::in);
 
 //! read a file and output all lines containing filter string to a stream
-void fileToStreamFiltered(std::ostream& stream, std::string filename, std::string filter);
+void file_to_stream_filtered(std::ostream& stream, std::string filename, std::string filter);
 
 //! output programs mem usage stats by reading from /proc
 void meminfo(LogStream& stream);

@@ -111,7 +111,7 @@ std::string backcolor(size_t i)
   return "\033[38;5;" + std::to_string(i) + "m";
 }
 
-size_t templateColorChooser(size_t i)
+size_t template_color_chooser(size_t i)
 {
   return i % 256;
 }
@@ -131,21 +131,21 @@ bool terminal_supports_color()
   }
 } // ... terminal_supports_color(...)
 
-std::string highlightTemplate(std::string str, size_t maxlevel)
+std::string highlight_template(std::string str, size_t maxlevel)
 {
   size_t startindex = 0;
   size_t level = 0;
   for (size_t i = 0; i < str.size(); i++) {
     if (str[i] == '<') {
       level++;
-      std::string dummy = "\033[38;5;" + std::to_string(templateColorChooser(level)) + "m";
+      std::string dummy = "\033[38;5;" + std::to_string(template_color_chooser(level)) + "m";
       str.insert(i, dummy);
       i += dummy.size();
       if (level == maxlevel)
         startindex = i + 1;
     } else if (str[i] == '>') {
       level--;
-      std::string dummy = "\033[38;5;" + std::to_string(templateColorChooser(level)) + "m";
+      std::string dummy = "\033[38;5;" + std::to_string(template_color_chooser(level)) + "m";
       str.insert(++i, dummy);
       if (level + 1 == maxlevel) {
         auto size = i - startindex - 1;
@@ -157,14 +157,14 @@ std::string highlightTemplate(std::string str, size_t maxlevel)
   }
   str += "\033[38;5;0m";
   return str;
-} // highlightTemplate
+} // highlight_template
 
-std::string highlightString(std::string str, size_t colornr)
+std::string highlight_string(std::string str, size_t colornr)
 {
   return "\033[38;5;" + std::to_string(colornr % 256) + "m" + str + "\033[0m"; //"\033[38;5;0m";
 }
 
-std::string highlightSearchString(std::string str, std::string substr, size_t colornr)
+std::string highlight_search_string(std::string str, std::string substr, size_t colornr)
 {
   long index = long(str.find(substr, 0));
 
@@ -176,9 +176,9 @@ std::string highlightSearchString(std::string str, std::string substr, size_t co
     index = str.find(substr, index + dummy.size() + substr.size() + dummy2.size());
   }
   return str;
-} // highlightSearchString
+} // highlight_search_string
 
-std::string colorString(const std::string str, const std::string clr)
+std::string color_string(const std::string str, const std::string clr)
 {
   if (terminal_supports_color())
     return clr + str + StreamModifiers::normal;
@@ -186,9 +186,9 @@ std::string colorString(const std::string str, const std::string clr)
     return str;
 }
 
-std::string colorStringRed(const std::string str)
+std::string color_string_red(const std::string str)
 {
-  return colorString(str, Colors::red);
+  return color_string(str, Colors::red);
 }
 
 } // namespace Common

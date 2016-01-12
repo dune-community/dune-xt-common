@@ -53,9 +53,9 @@ public:
               const std::string datadir = "data", const std::string _logdir = std::string("log"));
 
   //! \attention This will probably not do wht we want it to!
-  void setPrefix(std::string prefix);
-  void setStreamFlags(int streamID, int flags);
-  int getStreamFlags(int streamID) const;
+  void set_prefix(std::string prefix);
+  void set_stream_flags(int streamID, int flags);
+  int get_stream_flags(int streamID) const;
 
   /** \name forwarded Log functions
      * \{
@@ -63,24 +63,24 @@ public:
   template <class T>
   void log(T c, int streamID)
   {
-    getStream(streamID) << c;
+    get_stream(streamID) << c;
   } // Log
 
   /** \}
      */
 
-  LogStream& getStream(int streamId);
+  LogStream& get_stream(int streamId);
   LogStream& error()
   {
-    return getStream(LOG_ERROR);
+    return get_stream(LOG_ERROR);
   }
   LogStream& info()
   {
-    return getStream(LOG_INFO);
+    return get_stream(LOG_INFO);
   }
   LogStream& debug()
   {
-    return getStream(LOG_DEBUG);
+    return get_stream(LOG_DEBUG);
   }
   LogStream& devnull()
   {
@@ -90,7 +90,7 @@ public:
   //! flush all active streams
   void flush();
   //! creates a new LogStream with given id
-  int addStream(int flags);
+  int add_stream(int flags);
 
   //! re-enable all logging below given priority level
   void resume(LogStream::PriorityType prio = LogStream::default_suspend_priority);

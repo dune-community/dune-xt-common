@@ -22,7 +22,7 @@ TEST(Color, All)
   std::cout << StreamModifiers::underline << "a simple 'hello world': " << StreamModifiers::endunderline
             << "hello world" << std::endl;
   std::cout << StreamModifiers::underline << "a colored 'hello world': " << StreamModifiers::endunderline
-            << highlightString("hello world", 1) << std::endl;
+            << highlight_string("hello world", 1) << std::endl;
   std::cout << StreamModifiers::underline << "a colored 'hello world': " << StreamModifiers::endunderline
             << Colors::bgreen << "hello world" << StreamModifiers::normal << std::endl;
   std::cout << StreamModifiers::underline << "a blinking 'hello world': " << StreamModifiers::endunderline
@@ -35,16 +35,16 @@ TEST(Color, All)
             << StreamModifiers::reverse << "hello world" << StreamModifiers::endreverse << std::endl;
   std::cout << StreamModifiers::underline
             << "a 'hello world' with highlighted substrings ('o'): " << StreamModifiers::endunderline
-            << highlightSearchString("hello world", "o", 3) << std::endl;
+            << highlight_search_string("hello world", "o", 3) << std::endl;
   std::cout << StreamModifiers::underline << "a highlighted 'hello world'-template: " << StreamModifiers::endunderline
-            << highlightTemplate("Hello< World, Hello< World, Hello< World< Hello, World > > > >") << std::endl;
+            << highlight_template("Hello< World, Hello< World, Hello< World< Hello, World > > > >") << std::endl;
   std::cout << StreamModifiers::underline
             << "a highlighted 'hello world'-template only showing two levels: " << StreamModifiers::endunderline
-            << highlightTemplate("Hello< World, Hello< World, Hello< World< Hello, World > > > >", 2) << std::endl;
+            << highlight_template("Hello< World, Hello< World, Hello< World< Hello, World > > > >", 2) << std::endl;
   std::cout << StreamModifiers::underline
             << "colored 'hello world' for all available colors( 0 - 255): " << StreamModifiers::endunderline
             << std::endl;
   for (size_t i = 0; i < 256; ++i)
-    std::cout << highlightString("hello world - ", i);
+    std::cout << highlight_string("hello world - ", i);
   std::cout << std::endl;
 } // main

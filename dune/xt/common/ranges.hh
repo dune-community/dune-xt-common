@@ -93,7 +93,7 @@ public:
 }; // class EntityRange
 
 template <class GridViewTraits, size_t codim = 0>
-EntityRange<Dune::GridView<GridViewTraits>, codim> entityRange(const Dune::GridView<GridViewTraits>& view)
+EntityRange<Dune::GridView<GridViewTraits>, codim> entity_range(const Dune::GridView<GridViewTraits>& view)
 {
   return EntityRange<Dune::GridView<GridViewTraits>, codim>(view);
 }
@@ -101,7 +101,7 @@ EntityRange<Dune::GridView<GridViewTraits>, codim> entityRange(const Dune::GridV
 #if HAVE_DUNE_FEM
 
 template <class GP, size_t codim = 0>
-EntityRange<Dune::Fem::GridPartInterface<GP>, codim> entityRange(const Dune::Fem::GridPartInterface<GP>& part)
+EntityRange<Dune::Fem::GridPartInterface<GP>, codim> entity_range(const Dune::Fem::GridPartInterface<GP>& part)
 {
   return EntityRange<Dune::Fem::GridPartInterface<GP>, codim>(part);
 }
@@ -137,8 +137,8 @@ public:
 
 template <class GridViewTraits>
 IntersectionRange<Dune::GridView<GridViewTraits>, typename Dune::GridView<GridViewTraits>::template Codim<0>::Entity>
-intersectionRange(const Dune::GridView<GridViewTraits>& gridview,
-                  const typename Dune::GridView<GridViewTraits>::template Codim<0>::Entity& entity)
+intersection_range(const Dune::GridView<GridViewTraits>& gridview,
+                   const typename Dune::GridView<GridViewTraits>::template Codim<0>::Entity& entity)
 {
   return IntersectionRange<Dune::GridView<GridViewTraits>,
                            typename Dune::GridView<GridViewTraits>::template Codim<0>::Entity>(gridview, entity);
@@ -215,13 +215,13 @@ private:
 
 template <int mydim, int cdim, class GridImp, template <int, int, class> class GeometryImp>
 CornerRange<Dune::Geometry<mydim, cdim, GridImp, GeometryImp>>
-cornerRange(const Dune::Geometry<mydim, cdim, GridImp, GeometryImp>& geometry)
+corner_range(const Dune::Geometry<mydim, cdim, GridImp, GeometryImp>& geometry)
 {
   return CornerRange<Dune::Geometry<mydim, cdim, GridImp, GeometryImp>>(geometry);
 }
 
 template <int mydim, int cdim, class GridImp, template <int, int, class> class EntityImp>
-auto cornerRange(const Dune::Entity<mydim, cdim, GridImp, EntityImp>& entity)
+auto corner_range(const Dune::Entity<mydim, cdim, GridImp, EntityImp>& entity)
     -> CornerRange<typename std::remove_reference<decltype(entity.geometry())>::type>
 {
   return CornerRange<typename std::remove_reference<decltype(entity.geometry())>::type>(entity.geometry());
@@ -269,7 +269,7 @@ public:
 template <size_t codim, class DiscreteFunctionspaceType, class EntityType>
 LagrangePointSetRange<typename DiscreteFunctionspaceType::GridPartType, DiscreteFunctionspaceType::polynomialOrder,
                       codim>
-lagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& entity, const size_t subEntity)
+lagrange_point_set_range(const DiscreteFunctionspaceType& space, const EntityType& entity, const size_t subEntity)
 {
   return LagrangePointSetRange<typename DiscreteFunctionspaceType::GridPartType,
                                DiscreteFunctionspaceType::polynomialOrder,
@@ -278,7 +278,7 @@ lagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& 
 
 template <class LgPointSetType, size_t codim = 1>
 LagrangePointSetRange<typename LgPointSetType::GridPartType, LgPointSetType::polynomialOrder, codim>
-lagrangePointSetRange(const LgPointSetType& lpset, const size_t subEntity)
+lagrange_point_set_range(const LgPointSetType& lpset, const size_t subEntity)
 {
   return LagrangePointSetRange<typename LgPointSetType::GridPartType, LgPointSetType::polynomialOrder, codim>(
       lpset, subEntity);
@@ -287,8 +287,8 @@ lagrangePointSetRange(const LgPointSetType& lpset, const size_t subEntity)
 template <class GridPartTraits>
 IntersectionRange<Dune::Fem::GridPartInterface<GridPartTraits>,
                   typename Dune::Fem::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType>
-intersectionRange(const Dune::Fem::GridPartInterface<GridPartTraits>& gridpart,
-                  const typename Dune::Fem::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType& entity)
+intersection_range(const Dune::Fem::GridPartInterface<GridPartTraits>& gridpart,
+                   const typename Dune::Fem::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType& entity)
 {
   return IntersectionRange<Dune::Fem::GridPartInterface<GridPartTraits>,
                            typename Dune::Fem::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType>(
@@ -299,8 +299,8 @@ intersectionRange(const Dune::Fem::GridPartInterface<GridPartTraits>& gridpart,
 
 //! get a vector with values in [start : increment : end)
 template <class T, class sequence = std::vector<T>>
-typename std::enable_if<!std::is_enum<T>::value, sequence>::type valueRange(const T start, const T end,
-                                                                            const T increment = Epsilon<T>::value)
+typename std::enable_if<!std::is_enum<T>::value, sequence>::type value_range(const T start, const T end,
+                                                                             const T increment = Epsilon<T>::value)
 {
   // sadly, no overloaded version of std::abs is available for
   // unsigned long long, so we compute the absolute value of increment
@@ -314,27 +314,27 @@ typename std::enable_if<!std::is_enum<T>::value, sequence>::type valueRange(cons
 }
 
 //! signature for enumeration Types T
-template <class T, class sequence = std::vector<typename absretval<T>::type>>
+template <class T, class sequence = std::vector<typename Absretval<T>::type>>
 typename std::enable_if<std::is_enum<T>::value, sequence>::type
-valueRange(const T start, const T end,
-           const typename absretval<T>::type increment = Epsilon<typename absretval<T>::type>::value)
+value_range(const T start, const T end,
+            const typename Absretval<T>::type increment = Epsilon<typename Absretval<T>::type>::value)
 {
-  typedef typename absretval<T>::type R;
-  return valueRange(static_cast<R>(start), static_cast<R>(end), increment);
+  typedef typename Absretval<T>::type R;
+  return value_range(static_cast<R>(start), static_cast<R>(end), increment);
 }
 
 //! get a vector with values in [0 : Epsilon<T> : end)
 template <class T, class sequence = std::vector<T>>
-typename std::enable_if<!std::is_enum<T>::value, sequence>::type valueRange(const T end)
+typename std::enable_if<!std::is_enum<T>::value, sequence>::type value_range(const T end)
 {
-  return valueRange(T(0), end);
+  return value_range(T(0), end);
 }
 
 //! get a vector with values in [0 : Epsilon<T> : end)
-template <class T, class sequence = std::vector<typename absretval<T>::type>>
-typename std::enable_if<std::is_enum<T>::value, sequence>::type valueRange(const T end)
+template <class T, class sequence = std::vector<typename Absretval<T>::type>>
+typename std::enable_if<std::is_enum<T>::value, sequence>::type value_range(const T end)
 {
-  return valueRange(T(0), end);
+  return value_range(T(0), end);
 }
 
 } // namespace Common

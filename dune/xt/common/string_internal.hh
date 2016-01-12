@@ -389,7 +389,7 @@ static inline typename std::enable_if<is_vector<V>::value, std::string>::type to
                                                                                         const std::size_t precision)
 {
   std::string ret = "[";
-  for (auto ii : valueRange(vec.size())) {
+  for (auto ii : value_range(vec.size())) {
     if (ii > 0)
       ret += " ";
     ret += internal::to_string(vec[ii], precision);
@@ -403,10 +403,10 @@ static inline typename std::enable_if<is_matrix<M>::value, std::string>::type to
                                                                                         const std::size_t precision)
 {
   std::string ret = "[";
-  for (auto rr : valueRange(MatrixAbstraction<M>::rows(mat))) {
+  for (auto rr : value_range(MatrixAbstraction<M>::rows(mat))) {
     if (rr > 0)
       ret += "; ";
-    for (auto cc : valueRange(MatrixAbstraction<M>::cols(mat))) {
+    for (auto cc : value_range(MatrixAbstraction<M>::cols(mat))) {
       if (cc > 0)
         ret += " ";
       ret += internal::to_string(MatrixAbstraction<M>::get_entry(mat, rr, cc), precision);

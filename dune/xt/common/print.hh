@@ -79,13 +79,13 @@ typename std::enable_if<is_matrix<M>::value, void>::type print(const M& mat, con
 
 //! useful for visualizing sparsity patterns of matrices
 template <class Matrix>
-void matrixToGnuplotStream(const Matrix& matrix, std::ostream& stream)
+void matrix_to_gnuplot_stream(const Matrix& matrix, std::ostream& stream)
 {
   unsigned long nz = 0;
 
   const auto cols = matrix.cols();
-  for (auto row : valueRange(matrix.rows())) {
-    for (auto col : valueRange(cols)) {
+  for (auto row : value_range(matrix.rows())) {
+    for (auto col : value_range(cols)) {
       if (matrix.find(row, col))
         stream << row << "\t" << col << "\t" << matrix(row, col) << "\n";
     }
@@ -93,10 +93,10 @@ void matrixToGnuplotStream(const Matrix& matrix, std::ostream& stream)
     stream << "#non zeros in row " << row << " " << matrix.numNonZeros(row) << " (of " << matrix.cols() << " cols)\n";
   }
   stream << "#total non zeros " << nz << " of " << matrix.rows() * matrix.cols() << " entries\n";
-} // matrixToGnuplotStream
+} // matrix_to_gnuplot_stream
 
 //! maps 1,2,3 to x,y,z / X,Y,Z
-inline std::string dimToAxisName(const size_t dim, const bool capitalize = false)
+inline std::string dim_to_axis_name(const size_t dim, const bool capitalize = false)
 {
   char c = 'x';
 
@@ -104,7 +104,7 @@ inline std::string dimToAxisName(const size_t dim, const bool capitalize = false
   if (capitalize)
     c -= 32;
   return std::string() += c;
-} // matrixToGnuplotStream
+} // matrix_to_gnuplot_stream
 
 /** Outputiterator to emulate python's str.join(iterable)
  * \see http://codereview.stackexchange.com/questions/30132/comma-formatted-stl-vectors/30181#30181

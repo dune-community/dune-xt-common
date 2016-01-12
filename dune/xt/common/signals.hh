@@ -18,16 +18,16 @@ namespace Common {
 //! POSIX signal management utils
 
 //! reset given signal to default handler
-void resetSignal(int signal);
+void reset_signal(int signal);
 
 //! example signal handler
-void handleInterrupt(int signal);
+void handle_interrupt(int signal);
 
 //! type of handler functions
 typedef void handler_type(int);
 
 //! calling this from your main() will install handler as callback when signal is received
-void installSignalHandler(int signal = SIGINT, handler_type handler = handleInterrupt);
+void install_signal_handler(int signal = SIGINT, handler_type handler = handle_interrupt);
 
 } // namepsace Common
 } // namespace XT

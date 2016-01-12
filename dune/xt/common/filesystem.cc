@@ -16,25 +16,25 @@ namespace XT {
 namespace Common {
 
 //! strip filename from \path if present, return empty string if only filename present
-std::string directoryOnly(std::string _path)
+std::string directory_only(std::string _path)
 {
   return boost::filesystem::path(_path).parent_path().string();
 }
 
 //! return everything after the last slash
-std::string filenameOnly(const std::string& _path)
+std::string filename_only(const std::string& _path)
 {
 #if BOOST_FILESYSTEM_VERSION > 2
   return boost::filesystem::path(_path).filename().string();
 #else // if BOOST_FILESYSTEM_VERSION > 2
   return boost::filesystem::path(_path).filename();
 #endif // if BOOST_FILESYSTEM_VERSION > 2
-} // filenameOnly
+} // filename_only
 
 //! may include filename, will be stripped
-void testCreateDirectory(const std::string _path)
+void test_create_directory(const std::string _path)
 {
-  std::string pathonly = directoryOnly(_path);
+  std::string pathonly = directory_only(_path);
   if (!pathonly.empty())
     boost::filesystem::create_directories(pathonly);
 }
@@ -47,18 +47,18 @@ bool touch(const std::string& _path)
 
 boost::filesystem::ofstream* make_ofstream(const boost::filesystem::path& path, const std::ios_base::openmode mode)
 {
-  testCreateDirectory(path.string());
+  test_create_directory(path.string());
   return new boost::filesystem::ofstream(path, mode);
 }
 
 boost::filesystem::ifstream* make_ifstream(const boost::filesystem::path& path, const std::ios_base::openmode mode)
 {
-  testCreateDirectory(path.string());
+  test_create_directory(path.string());
   return new boost::filesystem::ifstream(path, mode);
 }
 
 //! read a file and output all lines containing filter string to a stream
-void fileToStreamFiltered(std::ostream& stream, std::string filename, std::string filter)
+void file_to_stream_filtered(std::ostream& stream, std::string filename, std::string filter)
 {
   std::ifstream file(filename.c_str(), std::ifstream::in);
   std::string line;
@@ -68,7 +68,7 @@ void fileToStreamFiltered(std::ostream& stream, std::string filename, std::strin
       stream << line << "\n";
   }
   file.close();
-} // fileToStreamFiltered
+} // file_to_stream_filtered
 
 //! output programs mem usage stats by reading from /proc
 void meminfo(LogStream& stream)
@@ -79,8 +79,8 @@ void meminfo(LogStream& stream)
   std::stringstream filename;
   filename << "/proc/" << pid << "/status";
 
-  fileToStreamFiltered(stream, filename.str(), "Vm");
-  fileToStreamFiltered(stream, "/proc/meminfo", "Mem");
+  file_to_stream_filtered(stream, filename.str(), "Vm");
+  file_to_stream_filtered(stream, "/proc/meminfo", "Mem");
   stream << "------------ \n\n" << std::endl;
 } // meminfo
 

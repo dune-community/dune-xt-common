@@ -31,25 +31,25 @@ class ValidatorInterface
 public:
   bool operator()(const T& value) const
   {
-    return asImp()(value);
+    return as_imp()(value);
   }
 
   std::string msg() const
   {
-    return asImp().msg();
+    return as_imp().msg();
   }
   void print(std::ostream& out) const
   {
-    out << asImp().msg();
+    out << as_imp().msg();
   }
 
 protected:
-  inline const Derived& asImp() const
+  inline const Derived& as_imp() const
   {
     return static_cast<const Derived&>(*this);
   }
 
-  inline Derived& asImp()
+  inline Derived& as_imp()
   {
     return static_cast<Derived&>(*this);
   }
@@ -123,7 +123,7 @@ public:
 
   std::string msg() const
   {
-    return (boost::format("given value was invalid: not less than %s") % toString(baseval_)).str();
+    return (boost::format("given value was invalid: not less than %s") % to_string(baseval_)).str();
   }
 
 private:
@@ -146,7 +146,7 @@ public:
 
   std::string msg() const
   {
-    return (boost::format("given value was invalid: not greater than %s") % toString(baseval_)).str();
+    return (boost::format("given value was invalid: not greater than %s") % to_string(baseval_)).str();
   }
 
 private:

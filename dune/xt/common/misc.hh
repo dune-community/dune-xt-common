@@ -48,28 +48,28 @@ namespace Common {
 
 //! element-index-in-container search
 template <class StlSequence>
-inline int getIdx(const StlSequence& ct, const typename StlSequence::value_type& val)
+inline int get_idx(const StlSequence& ct, const typename StlSequence::value_type& val)
 {
   const auto result = std::find(ct.begin(), ct.end(), val);
   if (result == ct.end())
     return -1;
   return std::distance(ct.begin(), result);
-} // getIdx
+} // get_idx
 
 /** this allows subscription indices to wrap around
-   * \example N=4: wraparound_array[4] == wraparound_array[0] && wraparound_array[-1] == wraparound_array[3]
+   * \example N=4: WraparoundArray[4] == WraparoundArray[0] && WraparoundArray[-1] == WraparoundArray[3]
    **/
 template <class T, size_t N>
-struct wraparound_array : public Dune::array<T, N>
+struct WraparoundArray : public Dune::array<T, N>
 {
   typedef Dune::array<T, N> BaseType;
-  wraparound_array()
+  WraparoundArray()
   {
     for (size_t i = 0; i < N; ++i)
       this->operator[](i) = T();
   }
 
-  wraparound_array(const BaseType other)
+  WraparoundArray(const BaseType other)
   {
     for (size_t i = 0; i < N; ++i)
       this->operator[](i) = other[i];
@@ -100,7 +100,7 @@ struct wraparound_array : public Dune::array<T, N>
 
 //! type safe (this will not compile for degraded-to-pointer arrays) way of getting array length
 template <class T, size_t N>
-size_t arrayLength(T(&/*array*/)[N])
+size_t array_length(T(&/*array*/)[N])
 {
   return N;
 }

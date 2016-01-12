@@ -56,7 +56,7 @@ void Logging::create(int logflags, const std::string logfile, const std::string 
   logflags_   = logflags;
   path logdir = path(datadir) / _logdir;
   filename_ = logdir / (log_fn % logfile % ".log").str();
-  testCreateDirectory(filename_.string());
+  test_create_directory(filename_.string());
   if ((logflags_ & LOG_FILE) != 0) {
     logfile_.open(filename_);
     assert(logfile_.is_open());
@@ -68,13 +68,13 @@ void Logging::create(int logflags, const std::string logfile, const std::string 
   }
 } // create
 
-void Logging::setPrefix(std::string prefix)
+void Logging::set_prefix(std::string prefix)
 {
   deinit();
   create(logflags_, prefix);
-} // setPrefix
+} // set_prefix
 
-void Logging::setStreamFlags(int streamID, int flags)
+void Logging::set_stream_flags(int streamID, int flags)
 {
   assert(flagmap_.find(streamID) != flagmap_.end());
   // this might result in logging to diff targtes, so we flush the current targets
@@ -82,7 +82,7 @@ void Logging::setStreamFlags(int streamID, int flags)
   flagmap_[streamID] = flags;
 }
 
-int Logging::getStreamFlags(int streamID) const
+int Logging::get_stream_flags(int streamID) const
 {
   const auto it = flagmap_.find(streamID);
   if (it == flagmap_.end())
@@ -91,7 +91,7 @@ int Logging::getStreamFlags(int streamID) const
   return it->second;
 }
 
-LogStream& Logging::getStream(int streamId)
+LogStream& Logging::get_stream(int streamId)
 {
   const auto it = streammap_.find(streamId);
   if (it == streammap_.end())
@@ -110,7 +110,7 @@ void Logging::flush()
   }
 } // flush
 
-int Logging::addStream(int flags)
+int Logging::add_stream(int flags)
 {
   static int streamID_int = LOG_NEXT;
   streamID_int <<= 1;
@@ -119,7 +119,7 @@ int Logging::addStream(int flags)
   flagmap_[streamID]   = (flags | streamID);
   streammap_[streamID] = make_unique<FileLogStream>(streamID, flagmap_[streamID], logfile_);
   return streamID_int;
-} // addStream
+} // add_stream
 
 void Logging::resume(LogStream::PriorityType prio)
 {

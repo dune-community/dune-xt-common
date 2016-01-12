@@ -76,10 +76,10 @@ TimingData::DeltaType TimingData::delta() const
   return {{cast(elapsed.wall * scale), cast(elapsed.user * scale), cast(elapsed.system * scale)}};
 }
 
-void Profiler::resetTiming(const std::string section_name)
+void Profiler::reset_timing(const std::string section_name)
 {
   try {
-    stopTiming(section_name);
+    stop_timing(section_name);
   } catch (Dune::RangeError) {
     // ok, timer simply wasn't running
   }
@@ -87,7 +87,7 @@ void Profiler::resetTiming(const std::string section_name)
   current_data[section_name] = {{0, 0, 0}};
 }
 
-void Profiler::startTiming(const std::string section_name)
+void Profiler::start_timing(const std::string section_name)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   if (current_run_number_ >= datamaps_.size()) {
@@ -108,7 +108,7 @@ void Profiler::startTiming(const std::string section_name)
   DXTC_LIKWID_BEGIN_SECTION(section_name)
 } // StartTiming
 
-long Profiler::stopTiming(const std::string section_name)
+long Profiler::stop_timing(const std::string section_name)
 {
   DXTC_LIKWID_END_SECTION(section_name)
   assert(current_run_number_ < datamaps_.size());
@@ -123,13 +123,13 @@ long Profiler::stopTiming(const std::string section_name)
   if (current_data.find(section_name) == current_data.end())
     current_data[section_name] = delta;
   else {
-    for (auto i : valueRange(delta.size()))
+    for (auto i : value_range(delta.size()))
       current_data[section_name][i] += delta[i];
   }
   return delta[0];
 } // StopTiming
 
-long Profiler::getTiming(const std::string section_name) const
+long Profiler::get_timing(const std::string section_name) const
 {
   return get_delta(section_name)[0];
 }
@@ -137,10 +137,10 @@ long Profiler::getTiming(const std::string section_name) const
 TimingData::DeltaType Profiler::get_delta(const std::string section_name) const
 {
   assert(current_run_number_ < datamaps_.size());
-  return getTimingIdx(section_name, current_run_number_);
+  return get_timing_idx(section_name, current_run_number_);
 }
 
-TimingData::DeltaType Profiler::getTimingIdx(const std::string section_name, const size_t run_number) const
+TimingData::DeltaType Profiler::get_timing_idx(const std::string section_name, const size_t run_number) const
 {
   assert(run_number < datamaps_.size());
   const Datamap& data             = datamaps_[run_number];
@@ -155,11 +155,11 @@ TimingData::DeltaType Profiler::getTimingIdx(const std::string section_name, con
   return section->second;
 }
 
-void Profiler::stopAll()
+void Profiler::stop_all()
 {
   for (auto&& section : known_timers_map_) {
     try {
-      stopTiming(section.first);
+      stop_timing(section.first);
     } catch (Dune::RangeError) {
     }
   }
@@ -174,12 +174,12 @@ void Profiler::reset(const size_t numRuns)
   current_run_number_ = 0;
 } // Reset
 
-void Profiler::addCount(const size_t num)
+void Profiler::add_count(const size_t num)
 {
   counters_[num] += 1;
 }
 
-void Profiler::nextRun()
+void Profiler::next_run()
 {
   // set all known timers to "stopped"
   for (auto& timer_it : known_timers_map_)
@@ -187,7 +187,7 @@ void Profiler::nextRun()
   current_run_number_++;
 }
 
-void Profiler::outputAveraged(const int refineLevel, const long numDofs, const double scale_factor) const
+void Profiler::output_averaged(const int refineLevel, const long numDofs, const double scale_factor) const
 {
   const auto& comm   = Dune::MPIHelper::getCollectiveCommunication();
   const int numProce = comm.size();
@@ -212,7 +212,7 @@ void Profiler::outputAveraged(const int refineLevel, const long numDofs, const d
   for (const auto& datamap : datamaps_) {
     for (const auto& timing : datamap) {
       //! this used to be GetTiming( it->second ), which is only valid thru an implicit and wrong conversion..
-      averages_map[timing.first] += getTiming(timing.first);
+      averages_map[timing.first] += get_timing(timing.first);
     }
   }
 
@@ -234,21 +234,21 @@ void Profiler::outputAveraged(const int refineLevel, const long numDofs, const d
   csv.close();
 } // OutputAveraged
 
-void Profiler::setOutputdir(const std::string dir)
+void Profiler::set_outputdir(const std::string dir)
 {
   output_dir_ = dir;
-  testCreateDirectory(output_dir_);
+  test_create_directory(output_dir_);
 }
 
-void Profiler::outputTimings(const std::string csv) const
+void Profiler::output_timings(const std::string csv) const
 {
   const auto& comm = Dune::MPIHelper::getCollectiveCommunication();
   boost::filesystem::path dir(output_dir_);
   boost::filesystem::path filename = dir / (boost::format("%s_p%08d.csv") % csv % comm.rank()).str();
   boost::filesystem::ofstream out(filename);
-  outputTimings(out);
+  output_timings(out);
   std::stringstream tmp_out;
-  outputTimingsAll(tmp_out);
+  output_timings_all(tmp_out);
   if (comm.rank() == 0) {
     boost::filesystem::path a_filename = dir / (boost::format("%s.csv") % csv).str();
     boost::filesystem::ofstream a_out(a_filename);
@@ -256,7 +256,7 @@ void Profiler::outputTimings(const std::string csv) const
   }
 }
 
-void Profiler::outputTimingsAll(std::ostream& out) const
+void Profiler::output_timings_all(std::ostream& out) const
 {
   if (datamaps_.size() < 1)
     return;
@@ -300,7 +300,7 @@ void Profiler::outputTimingsAll(std::ostream& out) const
     out << stash.str();
 }
 
-void Profiler::outputTimings(std::ostream& out) const
+void Profiler::output_timings(std::ostream& out) const
 {
   if (datamaps_.size() < 1)
     return;
@@ -324,7 +324,7 @@ Profiler::Profiler()
 {
   DXTC_LIKWID_INIT;
   reset(1);
-  setOutputdir("./profiling");
+  set_outputdir("./profiling");
 }
 
 Profiler::~Profiler()
@@ -340,7 +340,7 @@ OutputScopedTiming::OutputScopedTiming(const std::string& section_name, std::ost
 
 OutputScopedTiming::~OutputScopedTiming()
 {
-  const auto duration = profiler().stopTiming(section_name_);
+  const auto duration = profiler().stop_timing(section_name_);
   out_ << "Executing " << section_name_ << " took " << duration / 1000.f << "s\n";
 }
 

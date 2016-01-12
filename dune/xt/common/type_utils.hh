@@ -45,7 +45,7 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
-inline std::string demangleTypename(const std::string& mangled_name)
+inline std::string demangle_typename(const std::string& mangled_name)
 {
 #ifdef __GNUC__
   return abi::__cxa_demangle(mangled_name.c_str(), nullptr, nullptr, nullptr);
@@ -56,16 +56,16 @@ inline std::string demangleTypename(const std::string& mangled_name)
 
 //! demangles typeid
 template <class T>
-std::string demangledTypeId(T& obj)
+std::string demangled_type_id(T& obj)
 {
-  return demangleTypename(typeid(obj).name());
-} // demangledTypeId
+  return demangle_typename(typeid(obj).name());
+} // demangled_type_id
 
 //! create output for demangled typeid
 template <class T>
-void realTypeId(T& obj, std::string name = "", size_t maxlevel = 10000)
+void real_type_id(T& obj, std::string name = "", size_t maxlevel = 10000)
 {
-  std::cout << name << (name == "" ? "" : "'s type is ") << highlightTemplate(demangledTypeId(obj), maxlevel)
+  std::cout << name << (name == "" ? "" : "'s type is ") << highlight_template(demangled_type_id(obj), maxlevel)
             << std::endl;
 }
 
@@ -76,7 +76,7 @@ struct Typename
   static std::string value()
   {
 #if defined(__GNUC__) && defined(__GXX_RTTI)
-    return demangleTypename(typeid(T).name());
+    return demangle_typename(typeid(T).name());
 #else
     return "unknown";
 #endif
@@ -84,7 +84,7 @@ struct Typename
 };
 
 template <class T>
-std::string getTypename(const T&)
+std::string get_typename(const T&)
 {
   return Typename<T>::value();
 }
