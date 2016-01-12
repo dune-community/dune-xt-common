@@ -6,8 +6,8 @@
 //   Felix Schindler (2012, 2014)
 //   Rene Milk       (2010 - 2015)
 
-#ifndef DUNE_STUFF_DEBUG_HH
-#define DUNE_STUFF_DEBUG_HH
+#ifndef DUNE_XT_COMMON_DEBUG_HH
+#define DUNE_XT_COMMON_DEBUG_HH
 
 #include <cstring>
 #include <boost/assert.hpp>
@@ -46,4 +46,4 @@ inline char* charcopy(const char* s)
       (boost::format("assertion %1% == %2% failed: %3% != %4%") % #expt % #actual % expt % actual).str().c_str())
 #endif
 
-#endif // DUNE_STUFF_DEBUG_HH
+#endif // DUNE_XT_COMMON_DEBUG_HH

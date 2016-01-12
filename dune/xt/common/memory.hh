@@ -6,8 +6,8 @@
 //   Felix Schindler (2012, 2014 - 2015)
 //   Rene Milk       (2011 - 2012, 2014 - 2015)
 
-#ifndef DUNE_STUFF_MEMORY_HH
-#define DUNE_STUFF_MEMORY_HH
+#ifndef DUNE_XT_COMMON_MEMORY_HH
+#define DUNE_XT_COMMON_MEMORY_HH
 
 #include <memory>
 #include <boost/noncopyable.hpp>
@@ -297,4 +297,4 @@ private:
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_MEMORY_HH
+#endif // DUNE_XT_COMMON_MEMORY_HH

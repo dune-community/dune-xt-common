@@ -6,8 +6,8 @@
 //   Felix Schindler (2014)
 //   Rene Milk       (2013 - 2015)
 
-#ifndef DUNE_STUFF_PARALLEL_THREADSTORAGE_HH
-#define DUNE_STUFF_PARALLEL_THREADSTORAGE_HH
+#ifndef DUNE_XT_COMMON_PARALLEL_THREADSTORAGE_HH
+#define DUNE_XT_COMMON_PARALLEL_THREADSTORAGE_HH
 
 #include <deque>
 #include <algorithm>
@@ -197,4 +197,4 @@ using PerThreadValue = FallbackPerThreadValue<T>;
 }
 }
 
-#endif // DUNE_STUFF_PARALLEL_THREADSTORAGE_HH
+#endif // DUNE_XT_COMMON_PARALLEL_THREADSTORAGE_HH

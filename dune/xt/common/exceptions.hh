@@ -7,8 +7,8 @@
 //   Rene Milk       (2014 - 2015)
 //   Tobias Leibner  (2014)
 
-#ifndef DUNE_STUFF_COMMON_EXCEPTIONS_HH
-#define DUNE_STUFF_COMMON_EXCEPTIONS_HH
+#ifndef DUNE_XT_COMMON_EXCEPTIONS_HH
+#define DUNE_XT_COMMON_EXCEPTIONS_HH
 
 #include <dune/common/exceptions.hh>
 #include <dune/common/parallel/mpihelper.hh>
@@ -119,4 +119,4 @@ class you_have_to_implement_this : public Dune::NotImplemented
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_COMMON_EXCEPTIONS_HH
+#endif // DUNE_XT_COMMON_EXCEPTIONS_HH

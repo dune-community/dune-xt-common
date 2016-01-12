@@ -6,8 +6,8 @@
 //   Felix Schindler (2013 - 2014)
 //   Rene Milk       (2014 - 2015)
 
-#ifndef DUNE_STUFF_COMMON_CRTP_HH
-#define DUNE_STUFF_COMMON_CRTP_HH
+#ifndef DUNE_XT_COMMON_CRTP_HH
+#define DUNE_XT_COMMON_CRTP_HH
 
 #include <atomic>
 #include <mutex>
@@ -101,4 +101,4 @@ std::recursive_mutex CRTPInterface<I, T>::crtp_mutex_;
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_COMMON_CRTP_HH
+#endif // DUNE_XT_COMMON_CRTP_HH

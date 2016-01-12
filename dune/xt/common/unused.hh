@@ -5,8 +5,8 @@
 // Authors:
 //   Rene Milk (2015)
 
-#ifndef DUNE_STUFF_COMMON_UNUSED_HH
-#define DUNE_STUFF_COMMON_UNUSED_HH
+#ifndef DUNE_XT_COMMON_UNUSED_HH
+#define DUNE_XT_COMMON_UNUSED_HH
 
 #ifdef HAS_WORKING_UNUSED_ATTRIBUTE
 #define DSC_UNUSED(identifier) identifier __attribute__((unused))
@@ -31,4 +31,4 @@
 #endif // ifndef NDEBUG
 /*** LEGACY MACROS ****/
 
-#endif // DUNE_STUFF_COMMON_UNUSED_HH
+#endif // DUNE_XT_COMMON_UNUSED_HH

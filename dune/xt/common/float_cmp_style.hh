@@ -5,8 +5,8 @@
 // Authors:
 //   Rene Milk (2015)
 
-#ifndef DUNE_STUFF_COMMON_FLOAT_CMP_STYLE_HH
-#define DUNE_STUFF_COMMON_FLOAT_CMP_STYLE_HH
+#ifndef DUNE_XT_COMMON_FLOAT_CMP_STYLE_HH
+#define DUNE_XT_COMMON_FLOAT_CMP_STYLE_HH
 
 #include <type_traits>
 #include <complex>
@@ -58,4 +58,4 @@ struct ConvertStyle<Style::absolute>
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_COMMON_FLOAT_CMP_STYLE_HH
+#endif // DUNE_XT_COMMON_FLOAT_CMP_STYLE_HH

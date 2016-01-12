@@ -6,8 +6,8 @@
 //   Felix Schindler (2014 - 2015)
 //   Rene Milk       (2012 - 2015)
 
-#ifndef DUNE_STUFF_TYPENAMES_HH
-#define DUNE_STUFF_TYPENAMES_HH
+#ifndef DUNE_XT_COMMON_TYPENAMES_HH
+#define DUNE_XT_COMMON_TYPENAMES_HH
 
 #include <complex>
 #include <memory>
@@ -289,4 +289,4 @@ struct is_complex<T, false> : public std::false_type
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_TYPENAMES_HH
+#endif // DUNE_XT_COMMON_TYPENAMES_HH

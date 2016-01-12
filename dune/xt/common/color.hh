@@ -8,8 +8,8 @@
 //   Stefan Girke    (2012)
 //   Tobias Leibner  (2014)
 
-#ifndef DUNE_COMMON_COLOR_HH
-#define DUNE_COMMON_COLOR_HH
+#ifndef DUNE_XT_COMMON_COLOR_HH
+#define DUNE_XT_COMMON_COLOR_HH
 
 #include <sstream>
 #include <iostream>
@@ -153,4 +153,4 @@ std::string highlightSearchString(std::string str, std::string substr, size_t co
 } // namespace Stuff
 } // namespace Dune
 
-#endif // end of DUNE_COMMON_COLOR_HH
+#endif // end of DUNE_XT_COMMON_COLOR_HH

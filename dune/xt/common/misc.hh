@@ -13,8 +13,8 @@
    *  \file   stuff.hh
    *  \brief  contains some stuff
    **/
-#ifndef DUNE_STUFF_COMMON_MISC_HH
-#define DUNE_STUFF_COMMON_MISC_HH
+#ifndef DUNE_XT_COMMON_MISC_HH
+#define DUNE_XT_COMMON_MISC_HH
 
 #include <cstring>
 #include <map>
@@ -159,4 +159,4 @@ struct remove_const_reference
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_COMMON_MISC_HH
+#endif // DUNE_XT_COMMON_MISC_HH

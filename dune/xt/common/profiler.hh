@@ -7,8 +7,8 @@
 //   Rene Milk       (2009 - 2015)
 //   Sven Kaulmann   (2011)
 
-#ifndef DUNE_STUFF_PROFILER_HH_INCLUDED
-#define DUNE_STUFF_PROFILER_HH_INCLUDED
+#ifndef DUNE_XT_COMMON_PROFILER_HH
+#define DUNE_XT_COMMON_PROFILER_HH
 
 #ifndef DUNE_STUFF_DO_PROFILE
 #define DUNE_STUFF_DO_PROFILE 0
@@ -193,4 +193,4 @@ protected:
 #define DUNE_STUFF_PROFILE_SCOPE(section_name)
 #endif
 
-#endif // DUNE_STUFF_PROFILER_HH_INCLUDED
+#endif // DUNE_XT_COMMON_PROFILER_HH

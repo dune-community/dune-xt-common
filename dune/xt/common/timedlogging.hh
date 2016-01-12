@@ -11,8 +11,8 @@
    *  \file logging.hh
    *  \brief  logging
    **/
-#ifndef DUNE_STUFF_COMMON_TIMEDLOGGING_HH
-#define DUNE_STUFF_COMMON_TIMEDLOGGING_HH
+#ifndef DUNE_XT_COMMON_TIMEDLOGGING_HH
+#define DUNE_XT_COMMON_TIMEDLOGGING_HH
 
 #include <map>
 #include <string>
@@ -217,4 +217,4 @@ TimedLogging& TimedLogger();
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_COMMON_TIMED_LOGGING_HH
+#endif // DUNE_XT_COMMON_TIMED_LOGGING_HH

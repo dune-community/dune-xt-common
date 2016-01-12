@@ -8,8 +8,8 @@
 //   Sven Kaulmann   (2011 - 2012)
 //   Tobias Leibner  (2014)
 
-#ifndef DUNESTUFF_PRINTING_HH_INCLUDED
-#define DUNESTUFF_PRINTING_HH_INCLUDED
+#ifndef DUNE_XT_COMMON_PRINT_HH
+#define DUNE_XT_COMMON_PRINT_HH
 
 #include <string>
 #include <iostream>
@@ -159,4 +159,4 @@ public:
 } // namespace Stuff
 } // namespace Dune
 
-#endif // ifndef DUNESTUFF_PRINTING_HH_INCLUDED
+#endif // DUNE_XT_COMMON_PRINT_HH

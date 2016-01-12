@@ -9,8 +9,8 @@
 //   Sven Kaulmann    (2013)
 //   Tobias Leibner   (2014 - 2015)
 
-#ifndef DUNE_STUFF_COMMON_VECTOR_HH
-#define DUNE_STUFF_COMMON_VECTOR_HH
+#ifndef DUNE_XT_COMMON_VECTOR_HH
+#define DUNE_XT_COMMON_VECTOR_HH
 
 #include <vector>
 #include <ostream>
@@ -264,4 +264,4 @@ std::basic_ostream<CharType, CharTraits>& operator<<(std::basic_ostream<CharType
 } // ... operator<<(...)
 }
 
-#endif // DUNE_STUFF_COMMON_VECTOR_HH
+#endif // DUNE_XT_COMMON_VECTOR_HH

@@ -6,7 +6,7 @@
 //   Felix Schindler (2015)
 //   Rene Milk       (2015)
 
-#define DUNE_STUFF_TEST_MAIN_CATCH_EXCEPTIONS 1
+#define DUNE_XT_COMMON_TEST_MAIN_CATCH_EXCEPTIONS 1
 
 #include "main.hxx"
 

@@ -7,8 +7,8 @@
 //   Rene Milk       (2012 - 2013, 2015)
 //   Tobias Leibner  (2014)
 
-#ifndef DUNE_STUFF_VALIDATION_HH
-#define DUNE_STUFF_VALIDATION_HH
+#ifndef DUNE_XT_COMMON_VALIDATION_HH
+#define DUNE_XT_COMMON_VALIDATION_HH
 
 #include <ostream>
 #include <string>
@@ -243,4 +243,4 @@ std::ostream operator<<(std::ostream& out, const Dune::Stuff::Common::ValidatorI
   return out << validator.msg();
 }
 
-#endif // DUNE_STUFF_VALIDATION_HH
+#endif // DUNE_XT_COMMON_VALIDATION_HH

@@ -14,8 +14,8 @@
  * \brief contains methods to read/write scalar types and container types from/to strings and methods to manipulate
  *        strings
  **/
-#ifndef DUNE_STUFF_COMMON_STRING_HH
-#define DUNE_STUFF_COMMON_STRING_HH
+#ifndef DUNE_XT_COMMON_STRING_HH
+#define DUNE_XT_COMMON_STRING_HH
 
 #include <cstring>
 #include <ctime>
@@ -185,4 +185,4 @@ static inline char** vectorToMainArgs(const std::vector<std::string>& args)
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_COMMON_STRING_HH
+#endif // DUNE_XT_COMMON_STRING_HH

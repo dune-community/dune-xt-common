@@ -6,8 +6,8 @@
 //   Felix Schindler (2012, 2014)
 //   Rene Milk       (2010, 2012 - 2013, 2015)
 
-#ifndef DUNE_STUFF_SIGNALS
-#define DUNE_STUFF_SIGNALS
+#ifndef DUNE_XT_COMMON_SIGNALS
+#define DUNE_XT_COMMON_SIGNALS
 
 #include <signal.h>
 
@@ -33,4 +33,4 @@ void installSignalHandler(int signal = SIGINT, handler_type handler = handleInte
 } // namepsace Stuff
 } // namepsace Dune
 
-#endif // ifndef DUNE_STUFF_SIGNALS
+#endif // DUNE_XT_COMMON_SIGNALS

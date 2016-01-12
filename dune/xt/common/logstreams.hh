@@ -7,8 +7,8 @@
 //   Rene Milk       (2012 - 2015)
 //   Sven Kaulmann   (2014)
 
-#ifndef DUNE_STUFF_LOGSTREAMS_HH
-#define DUNE_STUFF_LOGSTREAMS_HH
+#ifndef DUNE_XT_COMMON_LOGSTREAMS_HH
+#define DUNE_XT_COMMON_LOGSTREAMS_HH
 
 #include <ostream>
 #include <fstream>

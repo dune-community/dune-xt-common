@@ -7,8 +7,8 @@
 //   Rene Milk       (2010 - 2015)
 //   Sven Kaulmann   (2011)
 
-#ifndef DUNE_STUFF_FILESYSTEM_HH
-#define DUNE_STUFF_FILESYSTEM_HH
+#ifndef DUNE_XT_COMMON_FILESYSTEM_HH
+#define DUNE_XT_COMMON_FILESYSTEM_HH
 
 #include "debug.hh"
 #include "string.hh"
@@ -51,4 +51,4 @@ void meminfo(Dune::Stuff::Common::LogStream& stream);
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_FILESYSTEM_HH
+#endif // DUNE_XT_COMMON_FILESYSTEM_HH

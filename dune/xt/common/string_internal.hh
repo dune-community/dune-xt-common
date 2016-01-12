@@ -9,8 +9,8 @@
 //   Sven Kaulmann   (2011 - 2012)
 //   Tobias Leibner  (2014 - 2015)
 
-#ifndef DUNE_STUFF_COMMON_STRING_INTERNAL_HH
-#define DUNE_STUFF_COMMON_STRING_INTERNAL_HH
+#ifndef DUNE_XT_COMMON_STRING_INTERNAL_HH
+#define DUNE_XT_COMMON_STRING_INTERNAL_HH
 
 #include <cstring>
 #include <ctime>
@@ -51,7 +51,7 @@ namespace Dune {
 namespace Stuff {
 namespace Common {
 
-#ifndef DUNE_STUFF_COMMON_STRING_HH
+#ifndef DUNE_XT_COMMON_STRING_HH
 // only necessary for headercheck
 template <class T = std::string>
 inline std::vector<T>
@@ -421,4 +421,4 @@ static inline typename std::enable_if<is_matrix<M>::value, std::string>::type to
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_COMMON_STRING_INTERNAL_HH
+#endif // DUNE_XT_COMMON_STRING_INTERNAL_HH

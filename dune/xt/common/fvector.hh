@@ -7,8 +7,8 @@
 //   Rene Milk       (2014 - 2015)
 //   Tobias Leibner  (2014)
 
-#ifndef DUNE_STUFF_COMMON_FVECTOR_HH
-#define DUNE_STUFF_COMMON_FVECTOR_HH
+#ifndef DUNE_XT_COMMON_FVECTOR_HH
+#define DUNE_XT_COMMON_FVECTOR_HH
 
 #include <initializer_list>
 #include <vector>
@@ -153,4 +153,4 @@ struct VectorAbstraction<Dune::Stuff::Common::FieldVector<K, SIZE>>
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_COMMON_FVECTOR_HH
+#endif // DUNE_XT_COMMON_FVECTOR_HH

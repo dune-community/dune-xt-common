@@ -7,8 +7,8 @@
 //   Rene Milk       (2015)
 //   Tobias Leibner  (2014)
 
-#ifndef DUNE_STUFF_COMMON_FMATRIX_HH
-#define DUNE_STUFF_COMMON_FMATRIX_HH
+#ifndef DUNE_XT_COMMON_FMATRIX_HH
+#define DUNE_XT_COMMON_FMATRIX_HH
 
 #include <dune/common/fmatrix.hh>
 #include <dune/common/fvector.hh>
@@ -141,4 +141,4 @@ public:
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_COMMON_FMATRIX_HH
+#endif // DUNE_XT_COMMON_FMATRIX_HH

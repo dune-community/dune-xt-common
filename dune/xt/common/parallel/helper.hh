@@ -7,8 +7,8 @@
 //   Rene Milk       (2014 - 2015)
 //   Tobias Leibner  (2014)
 
-#ifndef DUNE_STUFF_COMMON_PARALLEL_HELPER_HH
-#define DUNE_STUFF_COMMON_PARALLEL_HELPER_HH
+#ifndef DUNE_XT_COMMON_PARALLEL_HELPER_HH
+#define DUNE_XT_COMMON_PARALLEL_HELPER_HH
 
 #include <type_traits>
 
@@ -48,4 +48,4 @@ int abort_all_mpi_processes();
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_COMMON_PARALLEL_HELPER_HH
+#endif // DUNE_XT_COMMON_PARALLEL_HELPER_HH

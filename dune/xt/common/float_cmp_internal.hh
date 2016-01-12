@@ -6,8 +6,8 @@
 //   Barbara Verfürth (2015)
 //   Rene Milk        (2015)
 
-#ifndef DUNE_STUFF_COMMON_FLOAT_CMP_INTERNAL_HH
-#define DUNE_STUFF_COMMON_FLOAT_CMP_INTERNAL_HH
+#ifndef DUNE_XT_COMMON_FLOAT_CMP_INTERNAL_HH
+#define DUNE_XT_COMMON_FLOAT_CMP_INTERNAL_HH
 
 #include <type_traits>
 #include <complex>
@@ -251,4 +251,4 @@ struct cmp_type_check
 
 #include <dune/stuff/common/vector.hh>
 
-#endif // DUNE_STUFF_COMMON_FLOAT_CMP_INTERNAL_HH
+#endif // DUNE_XT_COMMON_FLOAT_CMP_INTERNAL_HH

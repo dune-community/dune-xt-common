@@ -8,8 +8,8 @@
 //   Rene Milk        (2013 - 2015)
 //   Tobias Leibner   (2014 - 2015)
 
-#ifndef DUNE_STUFF_COMMON_FLOAT_CMP_HH
-#define DUNE_STUFF_COMMON_FLOAT_CMP_HH
+#ifndef DUNE_XT_COMMON_FLOAT_CMP_HH
+#define DUNE_XT_COMMON_FLOAT_CMP_HH
 
 #include <type_traits>
 #include <complex>
@@ -115,4 +115,4 @@ DUNE_STUFF_COMMON_FLOAT_CMP_GENERATOR(le)
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_COMMON_FLOAT_CMP_HH
+#endif // DUNE_XT_COMMON_FLOAT_CMP_HH

@@ -11,8 +11,8 @@
    *  \file logging.hh
    *  \brief  logging
    **/
-#ifndef DUNE_STUFF_COMMON_LOGGING_HH
-#define DUNE_STUFF_COMMON_LOGGING_HH
+#ifndef DUNE_XT_COMMON_LOGGING_HH
+#define DUNE_XT_COMMON_LOGGING_HH
 
 #include <map>
 #include <string>
@@ -168,4 +168,4 @@ inline Logging& Logger()
 #define DSC_LOG_ERROR_0                                                                                                \
   (Dune::MPIHelper::getCollectiveCommunication().rank() == 0 ? DSC_LOG.error() : DSC_LOG.devnull())
 
-#endif // DUNE_STUFF_COMMON_LOGGING_HH
+#endif // DUNE_XT_COMMON_LOGGING_HH

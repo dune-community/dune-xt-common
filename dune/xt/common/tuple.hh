@@ -8,8 +8,8 @@
 //   Stefan Girke    (2012)
 //   Tobias Leibner  (2014)
 
-#ifndef DUNE_STUFF_COMMON_TUPLE_HH
-#define DUNE_STUFF_COMMON_TUPLE_HH
+#ifndef DUNE_XT_COMMON_TUPLE_HH
+#define DUNE_XT_COMMON_TUPLE_HH
 
 #include <dune/common/tuples.hh>
 #include <dune/common/typetraits.hh>
@@ -323,4 +323,4 @@ struct Combine
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_COMMON_TUPLE_HH
+#endif // DUNE_XT_COMMON_TUPLE_HH

@@ -9,8 +9,8 @@
 //   Sven Kaulmann   (2010 - 2011)
 //   Tobias Leibner  (2014)
 
-#ifndef DUNE_STUFF_COMMON_MATRIX_HH
-#define DUNE_STUFF_COMMON_MATRIX_HH
+#ifndef DUNE_XT_COMMON_MATRIX_HH
+#define DUNE_XT_COMMON_MATRIX_HH
 
 #include <boost/numeric/conversion/cast.hpp>
 
@@ -242,4 +242,4 @@ create(const size_t sz, const typename MatrixAbstraction<MatrixType>::S& val)
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_COMMON_MATRIX_HH
+#endif // DUNE_XT_COMMON_MATRIX_HH

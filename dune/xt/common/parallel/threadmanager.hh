@@ -6,8 +6,8 @@
 //   Felix Schindler (2014 - 2015)
 //   Rene Milk       (2013 - 2015)
 
-#ifndef DUNE_STUFF_COMMON_THREADMANAGER_HH
-#define DUNE_STUFF_COMMON_THREADMANAGER_HH
+#ifndef DUNE_XT_COMMON_THREADMANAGER_HH
+#define DUNE_XT_COMMON_THREADMANAGER_HH
 
 #include <thread>
 #if HAVE_TBB
@@ -61,4 +61,4 @@ inline ThreadManager& threadManager()
 }
 }
 
-#endif // DUNE_STUFF_COMMON_THREADMANAGER_HH
+#endif // DUNE_XT_COMMON_THREADMANAGER_HH

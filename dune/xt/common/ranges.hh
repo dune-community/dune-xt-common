@@ -8,8 +8,8 @@
 //   Sven Kaulmann   (2012 - 2013)
 //   Tobias Leibner  (2014)
 
-#ifndef DUNE_STUFF_RANGES_RANGES_HH
-#define DUNE_STUFF_RANGES_RANGES_HH
+#ifndef DUNE_XT_COMMON_RANGES_HH
+#define DUNE_XT_COMMON_RANGES_HH
 
 #include <type_traits>
 
@@ -341,4 +341,4 @@ typename std::enable_if<std::is_enum<T>::value, sequence>::type valueRange(const
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_RANGES_RANGES_HH
+#endif // DUNE_XT_COMMON_RANGES_HH

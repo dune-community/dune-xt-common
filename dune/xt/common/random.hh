@@ -7,8 +7,8 @@
 //   Rene Milk       (2012 - 2015)
 //   Tobias Leibner  (2014)
 
-#ifndef DUNE_STUFF_RANDOM_HH
-#define DUNE_STUFF_RANDOM_HH
+#ifndef DUNE_XT_COMMON_RANDOM_HH
+#define DUNE_XT_COMMON_RANDOM_HH
 
 #include <random>
 #include <limits>
@@ -154,4 +154,4 @@ public:
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_RANDOM_HH
+#endif // DUNE_XT_COMMON_RANDOM_HH

@@ -8,8 +8,8 @@
 //   Sven Kaulmann   (2013)
 //   Tobias Leibner  (2014)
 
-#ifndef DUNE_STUFF_COMMON_CONFIGURATION_HH
-#define DUNE_STUFF_COMMON_CONFIGURATION_HH
+#ifndef DUNE_XT_COMMON_CONFIGURATION_HH
+#define DUNE_XT_COMMON_CONFIGURATION_HH
 
 #include <set>
 #include <sstream>
@@ -472,4 +472,4 @@ static auto DSC_CONFIG_GETV(std::string key, T def,
   return DSC_CONFIG.get(key, def, v);
 }
 
-#endif // DUNE_STUFF_COMMON_CONFIGURATION_HH
+#endif // DUNE_XT_COMMON_CONFIGURATION_HH

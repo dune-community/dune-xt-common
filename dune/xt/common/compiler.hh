@@ -5,8 +5,8 @@
 // Authors:
 //   Rene Milk (2015)
 
-#ifndef DUNE_STUFF_COMMON_COMPILER_HH
-#define DUNE_STUFF_COMMON_COMPILER_HH
+#ifndef DUNE_XT_COMMON_COMPILER_HH
+#define DUNE_XT_COMMON_COMPILER_HH
 
 #if defined(__GNUC__)
 #if defined(__GNUC_PATCHLEVEL__)
@@ -16,4 +16,4 @@
 #endif
 #endif
 
-#endif // DUNE_STUFF_COMMON_COMPILER_HH
+#endif // DUNE_XT_COMMON_COMPILER_HH

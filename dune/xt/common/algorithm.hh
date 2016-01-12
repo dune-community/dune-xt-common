@@ -6,8 +6,8 @@
 //   Felix Schindler (2014)
 //   Rene Milk       (2014 - 2015)
 
-#ifndef DUNE_STUFF_ALGORITHM_HH
-#define DUNE_STUFF_ALGORITHM_HH
+#ifndef DUNE_XT_COMMON_ALGORITHM_HH
+#define DUNE_XT_COMMON_ALGORITHM_HH
 
 #include <utility>
 #include <iterator>
@@ -44,4 +44,4 @@ SequenceType make_string_sequence(InputIt first, InputIt last)
 } // namespace Stuff
 } // namespace Dune
 
-#endif // DUNE_STUFF_ALGORITHM_HH
+#endif // DUNE_XT_COMMON_ALGORITHM_HH

@@ -9,8 +9,8 @@
 //   Sven Kaulmann   (2013)
 //   Tobias Leibner  (2014)
 
-#ifndef DUNE_STUFF_COMMON_MATH_HH
-#define DUNE_STUFF_COMMON_MATH_HH
+#ifndef DUNE_XT_COMMON_MATH_HH
+#define DUNE_XT_COMMON_MATH_HH
 
 #include <vector>
 #include <limits>
@@ -239,4 +239,4 @@ bool isinf(std::complex<T> val)
 
 namespace std {
 }
-#endif // DUNE_STUFF_COMMON_MATH_HH
+#endif // DUNE_XT_COMMON_MATH_HH

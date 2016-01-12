@@ -8,8 +8,8 @@
 //   Sven Kaulmann   (2011 - 2012)
 //   Tobias Leibner  (2014)
 
-#ifndef DUNE_STUFF_FIXED_MAP_HH
-#define DUNE_STUFF_FIXED_MAP_HH
+#ifndef DUNE_XT_COMMON_FIXED_MAP_HH
+#define DUNE_XT_COMMON_FIXED_MAP_HH
 
 #include <array>
 #include <utility>
@@ -240,4 +240,4 @@ inline ostream& operator<<(ostream& out, const Dune::Stuff::Common::FixedMap<key
 }
 }
 
-#endif // DUNE_STUFF_FIXED_MAP_HH
+#endif // DUNE_XT_COMMON_FIXED_MAP_HH
