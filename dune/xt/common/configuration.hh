@@ -300,27 +300,6 @@ public:
   //! search command line options for key-value pairs and add them to Configuration
   void read_options(int argc, char* argv[]);
 
-  /**
-   *  \note this method is needed for the python bindings
-   */
-  template <class T>
-  T pb_get(std::string key, const DUNE_XT_COMMON_SSIZE_T size = 0) const
-  {
-    size_t sz = 0;
-    try {
-      sz = boost::numeric_cast<size_t>(size);
-    } catch (boost::bad_numeric_cast& ee) {
-      DUNE_THROW(Exceptions::external_error,
-                 "There was an error in boost converting '" << size << "' from '"
-                                                            << Typename<DUNE_XT_COMMON_SSIZE_T>::value()
-                                                            << "' to '"
-                                                            << Typename<size_t>::value()
-                                                            << ":\n"
-                                                            << ee.what());
-    }
-    return get<T>(key, sz);
-  } // ... get(...)
-
 private:
   void setup_();
 

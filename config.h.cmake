@@ -10,9 +10,6 @@
 /* begin dune-xt-common */
 // NEVER delete/alter above comment, dune's cmake relies on it
 
-/* We need this for the python bindings (there is no unsigned in python). */
-#define DUNE_XT_COMMON_SSIZE_T long int
-
 /* Define to the version of dune-xt-common */
 #define DUNE_XT_COMMON_VERSION ${DUNE_XT_COMMON_VERSION}
 
