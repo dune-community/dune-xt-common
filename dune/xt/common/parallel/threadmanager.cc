@@ -8,21 +8,31 @@
 //   Tobias Leibner  (2014 - 2015)
 
 #include "config.h"
-#include "threadmanager.hh"
+
+#if HAVE_TBB
+#include <thread>
+#endif
 
 #include <boost/numeric/conversion/cast.hpp>
-
-#include <dune/xt/common/configuration.hh>
-#include <dune/common/exceptions.hh>
-
-#include <dune/xt/common/fem.hh>
-#if HAVE_DUNE_FEM
-#include <dune/fem/misc/threads/threadmanager.hh>
-#endif
 
 #if HAVE_EIGEN
 #include <Eigen/Core>
 #endif
+
+#if HAVE_TBB
+#include <tbb/task_scheduler_init.h>
+#endif
+
+#include <dune/common/exceptions.hh>
+
+#include <dune/xt/common/configuration.hh>
+#include <dune/xt/common/fem.hh>
+
+#if HAVE_DUNE_FEM
+#include <dune/fem/misc/threads/threadmanager.hh>
+#endif
+
+#include "threadmanager.hh"
 
 // some assertions only make sense if dune-fem's threading manager is non-trivial
 #if defined(USE_PTHREADS) || defined(_OPENMP)
@@ -32,9 +42,6 @@
 #endif
 
 #if HAVE_TBB
-
-#include <thread>
-#include <tbb/task_scheduler_init.h>
 
 size_t Dune::XT::Common::ThreadManager::max_threads()
 {
@@ -131,4 +138,4 @@ Dune::XT::Common::ThreadManager::ThreadManager()
 {
 }
 
-#endif // HAVE_DUNE_FEM
+#endif // HAVE_TBB
