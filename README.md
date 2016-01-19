@@ -8,14 +8,8 @@
 #   Rene Milk       (2009, 2015)
 ```
 
-[![Build Status](https://travis-ci.org/wwu-numerik/dune-stuff.svg?branch=travis)](https://travis-ci.org/wwu-numerik/dune-stuff)
+[![Build Status](https://travis-ci.org/dune-community/dune-xt-common.svg?branch=master)](https://travis-ci.org/dune-community/dune-xt-common)
 
-dune-stuff is a DUNE (http://www.dune-project.org) module which provides a wide
-collection of ... stuff! This includes (but is not limited to) a logger, a
-profiler, string conversion, LA container and solver, ...
-
-New users may best try out this module by using the git supermodule
-dune-stuff-demos (http://users.dune-project.org/projects/dune-stuff-demos).
-Experienced DUNE users may go ahead!
+dune-xt-common is an eXTensions module for DUNE (http://www.dune-project.org).
 
 Please see our github page for issue tracking, further information, ...
