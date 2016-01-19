@@ -1,12 +1,13 @@
 #! /bin/bash
 #
-# This file is part of the dune-stuff project:
-#   https://github.com/wwu-numerik/dune-stuff
+# This file is part of the dune-xt-common project:
+#   https://github.com/dune-community/dune-xt-common
 # The copyright lies with the authors of this file (see below).
 # License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 # Authors:
-#   Felix Schindler (2015)
+#   Felix Schindler (2015 - 2016)
 #   Rene Milk       (2015)
+#   Tobias Leibner  (2015)
 
 BRANCH=${TRAVIS_BRANCH}
 if [ "x${TRAVIS_PULL_REQUEST}" != "xfalse" ] ; then

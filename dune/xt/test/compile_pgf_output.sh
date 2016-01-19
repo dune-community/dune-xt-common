@@ -1,11 +1,12 @@
 #!/bin/sh
 #
-# This file is part of the dune-stuff project:
-#   https://github.com/wwu-numerik/dune-stuff
+# This file is part of the dune-xt-common project:
+#   https://github.com/dune-community/dune-xt-common
 # The copyright lies with the authors of this file (see below).
 # License: BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 # Authors:
-#   Rene Milk (2012, 2015)
+#   Felix Schindler (2016)
+#   Rene Milk       (2012, 2015)
 
 make grid_output_pgf
 ./grid_output_pgf
