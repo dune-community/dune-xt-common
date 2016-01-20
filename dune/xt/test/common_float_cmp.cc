@@ -41,7 +41,7 @@ struct FloatCmpBase : public testing::Test
   FloatCmpBase()
     : zero(create<V>(s_size, create<S>(0, 0)))
     , one(create<V>(s_size, create<S>(0, 1)))
-    , epsilon(create<V>(s_size, DefaultEpsilon<R>::value()))
+    , epsilon(create<V>(s_size, DefaultEpsilon<S>::value()))
   {
   }
 
