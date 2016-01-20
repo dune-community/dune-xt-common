@@ -15,7 +15,7 @@
 #include <string>
 #include <sstream>
 
-#include <dune/xt/test/gtest/gtest.h>
+#include <dune/xt/common/test/gtest/gtest.h>
 #include <dune/xt/common/configuration.hh>
 #include <dune/xt/common/exceptions.hh>
 

@@ -8,7 +8,7 @@
 //   Tobias Leibner  (2014)
 
 // This one has to come first (includes the config.h)!
-#include "main.hxx"
+#include <dune/xt/common/test/main.hxx>
 
 #include <dune/xt/common/validation.hh>
 #include <dune/xt/common/configuration.hh>
@@ -20,7 +20,7 @@
 #include <dune/xt/common/float_cmp.hh>
 #include <dune/xt/common/matrix.hh>
 #include <dune/xt/common/tuple.hh>
-#include <dune/xt/test/float_cmp.hh>
+#include <dune/xt/common/test/float_cmp.hh>
 
 #include <array>
 #include <ostream>

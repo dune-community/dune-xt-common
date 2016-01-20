@@ -6,8 +6,7 @@
 //   Felix Schindler (2016)
 //   Rene Milk       (2015)
 
-#include "main.hxx"
-
+#include <dune/xt/common/test/main.hxx>
 #include <vector>
 #include <dune/xt/common/algorithm.hh>
 

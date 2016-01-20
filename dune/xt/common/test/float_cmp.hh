@@ -12,7 +12,7 @@
 #include <type_traits>
 #include <complex>
 
-#include <dune/xt/test/gtest/gtest.h>
+#include <dune/xt/common/test/gtest/gtest.h>
 #include <dune/xt/common/float_cmp.hh>
 
 #define DUNE_XT_COMMON_FLOAT_TEST_CMP_GENERATOR(ID, id)                                                                \

@@ -11,7 +11,7 @@
   * This file is intended as a starting point for quick testing.
   */
 
-#include "main.hxx"
+#include <dune/xt/common/test/main.hxx>
 
 TEST(empty, main)
 {

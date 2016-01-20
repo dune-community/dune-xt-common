@@ -6,7 +6,7 @@
 //   Felix Schindler (2016)
 //   Rene Milk       (2014 - 2015)
 
-#include "main.hxx"
+#include <dune/xt/common/test/main.hxx>
 
 #include <string>
 #include <memory>

@@ -13,12 +13,6 @@ DEPENDENCYCHECK( ${xtcommon} )
 
 set_source_files_properties( ${DUNE_HEADERS} PROPERTIES HEADER_FILE_ONLY 1 )
 
-
-
-install(DIRECTORY gtest
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/
-        FILES_MATCHING PATTERN "*.hh")
-
 BEGIN_TESTCASES(dunextcommon)
  
 END_TESTCASES()

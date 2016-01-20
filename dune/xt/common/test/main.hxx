@@ -42,7 +42,7 @@
 #include <dune/fem/misc/mpimanager.hh>
 #endif
 
-#include <dune/xt/test/gtest/gtest.h>
+#include <dune/xt/common/test/gtest/gtest.h>
 #include <dune/xt/common/configuration.hh>
 #include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/logging.hh>

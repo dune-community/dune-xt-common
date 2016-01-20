@@ -8,7 +8,7 @@
 //   Stefan Girke    (2012)
 //   Tobias Leibner  (2014)
 
-#include "main.hxx"
+#include <dune/xt/common/test/main.hxx>
 #include <dune/xt/common/color.hh>
 
 using namespace Dune::XT::Common;

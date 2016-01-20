@@ -12,10 +12,10 @@
 
 #include "config.h"
 
-#include <dune/xt/test/gtest/gtest.h>
+#include <dune/xt/common/test/gtest/gtest.h>
 #include <dune/xt/common/timedlogging.hh>
 
-#include "common.hh"
+#include <dune/xt/common/test/common.hh>
 
 using namespace Dune;
 using namespace Dune::XT;

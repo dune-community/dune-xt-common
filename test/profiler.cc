@@ -7,7 +7,7 @@
 //   Rene Milk       (2012 - 2015)
 //   Tobias Leibner  (2014)
 
-#include "main.hxx"
+#include <dune/xt/common/test/main.hxx>
 
 #include <dune/xt/common/profiler.hh>
 #include <dune/xt/common/math.hh>
