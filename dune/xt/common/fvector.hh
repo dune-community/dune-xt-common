@@ -140,7 +140,7 @@ struct VectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>>
 
   static inline VectorType create(const size_t sz)
   {
-    return VectorType(sz);
+    return VectorType(sz, ScalarType(0));
   }
 
   static inline VectorType create(const size_t sz, const ScalarType& val)
