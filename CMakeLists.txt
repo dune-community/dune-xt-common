@@ -107,6 +107,10 @@ list(APPEND COMMON_HEADER ${HEADER_LIST})
 endforeach(_mod DEPENDENCIES)
 set_source_files_properties(${COMMON_HEADER} PROPERTIES HEADER_FILE_ONLY 1)
 
+# add symlink for dune_execute.py to build-directory to be able to access it from other (xt-) modules
+file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
+dune_symlink_to_source_files(FILES bin/dune_execute.py)
+
 #disable most warnings from dependent modules
 foreach(_mod ${ALL_DEPENDENCIES})
     dune_module_to_uppercase(_upper_case "${_mod}")
@@ -120,6 +124,5 @@ endforeach(_mod DEPENDENCIES)
 add_subdirectory(dune)
 add_subdirectory("cmake/modules")
 add_subdirectory(doc/doxygen)
-add_subdirectory(test)
 
 finalize_dune_project(GENERATE_CONFIG_H_CMAKE)
