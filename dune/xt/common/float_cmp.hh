@@ -16,7 +16,7 @@
 
 #include <dune/common/float_cmp.hh>
 
-#include <dune/xt/common/type_utils.hh>
+#include <dune/xt/common/type_traits.hh>
 #include <dune/xt/common/vector.hh>
 #include "float_cmp_style.hh"
 #include "float_cmp_internal.hh"

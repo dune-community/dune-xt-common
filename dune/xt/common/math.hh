@@ -32,7 +32,7 @@
 #include <boost/math/special_functions/fpclassify.hpp>
 #include <dune/xt/common/reenable_warnings.hh>
 
-#include <dune/xt/common/type_utils.hh>
+#include <dune/xt/common/type_traits.hh>
 #include <dune/common/deprecated.hh>
 
 namespace Dune {

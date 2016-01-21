@@ -16,7 +16,7 @@
 #include <dune/xt/common/math.hh>
 #include <dune/xt/common/logging.hh>
 #include <dune/xt/common/exceptions.hh>
-#include <dune/xt/common/type_utils.hh>
+#include <dune/xt/common/type_traits.hh>
 #include <dune/xt/common/float_cmp.hh>
 #include <dune/xt/common/matrix.hh>
 #include <dune/xt/common/tuple.hh>

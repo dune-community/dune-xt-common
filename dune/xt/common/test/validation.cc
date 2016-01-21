@@ -10,7 +10,7 @@
 #include <dune/xt/common/test/main.hxx>
 
 #include <dune/xt/common/validation.hh>
-#include <dune/xt/common/type_utils.hh>
+#include <dune/xt/common/type_traits.hh>
 #include <dune/xt/common/math.hh>
 #include <dune/xt/common/random.hh>
 #include <dune/common/tuples.hh>

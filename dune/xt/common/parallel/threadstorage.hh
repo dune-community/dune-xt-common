@@ -17,7 +17,7 @@
 #endif
 #include <boost/noncopyable.hpp>
 
-#include <dune/xt/common/type_utils.hh>
+#include <dune/xt/common/type_traits.hh>
 #include <dune/xt/common/memory.hh>
 #include <dune/xt/common/parallel/threadmanager.hh>
 

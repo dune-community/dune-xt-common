@@ -47,7 +47,7 @@
 #include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/debug.hh>
 #include <dune/xt/common/ranges.hh>
-#include <dune/xt/common/type_utils.hh>
+#include <dune/xt/common/type_traits.hh>
 #include <dune/xt/common/vector.hh>
 
 namespace Dune {

@@ -11,7 +11,7 @@
 
 #include <iostream>
 
-#include <dune/xt/common/type_utils.hh>
+#include <dune/xt/common/type_traits.hh>
 #include <dune/xt/common/validation.hh>
 
 DUNE_XT_COMMON_TYPENAME(Dune::MPIHelper)

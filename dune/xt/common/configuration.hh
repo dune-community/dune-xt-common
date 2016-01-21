@@ -27,7 +27,7 @@
 #include <dune/xt/common/filesystem.hh>
 #include <dune/xt/common/misc.hh>
 #include <dune/xt/common/validation.hh>
-#include <dune/xt/common/type_utils.hh>
+#include <dune/xt/common/type_traits.hh>
 #include <dune/xt/common/algorithm.hh>
 
 namespace Dune {

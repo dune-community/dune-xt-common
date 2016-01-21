@@ -13,7 +13,7 @@
 #include <complex>
 
 #include <dune/common/float_cmp.hh>
-#include <dune/xt/common/type_utils.hh>
+#include <dune/xt/common/type_traits.hh>
 
 namespace Dune {
 namespace XT {
