@@ -16,7 +16,9 @@
 #include <boost/numeric/conversion/cast.hpp>
 
 #if HAVE_EIGEN
+#include <dune/xt/common/disable_warnings.hh>
 #include <Eigen/Core>
+#include <dune/xt/common/reenable_warnings.hh>
 #endif
 
 #if HAVE_TBB
