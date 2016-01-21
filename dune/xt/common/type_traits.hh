@@ -201,15 +201,15 @@ struct is_hashable<T, typename std::enable_if<!!sizeof(std::declval<std::hash<T>
     };                                                                                                                 \
                                                                                                                        \
     static const bool value = helper<T_local>::value;                                                                  \
-  };
+  }
 
 /**
   * \brief Macro to statically check a type for a typedef.
   *
   *        To check if a type Foo defines a typedef Bar, put this code somewhere, where a generated helper struct
-  *        may be defined (obviously only once for each typedef name!):
+  *        may be defined (obviously only once for each typedef name!, note the trailing `;`!):
 \code
-DXTC_has_typedef_initialize_once(Bar)
+DXTC_has_typedef_initialize_once(Bar);
 \endcode
   *        You can then check for Bar (this will give you a static const bool):
 \code
@@ -235,15 +235,15 @@ DXTC_has_typedef(Bar)< Foo >::value
     static std::false_type helper(...);                                                                                \
                                                                                                                        \
     static const bool value = decltype(helper<T_local>(0))::value;                                                     \
-  };
+  }
 
 /**
   * \brief Macro to statically check a class or struct for a static member.
   *
   *        To check if a class or struct Foo has a static member bar, put this code somewhere, where a generated helper
-  *        struct may be defined (obviously only once for each member name!):
+  *        struct may be defined (obviously only once for each member name!, note the trailing `;`!):
 \code
-DXTC_has_static_member_initialize_once(bar)
+DXTC_has_static_member_initialize_once(bar);
 \endcode
   *        You can then check for bar (this will give you a static const bool):
 \code
@@ -268,9 +268,9 @@ namespace internal {
 template <class Tt>
 struct is_complex_helper
 {
-  DXTC_has_typedef_initialize_once(value_type)
+  DXTC_has_typedef_initialize_once(value_type);
 
-      static const bool is_candidate = DXTC_has_typedef(value_type)<Tt>::value;
+  static const bool is_candidate = DXTC_has_typedef(value_type)<Tt>::value;
 }; // class is_complex_helper
 
 } // namespace internal
