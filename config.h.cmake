@@ -60,6 +60,10 @@
 # define HAVE_FUNE_FEM 0
 #endif
 
+#ifndef ENABLE_EIGEN
+# define ENABLE_EIGEN 0
+#endif
+
 #ifndef HAVE_EMPLACE
 # define HAVE_EMPLACE 0
 #endif
@@ -68,8 +72,16 @@
 # define ENABLE_SUPERLU 0
 #endif
 
+#ifndef HAVE_SUPERLU
+# define HAVE_SUPERLU 0
+#endif
+
 #ifndef ENABLE_UMFPACK
 # define ENABLE_UMFPACK 0
+#endif
+
+#ifndef HAVE_UMFPACK
+# define HAVE_UMFPACK 0
 #endif
 
 #ifndef ENABLE_BOOST
