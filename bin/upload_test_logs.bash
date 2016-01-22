@@ -15,7 +15,8 @@ if [ "x${TRAVIS_PULL_REQUEST}" != "xfalse" ] ; then
 fi
 cd
 rm -rf logs
-TESTLOGS_URL=https://github.com/wwu-numerik/dune-stuff-testlogs.git
+# TRAVIS_REPO_SLUG example: dune-community/dune-xt-common
+TESTLOGS_URL=https://${GH_TOKEN}@github.com/${TRAVIS_REPO_SLUG}-testlogs.git
 git clone ${TESTLOGS_URL} logs
 cd logs
 # check if branch exists, see http://stackoverflow.com/questions/8223906/how-to-check-if-remote-branch-exists-on-a-given-remote-repository
@@ -31,9 +32,9 @@ fi
 rm -rf ${DIR}
 mkdir ${DIR}
 rsync -a ${DUNE_BUILD_DIR}/dune-stuff/dune/stuff/test/*xml ${DIR}
-printenv | grep -v GH_TOKEN | sort > ${DIR}/env
+printenv | grep -v TOKEN | sort > ${DIR}/env
 git add --all .
 git config user.name "Travis-CI"
 git config user.email "travis@travis-ci.org"
 git commit -m "Testlogs for Job ${TRAVIS_JOB_NUMBER} - ${TRAVIS_COMMIT_RANGE}"
-git push -u https://${GH_TOKEN}@github.com/wwu-numerik/dune-stuff-testlogs.git ${BRANCH}
+git push -u ${TESTLOGS_URL} ${BRANCH}
