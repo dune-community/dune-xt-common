@@ -122,7 +122,8 @@ matrix:
     - os: linux
       compiler: gcc
       addons: *gcc49
-      env: CXX=g++-4.9 CC=gcc-4.9 MODULES_TO_DELETE="dune-xt-grid dune-xt-la dune-xt-functions dune-fem dune-pdelab dune-typetree dune-grid dune-istl"
+      # delete list should include dune-grid, but testtools errors out w/o it
+      env: CXX=g++-4.9 CC=gcc-4.9 MODULES_TO_DELETE="dune-xt-grid dune-xt-la dune-xt-functions dune-fem dune-pdelab dune-typetree dune-istl"
     - os: linux
       compiler: gcc
       addons: *gcc49
