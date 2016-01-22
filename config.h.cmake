@@ -60,6 +60,22 @@
 # define HAVE_FUNE_FEM 0
 #endif
 
+#ifndef HAVE_DUNE_GRID_MULTISCALE
+# define HAVE_DUNE_GRID_MULTISCALE 0
+#endif
+
+#ifndef HAVE_ALBERTA
+# define HAVE_ALBERTA 0
+#endif
+
+#ifndef HAVE_ALUGRID
+# define HAVE_ALUGRID 0
+#endif
+
+#ifndef HAVE_DUNE_SPGRID
+# define HAVE_DUNE_SPGRID 0
+#endif
+
 #ifndef ENABLE_EIGEN
 # define ENABLE_EIGEN 0
 #endif
