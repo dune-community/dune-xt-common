@@ -35,7 +35,7 @@ install(FILES ${DUNE_XT_COMMON_TEST_DIR}/main.hxx
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/xt/test/)
 
 include_directories(SYSTEM ${DUNE_XT_COMMON_TEST_DIR}/gtest )
-add_subdirectory(common/test)
+add_subdirectory(common/test EXCLUDE_FROM_ALL)
 
 dune_library_add_sources(gtest_dune_xt_common
                  SOURCES common/test/gtest/gtest-all.cc)
