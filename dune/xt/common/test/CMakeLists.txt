@@ -14,5 +14,7 @@ DEPENDENCYCHECK( ${xtcommon} )
 set_source_files_properties( ${DUNE_HEADERS} PROPERTIES HEADER_FILE_ONLY 1 )
 
 BEGIN_TESTCASES(dunextcommon)
- 
+
+add_format(${test_sources})
+
 END_TESTCASES()
