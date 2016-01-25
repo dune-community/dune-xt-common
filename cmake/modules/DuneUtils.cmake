@@ -53,6 +53,11 @@ ENDMACRO( ADD_CPPCHECK )
 macro(BEGIN_TESTCASES)
 # https://cmake.org/cmake/help/v3.0/module/FindGTest.html http://purplekarrot.net/blog/cmake-and-test-suites.html
 	file( GLOB test_sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cc" )
+        if ( DEFINED dune-xt-common_DIR )
+            set( dune-xt-common-path ${dune-xt-common_DIR} )
+        else ( DEFINED dune-xt-common_DIR )
+            set( dune-xt-common-path ${dune-xt-common_SOURCE_DIR} )
+        endif ( DEFINED dune-xt-common_DIR )
 	foreach( source ${test_sources} )
 		get_filename_component(testbase ${source} NAME_WE)
                 if( EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.mini )
@@ -61,7 +66,7 @@ macro(BEGIN_TESTCASES)
                                          INIFILE ${inifile}
                                          BASENAME test_${testbase}
                                          CREATED_TARGETS targetlist_${testbase}
-                                         SCRIPT ${dune-xt-common_DIR}/bin/dune_execute.py
+                                         SCRIPT ${dune-xt-common-path}/bin/dune_execute.py
                                          ${DEBUG_MACRO_TESTS})
 		foreach(testname ${targetlist_${testbase}})
                     target_link_libraries( ${testname} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common )
