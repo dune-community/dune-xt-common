@@ -6,8 +6,8 @@
 //   Felix Schindler (2014 - 2016)
 //   Rene Milk       (2012 - 2015)
 
-#ifndef DUNE_XT_COMMON_TYPENAMES_HH
-#define DUNE_XT_COMMON_TYPENAMES_HH
+#ifndef DUNE_XT_COMMON_TYPE_TRAITS_HH
+#define DUNE_XT_COMMON_TYPE_TRAITS_HH
 
 #ifdef __GNUC__
 #include <cxxabi.h>
@@ -16,6 +16,7 @@
 #include <complex>
 #include <memory>
 #include <type_traits>
+#include <iostream>
 
 #include <dune/common/typetraits.hh>
 
@@ -281,4 +282,4 @@ DUNE_XT_COMMON_TYPENAME(unsigned long)
 DUNE_XT_COMMON_TYPENAME(char)
 
 
-#endif // DUNE_XT_COMMON_TYPENAMES_HH
+#endif // DUNE_XT_COMMON_TYPE_TRAITS_HH
