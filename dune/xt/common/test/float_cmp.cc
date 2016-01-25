@@ -23,425 +23,166 @@ using namespace Dune;
 using XT::Common::create;
 using namespace XT::Common::FloatCmp;
 using XT::Common::VectorAbstraction;
-static const Style numpy          = Style::numpy;
-static const Style relativeWeak   = Style::relativeWeak;
-static const Style relativeStrong = Style::relativeStrong;
-static const Style absolute       = Style::absolute;
-static const Style defaultStyle   = Style::defaultStyle;
 
-static const size_t vec_size = 4;
-
-template <typename V, size_t s_size>
-struct FloatCmpBase : public testing::Test
+struct FloatCmpTest : public testing::Test
 {
+  typedef TESTTYPE V;
+  static const size_t s_size = VectorAbstraction<V>::has_static_size ? VectorAbstraction<V>::static_size : VECSIZE;
 
   typedef typename VectorAbstraction<V>::ScalarType S;
   typedef typename VectorAbstraction<V>::RealType R;
 
-  FloatCmpBase()
+  FloatCmpTest()
     : zero(create<V>(s_size, create<S>(0, 0)))
     , one(create<V>(s_size, create<S>(0, 1)))
     , epsilon(create<V>(s_size, DefaultEpsilon<S>::value()))
+    , test_config(DXTC_CONFIG.sub("test_common_float_cmp"))
   {
   }
 
   const V zero;
   const V one;
   const V epsilon;
+  const typename XT::Common::Configuration test_config;
 
   void check_eq()
   {
-    DXTC_EXPECT_FLOAT_EQ(zero, zero);
-    DXTC_EXPECT_FLOAT_EQ<numpy>(zero, zero);
-    DXTC_EXPECT_FLOAT_EQ<relativeWeak>(zero, zero);
-    DXTC_EXPECT_FLOAT_EQ<relativeStrong>(zero, zero);
-    DXTC_EXPECT_FLOAT_EQ<absolute>(zero, zero);
-    DXTC_EXPECT_FLOAT_EQ<defaultStyle>(zero, zero);
+    XTTEST_DXTC_EXPECT_FLOAT_EQ(zero, zero);
 
-    DXTC_EXPECT_FLOAT_EQ(zero, 0.9 * epsilon);
-    DXTC_EXPECT_FLOAT_EQ<numpy>(zero, 0.9 * epsilon);
-    EXPECT_FALSE(eq<relativeWeak>(zero, 0.9 * epsilon)); /* <- NOTE */
-    EXPECT_FALSE(eq<relativeStrong>(zero, 0.9 * epsilon)); /* <- NOTE */
-    DXTC_EXPECT_FLOAT_EQ<absolute>(zero, 0.9 * epsilon);
-    DXTC_EXPECT_FLOAT_EQ<defaultStyle>(zero, 0.9 * epsilon);
+    if (test_config["comparison_is_relative"] == "true") {
+      EXPECT_FALSE(COMPARE_EQ(zero, 0.9 * epsilon));
+      EXPECT_FALSE(COMPARE_EQ(one, one + 1.1 * epsilon));
+    } else {
+      XTTEST_DXTC_EXPECT_FLOAT_EQ(zero, 0.9 * epsilon);
+      XTTEST_DXTC_EXPECT_FLOAT_EQ(one, one + 1.1 * epsilon);
+    }
 
-    EXPECT_FALSE(eq(zero, 1.1 * epsilon));
-    EXPECT_FALSE(eq<numpy>(zero, 1.1 * epsilon));
-    EXPECT_FALSE(eq<relativeWeak>(zero, 1.1 * epsilon));
-    EXPECT_FALSE(eq<relativeStrong>(zero, 1.1 * epsilon));
-    DXTC_EXPECT_FLOAT_EQ<absolute>(zero, 1.1 * epsilon); /* <- NOTE */
-    EXPECT_FALSE(eq<defaultStyle>(zero, 1.1 * epsilon));
+    if (test_config["style_is_absolute"] == "true")
+      XTTEST_DXTC_EXPECT_FLOAT_EQ(zero, 1.1 * epsilon);
+    else
+      EXPECT_FALSE(COMPARE_EQ(zero, 1.1 * epsilon));
 
-    EXPECT_FALSE(eq(zero, one));
-    EXPECT_FALSE(eq<numpy>(zero, one));
-    EXPECT_FALSE(eq<relativeWeak>(zero, one));
-    EXPECT_FALSE(eq<relativeStrong>(zero, one));
-    EXPECT_FALSE(eq<absolute>(zero, one));
-    EXPECT_FALSE(eq<defaultStyle>(zero, one));
-
-    const auto eps_plus = one + 0.9 * epsilon;
-    DXTC_EXPECT_FLOAT_EQ(one, eps_plus);
-    DXTC_EXPECT_FLOAT_EQ<numpy>(one, eps_plus);
-    DXTC_EXPECT_FLOAT_EQ<relativeWeak>(one, eps_plus);
-    DXTC_EXPECT_FLOAT_EQ<relativeStrong>(one, eps_plus);
-    DXTC_EXPECT_FLOAT_EQ<absolute>(one, eps_plus);
-    DXTC_EXPECT_FLOAT_EQ<defaultStyle>(one, eps_plus);
-
-    DXTC_EXPECT_FLOAT_EQ(one, one + 1.1 * epsilon); /* <- NOTE */
-    DXTC_EXPECT_FLOAT_EQ<numpy>(one, one + 1.1 * epsilon); /* <- NOTE */
-    EXPECT_FALSE(eq<relativeWeak>(one, one + 1.1 * epsilon));
-    EXPECT_FALSE(eq<relativeStrong>(one, one + 1.1 * epsilon));
-    DXTC_EXPECT_FLOAT_EQ<absolute>(one, one + 1.1 * epsilon); /* <- NOTE */
-    DXTC_EXPECT_FLOAT_EQ<defaultStyle>(one, one + 1.1 * epsilon); /* <- NOTE */
-
-    EXPECT_FALSE(eq(one, 2. * one));
-    EXPECT_FALSE(eq<numpy>(one, 2. * one));
-    EXPECT_FALSE(eq<relativeWeak>(one, 2. * one));
-    EXPECT_FALSE(eq<relativeStrong>(one, 2. * one));
-    EXPECT_FALSE(eq<absolute>(one, 2. * one));
-    EXPECT_FALSE(eq<defaultStyle>(one, 2. * one));
+    EXPECT_FALSE(COMPARE_EQ(zero, one));
+    XTTEST_DXTC_EXPECT_FLOAT_EQ(one, one + 0.9 * epsilon);
+    EXPECT_FALSE(COMPARE_EQ(one, 2. * one));
   }
 
   void check_ne()
   {
-    EXPECT_FALSE(ne(zero, zero));
-    EXPECT_FALSE(ne<numpy>(zero, zero));
-    EXPECT_FALSE(ne<relativeWeak>(zero, zero));
-    EXPECT_FALSE(ne<relativeStrong>(zero, zero));
-    EXPECT_FALSE(ne<absolute>(zero, zero));
-    EXPECT_FALSE(ne<defaultStyle>(zero, zero));
+    EXPECT_FALSE(COMPARE_NE(zero, zero));
 
-    EXPECT_FALSE(ne(zero, 0.9 * epsilon));
-    EXPECT_FALSE(ne<numpy>(zero, 0.9 * epsilon));
-    EXPECT_TRUE(ne<relativeWeak>(zero, 0.9 * epsilon)); /* <- NOTE */
-    EXPECT_TRUE(ne<relativeStrong>(zero, 0.9 * epsilon)); /* <- NOTE */
-    EXPECT_FALSE(ne<absolute>(zero, 0.9 * epsilon));
-    EXPECT_FALSE(ne<defaultStyle>(zero, 0.9 * epsilon));
+    if (test_config["comparison_is_relative"] == "true") {
+      EXPECT_TRUE(COMPARE_NE(zero, 0.9 * epsilon));
+      EXPECT_TRUE(COMPARE_NE(one, one + 1.1 * epsilon));
+    } else {
+      EXPECT_FALSE(COMPARE_NE(zero, 0.9 * epsilon));
+      EXPECT_FALSE(COMPARE_NE(one, one + 1.1 * epsilon));
+    }
 
-    EXPECT_TRUE(ne(zero, 1.1 * epsilon));
-    EXPECT_TRUE(ne<numpy>(zero, 1.1 * epsilon));
-    EXPECT_TRUE(ne<relativeWeak>(zero, 1.1 * epsilon));
-    EXPECT_TRUE(ne<relativeStrong>(zero, 1.1 * epsilon));
-    EXPECT_FALSE(ne<absolute>(zero, 1.1 * epsilon)); /* <- NOTE */
-    EXPECT_TRUE(ne<defaultStyle>(zero, 1.1 * epsilon));
+    if (test_config["style_is_absolute"] == "true")
+      EXPECT_FALSE(COMPARE_NE(zero, 1.1 * epsilon));
+    else
+      EXPECT_TRUE(COMPARE_NE(zero, 1.1 * epsilon));
 
-    EXPECT_TRUE(ne(zero, one));
-    EXPECT_TRUE(ne<numpy>(zero, one));
-    EXPECT_TRUE(ne<relativeWeak>(zero, one));
-    EXPECT_TRUE(ne<relativeStrong>(zero, one));
-    EXPECT_TRUE(ne<absolute>(zero, one));
-    EXPECT_TRUE(ne<defaultStyle>(zero, one));
-
-    EXPECT_FALSE(ne(one, one + 0.9 * epsilon));
-    EXPECT_FALSE(ne<numpy>(one, one + 0.9 * epsilon));
-    EXPECT_FALSE(ne<relativeWeak>(one, one + 0.9 * epsilon));
-    EXPECT_FALSE(ne<relativeStrong>(one, one + 0.9 * epsilon));
-    EXPECT_FALSE(ne<absolute>(one, one + 0.9 * epsilon));
-    EXPECT_FALSE(ne<defaultStyle>(one, one + 0.9 * epsilon));
-
-    EXPECT_FALSE(ne(one, one + 1.1 * epsilon)); /* <- NOTE */
-    EXPECT_FALSE(ne<numpy>(one, one + 1.1 * epsilon)); /* <- NOTE */
-    EXPECT_TRUE(ne<relativeWeak>(one, one + 1.1 * epsilon));
-    EXPECT_TRUE(ne<relativeStrong>(one, one + 1.1 * epsilon));
-    EXPECT_FALSE(ne<absolute>(one, one + 1.1 * epsilon)); /* <- NOTE */
-    EXPECT_FALSE(ne<defaultStyle>(one, one + 1.1 * epsilon)); /* <- NOTE */
-
-    EXPECT_TRUE(ne(one, 2. * one));
-    EXPECT_TRUE(ne<numpy>(one, 2. * one));
-    EXPECT_TRUE(ne<relativeWeak>(one, 2. * one));
-    EXPECT_TRUE(ne<relativeStrong>(one, 2. * one));
-    EXPECT_TRUE(ne<absolute>(one, 2. * one));
-    EXPECT_TRUE(ne<defaultStyle>(one, 2. * one));
+    EXPECT_TRUE(COMPARE_NE(zero, one));
+    EXPECT_FALSE(COMPARE_NE(one, one + 0.9 * epsilon));
+    EXPECT_TRUE(COMPARE_NE(one, 2. * one));
   }
 
   void check_gt()
   {
-    EXPECT_FALSE(gt(zero, zero));
-    EXPECT_FALSE(gt<numpy>(zero, zero));
-    EXPECT_FALSE(gt<relativeWeak>(zero, zero));
-    EXPECT_FALSE(gt<relativeStrong>(zero, zero));
-    EXPECT_FALSE(gt<absolute>(zero, zero));
-    EXPECT_FALSE(gt<defaultStyle>(zero, zero));
+    EXPECT_FALSE(COMPARE_GT(zero, zero));
 
-    EXPECT_FALSE(gt(0.9 * epsilon, zero));
-    EXPECT_FALSE(gt<numpy>(0.9 * epsilon, zero));
-    EXPECT_TRUE(gt<relativeWeak>(0.9 * epsilon, zero)); /* <- NOTE */
-    EXPECT_TRUE(gt<relativeStrong>(0.9 * epsilon, zero)); /* <- NOTE */
-    EXPECT_FALSE(gt<absolute>(0.9 * epsilon, zero));
-    EXPECT_FALSE(gt<defaultStyle>(0.9 * epsilon, zero));
+    if (test_config["comparison_is_relative"] == "true") {
+      EXPECT_TRUE(COMPARE_GT(0.9 * epsilon, zero));
+      EXPECT_TRUE(COMPARE_GT(one + 1.1 * epsilon, one));
+    } else {
+      EXPECT_FALSE(COMPARE_GT(0.9 * epsilon, zero));
+      EXPECT_FALSE(COMPARE_GT(one + 1.1 * epsilon, one));
+    }
 
-    EXPECT_TRUE(gt(1.1 * epsilon, zero));
-    EXPECT_TRUE(gt<numpy>(1.1 * epsilon, zero));
-    EXPECT_TRUE(gt<relativeWeak>(1.1 * epsilon, zero));
-    EXPECT_TRUE(gt<relativeStrong>(1.1 * epsilon, zero));
-    EXPECT_FALSE(gt<absolute>(1.1 * epsilon, zero)); /* <- NOTE */
-    EXPECT_TRUE(gt<defaultStyle>(1.1 * epsilon, zero));
+    if (test_config["style_is_absolute"] == "true")
+      EXPECT_FALSE(COMPARE_GT(1.1 * epsilon, zero));
+    else
+      EXPECT_TRUE(COMPARE_GT(1.1 * epsilon, zero));
 
-    EXPECT_TRUE(gt(one, zero));
-    EXPECT_TRUE(gt<numpy>(one, zero));
-    EXPECT_TRUE(gt<relativeWeak>(one, zero));
-    EXPECT_TRUE(gt<relativeStrong>(one, zero));
-    EXPECT_TRUE(gt<absolute>(one, zero));
-    EXPECT_TRUE(gt<defaultStyle>(one, zero));
-
-    EXPECT_FALSE(gt(one + 0.9 * epsilon, one));
-    EXPECT_FALSE(gt<numpy>(one + 0.9 * epsilon, one));
-    EXPECT_FALSE(gt<relativeWeak>(one + 0.9 * epsilon, one));
-    EXPECT_FALSE(gt<relativeStrong>(one + 0.9 * epsilon, one));
-    EXPECT_FALSE(gt<absolute>(one + 0.9 * epsilon, one));
-    EXPECT_FALSE(gt<defaultStyle>(one + 0.9 * epsilon, one));
-
-    EXPECT_FALSE(gt(one + 1.1 * epsilon, one)); /* <- NOTE */
-    EXPECT_FALSE(gt<numpy>(one + 1.1 * epsilon, one)); /* <- NOTE */
-    EXPECT_TRUE(gt<relativeWeak>(one + 1.1 * epsilon, one));
-    EXPECT_TRUE(gt<relativeStrong>(one + 1.1 * epsilon, one));
-    EXPECT_FALSE(gt<absolute>(one + 1.1 * epsilon, one)); /* <- NOTE */
-    EXPECT_FALSE(gt<defaultStyle>(one + 1.1 * epsilon, one)); /* <- NOTE */
-
-    EXPECT_TRUE(gt(2. * one, one));
-    EXPECT_TRUE(gt<numpy>(2. * one, one));
-    EXPECT_TRUE(gt<relativeWeak>(2. * one, one));
-    EXPECT_TRUE(gt<relativeStrong>(2. * one, one));
-    EXPECT_TRUE(gt<absolute>(2. * one, one));
-    EXPECT_TRUE(gt<defaultStyle>(2. * one, one));
+    EXPECT_TRUE(COMPARE_GT(one, zero));
+    EXPECT_FALSE(COMPARE_GT(one + 0.9 * epsilon, one));
+    EXPECT_TRUE(COMPARE_GT(2. * one, one));
   }
 
   void check_lt()
   {
-    EXPECT_FALSE(lt(zero, zero));
-    EXPECT_FALSE(lt<numpy>(zero, zero));
-    EXPECT_FALSE(lt<relativeWeak>(zero, zero));
-    EXPECT_FALSE(lt<relativeStrong>(zero, zero));
-    EXPECT_FALSE(lt<absolute>(zero, zero));
-    EXPECT_FALSE(lt<defaultStyle>(zero, zero));
+    EXPECT_FALSE(COMPARE_LT(zero, zero));
 
-    EXPECT_FALSE(lt(zero, 0.9 * epsilon));
-    EXPECT_FALSE(lt<numpy>(zero, 0.9 * epsilon));
-    EXPECT_TRUE(lt<relativeWeak>(zero, 0.9 * epsilon)); /* <- NOTE */
-    EXPECT_TRUE(lt<relativeStrong>(zero, 0.9 * epsilon)); /* <- NOTE */
-    EXPECT_FALSE(lt<absolute>(zero, 0.9 * epsilon));
-    EXPECT_FALSE(lt<defaultStyle>(zero, 0.9 * epsilon));
+    if (test_config["comparison_is_relative"] == "true") {
+      EXPECT_TRUE(COMPARE_LT(zero, 0.9 * epsilon));
+      EXPECT_TRUE(COMPARE_LT(one, one + 1.1 * epsilon));
+    } else {
+      EXPECT_FALSE(COMPARE_LT(zero, 0.9 * epsilon));
+      EXPECT_FALSE(COMPARE_LT(one, one + 1.1 * epsilon));
+    }
 
-    EXPECT_TRUE(lt(zero, 1.1 * epsilon));
-    EXPECT_TRUE(lt<numpy>(zero, 1.1 * epsilon));
-    EXPECT_TRUE(lt<relativeWeak>(zero, 1.1 * epsilon));
-    EXPECT_TRUE(lt<relativeStrong>(zero, 1.1 * epsilon));
-    EXPECT_FALSE(lt<absolute>(zero, 1.1 * epsilon)); /* <- NOTE */
-    EXPECT_TRUE(lt<defaultStyle>(zero, 1.1 * epsilon));
+    if (test_config["style_is_absolute"] == "true")
+      EXPECT_FALSE(COMPARE_LT(zero, 1.1 * epsilon));
+    else
+      EXPECT_TRUE(COMPARE_LT(zero, 1.1 * epsilon));
 
-    EXPECT_TRUE(lt(zero, one));
-    EXPECT_TRUE(lt<numpy>(zero, one));
-    EXPECT_TRUE(lt<relativeWeak>(zero, one));
-    EXPECT_TRUE(lt<relativeStrong>(zero, one));
-    EXPECT_TRUE(lt<absolute>(zero, one));
-    EXPECT_TRUE(lt<defaultStyle>(zero, one));
-
-    EXPECT_FALSE(lt(one, one + 0.9 * epsilon));
-    EXPECT_FALSE(lt<numpy>(one, one + 0.9 * epsilon));
-    EXPECT_FALSE(lt<relativeWeak>(one, one + 0.9 * epsilon));
-    EXPECT_FALSE(lt<relativeStrong>(one, one + 0.9 * epsilon));
-    EXPECT_FALSE(lt<absolute>(one, one + 0.9 * epsilon));
-    EXPECT_FALSE(lt<defaultStyle>(one, one + 0.9 * epsilon));
-
-    EXPECT_FALSE(lt(one, one + 1.1 * epsilon)); /* <- NOTE */
-    EXPECT_FALSE(lt<numpy>(one, one + 1.1 * epsilon)); /* <- NOTE */
-    EXPECT_TRUE(lt<relativeWeak>(one, one + 1.1 * epsilon));
-    EXPECT_TRUE(lt<relativeStrong>(one, one + 1.1 * epsilon));
-    EXPECT_FALSE(lt<absolute>(one, one + 1.1 * epsilon)); /* <- NOTE */
-    EXPECT_FALSE(lt<defaultStyle>(one, one + 1.1 * epsilon)); /* <- NOTE */
-
-    EXPECT_TRUE(lt(one, 2. * one));
-    EXPECT_TRUE(lt<numpy>(one, 2. * one));
-    EXPECT_TRUE(lt<relativeWeak>(one, 2. * one));
-    EXPECT_TRUE(lt<relativeStrong>(one, 2. * one));
-    EXPECT_TRUE(lt<absolute>(one, 2. * one));
-    EXPECT_TRUE(lt<defaultStyle>(one, 2. * one));
+    EXPECT_TRUE(COMPARE_LT(zero, one));
+    EXPECT_FALSE(COMPARE_LT(one, one + 0.9 * epsilon));
+    EXPECT_TRUE(COMPARE_LT(one, 2. * one));
   }
 
   void check_ge()
   {
-    EXPECT_TRUE(ge(zero, zero));
-    EXPECT_TRUE(ge<numpy>(zero, zero));
-    EXPECT_TRUE(ge<relativeWeak>(zero, zero));
-    EXPECT_TRUE(ge<relativeStrong>(zero, zero));
-    EXPECT_TRUE(ge<absolute>(zero, zero));
-    EXPECT_TRUE(ge<defaultStyle>(zero, zero));
-
-    EXPECT_TRUE(ge(0.9 * epsilon, zero));
-    EXPECT_TRUE(ge<numpy>(0.9 * epsilon, zero));
-    EXPECT_TRUE(ge<relativeWeak>(0.9 * epsilon, zero));
-    EXPECT_TRUE(ge<relativeStrong>(0.9 * epsilon, zero));
-    EXPECT_TRUE(ge<absolute>(0.9 * epsilon, zero));
-    EXPECT_TRUE(ge<defaultStyle>(0.9 * epsilon, zero));
-
-    EXPECT_TRUE(ge(1.1 * epsilon, zero));
-    EXPECT_TRUE(ge<numpy>(1.1 * epsilon, zero));
-    EXPECT_TRUE(ge<relativeWeak>(1.1 * epsilon, zero));
-    EXPECT_TRUE(ge<relativeStrong>(1.1 * epsilon, zero));
-    EXPECT_TRUE(ge<absolute>(1.1 * epsilon, zero));
-    EXPECT_TRUE(ge<defaultStyle>(1.1 * epsilon, zero));
-
-    EXPECT_TRUE(ge(one, zero));
-    EXPECT_TRUE(ge<numpy>(one, zero));
-    EXPECT_TRUE(ge<relativeWeak>(one, zero));
-    EXPECT_TRUE(ge<relativeStrong>(one, zero));
-    EXPECT_TRUE(ge<absolute>(one, zero));
-    EXPECT_TRUE(ge<defaultStyle>(one, zero));
-
-    EXPECT_TRUE(ge(one + 0.9 * epsilon, one));
-    EXPECT_TRUE(ge<numpy>(one + 0.9 * epsilon, one));
-    EXPECT_TRUE(ge<relativeWeak>(one + 0.9 * epsilon, one));
-    EXPECT_TRUE(ge<relativeStrong>(one + 0.9 * epsilon, one));
-    EXPECT_TRUE(ge<absolute>(one + 0.9 * epsilon, one));
-    EXPECT_TRUE(ge<defaultStyle>(one + 0.9 * epsilon, one));
-
-    EXPECT_TRUE(ge(one + 1.1 * epsilon, one));
-    EXPECT_TRUE(ge<numpy>(one + 1.1 * epsilon, one));
-    EXPECT_TRUE(ge<relativeWeak>(one + 1.1 * epsilon, one));
-    EXPECT_TRUE(ge<relativeStrong>(one + 1.1 * epsilon, one));
-    EXPECT_TRUE(ge<absolute>(one + 1.1 * epsilon, one));
-    EXPECT_TRUE(ge<defaultStyle>(one + 1.1 * epsilon, one));
-
-    EXPECT_TRUE(ge(2. * one, one));
-    EXPECT_TRUE(ge<numpy>(2. * one, one));
-    EXPECT_TRUE(ge<relativeWeak>(2. * one, one));
-    EXPECT_TRUE(ge<relativeStrong>(2. * one, one));
-    EXPECT_TRUE(ge<absolute>(2. * one, one));
-    EXPECT_TRUE(ge<defaultStyle>(2. * one, one));
+    EXPECT_TRUE(COMPARE_GE(zero, zero));
+    EXPECT_TRUE(COMPARE_GE(0.9 * epsilon, zero));
+    EXPECT_TRUE(COMPARE_GE(1.1 * epsilon, zero));
+    EXPECT_TRUE(COMPARE_GE(one, zero));
+    EXPECT_TRUE(COMPARE_GE(one + 0.9 * epsilon, one));
+    EXPECT_TRUE(COMPARE_GE(one + 1.1 * epsilon, one));
+    EXPECT_TRUE(COMPARE_GE(2. * one, one));
   }
 
   void check_le()
   {
-    EXPECT_TRUE(le(zero, zero));
-    EXPECT_TRUE(le<numpy>(zero, zero));
-    EXPECT_TRUE(le<relativeWeak>(zero, zero));
-    EXPECT_TRUE(le<relativeStrong>(zero, zero));
-    EXPECT_TRUE(le<absolute>(zero, zero));
-    EXPECT_TRUE(le<defaultStyle>(zero, zero));
-
-    EXPECT_TRUE(le(zero, 0.9 * epsilon));
-    EXPECT_TRUE(le<numpy>(zero, 0.9 * epsilon));
-    EXPECT_TRUE(le<relativeWeak>(zero, 0.9 * epsilon));
-    EXPECT_TRUE(le<relativeStrong>(zero, 0.9 * epsilon));
-    EXPECT_TRUE(le<absolute>(zero, 0.9 * epsilon));
-    EXPECT_TRUE(le<defaultStyle>(zero, 0.9 * epsilon));
-
-    EXPECT_TRUE(le(zero, 1.1 * epsilon));
-    EXPECT_TRUE(le<numpy>(zero, 1.1 * epsilon));
-    EXPECT_TRUE(le<relativeWeak>(zero, 1.1 * epsilon));
-    EXPECT_TRUE(le<relativeStrong>(zero, 1.1 * epsilon));
-    EXPECT_TRUE(le<absolute>(zero, 1.1 * epsilon));
-    EXPECT_TRUE(le<defaultStyle>(zero, 1.1 * epsilon));
-
-    EXPECT_TRUE(le(zero, one));
-    EXPECT_TRUE(le<numpy>(zero, one));
-    EXPECT_TRUE(le<relativeWeak>(zero, one));
-    EXPECT_TRUE(le<relativeStrong>(zero, one));
-    EXPECT_TRUE(le<absolute>(zero, one));
-    EXPECT_TRUE(le<defaultStyle>(zero, one));
-
-    EXPECT_TRUE(le(one, one + 0.9 * epsilon));
-    EXPECT_TRUE(le<numpy>(one, one + 0.9 * epsilon));
-    EXPECT_TRUE(le<relativeWeak>(one, one + 0.9 * epsilon));
-    EXPECT_TRUE(le<relativeStrong>(one, one + 0.9 * epsilon));
-    EXPECT_TRUE(le<absolute>(one, one + 0.9 * epsilon));
-    EXPECT_TRUE(le<defaultStyle>(one, one + 0.9 * epsilon));
-
-    EXPECT_TRUE(le(one, one + 1.1 * epsilon));
-    EXPECT_TRUE(le<numpy>(one, one + 1.1 * epsilon));
-    EXPECT_TRUE(le<relativeWeak>(one, one + 1.1 * epsilon));
-    EXPECT_TRUE(le<relativeStrong>(one, one + 1.1 * epsilon));
-    EXPECT_TRUE(le<absolute>(one, one + 1.1 * epsilon));
-    EXPECT_TRUE(le<defaultStyle>(one, one + 1.1 * epsilon));
-
-    EXPECT_TRUE(le(one, 2. * one));
-    EXPECT_TRUE(le<numpy>(one, 2. * one));
-    EXPECT_TRUE(le<relativeWeak>(one, 2. * one));
-    EXPECT_TRUE(le<relativeStrong>(one, 2. * one));
-    EXPECT_TRUE(le<absolute>(one, 2. * one));
-    EXPECT_TRUE(le<defaultStyle>(one, 2. * one));
+    EXPECT_TRUE(COMPARE_LE(zero, zero));
+    EXPECT_TRUE(COMPARE_LE(zero, 0.9 * epsilon));
+    EXPECT_TRUE(COMPARE_LE(zero, 1.1 * epsilon));
+    EXPECT_TRUE(COMPARE_LE(zero, one));
+    EXPECT_TRUE(COMPARE_LE(one, one + 0.9 * epsilon));
+    EXPECT_TRUE(COMPARE_LE(one, one + 1.1 * epsilon));
+    EXPECT_TRUE(COMPARE_LE(one, 2. * one));
   }
 }; // struct FloatCmpBase
 
-template <class V, bool = VectorAbstraction<V>::has_static_size>
-struct TestSize
-{
-  static constexpr size_t size = VectorAbstraction<V>::static_size;
-};
-template <class V>
-struct TestSize<V, false>
-{
-  static constexpr size_t size = vec_size;
-};
 
-template <class S>
-struct FloatCmpScalar : public FloatCmpBase<S, 0>
-{
-};
-
-template <class V>
-struct FloatCmpVector : public FloatCmpBase<V, TestSize<V>::size>
-{
-};
-
-typedef testing::Types<double //, float
-                       //                      , long double // <- this requires a patch in dune/common/float_cmp.cc
-                       //                      (bc. of std::max and 1e-6)
-                       > ScalarTypes;
-
-TYPED_TEST_CASE(FloatCmpScalar, ScalarTypes);
-TYPED_TEST(FloatCmpScalar, eq)
+TEST_F(FloatCmpTest, eq)
 {
   this->check_eq();
 }
-TYPED_TEST(FloatCmpScalar, ne)
+
+TEST_F(FloatCmpTest, ne)
 {
   this->check_ne();
 }
-TYPED_TEST(FloatCmpScalar, gt)
+
+TEST_F(FloatCmpTest, gt)
 {
   this->check_gt();
 }
-TYPED_TEST(FloatCmpScalar, lt)
+
+TEST_F(FloatCmpTest, lt)
 {
   this->check_lt();
 }
-TYPED_TEST(FloatCmpScalar, ge)
+
+TEST_F(FloatCmpTest, ge)
 {
   this->check_ge();
 }
-TYPED_TEST(FloatCmpScalar, le)
-{
-  this->check_le();
-}
 
-typedef testing::Types<std::vector<double>, Dune::FieldVector<double, vec_size>, FieldVector<double, vec_size>,
-                       Dune::DynamicVector<double>, std::complex<double>, std::vector<std::complex<double>>,
-                       Dune::FieldVector<std::complex<double>, vec_size>, FieldVector<std::complex<double>, vec_size>,
-                       Dune::DynamicVector<std::complex<double>>> VectorTypes;
-
-TYPED_TEST_CASE(FloatCmpVector, VectorTypes);
-TYPED_TEST(FloatCmpVector, eq)
-{
-  this->check_eq();
-}
-TYPED_TEST(FloatCmpVector, ne)
-{
-  this->check_ne();
-}
-TYPED_TEST(FloatCmpVector, gt)
-{
-  this->check_gt();
-}
-TYPED_TEST(FloatCmpVector, lt)
-{
-  this->check_lt();
-}
-TYPED_TEST(FloatCmpVector, ge)
-{
-  this->check_ge();
-}
-TYPED_TEST(FloatCmpVector, le)
+TEST_F(FloatCmpTest, le)
 {
   this->check_le();
 }
