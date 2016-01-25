@@ -1,18 +1,18 @@
-__name = {testtype_short}_{comparestyle_short}
-__exec_suffix = {testtype_short}_{comparestyle_short}
+__name = {__local.testtype_short}_{__local.comparestyle_short}
+__exec_suffix = {__local.testtype_short}_{__local.comparestyle_short}
 
 __local.comparestyles = numpy, relativeWeak, relativeStrong, absolute, defaultStyle | expand comparestyles
 __local.comparestyles_relative = false, true, true, false, false | expand comparestyles 
 __local.comparestyles_absolute = false, false, false, true, false | expand comparestyles 
-comparestyle = , <Style::{__local.comparestyles}> | expand style
-comparestyle_short = none, {__local.comparestyles} | expand style
-testtype = {__local.fieldtype}, {__local.vectortype} | expand test
-testtype_short = {__local.fieldtype_short}, {__local.vectortype_short}_{__local.fieldtype_short} | expand test
-vec_size = 4
+__local.comparestyle = , <Style::{__local.comparestyles}> | expand style
+__local.comparestyle_short = none, {__local.comparestyles} | expand style
+__local.testtype = {__local.fieldtype}, {__local.vectortype} | expand test
+__local.testtype_short = {__local.fieldtype_short}, {__local.vectortype_short}_{__local.fieldtype_short} | expand test
+__local.vec_size = 4
 
 __local.fieldtype = double, std::complex<double> | expand field
 __local.fieldtype_short = double, complex | expand field
-__local.vectortype = std::vector<{__local.fieldtype}>, Dune::FieldVector<{__local.fieldtype}\,{vec_size}>, FieldVector<{__local.fieldtype}\,{vec_size}>, Dune::DynamicVector<{__local.fieldtype}> | expand vector
+__local.vectortype = std::vector<{__local.fieldtype}>, Dune::FieldVector<{__local.fieldtype}\,{__local.vec_size}>, FieldVector<{__local.fieldtype}\,{__local.vec_size}>, Dune::DynamicVector<{__local.fieldtype}> | expand vector
 __local.vectortype_short = std_vector, dune_fieldvector, xt_fieldvector, dynamic_vector | expand vector
 
 [test_common_float_cmp]
@@ -20,12 +20,12 @@ comparison_is_relative = false, {__local.comparestyles_relative} | expand style
 style_is_absolute = false, {__local.comparestyles_absolute} | expand style
 
 [__static]
-TESTTYPE = {testtype}
-VECSIZE = {vec_size}
-COMPARE_EQ = eq{comparestyle}
-COMPARE_NE = ne{comparestyle}
-COMPARE_GT = gt{comparestyle}
-COMPARE_LT = lt{comparestyle}
-COMPARE_GE = ge{comparestyle}
-COMPARE_LE = le{comparestyle}
-XTTEST_DXTC_EXPECT_FLOAT_EQ = DXTC_EXPECT_FLOAT_EQ{comparestyle}
+TESTTYPE = {__local.testtype}
+VECSIZE = {__local.vec_size}
+FLOATCMP_EQ = eq{__local.comparestyle}
+FLOATCMP_NE = ne{__local.comparestyle}
+FLOATCMP_GT = gt{__local.comparestyle}
+FLOATCMP_LT = lt{__local.comparestyle}
+FLOATCMP_GE = ge{__local.comparestyle}
+FLOATCMP_LE = le{__local.comparestyle}
+XT_TEST_DXTC_EXPECT_FLOAT_EQ = DXTC_EXPECT_FLOAT_EQ{__local.comparestyle}

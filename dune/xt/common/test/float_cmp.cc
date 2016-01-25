@@ -47,112 +47,112 @@ struct FloatCmpTest : public testing::Test
 
   void check_eq()
   {
-    XTTEST_DXTC_EXPECT_FLOAT_EQ(zero, zero);
+    XT_TEST_DXTC_EXPECT_FLOAT_EQ(zero, zero);
 
     if (test_config["comparison_is_relative"] == "true") {
-      EXPECT_FALSE(COMPARE_EQ(zero, 0.9 * epsilon));
-      EXPECT_FALSE(COMPARE_EQ(one, one + 1.1 * epsilon));
+      EXPECT_FALSE(FLOATCMP_EQ(zero, 0.9 * epsilon));
+      EXPECT_FALSE(FLOATCMP_EQ(one, one + 1.1 * epsilon));
     } else {
-      XTTEST_DXTC_EXPECT_FLOAT_EQ(zero, 0.9 * epsilon);
-      XTTEST_DXTC_EXPECT_FLOAT_EQ(one, one + 1.1 * epsilon);
+      XT_TEST_DXTC_EXPECT_FLOAT_EQ(zero, 0.9 * epsilon);
+      XT_TEST_DXTC_EXPECT_FLOAT_EQ(one, one + 1.1 * epsilon);
     }
 
     if (test_config["style_is_absolute"] == "true")
-      XTTEST_DXTC_EXPECT_FLOAT_EQ(zero, 1.1 * epsilon);
+      XT_TEST_DXTC_EXPECT_FLOAT_EQ(zero, 1.1 * epsilon);
     else
-      EXPECT_FALSE(COMPARE_EQ(zero, 1.1 * epsilon));
+      EXPECT_FALSE(FLOATCMP_EQ(zero, 1.1 * epsilon));
 
-    EXPECT_FALSE(COMPARE_EQ(zero, one));
-    XTTEST_DXTC_EXPECT_FLOAT_EQ(one, one + 0.9 * epsilon);
-    EXPECT_FALSE(COMPARE_EQ(one, 2. * one));
+    EXPECT_FALSE(FLOATCMP_EQ(zero, one));
+    XT_TEST_DXTC_EXPECT_FLOAT_EQ(one, one + 0.9 * epsilon);
+    EXPECT_FALSE(FLOATCMP_EQ(one, 2. * one));
   }
 
   void check_ne()
   {
-    EXPECT_FALSE(COMPARE_NE(zero, zero));
+    EXPECT_FALSE(FLOATCMP_NE(zero, zero));
 
     if (test_config["comparison_is_relative"] == "true") {
-      EXPECT_TRUE(COMPARE_NE(zero, 0.9 * epsilon));
-      EXPECT_TRUE(COMPARE_NE(one, one + 1.1 * epsilon));
+      EXPECT_TRUE(FLOATCMP_NE(zero, 0.9 * epsilon));
+      EXPECT_TRUE(FLOATCMP_NE(one, one + 1.1 * epsilon));
     } else {
-      EXPECT_FALSE(COMPARE_NE(zero, 0.9 * epsilon));
-      EXPECT_FALSE(COMPARE_NE(one, one + 1.1 * epsilon));
+      EXPECT_FALSE(FLOATCMP_NE(zero, 0.9 * epsilon));
+      EXPECT_FALSE(FLOATCMP_NE(one, one + 1.1 * epsilon));
     }
 
     if (test_config["style_is_absolute"] == "true")
-      EXPECT_FALSE(COMPARE_NE(zero, 1.1 * epsilon));
+      EXPECT_FALSE(FLOATCMP_NE(zero, 1.1 * epsilon));
     else
-      EXPECT_TRUE(COMPARE_NE(zero, 1.1 * epsilon));
+      EXPECT_TRUE(FLOATCMP_NE(zero, 1.1 * epsilon));
 
-    EXPECT_TRUE(COMPARE_NE(zero, one));
-    EXPECT_FALSE(COMPARE_NE(one, one + 0.9 * epsilon));
-    EXPECT_TRUE(COMPARE_NE(one, 2. * one));
+    EXPECT_TRUE(FLOATCMP_NE(zero, one));
+    EXPECT_FALSE(FLOATCMP_NE(one, one + 0.9 * epsilon));
+    EXPECT_TRUE(FLOATCMP_NE(one, 2. * one));
   }
 
   void check_gt()
   {
-    EXPECT_FALSE(COMPARE_GT(zero, zero));
+    EXPECT_FALSE(FLOATCMP_GT(zero, zero));
 
     if (test_config["comparison_is_relative"] == "true") {
-      EXPECT_TRUE(COMPARE_GT(0.9 * epsilon, zero));
-      EXPECT_TRUE(COMPARE_GT(one + 1.1 * epsilon, one));
+      EXPECT_TRUE(FLOATCMP_GT(0.9 * epsilon, zero));
+      EXPECT_TRUE(FLOATCMP_GT(one + 1.1 * epsilon, one));
     } else {
-      EXPECT_FALSE(COMPARE_GT(0.9 * epsilon, zero));
-      EXPECT_FALSE(COMPARE_GT(one + 1.1 * epsilon, one));
+      EXPECT_FALSE(FLOATCMP_GT(0.9 * epsilon, zero));
+      EXPECT_FALSE(FLOATCMP_GT(one + 1.1 * epsilon, one));
     }
 
     if (test_config["style_is_absolute"] == "true")
-      EXPECT_FALSE(COMPARE_GT(1.1 * epsilon, zero));
+      EXPECT_FALSE(FLOATCMP_GT(1.1 * epsilon, zero));
     else
-      EXPECT_TRUE(COMPARE_GT(1.1 * epsilon, zero));
+      EXPECT_TRUE(FLOATCMP_GT(1.1 * epsilon, zero));
 
-    EXPECT_TRUE(COMPARE_GT(one, zero));
-    EXPECT_FALSE(COMPARE_GT(one + 0.9 * epsilon, one));
-    EXPECT_TRUE(COMPARE_GT(2. * one, one));
+    EXPECT_TRUE(FLOATCMP_GT(one, zero));
+    EXPECT_FALSE(FLOATCMP_GT(one + 0.9 * epsilon, one));
+    EXPECT_TRUE(FLOATCMP_GT(2. * one, one));
   }
 
   void check_lt()
   {
-    EXPECT_FALSE(COMPARE_LT(zero, zero));
+    EXPECT_FALSE(FLOATCMP_LT(zero, zero));
 
     if (test_config["comparison_is_relative"] == "true") {
-      EXPECT_TRUE(COMPARE_LT(zero, 0.9 * epsilon));
-      EXPECT_TRUE(COMPARE_LT(one, one + 1.1 * epsilon));
+      EXPECT_TRUE(FLOATCMP_LT(zero, 0.9 * epsilon));
+      EXPECT_TRUE(FLOATCMP_LT(one, one + 1.1 * epsilon));
     } else {
-      EXPECT_FALSE(COMPARE_LT(zero, 0.9 * epsilon));
-      EXPECT_FALSE(COMPARE_LT(one, one + 1.1 * epsilon));
+      EXPECT_FALSE(FLOATCMP_LT(zero, 0.9 * epsilon));
+      EXPECT_FALSE(FLOATCMP_LT(one, one + 1.1 * epsilon));
     }
 
     if (test_config["style_is_absolute"] == "true")
-      EXPECT_FALSE(COMPARE_LT(zero, 1.1 * epsilon));
+      EXPECT_FALSE(FLOATCMP_LT(zero, 1.1 * epsilon));
     else
-      EXPECT_TRUE(COMPARE_LT(zero, 1.1 * epsilon));
+      EXPECT_TRUE(FLOATCMP_LT(zero, 1.1 * epsilon));
 
-    EXPECT_TRUE(COMPARE_LT(zero, one));
-    EXPECT_FALSE(COMPARE_LT(one, one + 0.9 * epsilon));
-    EXPECT_TRUE(COMPARE_LT(one, 2. * one));
+    EXPECT_TRUE(FLOATCMP_LT(zero, one));
+    EXPECT_FALSE(FLOATCMP_LT(one, one + 0.9 * epsilon));
+    EXPECT_TRUE(FLOATCMP_LT(one, 2. * one));
   }
 
   void check_ge()
   {
-    EXPECT_TRUE(COMPARE_GE(zero, zero));
-    EXPECT_TRUE(COMPARE_GE(0.9 * epsilon, zero));
-    EXPECT_TRUE(COMPARE_GE(1.1 * epsilon, zero));
-    EXPECT_TRUE(COMPARE_GE(one, zero));
-    EXPECT_TRUE(COMPARE_GE(one + 0.9 * epsilon, one));
-    EXPECT_TRUE(COMPARE_GE(one + 1.1 * epsilon, one));
-    EXPECT_TRUE(COMPARE_GE(2. * one, one));
+    EXPECT_TRUE(FLOATCMP_GE(zero, zero));
+    EXPECT_TRUE(FLOATCMP_GE(0.9 * epsilon, zero));
+    EXPECT_TRUE(FLOATCMP_GE(1.1 * epsilon, zero));
+    EXPECT_TRUE(FLOATCMP_GE(one, zero));
+    EXPECT_TRUE(FLOATCMP_GE(one + 0.9 * epsilon, one));
+    EXPECT_TRUE(FLOATCMP_GE(one + 1.1 * epsilon, one));
+    EXPECT_TRUE(FLOATCMP_GE(2. * one, one));
   }
 
   void check_le()
   {
-    EXPECT_TRUE(COMPARE_LE(zero, zero));
-    EXPECT_TRUE(COMPARE_LE(zero, 0.9 * epsilon));
-    EXPECT_TRUE(COMPARE_LE(zero, 1.1 * epsilon));
-    EXPECT_TRUE(COMPARE_LE(zero, one));
-    EXPECT_TRUE(COMPARE_LE(one, one + 0.9 * epsilon));
-    EXPECT_TRUE(COMPARE_LE(one, one + 1.1 * epsilon));
-    EXPECT_TRUE(COMPARE_LE(one, 2. * one));
+    EXPECT_TRUE(FLOATCMP_LE(zero, zero));
+    EXPECT_TRUE(FLOATCMP_LE(zero, 0.9 * epsilon));
+    EXPECT_TRUE(FLOATCMP_LE(zero, 1.1 * epsilon));
+    EXPECT_TRUE(FLOATCMP_LE(zero, one));
+    EXPECT_TRUE(FLOATCMP_LE(one, one + 0.9 * epsilon));
+    EXPECT_TRUE(FLOATCMP_LE(one, one + 1.1 * epsilon));
+    EXPECT_TRUE(FLOATCMP_LE(one, 2. * one));
   }
 }; // struct FloatCmpBase
 
