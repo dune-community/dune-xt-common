@@ -9,20 +9,16 @@
 #ifndef DUNE_XT_COMMON_TYPENAMES_HH
 #define DUNE_XT_COMMON_TYPENAMES_HH
 
+#ifdef __GNUC__
+#include <cxxabi.h>
+#endif
+
 #include <complex>
 #include <memory>
 #include <type_traits>
 
-#include <dune/common/version.hh>
-
-// static_assert/AlwaysFalse redirect to avoid warnings
-#if DUNE_VERSION_NEWER(DUNE_COMMON, 2, 4) // post 2.3 release
 #include <dune/common/typetraits.hh>
-#else
-#include <dune/common/static_assert.hh>
-#endif
 
-#include <dune/xt/common/color.hh>
 
 /** use this to define Typename specializations in the GLOBAL namespace ONLY **/
 #define DUNE_XT_COMMON_TYPENAME(NAME)                                                                                  \
@@ -41,9 +37,11 @@
   }                                                                                                                    \
   }
 
+
 namespace Dune {
 namespace XT {
 namespace Common {
+
 
 inline std::string demangle_typename(const std::string& mangled_name)
 {
@@ -54,12 +52,14 @@ inline std::string demangle_typename(const std::string& mangled_name)
 #endif // ifdef __GNUC__
 }
 
+
 //! demangles typeid
 template <class T>
 std::string demangled_type_id(T& obj)
 {
   return demangle_typename(typeid(obj).name());
 } // demangled_type_id
+
 
 //! create output for demangled typeid
 template <class T>
@@ -68,6 +68,7 @@ void real_type_id(T& obj, std::string name = "", size_t maxlevel = 10000)
   std::cout << name << (name == "" ? "" : "'s type is ") << highlight_template(demangled_type_id(obj), maxlevel)
             << std::endl;
 }
+
 
 //! an extensible mechanism to assign "cleartext" names to types
 template <typename T>
@@ -88,6 +89,7 @@ std::string get_typename(const T&)
 {
   return Typename<T>::value();
 }
+
 
 template <class T, class Ptr = void>
 struct is_smart_ptr
@@ -117,6 +119,7 @@ struct is_smart_ptr<T, typename std::enable_if<std::is_same<std::weak_ptr<typena
   typedef T type;
 };
 
+
 template <class T, class = void>
 struct PtrCaller
 {
@@ -135,6 +138,7 @@ struct PtrCaller<T, typename std::enable_if<is_smart_ptr<T>::value || std::is_po
   }
 };
 
+
 //! workaround for gcc 4.7 missing underlying type, via
 //! https://stackoverflow.com/questions/9343329/how-to-know-underlying-type-of-class-enum/10956467#10956467
 template <class T>
@@ -147,6 +151,7 @@ struct underlying_type
   typedef typename std::underlying_type<T>::type type;
 #endif
 };
+
 
 //! gcc < 4.8 fires a static-assert if std::hash< T > () isn't implemented
 #if __GNUC__ == 4 && (__GNUC_MINOR__ < 8)
@@ -168,12 +173,26 @@ struct is_hashable<T, typename std::enable_if<!!sizeof(std::declval<std::hash<T>
 };
 #endif
 
+
+template <class T>
+struct is_complex : public std::false_type
+{
+};
+
+template <class T>
+struct is_complex<std::complex<T>> : public std::true_type
+{
+};
+
+
 } // namespace Common
 } // namespace XT
 } // namespace Dune
 
+
 /**
   * \brief Helper macro to be used before DXTC_has_typedef.
+  * \see   DXTC_has_typedef
   *
   *        Taken from
   *        http://stackoverflow.com/questions/7834226/detecting-typedef-at-compile-time-template-metaprogramming
@@ -252,6 +271,7 @@ DXTC_has_static_member(bar)< Foo >::value
   */
 #define DXTC_has_static_member(mmbr) DXTC_has_static_member_helper_##mmbr
 
+
 DUNE_XT_COMMON_TYPENAME(int)
 DUNE_XT_COMMON_TYPENAME(double)
 DUNE_XT_COMMON_TYPENAME(float)
@@ -260,33 +280,5 @@ DUNE_XT_COMMON_TYPENAME(unsigned int)
 DUNE_XT_COMMON_TYPENAME(unsigned long)
 DUNE_XT_COMMON_TYPENAME(char)
 
-namespace Dune {
-namespace XT {
-namespace Common {
-namespace internal {
-
-template <class Tt>
-struct is_complex_helper
-{
-  DXTC_has_typedef_initialize_once(value_type);
-
-  static const bool is_candidate = DXTC_has_typedef(value_type)<Tt>::value;
-}; // class is_complex_helper
-
-} // namespace internal
-
-template <class T, bool candidate = internal::is_complex_helper<T>::is_candidate>
-struct is_complex : public std::is_base_of<std::complex<typename T::value_type>, T>
-{
-};
-
-template <class T>
-struct is_complex<T, false> : public std::false_type
-{
-};
-
-} // namespace Common
-} // namespace XT
-} // namespace Dune
 
 #endif // DUNE_XT_COMMON_TYPENAMES_HH
