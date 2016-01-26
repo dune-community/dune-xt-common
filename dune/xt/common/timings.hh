@@ -34,10 +34,10 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
-class Profiler;
+class Timings;
 
 //! XT::Profiler global instance
-Profiler& profiler();
+Timings& timings();
 
 //! wraps name, start- and end time for one timing section
 struct TimingData
@@ -64,19 +64,19 @@ public:
 //! a utility class to time a limited scope of code
 class ScopedTiming;
 
-/** \brief simple inline profiling class
+/** \brief simple inline timing class
    *  - User can set as many (even nested) named sections whose total (=system+user) time will be computed across all
   *program
    * instances.\n
    *  - Provides csv-conform output of process-averaged runtimes.
    **/
-class Profiler
+class Timings
 {
-  friend Profiler& profiler();
+  friend Timings& timings();
 
 private:
-  Profiler();
-  ~Profiler();
+  Timings();
+  ~Timings();
 
   typedef std::map<std::string, std::pair<bool, PerThreadValue<TimingData>>> KnownTimersMap;
   //! section name -> seconds
@@ -140,17 +140,17 @@ private:
   const std::string csv_sep_;
   std::mutex mutex_;
 
-  static Profiler& instance()
+  static Timings& instance()
   {
-    static Profiler pf;
+    static Timings pf;
     return pf;
   }
 };
 
 //! global profiler object
-inline Profiler& profiler()
+inline Timings& timings()
 {
-  return Profiler::instance();
+  return Timings::instance();
 }
 
 class ScopedTiming : public boost::noncopyable
@@ -162,12 +162,12 @@ public:
   inline ScopedTiming(const std::string& section_name)
     : section_name_(section_name)
   {
-    profiler().start_timing(section_name_);
+    timings().start_timing(section_name_);
   }
 
   inline ~ScopedTiming()
   {
-    profiler().stop_timing(section_name_);
+    timings().stop_timing(section_name_);
   }
 };
 
@@ -185,12 +185,12 @@ protected:
 } // namespace XT
 } // namespace Dune
 
-#define DXTC_PROFILER profiler()
+#define DXTC_TIMINGS timings()
 
-#if DUNE_XT_COMMON_DO_PROFILE
-#define DUNE_XT_COMMON_PROFILE_SCOPE(section_name) ScopedTiming DXTC_UNUSED(timer)(section_name)
+#if DUNE_XT_COMMON_DO_TIMING
+#define DUNE_XT_COMMON_TIMING_SCOPE(section_name) ScopedTiming DXTC_UNUSED(timer)(section_name)
 #else
-#define DUNE_XT_COMMON_PROFILE_SCOPE(section_name)
+#define DUNE_XT_COMMON_TIMING_SCOPE(section_name)
 #endif
 
 #endif // DUNE_XT_COMMON_PROFILER_HH

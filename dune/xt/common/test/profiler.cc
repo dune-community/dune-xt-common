@@ -9,7 +9,7 @@
 
 #include <dune/xt/common/test/main.hxx>
 
-#include <dune/xt/common/profiler.hh>
+#include <dune/xt/common/timings.hh>
 #include <dune/xt/common/math.hh>
 #include <dune/xt/common/ranges.hh>
 
@@ -30,10 +30,10 @@ static double confidence_margin()
 TEST(ProfilerTest, Timing)
 {
   for (auto i : value_range(1, 4)) {
-    DXTC_PROFILER.start_timing("ProfilerTest.Timing");
+    DXTC_TIMINGS.start_timing("ProfilerTest.Timing");
     busywait(wait_ms);
-    DXTC_PROFILER.stop_timing("ProfilerTest.Timing");
-    EXPECT_GE(DXTC_PROFILER.get_timing("ProfilerTest.Timing"), i * wait_ms * confidence_margin());
+    DXTC_TIMINGS.stop_timing("ProfilerTest.Timing");
+    EXPECT_GE(DXTC_TIMINGS.get_timing("ProfilerTest.Timing"), i * wait_ms * confidence_margin());
   }
 }
 
@@ -43,13 +43,13 @@ TEST(ProfilerTest, ScopedTiming)
   for (auto DUNE_UNUSED(i) : dvalue_range) {
     scoped_busywait("ProfilerTest.ScopedTiming", wait_ms);
   }
-  EXPECT_GE(DXTC_PROFILER.get_timing("ProfilerTest.ScopedTiming"), long(dvalue_range.size() * wait_ms));
+  EXPECT_GE(DXTC_TIMINGS.get_timing("ProfilerTest.ScopedTiming"), long(dvalue_range.size() * wait_ms));
 }
 
 TEST(ProfilerTest, OutputConstness)
 {
-  DXTC_PROFILER.reset(1);
-  const auto& prof = DXTC_PROFILER;
+  DXTC_TIMINGS.reset(1);
+  const auto& prof = DXTC_TIMINGS;
   prof.output_averaged(0, 0);
   prof.output_timings("timings");
   prof.output_timings(dev_null);
@@ -57,13 +57,13 @@ TEST(ProfilerTest, OutputConstness)
 
 TEST(ProfilerTest, ExpectedFailures)
 {
-  EXPECT_THROW(DXTC_PROFILER.reset(0), Dune::RangeError);
-  EXPECT_THROW(DXTC_PROFILER.stop_timing("This_section_was_never_started"), Dune::RangeError);
+  EXPECT_THROW(DXTC_TIMINGS.reset(0), Dune::RangeError);
+  EXPECT_THROW(DXTC_TIMINGS.stop_timing("This_section_was_never_started"), Dune::RangeError);
 }
 
 TEST(ProfilerTest, NestedTiming)
 {
-  auto& prof = DXTC_PROFILER;
+  auto& prof = DXTC_TIMINGS;
   prof.reset(1);
   prof.start_timing("NestedTiming.Outer");
   busywait(100);

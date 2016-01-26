@@ -13,7 +13,7 @@ set(lib_dune_xt_common_sources common/filesystem.cc
   common/logging.cc
   common/timedlogging.cc
   common/logstreams.cc
-  common/profiler.cc
+  common/timings.cc
   common/configuration.cc
   common/signals.cc
   common/math.cc

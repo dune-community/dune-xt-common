@@ -51,8 +51,8 @@
 #endif
 
 /* needed in dune/xt/common/profiler.hh */
-#ifndef DUNE_XT_COMMON_DO_PROFILE
-# define DUNE_XT_COMMON_DO_PROFILE 0
+#ifndef DUNE_XT_COMMON_DO_TIMING
+# define DUNE_XT_COMMON_DO_TIMING 0
 #endif
 
 /*** Silence implicitly False evaluation of undefined macro warnings ****/

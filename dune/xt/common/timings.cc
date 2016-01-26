@@ -9,7 +9,7 @@
 //   Tobias Leibner  (2014)
 
 #include "config.h"
-#include "profiler.hh"
+#include "timings.hh"
 
 #include <dune/common/version.hh>
 
@@ -76,7 +76,7 @@ TimingData::DeltaType TimingData::delta() const
   return {{cast(elapsed.wall * scale), cast(elapsed.user * scale), cast(elapsed.system * scale)}};
 }
 
-void Profiler::reset_timing(const std::string section_name)
+void Timings::reset_timing(const std::string section_name)
 {
   try {
     stop_timing(section_name);
@@ -87,7 +87,7 @@ void Profiler::reset_timing(const std::string section_name)
   current_data[section_name] = {{0, 0, 0}};
 }
 
-void Profiler::start_timing(const std::string section_name)
+void Timings::start_timing(const std::string section_name)
 {
   std::lock_guard<std::mutex> lock(mutex_);
   if (current_run_number_ >= datamaps_.size()) {
@@ -108,7 +108,7 @@ void Profiler::start_timing(const std::string section_name)
   DXTC_LIKWID_BEGIN_SECTION(section_name)
 } // StartTiming
 
-long Profiler::stop_timing(const std::string section_name)
+long Timings::stop_timing(const std::string section_name)
 {
   DXTC_LIKWID_END_SECTION(section_name)
   assert(current_run_number_ < datamaps_.size());
@@ -129,18 +129,18 @@ long Profiler::stop_timing(const std::string section_name)
   return delta[0];
 } // StopTiming
 
-long Profiler::get_timing(const std::string section_name) const
+long Timings::get_timing(const std::string section_name) const
 {
   return get_delta(section_name)[0];
 }
 
-TimingData::DeltaType Profiler::get_delta(const std::string section_name) const
+TimingData::DeltaType Timings::get_delta(const std::string section_name) const
 {
   assert(current_run_number_ < datamaps_.size());
   return get_timing_idx(section_name, current_run_number_);
 }
 
-TimingData::DeltaType Profiler::get_timing_idx(const std::string section_name, const size_t run_number) const
+TimingData::DeltaType Timings::get_timing_idx(const std::string section_name, const size_t run_number) const
 {
   assert(run_number < datamaps_.size());
   const Datamap& data             = datamaps_[run_number];
@@ -155,7 +155,7 @@ TimingData::DeltaType Profiler::get_timing_idx(const std::string section_name, c
   return section->second;
 }
 
-void Profiler::stop_all()
+void Timings::stop_all()
 {
   for (auto&& section : known_timers_map_) {
     try {
@@ -165,7 +165,7 @@ void Profiler::stop_all()
   }
 } // GetTiming
 
-void Profiler::reset(const size_t numRuns)
+void Timings::reset(const size_t numRuns)
 {
   if (!(numRuns > 0))
     DUNE_THROW(Dune::RangeError, "preparing the profiler for 0 runs is moronic");
@@ -174,12 +174,12 @@ void Profiler::reset(const size_t numRuns)
   current_run_number_ = 0;
 } // Reset
 
-void Profiler::add_count(const size_t num)
+void Timings::add_count(const size_t num)
 {
   counters_[num] += 1;
 }
 
-void Profiler::next_run()
+void Timings::next_run()
 {
   // set all known timers to "stopped"
   for (auto& timer_it : known_timers_map_)
@@ -187,7 +187,7 @@ void Profiler::next_run()
   current_run_number_++;
 }
 
-void Profiler::output_averaged(const int refineLevel, const long numDofs, const double scale_factor) const
+void Timings::output_averaged(const int refineLevel, const long numDofs, const double scale_factor) const
 {
   const auto& comm   = Dune::MPIHelper::getCollectiveCommunication();
   const int numProce = comm.size();
@@ -234,13 +234,13 @@ void Profiler::output_averaged(const int refineLevel, const long numDofs, const 
   csv.close();
 } // OutputAveraged
 
-void Profiler::set_outputdir(const std::string dir)
+void Timings::set_outputdir(const std::string dir)
 {
   output_dir_ = dir;
   test_create_directory(output_dir_);
 }
 
-void Profiler::output_timings(const std::string csv) const
+void Timings::output_timings(const std::string csv) const
 {
   const auto& comm = Dune::MPIHelper::getCollectiveCommunication();
   boost::filesystem::path dir(output_dir_);
@@ -256,7 +256,7 @@ void Profiler::output_timings(const std::string csv) const
   }
 }
 
-void Profiler::output_timings_all(std::ostream& out) const
+void Timings::output_timings_all(std::ostream& out) const
 {
   if (datamaps_.size() < 1)
     return;
@@ -300,7 +300,7 @@ void Profiler::output_timings_all(std::ostream& out) const
     out << stash.str();
 }
 
-void Profiler::output_timings(std::ostream& out) const
+void Timings::output_timings(std::ostream& out) const
 {
   if (datamaps_.size() < 1)
     return;
@@ -319,7 +319,7 @@ void Profiler::output_timings(std::ostream& out) const
   }
 }
 
-Profiler::Profiler()
+Timings::Timings()
   : csv_sep_(",")
 {
   DXTC_LIKWID_INIT;
@@ -327,7 +327,7 @@ Profiler::Profiler()
   set_outputdir("./profiling");
 }
 
-Profiler::~Profiler()
+Timings::~Timings()
 {
   DXTC_LIKWID_CLOSE;
 }
@@ -340,7 +340,7 @@ OutputScopedTiming::OutputScopedTiming(const std::string& section_name, std::ost
 
 OutputScopedTiming::~OutputScopedTiming()
 {
-  const auto duration = profiler().stop_timing(section_name_);
+  const auto duration = timings().stop_timing(section_name_);
   out_ << "Executing " << section_name_ << " took " << duration / 1000.f << "s\n";
 }
 
