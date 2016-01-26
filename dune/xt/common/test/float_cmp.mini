@@ -1,31 +1,40 @@
-__name = {__local.testtype_short}_{__local.comparestyle_short}
-__exec_suffix = {__local.testtype_short}_{__local.comparestyle_short}
+__name = {__local.testtype_short}_{__local.cmpstyle_template_short}
+__exec_suffix = {__local.testtype_short}_{__local.cmpstyle_template_short}
 
-__local.comparestyles = numpy, relativeWeak, relativeStrong, absolute, defaultStyle | expand comparestyles
-__local.comparestyles_relative = false, true, true, false, false | expand comparestyles 
-__local.comparestyles_absolute = false, false, false, true, false | expand comparestyles 
-__local.comparestyle = , <Style::{__local.comparestyles}> | expand style
-__local.comparestyle_short = none, {__local.comparestyles} | expand style
-__local.testtype = {__local.fieldtype}, {__local.vectortype} | expand test
-__local.testtype_short = {__local.fieldtype_short}, {__local.vectortype_short}_{__local.fieldtype_short} | expand test
-__local.vec_size = 4
+__local.cmpstyles = numpy, relativeWeak, relativeStrong, absolute, defaultStyle | expand cmpstyles
+__local.cmpstyle_is_relative = false, true, true, false, false | expand cmpstyles
+__local.cmpstyle_is_numpy = true, false, false, false, true | expand cmpstyles
+
+__local.cmpstyle_template = , <Style::{__local.cmpstyles}> | expand cmpstyle_templ
+__local.cmpstyle_template_short = none, {__local.cmpstyles} | expand cmpstyle_templ
+__local.default_eps = DefaultEpsilon<S>, DefaultEpsilon<S\,Style::{__local.cmpstyles}> | expand cmpstyle_templ
 
 __local.fieldtype = double, std::complex<double> | expand field
 __local.fieldtype_short = double, complex | expand field
 __local.vectortype = std::vector<{__local.fieldtype}>, Dune::FieldVector<{__local.fieldtype}\,{__local.vec_size}>, FieldVector<{__local.fieldtype}\,{__local.vec_size}>, Dune::DynamicVector<{__local.fieldtype}> | expand vector
 __local.vectortype_short = std_vector, dune_fieldvector, xt_fieldvector, dynamic_vector | expand vector
+__local.testtype = {__local.fieldtype}, {__local.vectortype} | expand test
+__local.testtype_short = {__local.fieldtype_short}, {__local.vectortype_short}_{__local.fieldtype_short} | expand test
+
+__local.vec_size = 4
 
 [test_common_float_cmp]
-comparison_is_relative = false, {__local.comparestyles_relative} | expand style
-style_is_absolute = false, {__local.comparestyles_absolute} | expand style
+cmpstyle_is_relative = false, {__local.cmpstyle_is_relative} | expand cmpstyle_templ
+cmpstyle_is_numpy = true, {__local.cmpstyle_is_numpy} | expand cmpstyle_templ
 
 [__static]
 TESTTYPE = {__local.testtype}
 VECSIZE = {__local.vec_size}
-FLOATCMP_EQ = eq{__local.comparestyle}
-FLOATCMP_NE = ne{__local.comparestyle}
-FLOATCMP_GT = gt{__local.comparestyle}
-FLOATCMP_LT = lt{__local.comparestyle}
-FLOATCMP_GE = ge{__local.comparestyle}
-FLOATCMP_LE = le{__local.comparestyle}
-XT_TEST_DXTC_EXPECT_FLOAT_EQ = DXTC_EXPECT_FLOAT_EQ{__local.comparestyle}
+DEFAULT_EPSILON = {__local.default_eps}
+FLOATCMP_EQ = eq{__local.cmpstyle_template}
+FLOATCMP_NE = ne{__local.cmpstyle_template}
+FLOATCMP_GT = gt{__local.cmpstyle_template}
+FLOATCMP_LT = lt{__local.cmpstyle_template}
+FLOATCMP_GE = ge{__local.cmpstyle_template}
+FLOATCMP_LE = le{__local.cmpstyle_template}
+TEST_DXTC_EXPECT_FLOAT_EQ = DXTC_EXPECT_FLOAT_EQ{__local.cmpstyle_template}
+TEST_DXTC_EXPECT_FLOAT_NE = DXTC_EXPECT_FLOAT_NE{__local.cmpstyle_template}
+TEST_DXTC_EXPECT_FLOAT_GT = DXTC_EXPECT_FLOAT_GT{__local.cmpstyle_template}
+TEST_DXTC_EXPECT_FLOAT_LT = DXTC_EXPECT_FLOAT_LT{__local.cmpstyle_template}
+TEST_DXTC_EXPECT_FLOAT_GE = DXTC_EXPECT_FLOAT_GE{__local.cmpstyle_template}
+TEST_DXTC_EXPECT_FLOAT_LE = DXTC_EXPECT_FLOAT_LE{__local.cmpstyle_template}
