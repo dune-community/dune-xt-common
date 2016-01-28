@@ -35,10 +35,12 @@
 #include <dune/xt/common/string.hh>
 #include <dune/xt/common/ranges.hh>
 #include <dune/xt/common/filesystem.hh>
+#include <dune/xt/common/logging.hh>
 #include <dune/xt/common/parallel/threadmanager.hh>
 
 #include <map>
 #include <string>
+#include <atomic>
 
 #include <dune/xt/common/disable_warnings.hh>
 #include <boost/foreach.hpp>
@@ -83,16 +85,12 @@ void Timings::reset_timing(const std::string section_name)
   } catch (Dune::RangeError) {
     // ok, timer simply wasn't running
   }
-  Datamap& current_data      = datamaps_[current_run_number_];
-  current_data[section_name] = {{0, 0, 0}};
+  commited_deltas_[section_name] = {{0, 0, 0}};
 }
 
 void Timings::start_timing(const std::string section_name)
 {
   std::lock_guard<std::mutex> lock(mutex_);
-  if (current_run_number_ >= datamaps_.size()) {
-    datamaps_.push_back(Datamap());
-  }
 
   const KnownTimersMap::iterator section = known_timers_map_.find(section_name);
   if (section != known_timers_map_.end()) {
@@ -111,41 +109,31 @@ void Timings::start_timing(const std::string section_name)
 long Timings::stop_timing(const std::string section_name)
 {
   DXTC_LIKWID_END_SECTION(section_name)
-  assert(current_run_number_ < datamaps_.size());
   if (known_timers_map_.find(section_name) == known_timers_map_.end())
     DUNE_THROW(Dune::RangeError, "trying to stop timer " << section_name << " that wasn't started\n");
 
   known_timers_map_[section_name].first = false; // marks as not running
   TimingData& timing = *(known_timers_map_[section_name].second);
   timing.stop();
-  const auto delta      = timing.delta();
-  Datamap& current_data = datamaps_[current_run_number_];
-  if (current_data.find(section_name) == current_data.end())
-    current_data[section_name] = delta;
+  const auto delta = timing.delta();
+  if (commited_deltas_.find(section_name) == commited_deltas_.end())
+    commited_deltas_[section_name] = delta;
   else {
     for (auto i : value_range(delta.size()))
-      current_data[section_name][i] += delta[i];
+      commited_deltas_[section_name][i] += delta[i];
   }
   return delta[0];
 } // StopTiming
 
-long Timings::get_timing(const std::string section_name) const
+TimingData::TimeType Timings::walltime(const std::string section_name) const
 {
-  return get_delta(section_name)[0];
+  return delta(section_name)[0];
 }
 
-TimingData::DeltaType Timings::get_delta(const std::string section_name) const
+TimingData::DeltaType Timings::delta(const std::string section_name) const
 {
-  assert(current_run_number_ < datamaps_.size());
-  return get_timing_idx(section_name, current_run_number_);
-}
-
-TimingData::DeltaType Timings::get_timing_idx(const std::string section_name, const size_t run_number) const
-{
-  assert(run_number < datamaps_.size());
-  const Datamap& data             = datamaps_[run_number];
-  Datamap::const_iterator section = data.find(section_name);
-  if (section == data.end()) {
+  DeltaMap::const_iterator section = commited_deltas_.find(section_name);
+  if (section == commited_deltas_.end()) {
     // timer might still be running
     const auto& timer_it = known_timers_map_.find(section_name);
     if (timer_it == known_timers_map_.end())
@@ -165,74 +153,11 @@ void Timings::stop_all()
   }
 } // GetTiming
 
-void Timings::reset(const size_t numRuns)
+void Timings::reset()
 {
-  if (!(numRuns > 0))
-    DUNE_THROW(Dune::RangeError, "preparing the profiler for 0 runs is moronic");
-  datamaps_.clear();
-  datamaps_           = DatamapVector(numRuns, Datamap());
-  current_run_number_ = 0;
+  stop_all();
+  commited_deltas_.clear();
 } // Reset
-
-void Timings::add_count(const size_t num)
-{
-  counters_[num] += 1;
-}
-
-void Timings::next_run()
-{
-  // set all known timers to "stopped"
-  for (auto& timer_it : known_timers_map_)
-    timer_it.second.first = false;
-  current_run_number_++;
-}
-
-void Timings::output_averaged(const int refineLevel, const long numDofs, const double scale_factor) const
-{
-  const auto& comm   = Dune::MPIHelper::getCollectiveCommunication();
-  const int numProce = comm.size();
-
-  boost::format csv_name("p%d_refinelvl_%d.csv");
-  csv_name % numProce % refineLevel;
-  boost::filesystem::path filename(output_dir_);
-  filename /= csv_name.str();
-
-  if (comm.rank() == 0)
-    std::cout << "Profiling info in: " << filename << std::endl;
-
-#ifndef NDEBUG
-  for (const auto& count : counters_) {
-    std::cout << "proc " << comm.rank() << " bId " << count.first << " count " << count.second << std::endl;
-  }
-#endif // ifndef NDEBUG
-
-  boost::filesystem::ofstream csv(filename);
-
-  std::map<std::string, long> averages_map;
-  for (const auto& datamap : datamaps_) {
-    for (const auto& timing : datamap) {
-      //! this used to be GetTiming( it->second ), which is only valid thru an implicit and wrong conversion..
-      averages_map[timing.first] += get_timing(timing.first);
-    }
-  }
-
-  // outputs column names
-  csv << "refine" << csv_sep_ << "processes" << csv_sep_ << "numDofs" << csv_sep_ << "L1 error" << csv_sep_;
-  for (const auto& avg_item : averages_map) {
-    csv << avg_item.first << csv_sep_;
-  }
-  csv << "Speedup (total)" << csv_sep_ << "Speedup (ohne Solver)" << std::endl;
-
-  // outputs column values
-  csv << refineLevel << csv_sep_ << comm.size() << csv_sep_ << numDofs << csv_sep_ << 0 << csv_sep_;
-  for (const auto& avg_item : averages_map) {
-    long clock_count = avg_item.second;
-    clock_count = long(comm.sum(clock_count) / double(scale_factor * numProce));
-    csv << clock_count / double(datamaps_.size()) << csv_sep_;
-  }
-  csv << "=I$2/I2" << csv_sep_ << "=SUM(E$2:G$2)/SUM(E2:G2)" << std::endl;
-  csv.close();
-} // OutputAveraged
 
 void Timings::set_outputdir(const std::string dir)
 {
@@ -240,90 +165,76 @@ void Timings::set_outputdir(const std::string dir)
   test_create_directory(output_dir_);
 }
 
-void Timings::output_timings(const std::string csv) const
+void Timings::output_timings(const std::string csv_base,
+                             const CollectiveCommunication<MPIHelper::MPICommunicator>& comm) const
 {
-  const auto& comm = Dune::MPIHelper::getCollectiveCommunication();
   boost::filesystem::path dir(output_dir_);
-  boost::filesystem::path filename = dir / (boost::format("%s_p%08d.csv") % csv % comm.rank()).str();
+  boost::filesystem::path filename = dir / (boost::format("%s_p%08d.csv") % csv_base % comm.rank()).str();
   boost::filesystem::ofstream out(filename);
   output_timings(out);
   std::stringstream tmp_out;
   output_timings_all(tmp_out);
   if (comm.rank() == 0) {
-    boost::filesystem::path a_filename = dir / (boost::format("%s.csv") % csv).str();
+    boost::filesystem::path a_filename = dir / (boost::format("%s.csv") % csv_base).str();
     boost::filesystem::ofstream a_out(a_filename);
     a_out << tmp_out.str() << std::endl;
   }
 }
 
-void Timings::output_timings_all(std::ostream& out) const
+void Timings::output_timings_all(std::ostream& out,
+                                 const CollectiveCommunication<MPIHelper::MPICommunicator>& comm) const
 {
-  if (datamaps_.size() < 1)
-    return;
-  // csv header:
-  const auto& comm = Dune::MPIHelper::getCollectiveCommunication();
-
   std::stringstream stash;
 
   stash << "run" << csv_sep_ << "threads" << csv_sep_ << "ranks";
-  for (const auto& section : datamaps_[0]) {
-    stash << csv_sep_ << section.first << "_avg_mix" << csv_sep_ << section.first << "_max_mix" << csv_sep_
-          << section.first << "_avg_usr" << csv_sep_ << section.first << "_max_usr" << csv_sep_ << section.first
-          << "_avg_wall" << csv_sep_ << section.first << "_max_wall" << csv_sep_ << section.first << "_avg_sys"
-          << csv_sep_ << section.first << "_max_sys";
+  for (const auto& section : commited_deltas_) {
+    stash << csv_sep_ << section.first << csv_sep_ << section.first << csv_sep_ << section.first << "_avg_usr"
+          << csv_sep_ << section.first << "_max_usr" << csv_sep_ << section.first << "_avg_wall" << csv_sep_
+          << section.first << "_max_wall" << csv_sep_ << section.first << "_avg_sys" << csv_sep_ << section.first
+          << "_max_sys";
   }
   int i             = 0;
   const auto weight = 1 / double(comm.size());
-  for (const auto& datamap : datamaps_) {
-    stash << std::endl << i++ << csv_sep_ << threadManager().max_threads() << csv_sep_ << comm.size();
-    for (const auto& section : datamap) {
-      const auto timings  = section.second;
-      auto wall           = timings[1];
-      auto usr            = timings[2];
-      auto sys            = timings[3];
-      auto mix            = timings[0];
-      const auto wall_sum = comm.sum(wall);
-      const auto wall_max = comm.max(wall);
-      const auto usr_sum  = comm.sum(usr);
-      const auto usr_max  = comm.max(usr);
-      const auto sys_sum  = comm.sum(sys);
-      const auto sys_max  = comm.max(sys);
-      const auto mix_sum  = comm.sum(mix);
-      const auto mix_max  = comm.max(mix);
-      stash << csv_sep_ << mix_sum * weight << csv_sep_ << mix_max << csv_sep_ << usr_sum * weight << csv_sep_
-            << usr_max << csv_sep_ << wall_sum * weight << csv_sep_ << wall_max << csv_sep_ << sys_sum * weight
-            << csv_sep_ << sys_max;
-    }
+
+  stash << std::endl << i++ << csv_sep_ << threadManager().max_threads() << csv_sep_ << comm.size();
+  for (const auto& section : commited_deltas_) {
+    const auto timings  = section.second;
+    auto wall           = timings[0];
+    auto usr            = timings[1];
+    auto sys            = timings[2];
+    const auto wall_sum = comm.sum(wall);
+    const auto wall_max = comm.max(wall);
+    const auto usr_sum  = comm.sum(usr);
+    const auto usr_max  = comm.max(usr);
+    const auto sys_sum  = comm.sum(sys);
+    const auto sys_max  = comm.max(sys);
+    stash << csv_sep_ << usr_sum * weight << csv_sep_ << usr_max << csv_sep_ << wall_sum * weight << csv_sep_
+          << wall_max << csv_sep_ << sys_sum * weight << csv_sep_ << sys_max;
   }
+
   stash << std::endl;
   if (comm.rank() == 0)
     out << stash.str();
 }
 
-void Timings::output_timings(std::ostream& out) const
+void Timings::output_timings(std::ostream& out, const CollectiveCommunication<MPIHelper::MPICommunicator>& comm) const
 {
-  if (datamaps_.size() < 1)
-    return;
-  // csv header:
-  out << "run";
-  for (const auto& section : datamaps_[0]) {
+  for (const auto& section : commited_deltas_) {
     out << csv_sep_ << section.first;
   }
-  size_t i = 0;
-  for (const auto& datamap : datamaps_) {
-    out << std::endl << i;
-    for (const auto& section : datamap) {
-      out << csv_sep_ << section.second[0];
-    }
-    out << std::endl;
+  const double size = comm.size();
+  for (const auto& section : commited_deltas_) {
+    auto val = section.second[0];
+    out << csv_sep_ << comm.sum(val) / size;
   }
+  out << std::endl;
 }
 
 Timings::Timings()
   : csv_sep_(",")
 {
   DXTC_LIKWID_INIT;
-  reset(1);
+  reset();
   set_outputdir("./profiling");
 }
 

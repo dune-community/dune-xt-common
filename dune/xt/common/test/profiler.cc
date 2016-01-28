@@ -33,7 +33,9 @@ TEST(ProfilerTest, Timing)
     DXTC_TIMINGS.start_timing("ProfilerTest.Timing");
     busywait(wait_ms);
     DXTC_TIMINGS.stop_timing("ProfilerTest.Timing");
-    EXPECT_GE(DXTC_TIMINGS.get_timing("ProfilerTest.Timing"), i * wait_ms * confidence_margin());
+    const auto timing = DXTC_TIMINGS.walltime("ProfilerTest.Timing");
+    EXPECT_GE(timing, i * wait_ms * confidence_margin());
+    EXPECT_EQ(timing, DXTC_TIMINGS.delta("ProfilerTest.Timing")[0]);
   }
 }
 
@@ -43,33 +45,31 @@ TEST(ProfilerTest, ScopedTiming)
   for (auto DUNE_UNUSED(i) : dvalue_range) {
     scoped_busywait("ProfilerTest.ScopedTiming", wait_ms);
   }
-  EXPECT_GE(DXTC_TIMINGS.get_timing("ProfilerTest.ScopedTiming"), long(dvalue_range.size() * wait_ms));
+  EXPECT_GE(DXTC_TIMINGS.walltime("ProfilerTest.ScopedTiming"), long(dvalue_range.size() * wait_ms));
 }
 
 TEST(ProfilerTest, OutputConstness)
 {
-  DXTC_TIMINGS.reset(1);
+  DXTC_TIMINGS.reset();
   const auto& prof = DXTC_TIMINGS;
-  prof.output_averaged(0, 0);
   prof.output_timings("timings");
   prof.output_timings(dev_null);
 }
 
 TEST(ProfilerTest, ExpectedFailures)
 {
-  EXPECT_THROW(DXTC_TIMINGS.reset(0), Dune::RangeError);
   EXPECT_THROW(DXTC_TIMINGS.stop_timing("This_section_was_never_started"), Dune::RangeError);
 }
 
 TEST(ProfilerTest, NestedTiming)
 {
   auto& prof = DXTC_TIMINGS;
-  prof.reset(1);
+  prof.reset();
   prof.start_timing("NestedTiming.Outer");
   busywait(100);
   prof.start_timing("NestedTiming.Inner");
   busywait(100);
-  auto inner = prof.get_timing("NestedTiming.Inner");
-  auto outer = prof.get_timing("NestedTiming.Outer");
+  auto inner = prof.walltime("NestedTiming.Inner");
+  auto outer = prof.walltime("NestedTiming.Outer");
   EXPECT_GT(outer, inner);
 }
