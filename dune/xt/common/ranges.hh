@@ -116,17 +116,6 @@ lagrange_point_set_range(const LgPointSetType& lpset, const size_t subEntity)
       lpset, subEntity);
 }
 
-template <class GridPartTraits>
-IntersectionRange<Dune::Fem::GridPartInterface<GridPartTraits>,
-                  typename Dune::Fem::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType>
-intersection_range(const Dune::Fem::GridPartInterface<GridPartTraits>& gridpart,
-                   const typename Dune::Fem::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType& entity)
-{
-  return IntersectionRange<Dune::Fem::GridPartInterface<GridPartTraits>,
-                           typename Dune::Fem::GridPartInterface<GridPartTraits>::template Codim<0>::EntityType>(
-      gridpart, entity);
-}
-
 #endif // HAVE_DUNE_FEM
 
 //! get a vector with values in [start : increment : end)
