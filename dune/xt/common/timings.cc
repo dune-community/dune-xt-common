@@ -165,25 +165,37 @@ void Timings::set_outputdir(const std::string dir)
   test_create_directory(output_dir_);
 }
 
-void Timings::output_timings(const std::string csv_base,
-                             const CollectiveCommunication<MPIHelper::MPICommunicator>& comm) const
+void Timings::output_per_rank(const std::string csv_base) const
 {
+  const auto rank = MPIHelper::getCollectiveCommunication().rank();
   boost::filesystem::path dir(output_dir_);
-  boost::filesystem::path filename = dir / (boost::format("%s_p%08d.csv") % csv_base % comm.rank()).str();
+  boost::filesystem::path filename = dir / (boost::format("%s_p%08d.csv") % csv_base % rank).str();
   boost::filesystem::ofstream out(filename);
-  output_timings(out);
+  output_all_measures(out, MPIHelper::getLocalCommunicator());
   std::stringstream tmp_out;
-  output_timings_all(tmp_out);
-  if (comm.rank() == 0) {
+  output_all_measures(tmp_out, MPIHelper::getCommunicator());
+  if (rank == 0) {
     boost::filesystem::path a_filename = dir / (boost::format("%s.csv") % csv_base).str();
     boost::filesystem::ofstream a_out(a_filename);
     a_out << tmp_out.str() << std::endl;
   }
 }
 
-void Timings::output_timings_all(std::ostream& out,
-                                 const CollectiveCommunication<MPIHelper::MPICommunicator>& comm) const
+void Timings::output_simple(std::ostream& out) const
 {
+  for (const auto& section : commited_deltas_) {
+    out << csv_sep_ << section.first;
+  }
+  for (const auto& section : commited_deltas_) {
+    out << csv_sep_ << section.second[0];
+    ;
+  }
+  out << std::endl;
+}
+
+void Timings::output_all_measures(std::ostream& out, MPIHelper::MPICommunicator mpi_comm) const
+{
+  CollectiveCommunication<MPIHelper::MPICommunicator> comm(mpi_comm);
   std::stringstream stash;
 
   stash << "run" << csv_sep_ << "threads" << csv_sep_ << "ranks";
@@ -215,19 +227,6 @@ void Timings::output_timings_all(std::ostream& out,
   stash << std::endl;
   if (comm.rank() == 0)
     out << stash.str();
-}
-
-void Timings::output_timings(std::ostream& out, const CollectiveCommunication<MPIHelper::MPICommunicator>& comm) const
-{
-  for (const auto& section : commited_deltas_) {
-    out << csv_sep_ << section.first;
-  }
-  const double size = comm.size();
-  for (const auto& section : commited_deltas_) {
-    auto val = section.second[0];
-    out << csv_sep_ << comm.sum(val) / size;
-  }
-  out << std::endl;
 }
 
 Timings::Timings()

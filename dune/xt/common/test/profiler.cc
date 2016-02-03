@@ -52,8 +52,9 @@ TEST(ProfilerTest, OutputConstness)
 {
   DXTC_TIMINGS.reset();
   const auto& prof = DXTC_TIMINGS;
-  prof.output_timings("timings");
-  prof.output_timings(dev_null);
+  prof.output_per_rank("timings");
+  prof.output_all_measures(dev_null);
+  prof.output_simple(dev_null);
 }
 
 TEST(ProfilerTest, ExpectedFailures)

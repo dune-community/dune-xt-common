@@ -103,17 +103,16 @@ public:
   //! get the full delta array
   TimingData::DeltaType delta(const std::string section_name) const;
 
-  /** file-output the named sections' walltimes only
-   * \note averages over all MPI processes **/
-  void output_timings(const std::string csv_base, const CollectiveCommunication<MPIHelper::MPICommunicator>& comm =
-                                                      Dune::MPIHelper::getCollectiveCommunication()) const;
-  void output_timings(std::ostream& out = std::cout, const CollectiveCommunication<MPIHelper::MPICommunicator>& comm =
-                                                         Dune::MPIHelper::getCollectiveCommunication()) const;
-  /** output all recoreded measures
-   * \note outputs average, min, max over all MPI processes **/
-  void output_timings_all(std::ostream& out = std::cout,
-                          const CollectiveCommunication<MPIHelper::MPICommunicator>& comm =
-                              Dune::MPIHelper::getCollectiveCommunication()) const;
+  /** creates one file local to each MPI-rank (no global averaging)
+   *  one single rank-0 file with all combined/averaged measures
+   ***/
+  void output_per_rank(const std::string csv_base) const;
+  //! outputs walltime only w/o MPI-rank averaging
+  void output_simple(std::ostream& out = std::cout) const;
+  /** output all recorded measures
+   * \note outputs average, min, max over all MPI processes associated to mpi_comm **/
+  void output_all_measures(std::ostream& out = std::cout,
+                           MPIHelper::MPICommunicator mpi_comm = Dune::MPIHelper::getCommunicator()) const;
 
   /// stops and resets all timers and data
   void reset();
