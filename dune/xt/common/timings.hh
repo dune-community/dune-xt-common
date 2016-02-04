@@ -20,6 +20,7 @@
 #include <ctime>
 #include <memory>
 #include <iostream>
+#include <atomic>
 #include <mutex>
 
 #include <boost/noncopyable.hpp>

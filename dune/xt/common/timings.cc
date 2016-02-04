@@ -40,7 +40,6 @@
 
 #include <map>
 #include <string>
-#include <atomic>
 
 #include <dune/xt/common/disable_warnings.hh>
 #include <boost/foreach.hpp>
