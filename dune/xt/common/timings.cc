@@ -233,7 +233,7 @@ Timings::Timings()
 {
   DXTC_LIKWID_INIT;
   reset();
-  set_outputdir("./profiling");
+  set_outputdir("profiling");
 }
 
 Timings::~Timings()
