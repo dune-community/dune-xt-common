@@ -9,6 +9,10 @@
 //   Rene Milk       (2014 - 2015)
 //   Tobias Leibner  (2015)
 
+#ifndef DUNE_AVOID_SGRID_DEPRE_WARNING_BECAUSE_I_KNOW_WHAT_IM_DOING
+#define DUNE_AVOID_SGRID_DEPRE_WARNING_BECAUSE_I_KNOW_WHAT_IM_DOING 1
+#endif
+
 #include "config.h"
 
 #ifndef THIS_IS_A_BUILDBOT_BUILD
