@@ -35,11 +35,11 @@ void test_create_directory(const std::string _path);
 //! pure c++ emulation of system's touch binary
 bool touch(const std::string& _path);
 
-boost::filesystem::ofstream* make_ofstream(const boost::filesystem::path& path,
-                                           const std::ios_base::openmode mode = std::ios_base::out);
+std::unique_ptr<boost::filesystem::ofstream> make_ofstream(const boost::filesystem::path& path,
+                                                           const std::ios_base::openmode mode = std::ios_base::out);
 
-boost::filesystem::ifstream* make_ifstream(const boost::filesystem::path& path,
-                                           const std::ios_base::openmode mode = std::ios_base::in);
+std::unique_ptr<boost::filesystem::ifstream> make_ifstream(const boost::filesystem::path& path,
+                                                           const std::ios_base::openmode mode = std::ios_base::in);
 
 //! read a file and output all lines containing filter string to a stream
 void file_to_stream_filtered(std::ostream& stream, std::string filename, std::string filter);

@@ -45,16 +45,18 @@ bool touch(const std::string& _path)
   return std::ofstream(_path.c_str()).is_open();
 }
 
-boost::filesystem::ofstream* make_ofstream(const boost::filesystem::path& path, const std::ios_base::openmode mode)
+std::unique_ptr<boost::filesystem::ofstream> make_ofstream(const boost::filesystem::path& path,
+                                                           const std::ios_base::openmode mode)
 {
   test_create_directory(path.string());
-  return new boost::filesystem::ofstream(path, mode);
+  return make_unique<boost::filesystem::ofstream>(path, mode);
 }
 
-boost::filesystem::ifstream* make_ifstream(const boost::filesystem::path& path, const std::ios_base::openmode mode)
+std::unique_ptr<boost::filesystem::ifstream> make_ifstream(const boost::filesystem::path& path,
+                                                           const std::ios_base::openmode mode)
 {
   test_create_directory(path.string());
-  return new boost::filesystem::ifstream(path, mode);
+  return make_unique<boost::filesystem::ifstream>(path, mode);
 }
 
 //! read a file and output all lines containing filter string to a stream
