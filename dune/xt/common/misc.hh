@@ -120,13 +120,20 @@ std::array<T, N> make_array(const T& v)
 template <class T, size_t N>
 std::array<T, N> make_array(const std::vector<T>& v)
 {
-  std::array<T, N> ret;
-  if (v.size() >= N)
+  if (v.size() == 1) {
+    return make_array<T, N>(v[0]);
+  } else if (v.size() < N) {
+    std::array<T, N> error_msg;
     DUNE_THROW(Exceptions::shapes_do_not_match,
-               "Trying to create a " << get_typename(ret) << " from a " << get_typename(v) << " of size " << v.size());
-  for (size_t nn = 0; nn < N; ++nn)
-    ret[nn] = v[nn];
-  return ret;
+               "Trying to create a " << get_typename(error_msg) << " from a " << get_typename(v) << " of size "
+                                     << v.size());
+  } else {
+    std::array<T, N> ret;
+    for (size_t nn = 0; nn < N; ++nn) {
+      ret[nn] = v[nn];
+    }
+    return ret;
+  }
 }
 
 //! writes process environment to file
