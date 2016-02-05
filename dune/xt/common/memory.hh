@@ -17,6 +17,7 @@ namespace XT {
 namespace Common {
 
 //! make_unique implementation via herb sutter: http://herbsutter.com/gotw/_102/
+//! \TODO this can be delegated to stdlib with c++14
 template <typename T, typename... Args>
 std::unique_ptr<T> make_unique(Args&&... args)
 {

@@ -77,17 +77,17 @@ TimingData::DeltaType TimingData::delta() const
   return {{cast(elapsed.wall * scale), cast(elapsed.user * scale), cast(elapsed.system * scale)}};
 }
 
-void Timings::reset_timing(const std::string section_name)
+void Timings::reset(const std::string section_name)
 {
   try {
-    stop_timing(section_name);
+    stop(section_name);
   } catch (Dune::RangeError) {
     // ok, timer simply wasn't running
   }
   commited_deltas_[section_name] = {{0, 0, 0}};
 }
 
-void Timings::start_timing(const std::string section_name)
+void Timings::start(const std::string section_name)
 {
   std::lock_guard<std::mutex> lock(mutex_);
 
@@ -105,7 +105,7 @@ void Timings::start_timing(const std::string section_name)
   DXTC_LIKWID_BEGIN_SECTION(section_name)
 } // StartTiming
 
-long Timings::stop_timing(const std::string section_name)
+long Timings::stop(const std::string section_name)
 {
   DXTC_LIKWID_END_SECTION(section_name)
   if (known_timers_map_.find(section_name) == known_timers_map_.end())
@@ -142,11 +142,11 @@ TimingData::DeltaType Timings::delta(const std::string section_name) const
   return section->second;
 }
 
-void Timings::stop_all()
+void Timings::stop()
 {
   for (auto&& section : known_timers_map_) {
     try {
-      stop_timing(section.first);
+      stop(section.first);
     } catch (Dune::RangeError) {
     }
   }
@@ -154,7 +154,7 @@ void Timings::stop_all()
 
 void Timings::reset()
 {
-  stop_all();
+  stop();
   commited_deltas_.clear();
 } // Reset
 
@@ -249,7 +249,7 @@ OutputScopedTiming::OutputScopedTiming(const std::string& section_name, std::ost
 
 OutputScopedTiming::~OutputScopedTiming()
 {
-  const auto duration = timings().stop_timing(section_name_);
+  const auto duration = timings().stop(section_name_);
   out_ << "Executing " << section_name_ << " took " << duration / 1000.f << "s\n";
 }
 

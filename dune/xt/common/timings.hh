@@ -88,16 +88,16 @@ private:
   const TimingData& get_timing_data(std::string section_name) const;
 
 public:
-  void stop_all();
+  void stop();
 
   //! set this to begin a named section
-  void start_timing(const std::string section_name);
+  void start(const std::string section_name);
 
   //! stop named section's counter
-  long stop_timing(const std::string section_name);
+  long stop(const std::string section_name);
 
   //! set elapsed time back to 0 for section_name
-  void reset_timing(const std::string section_name);
+  void reset(const std::string section_name);
 
   //! get runtime of section in milliseconds
   TimingData::TimeType walltime(const std::string section_name) const;
@@ -151,12 +151,12 @@ public:
   inline ScopedTiming(const std::string& section_name)
     : section_name_(section_name)
   {
-    timings().start_timing(section_name_);
+    timings().start(section_name_);
   }
 
   inline ~ScopedTiming()
   {
-    timings().stop_timing(section_name_);
+    timings().stop(section_name_);
   }
 };
 

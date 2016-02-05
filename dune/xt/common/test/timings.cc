@@ -30,9 +30,9 @@ static double confidence_margin()
 TEST(ProfilerTest, Timing)
 {
   for (auto i : value_range(1, 4)) {
-    DXTC_TIMINGS.start_timing("ProfilerTest.Timing");
+    DXTC_TIMINGS.start("ProfilerTest.Timing");
     busywait(wait_ms);
-    DXTC_TIMINGS.stop_timing("ProfilerTest.Timing");
+    DXTC_TIMINGS.stop("ProfilerTest.Timing");
     const auto timing = DXTC_TIMINGS.walltime("ProfilerTest.Timing");
     EXPECT_GE(timing, i * wait_ms * confidence_margin());
     EXPECT_EQ(timing, DXTC_TIMINGS.delta("ProfilerTest.Timing")[0]);
@@ -59,18 +59,33 @@ TEST(ProfilerTest, OutputConstness)
 
 TEST(ProfilerTest, ExpectedFailures)
 {
-  EXPECT_THROW(DXTC_TIMINGS.stop_timing("This_section_was_never_started"), Dune::RangeError);
+  EXPECT_THROW(DXTC_TIMINGS.stop("This_section_was_never_started"), Dune::RangeError);
 }
 
 TEST(ProfilerTest, NestedTiming)
 {
   auto& prof = DXTC_TIMINGS;
   prof.reset();
-  prof.start_timing("NestedTiming.Outer");
+  prof.start("NestedTiming.Outer");
   busywait(100);
-  prof.start_timing("NestedTiming.Inner");
+  prof.start("NestedTiming.Inner");
   busywait(100);
   auto inner = prof.walltime("NestedTiming.Inner");
   auto outer = prof.walltime("NestedTiming.Outer");
   EXPECT_GT(outer, inner);
+}
+
+TEST(ProfilerTest, Example)
+{
+  timings().reset();
+  using namespace Dune::XT::Common;
+  timings().start("example");
+  for (auto i : value_range(5)) {
+    ScopedTiming scoped_timing("example.inner");
+    busywait(i * 200);
+  }
+  timings().stop("example");
+  busywait(1000);
+  auto file = make_ofstream("example.csv");
+  timings().output_all_measures(*file);
 }
