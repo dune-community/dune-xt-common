@@ -197,17 +197,16 @@ void Timings::output_all_measures(std::ostream& out, MPIHelper::MPICommunicator 
   CollectiveCommunication<MPIHelper::MPICommunicator> comm(mpi_comm);
   std::stringstream stash;
 
-  stash << "run" << csv_sep_ << "threads" << csv_sep_ << "ranks";
+  stash << "threads" << csv_sep_ << "ranks";
   for (const auto& section : commited_deltas_) {
-    stash << csv_sep_ << section.first << csv_sep_ << section.first << csv_sep_ << section.first << "_avg_usr"
-          << csv_sep_ << section.first << "_max_usr" << csv_sep_ << section.first << "_avg_wall" << csv_sep_
-          << section.first << "_max_wall" << csv_sep_ << section.first << "_avg_sys" << csv_sep_ << section.first
-          << "_max_sys";
+    stash << csv_sep_ << section.first << "_avg_usr" << csv_sep_ << section.first << "_max_usr" << csv_sep_
+          << section.first << "_avg_wall" << csv_sep_ << section.first << "_max_wall" << csv_sep_ << section.first
+          << "_avg_sys" << csv_sep_ << section.first << "_max_sys";
   }
   int i             = 0;
   const auto weight = 1 / double(comm.size());
 
-  stash << std::endl << i++ << csv_sep_ << threadManager().max_threads() << csv_sep_ << comm.size();
+  stash << std::endl << threadManager().max_threads() << csv_sep_ << comm.size();
   for (const auto& section : commited_deltas_) {
     const auto timings  = section.second;
     auto wall           = timings[0];
