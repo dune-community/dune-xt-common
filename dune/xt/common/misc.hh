@@ -42,6 +42,7 @@
 #include <dune/xt/common/reenable_warnings.hh>
 #include <boost/filesystem/fstream.hpp>
 
+#include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/logging.hh>
 
 namespace Dune {
@@ -113,6 +114,18 @@ std::array<T, N> make_array(const T& v)
 {
   std::array<T, N> ret;
   ret.fill(v);
+  return ret;
+}
+
+template <class T, size_t N>
+std::array<T, N> make_array(const std::vector<T>& v)
+{
+  std::array<T, N> ret;
+  if (v.size() >= N)
+    DUNE_THROW(Exceptions::shapes_do_not_match,
+               "Trying to create a " << get_typename(ret) << " from a " << get_typename(v) << " of size " << v.size());
+  for (size_t nn = 0; nn < N; ++nn)
+    ret[nn] = v[nn];
   return ret;
 }
 
