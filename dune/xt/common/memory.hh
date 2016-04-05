@@ -235,6 +235,7 @@ public:
 
   const T& access() const
   {
+    assert(storage_);
     return storage_->access();
   }
 
@@ -247,7 +248,7 @@ class StorageProvider
 {
 public:
   explicit StorageProvider(T& tt)
-    : storage_(std::make_shared<internal::AccessByReference<T>>(tt))
+    : storage_(make_unique<internal::AccessByReference<T>>(tt))
   {
   }
 
@@ -284,11 +285,13 @@ public:
 
   T& access()
   {
+    assert(storage_);
     return storage_->access();
   }
 
   const T& access() const
   {
+    assert(storage_);
     return storage_->access();
   }
 

@@ -166,7 +166,6 @@ public:
      ***/
   void suspend(PriorityType priority = default_suspend_priority)
   {
-    assert(&this->storage_access());
     this->storage_access().suspend(priority);
   }
 
@@ -175,7 +174,6 @@ public:
      ***/
   void resume(PriorityType priority = default_suspend_priority)
   {
-    assert(&this->storage_access());
     this->storage_access().resume(priority);
   } // Resume
 }; // LogStream
