@@ -11,6 +11,7 @@
 #ifndef DUNE_XT_COMMON_MEMORY_HH
 #define DUNE_XT_COMMON_MEMORY_HH
 
+#include <cassert>
 #include <memory>
 #include <boost/noncopyable.hpp>
 
