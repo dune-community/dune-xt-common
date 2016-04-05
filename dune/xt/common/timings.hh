@@ -176,10 +176,10 @@ protected:
 } // namespace XT
 } // namespace Dune
 
-#define DXTC_TIMINGS timings()
+#define DXTC_TIMINGS Dune::XT::Common::timings()
 
 #if DUNE_XT_COMMON_DO_TIMING
-#define DUNE_XT_COMMON_TIMING_SCOPE(section_name) ScopedTiming DXTC_UNUSED(timer)(section_name)
+#define DUNE_XT_COMMON_TIMING_SCOPE(section_name) Dune::XT::Common::ScopedTiming DXTC_UNUSED(timer)(section_name)
 #else
 #define DUNE_XT_COMMON_TIMING_SCOPE(section_name)
 #endif
