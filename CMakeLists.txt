@@ -52,40 +52,38 @@ execute_process(
 
 SET( DS_FLAGS_Release CACHE STRING
   "-O2 -fPIC ${CMAKE_CXX_FLAGS_RELEASE}")
-set(DS_FLAGS_RelWithDebInfo ${DS_FLAGS_Release})
+set(DS_FLAGS_RelWithDebInfo "-g ${DS_FLAGS_Release}")
 
-SET( DS_FLAGS_Debug
+SET( DS_FLAGS_Debug CACHE STRING
   "-O0 -g3 -ggdb -Wunused-variable -fno-strict-aliasing -fPIC -Wall -Wextra -Wparentheses -pedantic  -Wshadow -Wundef -Wnon-virtual-dtor")
 
 #aka anything but intel, but cmake has identifier for icc
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  set( DS_FLAGS_Debug CACHE STRING
-        " -Wc++0x-compat -Wredundant-decls -Winline  -ftemplate-backtrace-limit=0 ${DS_FLAGS_Debug} "
+  list( APPEND DS_FLAGS_Debug
+         -Wc++0x-compat -Wredundant-decls -Winline  -ftemplate-backtrace-limit=0
       )
 else ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   # for us effectively icc
-  set( DS_FLAGS_Debug CACHE STRING
-        "-Wcast-qual -Wformat=2 -Winit-self -Woverloaded-virtual -Wshadow -Wsign-conversion -Wsign-promo -Wundef  -Wno-unused ${DS_FLAGS_Debug}")
+  list( APPEND DS_FLAGS_Debug
+        -Wcast-qual -Wformat=2 -Winit-self -Woverloaded-virtual -Wshadow -Wsign-conversion -Wsign-promo -Wundef  -Wno-unused)
 endif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
 
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  set( DS_FLAGS_Debug CACHE STRING
-        "-Wnon-literal-null-conversion -Wused-but-marked-unused -Wno-tautological-compare -Wfloat-equal -Wdisabled-macro-expansion -Wcovered-switch-default -Wswitch-enum -Wunreachable-code -Wshorten-64-to-32  ${DS_FLAGS_Debug}"
+  list( APPEND DS_FLAGS_Debug
+        -Wnon-literal-null-conversion -Wused-but-marked-unused -Wno-tautological-compare -Wfloat-equal -Wdisabled-macro-expansion -Wcovered-switch-default -Wswitch-enum -Wunreachable-code -Wshorten-64-to-32
       )
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  set( DS_FLAGS_Debug CACHE STRING
-        "-Wlogical-op  -Og ${DS_FLAGS_Debug} "
+  list( APPEND DS_FLAGS_Debug
+        -Wlogical-op  -Og 
       )
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL Debug)
     set(DS_COMPILE_OPTIONS ${DS_FLAGS_Debug})
 else(CMAKE_BUILD_TYPE STREQUAL Debug)
-    set(DS_COMPILE_OPTIONS ${DS_FLAGS_Debug})
+  set(DS_COMPILE_OPTIONS ${DS_FLAGS_Release})
 endif(CMAKE_BUILD_TYPE STREQUAL Debug)
 
-
-message(STATUS ${DS_FLAGS_${CMAKE_BUILD_TYPE}})
 dune_enable_all_packages(INCLUDE_DIRS ${dune-xt-common_SOURCE_DIR}/dune
                          COMPILE_DEFINITIONS DNDEBUG DDNDEBUG
                          COMPILE_OPTIONS ${DS_FLAGS_${CMAKE_BUILD_TYPE}}
