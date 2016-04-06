@@ -296,11 +296,6 @@ public:
   ConstStorageProvider<T>& operator=(const ConstStorageProvider<T>& other) = delete;
   ConstStorageProvider<T>& operator=(ConstStorageProvider<T>&& source) = delete;
 
-  const T& storage_access() const
-  {
-    return access();
-  }
-
   const T& access() const
   {
     assert(storage_);
@@ -347,16 +342,6 @@ public:
 
   StorageProvider<T>& operator=(const StorageProvider<T>& other) = delete;
   StorageProvider<T>& operator=(StorageProvider<T>&& source) = delete;
-
-  T& storage_access()
-  {
-    return access();
-  }
-
-  const T& storage_access() const
-  {
-    return access();
-  }
 
   T& access()
   {
