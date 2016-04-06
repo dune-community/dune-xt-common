@@ -42,19 +42,10 @@ struct ScopeTest : public testing::Test
     scope<StorageProvider>(shared);
     deref(shared);
   }
-
-  void check_raw() {
-    auto raw = new T(constant);
-    scope<ConstStorageProvider>(raw);
-    deref(raw);
-    scope<StorageProvider>(raw);
-    deref(raw);
-  }
 };
 constexpr typename ScopeTest::T ScopeTest::constant;
 
 TEST_F(ScopeTest, All)
 {
   this->check_shared();
-  this->check_raw();
 }
