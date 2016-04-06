@@ -148,7 +148,7 @@ public:
 
   explicit LogStream(SuspendableStrBuffer* buffer)
     : StorageBaseType(buffer)
-    , BaseType(&this->storage_access())
+    , BaseType(&this->access())
   {
   }
 
@@ -166,7 +166,7 @@ public:
      ***/
   void suspend(PriorityType priority = default_suspend_priority)
   {
-    this->storage_access().suspend(priority);
+    this->access().suspend(priority);
   }
 
   /** \brief start accepting input into the buffer again
@@ -174,7 +174,7 @@ public:
      ***/
   void resume(PriorityType priority = default_suspend_priority)
   {
-    this->storage_access().resume(priority);
+    this->access().resume(priority);
   } // Resume
 }; // LogStream
 
