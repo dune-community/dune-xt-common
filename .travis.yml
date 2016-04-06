@@ -47,8 +47,6 @@ before_install:
   - git submodule status
   - export DCTRL_ARG="--builddir=${DUNE_BUILD_DIR}  --opts=${OPTS}"
   # our local scripts look for an OPTS env entry
-  - ./local/bin/download_external_libraries.py
-  - ./local/bin/build_external_libraries.py
   # ensures ${MY_MODULE} from travis own checkout is used
   - echo removing modules ${MODULES_TO_DELETE}
   - rm -rf ${MODULES_TO_DELETE} ${MY_MODULE}
@@ -58,30 +56,15 @@ install:
   - cd $HOME/src
   #- export INST_DCTRL=$HOME/dune/bin/dunecontrol
   - export SRC_DCTRL=$PWD/dune-common/bin/dunecontrol
-  - ${SRC_DCTRL} ${DCTRL_ARG} all
   # move my travis checkout into this source tree
   - cp -ra ${TRAVIS_BUILD_DIR} .
 
-before_script:
-    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} configure
-    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${BUILD_CMD}
-    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${BUILD_CMD} test_binaries
-
 script:
-    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${BUILD_CMD} test
-    # retry this step becuase of the implicated race condition in cloning an pushing with multiple builder running in parallel
-    - travis_retry $HOME/src/scripts/bash/travis_upload_test_logs.bash ${DUNE_BUILD_DIR}/${MY_MODULE}/dune/xt/*/test/
-
     - PYTHONPATH=$HOME/src/scripts/python/ python3 -c "import travis_report as tp; tp.clang_format_status(\"${TRAVIS_BUILD_DIR}\")"
-    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${BUILD_CMD} headercheck
-    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${BUILD_CMD} install | grep -v "Installing"
-    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ${BUILD_CMD} package_source
 
 # runs independent of 'script' failure/success
 after_script:
     # reset for ctest
-    - ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec make clean
-    - export CTEST_ARG="--output-on-failure -S ${TRAVIS_BUILD_DIR}/.travis.ctest"
     # ctest errors on coverage gathering, this should NOT fail our entire build
     #- ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ctest ${CTEST_ARG} || echo "CTest Failed"
 
