@@ -173,7 +173,7 @@ public:
   }
 
   explicit AccessByPointer(std::shared_ptr<T> tt)
-    : tt_(tt)
+    : tt_(tt.get())
   {
   }
 

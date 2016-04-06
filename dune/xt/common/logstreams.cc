@@ -132,7 +132,6 @@ std::string TimedPrefixedStreamBuffer::elapsed_time_str() const
 
 LogStream& LogStream::flush()
 {
-  assert(&this->storage_access());
   this->storage_access().pubsync();
   return *this;
 }

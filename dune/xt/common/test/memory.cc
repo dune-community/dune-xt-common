@@ -16,43 +16,44 @@
 #include <dune/xt/common/fvector.hh>
 
 using namespace Dune::XT::Common;
-typedef testing::Types<int> TestTypes;
 
-template <class T>
+
 struct ScopeTest : public testing::Test
 {
+  typedef int T;
   static constexpr T constant = 1;
   template <class P>
   void deref(P& p) {
+    EXPECT_NE(p, nullptr);
     auto g = *p;
     EXPECT_EQ(constant, g);
   }
 
+  template <template <class F> class Provider, class P>
+  void scope(P& p) {
+    Provider<T> shared_provider(p);
+    deref(p);
+  }
+
   void check_shared() {
     auto shared = std::make_shared<T>(constant);
-    {
-      ConstStorageProvider<T> shared_provider(shared);
-      deref(shared);
-    }
-    // ok
+    scope<ConstStorageProvider>(shared);
+    deref(shared);
+    scope<StorageProvider>(shared);
     deref(shared);
   }
+
   void check_raw() {
     auto raw = new T(constant);
-    {
-      ConstStorageProvider<T> raw_provider(raw);
-      deref(raw);
-    }
-    // fails
+    scope<ConstStorageProvider>(raw);
     deref(raw);
-    EXPECT_NE(raw, nullptr);
+    scope<StorageProvider>(raw);
+    deref(raw);
   }
 };
-template <class T>
-const T ScopeTest<T>::constant;
+constexpr typename ScopeTest::T ScopeTest::constant;
 
-TYPED_TEST_CASE(ScopeTest, TestTypes);
-TYPED_TEST(ScopeTest, All)
+TEST_F(ScopeTest, All)
 {
   this->check_shared();
   this->check_raw();
