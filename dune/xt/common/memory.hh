@@ -84,7 +84,7 @@ public:
   /**
    * \attention This ctor transfers ownership to ConstAccessByPointer, do not delete tt manually!
    */
-  explicit ConstAccessByPointer(const T* tt)
+  explicit ConstAccessByPointer(const T*&& tt)
     : tt_(tt)
   {
   }
@@ -167,7 +167,7 @@ public:
   /**
    * \attention This ctor transfers ownership to AccessByPointer, do not delete tt manually!
    */
-  explicit AccessByPointer(T* tt)
+  explicit AccessByPointer(T*&& tt)
     : tt_(tt)
   {
   }
@@ -275,10 +275,8 @@ public:
   /**
    * \attention This ctor transfers ownership to ConstStorageProvider, do not delete tt manually!
    */
-  explicit ConstStorageProvider(const T* tt)
-    : storage_(make_unique<internal::ConstAccessByPointer<T>>(tt))
-  {
-  }
+  explicit ConstStorageProvider(const T*&& tt)
+    : storage_(make_unique<internal::ConstAccessByPointer<T>>(std::move(tt)))
   {
   }
 
@@ -319,10 +317,8 @@ public:
   /**
    * \attention This ctor transfers ownership to StorageProvider, do not delete tt manually!
    */
-  explicit StorageProvider(T* tt)
-    : storage_(make_unique<internal::AccessByPointer<T>>(tt))
-  {
-  }
+  explicit StorageProvider(T*&& tt)
+    : storage_(make_unique<internal::AccessByPointer<T>>(std::move(tt)))
   {
   }
 
