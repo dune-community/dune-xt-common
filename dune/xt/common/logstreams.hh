@@ -146,8 +146,8 @@ public:
   typedef SuspendableStrBuffer::PriorityType PriorityType;
   static const PriorityType default_suspend_priority = SuspendableStrBuffer::default_suspend_priority;
 
-  explicit LogStream(SuspendableStrBuffer* buffer)
-    : StorageBaseType(buffer)
+  explicit LogStream(SuspendableStrBuffer*&& buffer)
+    : StorageBaseType(std::move(buffer))
     , BaseType(&this->access())
   {
   }
