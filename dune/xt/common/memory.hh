@@ -14,6 +14,7 @@
 #include <cassert>
 #include <memory>
 #include <boost/noncopyable.hpp>
+#include <dune/common/shared_ptr.hh>
 
 namespace Dune {
 namespace XT {
@@ -92,7 +93,7 @@ public:
   }
 
   explicit ConstAccessByPointer(std::shared_ptr<const T> tt)
-    : tt_(tt)
+    : tt_(tt.get())
   {
   }
 
@@ -109,7 +110,7 @@ public:
   }
 
 private:
-  std::shared_ptr<const T> tt_;
+  std::unique_ptr<const T, Dune::null_deleter<const T>> tt_;
 }; // class ConstAccessByPointer
 
 template <class T>
@@ -194,7 +195,7 @@ public:
   }
 
 private:
-  std::shared_ptr<T> tt_;
+  std::unique_ptr<T, Dune::null_deleter<T>> tt_;
 }; // class AccessByPointer
 
 } // namespace internal
