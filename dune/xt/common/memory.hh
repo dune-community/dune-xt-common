@@ -81,6 +81,9 @@ template <class T>
 class ConstAccessByPointer : public ConstAccessInterface<T>
 {
 public:
+  /**
+   * \attention This ctor transfers ownership to ConstAccessByPointer, do not delete tt manually!
+   */
   explicit ConstAccessByPointer(const T* tt)
     : tt_(tt)
   {
@@ -161,6 +164,9 @@ template <class T>
 class AccessByPointer : public AccessInterface<T>
 {
 public:
+  /**
+   * \attention This ctor transfers ownership to AccessByPointer, do not delete tt manually!
+   */
   explicit AccessByPointer(T* tt)
     : tt_(tt)
   {
@@ -199,6 +205,64 @@ private:
 
 } // namespace internal
 
+
+/**
+ * \brief Provides generic (const) access to objects of different origins.
+ *
+ * Cosider the following base class which always requires a vector:
+\code
+struct Base
+{
+  Base(const std::vector<double>& vec);
+};
+\endcode
+ * Consider further a derived class which should be constructible with a given vector as well as without:
+\code
+struct Derived : public Base
+{
+  Derived(const std::vector<double>& vec);
+  Derived();
+}
+\endcode
+ * In the latter case, a vector should be created automatically, which is problematic due to the requirements of Base.
+ * The solution is to first derive from ConstStorageProvider or StorageProvider, which handles the management of the
+ * vector:
+\code
+struct Derived
+ : private ConstStorageProvider<std::vector<double>>
+ , public Base
+{
+  typedef ConstStorageProvider<std::vector<double>> VectorProvider;
+
+  Derived(const std::vector<double>& vec)
+    : VectorProvider(vec)
+    , Base(VectorProvider::access())
+  {}
+
+  Derived()
+    : VectorProvider(new std::vector<double>())
+    , Base(VectorProvider::access())
+}
+\endcode
+ * For the latter to work, ConstStorageProvider (as well as StorageProvider) needs to take ownership of the provided raw
+ * pointer.
+ * \attention ConstStorageProvider (as well as StorageProvider) takes ownership of the provided raw pointer. Thus, the
+ *            following code is supposed to fail:
+\code
+const T* tt = new T();
+{
+  ConstStorageProvider<T> provider(tt);
+}
+const T& derefed_tt = *tt;
+\endcode
+ *            Do the following instead:
+\code
+const T* tt = new T();
+{
+  ConstStorageProvider<T> provider(&tt);
+}
+const T& derefed_tt = *tt;
+ */
 template <class T>
 class ConstStorageProvider
 {
@@ -208,6 +272,9 @@ public:
   {
   }
 
+  /**
+   * \attention This ctor transfers ownership to ConstStorageProvider, do not delete tt manually!
+   */
   explicit ConstStorageProvider(const T* tt)
     : storage_(make_unique<internal::ConstAccessByPointer<T>>(tt))
   {
@@ -244,6 +311,10 @@ private:
   std::unique_ptr<internal::ConstAccessInterface<T>> storage_;
 }; // class ConstStorageProvider
 
+/**
+ * \brief Provides generic access to objects of different origins.
+ * \sa ConstStorageProvider
+ */
 template <class T>
 class StorageProvider
 {
@@ -253,6 +324,9 @@ public:
   {
   }
 
+  /**
+   * \attention This ctor transfers ownership to StorageProvider, do not delete tt manually!
+   */
   explicit StorageProvider(T* tt)
     : storage_(make_unique<internal::AccessByPointer<T>>(tt))
   {
