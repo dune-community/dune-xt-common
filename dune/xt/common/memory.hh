@@ -279,9 +279,6 @@ public:
     : storage_(make_unique<internal::ConstAccessByPointer<T>>(tt))
   {
   }
-
-  explicit ConstStorageProvider(std::unique_ptr<const T>&& tt)
-    : storage_(make_unique<internal::ConstAccessByPointer<T>>(tt))
   {
   }
 
@@ -326,9 +323,6 @@ public:
     : storage_(make_unique<internal::AccessByPointer<T>>(tt))
   {
   }
-
-  explicit StorageProvider(std::unique_ptr<T>&& tt)
-    : storage_(make_unique<internal::AccessByPointer<T>>(tt))
   {
   }
 
