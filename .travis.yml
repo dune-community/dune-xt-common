@@ -60,7 +60,11 @@ install:
   - cp -ra ${TRAVIS_BUILD_DIR} .
 
 script:
-    - PYTHONPATH=$HOME/src/scripts/python/ python3 -c "import travis_report as tp; tp.clang_format_status(\"${TRAVIS_BUILD_DIR}\")"
+    - |
+     if [ "x${CLANG_FORMAT}" != "x" ] ; then
+        git config --global hooks.clangformat ${CLANG_FORMAT}
+        PYTHONPATH=$HOME/src/scripts/python/ python3 -c "import travis_report as tp; tp.clang_format_status(\"${TRAVIS_BUILD_DIR}\")"
+     fi
 
 # runs independent of 'script' failure/success
 after_script:
@@ -134,7 +138,7 @@ matrix:
           packages:
           - *commonpackages
           - ['clang-3.7']
-      env: CXX=clang++-3.7 CC=clang-3.7 MODULES_TO_DELETE="dune-xt-grid dune-xt-la dune-xt-functions"
+      env: CXX=clang++-3.7 CC=clang-3.7 MODULES_TO_DELETE="dune-xt-grid dune-xt-la dune-xt-functions" CLANG_FORMAT="/usr/bin/clang-format-3.7"
 
     - os: linux
       compiler: clang
