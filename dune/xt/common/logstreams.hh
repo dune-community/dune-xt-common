@@ -146,9 +146,9 @@ public:
   typedef SuspendableStrBuffer::PriorityType PriorityType;
   static const PriorityType default_suspend_priority = SuspendableStrBuffer::default_suspend_priority;
 
-  explicit LogStream(SuspendableStrBuffer* buffer)
-    : StorageBaseType(buffer)
-    , BaseType(&this->storage_access())
+  explicit LogStream(SuspendableStrBuffer*&& buffer)
+    : StorageBaseType(std::move(buffer))
+    , BaseType(&this->access())
   {
   }
 
@@ -166,8 +166,7 @@ public:
      ***/
   void suspend(PriorityType priority = default_suspend_priority)
   {
-    assert(&this->storage_access());
-    this->storage_access().suspend(priority);
+    this->access().suspend(priority);
   }
 
   /** \brief start accepting input into the buffer again
@@ -175,8 +174,7 @@ public:
      ***/
   void resume(PriorityType priority = default_suspend_priority)
   {
-    assert(&this->storage_access());
-    this->storage_access().resume(priority);
+    this->access().resume(priority);
   } // Resume
 }; // LogStream
 
