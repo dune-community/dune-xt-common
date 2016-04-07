@@ -50,13 +50,15 @@ execute_process(
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-SET( DS_FLAGS_Release CACHE STRING
-  "-O2" "-fPIC" "${CMAKE_CXX_FLAGS_RELEASE}")
+SET( DS_FLAGS_Release
+  "-fPIC"
+  CACHE STRING "")
 set(DS_FLAGS_RelWithDebInfo
-  "-g" "${DS_FLAGS_Release}")
-
-SET( DS_FLAGS_Debug CACHE STRING
-  "-O0 -g3 -ggdb -Wunused-variable -fno-strict-aliasing -fPIC -Wall -Wextra -Wparentheses -pedantic  -Wshadow -Wundef -Wnon-virtual-dtor")
+  "-fPIC"
+  CACHE STRING "")
+SET( DS_FLAGS_Debug
+  "-O0" "-g3" "-ggdb" "-Wunused-variable" "-fno-strict-aliasing" "-fPIC" "-Wall" "-Wextra" "-Wparentheses" "-pedantic"  "-Wshadow" "-Wundef" "-Wnon-virtual-dtor" 
+  CACHE STRING "")
 
 #aka anything but intel, but cmake has identifier for icc
 if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
@@ -78,12 +80,6 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
         -Wlogical-op  -Og 
       )
 endif()
-
-if(CMAKE_BUILD_TYPE STREQUAL Debug)
-    set(DS_COMPILE_OPTIONS ${DS_FLAGS_Debug})
-else(CMAKE_BUILD_TYPE STREQUAL Debug)
-  set(DS_COMPILE_OPTIONS ${DS_FLAGS_Release})
-endif(CMAKE_BUILD_TYPE STREQUAL Debug)
 
 dune_enable_all_packages(INCLUDE_DIRS ${dune-xt-common_SOURCE_DIR}/dune
                          COMPILE_DEFINITIONS DNDEBUG DDNDEBUG
