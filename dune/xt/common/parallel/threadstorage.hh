@@ -45,7 +45,7 @@ public:
   explicit FallbackPerThreadValue(ConstValueType& value)
     : values_(threadManager().max_threads())
   {
-    std::generate(values_.begin(), values_.end(), [=]() { return make_unique<ValueType>(value); });
+    std::generate(values_.begin(), values_.end(), [=]() { return Common::make_unique<ValueType>(value); });
   }
 
   //! Initialization by in-place construction ValueType with \param ctor_args
@@ -56,15 +56,15 @@ public:
 #if __GNUC__
     // cannot unpack in lambda due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=47226
     ValueType v(ctor_args...);
-    std::generate(values_.begin(), values_.end(), [&]() { return make_unique<ValueType>(v); });
+    std::generate(values_.begin(), values_.end(), [&]() { return Common::make_unique<ValueType>(v); });
 #else
-    std::generate(values_.begin(), values_.end(), [&]() { return make_unique<ValueType>(ctor_args...); });
+    std::generate(values_.begin(), values_.end(), [&]() { return Common::make_unique<ValueType>(ctor_args...); });
 #endif
   }
 
   ThisType& operator=(ConstValueType&& value)
   {
-    std::generate(values_.begin(), values_.end(), [=]() { return make_unique<ValueType>(value); });
+    std::generate(values_.begin(), values_.end(), [=]() { return Common::make_unique<ValueType>(value); });
     return *this;
   }
 
@@ -138,14 +138,14 @@ public:
       // cannot unpack in lambda due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=47226
       : TBBPerThreadValue(ValueType(ctor_args...))
 #else
-    : values_(new ContainerType([=]() { return make_unique<ValueType>(ctor_args...); }))
+    : values_(new ContainerType([=]() { return Common::make_unique<ValueType>(ctor_args...); }))
 #endif
   {
   }
 
   ThisType& operator=(ValueType&& value)
   {
-    values_ = make_unique<ContainerType>([=]() { return make_unique<ValueType>(value); });
+    values_ = Common::make_unique<ContainerType>([=]() { return Common::make_unique<ValueType>(value); });
     return *this;
   }
 

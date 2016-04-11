@@ -268,7 +268,7 @@ class ConstStorageProvider
 {
 public:
   explicit ConstStorageProvider(const T& tt)
-    : storage_(make_unique<internal::ConstAccessByReference<T>>(tt))
+    : storage_(Common::make_unique<internal::ConstAccessByReference<T>>(tt))
   {
   }
 
@@ -276,12 +276,12 @@ public:
    * \attention This ctor transfers ownership to ConstStorageProvider, do not delete tt manually!
    */
   explicit ConstStorageProvider(const T*&& tt)
-    : storage_(make_unique<internal::ConstAccessByPointer<T>>(std::move(tt)))
+    : storage_(Common::make_unique<internal::ConstAccessByPointer<T>>(std::move(tt)))
   {
   }
 
   explicit ConstStorageProvider(std::shared_ptr<const T> tt)
-    : storage_(make_unique<internal::ConstAccessByPointer<T>>(tt))
+    : storage_(Common::make_unique<internal::ConstAccessByPointer<T>>(tt))
   {
   }
 
@@ -310,7 +310,7 @@ class StorageProvider
 {
 public:
   explicit StorageProvider(T& tt)
-    : storage_(make_unique<internal::AccessByReference<T>>(tt))
+    : storage_(Common::make_unique<internal::AccessByReference<T>>(tt))
   {
   }
 
@@ -318,12 +318,12 @@ public:
    * \attention This ctor transfers ownership to StorageProvider, do not delete tt manually!
    */
   explicit StorageProvider(T*&& tt)
-    : storage_(make_unique<internal::AccessByPointer<T>>(std::move(tt)))
+    : storage_(Common::make_unique<internal::AccessByPointer<T>>(std::move(tt)))
   {
   }
 
   explicit StorageProvider(std::shared_ptr<T> tt)
-    : storage_(make_unique<internal::AccessByPointer<T>>(tt))
+    : storage_(Common::make_unique<internal::AccessByPointer<T>>(tt))
   {
   }
 
