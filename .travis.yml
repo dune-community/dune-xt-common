@@ -97,7 +97,6 @@ env:
 matrix:
   include:
     - os: linux
-      compiler: gcc
       addons: &gcc49
         apt:
           sources:
@@ -108,16 +107,13 @@ matrix:
           - ['g++-4.9', 'gcc-4.9']
       env: CXX=g++-4.9 CC=gcc-4.9 MODULES_TO_DELETE="dune-xt-grid dune-xt-la dune-xt-functions"
     - os: linux
-      compiler: gcc
       addons: *gcc49
       env: CXX=g++-4.9 CC=gcc-4.9 MODULES_TO_DELETE="dune-xt-grid dune-xt-la dune-xt-functions dune-fem dune-pdelab dune-typetree dune-grid dune-istl"
     - os: linux
-      compiler: gcc
       addons: *gcc49
       env: CXX=g++-4.9 CC=gcc-4.9 MODULES_TO_DELETE="dune-xt-grid dune-xt-la dune-xt-functions dune-fem dune-pdelab"
 
     - os: linux
-      compiler: gcc
       addons:
         apt:
           sources:
@@ -129,7 +125,6 @@ matrix:
       env: CXX=g++-5 CC=gcc-5 MODULES_TO_DELETE="dune-xt-grid dune-xt-la dune-xt-functions"
 
     - os: linux
-      compiler: clang
       addons:
         apt:
           sources:
@@ -141,7 +136,6 @@ matrix:
       env: CXX=clang++-3.7 CC=clang-3.7 MODULES_TO_DELETE="dune-xt-grid dune-xt-la dune-xt-functions" CLANG_FORMAT="/usr/bin/clang-format-3.7"
 
     - os: linux
-      compiler: clang
       addons:
         apt:
           sources:
@@ -153,7 +147,6 @@ matrix:
       env: OPTS=config.opts/travis.make BUILD_CMD="make -k -j2" CXX=clang++-3.7 CC=clang-3.7 MODULES_TO_DELETE="dune-xt-grid dune-xt-la dune-xt-functions"
 
     #- os: linux
-      #compiler: clang
       #addons:
         #apt:
           #sources:
