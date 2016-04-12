@@ -41,7 +41,7 @@ before_install:
   - sudo -E pip install -U requests virtualenv cpp-coveralls
   - export PATH=/usr/lib/ccache:$PATH
   - cd $HOME
-  - test -d src || git clone https://github.com/dune-community/dune-xt-super.git src
+  - test -d src || git clone --branch=format_check_reporting https://github.com/dune-community/dune-xt-super.git src
   - cd $HOME/src
   - git submodule update --init --recursive
   - git submodule status
