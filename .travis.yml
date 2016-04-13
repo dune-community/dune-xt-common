@@ -65,10 +65,10 @@ script:
 # runs independent of 'script' failure/success
 after_script:
     - |
-      #if [ "x${CLANG_FORMAT}" != "x" ] ; then
+     if [ "x${CLANG_FORMAT}" != "x" ] ; then
         git config --global hooks.clangformat ${CLANG_FORMAT}
         PYTHONPATH=$HOME/src/scripts/python/ python3 -c "import travis_report as tp; tp.clang_format_status(\"${TRAVIS_BUILD_DIR}\")"
-        #fi
+     fi
     # reset for ctest
     # ctest errors on coverage gathering, this should NOT fail our entire build
     #- ${SRC_DCTRL} ${DCTRL_ARG} --only=${MY_MODULE} bexec ctest ${CTEST_ARG} || echo "CTest Failed"
