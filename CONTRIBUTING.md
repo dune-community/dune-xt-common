@@ -22,7 +22,7 @@ There are several ways to contribute to this project:
 
 ## Contribute code and/or documentation
 
-[Fork](https://github.com/dune-community/dune-xt-common#fork-destination-box) the repository and open up a pull request, explaining your changes and why they should be included.
+Fork the repository and open up a pull request, explaining your changes and why they should be included.
 
 ## Mailinglist and issues
 
@@ -104,6 +104,7 @@ Sort the groups by
   * dune core modules
   * dune-xt-common
   * local header within the same (sub)folder
+  
 For example:
 ```c++
 #include <string>
@@ -129,7 +130,7 @@ If extending some functionality from dune-common, the names of the headers shoul
 In such cases, the first header is expected to include the latter!
 Rather use a subdirectory and several headers than overly large headers.
 
-Tests can be found in `dune/xt/common/test`, where the name of a test source correspond to the full path of the corresponding header, e.g. `dune/xt/common/test/foo.cc` contains tests for `dune/xt/common/foo.hh`.
+Tests can be found in `dune/xt/common/test`, where the name of a test source correspond to the full path of the corresponding header, e.g. `dune/xt/common/test/foo_bar.cc` contains tests for `dune/xt/common/foo/bar.hh`.
 
 
 # clang-format
