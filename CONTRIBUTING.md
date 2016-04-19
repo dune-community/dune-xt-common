@@ -9,7 +9,7 @@
 
 # Help
 
-If you are experiencing problems or would like to get help, open up a new [issue](https://github.com/dune-community/dune-xt-common/issues/new) and tag it accordingly.
+If you are experiencing problems or would like to get help, open up a new [issue](https://github.com/dune-community/dune-xt-common/issues/new) and tag it accordingly or ask for help on the [mailinglist](https://listserv.uni-muenster.de/mailman/listinfo/dune-xt-dev).
 Please note that dune-xt-common is not one of the core DUNE modules.
 Thus, you will not get any support from the official channels (such as the DUNE mailinglist, the DUNE bugtracker, etc...).
 When submitting bugs, please read these [general guidellines](http://users.dune-project.org/projects/main-wiki/wiki/Guides_bug_reporting) beforehand.
@@ -26,7 +26,7 @@ Fork the repository and open up a pull request, explaining your changes and why 
 
 ## Mailinglist and issues
 
-Join the [mailinglist](https://listserv.uni-muenster.de/mailman/listinfo/dune-gdt-dev) and take a look at the [issues](https://github.com/dune-community/dune-xt-common/issues) to help shape the future of this project.
+Join the [mailinglist](https://listserv.uni-muenster.de/mailman/listinfo/dune-xt-dev) and take a look at the [issues](https://github.com/dune-community/dune-xt-common/issues) to help shape the future of this project.
 
 
 # Coding style
@@ -45,8 +45,8 @@ In particular, these are:
 ```c++
 #include <boost/numeric/conversion/cast.hpp>
 
-const auto unsigned_number = boost::numeric_cast<size_t>(some_size_of_unknown_int_type);
-// ...
+const auto unsigned_number = boost::numeric_cast<size_t>(some_vector_size_of_unknown_int_type);
+// work with unsigned_number as size_t
 Dune::function_that_requires_an_int_because_ints_are_cool(boost::numeric_cast<int>(unsigned_number);
 ```
 * Regarding whitespace, the only choice we have is the number of empty lines: one or two.
