@@ -31,9 +31,9 @@ Join the [mailinglist](https://listserv.uni-muenster.de/mailman/listinfo/dune-xt
 
 # Coding style
 
-Every project has its onw style, so here it is: we use clang-format to handle all whitespace related formatting and provide a corresponding `.clang-format` style specification file (see below for details).
-This means that everything related to whitespace (brackets, comments, braces, macros, ...) is determined by clang-format, no flexibilty here (apart from one exception, see below).
-_I repeat: no flexibility at all regarding whitespace._
+Every project has its own style, so here it is: we use clang-format to handle all formatting and provide a corresponding `.clang-format` style specification file (see below for details).
+This means that everything related to whitespace, brackets, comments, braces, macros, etc. is determined by clang-format, no flexibilty here (apart from one exception, see below).
+_I repeat: no flexibility at all regarding these._
 Apart from that we have some simple rules that you are asked to follow and any contributions in violation may be rejected.
 In particular, these are:
 
@@ -41,6 +41,7 @@ In particular, these are:
 * Class members end with a trailing underscore. Static class members may drop the trailing underscore (in particular dimensions, such as `static const size_t dim = 2;`).
 * We append `Type` to in-class typedefs.
 * Prefer `using typename BaseClass::FooType;` over `typedef typename BaseType::FooType FooType;`, reduces errors due to typos.
+* Include guards follow a pattern: file location `dune/xt/common/fvector.hh` turns into `DUNE_XT_COMMON_FVECTOR_HH`
 * Be careful to handle integers corretly, bad integer conversion is bad! Whenever possible, use `size_t` (even for `template<class Foo, size_t bar>`) and convert to the correct type using boost:
 ```c++
 #include <boost/numeric/conversion/cast.hpp>
