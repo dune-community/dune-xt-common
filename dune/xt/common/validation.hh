@@ -19,6 +19,7 @@
 #include <dune/xt/common/misc.hh>
 #include <dune/xt/common/string.hh>
 #include <dune/xt/common/type_traits.hh>
+#include <dune/xt/common/float_cmp.hh>
 
 namespace Dune {
 namespace XT {
@@ -121,6 +122,7 @@ public:
   inline bool operator()(const T& val) const
   {
     return baseval_ < val;
+    return FloatCmp::lt(baseval_, val);
   }
 
   std::string msg() const
@@ -143,7 +145,7 @@ public:
   }
   inline bool operator()(const T& val) const
   {
-    return baseval_ > val;
+    return FloatCmp::gt(baseval_, val);
   }
 
   std::string msg() const
