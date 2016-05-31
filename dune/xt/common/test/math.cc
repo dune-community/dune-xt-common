@@ -19,21 +19,12 @@
 #include <dune/xt/common/ranges.hh>
 
 using namespace Dune::XT::Common;
+using namespace Dune::XT::Test;
 typedef testing::Types<double, int, Dune::FieldVector<double, 3>, std::vector<double>> ClampTestTypes;
 typedef testing::Types<double, int> TestTypes;
 typedef testing::Types<std::complex<double>, double, int> ComplexTestTypes;
 
-template <typename T>
-static typename std::enable_if<is_vector<T>::value, T>::type init_bound(int val)
-{
-  const auto size = VectorAbstraction<T>::has_static_size ? VectorAbstraction<T>::static_size : 3u;
-  return VectorAbstraction<T>::create(size, val);
-}
-template <typename T>
-static typename std::enable_if<!is_vector<T>::value, T>::type init_bound(int val)
-{
-  return T(val);
-}
+
 template <class T>
 struct ClampTest : public testing::Test
 {

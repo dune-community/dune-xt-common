@@ -19,6 +19,8 @@
 #include <boost/assign/list_of.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
+#include <dune/xt/common/vector.hh>
+
 namespace Dune {
 namespace XT {
 namespace Common {
@@ -115,7 +117,7 @@ public:
 };
 
 //! defaultrng with choice of uniform distribution and stl's default random engine based on T and its numeric_limits
-template <class T>
+template <class T, bool = is_vector<T>::value>
 class DefaultRNG : public RNG<T, typename UniformDistributionSelector<T>::type, std::default_random_engine>
 {
   typedef RNG<T, typename UniformDistributionSelector<T>::type, std::default_random_engine> BaseType;
@@ -129,7 +131,7 @@ public:
 };
 
 template <class T>
-class DefaultRNG<std::complex<T>>
+class DefaultRNG<std::complex<T>, false>
     : public RNG<std::complex<T>, typename UniformDistributionSelector<T>::type, std::default_random_engine>
 {
   typedef RNG<std::complex<T>, typename UniformDistributionSelector<T>::type, std::default_random_engine> BaseType;
@@ -140,6 +142,38 @@ public:
     : BaseType(std::default_random_engine(seed), typename UniformDistributionSelector<T>::type(min, max))
   {
   }
+};
+
+template <class VectorType>
+class DefaultRNG<VectorType, true>
+{
+  typedef typename VectorAbstraction<VectorType>::S T;
+  typedef DefaultRNG<T> RngType;
+
+public:
+  DefaultRNG(VectorType min_vec = VectorType(std::numeric_limits<T>::min()),
+             VectorType max_vec  = VectorType(std::numeric_limits<T>::max()),
+             VectorType seed_vec = VectorType(std::random_device()()))
+  {
+    std::size_t idx = 0;
+    for (auto&& min : min_vec) {
+      rngs_.emplace_back(min, max_vec[idx], seed_vec[idx]);
+      ++idx;
+    }
+  }
+  inline VectorType operator()()
+  {
+    VectorType result_vec = VectorAbstraction<VectorType>::create(rngs_.size());
+    std::size_t idx = 0;
+    for (auto&& res : result_vec) {
+      res = rngs_.at(idx)();
+      ++idx;
+    }
+    return result_vec;
+  }
+
+private:
+  std::vector<RngType> rngs_;
 };
 
 template <>

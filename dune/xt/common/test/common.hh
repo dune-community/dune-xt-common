@@ -21,6 +21,7 @@
 
 #include <dune/xt/common/convergence-study.hh>
 #include <dune/xt/common/compiler.hh>
+#include <dune/xt/common/vector.hh>
 
 template <template <class> class Test>
 struct TestRunner
@@ -78,6 +79,17 @@ void print_collected_eoc_study_results(const std::map<std::string, std::vector<d
 // returns unsigned int on purpose, see GridProvider
 unsigned int grid_elements();
 
+template <typename T>
+static typename std::enable_if<Common::is_vector<T>::value, T>::type init_bound(int val)
+{
+  const auto size = Common::VectorAbstraction<T>::has_static_size ? Common::VectorAbstraction<T>::static_size : 3u;
+  return Common::VectorAbstraction<T>::create(size, val);
+}
+template <typename T>
+static typename std::enable_if<!Common::is_vector<T>::value, T>::type init_bound(int val)
+{
+  return T(val);
+}
 } // namespace Test
 } // namespace XT
 } // namespace Dune
