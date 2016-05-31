@@ -37,13 +37,9 @@ public:
     return as_imp()(value);
   }
 
-  std::string msg() const
+  std::string msg(const T& val) const
   {
-    return as_imp().msg();
-  }
-  void print(std::ostream& out) const
-  {
-    out << as_imp().msg();
+    return as_imp().msg(val);
   }
 
 protected:
@@ -78,7 +74,7 @@ public:
     return true;
   }
 
-  std::string msg() const
+  std::string msg(const T&) const
   {
     return "ValidateAny: all values should be valid... \n\n";
   }
@@ -104,9 +100,11 @@ public:
     return std::find(valid_list_.begin(), valid_list_.end(), val) != valid_list_.end();
   }
 
-  std::string msg() const
+  std::string msg(const T& value) const
   {
-    return "ValidateInList: checked Parameter was not in valid list\n\n";
+    return (boost::format("ValidateInList: checked Parameter %s was not in valid list %s\n") % to_string(value)
+            % to_string(valid_list_))
+        .str();
   }
 };
 
@@ -125,9 +123,10 @@ public:
     return FloatCmp::lt(baseval_, val);
   }
 
-  std::string msg() const
+  std::string msg(const T& value) const
   {
-    return (boost::format("given value was invalid: not less than %s") % to_string(baseval_)).str();
+    return (boost::format("given value %s was invalid: not less than %s") % to_string(value) % to_string(baseval_))
+        .str();
   }
 
 private:
@@ -148,9 +147,10 @@ public:
     return FloatCmp::gt(baseval_, val);
   }
 
-  std::string msg() const
+  std::string msg(const T& value) const
   {
-    return (boost::format("given value was invalid: not greater than %s") % to_string(baseval_)).str();
+    return (boost::format("given value %s was invalid: not greater than %s") % to_string(value) % to_string(baseval_))
+        .str();
   }
 
 private:
@@ -175,9 +175,9 @@ public:
     return !validator_(val);
   }
 
-  std::string msg() const
+  std::string msg(const T& value) const
   {
-    return "Inverse condition failed: " + validator_.msg();
+    return "Inverse condition failed: " + validator_.msg(value);
   }
 
 private:
@@ -217,9 +217,11 @@ public:
     return lowerOk && upperOk;
   }
 
-  std::string msg() const
+  std::string msg(const T& value) const
   {
-    return "given value was invalid: value not in given interval";
+    return (boost::format("given value %s was invalid: value not in set interval [%s %s]") % to_string(value) % min_
+            % max_)
+        .str();
   }
 
 private:
@@ -240,11 +242,5 @@ struct Typename<ValidateAny<T>>
 } // end namespace Common
 } // end namespace XT
 } // end namespace Dune
-
-template <class T, class Validator>
-std::ostream operator<<(std::ostream& out, const Dune::XT::Common::ValidatorInterface<T, Validator>& validator)
-{
-  return out << validator.msg();
-}
 
 #endif // DUNE_XT_COMMON_VALIDATION_HH

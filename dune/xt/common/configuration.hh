@@ -319,7 +319,7 @@ private:
       if (validator(val))
         return val;
       else
-        DUNE_THROW(Exceptions::configuration_error, validator.msg());
+        DUNE_THROW(Exceptions::configuration_error, validator.msg(val));
     } catch (boost::bad_lexical_cast& e) {
       DUNE_THROW(Exceptions::external_error,
                  "Error in boost while converting the string '" << valstring << "' to type '" << Typename<T>::value()
