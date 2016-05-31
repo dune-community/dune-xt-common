@@ -35,6 +35,7 @@
 #include <dune/xt/common/reenable_warnings.hh>
 
 #include <dune/xt/common/type_traits.hh>
+#include <dune/xt/common/vector.hh>
 #include <dune/common/deprecated.hh>
 
 namespace Dune {
@@ -177,9 +178,21 @@ protected:
 
 //! \return var bounded in [min, max]
 template <typename T>
-T clamp(const T var, const T min, const T max)
+typename std::enable_if<!is_vector<T>::value, T>::type clamp(const T var, const T min, const T max)
 {
   return (var < min) ? min : (var > max) ? max : var;
+}
+
+template <typename T>
+typename std::enable_if<is_vector<T>::value, T>::type clamp(const T var, const T min, const T max)
+{
+  auto result     = var;
+  std::size_t idx = 0;
+  for (auto&& element : var) {
+    result[idx] = clamp(element, min[idx], max[idx]);
+    ++idx;
+  }
+  return result;
 }
 
 /**

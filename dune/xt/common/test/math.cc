@@ -19,27 +19,39 @@
 #include <dune/xt/common/ranges.hh>
 
 using namespace Dune::XT::Common;
+typedef testing::Types<double, int, Dune::FieldVector<double, 3>, std::vector<double>> ClampTestTypes;
 typedef testing::Types<double, int> TestTypes;
 typedef testing::Types<std::complex<double>, double, int> ComplexTestTypes;
 
+template <typename T>
+static typename std::enable_if<is_vector<T>::value, T>::type init_bound(int val)
+{
+  const auto size = VectorAbstraction<T>::has_static_size ? VectorAbstraction<T>::static_size : 3u;
+  return VectorAbstraction<T>::create(size, val);
+}
+template <typename T>
+static typename std::enable_if<!is_vector<T>::value, T>::type init_bound(int val)
+{
+  return T(val);
+}
 template <class T>
 struct ClampTest : public testing::Test
 {
   const T lower;
   const T upper;
   ClampTest()
-    : lower(T(-1))
-    , upper(T(1))
+    : lower(init_bound<T>(-1))
+    , upper(init_bound<T>(1))
   {
   }
 };
 
-TYPED_TEST_CASE(ClampTest, TestTypes);
+TYPED_TEST_CASE(ClampTest, ClampTestTypes);
 TYPED_TEST(ClampTest, All)
 {
-  EXPECT_EQ(clamp(TypeParam(-2), this->lower, this->upper), this->lower);
-  EXPECT_EQ(clamp(TypeParam(2), this->lower, this->upper), this->upper);
-  EXPECT_EQ(clamp(TypeParam(0), this->lower, this->upper), TypeParam(0));
+  EXPECT_EQ(clamp(init_bound<TypeParam>(-2), this->lower, this->upper), this->lower);
+  EXPECT_EQ(clamp(init_bound<TypeParam>(2), this->lower, this->upper), this->upper);
+  EXPECT_EQ(clamp(init_bound<TypeParam>(0), this->lower, this->upper), init_bound<TypeParam>(0));
 }
 
 template <class T>
