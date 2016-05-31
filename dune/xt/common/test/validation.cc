@@ -30,7 +30,7 @@
 using namespace Dune::XT::Common;
 
 typedef testing::Types<double, float, // Dune::bigunsignedint,
-                       int, unsigned int, unsigned long, long long, char> MathTestTypes;
+                       int, unsigned int, unsigned long, long long, char, Dune::FieldVector<double, 3>> MathTestTypes;
 
 template <class T>
 struct ValidationTest : public testing::Test

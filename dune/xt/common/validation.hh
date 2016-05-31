@@ -119,8 +119,7 @@ public:
   }
   inline bool operator()(const T& val) const
   {
-    return baseval_ < val;
-    return FloatCmp::lt(baseval_, val);
+    return FloatCmp::lt(val, baseval_);
   }
 
   std::string msg(const T& value) const
@@ -144,7 +143,7 @@ public:
   }
   inline bool operator()(const T& val) const
   {
-    return FloatCmp::gt(baseval_, val);
+    return FloatCmp::gt(val, baseval_);
   }
 
   std::string msg(const T& value) const
