@@ -1,0 +1,7 @@
+
+__exec_suffix = {suf_testtype}
+testtype = double, float, int, unsigned int, unsigned long, long long, char, Dune::FieldVector<double\, 3> | expand field
+suf_testtype = double, float, int, unsigned_int, unsigned_long, long_long, char, field_vector_double_3 | expand field
+
+[__static]
+FIELD_TYPE = {testtype} 
