@@ -72,6 +72,24 @@ struct DefaultEpsilon<std::complex<T>, Style::numpy>
   }
 };
 
+template <Style style>
+struct DefaultEpsilon<long, style>
+{
+  static long value()
+  {
+    return std::numeric_limits<long>::epsilon();
+  }
+};
+
+template <>
+struct DefaultEpsilon<long, Style::numpy>
+{
+  static long value()
+  {
+    return std::numeric_limits<long>::epsilon();
+  }
+};
+
 template <class V>
 struct MT
 {
