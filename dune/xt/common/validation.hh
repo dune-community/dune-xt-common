@@ -32,14 +32,14 @@ template <class T, class Derived>
 class ValidatorInterface
 {
 public:
-  bool operator()(const T& value) const
+  bool operator()(const T& rhs) const
   {
-    return as_imp()(value);
+    return as_imp()(rhs);
   }
 
-  std::string msg(const T& val) const
+  std::string msg(const T& rhs) const
   {
-    return as_imp().msg(val);
+    return as_imp().msg(rhs);
   }
 
 protected:
@@ -95,9 +95,9 @@ public:
   {
   }
 
-  inline bool operator()(const T& val) const
+  inline bool operator()(const T& rhs) const
   {
-    return std::find(valid_list_.begin(), valid_list_.end(), val) != valid_list_.end();
+    return std::find(valid_list_.begin(), valid_list_.end(), rhs) != valid_list_.end();
   }
 
   std::string msg(const T& value) const
@@ -113,23 +113,23 @@ template <class T>
 class ValidateLess : public ValidatorInterface<T, ValidateLess<T>>
 {
 public:
-  ValidateLess(const T& baseval)
-    : baseval_(baseval)
+  ValidateLess(const T& lhs)
+    : lhs_(lhs)
   {
   }
-  inline bool operator()(const T& val) const
+  inline bool operator()(const T& rhs) const
   {
-    return FloatCmp::lt(baseval_, val, 0., 0.);
+    return FloatCmp::lt(lhs_, rhs, 0., 0.);
   }
 
   std::string msg(const T& value) const
   {
-    return (boost::format("given value %s was invalid: not less than %s") % to_string(value) % to_string(baseval_))
+    return (boost::format("given value %s was invalid: not less than %s") % to_string(value) % to_string(lhs_))
         .str();
   }
 
 private:
-  const T baseval_;
+  const T lhs_;
 };
 
 //! validate arg iff greater than value, obviously
@@ -137,23 +137,23 @@ template <class T>
 class ValidateGreater : public ValidatorInterface<T, ValidateGreater<T>>
 {
 public:
-  ValidateGreater(const T& baseval)
-    : baseval_(baseval)
+  ValidateGreater(const T& lhs)
+    : lhs_(lhs)
   {
   }
-  inline bool operator()(const T& val) const
+  inline bool operator()(const T& rhs) const
   {
-    return FloatCmp::gt(baseval_, val, 0., 0.);
+    return FloatCmp::gt(lhs_, rhs, 0., 0.);
   }
 
   std::string msg(const T& value) const
   {
-    return (boost::format("given value %s was invalid: not greater than %s") % to_string(value) % to_string(baseval_))
+    return (boost::format("given value %s was invalid: not greater than %s") % to_string(value) % to_string(lhs_))
         .str();
   }
 
 private:
-  const T baseval_;
+  const T lhs_;
 };
 
 //! validate iff not Validator(arg)
@@ -209,10 +209,10 @@ public:
   {
   }
 
-  inline bool operator()(const T& val) const
+  inline bool operator()(const T& rhs) const
   {
-    const bool lowerOk = ValidateGreaterOrEqual<T>(val)(min_);
-    const bool upperOk = ValidateGreaterOrEqual<T>(max_)(val);
+    const bool lowerOk = ValidateGreaterOrEqual<T>(rhs)(min_);
+    const bool upperOk = ValidateGreaterOrEqual<T>(max_)(rhs);
     return lowerOk && upperOk;
   }
 
