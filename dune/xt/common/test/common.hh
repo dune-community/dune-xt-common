@@ -80,13 +80,15 @@ void print_collected_eoc_study_results(const std::map<std::string, std::vector<d
 unsigned int grid_elements();
 
 template <typename T>
-static typename std::enable_if<Common::is_vector<T>::value, T>::type init_bound(typename Common::VectorAbstraction<T>::S val)
+static typename std::enable_if<Common::is_vector<T>::value, T>::type
+init_bound(typename Common::VectorAbstraction<T>::S val)
 {
   const auto size = Common::VectorAbstraction<T>::has_static_size ? Common::VectorAbstraction<T>::static_size : 3u;
   return Common::VectorAbstraction<T>::create(size, val);
 }
 template <typename T>
-static typename std::enable_if<!Common::is_vector<T>::value, T>::type init_bound(typename Common::VectorAbstraction<T>::S val)
+static typename std::enable_if<!Common::is_vector<T>::value, T>::type
+init_bound(typename Common::VectorAbstraction<T>::S val)
 {
   return T(val);
 }

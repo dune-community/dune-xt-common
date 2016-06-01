@@ -27,20 +27,20 @@ TEST(Init, Random)
 {
   typedef RNG_FIELD_TYPE T;
   typedef DefaultRNG<T> RNG;
-//  typedef typename VectorAbstraction<T>::S Scalar;
+  //  typedef typename VectorAbstraction<T>::S Scalar;
   const auto lower_bound = init_bound<T>(1);
   // for the int check we need at least on int in between lower and upper bound
   const auto upper_bound = init_bound<T>(3);
-  const auto seed = init_bound<T>(0);
+  const auto seed        = init_bound<T>(0);
   RNG rng1;
   RNG rng2(lower_bound);
   RNG rng3(lower_bound, upper_bound);
   RNG rng4(lower_bound, upper_bound, seed);
-  for(auto& r : std::array<RNG, 3>{{rng2, rng3, rng4}}) {
+  for (auto& r : std::array<RNG, 3>{{rng2, rng3, rng4}}) {
     const auto val = r();
     EXPECT_TRUE(FloatCmp::ge(val, lower_bound));
   }
-  for(auto& r : std::array<RNG, 2>{{rng3, rng4}}) {
+  for (auto& r : std::array<RNG, 2>{{rng3, rng4}}) {
     const auto val = r();
     EXPECT_TRUE(FloatCmp::le(val, upper_bound));
   }
@@ -55,4 +55,3 @@ TEST(Init, Random)
   std::string rstr = str_rng();
   EXPECT_EQ(rstr.size(), 2);
 }
-

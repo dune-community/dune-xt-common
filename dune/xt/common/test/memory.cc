@@ -23,19 +23,22 @@ struct ScopeTest : public testing::Test
   typedef int T;
   static constexpr T constant = 1;
   template <class P>
-  void deref(P& p) {
+  void deref(P& p)
+  {
     EXPECT_NE(p, nullptr);
     auto g = *p;
     EXPECT_EQ(constant, g);
   }
 
   template <template <class F> class Provider, class P>
-  void scope(P& p) {
+  void scope(P& p)
+  {
     Provider<T> shared_provider(p);
     deref(p);
   }
 
-  void check_shared() {
+  void check_shared()
+  {
     auto shared = std::make_shared<T>(constant);
     scope<ConstStorageProvider>(shared);
     deref(shared);

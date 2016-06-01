@@ -124,8 +124,7 @@ public:
 
   std::string msg(const T& value) const
   {
-    return (boost::format("given value %s was invalid: not less than %s") % to_string(value) % to_string(lhs_))
-        .str();
+    return (boost::format("given value %s was invalid: not less than %s") % to_string(value) % to_string(lhs_)).str();
   }
 
 private:
