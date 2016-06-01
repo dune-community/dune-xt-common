@@ -9,8 +9,8 @@ __local.cmpstyle_template = , <Style::{__local.cmpstyles}> | expand cmpstyle_tem
 __local.cmpstyle_template_short = none, {__local.cmpstyles} | expand cmpstyle_templ
 __local.default_eps = DefaultEpsilon<S>, DefaultEpsilon<S\,Style::{__local.cmpstyles}> | expand cmpstyle_templ
 
-__local.fieldtype = double, std::complex<double> | expand field
-__local.fieldtype_short = double, complex | expand field
+__local.fieldtype = long, double, std::complex<double> | expand field
+__local.fieldtype_short = long, double, complex | expand field
 __local.vectortype = std::vector<{__local.fieldtype}>, Dune::FieldVector<{__local.fieldtype}\,{__local.vec_size}>, FieldVector<{__local.fieldtype}\,{__local.vec_size}>, Dune::DynamicVector<{__local.fieldtype}> | expand vector
 __local.vectortype_short = std_vector, dune_fieldvector, xt_fieldvector, dynamic_vector | expand vector
 __local.testtype = {__local.fieldtype}, {__local.vectortype} | expand test
