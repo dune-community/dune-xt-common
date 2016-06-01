@@ -57,87 +57,103 @@ struct FloatCmpTest : public testing::Test
   {
 
     TEST_DXTC_EXPECT_FLOAT_EQ(zero, zero);
-    EXPECT_FALSE(FLOATCMP_EQ(zero, eps_plus));
     EXPECT_FALSE(FLOATCMP_EQ(zero, one));
     TEST_DXTC_EXPECT_FLOAT_EQ(one, one + eps_minus);
     EXPECT_FALSE(FLOATCMP_EQ(one, two));
 
-    if (test_config["cmpstyle_is_relative"] == "true")
+    if (test_config["cmpstyle_is_relative"] == "true" && test_config["fieldtype_is_float"] == "true")
       EXPECT_FALSE(FLOATCMP_EQ(zero, eps_minus));
     else
       TEST_DXTC_EXPECT_FLOAT_EQ(zero, eps_minus);
 
-    if (test_config["cmpstyle_is_numpy"] == "true")
+    if (test_config["cmpstyle_is_numpy"] == "true" || test_config["fieldtype_is_float"] == "false")
       TEST_DXTC_EXPECT_FLOAT_EQ(one, one + eps_plus);
     else
-      EXPECT_FALSE(FLOATCMP_EQ(one, one + eps_minus));
+      EXPECT_FALSE(FLOATCMP_EQ(one, one + eps_plus));
+
+    if (test_config["fieldtype_is_float"] == "true")
+      EXPECT_FALSE(FLOATCMP_EQ(zero, eps_plus));
+    else
+      TEST_DXTC_EXPECT_FLOAT_EQ(zero, eps_plus);
   }
 
   void check_ne()
   {
     EXPECT_FALSE(FLOATCMP_NE(zero, zero));
-    TEST_DXTC_EXPECT_FLOAT_NE(zero, eps_minus);
     TEST_DXTC_EXPECT_FLOAT_NE(zero, one);
     EXPECT_FALSE(FLOATCMP_NE(one, one + eps_minus));
     TEST_DXTC_EXPECT_FLOAT_NE(one, two);
 
-    if (test_config["cmpstyle_is_relative"] == "true")
+    if (test_config["cmpstyle_is_relative"] == "true" && test_config["fieldtype_is_float"] == "true")
       TEST_DXTC_EXPECT_FLOAT_NE(zero, eps_minus);
     else
       EXPECT_FALSE(FLOATCMP_NE(zero, eps_minus));
 
-    if (test_config["cmpstyle_is_numpy"] == "true")
-      EXPECT_FALSE(FLOATCMP_NE(one, one + eps_minus));
+    if (test_config["cmpstyle_is_numpy"] == "true" || test_config["fieldtype_is_float"] == "false")
+      EXPECT_FALSE(FLOATCMP_NE(one, one + eps_plus));
     else
-      TEST_DXTC_EXPECT_FLOAT_NE(one, one + eps_minus);
+      TEST_DXTC_EXPECT_FLOAT_NE(one, one + eps_plus);
+
+    if (test_config["fieldtype_is_float"] == "true")
+      TEST_DXTC_EXPECT_FLOAT_NE(zero, eps_plus);
+    else
+      EXPECT_FALSE(FLOATCMP_NE(zero, eps_plus));
   }
 
   void check_gt()
   {
     EXPECT_FALSE(FLOATCMP_GT(zero, zero));
-    TEST_DXTC_EXPECT_FLOAT_GT(eps_minus, zero);
     TEST_DXTC_EXPECT_FLOAT_GT(one, zero);
     EXPECT_FALSE(FLOATCMP_GT(one + eps_minus, one));
     TEST_DXTC_EXPECT_FLOAT_GT(two, one);
 
-    if (test_config["cmpstyle_is_relative"] == "true")
+    if (test_config["cmpstyle_is_relative"] == "true" && test_config["fieldtype_is_float"] == "true")
       TEST_DXTC_EXPECT_FLOAT_GT(eps_minus, zero);
     else
       EXPECT_FALSE(FLOATCMP_GT(eps_minus, zero));
 
-    if (test_config["cmpstyle_is_numpy"] == "true")
-      EXPECT_FALSE(FLOATCMP_GT(one + eps_minus, one));
+    if (test_config["cmpstyle_is_numpy"] == "true" || test_config["fieldtype_is_float"] == "false")
+      EXPECT_FALSE(FLOATCMP_GT(one + eps_plus, one));
     else
-      TEST_DXTC_EXPECT_FLOAT_GT(one + eps_minus, one);
+      TEST_DXTC_EXPECT_FLOAT_GT(one + eps_plus, one);
+
+    if (test_config["fieldtype_is_float"] == "true")
+      TEST_DXTC_EXPECT_FLOAT_GT(eps_plus, zero);
+    else
+      EXPECT_FALSE(FLOATCMP_GT(eps_plus, zero));
   }
 
   void check_lt()
   {
     EXPECT_FALSE(FLOATCMP_LT(zero, zero));
-    TEST_DXTC_EXPECT_FLOAT_LT(zero, eps_minus);
     TEST_DXTC_EXPECT_FLOAT_LT(zero, one);
     EXPECT_FALSE(FLOATCMP_LT(one, one + eps_minus));
     TEST_DXTC_EXPECT_FLOAT_LT(one, two);
 
-    if (test_config["cmpstyle_is_relative"] == "true")
+    if (test_config["cmpstyle_is_relative"] == "true" && test_config["fieldtype_is_float"] == "true")
       TEST_DXTC_EXPECT_FLOAT_LT(zero, eps_minus);
     else
       EXPECT_FALSE(FLOATCMP_LT(zero, eps_minus));
 
-    if (test_config["cmpstyle_is_numpy"] == "true")
-      EXPECT_FALSE(FLOATCMP_LT(one, one + eps_minus));
+    if (test_config["cmpstyle_is_numpy"] == "true" || test_config["fieldtype_is_float"] == "false")
+      EXPECT_FALSE(FLOATCMP_LT(one, one + eps_plus));
     else
-      TEST_DXTC_EXPECT_FLOAT_LT(one, one + eps_minus);
+      TEST_DXTC_EXPECT_FLOAT_LT(one, one + eps_plus);
+
+    if (test_config["fieldtype_is_float"] == "true")
+      TEST_DXTC_EXPECT_FLOAT_LT(zero, eps_plus);
+    else
+      EXPECT_FALSE(FLOATCMP_LT(zero, eps_plus));
   }
 
   void check_ge()
   {
     TEST_DXTC_EXPECT_FLOAT_GE(zero, zero);
     TEST_DXTC_EXPECT_FLOAT_GE(eps_minus, zero);
-    TEST_DXTC_EXPECT_FLOAT_GE(eps_minus, zero);
+    TEST_DXTC_EXPECT_FLOAT_GE(eps_plus, zero);
     TEST_DXTC_EXPECT_FLOAT_GE(one, zero);
     TEST_DXTC_EXPECT_FLOAT_GE(one + eps_minus, one);
-    TEST_DXTC_EXPECT_FLOAT_GE(one + eps_minus, one);
+    TEST_DXTC_EXPECT_FLOAT_GE(one + eps_plus, one);
     TEST_DXTC_EXPECT_FLOAT_GE(two, one);
   }
 
@@ -145,10 +161,10 @@ struct FloatCmpTest : public testing::Test
   {
     TEST_DXTC_EXPECT_FLOAT_LE(zero, zero);
     TEST_DXTC_EXPECT_FLOAT_LE(zero, eps_minus);
-    TEST_DXTC_EXPECT_FLOAT_LE(zero, eps_minus);
+    TEST_DXTC_EXPECT_FLOAT_LE(zero, eps_plus);
     TEST_DXTC_EXPECT_FLOAT_LE(zero, one);
     TEST_DXTC_EXPECT_FLOAT_LE(one, one + eps_minus);
-    TEST_DXTC_EXPECT_FLOAT_LE(one, one + eps_minus);
+    TEST_DXTC_EXPECT_FLOAT_LE(one, one + eps_plus);
     TEST_DXTC_EXPECT_FLOAT_LE(one, two);
   }
 }; // struct FloatCmpBase
