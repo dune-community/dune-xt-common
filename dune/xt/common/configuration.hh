@@ -314,12 +314,9 @@ private:
                     const size_t size, const size_t cols) const
   {
     std::string valstring = BaseType::get(key, to_string(def));
+    T val;
     try {
-      T val = from_string<T>(valstring, size, cols);
-      if (validator(val))
-        return val;
-      else
-        DUNE_THROW(Exceptions::configuration_error, validator.msg(val));
+      val = from_string<T>(valstring, size, cols);
     } catch (boost::bad_lexical_cast& e) {
       DUNE_THROW(Exceptions::external_error,
                  "Error in boost while converting the string '" << valstring << "' to type '" << Typename<T>::value()
@@ -339,6 +336,10 @@ private:
                                                                   << " with default "
                                                                   << to_string(def));
     }
+    if (validator(val))
+      return val;
+    else
+      DUNE_THROW(Exceptions::configuration_error, validator.msg(val));
   } // ... get_valid_value(...)
 
   /** \brief all public get signatures call this one
