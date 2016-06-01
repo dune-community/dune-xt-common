@@ -37,7 +37,10 @@ struct FloatCmpTest : public testing::Test
   FloatCmpTest()
     : zero(create<V>(s_size, create<S>(0, 0)))
     , one(create<V>(s_size, create<S>(0, 1)))
-    , epsilon(create<V>(s_size, DEFAULT_EPSILON::value()))
+    , epsilon(create<V>(s_size, XT::Common::FloatCmp::DEFAULT_EPSILON::value()))
+    , eps_plus(create<V>(s_size, XT::Common::FloatCmp::DEFAULT_EPSILON::value() * 1.1))
+    , eps_minus(create<V>(s_size, XT::Common::FloatCmp::DEFAULT_EPSILON::value() * 0.9))
+    , two(create<V>(s_size, create<S>(0, 2)))
     , test_config(DXTC_CONFIG.sub("test_common_float_cmp"))
   {
   }
@@ -45,104 +48,108 @@ struct FloatCmpTest : public testing::Test
   const V zero;
   const V one;
   const V epsilon;
+  const V eps_plus;
+  const V eps_minus;
+  const V two;
   const typename XT::Common::Configuration test_config;
 
   void check_eq()
   {
+
     TEST_DXTC_EXPECT_FLOAT_EQ(zero, zero);
-    EXPECT_FALSE(FLOATCMP_EQ(zero, 1.1 * epsilon));
+    EXPECT_FALSE(FLOATCMP_EQ(zero, eps_plus));
     EXPECT_FALSE(FLOATCMP_EQ(zero, one));
-    TEST_DXTC_EXPECT_FLOAT_EQ(one, one + 0.9 * epsilon);
-    EXPECT_FALSE(FLOATCMP_EQ(one, 2. * one));
+    TEST_DXTC_EXPECT_FLOAT_EQ(one, one + eps_minus);
+    EXPECT_FALSE(FLOATCMP_EQ(one, two));
 
     if (test_config["cmpstyle_is_relative"] == "true")
-      EXPECT_FALSE(FLOATCMP_EQ(zero, 0.9 * epsilon));
+      EXPECT_FALSE(FLOATCMP_EQ(zero, eps_minus));
     else
-      TEST_DXTC_EXPECT_FLOAT_EQ(zero, 0.9 * epsilon);
+      TEST_DXTC_EXPECT_FLOAT_EQ(zero, eps_minus);
 
     if (test_config["cmpstyle_is_numpy"] == "true")
-      TEST_DXTC_EXPECT_FLOAT_EQ(one, one + 1.1 * epsilon);
+      TEST_DXTC_EXPECT_FLOAT_EQ(one, one + eps_plus);
     else
-      EXPECT_FALSE(FLOATCMP_EQ(one, one + 1.1 * epsilon));
+      EXPECT_FALSE(FLOATCMP_EQ(one, one + eps_minus));
   }
 
   void check_ne()
   {
     EXPECT_FALSE(FLOATCMP_NE(zero, zero));
-    TEST_DXTC_EXPECT_FLOAT_NE(zero, 1.1 * epsilon);
+    TEST_DXTC_EXPECT_FLOAT_NE(zero, eps_minus);
     TEST_DXTC_EXPECT_FLOAT_NE(zero, one);
-    EXPECT_FALSE(FLOATCMP_NE(one, one + 0.9 * epsilon));
-    TEST_DXTC_EXPECT_FLOAT_NE(one, 2. * one);
+    EXPECT_FALSE(FLOATCMP_NE(one, one + eps_minus));
+    TEST_DXTC_EXPECT_FLOAT_NE(one, two);
 
     if (test_config["cmpstyle_is_relative"] == "true")
-      TEST_DXTC_EXPECT_FLOAT_NE(zero, 0.9 * epsilon);
+      TEST_DXTC_EXPECT_FLOAT_NE(zero, eps_minus);
     else
-      EXPECT_FALSE(FLOATCMP_NE(zero, 0.9 * epsilon));
+      EXPECT_FALSE(FLOATCMP_NE(zero, eps_minus));
 
     if (test_config["cmpstyle_is_numpy"] == "true")
-      EXPECT_FALSE(FLOATCMP_NE(one, one + 1.1 * epsilon));
+      EXPECT_FALSE(FLOATCMP_NE(one, one + eps_minus));
     else
-      TEST_DXTC_EXPECT_FLOAT_NE(one, one + 1.1 * epsilon);
+      TEST_DXTC_EXPECT_FLOAT_NE(one, one + eps_minus);
   }
 
   void check_gt()
   {
     EXPECT_FALSE(FLOATCMP_GT(zero, zero));
-    TEST_DXTC_EXPECT_FLOAT_GT(1.1 * epsilon, zero);
+    TEST_DXTC_EXPECT_FLOAT_GT(eps_minus, zero);
     TEST_DXTC_EXPECT_FLOAT_GT(one, zero);
-    EXPECT_FALSE(FLOATCMP_GT(one + 0.9 * epsilon, one));
-    TEST_DXTC_EXPECT_FLOAT_GT(2. * one, one);
+    EXPECT_FALSE(FLOATCMP_GT(one + eps_minus, one));
+    TEST_DXTC_EXPECT_FLOAT_GT(two, one);
 
     if (test_config["cmpstyle_is_relative"] == "true")
-      TEST_DXTC_EXPECT_FLOAT_GT(0.9 * epsilon, zero);
+      TEST_DXTC_EXPECT_FLOAT_GT(eps_minus, zero);
     else
-      EXPECT_FALSE(FLOATCMP_GT(0.9 * epsilon, zero));
+      EXPECT_FALSE(FLOATCMP_GT(eps_minus, zero));
 
     if (test_config["cmpstyle_is_numpy"] == "true")
-      EXPECT_FALSE(FLOATCMP_GT(one + 1.1 * epsilon, one));
+      EXPECT_FALSE(FLOATCMP_GT(one + eps_minus, one));
     else
-      TEST_DXTC_EXPECT_FLOAT_GT(one + 1.1 * epsilon, one);
+      TEST_DXTC_EXPECT_FLOAT_GT(one + eps_minus, one);
   }
 
   void check_lt()
   {
     EXPECT_FALSE(FLOATCMP_LT(zero, zero));
-    TEST_DXTC_EXPECT_FLOAT_LT(zero, 1.1 * epsilon);
+    TEST_DXTC_EXPECT_FLOAT_LT(zero, eps_minus);
     TEST_DXTC_EXPECT_FLOAT_LT(zero, one);
-    EXPECT_FALSE(FLOATCMP_LT(one, one + 0.9 * epsilon));
-    TEST_DXTC_EXPECT_FLOAT_LT(one, 2. * one);
+    EXPECT_FALSE(FLOATCMP_LT(one, one + eps_minus));
+    TEST_DXTC_EXPECT_FLOAT_LT(one, two);
 
     if (test_config["cmpstyle_is_relative"] == "true")
-      TEST_DXTC_EXPECT_FLOAT_LT(zero, 0.9 * epsilon);
+      TEST_DXTC_EXPECT_FLOAT_LT(zero, eps_minus);
     else
-      EXPECT_FALSE(FLOATCMP_LT(zero, 0.9 * epsilon));
+      EXPECT_FALSE(FLOATCMP_LT(zero, eps_minus));
 
     if (test_config["cmpstyle_is_numpy"] == "true")
-      EXPECT_FALSE(FLOATCMP_LT(one, one + 1.1 * epsilon));
+      EXPECT_FALSE(FLOATCMP_LT(one, one + eps_minus));
     else
-      TEST_DXTC_EXPECT_FLOAT_LT(one, one + 1.1 * epsilon);
+      TEST_DXTC_EXPECT_FLOAT_LT(one, one + eps_minus);
   }
 
   void check_ge()
   {
     TEST_DXTC_EXPECT_FLOAT_GE(zero, zero);
-    TEST_DXTC_EXPECT_FLOAT_GE(0.9 * epsilon, zero);
-    TEST_DXTC_EXPECT_FLOAT_GE(1.1 * epsilon, zero);
+    TEST_DXTC_EXPECT_FLOAT_GE(eps_minus, zero);
+    TEST_DXTC_EXPECT_FLOAT_GE(eps_minus, zero);
     TEST_DXTC_EXPECT_FLOAT_GE(one, zero);
-    TEST_DXTC_EXPECT_FLOAT_GE(one + 0.9 * epsilon, one);
-    TEST_DXTC_EXPECT_FLOAT_GE(one + 1.1 * epsilon, one);
-    TEST_DXTC_EXPECT_FLOAT_GE(2. * one, one);
+    TEST_DXTC_EXPECT_FLOAT_GE(one + eps_minus, one);
+    TEST_DXTC_EXPECT_FLOAT_GE(one + eps_minus, one);
+    TEST_DXTC_EXPECT_FLOAT_GE(two, one);
   }
 
   void check_le()
   {
     TEST_DXTC_EXPECT_FLOAT_LE(zero, zero);
-    TEST_DXTC_EXPECT_FLOAT_LE(zero, 0.9 * epsilon);
-    TEST_DXTC_EXPECT_FLOAT_LE(zero, 1.1 * epsilon);
+    TEST_DXTC_EXPECT_FLOAT_LE(zero, eps_minus);
+    TEST_DXTC_EXPECT_FLOAT_LE(zero, eps_minus);
     TEST_DXTC_EXPECT_FLOAT_LE(zero, one);
-    TEST_DXTC_EXPECT_FLOAT_LE(one, one + 0.9 * epsilon);
-    TEST_DXTC_EXPECT_FLOAT_LE(one, one + 1.1 * epsilon);
-    TEST_DXTC_EXPECT_FLOAT_LE(one, 2. * one);
+    TEST_DXTC_EXPECT_FLOAT_LE(one, one + eps_minus);
+    TEST_DXTC_EXPECT_FLOAT_LE(one, one + eps_minus);
+    TEST_DXTC_EXPECT_FLOAT_LE(one, two);
   }
 }; // struct FloatCmpBase
 
