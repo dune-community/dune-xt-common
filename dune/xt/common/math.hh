@@ -206,7 +206,7 @@ int signum(T val)
   return (T(0) < val) - (val < T(0));
 }
 
-/** enable us to use DSC::numeric_limits for all types, even when no specialization is avaliable.
+/** enable us to use DXTC::numeric_limits for all types, even when no specialization is avaliable.
  * If there is one, it's used. Otherwise we default to numerical_limtis of double
  **/
 template <class T, typename = void>

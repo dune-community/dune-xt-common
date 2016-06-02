@@ -259,7 +259,7 @@ void Configuration::setup_()
     logfile_ = boost::filesystem::path(internal::configuration_logfile).string();
   if (has_key("global.datadir") && has_key("logging.dir"))
     logfile_ = (boost::filesystem::path(get<std::string>("global.datadir")) / get<std::string>("logging.dir")
-                / "dsc_parameter.log")
+                / "dxtc_parameter.log")
                    .string();
   logfile_ = boost::filesystem::path(logfile_).string();
 } // ... setup_(...)
