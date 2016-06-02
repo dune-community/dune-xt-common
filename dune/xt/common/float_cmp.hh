@@ -28,7 +28,7 @@ namespace XT {
 namespace Common {
 namespace FloatCmp {
 
-template <class T, Style style = Style::defaultStyle>
+template <class T, Style style = Style::defaultStyle, bool = std::is_integral<T>::value>
 struct DefaultEpsilon
 {
   typedef typename Dune::FloatCmp::EpsilonType<T>::Type Type;
@@ -40,7 +40,7 @@ struct DefaultEpsilon
 
 //! since we treat complex like a vector its epsilon is (eps,eps) of its scalar type
 template <class T, Style style>
-struct DefaultEpsilon<std::complex<T>, style>
+struct DefaultEpsilon<std::complex<T>, style, false>
 {
   typedef typename Dune::FloatCmp::EpsilonType<std::complex<T>>::Type Type;
   static Type value()
@@ -51,7 +51,7 @@ struct DefaultEpsilon<std::complex<T>, style>
 };
 
 template <class T>
-struct DefaultEpsilon<T, Style::numpy>
+struct DefaultEpsilon<T, Style::numpy, false>
 {
   typedef typename Dune::FloatCmp::EpsilonType<T>::Type Type;
   static Type value()
@@ -62,13 +62,33 @@ struct DefaultEpsilon<T, Style::numpy>
 
 //! necessary to avoid ambig. partial specialization
 template <class T>
-struct DefaultEpsilon<std::complex<T>, Style::numpy>
+struct DefaultEpsilon<std::complex<T>, Style::numpy, false>
 {
   typedef typename Dune::FloatCmp::EpsilonType<std::complex<T>>::Type Type;
   static Type value()
   {
     const auto val = Dune::FloatCmp::DefaultEpsilon<T, Dune::FloatCmp::relativeStrong>::value();
     return std::complex<T>(val, val);
+  }
+};
+
+//! these integral specialisations are only necessary because dune-common's DefaultEpsilon
+//! tries to instantiate invalid code for integers
+template <class T, Style style>
+struct DefaultEpsilon<T, style, true>
+{
+  static long value()
+  {
+    return std::numeric_limits<T>::epsilon();
+  }
+};
+
+template <class T>
+struct DefaultEpsilon<T, Style::numpy, true>
+{
+  static long value()
+  {
+    return std::numeric_limits<T>::epsilon();
   }
 };
 
