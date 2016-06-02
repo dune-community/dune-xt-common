@@ -164,7 +164,7 @@ public:
     acc_(el);
   }
 
-  void output(std::ostream& stream)
+  void output(std::ostream& stream) const
   {
     stream << boost::format("min: %e\tmax: %e\tavg: %e\n") % min() % max() % average();
   }
@@ -253,5 +253,12 @@ bool isinf(std::complex<T> val)
 } // namespace Dune
 
 namespace std {
+}
+
+template <class T>
+inline std::ostream& operator<<(std::ostream& s, const Dune::XT::Common::MinMaxAvg<T>& d)
+{
+  d.output(s);
+  return s;
 }
 #endif // DUNE_XT_COMMON_MATH_HH
