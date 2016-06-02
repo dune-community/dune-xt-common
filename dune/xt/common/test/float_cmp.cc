@@ -33,6 +33,7 @@ struct FloatCmpTest : public testing::Test
 
   typedef typename VectorAbstraction<V>::ScalarType S;
   typedef typename VectorAbstraction<V>::RealType R;
+  static constexpr bool fieldtype_is_float = std::is_floating_point<R>::value;
 
   FloatCmpTest()
     : zero(create<V>(s_size, create<S>(0, 0)))
@@ -61,17 +62,17 @@ struct FloatCmpTest : public testing::Test
     TEST_DXTC_EXPECT_FLOAT_EQ(one, one + eps_minus);
     EXPECT_FALSE(FLOATCMP_EQ(one, two));
 
-    if (test_config["cmpstyle_is_relative"] == "true" && test_config["fieldtype_is_float"] == "true")
+    if (test_config["cmpstyle_is_relative"] == "true" && fieldtype_is_float)
       EXPECT_FALSE(FLOATCMP_EQ(zero, eps_minus));
     else
       TEST_DXTC_EXPECT_FLOAT_EQ(zero, eps_minus);
 
-    if (test_config["cmpstyle_is_numpy"] == "true" || test_config["fieldtype_is_float"] == "false")
+    if (test_config["cmpstyle_is_numpy"] == "true" || !fieldtype_is_float)
       TEST_DXTC_EXPECT_FLOAT_EQ(one, one + eps_plus);
     else
       EXPECT_FALSE(FLOATCMP_EQ(one, one + eps_plus));
 
-    if (test_config["fieldtype_is_float"] == "true")
+    if (fieldtype_is_float)
       EXPECT_FALSE(FLOATCMP_EQ(zero, eps_plus));
     else
       TEST_DXTC_EXPECT_FLOAT_EQ(zero, eps_plus);
@@ -84,17 +85,17 @@ struct FloatCmpTest : public testing::Test
     EXPECT_FALSE(FLOATCMP_NE(one, one + eps_minus));
     TEST_DXTC_EXPECT_FLOAT_NE(one, two);
 
-    if (test_config["cmpstyle_is_relative"] == "true" && test_config["fieldtype_is_float"] == "true")
+    if (test_config["cmpstyle_is_relative"] == "true" && fieldtype_is_float)
       TEST_DXTC_EXPECT_FLOAT_NE(zero, eps_minus);
     else
       EXPECT_FALSE(FLOATCMP_NE(zero, eps_minus));
 
-    if (test_config["cmpstyle_is_numpy"] == "true" || test_config["fieldtype_is_float"] == "false")
+    if (test_config["cmpstyle_is_numpy"] == "true" || !fieldtype_is_float)
       EXPECT_FALSE(FLOATCMP_NE(one, one + eps_plus));
     else
       TEST_DXTC_EXPECT_FLOAT_NE(one, one + eps_plus);
 
-    if (test_config["fieldtype_is_float"] == "true")
+    if (fieldtype_is_float)
       TEST_DXTC_EXPECT_FLOAT_NE(zero, eps_plus);
     else
       EXPECT_FALSE(FLOATCMP_NE(zero, eps_plus));
@@ -107,17 +108,17 @@ struct FloatCmpTest : public testing::Test
     EXPECT_FALSE(FLOATCMP_GT(one + eps_minus, one));
     TEST_DXTC_EXPECT_FLOAT_GT(two, one);
 
-    if (test_config["cmpstyle_is_relative"] == "true" && test_config["fieldtype_is_float"] == "true")
+    if (test_config["cmpstyle_is_relative"] == "true" && fieldtype_is_float)
       TEST_DXTC_EXPECT_FLOAT_GT(eps_minus, zero);
     else
       EXPECT_FALSE(FLOATCMP_GT(eps_minus, zero));
 
-    if (test_config["cmpstyle_is_numpy"] == "true" || test_config["fieldtype_is_float"] == "false")
+    if (test_config["cmpstyle_is_numpy"] == "true" || !fieldtype_is_float)
       EXPECT_FALSE(FLOATCMP_GT(one + eps_plus, one));
     else
       TEST_DXTC_EXPECT_FLOAT_GT(one + eps_plus, one);
 
-    if (test_config["fieldtype_is_float"] == "true")
+    if (fieldtype_is_float)
       TEST_DXTC_EXPECT_FLOAT_GT(eps_plus, zero);
     else
       EXPECT_FALSE(FLOATCMP_GT(eps_plus, zero));
@@ -130,17 +131,17 @@ struct FloatCmpTest : public testing::Test
     EXPECT_FALSE(FLOATCMP_LT(one, one + eps_minus));
     TEST_DXTC_EXPECT_FLOAT_LT(one, two);
 
-    if (test_config["cmpstyle_is_relative"] == "true" && test_config["fieldtype_is_float"] == "true")
+    if (test_config["cmpstyle_is_relative"] == "true" && fieldtype_is_float)
       TEST_DXTC_EXPECT_FLOAT_LT(zero, eps_minus);
     else
       EXPECT_FALSE(FLOATCMP_LT(zero, eps_minus));
 
-    if (test_config["cmpstyle_is_numpy"] == "true" || test_config["fieldtype_is_float"] == "false")
+    if (test_config["cmpstyle_is_numpy"] == "true" || !fieldtype_is_float)
       EXPECT_FALSE(FLOATCMP_LT(one, one + eps_plus));
     else
       TEST_DXTC_EXPECT_FLOAT_LT(one, one + eps_plus);
 
-    if (test_config["fieldtype_is_float"] == "true")
+    if (fieldtype_is_float)
       TEST_DXTC_EXPECT_FLOAT_LT(zero, eps_plus);
     else
       EXPECT_FALSE(FLOATCMP_LT(zero, eps_plus));

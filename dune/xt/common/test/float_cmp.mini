@@ -21,7 +21,6 @@ __local.vec_size = 4
 [test_common_float_cmp]
 cmpstyle_is_relative = false, {__local.cmpstyle_is_relative} | expand cmpstyle_templ
 cmpstyle_is_numpy = true, {__local.cmpstyle_is_numpy} | expand cmpstyle_templ
-fieldtype_is_float = false, true, true | expand field
 
 [__static]
 TESTTYPE = {__local.testtype}
