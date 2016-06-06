@@ -205,7 +205,6 @@ void Timings::output_all_measures(std::ostream& out, MPIHelper::MPICommunicator 
           << section.first << "_avg_wall" << csv_sep_ << section.first << "_max_wall" << csv_sep_ << section.first
           << "_avg_sys" << csv_sep_ << section.first << "_max_sys";
   }
-  int i             = 0;
   const auto weight = 1 / double(comm.size());
 
   stash << std::endl << threadManager().max_threads() << csv_sep_ << comm.size();
