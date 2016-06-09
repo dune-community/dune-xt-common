@@ -59,14 +59,15 @@ void Logging::create(int logflags, const std::string logfile, const std::string 
   path logdir = path(datadir) / _logdir;
   filename_ = logdir / (log_fn % logfile % ".log").str();
   test_create_directory(filename_.string());
-  if ((logflags_ & LOG_FILE) != 0) {
+  const bool file_logging = ((logflags_ & LOG_FILE) != 0);
+  if (file_logging) {
     logfile_.open(filename_);
     assert(logfile_.is_open());
   }
 
   for (const auto id : streamIDs_) {
     flagmap_[id]   = logflags;
-    streammap_[id] = Dune::XT::Common::make_unique<FileLogStream>(id, flagmap_[id], logfile_);
+    streammap_[id] = Dune::XT::Common::make_unique<DualLogStream>(id, flagmap_[id], std::cout, logfile_);
   }
 } // create
 
@@ -119,7 +120,7 @@ int Logging::add_stream(int flags)
   int streamID = streamID_int;
   streamIDs_.push_back(streamID);
   flagmap_[streamID]   = (flags | streamID);
-  streammap_[streamID] = Dune::XT::Common::make_unique<FileLogStream>(streamID, flagmap_[streamID], logfile_);
+  streammap_[streamID] = Dune::XT::Common::make_unique<DualLogStream>(streamID, flagmap_[streamID], std::cout, logfile_);
   return streamID_int;
 } // add_stream
 

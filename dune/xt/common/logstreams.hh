@@ -39,6 +39,8 @@ enum LogFlags
   LOG_NEXT    = 64
 };
 
+class CombinedBuffer;
+
 class SuspendableStrBuffer : public std::basic_stringbuf<char, std::char_traits<char>>
 {
   typedef std::basic_stringbuf<char, std::char_traits<char>> BaseType;
@@ -63,6 +65,7 @@ public:
   int pubsync();
 
 protected:
+  friend class CombinedBuffer;
   virtual std::streamsize xsputn(const char_type* s, std::streamsize count);
   virtual int_type overflow(int_type ch = traits_type::eof());
 
@@ -82,22 +85,47 @@ private:
   std::mutex mutex_;
 }; // class SuspendableStrBuffer
 
-class FileBuffer : public SuspendableStrBuffer
+
+class OstreamBuffer : public SuspendableStrBuffer
 {
 public:
-  FileBuffer(int loglevel, int& logflags, std::ofstream& file)
+  OstreamBuffer(int loglevel, int& logflags, std::ostream& out)
     : SuspendableStrBuffer(loglevel, logflags)
-    , logfile_(file)
+    , out_(out)
   {
   }
 
 private:
-  std::ofstream& logfile_;
+  std::ostream& out_;
   std::mutex sync_mutex_;
 
 protected:
   virtual int sync();
 }; // class FileBuffer
+
+class CombinedBuffer : public SuspendableStrBuffer
+{
+public:
+  CombinedBuffer(int loglevel, int& logflags, std::initializer_list<SuspendableStrBuffer*> buffer_input)
+    : SuspendableStrBuffer(loglevel, logflags)
+  {
+    for(auto&& buffer_ptr : buffer_input) {
+      buffer_.emplace_back(buffer_ptr);
+    }
+  }
+
+  int pubsync();
+
+protected:
+  virtual std::streamsize xsputn(const char_type* s, std::streamsize count);
+  virtual int_type overflow(int_type ch = traits_type::eof());
+  virtual int sync();
+
+private:
+  std::list<std::unique_ptr<SuspendableStrBuffer>> buffer_;
+}; // class FileBuffer
+
+using FileBuffer = OstreamBuffer;
 
 class EmptyBuffer : public SuspendableStrBuffer
 {
@@ -214,23 +242,24 @@ public:
 }; // TimedPrefixedLogStream
 
 //! ostream compatible class wrapping file and console output
-class FileLogStream : public LogStream
+class OstreamLogStream : public LogStream
 {
 public:
-  FileLogStream(int loglevel, int& logflags, /*std::ofstream& file,*/ std::ofstream& fileWoTime)
-    : LogStream(new FileBuffer(loglevel, logflags, /*file,*/ fileWoTime))
-  {
-  }
-}; // class FileLogStream
+  OstreamLogStream(int loglevel, int& logflags, std::ostream& out);
+}; // class OstreamLogStream
+
+//! ostream compatible class wrapping file and console output
+class DualLogStream : public LogStream
+{
+public:
+  DualLogStream(int loglevel, int& logflags, std::ostream& out, std::ofstream& file);
+}; // class OstreamLogStream
 
 //! /dev/null
 class EmptyLogStream : public LogStream
 {
 public:
-  explicit EmptyLogStream(int& logflags)
-    : LogStream(new EmptyBuffer(int(LOG_NONE), logflags))
-  {
-  }
+  explicit EmptyLogStream(int& logflags);
 }; // class EmptyLogStream
 
 namespace {

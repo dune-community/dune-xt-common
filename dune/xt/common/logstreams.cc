@@ -147,14 +147,12 @@ TimedPrefixedLogStream::~TimedPrefixedLogStream()
   flush();
 }
 
-int FileBuffer::sync()
+int OstreamBuffer::sync()
 {
   // flush buffer into stream
   std::lock_guard<std::mutex> guard(sync_mutex_);
-  std::cout << str();
-  std::cout.flush();
-  logfile_ << str();
-  logfile_.flush();
+  out_ << str();
+  out_.flush();
   str("");
   return 0;
 }
@@ -163,6 +161,56 @@ int EmptyBuffer::sync()
 {
   str("");
   return 0;
+}
+
+int CombinedBuffer::pubsync()
+{
+  if(!enabled())
+    return 0;
+  int ret;
+  for(auto&& buffer_ptr : buffer_)
+    ret = buffer_ptr->pubsync();
+  return ret;
+}
+
+std::streamsize CombinedBuffer::xsputn(const char_type *s, std::streamsize count)
+{
+  std::streamsize ret;
+  for(auto&& buffer_ptr : buffer_)
+    ret = buffer_ptr->xsputn(s, count);
+  return ret;
+}
+
+CombinedBuffer::int_type CombinedBuffer::overflow(int_type ch)
+{
+  int_type ret;
+  for(auto&& buffer_ptr : buffer_)
+    ret = buffer_ptr->overflow(ch);
+  return ret;
+}
+
+int CombinedBuffer::sync()
+{
+  int ret;
+  for(auto&& buffer_ptr : buffer_)
+    ret = buffer_ptr->sync();
+  return ret;
+}
+
+DualLogStream::DualLogStream(int loglevel, int &logflags, std::ostream &out, std::ofstream &file)
+  : LogStream(new CombinedBuffer(loglevel, logflags, {new OstreamBuffer(loglevel, logflags, out),
+                                                      new OstreamBuffer(loglevel, logflags, file)}))
+{
+}
+
+OstreamLogStream::OstreamLogStream(int loglevel, int &logflags, std::ostream &out)
+  : LogStream(new OstreamBuffer(loglevel, logflags, out))
+{
+}
+
+EmptyLogStream::EmptyLogStream(int &logflags)
+  : LogStream(new EmptyBuffer(int(LOG_NONE), logflags))
+{
 }
 
 } // namespace Common
