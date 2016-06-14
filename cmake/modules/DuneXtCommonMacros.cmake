@@ -59,7 +59,7 @@ macro(add_format)
           # 'fix' relative source defs
         set(_file ${CMAKE_CURRENT_SOURCE_DIR}/${_file})
       endif(NOT EXISTS ${_file})
-      add_custom_target("format_${fn}" ${ClangFormat_EXECUTABLE} -i -style=file ${_file} )
+      add_custom_target("format_${fn}" ${ClangFormat_EXECUTABLE} -i -style=file -fallback-style=none ${_file} )
       add_dependencies( format "format_${fn}" )
     endforeach(_file )
   else()
