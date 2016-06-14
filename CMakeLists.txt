@@ -119,5 +119,7 @@ endforeach(_mod DEPENDENCIES)
 add_subdirectory(dune)
 add_subdirectory("cmake/modules")
 add_subdirectory(doc/doxygen)
+add_format(${CMAKE_CURRENT_SOURCE_DIR})
+add_tidy(${CMAKE_CURRENT_SOURCE_DIR})
 
 finalize_dune_project(GENERATE_CONFIG_H_CMAKE)

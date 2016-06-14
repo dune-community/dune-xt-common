@@ -165,18 +165,18 @@ int EmptyBuffer::sync()
 
 int CombinedBuffer::pubsync()
 {
-  if(!enabled())
+  if (!enabled())
     return 0;
   int ret;
-  for(auto&& buffer_ptr : buffer_)
+  for (auto&& buffer_ptr : buffer_)
     ret = buffer_ptr->pubsync();
   return ret;
 }
 
-std::streamsize CombinedBuffer::xsputn(const char_type *s, std::streamsize count)
+std::streamsize CombinedBuffer::xsputn(const char_type* s, std::streamsize count)
 {
   std::streamsize ret;
-  for(auto&& buffer_ptr : buffer_)
+  for (auto&& buffer_ptr : buffer_)
     ret = buffer_ptr->xsputn(s, count);
   return ret;
 }
@@ -184,7 +184,7 @@ std::streamsize CombinedBuffer::xsputn(const char_type *s, std::streamsize count
 CombinedBuffer::int_type CombinedBuffer::overflow(int_type ch)
 {
   int_type ret;
-  for(auto&& buffer_ptr : buffer_)
+  for (auto&& buffer_ptr : buffer_)
     ret = buffer_ptr->overflow(ch);
   return ret;
 }
@@ -192,23 +192,23 @@ CombinedBuffer::int_type CombinedBuffer::overflow(int_type ch)
 int CombinedBuffer::sync()
 {
   int ret;
-  for(auto&& buffer_ptr : buffer_)
+  for (auto&& buffer_ptr : buffer_)
     ret = buffer_ptr->sync();
   return ret;
 }
 
-DualLogStream::DualLogStream(int loglevel, int &logflags, std::ostream &out, std::ofstream &file)
-  : LogStream(new CombinedBuffer(loglevel, logflags, {new OstreamBuffer(loglevel, logflags, out),
-                                                      new OstreamBuffer(loglevel, logflags, file)}))
+DualLogStream::DualLogStream(int loglevel, int& logflags, std::ostream& out, std::ofstream& file)
+  : LogStream(new CombinedBuffer(
+        loglevel, logflags, {new OstreamBuffer(loglevel, logflags, out), new OstreamBuffer(loglevel, logflags, file)}))
 {
 }
 
-OstreamLogStream::OstreamLogStream(int loglevel, int &logflags, std::ostream &out)
+OstreamLogStream::OstreamLogStream(int loglevel, int& logflags, std::ostream& out)
   : LogStream(new OstreamBuffer(loglevel, logflags, out))
 {
 }
 
-EmptyLogStream::EmptyLogStream(int &logflags)
+EmptyLogStream::EmptyLogStream(int& logflags)
   : LogStream(new EmptyBuffer(int(LOG_NONE), logflags))
 {
 }
