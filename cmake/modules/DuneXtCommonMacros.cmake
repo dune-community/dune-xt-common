@@ -63,10 +63,27 @@ macro(add_format glob_dir)
     add_custom_target("format_${fn}" ${ClangFormat_EXECUTABLE} -i -style=file -fallback-style=none ${_files} ) 
     add_dependencies( format "format_${fn}" )
   else()
-    message(WARNING "not adding format target because clang-format is missing or" 
+    message(WARNING "not adding format target because clang-format is missing or " 
                 "wrong version: ${ClangFormat_EXECUTABLE} ${ClangFormat_VERSION}")
   endif(ClangFormat_FOUND)
 endmacro(add_format)
+
+find_package(ClangTidy 3.7 )
+macro(add_tidy glob_dir)
+  if(ClangTidy_FOUND)
+    message(STATUS "adding tidy target")
+    if (NOT TARGET tidy)
+      add_custom_target( tidy )
+    endif (NOT TARGET format)
+    string(REPLACE "/" "_" fn ${glob_dir})
+    file(GLOB_RECURSE _files "${glob_dir}/*.cc" "${glob_dir}/*.c")
+    add_custom_target("tidy_${fn}" ${ClangTidy_EXECUTABLE} -p=${CMAKE_CURRENT_BINARY_DIR} ${_files} )
+    add_dependencies( tidy "tidy_${fn}" )
+  else()
+    message(WARNING "not adding tidy target because clang-tidy is missing or" 
+                "wrong version: ${ClangTidy_EXECUTABLE} ${ClangTidy_VERSION}")
+  endif(ClangTidy_FOUND)
+endmacro(add_tidy)
 
 macro(add_forced_doxygen_target)
   add_doxygen_target()
