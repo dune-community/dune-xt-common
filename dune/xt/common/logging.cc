@@ -119,8 +119,9 @@ int Logging::add_stream(int flags)
   streamID_int <<= 1;
   int streamID = streamID_int;
   streamIDs_.push_back(streamID);
-  flagmap_[streamID]   = (flags | streamID);
-  streammap_[streamID] = Dune::XT::Common::make_unique<DualLogStream>(streamID, flagmap_[streamID], std::cout, logfile_);
+  flagmap_[streamID] = (flags | streamID);
+  streammap_[streamID] =
+      Dune::XT::Common::make_unique<DualLogStream>(streamID, flagmap_[streamID], std::cout, logfile_);
   return streamID_int;
 } // add_stream
 

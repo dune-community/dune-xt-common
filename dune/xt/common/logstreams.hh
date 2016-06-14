@@ -109,7 +109,7 @@ public:
   CombinedBuffer(int loglevel, int& logflags, std::initializer_list<SuspendableStrBuffer*> buffer_input)
     : SuspendableStrBuffer(loglevel, logflags)
   {
-    for(auto&& buffer_ptr : buffer_input) {
+    for (auto&& buffer_ptr : buffer_input) {
       buffer_.emplace_back(buffer_ptr);
     }
   }
