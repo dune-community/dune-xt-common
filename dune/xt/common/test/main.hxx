@@ -57,6 +57,10 @@
 #include <dune/xt/common/parallel/threadmanager.hh>
 #include <dune/xt/common/vector.hh>
 
+#if HAVE_TBB
+#include <tbb/task_scheduler_init.h>
+#endif
+
 #include "common.hh"
 
 int main(int argc, char** argv)
@@ -98,10 +102,9 @@ int main(int argc, char** argv)
     TimedLogger().create(max_level/*info*/, max_level/*debug*/);
     const size_t threads = DXTC_CONFIG.has_key("threading.max_count") // <- doing this so complicated to
                                ? DXTC_CONFIG.get<size_t>("threading.max_count") //    silence the WARNING: ...
+                               : Dune::XT::Common::ThreadManager::default_max_threads();
 #if HAVE_TBB
-                               : std::thread::hardware_concurrency();
-#else
-                             : 1u;
+    tbb::task_scheduler_init tbb_init(threads);
 #endif
     threadManager().set_max_threads(threads);
 

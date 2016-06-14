@@ -83,22 +83,16 @@ size_t Dune::XT::Common::ThreadManager::default_max_threads()
 void Dune::XT::Common::ThreadManager::set_max_threads(const size_t count)
 {
   DXTC_CONFIG.set("threading.max_count", count, true);
-  if (tbb_init_.is_active()) {
-    DXTC_LOG_DEBUG << (boost::format("Re-initializing TBB from %d to %d threads") % max_threads_ % count).str();
-    tbb_init_.terminate();
-  }
   max_threads_        = count;
   const int int_count = boost::numeric_cast<int>(count);
   WITH_DUNE_FEM_AND_THREADING(Dune::Fem::ThreadManager::setMaxNumberThreads(int_count);)
 #if HAVE_EIGEN
   Eigen::setNbThreads(int_count);
 #endif
-  tbb_init_.initialize(int_count);
 }
 
 Dune::XT::Common::ThreadManager::ThreadManager()
   : max_threads_(default_max_threads())
-  , tbb_init_(tbb::task_scheduler_init::deferred)
 {
 #if HAVE_EIGEN
   // must be called before tbb threads are created via tbb::task_scheduler_init object ctor

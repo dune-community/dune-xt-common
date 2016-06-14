@@ -12,9 +12,6 @@
 #define DUNE_XT_COMMON_THREADMANAGER_HH
 
 #include <thread>
-#if HAVE_TBB
-#include <tbb/task_scheduler_init.h>
-#endif
 
 namespace Dune {
 namespace XT {
@@ -51,9 +48,6 @@ private:
   ThreadManager();
 
   size_t max_threads_;
-#if HAVE_TBB
-  tbb::task_scheduler_init tbb_init_;
-#endif
 };
 
 inline ThreadManager& threadManager()
