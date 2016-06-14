@@ -89,19 +89,13 @@ int main(int argc, char** argv)
         "",
         "");
 
-    TimedLogger().create(
 #if DUNE_XT_COMMON_TEST_MAIN_ENABLE_TIMED_LOGGING && DUNE_XT_COMMON_TEST_MAIN_ENABLE_INFO_LOGGING
-        std::numeric_limits<ssize_t>::max(),
+  const ssize_t max_level = std::numeric_limits<ssize_t>::max();
 #else
-      -1,
+  const ssize_t max_level = -1;
 #endif
-#if DUNE_XT_COMMON_TEST_MAIN_ENABLE_TIMED_LOGGING                                                                      \
-    && DUNE_XT_COMMON_TEST_MAIN_ENABLE_DEBUG_LOGGING /*&& !THIS_IS_A_BUILDBOT_BUILD*/
-        std::numeric_limits<ssize_t>::max()
-#else
-      -1
-#endif
-            );
+
+    TimedLogger().create(max_level/*info*/, max_level/*debug*/);
     const size_t threads = DXTC_CONFIG.has_key("threading.max_count") // <- doing this so complicated to
                                ? DXTC_CONFIG.get<size_t>("threading.max_count") //    silence the WARNING: ...
 #if HAVE_TBB
