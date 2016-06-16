@@ -7,142 +7,10 @@
 #   Rene Milk       (2013 - 2016)
 #   Sven Kaulmann   (2014)
 
-################ macros and functions #################################################################################
+include(XtCompilerSupport)
+include(XtTooling)
 
-Macro(ADD_IF_SUPPORTED dest)
-  FOREACH(flag ${ARGN})
-    CHECK_CXX_ACCEPTS_FLAG("${flag}" has_${flag})
-    if(has_${flag})
-      Set(${dest} "${${dest}} ${flag}")
-    else(has_${flag})
-      Message("compiler doesn't support: ${flag}")
-    endif(has_${flag})
-  ENDFOREACH(flag ${ARGN})
-EndMacro(ADD_IF_SUPPORTED)
-
-MACRO(INCLUDE_SYS_DIR)
-    FOREACH( ARG ${ARGN} )
-        IF(IS_DIRECTORY ${ARG} )
-            INCLUDE_DIRECTORIES(${ARG})
-            ADD_DEFINITIONS("-isystem${ARG}")
-        ELSE(IS_DIRECTORY ${ARG} )
-            MESSAGE( STATUS "Include directory ${ARG} does not exist" )
-        ENDIF(IS_DIRECTORY ${ARG} )
-    ENDFOREACH( ARG )
-ENDMACRO(INCLUDE_SYS_DIR)
-
-macro(add_analyze)
-    find_program(ANALYZER clang-check)
-    if(EXISTS ${ANALYZER})
-        message(STATUS "adding analyze target")
-        add_custom_target( analyze SOURCES ${ARGN} )
-        foreach(_file ${ARGN})
-            string(REPLACE "/" "_" fn ${_file})
-            add_custom_target("analyze_${fn}" ${ANALYZER} -fixit -p=${CMAKE_CURRENT_BINARY_DIR} -analyze ${CMAKE_CURRENT_SOURCE_DIR}/${_file} )
-            add_dependencies( analyze "analyze_${fn}" )
-        endforeach(_file )
-    else()
-        message(WARNING "not adding analyze target because clang-check is missing")
-    endif(EXISTS ${ANALYZER})
-endmacro(add_analyze)
-
-find_package(ClangFormat 3.7 EXACT)
-macro(add_format glob_dir)
-  if(${ARGC} GREATER 1)
-    message(WARNING "'add_format' API has changed. Please provide a single "
-                    "search directory instead of multiple filenames")
-  endif()
-  if(ClangFormat_FOUND)
-    message(STATUS "adding format target")
-    if (NOT TARGET format)
-      add_custom_target( format  )
-    endif (NOT TARGET format)
-    string(REPLACE "/" "_" fn ${glob_dir})
-    file(GLOB_RECURSE _files "${glob_dir}/*.hh" "${glob_dir}/*.cc"
-        "${glob_dir}/*.cxx" "${glob_dir}/*.hxx" "${glob_dir}/*.h" "${glob_dir}/*.c")
-    add_custom_target("format_${fn}" ${ClangFormat_EXECUTABLE} -i -style=file -fallback-style=none ${_files} ) 
-    add_dependencies( format "format_${fn}" )
-  else()
-    message(WARNING "not adding format target because clang-format is missing or " 
-                "wrong version: ${ClangFormat_EXECUTABLE} ${ClangFormat_VERSION}")
-  endif(ClangFormat_FOUND)
-endmacro(add_format)
-
-find_package(ClangTidy 3.7 )
-macro(add_tidy glob_dir)
-  if(ClangTidy_FOUND)
-    message(STATUS "adding tidy target")
-    if (NOT TARGET tidy)
-      add_custom_target( tidy )
-    endif (NOT TARGET format)
-    string(REPLACE "/" "_" fn ${glob_dir})
-    file(GLOB_RECURSE _files "${glob_dir}/*.cc" "${glob_dir}/*.c")
-    add_custom_target("tidy_${fn}" ${ClangTidy_EXECUTABLE} -p=${CMAKE_CURRENT_BINARY_DIR} ${_files} )
-    add_dependencies( tidy "tidy_${fn}" )
-  else()
-    message(WARNING "not adding tidy target because clang-tidy is missing or" 
-                "wrong version: ${ClangTidy_EXECUTABLE} ${ClangTidy_VERSION}")
-  endif(ClangTidy_FOUND)
-endmacro(add_tidy)
-
-macro(add_forced_doxygen_target)
-  add_doxygen_target()
-  if(TARGET doxygen_${ProjectName})
-    add_custom_target(doxygen_${ProjectName}_pre_build COMMAND rm -rf ${CMAKE_CURRENT_BINARY_DIR}/html )
-    add_dependencies(doxygen_${ProjectName} doxygen_${ProjectName}_pre_build)
-  endif()
-endmacro(add_forced_doxygen_target)
-
-################ end macros and functions #############################################################################
-
-################ library and compiler checks  #########################################################################
-INCLUDE (CheckIncludeFileCXX)
-include(TestCXXAcceptsFlag)
-CHECK_INCLUDE_FILE_CXX("tr1/array" HAVE_TR1_ARRAY)
-CHECK_INCLUDE_FILE_CXX("malloc.h" HAVE_MALLOC_H)
-
-
-CHECK_CXX_SOURCE_COMPILES("
-   int main(void)
-   {
-     auto f = [&] (){ return 0; };
-     return 0;
-   };
-"  HAS_LAMBDA_FUNCTIONS
-)
-
-CHECK_CXX_SOURCE_COMPILES("
-    #include <vector>
-    #include <iterator>
-    int main(void)
-    {
-      std::vector<int> a;
-      std::vector<int>::const_iterator b = std::begin(a);
-      std::vector<int>::const_iterator e = std::end(a);
-      return 0;
-    };
-"  HAS_STD_BEGIN_END
-)
-
-CHECK_CXX_SOURCE_COMPILES("
-    int main(void)
-    {
-      int a __attribute__((unused)) = 0;
-    };
-"  HAS_WORKING_UNUSED_ATTRIBUTE
-)
-
-CHECK_CXX_SOURCE_COMPILES("
-    #include <map>
-    int main(void)
-    {
-      std::map<int, int> a;
-      a.emplace(2, 2);
-      return 0;
-    };
-"  HAVE_MAP_EMPLACE
-)
-
+################ library checks  #########################################################################
 set(DS_REQUIRED_BOOST_LIBS system thread filesystem date_time timer chrono)
 FIND_PACKAGE(PkgConfig)
 FIND_PACKAGE(Boost 1.48.0 COMPONENTS ${DS_REQUIRED_BOOST_LIBS} REQUIRED)
@@ -158,8 +26,8 @@ else(EIGEN3_FOUND)
   set(HAVE_EIGEN 0)
 endif(EIGEN3_FOUND)
 
-if(NOT CMAKE_SYSTEM_PROCESSOR STREQUAL "k1om")
 # intel mic and likwid don't mix
+if(NOT CMAKE_SYSTEM_PROCESSOR STREQUAL "k1om")
     include(FindLIKWID)
     find_package(LIKWID)
     if(LIKWID_FOUND)
@@ -171,7 +39,7 @@ else()
 endif()
 
 include(DuneTBB)
-################ end library and compiler checks  #####################################################################
+################ end library checks  #####################################################################
 
 ################ misc vars  #########################################################################
 
