@@ -49,8 +49,6 @@ macro(BEGIN_TESTCASES)
                     target_link_libraries( test_${testbase} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common )
                     add_test( NAME test_${testbase} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/test_${testbase}
                                           --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/test_${testbase}.xml )
-                    # currently property seems to have no effect
-                    set_tests_properties(test_${testbase} PROPERTIES TIMEOUT ${DUNE_TEST_TIMEOUT})
                     list(APPEND testnames test_${testbase} )
 	        endif( EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.mini )
         endforeach( source )
@@ -59,9 +57,14 @@ endmacro(BEGIN_TESTCASES)
 macro(END_TESTCASES)
     add_directory_test_target(_test_target)
     add_dependencies(${_test_target} ${testnames})
-	add_custom_target(test_binaries DEPENDS ${testnames})
-	add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --timeout ${DUNE_TEST_TIMEOUT}
-                  DEPENDS test_binaries)
+    foreach( test ${testnames} )
+        set_tests_properties(test_${testbase} PROPERTIES TIMEOUT ${DXT_TEST_TIMEOUT})
+    endforeach( test ${testnames} )
+    add_custom_target(test_binaries DEPENDS ${testnames})
+    add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --timeout ${DXT_TEST_TIMEOUT} -j ${DXT_TEST_PROCS}
+                        DEPENDS test_binaries)
+    add_custom_target(recheck COMMAND ${CMAKE_CTEST_COMMAND} --timeout ${DXT_TEST_TIMEOUT} --rerun-failed -j ${DXT_TEST_PROCS}
+                        DEPENDS test_binaries)
 endmacro(END_TESTCASES)
 
 ENABLE_TESTING()
