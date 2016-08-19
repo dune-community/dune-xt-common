@@ -9,10 +9,6 @@
 //   Rene Milk       (2014 - 2015)
 //   Tobias Leibner  (2015)
 
-#ifndef DUNE_AVOID_SGRID_DEPRE_WARNING_BECAUSE_I_KNOW_WHAT_IM_DOING
-#define DUNE_AVOID_SGRID_DEPRE_WARNING_BECAUSE_I_KNOW_WHAT_IM_DOING 1
-#endif
-
 #include "config.h"
 
 #ifndef THIS_IS_A_BUILDBOT_BUILD
@@ -57,6 +53,9 @@
 #include <dune/xt/common/parallel/threadmanager.hh>
 #include <dune/xt/common/vector.hh>
 
+// is_alugrid<>
+#include <dune/stuff/grid/information.hh>
+
 #if HAVE_TBB
 #include <tbb/task_scheduler_init.h>
 #endif
@@ -64,6 +63,10 @@
 #include "common.hh"
 
 int main(int argc, char** argv)
+static const double LocalizableProjectionOperator_default_tolerance   = 1e-15;
+static const double LocalizableProjectionOperator_alugrid_tolerance   = 3.8e-11;
+static const double L2ProjectionLocalizableOperator_alugrid_tolerance = 3.7965e-11;
+
 {
   using namespace Dune;
   using namespace Dune::XT::Common;

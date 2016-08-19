@@ -41,9 +41,11 @@ public:
 
   virtual double norm_reference_solution(const std::string type) = 0;
 
+  virtual size_t current_num_DoFs() = 0;
+
   virtual size_t current_grid_size() const = 0;
 
-  virtual double current_grid_width() const = 0;
+  virtual double current_grid_width() = 0;
 
   /**
    * \return The time it took to solve on this refinement.

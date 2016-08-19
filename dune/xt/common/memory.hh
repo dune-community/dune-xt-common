@@ -285,11 +285,29 @@ public:
   {
   }
 
-  explicit ConstStorageProvider(const ConstStorageProvider<T>& other) = default;
-  explicit ConstStorageProvider(ConstStorageProvider<T>&& source) = default;
+  explicit ConstStorageProvider(std::unique_ptr< const T >&& tt)
+    : storage_(tt)
+  {}
 
-  ConstStorageProvider<T>& operator=(const ConstStorageProvider<T>& other) = delete;
-  ConstStorageProvider<T>& operator=(ConstStorageProvider<T>&& source) = delete;
+  explicit ConstStorageProvider(std::unique_ptr< T >&& tt)
+    : storage_(tt)
+  {}
+
+  template< class ...Args >
+  explicit ConstStorageProvider(Args&& ...args) // using new instead of make_shared for better error messages
+    : storage_(Common::make_unique< internal::ConstAccessByPointer< T > >(new T(std::forward< Args >(args)...)))
+  {}
+
+  explicit ConstStorageProvider(const ConstStorageProvider< T >& other) = default;
+  explicit ConstStorageProvider(ConstStorageProvider< T >&& source)     = default;
+
+  ConstStorageProvider< T >& operator=(const ConstStorageProvider< T >& other) = delete;
+  ConstStorageProvider< T >& operator=(ConstStorageProvider< T >&& source)     = delete;
+
+  const T& storage_access() const
+  {
+    return access();
+  }
 
   const T& access() const
   {

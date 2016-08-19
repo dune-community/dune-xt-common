@@ -127,7 +127,7 @@ private:
 public:
   //! Initialization by copy construction of ValueType
   explicit TBBPerThreadValue(ValueType value)
-    : values_(new ContainerType([=]() { return make_unique<ValueType>(value); }))
+    : values_(new ContainerType([=]() { return Common::make_unique<ValueType>(value); }))
   {
   }
 
