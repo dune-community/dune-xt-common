@@ -156,92 +156,6 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
-//! split our function wrapper into sep pointers for Datawriter input
-template <class T1, class T2 = T1, class T3 = T2, class T4 = T3>
-struct TupleSerializer
-{
-  typedef Dune::tuple<const typename T1::DiscreteVelocityFunctionType*,
-                      const typename T1::DiscretePressureFunctionType*,
-                      const typename T2::DiscreteVelocityFunctionType*,
-                      const typename T2::DiscretePressureFunctionType*,
-                      const typename T3::DiscreteVelocityFunctionType*,
-                      const typename T3::DiscretePressureFunctionType*,
-                      const typename T4::DiscreteVelocityFunctionType*,
-                      const typename T4::DiscretePressureFunctionType*>
-      TupleType;
-
-  static TupleType& get_tuple(T1& t1, T2& t2, T3& t3, T4& t4)
-  {
-    // yay for dangling pointers, but using a local static here fubared sequential runs with diff grid
-    TupleType* t = new TupleType(&(t1.discreteVelocity()),
-                                 &(t1.discretePressure()),
-                                 &(t2.discreteVelocity()),
-                                 &(t2.discretePressure()),
-                                 &(t3.discreteVelocity()),
-                                 &(t3.discretePressure()),
-                                 &(t4.discreteVelocity()),
-                                 &(t4.discretePressure()));
-
-    return *t;
-  } // get_tuple
-
-  static TupleType& get_tuple(T1& t1, T2& t2, T3& t3)
-  {
-    // yay for dangling pointers, but using a local static here fubared sequential runs with diff grid
-    TupleType* t = new TupleType(&(t1.discreteVelocity()),
-                                 &(t1.discretePressure()),
-                                 &(t2.discreteVelocity()),
-                                 &(t2.discretePressure()),
-                                 &(t3.discreteVelocity()),
-                                 &(t3.discretePressure()),
-                                 nullptr,
-                                 nullptr);
-
-    return *t;
-  } // get_tuple
-
-  static TupleType& get_tuple(T1& t1, T2& t2)
-  {
-    // yay for dangling pointers, but using a local static here fubared sequential runs with diff grid
-    TupleType* t = new TupleType(&(t1.discreteVelocity()),
-                                 &(t1.discretePressure()),
-                                 &(t2.discreteVelocity()),
-                                 &(t2.discretePressure()),
-                                 nullptr,
-                                 nullptr,
-                                 nullptr,
-                                 nullptr);
-
-    return *t;
-  } // get_tuple
-
-  static TupleType& get_tuple(T1& t1)
-  {
-    // yay for dangling pointers, but using a local static here fubared sequential runs with diff grid
-    TupleType* t = new TupleType(
-        &(t1.discreteVelocity()), &(t1.discretePressure()), nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
-
-    return *t;
-  } // get_tuple
-};
-
-template <class T1,
-          class T2 = T1,
-          class T3 = T1,
-          class T4 = T1,
-          class T5 = T1,
-          class T6 = T1,
-          class T7 = T1,
-          class T8 = T1,
-          class T9 = T1>
-struct FullTuple : public Dune::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9>
-{
-  FullTuple(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9)
-    : Dune::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9>(t1, t2, t3, t4, t5, t6, t7, t8, t9)
-  {
-  }
-};
-
 // reduced from
 // http://stackoverflow.com/questions/1492204/is-it-possible-to-generate-types-with-all-combinations-of-template-arguments
 namespace TupleProduct {
@@ -252,14 +166,11 @@ using boost::mpl::next;
 using boost::mpl::if_;
 using boost::mpl::deref;
 
-size_t total_recursions = 0;
-
 struct end_of_recursion_tag
 {
   template <class... Args>
   static void Run(Args&&... /*args*/)
   {
-    std::cout << "end of " << total_recursions << " recursions\n";
   }
 };
 
@@ -303,9 +214,6 @@ struct Combine
 
     static void Run()
     {
-      // increment recursion counter
-      ++total_recursions;
-
       // test on the generated types of this round of recursion
       TestFunc::template run<typename deref<UIterator>::type, typename deref<VIterator>::type>();
 
@@ -316,9 +224,6 @@ struct Combine
     template <class... Args>
     static void Run(Args&&... args)
     {
-      // increment recursion counter
-      ++total_recursions;
-
       // test on the generated types of this round of recursion
       TestFunc::template run<typename deref<UIterator>::type, typename deref<VIterator>::type>(
           std::forward<Args>(args)...);
