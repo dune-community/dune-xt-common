@@ -34,7 +34,7 @@ void SuspendableStrBuffer::suspend(PriorityType priority)
     // don't accidentally invalidate flags if already suspended
     if (!is_suspended_) {
       suspended_logflags_ = logflags_;
-      logflags_           = LOG_NONE;
+      logflags_ = LOG_NONE;
     }
     is_suspended_ = true;
   }
@@ -44,8 +44,8 @@ void SuspendableStrBuffer::resume(PriorityType priority)
 {
   if (priority >= suspend_priority_) {
     if (is_suspended_)
-      logflags_       = suspended_logflags_;
-    is_suspended_     = false;
+      logflags_ = suspended_logflags_;
+    is_suspended_ = false;
     suspend_priority_ = default_suspend_priority;
   }
 } // Resume
@@ -112,7 +112,7 @@ int TimedPrefixedStreamBuffer::sync()
 std::string TimedPrefixedStreamBuffer::elapsed_time_str() const
 {
   const double secs_per_week = 604800;
-  const double secs_per_day  = 86400;
+  const double secs_per_day = 86400;
   const double secs_per_hour = 3600;
   const double elapsed = timer_.elapsed();
   const size_t weeks(elapsed / secs_per_week);

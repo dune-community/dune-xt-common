@@ -152,7 +152,7 @@ class DefaultRNG<VectorType, true>
 
 public:
   DefaultRNG(VectorType min_vec = VectorType(std::numeric_limits<T>::min()),
-             VectorType max_vec  = VectorType(std::numeric_limits<T>::max()),
+             VectorType max_vec = VectorType(std::numeric_limits<T>::max()),
              VectorType seed_vec = VectorType(std::random_device()()))
   {
     std::size_t idx = 0;

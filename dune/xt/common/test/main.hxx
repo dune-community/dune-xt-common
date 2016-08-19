@@ -62,9 +62,8 @@
 
 #include "common.hh"
 
-int main(int argc, char** argv)
-static const double LocalizableProjectionOperator_default_tolerance   = 1e-15;
-static const double LocalizableProjectionOperator_alugrid_tolerance   = 3.8e-11;
+int main(int argc, char** argv) static const double LocalizableProjectionOperator_default_tolerance = 1e-15;
+static const double LocalizableProjectionOperator_alugrid_tolerance = 3.8e-11;
 static const double L2ProjectionLocalizableOperator_alugrid_tolerance = 3.7965e-11;
 
 {
@@ -97,12 +96,12 @@ static const double L2ProjectionLocalizableOperator_alugrid_tolerance = 3.7965e-
         "");
 
 #if DUNE_XT_COMMON_TEST_MAIN_ENABLE_TIMED_LOGGING && DUNE_XT_COMMON_TEST_MAIN_ENABLE_INFO_LOGGING
-  const ssize_t max_level = std::numeric_limits<ssize_t>::max();
+    const ssize_t max_level = std::numeric_limits<ssize_t>::max();
 #else
   const ssize_t max_level = -1;
 #endif
 
-    TimedLogger().create(max_level/*info*/, max_level/*debug*/);
+    TimedLogger().create(max_level /*info*/, max_level /*debug*/);
     const size_t threads = DXTC_CONFIG.has_key("threading.max_count") // <- doing this so complicated to
                                ? DXTC_CONFIG.get<size_t>("threading.max_count") //    silence the WARNING: ...
                                : Dune::XT::Common::ThreadManager::default_max_threads();

@@ -42,9 +42,9 @@ namespace internal {
 std::pair<size_t, ssize_t> convert_to_scientific(const double number, const size_t precision)
 {
   // see http://www.mathworks.com/matlabcentral/newsreader/view_thread/151859
-  const double sign  = (number > 0.0) ? 1.0 : -1.0;
-  const double tmp   = std::log10(std::abs(number));
-  ssize_t exponent   = ((tmp > 0) ? 1 : -1) * std::floor(std::abs(tmp));
+  const double sign = (number > 0.0) ? 1.0 : -1.0;
+  const double tmp = std::log10(std::abs(number));
+  ssize_t exponent = ((tmp > 0) ? 1 : -1) * std::floor(std::abs(tmp));
   double coefficient = sign * std::pow(10.0, tmp - exponent);
   if (std::abs(coefficient) < 1.0) {
     coefficient *= 10.0;
@@ -84,9 +84,9 @@ void check_eoc_study_for_success(const Common::ConvergenceStudy& study,
     if (actual_results.size() > expected_results.size())
       return;
     for (size_t ii = 0; ii < actual_results.size(); ++ii) {
-      const auto actual_result     = internal::convert_to_scientific(actual_results[ii], 2);
-      const auto expected_result   = internal::convert_to_scientific(expected_results[ii], 2);
-      const auto actual_exponent   = actual_result.second;
+      const auto actual_result = internal::convert_to_scientific(actual_results[ii], 2);
+      const auto expected_result = internal::convert_to_scientific(expected_results[ii], 2);
+      const auto actual_exponent = actual_result.second;
       const auto expected_exponent = expected_result.second;
       EXPECT_EQ(expected_exponent, actual_exponent)
           << "          Exponent comparison (in scientific notation, precision 2) failed for\n"
@@ -95,7 +95,7 @@ void check_eoc_study_for_success(const Common::ConvergenceStudy& study,
           << "          expected_results[" << ii << "] = " << expected_results[ii];
       if (actual_exponent != expected_exponent)
         return;
-      const auto actual_coefficient   = actual_result.first;
+      const auto actual_coefficient = actual_result.first;
       const auto expected_coefficient = expected_result.first;
       EXPECT_EQ(expected_coefficient, actual_coefficient)
           << "          Coefficient comparison (in scientific notation, precision 2) failed for\n"

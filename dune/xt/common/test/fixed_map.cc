@@ -38,10 +38,10 @@ TEST(FixedMapTest, All)
     EXPECT_EQ(int(), too_big[std::string()]);
     EXPECT_EQ(too_big.find(to_string(i)), too_big.end());
   }
-  auto size      = fits.size();
+  auto size = fits.size();
   const auto end = fits.end();
   for (auto& pt : fits) {
-    const int value       = pt.second;
+    const int value = pt.second;
     const std::string key = pt.first;
     EXPECT_EQ(key, to_string(value));
     EXPECT_NE(fits.find(key), end);

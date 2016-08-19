@@ -42,9 +42,9 @@ struct CreateByOperator
   static Configuration create()
   {
     Configuration config;
-    config["string"]              = "string";
-    config["sub1.int"]            = "1";
-    config["sub2.size_t"]         = "1";
+    config["string"] = "string";
+    config["sub1.int"] = "1";
+    config["sub2.size_t"] = "1";
     config["sub2.subsub1.vector"] = "[0 1]";
     config["sub2.subsub1.matrix"] = "[0 1; 1 2]";
     return config;
@@ -56,9 +56,9 @@ struct CreateByOperatorAndAssign
   static Configuration create()
   {
     Configuration config;
-    config["string"]              = "string";
-    config["sub1.int"]            = "1";
-    config["sub2.size_t"]         = "1";
+    config["string"] = "string";
+    config["sub1.int"] = "1";
+    config["sub2.size_t"] = "1";
     config["sub2.subsub1.vector"] = "[0 1]";
     config["sub2.subsub1.matrix"] = "[0 1; 1 2]";
     Configuration config2;
@@ -125,9 +125,9 @@ struct CreateByParameterTree
   static Configuration create()
   {
     Dune::ParameterTree paramtree;
-    paramtree["string"]              = "string";
-    paramtree["sub1.int"]            = "1";
-    paramtree["sub2.size_t"]         = "1";
+    paramtree["string"] = "string";
+    paramtree["sub1.int"] = "1";
+    paramtree["sub2.size_t"] = "1";
     paramtree["sub2.subsub1.vector"] = "[0 1]";
     paramtree["sub2.subsub1.matrix"] = "[0 1; 1 2]";
     return Configuration(paramtree);
@@ -135,11 +135,13 @@ struct CreateByParameterTree
 };
 
 typedef testing::Types<double, float, std::string, std::complex<double>, int, unsigned int, unsigned long, long long,
-                       char> TestTypes;
+                       char>
+    TestTypes;
 
 typedef testing::Types<CreateByOperator, CreateByKeyAndValueAndAddConfiguration, CreateByKeyAndValueAndAddParameterTree,
                        CreateByKeyAndValueVectorsAndAddParameterTree, CreateByKeysAndValues, CreateByParameterTree,
-                       CreateByOperatorAndAssign> ConfigurationCreators;
+                       CreateByOperatorAndAssign>
+    ConfigurationCreators;
 
 template <class T>
 static DefaultRNG<T> rng_setup()
@@ -196,7 +198,7 @@ struct ConfigTest : public testing::Test
   {
     std::set<std::string> uniq_keys;
     for (T val : values) {
-      const auto key     = key_gen();
+      const auto key = key_gen();
       const auto got_val = DXTC_CONFIG_GET(key, val);
       // since the value invariably goes through string conversion, we need to adjust the expected value as well
       const T adjusted_val = from_string<T>(to_string(val));

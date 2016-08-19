@@ -19,7 +19,7 @@
 #define SEGFAULT                                                                                                       \
   {                                                                                                                    \
     int* J = 0;                                                                                                        \
-    *J     = 9;                                                                                                        \
+    *J = 9;                                                                                                            \
   }
 
 inline char* charcopy(const char* s)

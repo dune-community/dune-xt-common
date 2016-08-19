@@ -86,14 +86,14 @@ void TimedLogging::create(const ssize_t max_info_level, const ssize_t max_debug_
   std::lock_guard<std::mutex> DUNE_UNUSED(guard)(mutex_);
   if (created_)
     DUNE_THROW(Exceptions::you_are_using_this_wrong, "Do not call create() more than once!");
-  max_info_level_  = max_info_level;
+  max_info_level_ = max_info_level;
   max_debug_level_ = max_debug_level;
   enable_warnings_ = enable_warnings;
-  enable_colors_   = enable_colors && terminal_supports_color();
-  info_prefix_     = enable_colors_ ? info_color : "";
-  debug_prefix_    = enable_colors_ ? debug_color : "";
-  warning_prefix_  = enable_colors_ ? warning_color : "";
-  created_         = true;
+  enable_colors_ = enable_colors && terminal_supports_color();
+  info_prefix_ = enable_colors_ ? info_color : "";
+  debug_prefix_ = enable_colors_ ? debug_color : "";
+  warning_prefix_ = enable_colors_ ? warning_color : "";
+  created_ = true;
   current_level_ = -1;
   update_colors();
 } // ... create(...)
@@ -115,8 +115,8 @@ TimedLogManager TimedLogging::get(const std::string id)
 void TimedLogging::update_colors()
 {
   if (enable_colors_) {
-    info_prefix_    = color(info_prefix_);
-    debug_prefix_   = color(debug_prefix_);
+    info_prefix_ = color(info_prefix_);
+    debug_prefix_ = color(debug_prefix_);
     warning_prefix_ = color(warning_prefix_);
     if (info_prefix_.empty())
       info_suffix_ = "";

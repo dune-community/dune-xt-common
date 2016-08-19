@@ -194,10 +194,10 @@ Configuration Configuration::operator+(Configuration& other)
 Configuration& Configuration::operator=(const Configuration& other)
 {
   if (this != &other) {
-    BaseType::operator      =(other);
+    BaseType::operator=(other);
     warn_on_default_access_ = other.warn_on_default_access_;
-    log_on_exit_            = other.log_on_exit_;
-    logfile_                = other.logfile_;
+    log_on_exit_ = other.log_on_exit_;
+    logfile_ = other.logfile_;
   }
   return *this;
 } // ... operator=(...)
@@ -274,10 +274,12 @@ void Configuration::add_tree_(const Configuration& other, const std::string sub_
       set(key, element.second, overwrite);
     } catch (Exceptions::configuration_error& ee) {
       DUNE_THROW(Exceptions::configuration_error,
-                 "There was an error adding other (see below) to this:\n\n" << ee.what() << "\n\n"
-                                                                            << "======================\n"
-                                                                            << other.report_string()
-                                                                            << "\n");
+                 "There was an error adding other (see below) to this:\n\n"
+                     << ee.what()
+                     << "\n\n"
+                     << "======================\n"
+                     << other.report_string()
+                     << "\n");
     }
   }
 } // ... add_tree_(...)

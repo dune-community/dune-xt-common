@@ -2465,7 +2465,7 @@ public:
   T* release()
   {
     T* const ptr = ptr_;
-    ptr_         = NULL;
+    ptr_ = NULL;
     return ptr;
   }
 
@@ -2953,7 +2953,7 @@ public:
   void Lock()
   {
     GTEST_CHECK_POSIX_SUCCESS_(pthread_mutex_lock(&mutex_));
-    owner_     = pthread_self();
+    owner_ = pthread_self();
     has_owner_ = true;
   }
 
@@ -3176,7 +3176,7 @@ private:
       return CheckedDowncastToActualType<ValueHolder>(holder)->pointer();
     }
 
-    ValueHolder* const new_holder                 = new ValueHolder(default_);
+    ValueHolder* const new_holder = new ValueHolder(default_);
     ThreadLocalValueHolderBase* const holder_base = new_holder;
     GTEST_CHECK_POSIX_SUCCESS_(pthread_setspecific(key_, holder_base));
     return new_holder->pointer();
@@ -4701,7 +4701,8 @@ struct Types24
 {
   typedef T1 Head;
   typedef Types23<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
-                  T24> Tail;
+                  T24>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4712,7 +4713,8 @@ struct Types25
 {
   typedef T1 Head;
   typedef Types24<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
-                  T24, T25> Tail;
+                  T24, T25>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4723,7 +4725,8 @@ struct Types26
 {
   typedef T1 Head;
   typedef Types25<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
-                  T24, T25, T26> Tail;
+                  T24, T25, T26>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4734,7 +4737,8 @@ struct Types27
 {
   typedef T1 Head;
   typedef Types26<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
-                  T24, T25, T26, T27> Tail;
+                  T24, T25, T26, T27>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4745,7 +4749,8 @@ struct Types28
 {
   typedef T1 Head;
   typedef Types27<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
-                  T24, T25, T26, T27, T28> Tail;
+                  T24, T25, T26, T27, T28>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4756,7 +4761,8 @@ struct Types29
 {
   typedef T1 Head;
   typedef Types28<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
-                  T24, T25, T26, T27, T28, T29> Tail;
+                  T24, T25, T26, T27, T28, T29>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4767,7 +4773,8 @@ struct Types30
 {
   typedef T1 Head;
   typedef Types29<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
-                  T24, T25, T26, T27, T28, T29, T30> Tail;
+                  T24, T25, T26, T27, T28, T29, T30>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4779,7 +4786,8 @@ struct Types31
 {
   typedef T1 Head;
   typedef Types30<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
-                  T24, T25, T26, T27, T28, T29, T30, T31> Tail;
+                  T24, T25, T26, T27, T28, T29, T30, T31>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4791,7 +4799,8 @@ struct Types32
 {
   typedef T1 Head;
   typedef Types31<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
-                  T24, T25, T26, T27, T28, T29, T30, T31, T32> Tail;
+                  T24, T25, T26, T27, T28, T29, T30, T31, T32>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4803,7 +4812,8 @@ struct Types33
 {
   typedef T1 Head;
   typedef Types32<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
-                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33> Tail;
+                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4815,7 +4825,8 @@ struct Types34
 {
   typedef T1 Head;
   typedef Types33<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
-                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34> Tail;
+                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4827,7 +4838,8 @@ struct Types35
 {
   typedef T1 Head;
   typedef Types34<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
-                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> Tail;
+                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4839,7 +4851,8 @@ struct Types36
 {
   typedef T1 Head;
   typedef Types35<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
-                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> Tail;
+                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4851,7 +4864,8 @@ struct Types37
 {
   typedef T1 Head;
   typedef Types36<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
-                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37> Tail;
+                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4864,7 +4878,8 @@ struct Types38
 {
   typedef T1 Head;
   typedef Types37<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
-                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38> Tail;
+                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4877,7 +4892,8 @@ struct Types39
 {
   typedef T1 Head;
   typedef Types38<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
-                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39> Tail;
+                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4890,7 +4906,8 @@ struct Types40
 {
   typedef T1 Head;
   typedef Types39<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
-                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40> Tail;
+                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4903,7 +4920,8 @@ struct Types41
 {
   typedef T1 Head;
   typedef Types40<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
-                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41> Tail;
+                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4916,7 +4934,8 @@ struct Types42
 {
   typedef T1 Head;
   typedef Types41<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
-                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42> Tail;
+                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4929,8 +4948,8 @@ struct Types43
 {
   typedef T1 Head;
   typedef Types42<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
-                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42,
-                  T43> Tail;
+                  T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4944,7 +4963,8 @@ struct Types44
   typedef T1 Head;
   typedef Types43<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
                   T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43,
-                  T44> Tail;
+                  T44>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4959,7 +4979,8 @@ struct Types45
   typedef T1 Head;
   typedef Types44<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
                   T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43,
-                  T44, T45> Tail;
+                  T44, T45>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4974,7 +4995,8 @@ struct Types46
   typedef T1 Head;
   typedef Types45<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
                   T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43,
-                  T44, T45, T46> Tail;
+                  T44, T45, T46>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -4989,7 +5011,8 @@ struct Types47
   typedef T1 Head;
   typedef Types46<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
                   T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43,
-                  T44, T45, T46, T47> Tail;
+                  T44, T45, T46, T47>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -5004,7 +5027,8 @@ struct Types48
   typedef T1 Head;
   typedef Types47<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
                   T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43,
-                  T44, T45, T46, T47, T48> Tail;
+                  T44, T45, T46, T47, T48>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -5019,7 +5043,8 @@ struct Types49
   typedef T1 Head;
   typedef Types48<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
                   T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43,
-                  T44, T45, T46, T47, T48, T49> Tail;
+                  T44, T45, T46, T47, T48, T49>
+      Tail;
 };
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
@@ -5034,7 +5059,8 @@ struct Types50
   typedef T1 Head;
   typedef Types49<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22, T23,
                   T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41, T42, T43,
-                  T44, T45, T46, T47, T48, T49, T50> Tail;
+                  T44, T45, T46, T47, T48, T49, T50>
+      Tail;
 };
 
 
@@ -5074,7 +5100,8 @@ struct Types
 {
   typedef internal::Types50<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
                             T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38,
-                            T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50> type;
+                            T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49, T50>
+      type;
 };
 
 template <>
@@ -5346,7 +5373,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
              internal::None, internal::None, internal::None, internal::None, internal::None>
 {
   typedef internal::Types21<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
-                            T21> type;
+                            T21>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5359,7 +5387,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
              internal::None, internal::None, internal::None, internal::None>
 {
   typedef internal::Types22<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
-                            T21, T22> type;
+                            T21, T22>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5372,7 +5401,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
              internal::None, internal::None, internal::None>
 {
   typedef internal::Types23<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
-                            T21, T22, T23> type;
+                            T21, T22, T23>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5386,7 +5416,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
              internal::None, internal::None>
 {
   typedef internal::Types24<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
-                            T21, T22, T23, T24> type;
+                            T21, T22, T23, T24>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5400,7 +5431,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
              internal::None>
 {
   typedef internal::Types25<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
-                            T21, T22, T23, T24, T25> type;
+                            T21, T22, T23, T24, T25>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5414,7 +5446,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
              internal::None>
 {
   typedef internal::Types26<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
-                            T21, T22, T23, T24, T25, T26> type;
+                            T21, T22, T23, T24, T25, T26>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5427,7 +5460,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
              internal::None, internal::None, internal::None, internal::None, internal::None, internal::None>
 {
   typedef internal::Types27<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
-                            T21, T22, T23, T24, T25, T26, T27> type;
+                            T21, T22, T23, T24, T25, T26, T27>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5440,7 +5474,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
              internal::None, internal::None, internal::None, internal::None, internal::None>
 {
   typedef internal::Types28<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
-                            T21, T22, T23, T24, T25, T26, T27, T28> type;
+                            T21, T22, T23, T24, T25, T26, T27, T28>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5453,7 +5488,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
              internal::None, internal::None, internal::None, internal::None, internal::None>
 {
   typedef internal::Types29<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
-                            T21, T22, T23, T24, T25, T26, T27, T28, T29> type;
+                            T21, T22, T23, T24, T25, T26, T27, T28, T29>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5466,7 +5502,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
              internal::None, internal::None, internal::None, internal::None>
 {
   typedef internal::Types30<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
-                            T21, T22, T23, T24, T25, T26, T27, T28, T29, T30> type;
+                            T21, T22, T23, T24, T25, T26, T27, T28, T29, T30>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5480,7 +5517,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
              internal::None, internal::None, internal::None>
 {
   typedef internal::Types31<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
-                            T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31> type;
+                            T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5494,7 +5532,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
              internal::None, internal::None, internal::None>
 {
   typedef internal::Types32<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
-                            T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32> type;
+                            T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5508,7 +5547,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
              internal::None, internal::None>
 {
   typedef internal::Types33<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
-                            T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33> type;
+                            T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5522,7 +5562,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
              internal::None>
 {
   typedef internal::Types34<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
-                            T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34> type;
+                            T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5535,7 +5576,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
              internal::None, internal::None, internal::None, internal::None, internal::None, internal::None>
 {
   typedef internal::Types35<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
-                            T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> type;
+                            T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5548,7 +5590,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
              internal::None, internal::None, internal::None, internal::None, internal::None, internal::None>
 {
   typedef internal::Types36<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
-                            T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> type;
+                            T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5561,7 +5604,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
              internal::None, internal::None, internal::None, internal::None, internal::None>
 {
   typedef internal::Types37<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
-                            T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37> type;
+                            T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5575,8 +5619,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
              internal::None, internal::None, internal::None, internal::None>
 {
   typedef internal::Types38<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
-                            T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37,
-                            T38> type;
+                            T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5591,7 +5635,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
 {
   typedef internal::Types39<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
                             T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38,
-                            T39> type;
+                            T39>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5606,7 +5651,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
 {
   typedef internal::Types40<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
                             T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38,
-                            T39, T40> type;
+                            T39, T40>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5621,7 +5667,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
 {
   typedef internal::Types41<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
                             T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38,
-                            T39, T40, T41> type;
+                            T39, T40, T41>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5636,7 +5683,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
 {
   typedef internal::Types42<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
                             T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38,
-                            T39, T40, T41, T42> type;
+                            T39, T40, T41, T42>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5651,7 +5699,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
 {
   typedef internal::Types43<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
                             T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38,
-                            T39, T40, T41, T42, T43> type;
+                            T39, T40, T41, T42, T43>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5665,7 +5714,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
 {
   typedef internal::Types44<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
                             T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38,
-                            T39, T40, T41, T42, T43, T44> type;
+                            T39, T40, T41, T42, T43, T44>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5680,7 +5730,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
 {
   typedef internal::Types45<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
                             T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38,
-                            T39, T40, T41, T42, T43, T44, T45> type;
+                            T39, T40, T41, T42, T43, T44, T45>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5695,7 +5746,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
 {
   typedef internal::Types46<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
                             T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38,
-                            T39, T40, T41, T42, T43, T44, T45, T46> type;
+                            T39, T40, T41, T42, T43, T44, T45, T46>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5710,7 +5762,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
 {
   typedef internal::Types47<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
                             T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38,
-                            T39, T40, T41, T42, T43, T44, T45, T46, T47> type;
+                            T39, T40, T41, T42, T43, T44, T45, T46, T47>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5725,7 +5778,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
 {
   typedef internal::Types48<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
                             T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38,
-                            T39, T40, T41, T42, T43, T44, T45, T46, T47, T48> type;
+                            T39, T40, T41, T42, T43, T44, T45, T46, T47, T48>
+      type;
 };
 template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8,
           typename T9, typename T10, typename T11, typename T12, typename T13, typename T14, typename T15, typename T16,
@@ -5740,7 +5794,8 @@ struct Types<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T
 {
   typedef internal::Types49<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20,
                             T21, T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38,
-                            T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49> type;
+                            T39, T40, T41, T42, T43, T44, T45, T46, T47, T48, T49>
+      type;
 };
 
 namespace internal {
@@ -5993,7 +6048,8 @@ struct Templates23
 {
   typedef TemplateSel<T1> Head;
   typedef Templates22<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
-                      T23> Tail;
+                      T23>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6005,7 +6061,8 @@ struct Templates24
 {
   typedef TemplateSel<T1> Head;
   typedef Templates23<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
-                      T23, T24> Tail;
+                      T23, T24>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6017,7 +6074,8 @@ struct Templates25
 {
   typedef TemplateSel<T1> Head;
   typedef Templates24<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
-                      T23, T24, T25> Tail;
+                      T23, T24, T25>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6030,7 +6088,8 @@ struct Templates26
 {
   typedef TemplateSel<T1> Head;
   typedef Templates25<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
-                      T23, T24, T25, T26> Tail;
+                      T23, T24, T25, T26>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6043,7 +6102,8 @@ struct Templates27
 {
   typedef TemplateSel<T1> Head;
   typedef Templates26<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
-                      T23, T24, T25, T26, T27> Tail;
+                      T23, T24, T25, T26, T27>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6056,7 +6116,8 @@ struct Templates28
 {
   typedef TemplateSel<T1> Head;
   typedef Templates27<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
-                      T23, T24, T25, T26, T27, T28> Tail;
+                      T23, T24, T25, T26, T27, T28>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6069,7 +6130,8 @@ struct Templates29
 {
   typedef TemplateSel<T1> Head;
   typedef Templates28<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
-                      T23, T24, T25, T26, T27, T28, T29> Tail;
+                      T23, T24, T25, T26, T27, T28, T29>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6082,7 +6144,8 @@ struct Templates30
 {
   typedef TemplateSel<T1> Head;
   typedef Templates29<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
-                      T23, T24, T25, T26, T27, T28, T29, T30> Tail;
+                      T23, T24, T25, T26, T27, T28, T29, T30>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6096,7 +6159,8 @@ struct Templates31
 {
   typedef TemplateSel<T1> Head;
   typedef Templates30<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
-                      T23, T24, T25, T26, T27, T28, T29, T30, T31> Tail;
+                      T23, T24, T25, T26, T27, T28, T29, T30, T31>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6110,7 +6174,8 @@ struct Templates32
 {
   typedef TemplateSel<T1> Head;
   typedef Templates31<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
-                      T23, T24, T25, T26, T27, T28, T29, T30, T31, T32> Tail;
+                      T23, T24, T25, T26, T27, T28, T29, T30, T31, T32>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6124,7 +6189,8 @@ struct Templates33
 {
   typedef TemplateSel<T1> Head;
   typedef Templates32<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
-                      T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33> Tail;
+                      T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6138,7 +6204,8 @@ struct Templates34
 {
   typedef TemplateSel<T1> Head;
   typedef Templates33<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
-                      T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34> Tail;
+                      T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6152,7 +6219,8 @@ struct Templates35
 {
   typedef TemplateSel<T1> Head;
   typedef Templates34<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
-                      T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> Tail;
+                      T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6167,7 +6235,8 @@ struct Templates36
 {
   typedef TemplateSel<T1> Head;
   typedef Templates35<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
-                      T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> Tail;
+                      T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6182,7 +6251,8 @@ struct Templates37
 {
   typedef TemplateSel<T1> Head;
   typedef Templates36<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
-                      T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37> Tail;
+                      T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6197,7 +6267,8 @@ struct Templates38
 {
   typedef TemplateSel<T1> Head;
   typedef Templates37<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
-                      T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38> Tail;
+                      T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6212,7 +6283,8 @@ struct Templates39
 {
   typedef TemplateSel<T1> Head;
   typedef Templates38<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
-                      T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39> Tail;
+                      T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6227,7 +6299,8 @@ struct Templates40
 {
   typedef TemplateSel<T1> Head;
   typedef Templates39<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
-                      T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40> Tail;
+                      T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6243,8 +6316,8 @@ struct Templates41
 {
   typedef TemplateSel<T1> Head;
   typedef Templates40<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
-                      T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40,
-                      T41> Tail;
+                      T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6261,7 +6334,8 @@ struct Templates42
   typedef TemplateSel<T1> Head;
   typedef Templates41<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
                       T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41,
-                      T42> Tail;
+                      T42>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6278,7 +6352,8 @@ struct Templates43
   typedef TemplateSel<T1> Head;
   typedef Templates42<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
                       T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41,
-                      T42, T43> Tail;
+                      T42, T43>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6295,7 +6370,8 @@ struct Templates44
   typedef TemplateSel<T1> Head;
   typedef Templates43<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
                       T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41,
-                      T42, T43, T44> Tail;
+                      T42, T43, T44>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6312,7 +6388,8 @@ struct Templates45
   typedef TemplateSel<T1> Head;
   typedef Templates44<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
                       T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41,
-                      T42, T43, T44, T45> Tail;
+                      T42, T43, T44, T45>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6330,7 +6407,8 @@ struct Templates46
   typedef TemplateSel<T1> Head;
   typedef Templates45<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
                       T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41,
-                      T42, T43, T44, T45, T46> Tail;
+                      T42, T43, T44, T45, T46>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6348,7 +6426,8 @@ struct Templates47
   typedef TemplateSel<T1> Head;
   typedef Templates46<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
                       T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41,
-                      T42, T43, T44, T45, T46, T47> Tail;
+                      T42, T43, T44, T45, T46, T47>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6366,7 +6445,8 @@ struct Templates48
   typedef TemplateSel<T1> Head;
   typedef Templates47<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
                       T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41,
-                      T42, T43, T44, T45, T46, T47, T48> Tail;
+                      T42, T43, T44, T45, T46, T47, T48>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6384,7 +6464,8 @@ struct Templates49
   typedef TemplateSel<T1> Head;
   typedef Templates48<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
                       T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41,
-                      T42, T43, T44, T45, T46, T47, T48, T49> Tail;
+                      T42, T43, T44, T45, T46, T47, T48, T49>
+      Tail;
 };
 
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
@@ -6402,7 +6483,8 @@ struct Templates50
   typedef TemplateSel<T1> Head;
   typedef Templates49<T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21, T22,
                       T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40, T41,
-                      T42, T43, T44, T45, T46, T47, T48, T49, T50> Tail;
+                      T42, T43, T44, T45, T46, T47, T48, T49, T50>
+      Tail;
 };
 
 
@@ -6440,7 +6522,8 @@ struct Templates
 {
   typedef Templates50<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
                       T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40,
-                      T41, T42, T43, T44, T45, T46, T47, T48, T49, T50> type;
+                      T41, T42, T43, T44, T45, T46, T47, T48, T49, T50>
+      type;
 };
 
 template <>
@@ -6663,7 +6746,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
                  NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT>
 {
   typedef Templates22<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
-                      T22> type;
+                      T22>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6675,7 +6759,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
                  NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT>
 {
   typedef Templates23<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
-                      T22, T23> type;
+                      T22, T23>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6687,7 +6772,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
                  NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT>
 {
   typedef Templates24<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
-                      T22, T23, T24> type;
+                      T22, T23, T24>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6699,7 +6785,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
                  NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT>
 {
   typedef Templates25<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
-                      T22, T23, T24, T25> type;
+                      T22, T23, T24, T25>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6712,7 +6799,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
                  NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT>
 {
   typedef Templates26<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
-                      T22, T23, T24, T25, T26> type;
+                      T22, T23, T24, T25, T26>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6725,7 +6813,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
                  NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT>
 {
   typedef Templates27<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
-                      T22, T23, T24, T25, T26, T27> type;
+                      T22, T23, T24, T25, T26, T27>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6738,7 +6827,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
                  NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT>
 {
   typedef Templates28<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
-                      T22, T23, T24, T25, T26, T27, T28> type;
+                      T22, T23, T24, T25, T26, T27, T28>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6751,7 +6841,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
                  NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT>
 {
   typedef Templates29<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
-                      T22, T23, T24, T25, T26, T27, T28, T29> type;
+                      T22, T23, T24, T25, T26, T27, T28, T29>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6764,7 +6855,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
                  NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT>
 {
   typedef Templates30<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
-                      T22, T23, T24, T25, T26, T27, T28, T29, T30> type;
+                      T22, T23, T24, T25, T26, T27, T28, T29, T30>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6778,7 +6870,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
                  NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT>
 {
   typedef Templates31<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
-                      T22, T23, T24, T25, T26, T27, T28, T29, T30, T31> type;
+                      T22, T23, T24, T25, T26, T27, T28, T29, T30, T31>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6792,7 +6885,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
                  NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT>
 {
   typedef Templates32<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
-                      T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32> type;
+                      T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6806,7 +6900,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
                  NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT>
 {
   typedef Templates33<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
-                      T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33> type;
+                      T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6820,7 +6915,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
                  NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT>
 {
   typedef Templates34<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
-                      T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34> type;
+                      T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6834,7 +6930,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
                  NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT>
 {
   typedef Templates35<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
-                      T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35> type;
+                      T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6849,7 +6946,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
                  NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT>
 {
   typedef Templates36<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
-                      T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36> type;
+                      T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6864,7 +6962,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
                  NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT>
 {
   typedef Templates37<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
-                      T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37> type;
+                      T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6879,7 +6978,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
                  NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT>
 {
   typedef Templates38<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
-                      T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38> type;
+                      T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6894,7 +6994,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
                  NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT>
 {
   typedef Templates39<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
-                      T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39> type;
+                      T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6909,8 +7010,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
                  NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT, NoneT>
 {
   typedef Templates40<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
-                      T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39,
-                      T40> type;
+                      T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6927,7 +7028,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
 {
   typedef Templates41<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
                       T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40,
-                      T41> type;
+                      T41>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6944,7 +7046,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
 {
   typedef Templates42<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
                       T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40,
-                      T41, T42> type;
+                      T41, T42>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6961,7 +7064,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
 {
   typedef Templates43<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
                       T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40,
-                      T41, T42, T43> type;
+                      T41, T42, T43>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6978,7 +7082,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
 {
   typedef Templates44<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
                       T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40,
-                      T41, T42, T43, T44> type;
+                      T41, T42, T43, T44>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -6995,7 +7100,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
 {
   typedef Templates45<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
                       T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40,
-                      T41, T42, T43, T44, T45> type;
+                      T41, T42, T43, T44, T45>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -7013,7 +7119,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
 {
   typedef Templates46<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
                       T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40,
-                      T41, T42, T43, T44, T45, T46> type;
+                      T41, T42, T43, T44, T45, T46>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -7031,7 +7138,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
 {
   typedef Templates47<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
                       T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40,
-                      T41, T42, T43, T44, T45, T46, T47> type;
+                      T41, T42, T43, T44, T45, T46, T47>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -7049,7 +7157,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
 {
   typedef Templates48<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
                       T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40,
-                      T41, T42, T43, T44, T45, T46, T47, T48> type;
+                      T41, T42, T43, T44, T45, T46, T47, T48>
+      type;
 };
 template <GTEST_TEMPLATE_ T1, GTEST_TEMPLATE_ T2, GTEST_TEMPLATE_ T3, GTEST_TEMPLATE_ T4, GTEST_TEMPLATE_ T5,
           GTEST_TEMPLATE_ T6, GTEST_TEMPLATE_ T7, GTEST_TEMPLATE_ T8, GTEST_TEMPLATE_ T9, GTEST_TEMPLATE_ T10,
@@ -7067,7 +7176,8 @@ struct Templates<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T1
 {
   typedef Templates49<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, T21,
                       T22, T23, T24, T25, T26, T27, T28, T29, T30, T31, T32, T33, T34, T35, T36, T37, T38, T39, T40,
-                      T41, T42, T43, T44, T45, T46, T47, T48, T49> type;
+                      T41, T42, T43, T44, T45, T46, T47, T48, T49>
+      type;
 };
 
 // The TypeList template makes it possible to use either a single type
@@ -7162,7 +7272,7 @@ GTEST_API_ extern const char kStackTraceMarker[];
 // pointer literal if and only if the first version is picked by the
 // compiler.
 char IsNullLiteralHelper(Secret* p);
-char(&IsNullLiteralHelper(...))[2]; // NOLINT
+char (&IsNullLiteralHelper(...))[2]; // NOLINT
 
 // A compile-time bool constant that is true if and only if x is a
 // null pointer literal (i.e. NULL or any 0-valued compile-time
@@ -7910,7 +8020,7 @@ private:
   // which version of Helper() is used, and hence whether x can be
   // implicitly converted to type To.
   static char Helper(To);
-  static char(&Helper(...))[2]; // NOLINT
+  static char (&Helper(...))[2]; // NOLINT
 
   // We have to put the 'public' section after the 'private' section,
   // or MSVC refuses to compile the code.
@@ -8011,7 +8121,7 @@ inline bool ArrayEq(const T& lhs, const U& rhs)
 
 // This overload is used when k >= 1.
 template <typename T, typename U, size_t N>
-inline bool ArrayEq(const T(&lhs)[N], const U(&rhs)[N])
+inline bool ArrayEq(const T (&lhs)[N], const U (&rhs)[N])
 {
   return internal::ArrayEq(lhs, N, rhs);
 }
@@ -8057,7 +8167,7 @@ inline void CopyArray(const T& from, U* to)
 
 // This overload is used when k >= 1.
 template <typename T, typename U, size_t N>
-inline void CopyArray(const T(&from)[N], U (*to)[N])
+inline void CopyArray(const T (&from)[N], U (*to)[N])
 {
   internal::CopyArray(from, N, *to);
 }
@@ -8150,7 +8260,7 @@ private:
       CopyArray(array, a_size, copy);
       array_ = copy;
     }
-    size_               = a_size;
+    size_ = a_size;
     relation_to_source_ = relation;
   }
 
@@ -8380,8 +8490,8 @@ namespace internal {
 GTEST_DECLARE_string_(internal_run_death_test);
 
 // Names of the flags (needed for parsing Google Test flags).
-const char kDeathTestStyleFlag[]       = "death_test_style";
-const char kDeathTestUseFork[]         = "death_test_use_fork";
+const char kDeathTestStyleFlag[] = "death_test_style";
+const char kDeathTestUseFork[] = "death_test_use_fork";
 const char kInternalRunDeathTestFlag[] = "internal_run_death_test";
 
 #if GTEST_HAS_DEATH_TEST
@@ -9268,9 +9378,9 @@ public:
 
     linked_ptr_internal const* p = ptr;
     while (p->next_ != ptr)
-      p      = p->next_;
+      p = p->next_;
     p->next_ = this;
-    next_    = ptr;
+    next_ = ptr;
   }
 
   // Leave whatever circle we're part of.  Returns true if we were the
@@ -9283,7 +9393,7 @@ public:
       return true;
     linked_ptr_internal const* p = next_;
     while (p->next_ != this)
-      p      = p->next_;
+      p = p->next_;
     p->next_ = next_;
     return false;
   }
@@ -10094,7 +10204,7 @@ class UniversalPrinter<T[N]>
 public:
   // Prints the given array, omitting some elements when there are too
   // many.
-  static void Print(const T(&a)[N], ::std::ostream* os)
+  static void Print(const T (&a)[N], ::std::ostream* os)
   {
     UniversalPrintArray(a, N, os);
   }
@@ -10153,7 +10263,7 @@ template <typename T, size_t N>
 class UniversalTersePrinter<T[N]>
 {
 public:
-  static void Print(const T(&value)[N], ::std::ostream* os)
+  static void Print(const T (&value)[N], ::std::ostream* os)
   {
     UniversalPrinter<T[N]>::Print(value, os);
   }
@@ -11066,7 +11176,7 @@ internal::ParamGenerator<typename ::testing::internal::IteratorTraits<ForwardIte
 ValuesIn(ForwardIterator begin, ForwardIterator end);
 
 template <typename T, size_t N>
-internal::ParamGenerator<T> ValuesIn(const T(&array)[N]);
+internal::ParamGenerator<T> ValuesIn(const T (&array)[N]);
 
 template <class Container>
 internal::ParamGenerator<typename Container::value_type> ValuesIn(const Container& container);
@@ -17750,7 +17860,7 @@ ValuesIn(ForwardIterator begin, ForwardIterator end)
 }
 
 template <typename T, size_t N>
-internal::ParamGenerator<T> ValuesIn(const T(&array)[N])
+internal::ParamGenerator<T> ValuesIn(const T (&array)[N])
 {
   return ValuesIn(array, array + N);
 }
@@ -22726,15 +22836,15 @@ public:
 // INTERNAL IMPLEMENTATION - DO NOT USE IN A USER PROGRAM.
 
 // Implements the helper function for {ASSERT|EXPECT}_NE
-GTEST_IMPL_CMP_HELPER_(NE, != );
+GTEST_IMPL_CMP_HELPER_(NE, !=);
 // Implements the helper function for {ASSERT|EXPECT}_LE
-GTEST_IMPL_CMP_HELPER_(LE, <= );
+GTEST_IMPL_CMP_HELPER_(LE, <=);
 // Implements the helper function for {ASSERT|EXPECT}_LT
-GTEST_IMPL_CMP_HELPER_(LT, < );
+GTEST_IMPL_CMP_HELPER_(LT, <);
 // Implements the helper function for {ASSERT|EXPECT}_GE
-GTEST_IMPL_CMP_HELPER_(GE, >= );
+GTEST_IMPL_CMP_HELPER_(GE, >=);
 // Implements the helper function for {ASSERT|EXPECT}_GT
-GTEST_IMPL_CMP_HELPER_(GT, > );
+GTEST_IMPL_CMP_HELPER_(GT, >);
 
 #undef GTEST_IMPL_CMP_HELPER_
 
@@ -23135,7 +23245,8 @@ AssertionResult AssertPred1Helper(const char* pred_text, const char* e1, Pred pr
     return AssertionSuccess();
 
   return AssertionFailure() << pred_text << "(" << e1 << ") evaluates to false, where"
-                            << "\n" << e1 << " evaluates to " << v1;
+                            << "\n"
+                            << e1 << " evaluates to " << v1;
 }
 
 // Internal macro for implementing {EXPECT|ASSERT}_PRED_FORMAT1.
@@ -23163,7 +23274,9 @@ AssertionResult AssertPred2Helper(const char* pred_text, const char* e1, const c
     return AssertionSuccess();
 
   return AssertionFailure() << pred_text << "(" << e1 << ", " << e2 << ") evaluates to false, where"
-                            << "\n" << e1 << " evaluates to " << v1 << "\n" << e2 << " evaluates to " << v2;
+                            << "\n"
+                            << e1 << " evaluates to " << v1 << "\n"
+                            << e2 << " evaluates to " << v2;
 }
 
 // Internal macro for implementing {EXPECT|ASSERT}_PRED_FORMAT2.
@@ -23192,7 +23305,9 @@ AssertionResult AssertPred3Helper(const char* pred_text, const char* e1, const c
     return AssertionSuccess();
 
   return AssertionFailure() << pred_text << "(" << e1 << ", " << e2 << ", " << e3 << ") evaluates to false, where"
-                            << "\n" << e1 << " evaluates to " << v1 << "\n" << e2 << " evaluates to " << v2 << "\n"
+                            << "\n"
+                            << e1 << " evaluates to " << v1 << "\n"
+                            << e2 << " evaluates to " << v2 << "\n"
                             << e3 << " evaluates to " << v3;
 }
 
@@ -23225,8 +23340,11 @@ AssertionResult AssertPred4Helper(const char* pred_text, const char* e1, const c
 
   return AssertionFailure() << pred_text << "(" << e1 << ", " << e2 << ", " << e3 << ", " << e4
                             << ") evaluates to false, where"
-                            << "\n" << e1 << " evaluates to " << v1 << "\n" << e2 << " evaluates to " << v2 << "\n"
-                            << e3 << " evaluates to " << v3 << "\n" << e4 << " evaluates to " << v4;
+                            << "\n"
+                            << e1 << " evaluates to " << v1 << "\n"
+                            << e2 << " evaluates to " << v2 << "\n"
+                            << e3 << " evaluates to " << v3 << "\n"
+                            << e4 << " evaluates to " << v4;
 }
 
 // Internal macro for implementing {EXPECT|ASSERT}_PRED_FORMAT4.
@@ -23260,9 +23378,12 @@ AssertionResult AssertPred5Helper(const char* pred_text, const char* e1, const c
 
   return AssertionFailure() << pred_text << "(" << e1 << ", " << e2 << ", " << e3 << ", " << e4 << ", " << e5
                             << ") evaluates to false, where"
-                            << "\n" << e1 << " evaluates to " << v1 << "\n" << e2 << " evaluates to " << v2 << "\n"
-                            << e3 << " evaluates to " << v3 << "\n" << e4 << " evaluates to " << v4 << "\n" << e5
-                            << " evaluates to " << v5;
+                            << "\n"
+                            << e1 << " evaluates to " << v1 << "\n"
+                            << e2 << " evaluates to " << v2 << "\n"
+                            << e3 << " evaluates to " << v3 << "\n"
+                            << e4 << " evaluates to " << v4 << "\n"
+                            << e5 << " evaluates to " << v5;
 }
 
 // Internal macro for implementing {EXPECT|ASSERT}_PRED_FORMAT5.

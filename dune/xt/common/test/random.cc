@@ -31,7 +31,7 @@ TEST(Init, Random)
   const auto lower_bound = init_bound<T>(1);
   // for the int check we need at least on int in between lower and upper bound
   const auto upper_bound = init_bound<T>(3);
-  const auto seed        = init_bound<T>(0);
+  const auto seed = init_bound<T>(0);
   RNG rng1;
   RNG rng2(lower_bound);
   RNG rng3(lower_bound, upper_bound);

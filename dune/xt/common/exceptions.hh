@@ -38,7 +38,7 @@ if (a.size() != b.size())
  */
 #define DUNE_THROW(E, m)                                                                                               \
   do {                                                                                                                 \
-    const std::string th__red   = "\033[31m";                                                                          \
+    const std::string th__red = "\033[31m";                                                                            \
     const std::string th__brown = "\033[33m";                                                                          \
     const std::string th__clear = "\033[0m";                                                                           \
     E th__ex;                                                                                                          \

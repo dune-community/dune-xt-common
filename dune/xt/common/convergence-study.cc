@@ -122,7 +122,7 @@ std::map<std::string, std::vector<double>> ConvergenceStudy::run(const bool rela
     if (relative)
       reference_norm[norm] = norm_reference_solution(norm);
     else
-      reference_norm[norm]    = 0.0;
+      reference_norm[norm] = 0.0;
     last_relative_error[norm] = 0.0;
   }
   double last_grid_width = current_grid_width();

@@ -62,8 +62,8 @@ void LocalizationStudy::run(std::ostream& out)
       std::string(" ||") + "   L^2 difference   " + "|" + "   L^oo difference  " + "|" + " standard deviation ";
   size_t first_column_size = 0;
   for (auto id : actually_used_indicators)
-    first_column_size          = std::max(first_column_size, id.size());
-  first_column_size            = std::max(first_column_size, total_width - header_line.size() - 1);
+    first_column_size = std::max(first_column_size, id.size());
+  first_column_size = std::max(first_column_size, total_width - header_line.size() - 1);
   std::string first_column_str = "";
   for (size_t ii = 0; ii < first_column_size; ++ii)
     first_column_str += " ";

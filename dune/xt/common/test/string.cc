@@ -71,7 +71,8 @@ struct VectorStringTestInt : public ::testing::Test
 };
 
 typedef testing::Types<std::vector<double>, Dune::DynamicVector<double>, Dune::FieldVector<double, 3>,
-                       FieldVector<double, 3>> VectorTypesDouble;
+                       FieldVector<double, 3>>
+    VectorTypesDouble;
 
 typedef testing::Types<std::vector<int>, Dune::DynamicVector<int>, Dune::FieldVector<int, 3>, FieldVector<int, 3>>
     VectorTypesInt;
@@ -163,12 +164,12 @@ TEST(StringTest, Tokenizer)
 {
   const string seps(" \t;");
   const string msg("a t\tkk;;g");
-  const vector<string> tokens_default    = {"a", "t", "kk", "", "g"};
+  const vector<string> tokens_default = {"a", "t", "kk", "", "g"};
   const vector<string> tokens_compressed = {"a", "t", "kk", "g"};
   EXPECT_EQ(tokens_default, tokenize(msg, seps, boost::algorithm::token_compress_off));
   EXPECT_EQ(tokens_compressed, tokenize(msg, seps, boost::algorithm::token_compress_on));
   const string num_msg("-1 2;;4");
-  vector<int> numbers_default    = {-1, 2, 0, 4};
+  vector<int> numbers_default = {-1, 2, 0, 4};
   vector<int> numbers_compressed = {-1, 2, 4};
   EXPECT_EQ(numbers_default, tokenize<int>(num_msg, seps, boost::algorithm::token_compress_off));
   EXPECT_EQ(numbers_compressed, tokenize<int>(num_msg, seps, boost::algorithm::token_compress_on));

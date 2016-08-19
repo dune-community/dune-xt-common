@@ -51,7 +51,7 @@ struct Checker<ThreadValue, false /*valuetype is not const*/>
     value_check(const_foo, value);
     EXPECT_GT(const_foo.sum(), 0);
 
-    const auto new_value                 = typename ThreadValue::ValueType(9);
+    const auto new_value = typename ThreadValue::ValueType(9);
     typename ThreadValue::ValueType& bar = *foo;
     bar = new_value;
     value_check(const_foo, new_value);
@@ -68,7 +68,8 @@ typedef testing::Types<FallbackPerThreadValue<int>, PerThreadValue<int>,
 #if HAVE_TBB
                        TBBPerThreadValue<int>, TBBPerThreadValue<const int>,
 #endif
-                       FallbackPerThreadValue<const int>, PerThreadValue<const int>> TLSTypes;
+                       FallbackPerThreadValue<const int>, PerThreadValue<const int>>
+    TLSTypes;
 
 template <class T>
 struct ThreadValueTest : public testing::Test

@@ -54,7 +54,8 @@ struct Int
 typedef Dune::tuple<double, float
                     //                   , Dune::bigunsignedint
                     ,
-                    int, unsigned int, unsigned long, long long, char> BasicTypes;
+                    int, unsigned int, unsigned long, long long, char>
+    BasicTypes;
 
 //! where sleep only counts toward wall time, this wastes actual cpu time
 void busywait(const size_t ms);

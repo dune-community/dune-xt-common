@@ -48,7 +48,7 @@ struct ValidationTest : public testing::Test
     {
       typedef VectorAbstraction<T>::S S;
       const auto scalar_eps = Epsilon<S>::value;
-      const T lower         = init_bound<T>(std::numeric_limits<S>::min() + scalar_eps);
+      const T lower = init_bound<T>(std::numeric_limits<S>::min() + scalar_eps);
       const T upper = init_bound<T>(std::numeric_limits<S>::max() - scalar_eps);
       RNGType rng(lower, upper);
       for (int i = samples; i > 0; --i) {

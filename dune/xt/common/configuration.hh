@@ -38,10 +38,10 @@ namespace Common {
 
 namespace internal {
 
-static const bool configuration_record_defaults        = false;
+static const bool configuration_record_defaults = false;
 static const bool configuration_warn_on_default_access = false;
-static const bool configuration_log_on_exit            = false;
-static const std::string configuration_logfile         = "data/log/dxtc_parameter.log";
+static const bool configuration_log_on_exit = false;
+static const std::string configuration_logfile = "data/log/dxtc_parameter.log";
 
 template <class T>
 struct Typer
@@ -76,7 +76,7 @@ public:
   // This ctor must not be marked explicit (needed internally)!
   Configuration(const ParameterTree& tree, const bool /*record_defaults*/ = internal::configuration_record_defaults,
                 const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit            = internal::configuration_log_on_exit,
+                const bool log_on_exit = internal::configuration_log_on_exit,
                 const std::string logfile = internal::configuration_logfile);
 
   // This ctor must not be marked explicit (needed internally)!
@@ -85,9 +85,9 @@ public:
   Configuration(const Configuration& other);
 
   explicit Configuration(std::istream& in, // <- does not matter
-                         const bool /*record_defaults*/    = internal::configuration_record_defaults,
+                         const bool /*record_defaults*/ = internal::configuration_record_defaults,
                          const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                         const bool log_on_exit            = internal::configuration_log_on_exit,
+                         const bool log_on_exit = internal::configuration_log_on_exit,
                          const std::string logfile = internal::configuration_logfile);
 
   //! read ParameterTree from file and call Configuration(const ParameterTree& tree)
@@ -97,20 +97,20 @@ public:
   //! read ParameterTree from given arguments and call Configuration(const ParameterTree& tree)
   Configuration(int argc, char** argv, const bool /*record_defaults*/ = internal::configuration_record_defaults,
                 const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit            = internal::configuration_log_on_exit,
+                const bool log_on_exit = internal::configuration_log_on_exit,
                 const std::string logfile = internal::configuration_logfile);
 
   //! read ParameterTree from given arguments and file and call Configuration(const ParameterTree& tree)
   Configuration(int argc, char** argv, const std::string filename,
-                const bool /*record_defaults*/    = internal::configuration_record_defaults,
+                const bool /*record_defaults*/ = internal::configuration_record_defaults,
                 const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit            = internal::configuration_log_on_exit,
+                const bool log_on_exit = internal::configuration_log_on_exit,
                 const std::string logfile = internal::configuration_logfile);
 
   template <class T>
   Configuration(std::string key, T value, const bool /*record_defaults*/ = internal::configuration_record_defaults,
                 const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit            = internal::configuration_log_on_exit,
+                const bool log_on_exit = internal::configuration_log_on_exit,
                 const std::string logfile = internal::configuration_logfile)
     : BaseType()
     , warn_on_default_access_(warn_on_default_access)
@@ -122,16 +122,16 @@ public:
   }
 
   Configuration(const std::vector<std::string> keys, const std::vector<std::string> values_in,
-                const bool /*record_defaults*/    = internal::configuration_record_defaults,
+                const bool /*record_defaults*/ = internal::configuration_record_defaults,
                 const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit            = internal::configuration_log_on_exit,
+                const bool log_on_exit = internal::configuration_log_on_exit,
                 const std::string logfile = internal::configuration_logfile);
 
   template <class T>
   Configuration(const std::vector<std::string> keys, const std::initializer_list<T> values_in,
-                const bool record_defaults        = internal::configuration_record_defaults,
+                const bool record_defaults = internal::configuration_record_defaults,
                 const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit            = internal::configuration_log_on_exit,
+                const bool log_on_exit = internal::configuration_log_on_exit,
                 const std::string logfile = internal::configuration_logfile)
     : Configuration(keys, make_string_sequence(values_in.begin(), values_in.end()), record_defaults,
                     warn_on_default_access, log_on_exit, logfile)
@@ -219,8 +219,8 @@ public:
                ValidateAny<typename internal::Typer<T>::type>()) const
   {
     typedef typename internal::Typer<T>::type Tt;
-    const auto def_t  = static_cast<Tt>(def);
-    const auto value  = get(key, to_string(def_t), ValidateAny<std::string>());
+    const auto def_t = static_cast<Tt>(def);
+    const auto value = get(key, to_string(def_t), ValidateAny<std::string>());
     const auto tokens = tokenize<Tt>(value, separators);
     for (auto token : tokens) {
       if (!validator(token)) {
@@ -446,9 +446,9 @@ static auto DXTC_CONFIG_GET(std::string key, T def) -> decltype(DXTC_CONFIG.get(
 }
 
 template <typename T, class V>
-static auto DXTC_CONFIG_GETV(
-    std::string key, T def,
-    const Dune::XT::Common::ValidatorInterface<typename Dune::XT::Common::internal::Typer<T>::type, V>& v)
+static auto
+DXTC_CONFIG_GETV(std::string key, T def,
+                 const Dune::XT::Common::ValidatorInterface<typename Dune::XT::Common::internal::Typer<T>::type, V>& v)
     -> decltype(DXTC_CONFIG.get(key, def, v))
 {
   return DXTC_CONFIG.get(key, def, v);

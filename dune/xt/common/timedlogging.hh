@@ -72,9 +72,9 @@ private:
 class TimedLogging
 {
 public:
-  static const ssize_t default_max_info_level  = -1;
+  static const ssize_t default_max_info_level = -1;
   static const ssize_t default_max_debug_level = -1;
-  static const bool default_enable_warnings    = true;
+  static const bool default_enable_warnings = true;
   static const bool default_enable_colors = true;
   static const std::string default_info_color()
   {
@@ -103,8 +103,8 @@ public:
   void create(const ssize_t max_info_level = default_max_info_level,
               const ssize_t max_debug_level = default_max_debug_level,
               const bool enable_warnings = default_enable_warnings, const bool enable_colors = default_enable_colors,
-              const std::string info_color    = default_info_color(),
-              const std::string debug_color   = default_debug_color(),
+              const std::string info_color = default_info_color(),
+              const std::string debug_color = default_debug_color(),
               const std::string warning_color = default_warning_color());
 
   TimedLogManager get(const std::string id);

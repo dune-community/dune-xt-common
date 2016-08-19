@@ -53,9 +53,9 @@ void Logging::create(int logflags, const std::string logfile, const std::string 
   boost::format log_fn("%s%s");
   if (comm.size() > 1) {
     const std::string rank = (boost::format("%08d") % comm.rank()).str();
-    log_fn                 = boost::format("%s_p" + rank + "_%s");
+    log_fn = boost::format("%s_p" + rank + "_%s");
   }
-  logflags_   = logflags;
+  logflags_ = logflags;
   path logdir = path(datadir) / _logdir;
   filename_ = logdir / (log_fn % logfile % ".log").str();
   test_create_directory(filename_.string());
@@ -66,7 +66,7 @@ void Logging::create(int logflags, const std::string logfile, const std::string 
   }
 
   for (const auto id : streamIDs_) {
-    flagmap_[id]   = logflags;
+    flagmap_[id] = logflags;
     streammap_[id] = Dune::XT::Common::make_unique<DualLogStream>(id, flagmap_[id], std::cout, logfile_);
   }
 } // create

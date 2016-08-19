@@ -27,7 +27,7 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
-#define DS_CONST_CHAR const char *
+#define DS_CONST_CHAR const char*
 
 /**
  * @brief namespace to define color constants that can be

@@ -165,7 +165,7 @@ from_string(std::string ss, const size_t /*size*/ = 0, const size_t /*cols*/ = 0
   const auto sign_pos = ss.find("+", 1) != string::npos ? ss.find("+", 1) : ss.find("-", 1);
   re = from_string<T>(ss.substr(0, sign_pos));
   if (sign_pos != string::npos) {
-    ss                = ss.substr(sign_pos);
+    ss = ss.substr(sign_pos);
     const auto im_pos = ss.find("i");
     if (im_pos == string::npos)
       DUNE_THROW(Exceptions::conversion_error, "Error converting " << ss << " no imaginary unit");
@@ -213,7 +213,7 @@ from_string(std::string ss, const size_t size, const size_t DXTC_DEBUG_ONLY(cols
     return ret;
   } else {
     // we treat this as a scalar
-    const auto val              = from_string<S>(trim_copy_safely(vector_str));
+    const auto val = from_string<S>(trim_copy_safely(vector_str));
     const size_t automatic_size = (size == 0 ? 1 : size);
     const size_t actual_size =
         VectorAbstraction<VectorType>::has_static_size ? VectorAbstraction<VectorType>::static_size : automatic_size;
@@ -271,7 +271,7 @@ from_string(std::string matrix_str, const size_t rows, const size_t cols)
       const auto row_token = boost::algorithm::trim_copy(row_tokens[rr]);
       // we treat this as a vector, so we split along ' '
       const auto column_tokens = tokenize<std::string>(row_token, " ", boost::algorithm::token_compress_on);
-      min_cols                 = std::min(min_cols, column_tokens.size());
+      min_cols = std::min(min_cols, column_tokens.size());
     }
     if (cols > 0 && min_cols < cols)
       DUNE_THROW(Exceptions::conversion_error,
@@ -305,7 +305,7 @@ from_string(std::string matrix_str, const size_t rows, const size_t cols)
     return ret;
   } else {
     // we treat this as a scalar
-    const S val                 = from_string<S>(trim_copy_safely(matrix_str));
+    const S val = from_string<S>(trim_copy_safely(matrix_str));
     const size_t automatic_rows = (rows == 0 ? 1 : rows);
     const size_t actual_rows =
         MatrixAbstraction<MatrixType>::has_static_size ? MatrixAbstraction<MatrixType>::static_rows : automatic_rows;
@@ -355,8 +355,8 @@ static inline std::string to_string(const std::complex<T>& val, const std::size_
 {
   using namespace std;
   stringstream os;
-  const auto im       = imag(val);
-  const string sign   = signum(im) < 0 ? "" : "+";
+  const auto im = imag(val);
+  const string sign = signum(im) < 0 ? "" : "+";
   const auto real_str = internal::to_string(real(val), precision);
   const auto imag_str = internal::to_string(im, precision);
   os << real_str << sign << imag_str << "i";

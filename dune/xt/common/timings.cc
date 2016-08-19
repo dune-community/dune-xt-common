@@ -73,7 +73,7 @@ void TimingData::stop()
 
 TimingData::DeltaType TimingData::delta() const
 {
-  const auto scale   = 1.0 / double(boost::timer::nanosecond_type(1e6));
+  const auto scale = 1.0 / double(boost::timer::nanosecond_type(1e6));
   const auto elapsed = timer_->elapsed();
   const auto cast = [=](double var) { return static_cast<typename TimingData::DeltaType::value_type>(var); };
   return {{cast(elapsed.wall * scale), cast(elapsed.user * scale), cast(elapsed.system * scale)}};
@@ -98,7 +98,7 @@ void Timings::start(const std::string section_name)
     if (section->second.first) // timer currently running
       return;
 
-    section->second.first  = true; // set active, start with new
+    section->second.first = true; // set active, start with new
     section->second.second = TimingData(section_name);
   } else {
     // init new section
@@ -209,16 +209,16 @@ void Timings::output_all_measures(std::ostream& out, MPIHelper::MPICommunicator 
 
   stash << std::endl << threadManager().max_threads() << csv_sep_ << comm.size();
   for (const auto& section : commited_deltas_) {
-    const auto timings  = section.second;
-    auto wall           = timings[0];
-    auto usr            = timings[1];
-    auto sys            = timings[2];
+    const auto timings = section.second;
+    auto wall = timings[0];
+    auto usr = timings[1];
+    auto sys = timings[2];
     const auto wall_sum = comm.sum(wall);
     const auto wall_max = comm.max(wall);
-    const auto usr_sum  = comm.sum(usr);
-    const auto usr_max  = comm.max(usr);
-    const auto sys_sum  = comm.sum(sys);
-    const auto sys_max  = comm.max(sys);
+    const auto usr_sum = comm.sum(usr);
+    const auto usr_max = comm.max(usr);
+    const auto sys_sum = comm.sum(sys);
+    const auto sys_max = comm.max(sys);
     stash << csv_sep_ << usr_sum * weight << csv_sep_ << usr_max << csv_sep_ << wall_sum * weight << csv_sep_
           << wall_max << csv_sep_ << sys_sum * weight << csv_sep_ << sys_max;
   }

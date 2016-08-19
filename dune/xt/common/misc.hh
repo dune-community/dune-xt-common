@@ -103,7 +103,7 @@ struct WraparoundArray : public Dune::array<T, N>
 
 //! type safe (this will not compile for degraded-to-pointer arrays) way of getting array length
 template <class T, size_t N>
-size_t array_length(T(&/*array*/)[N])
+size_t array_length(T (&/*array*/)[N])
 {
   return N;
 }
