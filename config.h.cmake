@@ -24,10 +24,7 @@
 /* Define to the revision of dune-xt-common */
 #define DUNE_XT_COMMON_VERSION_REVISION ${DUNE_XT_COMMON_VERSION_REVISION}
 
-/* Define to 1 if eigen was found, else 0 */
-#ifndef HAVE_EIGEN
-#define HAVE_EIGEN ${HAVE_EIGEN}
-#endif
+#define HAVE_EIGEN ENABLE_EIGEN
 
 /* Define to 1 if threading building blocks were found, else 0 */
 #ifndef HAVE_TBB

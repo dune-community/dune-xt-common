@@ -20,7 +20,8 @@ endforeach(_boost_lib ${DS_REQUIRED_BOOST_LIBS})
 
 find_package(Eigen3 3.2.0)
 if(EIGEN3_FOUND)
-  dune_register_package_flags(INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR})
+  dune_register_package_flags(INCLUDE_DIRS ${EIGEN3_INCLUDE_DIR}
+    COMPILE_DEFINITIONS "ENABLE_EIGEN=1")
   set(HAVE_EIGEN 1)
 else(EIGEN3_FOUND)
   set(HAVE_EIGEN 0)
