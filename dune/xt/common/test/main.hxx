@@ -62,10 +62,11 @@
 
 #include "common.hh"
 
-int main(int argc, char** argv) static const double LocalizableProjectionOperator_default_tolerance = 1e-15;
+static const double LocalizableProjectionOperator_default_tolerance = 1e-15;
 static const double LocalizableProjectionOperator_alugrid_tolerance = 3.8e-11;
 static const double L2ProjectionLocalizableOperator_alugrid_tolerance = 3.7965e-11;
 
+int main(int argc, char** argv)
 {
   using namespace Dune;
   using namespace Dune::XT::Common;
