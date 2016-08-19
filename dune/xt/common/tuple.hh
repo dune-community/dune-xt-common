@@ -321,6 +321,39 @@ struct Combine
 
 } // namespace TupleProduct
 
+//! from https://stackoverflow.com/questions/16853552/how-to-create-a-type-list-for-variadic-templates-that-contains-n-times-the-sam
+template< std::size_t... >
+struct indices {};
+
+//! call this without Indices (i.e. create_indices< N >::type)
+template< std::size_t N, std::size_t... Indices>
+struct create_indices : create_indices< N-1, N-1, Indices...> {};
+
+//! terminating template
+template< std::size_t... Indices >
+struct create_indices< 0, Indices...> {
+  typedef indices<Indices...> type;
+};
+
+//! T_aliased< T, Index > is always the type T, no matter what index is
+template<typename T, std::size_t index>
+using T_aliased = T;
+
+//! make_identical_tuple< T, N >::type is a std::tuple< T, ... , T > with a length of N
+template< typename T, std::size_t N, typename I = typename create_indices< N >::type >
+struct make_identical_tuple;
+
+template< typename T, std::size_t N, std::size_t ...Indices >
+struct make_identical_tuple< T, N, indices< Indices... > >
+{
+  using type = std::tuple<T_aliased<T, Indices>...>;
+
+  static type create(const T& t)
+  {
+    return type(T_aliased<T, Indices>{t}...);
+  }
+};
+
 } // namespace Common
 } // namespace XT
 } // namespace Dune
