@@ -295,8 +295,9 @@ public:
   {
   }
 
+  // using new instead of make_shared for better error messages
   template <class... Args>
-  explicit ConstStorageProvider(Args&&... args) // using new instead of make_shared for better error messages
+  explicit ConstStorageProvider(Args&&... args)
       : storage_(Common::make_unique<internal::ConstAccessByPointer<T>>(new T(std::forward<Args>(args)...)))
   {
   }
@@ -345,6 +346,13 @@ public:
 
   explicit StorageProvider(std::shared_ptr<T> tt)
     : storage_(Common::make_unique<internal::AccessByPointer<T>>(tt))
+  {
+  }
+
+  // using new instead of make_shared for better error messages
+  template <class... Args>
+  explicit StorageProvider(Args&&... args)
+      : storage_(Common::make_unique<internal::AccessByPointer<T>>(new T(std::forward<Args>(args)...)))
   {
   }
 
