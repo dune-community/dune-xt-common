@@ -42,10 +42,16 @@ namespace Common {
 class TimedLogManager
 {
 public:
-  TimedLogManager(const Timer& timer, const std::string info_prefix, const std::string debug_prefix,
-                  const std::string warning_prefix, const ssize_t max_info_level, const ssize_t max_debug_level,
-                  const bool enable_warnings, std::atomic<ssize_t>& current_level,
-                  std::ostream& disabled_out = dev_null, std::ostream& enabled_out = std::cout,
+  TimedLogManager(const Timer& timer,
+                  const std::string info_prefix,
+                  const std::string debug_prefix,
+                  const std::string warning_prefix,
+                  const ssize_t max_info_level,
+                  const ssize_t max_debug_level,
+                  const bool enable_warnings,
+                  std::atomic<ssize_t>& current_level,
+                  std::ostream& disabled_out = dev_null,
+                  std::ostream& enabled_out = std::cout,
                   std::ostream& warn_out = std::cerr);
 
   ~TimedLogManager();
@@ -102,7 +108,8 @@ public:
    */
   void create(const ssize_t max_info_level = default_max_info_level,
               const ssize_t max_debug_level = default_max_debug_level,
-              const bool enable_warnings = default_enable_warnings, const bool enable_colors = default_enable_colors,
+              const bool enable_warnings = default_enable_warnings,
+              const bool enable_colors = default_enable_colors,
               const std::string info_color = default_info_color(),
               const std::string debug_color = default_debug_color(),
               const std::string warning_color = default_warning_color());

@@ -123,7 +123,8 @@ class DefaultRNG : public RNG<T, typename UniformDistributionSelector<T>::type, 
   typedef RNG<T, typename UniformDistributionSelector<T>::type, std::default_random_engine> BaseType;
 
 public:
-  DefaultRNG(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max(),
+  DefaultRNG(T min = std::numeric_limits<T>::min(),
+             T max = std::numeric_limits<T>::max(),
              T seed = std::random_device()())
     : BaseType(std::default_random_engine(seed), typename UniformDistributionSelector<T>::type(min, max))
   {
@@ -137,7 +138,8 @@ class DefaultRNG<std::complex<T>, false>
   typedef RNG<std::complex<T>, typename UniformDistributionSelector<T>::type, std::default_random_engine> BaseType;
 
 public:
-  DefaultRNG(T min = std::numeric_limits<T>::min(), T max = std::numeric_limits<T>::max(),
+  DefaultRNG(T min = std::numeric_limits<T>::min(),
+             T max = std::numeric_limits<T>::max(),
              T seed = std::random_device()())
     : BaseType(std::default_random_engine(seed), typename UniformDistributionSelector<T>::type(min, max))
   {

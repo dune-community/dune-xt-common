@@ -74,7 +74,8 @@ public:
   }
 
   // This ctor must not be marked explicit (needed internally)!
-  Configuration(const ParameterTree& tree, const bool /*record_defaults*/ = internal::configuration_record_defaults,
+  Configuration(const ParameterTree& tree,
+                const bool /*record_defaults*/ = internal::configuration_record_defaults,
                 const bool warn_on_default_access = internal::configuration_warn_on_default_access,
                 const bool log_on_exit = internal::configuration_log_on_exit,
                 const std::string logfile = internal::configuration_logfile);
@@ -91,24 +92,33 @@ public:
                          const std::string logfile = internal::configuration_logfile);
 
   //! read ParameterTree from file and call Configuration(const ParameterTree& tree)
-  Configuration(const std::string filename, const bool /*record_defaults*/, const bool warn_on_default_access,
-                const bool log_on_exit, const std::string logfile);
+  Configuration(const std::string filename,
+                const bool /*record_defaults*/,
+                const bool warn_on_default_access,
+                const bool log_on_exit,
+                const std::string logfile);
 
   //! read ParameterTree from given arguments and call Configuration(const ParameterTree& tree)
-  Configuration(int argc, char** argv, const bool /*record_defaults*/ = internal::configuration_record_defaults,
+  Configuration(int argc,
+                char** argv,
+                const bool /*record_defaults*/ = internal::configuration_record_defaults,
                 const bool warn_on_default_access = internal::configuration_warn_on_default_access,
                 const bool log_on_exit = internal::configuration_log_on_exit,
                 const std::string logfile = internal::configuration_logfile);
 
   //! read ParameterTree from given arguments and file and call Configuration(const ParameterTree& tree)
-  Configuration(int argc, char** argv, const std::string filename,
+  Configuration(int argc,
+                char** argv,
+                const std::string filename,
                 const bool /*record_defaults*/ = internal::configuration_record_defaults,
                 const bool warn_on_default_access = internal::configuration_warn_on_default_access,
                 const bool log_on_exit = internal::configuration_log_on_exit,
                 const std::string logfile = internal::configuration_logfile);
 
   template <class T>
-  Configuration(std::string key, T value, const bool /*record_defaults*/ = internal::configuration_record_defaults,
+  Configuration(std::string key,
+                T value,
+                const bool /*record_defaults*/ = internal::configuration_record_defaults,
                 const bool warn_on_default_access = internal::configuration_warn_on_default_access,
                 const bool log_on_exit = internal::configuration_log_on_exit,
                 const std::string logfile = internal::configuration_logfile)
@@ -121,20 +131,26 @@ public:
     setup_();
   }
 
-  Configuration(const std::vector<std::string> keys, const std::vector<std::string> values_in,
+  Configuration(const std::vector<std::string> keys,
+                const std::vector<std::string> values_in,
                 const bool /*record_defaults*/ = internal::configuration_record_defaults,
                 const bool warn_on_default_access = internal::configuration_warn_on_default_access,
                 const bool log_on_exit = internal::configuration_log_on_exit,
                 const std::string logfile = internal::configuration_logfile);
 
   template <class T>
-  Configuration(const std::vector<std::string> keys, const std::initializer_list<T> values_in,
+  Configuration(const std::vector<std::string> keys,
+                const std::initializer_list<T> values_in,
                 const bool record_defaults = internal::configuration_record_defaults,
                 const bool warn_on_default_access = internal::configuration_warn_on_default_access,
                 const bool log_on_exit = internal::configuration_log_on_exit,
                 const std::string logfile = internal::configuration_logfile)
-    : Configuration(keys, make_string_sequence(values_in.begin(), values_in.end()), record_defaults,
-                    warn_on_default_access, log_on_exit, logfile)
+    : Configuration(keys,
+                    make_string_sequence(values_in.begin(), values_in.end()),
+                    record_defaults,
+                    warn_on_default_access,
+                    log_on_exit,
+                    logfile)
   {
   }
 
@@ -171,7 +187,9 @@ public:
   //! const get without default value, with validation
   template <class T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
   typename internal::Typer<T>::type
-  get(std::string key, const size_t size, const size_t cols = 0,
+  get(std::string key,
+      const size_t size,
+      const size_t cols = 0,
       const ValidatorInterface<T, Validator>& validator = ValidateAny<typename internal::Typer<T>::type>()) const
   {
     if (!has_key(key))
@@ -183,8 +201,9 @@ public:
   //! const get without default value, with validation
   template <class T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
   typename internal::Typer<T>::type
-  get(std::string key, const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
-                           ValidateAny<typename internal::Typer<T>::type>()) const
+  get(std::string key,
+      const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
+          ValidateAny<typename internal::Typer<T>::type>()) const
   {
     if (!has_key(key))
       DUNE_THROW(Exceptions::configuration_error,
@@ -195,7 +214,10 @@ public:
   //! get variation with default value, validation
   template <typename T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
   typename internal::Typer<T>::type
-  get(std::string key, T def, const size_t size, const size_t cols = 0,
+  get(std::string key,
+      T def,
+      const size_t size,
+      const size_t cols = 0,
       const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
           ValidateAny<typename internal::Typer<T>::type>()) const
   {
@@ -205,8 +227,10 @@ public:
   //! get variation with default value, validation
   template <typename T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
   typename internal::Typer<T>::type
-  get(std::string key, T def, const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
-                                  ValidateAny<typename internal::Typer<T>::type>()) const
+  get(std::string key,
+      T def,
+      const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
+          ValidateAny<typename internal::Typer<T>::type>()) const
   {
     return get_(key, def, validator, 0, 0);
   } // ... get(...)
@@ -214,7 +238,9 @@ public:
   //! get std::vector< T > from tree_
   template <typename T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
   std::vector<typename internal::Typer<T>::type>
-  get_list(std::string key, T def = T(), const std::string separators = ";",
+  get_list(std::string key,
+           T def = T(),
+           const std::string separators = ";",
            const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
                ValidateAny<typename internal::Typer<T>::type>()) const
   {
@@ -309,9 +335,11 @@ private:
 
   //! get value from tree and validate with validator
   template <typename T, class Validator>
-  T get_valid_value(const std::string& key, T def,
+  T get_valid_value(const std::string& key,
+                    T def,
                     const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator,
-                    const size_t size, const size_t cols) const
+                    const size_t size,
+                    const size_t cols) const
   {
     std::string valstring = BaseType::get(key, to_string(def));
     T val;
@@ -356,8 +384,10 @@ private:
    *  def if key does not exist in Configuration
    */
   template <typename T, class Validator>
-  typename internal::Typer<T>::type get_(const std::string& key, typename internal::Typer<T>::type def,
-                                         const ValidatorInterface<T, Validator>& validator, const size_t size,
+  typename internal::Typer<T>::type get_(const std::string& key,
+                                         typename internal::Typer<T>::type def,
+                                         const ValidatorInterface<T, Validator>& validator,
+                                         const size_t size,
                                          const size_t cols) const
   {
 #ifndef NDEBUG
@@ -447,7 +477,8 @@ static auto DXTC_CONFIG_GET(std::string key, T def) -> decltype(DXTC_CONFIG.get(
 
 template <typename T, class V>
 static auto
-DXTC_CONFIG_GETV(std::string key, T def,
+DXTC_CONFIG_GETV(std::string key,
+                 T def,
                  const Dune::XT::Common::ValidatorInterface<typename Dune::XT::Common::internal::Typer<T>::type, V>& v)
     -> decltype(DXTC_CONFIG.get(key, def, v))
 {

@@ -160,12 +160,15 @@ namespace Common {
 template <class T1, class T2 = T1, class T3 = T2, class T4 = T3>
 struct TupleSerializer
 {
-  typedef Dune::
-      tuple<const typename T1::DiscreteVelocityFunctionType*, const typename T1::DiscretePressureFunctionType*,
-            const typename T2::DiscreteVelocityFunctionType*, const typename T2::DiscretePressureFunctionType*,
-            const typename T3::DiscreteVelocityFunctionType*, const typename T3::DiscretePressureFunctionType*,
-            const typename T4::DiscreteVelocityFunctionType*, const typename T4::DiscretePressureFunctionType*>
-          TupleType;
+  typedef Dune::tuple<const typename T1::DiscreteVelocityFunctionType*,
+                      const typename T1::DiscretePressureFunctionType*,
+                      const typename T2::DiscreteVelocityFunctionType*,
+                      const typename T2::DiscretePressureFunctionType*,
+                      const typename T3::DiscreteVelocityFunctionType*,
+                      const typename T3::DiscretePressureFunctionType*,
+                      const typename T4::DiscreteVelocityFunctionType*,
+                      const typename T4::DiscretePressureFunctionType*>
+      TupleType;
 
   static TupleType& get_tuple(T1& t1, T2& t2, T3& t3, T4& t4)
   {
@@ -222,8 +225,15 @@ struct TupleSerializer
   } // get_tuple
 };
 
-template <class T1, class T2 = T1, class T3 = T1, class T4 = T1, class T5 = T1, class T6 = T1, class T7 = T1,
-          class T8 = T1, class T9 = T1>
+template <class T1,
+          class T2 = T1,
+          class T3 = T1,
+          class T4 = T1,
+          class T5 = T1,
+          class T6 = T1,
+          class T7 = T1,
+          class T8 = T1,
+          class T9 = T1>
 struct FullTuple : public Dune::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9>
 {
   FullTuple(T1 t1, T2 t2, T3 t3, T4 t4, T5 t5, T6 t6, T7 t7, T8 t8, T9 t9)

@@ -58,8 +58,8 @@ public:
 
   std::vector<std::string> used_norms() const;
 
-  std::map<std::string, std::vector<double>> run(const bool relative = false, std::ostream& out = DXTC_LOG_INFO_0,
-                                                 const bool print_timings = true);
+  std::map<std::string, std::vector<double>>
+  run(const bool relative = false, std::ostream& out = DXTC_LOG_INFO_0, const bool print_timings = true);
 
   virtual std::vector<double> expected_results(const std::string /*type*/) const;
 

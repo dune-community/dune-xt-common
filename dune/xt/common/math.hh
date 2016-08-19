@@ -170,8 +170,10 @@ public:
   }
 
 protected:
-  typedef boost::accumulators::stats<boost::accumulators::tag::max, boost::accumulators::tag::min,
-                                     boost::accumulators::tag::mean, boost::accumulators::tag::count,
+  typedef boost::accumulators::stats<boost::accumulators::tag::max,
+                                     boost::accumulators::tag::min,
+                                     boost::accumulators::tag::mean,
+                                     boost::accumulators::tag::count,
                                      boost::accumulators::tag::sum>
       StatsType;
   boost::accumulators::accumulator_set<ElementType, StatsType> acc_;

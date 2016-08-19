@@ -70,9 +70,9 @@ struct VectorStringTestInt : public ::testing::Test
   }
 };
 
-typedef testing::Types<std::vector<double>, Dune::DynamicVector<double>, Dune::FieldVector<double, 3>,
-                       FieldVector<double, 3>>
-    VectorTypesDouble;
+typedef testing::
+    Types<std::vector<double>, Dune::DynamicVector<double>, Dune::FieldVector<double, 3>, FieldVector<double, 3>>
+        VectorTypesDouble;
 
 typedef testing::Types<std::vector<int>, Dune::DynamicVector<int>, Dune::FieldVector<int, 3>, FieldVector<int, 3>>
     VectorTypesInt;

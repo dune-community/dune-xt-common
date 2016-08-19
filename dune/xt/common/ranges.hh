@@ -101,7 +101,8 @@ public:
 };
 
 template <size_t codim, class DiscreteFunctionspaceType, class EntityType>
-LagrangePointSetRange<typename DiscreteFunctionspaceType::GridPartType, DiscreteFunctionspaceType::polynomialOrder,
+LagrangePointSetRange<typename DiscreteFunctionspaceType::GridPartType,
+                      DiscreteFunctionspaceType::polynomialOrder,
                       codim>
 lagrange_point_set_range(const DiscreteFunctionspaceType& space, const EntityType& entity, const size_t subEntity)
 {
@@ -122,8 +123,8 @@ lagrange_point_set_range(const LgPointSetType& lpset, const size_t subEntity)
 
 //! get a vector with values in [start : increment : end)
 template <class T, class sequence = std::vector<T>>
-typename std::enable_if<!std::is_enum<T>::value, sequence>::type value_range(const T start, const T end,
-                                                                             const T increment = Epsilon<T>::value)
+typename std::enable_if<!std::is_enum<T>::value, sequence>::type
+value_range(const T start, const T end, const T increment = Epsilon<T>::value)
 {
   // sadly, no overloaded version of std::abs is available for
   // unsigned long long, so we compute the absolute value of increment
@@ -139,7 +140,8 @@ typename std::enable_if<!std::is_enum<T>::value, sequence>::type value_range(con
 //! signature for enumeration Types T
 template <class T, class sequence = std::vector<typename Absretval<T>::type>>
 typename std::enable_if<std::is_enum<T>::value, sequence>::type
-value_range(const T start, const T end,
+value_range(const T start,
+            const T end,
             const typename Absretval<T>::type increment = Epsilon<typename Absretval<T>::type>::value)
 {
   typedef typename Absretval<T>::type R;

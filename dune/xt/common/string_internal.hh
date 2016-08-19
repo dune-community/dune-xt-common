@@ -57,7 +57,8 @@ namespace Common {
 // only necessary for headercheck
 template <class T = std::string>
 inline std::vector<T>
-tokenize(const std::string& msg, const std::string& separators,
+tokenize(const std::string& msg,
+         const std::string& separators,
          const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off);
 #endif // DUNE_XT_COMMON_STRING_HH
 

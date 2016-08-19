@@ -134,12 +134,16 @@ struct CreateByParameterTree
   }
 };
 
-typedef testing::Types<double, float, std::string, std::complex<double>, int, unsigned int, unsigned long, long long,
-                       char>
-    TestTypes;
+typedef testing::
+    Types<double, float, std::string, std::complex<double>, int, unsigned int, unsigned long, long long, char>
+        TestTypes;
 
-typedef testing::Types<CreateByOperator, CreateByKeyAndValueAndAddConfiguration, CreateByKeyAndValueAndAddParameterTree,
-                       CreateByKeyAndValueVectorsAndAddParameterTree, CreateByKeysAndValues, CreateByParameterTree,
+typedef testing::Types<CreateByOperator,
+                       CreateByKeyAndValueAndAddConfiguration,
+                       CreateByKeyAndValueAndAddParameterTree,
+                       CreateByKeyAndValueVectorsAndAddParameterTree,
+                       CreateByKeysAndValues,
+                       CreateByParameterTree,
                        CreateByOperatorAndAssign>
     ConfigurationCreators;
 

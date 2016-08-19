@@ -29,7 +29,8 @@ namespace Common {
 //! custom iterator for \ref FixedMap
 template <class FixedMapType>
 class FixedMapIterator : public boost::iterator_facade<FixedMapIterator<FixedMapType>,
-                                                       typename FixedMapType::value_type, boost::forward_traversal_tag>
+                                                       typename FixedMapType::value_type,
+                                                       boost::forward_traversal_tag>
 {
   typedef FixedMapIterator<FixedMapType> ThisType;
 
@@ -70,9 +71,9 @@ private:
 
 //! custom const iterator for \ref FixedMap
 template <class FixedMapType>
-class ConstFixedMapIterator
-    : public boost::iterator_facade<ConstFixedMapIterator<FixedMapType>, const typename FixedMapType::value_type,
-                                    boost::forward_traversal_tag>
+class ConstFixedMapIterator : public boost::iterator_facade<ConstFixedMapIterator<FixedMapType>,
+                                                            const typename FixedMapType::value_type,
+                                                            boost::forward_traversal_tag>
 {
   typedef ConstFixedMapIterator<FixedMapType> ThisType;
 

@@ -51,10 +51,15 @@ struct Int
   static const int value = i;
 };
 
-typedef Dune::tuple<double, float
+typedef Dune::tuple<double,
+                    float
                     //                   , Dune::bigunsignedint
                     ,
-                    int, unsigned int, unsigned long, long long, char>
+                    int,
+                    unsigned int,
+                    unsigned long,
+                    long long,
+                    char>
     BasicTypes;
 
 //! where sleep only counts toward wall time, this wastes actual cpu time

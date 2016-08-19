@@ -68,7 +68,8 @@ namespace Common {
  **/
 template <class T = std::string>
 inline std::vector<T>
-tokenize(const std::string& msg, const std::string& separators,
+tokenize(const std::string& msg,
+         const std::string& separators,
          const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off);
 
 } // namespace Common
@@ -126,8 +127,8 @@ std::string whitespaceify(const T& t, const char whitespace = ' ')
 } // ... whitespaceify(...)
 
 template <class T>
-inline std::vector<T> tokenize(const std::string& msg, const std::string& separators,
-                               const boost::algorithm::token_compress_mode_type mode)
+inline std::vector<T>
+tokenize(const std::string& msg, const std::string& separators, const boost::algorithm::token_compress_mode_type mode)
 {
   std::vector<std::string> strings;
   boost::algorithm::split(strings, msg, boost::algorithm::is_any_of(separators), mode);
@@ -140,8 +141,8 @@ inline std::vector<T> tokenize(const std::string& msg, const std::string& separa
 } // ... tokenize(...)
 
 template <>
-inline std::vector<std::string> tokenize(const std::string& msg, const std::string& separators,
-                                         const boost::algorithm::token_compress_mode_type mode)
+inline std::vector<std::string>
+tokenize(const std::string& msg, const std::string& separators, const boost::algorithm::token_compress_mode_type mode)
 {
   std::vector<std::string> strings;
   boost::algorithm::split(strings, msg, boost::algorithm::is_any_of(separators), mode);

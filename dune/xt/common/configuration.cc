@@ -26,8 +26,11 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
-Configuration::Configuration(const Dune::ParameterTree& tree_in, const bool /*record_defaults*/,
-                             const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
+Configuration::Configuration(const Dune::ParameterTree& tree_in,
+                             const bool /*record_defaults*/,
+                             const bool warn_on_default_access,
+                             const bool log_on_exit,
+                             const std::string logfile)
   : BaseType(tree_in)
   , warn_on_default_access_(warn_on_default_access)
   , log_on_exit_(log_on_exit)
@@ -54,8 +57,11 @@ Configuration::Configuration(const Configuration& other)
 {
 }
 
-Configuration::Configuration(std::istream& in, const bool /*record_defaults*/, const bool warn_on_default_access,
-                             const bool log_on_exit, const std::string logfile)
+Configuration::Configuration(std::istream& in,
+                             const bool /*record_defaults*/,
+                             const bool warn_on_default_access,
+                             const bool log_on_exit,
+                             const std::string logfile)
   : BaseType(initialize(in))
   , warn_on_default_access_(warn_on_default_access)
   , log_on_exit_(log_on_exit)
@@ -63,22 +69,34 @@ Configuration::Configuration(std::istream& in, const bool /*record_defaults*/, c
 {
 }
 
-Configuration::Configuration(const std::string filename, const bool record_defaults, const bool warn_on_default_access,
-                             const bool log_on_exit, const std::string logfile)
+Configuration::Configuration(const std::string filename,
+                             const bool record_defaults,
+                             const bool warn_on_default_access,
+                             const bool log_on_exit,
+                             const std::string logfile)
   : Configuration::Configuration(initialize(filename), record_defaults, warn_on_default_access, log_on_exit, logfile)
 {
 }
 
-Configuration::Configuration(int argc, char** argv, const bool record_defaults, const bool warn_on_default_access,
-                             const bool log_on_exit, const std::string logfile)
+Configuration::Configuration(int argc,
+                             char** argv,
+                             const bool record_defaults,
+                             const bool warn_on_default_access,
+                             const bool log_on_exit,
+                             const std::string logfile)
   : Configuration::Configuration(initialize(argc, argv), record_defaults, warn_on_default_access, log_on_exit, logfile)
 {
 }
 
-Configuration::Configuration(int argc, char** argv, const std::string filename, const bool record_defaults,
-                             const bool warn_on_default_access, const bool log_on_exit, const std::string logfile)
-  : Configuration::Configuration(initialize(argc, argv, filename), record_defaults, warn_on_default_access, log_on_exit,
-                                 logfile)
+Configuration::Configuration(int argc,
+                             char** argv,
+                             const std::string filename,
+                             const bool record_defaults,
+                             const bool warn_on_default_access,
+                             const bool log_on_exit,
+                             const std::string logfile)
+  : Configuration::Configuration(
+        initialize(argc, argv, filename), record_defaults, warn_on_default_access, log_on_exit, logfile)
 {
 }
 
@@ -400,8 +418,11 @@ bool operator!=(const Configuration& left, const Configuration& right)
   return !(left == right);
 }
 
-Configuration::Configuration(const std::vector<std::string> keys, const std::vector<std::string> values_in,
-                             const bool /*record_defaults*/, const bool warn_on_default_access, const bool log_on_exit,
+Configuration::Configuration(const std::vector<std::string> keys,
+                             const std::vector<std::string> values_in,
+                             const bool /*record_defaults*/,
+                             const bool warn_on_default_access,
+                             const bool log_on_exit,
                              const std::string logfile)
   : BaseType()
   , warn_on_default_access_(warn_on_default_access)

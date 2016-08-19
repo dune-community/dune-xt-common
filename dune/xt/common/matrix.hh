@@ -69,8 +69,8 @@ struct MatrixAbstraction
     static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
   }
 
-  static inline void set_entry(MatrixType& /*mat*/, const size_t /*row*/, const size_t /*col*/,
-                               const ScalarType& /*val*/)
+  static inline void
+  set_entry(MatrixType& /*mat*/, const size_t /*row*/, const size_t /*col*/, const ScalarType& /*val*/)
   {
     static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
   }

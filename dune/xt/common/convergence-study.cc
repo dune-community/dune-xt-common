@@ -40,8 +40,8 @@ std::vector<std::string> ConvergenceStudy::used_norms() const
   }
 } // ... used_norms(...)
 
-std::map<std::string, std::vector<double>> ConvergenceStudy::run(const bool relative, std::ostream& out,
-                                                                 const bool print_timings)
+std::map<std::string, std::vector<double>>
+ConvergenceStudy::run(const bool relative, std::ostream& out, const bool print_timings)
 {
   boost::io::ios_all_saver guard(out);
   if (provided_norms().size() == 0)

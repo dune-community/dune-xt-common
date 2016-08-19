@@ -27,8 +27,8 @@ namespace XT {
 namespace Common {
 
 template <class V>
-typename std::enable_if<is_vector<V>::value, void>::type print(const V& vec, const std::string name, std::ostream& out,
-                                                               const std::string prefix = "")
+typename std::enable_if<is_vector<V>::value, void>::type
+print(const V& vec, const std::string name, std::ostream& out, const std::string prefix = "")
 {
   out << prefix << name << " = ";
   if (vec.size() == 0)
@@ -44,8 +44,8 @@ typename std::enable_if<is_vector<V>::value, void>::type print(const V& vec, con
 } // ... print(...)
 
 template <class M>
-typename std::enable_if<is_matrix<M>::value, void>::type print(const M& mat, const std::string name, std::ostream& out,
-                                                               const std::string prefix = "")
+typename std::enable_if<is_matrix<M>::value, void>::type
+print(const M& mat, const std::string name, std::ostream& out, const std::string prefix = "")
 {
   typedef MatrixAbstraction<M> MM;
   const size_t rows = MM::rows(mat);

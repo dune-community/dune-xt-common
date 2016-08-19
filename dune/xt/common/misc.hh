@@ -156,8 +156,8 @@ std::pair<typename MapType::iterator, bool> map_emplace(MapType& map_in, Key key
 }
 
 template <typename K, typename V, typename MapType>
-std::pair<typename MapType::iterator, bool> map_emplace(MapType& map_in, std::piecewise_construct_t pcw, K&& keys,
-                                                        V&& values)
+std::pair<typename MapType::iterator, bool>
+map_emplace(MapType& map_in, std::piecewise_construct_t pcw, K&& keys, V&& values)
 {
 #if HAVE_MAP_EMPLACE
   return map_in.emplace(pcw, keys, values);

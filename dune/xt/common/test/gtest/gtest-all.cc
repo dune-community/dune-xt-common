@@ -667,8 +667,8 @@ void WriteToShardStatusFileIfNeeded();
 // an error and exits. If in_subprocess_for_death_test, sharding is
 // disabled because it must only be applied to the original test
 // process. Otherwise, we could filter out death tests we intended to execute.
-GTEST_API_ bool ShouldShard(const char* total_shards_str, const char* shard_index_str,
-                            bool in_subprocess_for_death_test);
+GTEST_API_ bool
+ShouldShard(const char* total_shards_str, const char* shard_index_str, bool in_subprocess_for_death_test);
 
 // Parses the environment variable var as an Int32. If it is unset,
 // returns default_val. If it is not an Int32, prints an error and
@@ -1080,7 +1080,9 @@ public:
   //                   this is not a typed or a type-parameterized test.
   //   set_up_tc:      pointer to the function that sets up the test case
   //   tear_down_tc:   pointer to the function that tears down the test case
-  TestCase* GetTestCase(const char* test_case_name, const char* type_param, Test::SetUpTestCaseFunc set_up_tc,
+  TestCase* GetTestCase(const char* test_case_name,
+                        const char* type_param,
+                        Test::SetUpTestCaseFunc set_up_tc,
                         Test::TearDownTestCaseFunc tear_down_tc);
 
   // Adds a TestInfo to the unit test.
@@ -1789,22 +1791,27 @@ static const char* GetDefaultFilter()
   return kUniversalFilter;
 }
 
-GTEST_DEFINE_bool_(also_run_disabled_tests, internal::BoolFromGTestEnv("also_run_disabled_tests", false),
+GTEST_DEFINE_bool_(also_run_disabled_tests,
+                   internal::BoolFromGTestEnv("also_run_disabled_tests", false),
                    "Run disabled tests too, in addition to the tests normally being run.");
 
-GTEST_DEFINE_bool_(break_on_failure, internal::BoolFromGTestEnv("break_on_failure", false),
+GTEST_DEFINE_bool_(break_on_failure,
+                   internal::BoolFromGTestEnv("break_on_failure", false),
                    "True iff a failed assertion should be a debugger break-point.");
 
-GTEST_DEFINE_bool_(catch_exceptions, internal::BoolFromGTestEnv("catch_exceptions", true),
+GTEST_DEFINE_bool_(catch_exceptions,
+                   internal::BoolFromGTestEnv("catch_exceptions", true),
                    "True iff " GTEST_NAME_ " should catch exceptions and treat them as test failures.");
 
-GTEST_DEFINE_string_(color, internal::StringFromGTestEnv("color", "auto"),
+GTEST_DEFINE_string_(color,
+                     internal::StringFromGTestEnv("color", "auto"),
                      "Whether to use colors in the output.  Valid values: yes, no, "
                      "and auto.  'auto' means to use colors if the output is "
                      "being sent to a terminal and the TERM environment variable "
                      "is set to a terminal type that supports colors.");
 
-GTEST_DEFINE_string_(filter, internal::StringFromGTestEnv("filter", GetDefaultFilter()),
+GTEST_DEFINE_string_(filter,
+                     internal::StringFromGTestEnv("filter", GetDefaultFilter()),
                      "A colon-separated list of glob (not regex) patterns "
                      "for filtering the tests to run, optionally followed by a "
                      "'-' and a : separated list of negative patterns (tests to "
@@ -1813,7 +1820,8 @@ GTEST_DEFINE_string_(filter, internal::StringFromGTestEnv("filter", GetDefaultFi
 
 GTEST_DEFINE_bool_(list_tests, false, "List all tests without running them.");
 
-GTEST_DEFINE_string_(output, internal::StringFromGTestEnv("output", ""),
+GTEST_DEFINE_string_(output,
+                     internal::StringFromGTestEnv("output", ""),
                      "A format (currently must be \"xml\"), optionally followed "
                      "by a colon and an output file name or directory. A directory "
                      "is indicated by a trailing pathname separator. "
@@ -1823,34 +1831,42 @@ GTEST_DEFINE_string_(output, internal::StringFromGTestEnv("output", ""),
                      "executable's name and, if necessary, made unique by adding "
                      "digits.");
 
-GTEST_DEFINE_bool_(print_time, internal::BoolFromGTestEnv("print_time", true),
+GTEST_DEFINE_bool_(print_time,
+                   internal::BoolFromGTestEnv("print_time", true),
                    "True iff " GTEST_NAME_ " should display elapsed time in text output.");
 
-GTEST_DEFINE_int32_(random_seed, internal::Int32FromGTestEnv("random_seed", 0),
+GTEST_DEFINE_int32_(random_seed,
+                    internal::Int32FromGTestEnv("random_seed", 0),
                     "Random number seed to use when shuffling test orders.  Must be in range "
                     "[1, 99999], or 0 to use a seed based on the current time.");
 
-GTEST_DEFINE_int32_(repeat, internal::Int32FromGTestEnv("repeat", 1),
+GTEST_DEFINE_int32_(repeat,
+                    internal::Int32FromGTestEnv("repeat", 1),
                     "How many times to repeat each test.  Specify a negative number "
                     "for repeating forever.  Useful for shaking out flaky tests.");
 
-GTEST_DEFINE_bool_(show_internal_stack_frames, false,
+GTEST_DEFINE_bool_(show_internal_stack_frames,
+                   false,
                    "True iff " GTEST_NAME_ " should include internal stack frames when "
                    "printing test failure stack traces.");
 
-GTEST_DEFINE_bool_(shuffle, internal::BoolFromGTestEnv("shuffle", false),
+GTEST_DEFINE_bool_(shuffle,
+                   internal::BoolFromGTestEnv("shuffle", false),
                    "True iff " GTEST_NAME_ " should randomize tests' order on every run.");
 
-GTEST_DEFINE_int32_(stack_trace_depth, internal::Int32FromGTestEnv("stack_trace_depth", kMaxStackTraceDepth),
+GTEST_DEFINE_int32_(stack_trace_depth,
+                    internal::Int32FromGTestEnv("stack_trace_depth", kMaxStackTraceDepth),
                     "The maximum number of stack frames to print when an "
                     "assertion fails.  The valid range is 0 through 100, inclusive.");
 
-GTEST_DEFINE_string_(stream_result_to, internal::StringFromGTestEnv("stream_result_to", ""),
+GTEST_DEFINE_string_(stream_result_to,
+                     internal::StringFromGTestEnv("stream_result_to", ""),
                      "This flag specifies the host name and the port number on which to stream "
                      "test results. Example: \"localhost:555\". The flag is effective only on "
                      "Linux.");
 
-GTEST_DEFINE_bool_(throw_on_failure, internal::BoolFromGTestEnv("throw_on_failure", false),
+GTEST_DEFINE_bool_(throw_on_failure,
+                   internal::BoolFromGTestEnv("throw_on_failure", false),
                    "When this flag is specified, a failed assertion will throw an exception "
                    "if exceptions are enabled or exit the program with a non-zero code "
                    "otherwise.");
@@ -2184,9 +2200,12 @@ extern const TypeId kTestTypeIdInGoogleTest = GetTestTypeId();
 // This predicate-formatter checks that 'results' contains a test part
 // failure of the given type and that the failure message contains the
 // given substring.
-AssertionResult HasOneFailure(const char* /* results_expr */, const char* /* type_expr */,
-                              const char* /* substr_expr */, const TestPartResultArray& results,
-                              TestPartResult::Type type, const string& substr)
+AssertionResult HasOneFailure(const char* /* results_expr */,
+                              const char* /* type_expr */,
+                              const char* /* substr_expr */,
+                              const TestPartResultArray& results,
+                              TestPartResult::Type type,
+                              const string& substr)
 {
   const std::string expected(type == TestPartResult::kFatalFailure ? "1 fatal failure" : "1 non-fatal failure");
   Message msg;
@@ -2218,7 +2237,8 @@ AssertionResult HasOneFailure(const char* /* results_expr */, const char* /* typ
 // The constructor of SingleFailureChecker remembers where to look up
 // test part results, what type of failure we expect, and what
 // substring the failure message should contain.
-SingleFailureChecker::SingleFailureChecker(const TestPartResultArray* results, TestPartResult::Type type,
+SingleFailureChecker::SingleFailureChecker(const TestPartResultArray* results,
+                                           TestPartResult::Type type,
                                            const string& substr)
   : results_(results)
   , type_(type)
@@ -2596,8 +2616,11 @@ namespace internal {
 // The ignoring_case parameter is true iff the assertion is a
 // *_STRCASEEQ*.  When it's true, the string " (ignoring case)" will
 // be inserted into the message.
-AssertionResult EqFailure(const char* expected_expression, const char* actual_expression,
-                          const std::string& expected_value, const std::string& actual_value, bool ignoring_case)
+AssertionResult EqFailure(const char* expected_expression,
+                          const char* actual_expression,
+                          const std::string& expected_value,
+                          const std::string& actual_value,
+                          bool ignoring_case)
 {
   Message msg;
   msg << "Value of: " << actual_expression;
@@ -2617,8 +2640,10 @@ AssertionResult EqFailure(const char* expected_expression, const char* actual_ex
 }
 
 // Constructs a failure message for Boolean assertions such as EXPECT_TRUE.
-std::string GetBoolAssertionFailureMessage(const AssertionResult& assertion_result, const char* expression_text,
-                                           const char* actual_predicate_value, const char* expected_predicate_value)
+std::string GetBoolAssertionFailureMessage(const AssertionResult& assertion_result,
+                                           const char* expression_text,
+                                           const char* actual_predicate_value,
+                                           const char* expected_predicate_value)
 {
   const char* actual_message = assertion_result.message();
   Message msg;
@@ -2630,8 +2655,8 @@ std::string GetBoolAssertionFailureMessage(const AssertionResult& assertion_resu
 }
 
 // Helper function for implementing ASSERT_NEAR.
-AssertionResult DoubleNearPredFormat(const char* expr1, const char* expr2, const char* abs_error_expr, double val1,
-                                     double val2, double abs_error)
+AssertionResult DoubleNearPredFormat(
+    const char* expr1, const char* expr2, const char* abs_error_expr, double val1, double val2, double abs_error)
 {
   const double diff = fabs(val1 - val2);
   if (diff <= abs_error)
@@ -2697,8 +2722,8 @@ namespace internal {
 
 // The helper function for {ASSERT|EXPECT}_EQ with int or enum
 // arguments.
-AssertionResult CmpHelperEQ(const char* expected_expression, const char* actual_expression, BiggestInt expected,
-                            BiggestInt actual)
+AssertionResult
+CmpHelperEQ(const char* expected_expression, const char* actual_expression, BiggestInt expected, BiggestInt actual)
 {
   if (expected == actual) {
     return AssertionSuccess();
@@ -2745,8 +2770,8 @@ GTEST_IMPL_CMP_HELPER_(GT, >)
 #undef GTEST_IMPL_CMP_HELPER_
 
 // The helper function for {ASSERT|EXPECT}_STREQ.
-AssertionResult CmpHelperSTREQ(const char* expected_expression, const char* actual_expression, const char* expected,
-                               const char* actual)
+AssertionResult
+CmpHelperSTREQ(const char* expected_expression, const char* actual_expression, const char* expected, const char* actual)
 {
   if (String::CStringEquals(expected, actual)) {
     return AssertionSuccess();
@@ -2756,7 +2781,9 @@ AssertionResult CmpHelperSTREQ(const char* expected_expression, const char* actu
 }
 
 // The helper function for {ASSERT|EXPECT}_STRCASEEQ.
-AssertionResult CmpHelperSTRCASEEQ(const char* expected_expression, const char* actual_expression, const char* expected,
+AssertionResult CmpHelperSTRCASEEQ(const char* expected_expression,
+                                   const char* actual_expression,
+                                   const char* expected,
                                    const char* actual)
 {
   if (String::CaseInsensitiveCStringEquals(expected, actual)) {
@@ -2826,8 +2853,11 @@ bool IsSubstringPred(const StringType& needle, const StringType& haystack)
 // StringType here can be const char*, const wchar_t*, ::std::string,
 // or ::std::wstring.
 template <typename StringType>
-AssertionResult IsSubstringImpl(bool expected_to_be_substring, const char* needle_expr, const char* haystack_expr,
-                                const StringType& needle, const StringType& haystack)
+AssertionResult IsSubstringImpl(bool expected_to_be_substring,
+                                const char* needle_expr,
+                                const char* haystack_expr,
+                                const StringType& needle,
+                                const StringType& haystack)
 {
   if (IsSubstringPred(needle, haystack) == expected_to_be_substring)
     return AssertionSuccess();
@@ -2847,50 +2877,58 @@ AssertionResult IsSubstringImpl(bool expected_to_be_substring, const char* needl
 // substring of haystack (NULL is considered a substring of itself
 // only), and return an appropriate error message when they fail.
 
-AssertionResult IsSubstring(const char* needle_expr, const char* haystack_expr, const char* needle,
-                            const char* haystack)
+AssertionResult
+IsSubstring(const char* needle_expr, const char* haystack_expr, const char* needle, const char* haystack)
 {
   return IsSubstringImpl(true, needle_expr, haystack_expr, needle, haystack);
 }
 
-AssertionResult IsSubstring(const char* needle_expr, const char* haystack_expr, const wchar_t* needle,
-                            const wchar_t* haystack)
+AssertionResult
+IsSubstring(const char* needle_expr, const char* haystack_expr, const wchar_t* needle, const wchar_t* haystack)
 {
   return IsSubstringImpl(true, needle_expr, haystack_expr, needle, haystack);
 }
 
-AssertionResult IsNotSubstring(const char* needle_expr, const char* haystack_expr, const char* needle,
-                               const char* haystack)
+AssertionResult
+IsNotSubstring(const char* needle_expr, const char* haystack_expr, const char* needle, const char* haystack)
 {
   return IsSubstringImpl(false, needle_expr, haystack_expr, needle, haystack);
 }
 
-AssertionResult IsNotSubstring(const char* needle_expr, const char* haystack_expr, const wchar_t* needle,
-                               const wchar_t* haystack)
+AssertionResult
+IsNotSubstring(const char* needle_expr, const char* haystack_expr, const wchar_t* needle, const wchar_t* haystack)
 {
   return IsSubstringImpl(false, needle_expr, haystack_expr, needle, haystack);
 }
 
-AssertionResult IsSubstring(const char* needle_expr, const char* haystack_expr, const ::std::string& needle,
+AssertionResult IsSubstring(const char* needle_expr,
+                            const char* haystack_expr,
+                            const ::std::string& needle,
                             const ::std::string& haystack)
 {
   return IsSubstringImpl(true, needle_expr, haystack_expr, needle, haystack);
 }
 
-AssertionResult IsNotSubstring(const char* needle_expr, const char* haystack_expr, const ::std::string& needle,
+AssertionResult IsNotSubstring(const char* needle_expr,
+                               const char* haystack_expr,
+                               const ::std::string& needle,
                                const ::std::string& haystack)
 {
   return IsSubstringImpl(false, needle_expr, haystack_expr, needle, haystack);
 }
 
 #if GTEST_HAS_STD_WSTRING
-AssertionResult IsSubstring(const char* needle_expr, const char* haystack_expr, const ::std::wstring& needle,
+AssertionResult IsSubstring(const char* needle_expr,
+                            const char* haystack_expr,
+                            const ::std::wstring& needle,
                             const ::std::wstring& haystack)
 {
   return IsSubstringImpl(true, needle_expr, haystack_expr, needle, haystack);
 }
 
-AssertionResult IsNotSubstring(const char* needle_expr, const char* haystack_expr, const ::std::wstring& needle,
+AssertionResult IsNotSubstring(const char* needle_expr,
+                               const char* haystack_expr,
+                               const ::std::wstring& needle,
                                const ::std::wstring& haystack)
 {
   return IsSubstringImpl(false, needle_expr, haystack_expr, needle, haystack);
@@ -3114,7 +3152,9 @@ bool String::WideCStringEquals(const wchar_t* lhs, const wchar_t* rhs)
 }
 
 // Helper function for *_STREQ on wide strings.
-AssertionResult CmpHelperSTREQ(const char* expected_expression, const char* actual_expression, const wchar_t* expected,
+AssertionResult CmpHelperSTREQ(const char* expected_expression,
+                               const char* actual_expression,
+                               const wchar_t* expected,
                                const wchar_t* actual)
 {
   if (String::WideCStringEquals(expected, actual)) {
@@ -3125,8 +3165,8 @@ AssertionResult CmpHelperSTREQ(const char* expected_expression, const char* actu
 }
 
 // Helper function for *_STRNE on wide strings.
-AssertionResult CmpHelperSTRNE(const char* s1_expression, const char* s2_expression, const wchar_t* s1,
-                               const wchar_t* s2)
+AssertionResult
+CmpHelperSTRNE(const char* s1_expression, const char* s2_expression, const wchar_t* s1, const wchar_t* s2)
 {
   if (!String::WideCStringEquals(s1, s2)) {
     return AssertionSuccess();
@@ -3728,8 +3768,12 @@ bool Test::HasNonfatalFailure()
 
 // Constructs a TestInfo object. It assumes ownership of the test factory
 // object.
-TestInfo::TestInfo(const std::string& a_test_case_name, const std::string& a_name, const char* a_type_param,
-                   const char* a_value_param, internal::TypeId fixture_class_id, internal::TestFactoryBase* factory)
+TestInfo::TestInfo(const std::string& a_test_case_name,
+                   const std::string& a_name,
+                   const char* a_type_param,
+                   const char* a_value_param,
+                   internal::TypeId fixture_class_id,
+                   internal::TestFactoryBase* factory)
   : test_case_name_(a_test_case_name)
   , name_(a_name)
   , type_param_(a_type_param ? new std::string(a_type_param) : NULL)
@@ -3768,9 +3812,14 @@ namespace internal {
 //   factory:          pointer to the factory that creates a test object.
 //                     The newly created TestInfo instance will assume
 //                     ownership of the factory object.
-TestInfo* MakeAndRegisterTestInfo(const char* test_case_name, const char* name, const char* type_param,
-                                  const char* value_param, TypeId fixture_class_id, SetUpTestCaseFunc set_up_tc,
-                                  TearDownTestCaseFunc tear_down_tc, TestFactoryBase* factory)
+TestInfo* MakeAndRegisterTestInfo(const char* test_case_name,
+                                  const char* name,
+                                  const char* type_param,
+                                  const char* value_param,
+                                  TypeId fixture_class_id,
+                                  SetUpTestCaseFunc set_up_tc,
+                                  TearDownTestCaseFunc tear_down_tc,
+                                  TestFactoryBase* factory)
 {
   TestInfo* const test_info = new TestInfo(test_case_name, name, type_param, value_param, fixture_class_id, factory);
   GetUnitTestImpl()->AddTestInfo(set_up_tc, tear_down_tc, test_info);
@@ -3945,7 +3994,9 @@ int TestCase::total_test_count() const
 //                 this is not a typed or a type-parameterized test case.
 //   set_up_tc:    pointer to the function that sets up the test case
 //   tear_down_tc: pointer to the function that tears down the test case
-TestCase::TestCase(const char* a_name, const char* a_type_param, Test::SetUpTestCaseFunc set_up_tc,
+TestCase::TestCase(const char* a_name,
+                   const char* a_type_param,
+                   Test::SetUpTestCaseFunc set_up_tc,
                    Test::TearDownTestCaseFunc tear_down_tc)
   : name_(a_name)
   , type_param_(a_type_param ? new std::string(a_type_param) : NULL)
@@ -4649,7 +4700,9 @@ private:
 
   // Verifies that the given attribute belongs to the given element and
   // streams the attribute as XML.
-  static void OutputXmlAttribute(std::ostream* stream, const std::string& element_name, const std::string& name,
+  static void OutputXmlAttribute(std::ostream* stream,
+                                 const std::string& element_name,
+                                 const std::string& name,
                                  const std::string& value);
 
   // Streams an XML CDATA section, escaping invalid CDATA sequences as needed.
@@ -4853,8 +4906,10 @@ void XmlUnitTestResultPrinter::OutputXmlCDataSection(::std::ostream* stream, con
   *stream << "]]>";
 }
 
-void XmlUnitTestResultPrinter::OutputXmlAttribute(std::ostream* stream, const std::string& element_name,
-                                                  const std::string& name, const std::string& value)
+void XmlUnitTestResultPrinter::OutputXmlAttribute(std::ostream* stream,
+                                                  const std::string& element_name,
+                                                  const std::string& name,
+                                                  const std::string& value)
 {
   const std::vector<std::string>& allowed_names = GetReservedAttributesForElement(element_name);
 
@@ -4866,7 +4921,8 @@ void XmlUnitTestResultPrinter::OutputXmlAttribute(std::ostream* stream, const st
 
 // Prints an XML representation of a TestInfo object.
 // TODO(wan): There is also value in printing properties with the plain printer.
-void XmlUnitTestResultPrinter::OutputXmlTestInfo(::std::ostream* stream, const char* test_case_name,
+void XmlUnitTestResultPrinter::OutputXmlTestInfo(::std::ostream* stream,
+                                                 const char* test_case_name,
                                                  const TestInfo& test_info)
 {
   const TestResult& result = *test_info.result();
@@ -5380,9 +5436,11 @@ Environment* UnitTest::AddEnvironment(Environment* env)
 // assertion macros (e.g. ASSERT_TRUE, EXPECT_EQ, etc) eventually call
 // this to report their results.  The user code should use the
 // assertion macros instead of calling this directly.
-void UnitTest::AddTestPartResult(TestPartResult::Type result_type, const char* file_name, int line_number,
-                                 const std::string& message, const std::string& os_stack_trace)
-    GTEST_LOCK_EXCLUDED_(mutex_)
+void UnitTest::AddTestPartResult(TestPartResult::Type result_type,
+                                 const char* file_name,
+                                 int line_number,
+                                 const std::string& message,
+                                 const std::string& os_stack_trace) GTEST_LOCK_EXCLUDED_(mutex_)
 {
   Message msg;
   msg << message;
@@ -5786,8 +5844,10 @@ private:
 //                   this is not a typed or a type-parameterized test case.
 //   set_up_tc:      pointer to the function that sets up the test case
 //   tear_down_tc:   pointer to the function that tears down the test case
-TestCase* UnitTestImpl::GetTestCase(const char* test_case_name, const char* type_param,
-                                    Test::SetUpTestCaseFunc set_up_tc, Test::TearDownTestCaseFunc tear_down_tc)
+TestCase* UnitTestImpl::GetTestCase(const char* test_case_name,
+                                    const char* type_param,
+                                    Test::SetUpTestCaseFunc set_up_tc,
+                                    Test::TearDownTestCaseFunc tear_down_tc)
 {
   // Can we find a TestCase with the given name?
   const std::vector<TestCase*>::const_iterator test_case =
@@ -6701,14 +6761,16 @@ namespace testing {
 // The default death test style.
 static const char kDefaultDeathTestStyle[] = "fast";
 
-GTEST_DEFINE_string_(death_test_style, internal::StringFromGTestEnv("death_test_style", kDefaultDeathTestStyle),
+GTEST_DEFINE_string_(death_test_style,
+                     internal::StringFromGTestEnv("death_test_style", kDefaultDeathTestStyle),
                      "Indicates how to run a death test in a forked child process: "
                      "\"threadsafe\" (child process re-executes the test binary "
                      "from the beginning, running only the specific death test) or "
                      "\"fast\" (child process runs the death test immediately "
                      "after forking).");
 
-GTEST_DEFINE_bool_(death_test_use_fork, internal::BoolFromGTestEnv("death_test_use_fork", false),
+GTEST_DEFINE_bool_(death_test_use_fork,
+                   internal::BoolFromGTestEnv("death_test_use_fork", false),
                    "Instructs to use fork()/_exit() instead of clone() in death tests. "
                    "Ignored and always uses fork() on POSIX systems where clone() is not "
                    "implemented. Useful when running under valgrind or similar tools if "
@@ -6719,7 +6781,8 @@ GTEST_DEFINE_bool_(death_test_use_fork, internal::BoolFromGTestEnv("death_test_u
                    "most likely be removed.");
 
 namespace internal {
-GTEST_DEFINE_string_(internal_run_death_test, "",
+GTEST_DEFINE_string_(internal_run_death_test,
+                     "",
                      "Indicates the file, line number, temporal index of "
                      "the single death test to run, and a file descriptor to "
                      "which a success code may be sent, all separated by "
@@ -7838,8 +7901,8 @@ DeathTest::TestRole ExecDeathTest::AssumeRole()
 // by the "test" argument to its address.  If the test should be
 // skipped, sets that pointer to NULL.  Returns true, unless the
 // flag is set to an invalid value.
-bool DefaultDeathTestFactory::Create(const char* statement, const RE* regex, const char* file, int line,
-                                     DeathTest** test)
+bool DefaultDeathTestFactory::Create(
+    const char* statement, const RE* regex, const char* file, int line, DeathTest** test)
 {
   UnitTestImpl* const impl = GetUnitTestImpl();
   const InternalRunDeathTestFlag* const flag = impl->internal_run_death_test_flag();
@@ -7909,7 +7972,8 @@ static void SplitString(const ::std::string& str, char delimiter, ::std::vector<
 // Recreates the pipe and event handles from the provided parameters,
 // signals the event, and returns a file descriptor wrapped around the pipe
 // handle. This function is called in the child process only.
-int GetStatusFileDescriptor(unsigned int parent_process_id, size_t write_handle_as_size_t,
+int GetStatusFileDescriptor(unsigned int parent_process_id,
+                            size_t write_handle_as_size_t,
                             size_t event_handle_as_size_t)
 {
   AutoHandle parent_process_handle(::OpenProcess(PROCESS_DUP_HANDLE,

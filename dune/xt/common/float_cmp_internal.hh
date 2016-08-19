@@ -47,15 +47,15 @@ namespace internal {
  *            https://github.com/numpy/numpy/blob/v1.9.1/numpy/core/numeric.py#L2238
  */
 template <class T>
-typename std::enable_if<std::is_arithmetic<T>::value, bool>::type float_cmp_eq(const T& xx, const T& yy, const T& rtol,
-                                                                               const T& atol)
+typename std::enable_if<std::is_arithmetic<T>::value, bool>::type
+float_cmp_eq(const T& xx, const T& yy, const T& rtol, const T& atol)
 {
   return std::abs(xx - yy) <= atol + std::abs(yy) * rtol;
 }
 
 template <class T>
-typename std::enable_if<is_complex<T>::value, bool>::type float_cmp_eq(const T& xx, const T& yy, const T& rtol,
-                                                                       const T& atol)
+typename std::enable_if<is_complex<T>::value, bool>::type
+float_cmp_eq(const T& xx, const T& yy, const T& rtol, const T& atol)
 {
   using namespace std;
   return (float_cmp_eq(real(xx), real(yy), real(rtol), real(atol))
@@ -79,8 +79,8 @@ float_cmp_eq(const XType& xx, const YType& yy, const TolType& rtol, const TolTyp
 } // ... float_cmp(...)
 
 template <Dune::FloatCmp::CmpStyle style, class T>
-typename std::enable_if<std::is_arithmetic<T>::value, bool>::type dune_float_cmp_eq(const T& xx, const T& yy,
-                                                                                    const T& eps)
+typename std::enable_if<std::is_arithmetic<T>::value, bool>::type
+dune_float_cmp_eq(const T& xx, const T& yy, const T& eps)
 {
   return Dune::FloatCmp::eq<T, style>(xx, yy, eps);
 }
