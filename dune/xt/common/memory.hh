@@ -272,10 +272,21 @@ public:
   {
   }
 
+  explicit ConstStorageProvider(T& tt)
+    : storage_(Common::make_unique<internal::ConstAccessByReference<T>>(tt))
+  {
+  }
+
+
   /**
    * \attention This ctor transfers ownership to ConstStorageProvider, do not delete tt manually!
    */
   explicit ConstStorageProvider(const T*&& tt)
+    : storage_(Common::make_unique<internal::ConstAccessByPointer<T>>(std::move(tt)))
+  {
+  }
+
+  explicit ConstStorageProvider(T*&& tt)
     : storage_(Common::make_unique<internal::ConstAccessByPointer<T>>(std::move(tt)))
   {
   }
@@ -312,11 +323,6 @@ public:
 
   ConstStorageProvider<T>& operator=(const ConstStorageProvider<T>& other) = delete;
   ConstStorageProvider<T>& operator=(ConstStorageProvider<T>&& source) = delete;
-
-  const T& storage_access() const
-  {
-    return access();
-  }
 
   const T& access() const
   {
