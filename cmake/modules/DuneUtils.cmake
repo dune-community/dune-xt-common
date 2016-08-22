@@ -20,7 +20,7 @@ function(TO_LIST_SPACES _LIST_NAME OUTPUT_VAR)
   set(${OUTPUT_VAR} "${NEW_LIST_SPACE}" PARENT_SCOPE)
 endfunction()
 
-
+enable_testing()
 
 macro(BEGIN_TESTCASES)
 # https://cmake.org/cmake/help/v3.0/module/FindGTest.html http://purplekarrot.net/blog/cmake-and-test-suites.html
@@ -40,27 +40,35 @@ macro(BEGIN_TESTCASES)
                                          CREATED_TARGETS targetlist_${testbase}
                                          SCRIPT ${dune-xt-common-path}/bin/dune_execute.py
                                          ${DEBUG_MACRO_TESTS})
-		foreach(testname ${targetlist_${testbase}})
-                    target_link_libraries( ${testname} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common )
-		    list(APPEND testnames ${testname} )
-                endforeach(testname)
+                    foreach(testname ${targetlist_${testbase}})
+                        target_link_libraries( ${testname} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common )
+                        list(APPEND dxt_test_binaries ${testname} )
+                    endforeach(testname)
                 else( EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.mini )
                     add_executable( test_${testbase} ${source} ${COMMON_HEADER} )
                     target_link_libraries( test_${testbase} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common )
                     add_test( NAME test_${testbase} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/test_${testbase}
                                           --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/test_${testbase}.xml )
-                    list(APPEND testnames test_${testbase} )
+                    list(APPEND dxt_test_binaries test_${testbase} )
 	        endif( EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.mini )
         endforeach( source )
 endmacro(BEGIN_TESTCASES)
 
 macro(END_TESTCASES)
+    # this ensures binaries are build prior to "make test"
     add_directory_test_target(_test_target)
-    add_dependencies(${_test_target} ${testnames})
-    foreach( test ${testnames} )
-        set_tests_properties(test_${testbase} PROPERTIES TIMEOUT ${DXT_TEST_TIMEOUT})
-    endforeach( test ${testnames} )
-    add_custom_target(test_binaries DEPENDS ${testnames})
+    add_dependencies(${_test_target} ${dxt_test_binaries})
+    
+    # this excludes meta-ini variation test cases because 
+    # there binary name != test name
+    foreach( test ${dxt_test_binaries} )
+        if (TARGET test)
+            set_tests_properties(${test} PROPERTIES TIMEOUT ${DXT_TEST_TIMEOUT})
+        endif(TARGET test)
+    endforeach( test ${dxt_test_binaries} )
+    
+    add_custom_target(test_binaries DEPENDS ${dxt_test_binaries})
+#     add_dependencies(test test_binaries)
     add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --timeout ${DXT_TEST_TIMEOUT} -j ${DXT_TEST_PROCS}
                         DEPENDS test_binaries)
     add_custom_target(recheck COMMAND ${CMAKE_CTEST_COMMAND} --timeout ${DXT_TEST_TIMEOUT} --rerun-failed -j ${DXT_TEST_PROCS}
