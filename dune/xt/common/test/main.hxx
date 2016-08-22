@@ -53,8 +53,6 @@
 #include <dune/xt/common/parallel/threadmanager.hh>
 #include <dune/xt/common/vector.hh>
 
-// is_alugrid<>
-#include <dune/stuff/grid/information.hh>
 
 #if HAVE_TBB
 #include <tbb/task_scheduler_init.h>
