@@ -16,6 +16,7 @@
 #include <vector>
 
 #include <dune/common/fvector.hh>
+#include <dune/common/fmatrix.hh>
 
 #include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/debug.hh>
