@@ -55,10 +55,6 @@ macro(BEGIN_TESTCASES)
 endmacro(BEGIN_TESTCASES)
 
 macro(END_TESTCASES)
-    # this ensures binaries are build prior to "make test"
-    add_directory_test_target(_test_target)
-    add_dependencies(${_test_target} ${dxt_test_binaries})
-    
     # this excludes meta-ini variation test cases because 
     # there binary name != test name
     foreach( test ${dxt_test_binaries} )
