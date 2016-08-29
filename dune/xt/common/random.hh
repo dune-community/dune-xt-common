@@ -101,7 +101,7 @@ class RandomStrings : public RNG<std::string, std::uniform_int_distribution<int>
   const size_t length;
 
 public:
-  RandomStrings(size_t l)
+  explicit RandomStrings(size_t l)
     : BaseType(std::mt19937(std::random_device()()),
                std::uniform_int_distribution<int>(0, boost::numeric_cast<int>(alphanums.size() - 1)))
     , length(l)
@@ -123,7 +123,7 @@ class DefaultRNG : public RNG<T, typename UniformDistributionSelector<T>::type, 
   typedef RNG<T, typename UniformDistributionSelector<T>::type, std::default_random_engine> BaseType;
 
 public:
-  DefaultRNG(T min = std::numeric_limits<T>::min(),
+  explicit DefaultRNG(T min = std::numeric_limits<T>::min(),
              T max = std::numeric_limits<T>::max(),
              T seed = std::random_device()())
     : BaseType(std::default_random_engine(seed), typename UniformDistributionSelector<T>::type(min, max))

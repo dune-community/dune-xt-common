@@ -104,7 +104,7 @@ public:
   struct SuspendLocal
   {
     LogStream::PriorityType prio_;
-    SuspendLocal(LogStream::PriorityType prio = LogStream::default_suspend_priority)
+    explicit SuspendLocal(LogStream::PriorityType prio = LogStream::default_suspend_priority)
       : prio_(prio)
     {
       Logger().suspend(prio_);
@@ -119,7 +119,7 @@ public:
   struct ResumeLocal
   {
     LogStream::PriorityType prio_;
-    ResumeLocal(LogStream::PriorityType prio = LogStream::default_suspend_priority)
+    explicit ResumeLocal(LogStream::PriorityType prio = LogStream::default_suspend_priority)
       : prio_(prio)
     {
       Logger().resume(prio_);

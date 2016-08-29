@@ -90,7 +90,7 @@ class ValidateInList : public ValidatorInterface<T, ValidateInList<T, ListImp>>
   ListType valid_list_;
 
 public:
-  ValidateInList(const ListType& valid_list)
+  explicit ValidateInList(const ListType& valid_list)
     : valid_list_(valid_list)
   {
   }

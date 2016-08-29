@@ -25,7 +25,7 @@ namespace Common {
 class ConvergenceStudy
 {
 public:
-  ConvergenceStudy(const std::vector<std::string> only_these_norms = {});
+  explicit ConvergenceStudy(const std::vector<std::string> only_these_norms = {});
 
   virtual ~ConvergenceStudy()
   {

@@ -150,7 +150,7 @@ protected:
   const std::string section_name_;
 
 public:
-  inline ScopedTiming(const std::string& section_name)
+  explicit inline ScopedTiming(const std::string& section_name)
     : section_name_(section_name)
   {
     timings().start(section_name_);

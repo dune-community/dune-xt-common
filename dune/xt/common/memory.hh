@@ -33,7 +33,7 @@ struct nonmoveable
   constexpr nonmoveable() = default;
   ~nonmoveable() = default;
   nonmoveable& operator=(nonmoveable&& source) = delete;
-  nonmoveable(nonmoveable&& source) = delete;
+  explicit nonmoveable(nonmoveable&& source) = delete;
 };
 
 namespace internal {
@@ -139,7 +139,7 @@ public:
   {
   }
 
-  explicit AccessByReference(AccessByReference<T>& other) = default;
+  explicit AccessByReference(const AccessByReference<T>& other) = default;
   explicit AccessByReference(AccessByReference<T>&& source) = default;
 
   virtual ~AccessByReference()
@@ -182,7 +182,7 @@ public:
   {
   }
 
-  explicit AccessByPointer(AccessByPointer<T>& other) = default;
+  explicit AccessByPointer(const AccessByPointer<T>& other) = default;
   explicit AccessByPointer(AccessByPointer<T>&& source) = default;
 
   virtual ~AccessByPointer()
