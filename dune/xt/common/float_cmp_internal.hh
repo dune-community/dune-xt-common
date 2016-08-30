@@ -324,12 +324,10 @@ struct cmp_type_check
 {
   static constexpr bool is_ok_scalar = (std::is_arithmetic<FirstType>::value || is_complex<FirstType>::value)
                                        && std::is_same<FirstType, SecondType>::value;
-  static constexpr bool is_ok_vector = is_vector<FirstType>::value
-                                       && is_vector<SecondType>::value
+  static constexpr bool is_ok_vector = is_vector<FirstType>::value && is_vector<SecondType>::value
                                        && std::is_same<ToleranceType, typename VectorAbstraction<FirstType>::S>::value
                                        && std::is_same<ToleranceType, typename VectorAbstraction<SecondType>::S>::value;
-  static constexpr bool is_ok_matrix = is_matrix<FirstType>::value
-                                       && is_matrix<SecondType>::value
+  static constexpr bool is_ok_matrix = is_matrix<FirstType>::value && is_matrix<SecondType>::value
                                        && std::is_same<ToleranceType, typename MatrixAbstraction<FirstType>::S>::value
                                        && std::is_same<ToleranceType, typename MatrixAbstraction<SecondType>::S>::value;
   static constexpr bool value = is_ok_scalar || is_ok_vector || is_ok_matrix;
@@ -342,6 +340,5 @@ struct cmp_type_check
 } // namespace Dune
 
 #include <dune/xt/common/vector.hh>
-#include <dune/xt/common/matrix.hh>
 
 #endif // DUNE_XT_COMMON_FLOAT_CMP_INTERNAL_HH
