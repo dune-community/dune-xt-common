@@ -9,10 +9,14 @@
 
 # Help
 
-If you are experiencing problems or would like to get help, open up a new [issue](https://github.com/dune-community/dune-xt-common/issues/new) and tag it accordingly or ask for help on the [mailinglist](https://listserv.uni-muenster.de/mailman/listinfo/dune-xt-dev).
+If you are experiencing problems or would like to get help, open up a new
+[issue](https://github.com/dune-community/dune-xt-common/issues/new) and tag it accordingly or ask for help on the
+[mailinglist](https://listserv.uni-muenster.de/mailman/listinfo/dune-xt-dev).
 Please note that dune-xt-common is not one of the core DUNE modules.
-Thus, you will not get any support from the official channels (such as the DUNE mailinglist, the DUNE bugtracker, etc...).
-When submitting bugs, please read these [general guidellines](http://users.dune-project.org/projects/main-wiki/wiki/Guides_bug_reporting) beforehand.
+Thus, you will not get any support from the official channels (such as the DUNE mailinglist, the DUNE bugtracker,
+etc...).
+When submitting bugs, please read these [general
+guidelines](http://users.dune-project.org/projects/main-wiki/wiki/Guides_bug_reporting) beforehand.
 
 
 # Contributing
@@ -26,23 +30,33 @@ Fork the repository and open up a pull request, explaining your changes and why 
 
 ## Mailinglist and issues
 
-Join the [mailinglist](https://listserv.uni-muenster.de/mailman/listinfo/dune-xt-dev) and take a look at the [issues](https://github.com/dune-community/dune-xt-common/issues) to help shape the future of this project.
+Join the [mailinglist](https://listserv.uni-muenster.de/mailman/listinfo/dune-xt-dev) and take a look at the
+[issues](https://github.com/dune-community/dune-xt-common/issues) to help shape the future of this project.
 
 
 # Coding style
 
-Every project has its own style, so here it is: we use clang-format to handle all formatting and provide a corresponding `.clang-format` style specification file (see below for details).
-This means that everything related to whitespace, brackets, comments, braces, macros, etc. is determined by clang-format, no flexibilty here (apart from one exception, see below).
+Every project has its own style, so here it is: we use clang-format to handle all formatting and provide a
+corresponding `.clang-format` style specification file (see below for details).
+This means that everything related to whitespace, brackets, comments, braces, macros, etc. is determined by
+clang-format, no flexibilty here (apart from one exception, see below).
 _I repeat: no flexibility at all regarding these._
-Apart from that we have some simple rules that you are asked to follow and any contributions in violation may be rejected.
+Apart from that we have some simple rules that you are asked to follow and any contributions in violation may be
+rejected.
 In particular, these are:
 
-* We use `CamelCase` for class and struct names, enum names, typedefs, and the like. We use `stl_standard` for class methods, members and variables. Does not seem to be consistent, but we never claimed we would be and it is highly readable. The only exception are typedefs and helper structs which arise in a context similar to the stl, where we use lowercase `typedef ... type;` and `struct is_vector {`.
-* Class members end with a trailing underscore. Static class members may drop the trailing underscore (in particular dimensions, such as `static const size_t dim = 2;`).
+* We use `CamelCase` for class and struct names, enum names, typedefs, and the like. We use `stl_standard` for class
+methods, members and variables. Does not seem to be consistent, but we never claimed we would be and it is highly
+readable. The only exception are typedefs and helper structs which arise in a context similar to the stl, where we use
+lowercase `typedef ... type;` and `struct is_vector {`.
+* Class members end with a trailing underscore. Static class members may drop the trailing underscore (in particular
+dimensions, such as `static const size_t dim = 2;`).
 * We append `Type` to in-class typedefs.
-* Prefer `using typename BaseClass::FooType;` over `typedef typename BaseType::FooType FooType;`, reduces errors due to typos.
+* Prefer `using typename BaseClass::FooType;` over `typedef typename BaseType::FooType FooType;`, reduces errors due to
+typos.
 * Include guards follow a pattern: file location `dune/xt/common/fvector.hh` turns into `DUNE_XT_COMMON_FVECTOR_HH`
-* Be careful to handle integers corretly, bad integer conversion is bad! Whenever possible, use `size_t` (even for `template<class Foo, size_t bar>`) and convert to the correct type using boost:
+* Be careful to handle integers corretly, bad integer conversion is bad! Whenever possible, use `size_t` (even for
+`template<class Foo, size_t bar>`) and convert to the correct type using boost:
 ```c++
 #include <boost/numeric/conversion/cast.hpp>
 
@@ -70,16 +84,16 @@ class Foo // two newlines above this class
   typedef Foo ThisType;
 public:
   static dim = 1; // this member does not need the trailing underscore
-  
+
   Foo() // one newline above this ctor
   {}
-  
+
   void member_func() // one newline above this member function
   {}
-  
+
 private: // one newline above this group of members
   double number_; // all provate members with
-  bool member_;   // trailing underscore  
+  bool member_;   // trailing underscore
 }; // two newlines below this class
 
 
@@ -105,7 +119,7 @@ Sort the groups by
   * dune core modules
   * dune-xt-common
   * local header within the same (sub)folder
-  
+
 For example:
 ```c++
 #include <string>
@@ -131,7 +145,8 @@ If extending some functionality from dune-common, the names of the headers shoul
 In such cases, the first header is expected to include the latter!
 Rather use a subdirectory and several headers than overly large headers.
 
-Tests can be found in `dune/xt/common/test`, where the name of a test source correspond to the full path of the corresponding header, e.g. `dune/xt/common/test/foo_bar.cc` contains tests for `dune/xt/common/foo/bar.hh`.
+Tests can be found in `dune/xt/common/test`, where the name of a test source correspond to the full path of the
+corresponding header, e.g. `dune/xt/common/test/foo_bar.cc` contains tests for `dune/xt/common/foo/bar.hh`.
 
 
 # clang-format
@@ -140,8 +155,11 @@ You need to have clang-format in version 3.7 installed (use `clang-format --vers
 To apply clang-format to all files in this project, call `make format` in your build directory.
 _Note that clang-format changes the files inplace, so save your work in your editor beforehand!_
 
-You can install a pre-commit hook to test for compliance by placing [this file](https://github.com/wwu-numerik/git-hooks/blob/master/pre-commit.clang-format) in the following location: `dune-xt-common/.git/hooks/pre-commit`.
+You can install a pre-commit hook to test for compliance by placing [this
+file](https://github.com/wwu-numerik/git-hooks/blob/master/pre-commit.clang-format) in the following location:
+`dune-xt-common/.git/hooks/pre-commit`.
 
-If you do not have clang-format in version 3.7 available or forgot to apply it, the code you publish will fail the corresponding travis check.
+If you do not have clang-format in version 3.7 available or forgot to apply it, the code you publish will fail the
+corresponding travis check.
 Upon failure you are provided with more information on the github pull request page on how to proceed.
 In particular you are provided with the required changes which you may download and incorporate into your code.
