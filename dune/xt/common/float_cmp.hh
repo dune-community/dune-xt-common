@@ -95,42 +95,13 @@ struct DefaultEpsilon<T, Style::numpy, true>
 template <class V>
 struct MT
 {
-  typedef typename VectorAbstraction<V>::S T;
+  typedef typename std::conditional<Dune::XT::Common::is_matrix<V>::value,
+                                    typename Dune::XT::Common::MatrixAbstraction<V>::S,
+                                    typename Dune::XT::Common::VectorAbstraction<V>::S>::type T;
   typedef typename Dune::FloatCmp::EpsilonType<typename MT<V>::T>::Type Eps;
 };
 
-#define DUNE_XT_COMMON_FLOAT_CMP_GENERATOR(id)                                                                         \
-  template <Style style, class FirstType, class SecondType>                                                            \
-  typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, typename MT<FirstType>::T>::value,           \
-                          bool>::type                                                                                  \
-  id(const FirstType& first,                                                                                           \
-     const SecondType& second,                                                                                         \
-     const typename MT<FirstType>::Eps& rtol = DefaultEpsilon<typename MT<FirstType>::T, style>::value(),              \
-     const typename MT<FirstType>::Eps& atol = DefaultEpsilon<typename MT<FirstType>::T, style>::value())              \
-  {                                                                                                                    \
-    return internal::Call<FirstType, SecondType, typename MT<FirstType>::Eps, style>::id(first, second, rtol, atol);   \
-  }                                                                                                                    \
-                                                                                                                       \
-  template <class FirstType, class SecondType>                                                                         \
-  typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, typename MT<FirstType>::T>::value,           \
-                          bool>::type                                                                                  \
-  id(const FirstType& first,                                                                                           \
-     const SecondType& second,                                                                                         \
-     const typename MT<FirstType>::Eps& rtol =                                                                         \
-         DefaultEpsilon<typename MT<FirstType>::T, Style::defaultStyle>::value(),                                      \
-     const typename MT<FirstType>::Eps& atol =                                                                         \
-         DefaultEpsilon<typename MT<FirstType>::T, Style::defaultStyle>::value())                                      \
-  {                                                                                                                    \
-    return id<Style::defaultStyle>(first, second, rtol, atol);                                                         \
-  }
-
-DUNE_XT_COMMON_FLOAT_CMP_GENERATOR(eq)
-DUNE_XT_COMMON_FLOAT_CMP_GENERATOR(ne)
-DUNE_XT_COMMON_FLOAT_CMP_GENERATOR(gt)
-DUNE_XT_COMMON_FLOAT_CMP_GENERATOR(lt)
-DUNE_XT_COMMON_FLOAT_CMP_GENERATOR(ge)
-DUNE_XT_COMMON_FLOAT_CMP_GENERATOR(le)
-#undef DUNE_XT_COMMON_FLOAT_CMP_GENERATOR
+#include "float_cmp_generated.hh"
 
 } // namespace FloatCmp
 } // namespace Common

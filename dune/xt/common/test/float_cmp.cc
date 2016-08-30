@@ -16,6 +16,7 @@
 
 #include <dune/common/dynvector.hh>
 #include <dune/common/fvector.hh>
+#include <dune/common/fmatrix.hh>
 
 #include <dune/xt/common/float_cmp.hh>
 #include <dune/xt/common/test/float_cmp.hh>
@@ -23,8 +24,14 @@
 
 using namespace Dune;
 using XT::Common::create;
-using namespace XT::Common::FloatCmp;
+using XT::Common::FloatCmp::Style;
 using XT::Common::VectorAbstraction;
+using XT::Common::MatrixAbstraction;
+static const Style numpy = Style::numpy;
+static const Style relativeWeak = Style::relativeWeak;
+static const Style relativeStrong = Style::relativeStrong;
+static const Style absolute = Style::absolute;
+static const Style defaultStyle = Style::defaultStyle;
 
 struct FloatCmpTest : public testing::Test
 {

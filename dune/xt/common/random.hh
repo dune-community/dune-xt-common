@@ -124,8 +124,8 @@ class DefaultRNG : public RNG<T, typename UniformDistributionSelector<T>::type, 
 
 public:
   explicit DefaultRNG(T min = std::numeric_limits<T>::min(),
-             T max = std::numeric_limits<T>::max(),
-             T seed = std::random_device()())
+                      T max = std::numeric_limits<T>::max(),
+                      T seed = std::random_device()())
     : BaseType(std::default_random_engine(seed), typename UniformDistributionSelector<T>::type(min, max))
   {
   }

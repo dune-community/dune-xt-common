@@ -39,7 +39,9 @@ struct MatrixAbstraction
 {
   typedef MatType MatrixType;
   typedef MatType ScalarType;
+  typedef MatType RealType;
   typedef MatType S;
+  typedef MatType R;
 
   static const bool is_matrix = false;
 
@@ -85,8 +87,10 @@ template <class K>
 struct MatrixAbstraction<Dune::DynamicMatrix<K>>
 {
   typedef Dune::DynamicMatrix<K> MatrixType;
-  typedef K ScalarType;
+  typedef typename Dune::FieldTraits<K>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<K>::real_type RealType;
   typedef ScalarType S;
+  typedef RealType R;
 
   static const bool is_matrix = true;
 
@@ -131,8 +135,10 @@ template <class K, int N, int M>
 struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
 {
   typedef Dune::FieldMatrix<K, N, M> MatrixType;
-  typedef K ScalarType;
+  typedef typename Dune::FieldTraits<K>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<K>::real_type RealType;
   typedef ScalarType S;
+  typedef RealType R;
 
   static const bool is_matrix = true;
 
@@ -185,8 +191,10 @@ template <class K, int N, int M>
 struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
 {
   typedef Dune::XT::Common::FieldMatrix<K, N, M> MatrixType;
-  typedef K ScalarType;
+  typedef typename Dune::FieldTraits<K>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<K>::real_type RealType;
   typedef ScalarType S;
+  typedef RealType R;
 
   static const bool is_matrix = true;
 
@@ -235,9 +243,9 @@ struct is_matrix
 
 template <class MatrixType>
 typename std::enable_if<is_matrix<MatrixType>::value, MatrixType>::type
-create(const size_t sz, const typename MatrixAbstraction<MatrixType>::S& val)
+create(const size_t rows, const size_t cols, const typename MatrixAbstraction<MatrixType>::S& val)
 {
-  return MatrixAbstraction<MatrixType>::create(sz, val);
+  return MatrixAbstraction<MatrixType>::create(rows, cols, val);
 }
 
 } // namespace Common
