@@ -73,8 +73,8 @@ test_tpl = '''
 '''
 
 bindir = os.path.dirname(os.path.abspath(__file__))
-fn_test = os.path.join(bindir, '..', 'dune', 'xt', 'common', 'test', 'float_cmp_generated.hh')
-fn_common = os.path.join(bindir, '..', 'dune', 'xt', 'common', 'float_cmp_generated.hh')
+fn_test = os.path.join(bindir, '..', 'dune', 'xt', 'common', 'test', 'float_cmp_generated.hxx')
+fn_common = os.path.join(bindir, '..', 'dune', 'xt', 'common', 'float_cmp_generated.hxx')
 cmps = ['eq', 'ne', 'gt', 'lt', 'ge', 'le']
 with open(fn_test, 'wt') as test_header, open(fn_common, 'wt') as common_header:
     for name in cmps:

@@ -17,6 +17,6 @@
 #include <dune/xt/common/test/gtest/gtest.h>
 #include <dune/xt/common/float_cmp.hh>
 
-#include "float_cmp_generated.hh"
+#include "float_cmp_generated.hxx"
 
 #endif // DUNE_XT_COMMON_TEST_FLOAT_COMPARE_HH

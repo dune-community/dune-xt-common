@@ -101,7 +101,7 @@ struct MT
   typedef typename Dune::FloatCmp::EpsilonType<typename MT<V>::T>::Type Eps;
 };
 
-#include "float_cmp_generated.hh"
+#include "float_cmp_generated.hxx"
 
 } // namespace FloatCmp
 } // namespace Common
