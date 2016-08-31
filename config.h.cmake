@@ -75,10 +75,6 @@
 # define HAVE_DUNE_SPGRID 0
 #endif
 
-#ifndef ENABLE_EIGEN
-# define ENABLE_EIGEN 0
-#endif
-
 #ifndef HAVE_EMPLACE
 # define HAVE_EMPLACE 0
 #endif

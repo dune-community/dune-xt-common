@@ -24,6 +24,8 @@ if(EIGEN3_FOUND)
     COMPILE_DEFINITIONS "ENABLE_EIGEN=1")
   set(HAVE_EIGEN 1)
 else(EIGEN3_FOUND)
+  dune_register_package_flags(
+    COMPILE_DEFINITIONS "ENABLE_EIGEN=0")
   set(HAVE_EIGEN 0)
 endif(EIGEN3_FOUND)
 
