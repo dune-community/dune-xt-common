@@ -55,14 +55,14 @@ macro(BEGIN_TESTCASES)
 endmacro(BEGIN_TESTCASES)
 
 macro(END_TESTCASES)
-    # this excludes meta-ini variation test cases because 
+    # this excludes meta-ini variation test cases because
     # there binary name != test name
     foreach( test ${dxt_test_binaries} )
         if (TARGET test)
             set_tests_properties(${test} PROPERTIES TIMEOUT ${DXT_TEST_TIMEOUT})
         endif(TARGET test)
     endforeach( test ${dxt_test_binaries} )
-    
+
     add_custom_target(test_binaries DEPENDS ${dxt_test_binaries})
 #     add_dependencies(test test_binaries)
     add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} --timeout ${DXT_TEST_TIMEOUT} -j ${DXT_TEST_PROCS}
@@ -72,3 +72,28 @@ macro(END_TESTCASES)
 endmacro(END_TESTCASES)
 
 ENABLE_TESTING()
+
+macro(add_header_listing)
+    # header
+    file( GLOB_RECURSE xtcommon "${CMAKE_CURRENT_SOURCE_DIR}/dune/*.hh" )
+    set( COMMON_HEADER ${xtcommon} ${DUNE_HEADERS} )
+
+    # add header of dependent modules for header listing
+    foreach(_mod ${ALL_DEPENDENCIES})
+        file(GLOB_RECURSE HEADER_LIST "${CMAKE_CURRENT_SOURCE_DIR}/../${_mod}/*.hh")
+        list(APPEND COMMON_HEADER ${HEADER_LIST})
+    endforeach(_mod DEPENDENCIES)
+    set_source_files_properties(${COMMON_HEADER} PROPERTIES HEADER_FILE_ONLY 1)
+endmacro(add_header_listing)
+
+macro(make_dependent_modules_sys_included)
+    #disable most warnings from dependent modules
+    foreach(_mod ${ALL_DEPENDENCIES})
+        dune_module_to_uppercase(_upper_case "${_mod}")
+        if(${_mod}_INCLUDE_DIRS)
+            foreach( _idir ${${_mod}_INCLUDE_DIRS} )
+                add_definitions("-isystem ${_idir}")
+            endforeach( _idir )
+        endif(${_mod}_INCLUDE_DIRS)
+    endforeach(_mod DEPENDENCIES)
+endmacro(make_dependent_modules_sys_included)

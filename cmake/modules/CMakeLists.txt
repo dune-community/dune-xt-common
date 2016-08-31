@@ -7,12 +7,16 @@
 #   Rene Milk       (2012 - 2013, 2015)
 
 install(FILES   AddALUGridCompileFlags.cmake
-                DuneXtCommonMacros.cmake
                 DuneTBB.cmake
                 DuneUtils.cmake
+                DuneXtCommonMacros.cmake
+                FindClangFormat.cmake
+                FindClangTidy.cmake
                 FindEigen3.cmake
                 FindFASP.cmake
                 FindLIKWID.cmake
                 FindTBB.cmake
                 GridUtils.cmake
+                XtCompilerSupport.cmake
+                XtTooling.cmake
         DESTINATION ${DUNE_INSTALL_MODULEDIR})

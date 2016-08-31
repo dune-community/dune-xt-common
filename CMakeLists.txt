@@ -57,7 +57,7 @@ set(DS_FLAGS_RelWithDebInfo
   "-fPIC"
   CACHE STRING "")
 SET( DS_FLAGS_Debug
-  "-O0" "-g3" "-ggdb" "-Wunused-variable" "-fno-strict-aliasing" "-fPIC" "-Wall" "-Wextra" "-Wparentheses" "-pedantic"  "-Wshadow" "-Wundef" "-Wnon-virtual-dtor" 
+  "-O0" "-g3" "-ggdb" "-Wunused-variable" "-fno-strict-aliasing" "-fPIC" "-Wall" "-Wextra" "-Wparentheses" "-pedantic"  "-Wshadow" "-Wundef" "-Wnon-virtual-dtor"
   CACHE STRING "")
 
 #aka anything but intel, but cmake has identifier for icc
@@ -77,7 +77,7 @@ if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
       )
 elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
   list( APPEND DS_FLAGS_Debug
-        -Wlogical-op  -Og 
+        -Wlogical-op  -Og
       )
 endif()
 
@@ -85,40 +85,21 @@ dune_enable_all_packages(INCLUDE_DIRS ${dune-xt-common_SOURCE_DIR}/dune
                          COMPILE_DEFINITIONS DNDEBUG DDNDEBUG
                          COMPILE_OPTIONS ${DS_FLAGS_${CMAKE_BUILD_TYPE}}
                          MODULE_LIBRARIES dunextcommon gtest_dune_xt_common
-                         VERBOSE
                          )
 
 include(DuneUtils)
 include(GridUtils)
 
-# header
-file( GLOB_RECURSE xtcommon "${CMAKE_CURRENT_SOURCE_DIR}/dune/*.hh" )
-set( COMMON_HEADER ${xtcommon} ${DUNE_HEADERS} )
-
-# add header of dependent modules for header listing
-foreach(_mod ${ALL_DEPENDENCIES})
-file(GLOB_RECURSE HEADER_LIST "${CMAKE_CURRENT_SOURCE_DIR}/../${_mod}/*.hh")
-list(APPEND COMMON_HEADER ${HEADER_LIST})
-endforeach(_mod DEPENDENCIES)
-set_source_files_properties(${COMMON_HEADER} PROPERTIES HEADER_FILE_ONLY 1)
-
 # add symlink for dune_execute.py to build-directory to be able to access it from other (xt-) modules
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 dune_symlink_to_source_files(FILES bin/dune_execute.py)
 
-#disable most warnings from dependent modules
-foreach(_mod ${ALL_DEPENDENCIES})
-    dune_module_to_uppercase(_upper_case "${_mod}")
-    if(${_mod}_INCLUDE_DIRS)
-        foreach( _idir ${${_mod}_INCLUDE_DIRS} )
-            add_definitions("-isystem ${_idir}")
-        endforeach( _idir )
-    endif(${_mod}_INCLUDE_DIRS)
-endforeach(_mod DEPENDENCIES)
-
 add_subdirectory(dune)
 add_subdirectory("cmake/modules")
 add_subdirectory(doc/doxygen)
+
+add_header_listing()
+make_dependent_modules_sys_included()
 add_format(${CMAKE_CURRENT_SOURCE_DIR})
 add_tidy(${CMAKE_CURRENT_SOURCE_DIR})
 
