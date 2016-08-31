@@ -108,7 +108,7 @@ public:
   }
 };
 
-//! validate arg iff less than value, obviously
+//! validate arg iff lhs < rhs
 template <class T>
 class ValidateLess : public ValidatorInterface<T, ValidateLess<T>>
 {
@@ -131,7 +131,7 @@ private:
   const T lhs_;
 };
 
-//! validate arg iff greater than value, obviously
+//! validate arg iff lhs > rhs, obviously
 template <class T>
 class ValidateGreater : public ValidatorInterface<T, ValidateGreater<T>>
 {

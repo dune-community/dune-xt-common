@@ -42,19 +42,16 @@ struct ValidationTest : public testing::Test
   void all()
   {
     using namespace boost::assign;
-    const int samples = 100;
-    std::cout << "\tTesting Validators for type " << Typename<T>::value() << "\n\t\t" << samples
-              << " random numbers ..." << std::endl;
     {
       typedef VectorAbstraction<T>::S S;
       const auto scalar_eps = Epsilon<S>::value;
-      const T lower = init_bound<T>(std::numeric_limits<S>::min() + scalar_eps);
-      const T upper = init_bound<T>(std::numeric_limits<S>::max() - scalar_eps);
-      RNGType rng(lower, upper);
-      for (int i = samples; i > 0; --i) {
-        const T arg = rng();
+      const T lower = init_bound<T>(std::numeric_limits<S>::min() / 6 + scalar_eps);
+      const T upper = init_bound<T>(std::numeric_limits<S>::max() / 6 - scalar_eps);
+
+      for (auto&& arg : std::array<T, 3>{{lower, T(0), upper}}) {
         test(lower, upper, arg);
       }
+      RNGType rng(lower, upper);
       boost::array<T, 10> ar = list_of<T>().repeat_fun(9, rng);
       ValidateInList<T, boost::array<T, 10>> validator(ar);
       for (T t : ar) {
