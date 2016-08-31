@@ -20,7 +20,7 @@ const size_t wait_ms = 142;
 
 void scoped_busywait(const std::string& name, size_t ms)
 {
-  ScopedTiming DUNE_UNUSED(scopedTiming)(name);
+  ScopedTiming scopedTiming(name) DUNE_UNUSED;
   busywait(ms);
 }
 
@@ -44,7 +44,7 @@ TEST(ProfilerTest, Timing)
 TEST(ProfilerTest, ScopedTiming)
 {
   const auto dvalue_range = value_range(1, 4);
-  for (auto DUNE_UNUSED(i) : dvalue_range) {
+  for (auto i DUNE_UNUSED : dvalue_range) {
     scoped_busywait("ProfilerTest.ScopedTiming", wait_ms);
   }
   EXPECT_GE(DXTC_TIMINGS.walltime("ProfilerTest.ScopedTiming"), long(dvalue_range.size() * wait_ms));
