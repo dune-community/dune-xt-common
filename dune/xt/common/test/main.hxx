@@ -35,6 +35,8 @@
 #include <fstream>
 #include <limits>
 
+#include <boost/numeric/conversion/cast.hpp>
+
 #include <dune/common/float_cmp.hh>
 #include <dune/common/fvector.hh>
 #include <dune/common/fmatrix.hh>
@@ -101,7 +103,7 @@ int main(int argc, char** argv)
                                ? DXTC_CONFIG.get<size_t>("threading.max_count") //    silence the WARNING: ...
                                : Dune::XT::Common::ThreadManager::default_max_threads();
 #if HAVE_TBB
-    tbb::task_scheduler_init tbb_init(threads);
+    tbb::task_scheduler_init tbb_init(boost::numeric_cast<int>(threads));
 #endif
     threadManager().set_max_threads(threads);
 
