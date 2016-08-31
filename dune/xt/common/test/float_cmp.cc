@@ -25,21 +25,15 @@
 using namespace Dune;
 using XT::Common::create;
 using XT::Common::FloatCmp::Style;
-using XT::Common::VectorAbstraction;
-using XT::Common::MatrixAbstraction;
-static const Style numpy = Style::numpy;
-static const Style relativeWeak = Style::relativeWeak;
-static const Style relativeStrong = Style::relativeStrong;
-static const Style absolute = Style::absolute;
-static const Style defaultStyle = Style::defaultStyle;
 
 struct FloatCmpTest : public testing::Test
 {
   typedef TESTTYPE V;
-  static const size_t s_size = VectorAbstraction<V>::has_static_size ? VectorAbstraction<V>::static_size : VECSIZE;
+  static const size_t s_size =
+      XT::Common::VectorAbstraction<V>::has_static_size ? XT::Common::VectorAbstraction<V>::static_size : VECSIZE;
 
-  typedef typename VectorAbstraction<V>::ScalarType S;
-  typedef typename VectorAbstraction<V>::RealType R;
+  typedef typename XT::Common::VectorAbstraction<V>::ScalarType S;
+  typedef typename XT::Common::VectorAbstraction<V>::RealType R;
   static constexpr bool fieldtype_is_float = std::is_floating_point<R>::value;
 
   FloatCmpTest()

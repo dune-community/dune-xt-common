@@ -17,6 +17,7 @@
 
 #include <dune/common/float_cmp.hh>
 
+#include <dune/xt/common/math.hh>
 #include <dune/xt/common/type_traits.hh>
 #include <dune/xt/common/float_cmp_style.hh>
 
@@ -45,7 +46,6 @@ struct MatrixAbstraction;
 template <class MatType>
 struct is_matrix;
 
-
 namespace FloatCmp {
 namespace internal {
 
@@ -57,7 +57,7 @@ template <class T>
 typename std::enable_if<std::is_arithmetic<T>::value, bool>::type
 float_cmp_eq(const T& xx, const T& yy, const T& rtol, const T& atol)
 {
-  return std::abs(xx - yy) <= atol + std::abs(yy) * rtol;
+  return absolute_difference(xx, yy) <= atol + Dune::XT::Common::abs(yy) * rtol;
 }
 
 template <class T>

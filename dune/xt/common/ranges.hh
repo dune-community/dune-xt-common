@@ -138,13 +138,13 @@ value_range(const T start, const T end, const T increment = Epsilon<T>::value)
 }
 
 //! signature for enumeration Types T
-template <class T, class sequence = std::vector<typename Absretval<T>::type>>
-typename std::enable_if<std::is_enum<T>::value, sequence>::type
-value_range(const T start,
-            const T end,
-            const typename Absretval<T>::type increment = Epsilon<typename Absretval<T>::type>::value)
+template <class T, class sequence = std::vector<typename internal::Absretval<T>::type>>
+typename std::enable_if<std::is_enum<T>::value, sequence>::type value_range(
+    const T start,
+    const T end,
+    const typename internal::Absretval<T>::type increment = Epsilon<typename internal::Absretval<T>::type>::value)
 {
-  typedef typename Absretval<T>::type R;
+  typedef typename internal::Absretval<T>::type R;
   return value_range(static_cast<R>(start), static_cast<R>(end), increment);
 }
 
@@ -156,7 +156,7 @@ typename std::enable_if<!std::is_enum<T>::value, sequence>::type value_range(con
 }
 
 //! get a vector with values in [0 : Epsilon<T> : end)
-template <class T, class sequence = std::vector<typename Absretval<T>::type>>
+template <class T, class sequence = std::vector<typename internal::Absretval<T>::type>>
 typename std::enable_if<std::is_enum<T>::value, sequence>::type value_range(const T end)
 {
   return value_range(T(0), end);

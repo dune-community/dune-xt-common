@@ -23,7 +23,6 @@
 
 #include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/type_traits.hh>
-#include <dune/xt/common/float_cmp.hh>
 
 namespace Dune {
 namespace XT {

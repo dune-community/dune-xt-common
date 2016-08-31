@@ -77,7 +77,8 @@ struct DefaultEpsilon<std::complex<T>, Style::numpy, false>
 template <class T, Style style>
 struct DefaultEpsilon<T, style, true>
 {
-  static long value()
+  typedef T Type;
+  static T value()
   {
     return std::numeric_limits<T>::epsilon();
   }
@@ -86,7 +87,8 @@ struct DefaultEpsilon<T, style, true>
 template <class T>
 struct DefaultEpsilon<T, Style::numpy, true>
 {
-  static long value()
+  typedef T Type;
+  static T value()
   {
     return std::numeric_limits<T>::epsilon();
   }

@@ -71,10 +71,11 @@ struct Epsilon<std::string, false>
 };
 
 template <class T>
-const T Epsilon<T, true>::value = 1;
+const T Epsilon<T, true>::value = T(1);
 template <class T>
 const T Epsilon<T, false>::value = std::numeric_limits<T>::epsilon();
 
+namespace internal {
 /**
  *  Helper struct to compute absolute values of signed and unsigned values,
  *  std::abs is only defined for signed types.
@@ -108,11 +109,21 @@ struct Absretval<T, true>
   typedef typename underlying_type<T>::type type;
 };
 
+} // namespace internal
+
+//! drop-in replacement for std::abs, that works for more types
 template <class T>
-typename Absretval<T>::type abs(const T& val)
+typename internal::Absretval<T>::type abs(const T& val)
 {
-  typedef typename Absretval<T>::type R;
-  return AbsoluteValue<R>::result(static_cast<R>(val));
+  typedef typename internal::Absretval<T>::type R;
+  return internal::AbsoluteValue<R>::result(static_cast<R>(val));
+}
+
+//! very simple, underrun-safe for unsigned types, difference method
+template <class T>
+T absolute_difference(T a, T b)
+{
+  return (a > b) ? a - b : b - a;
 }
 
 //! a vector wrapper for continiously updating min,max,avg of some element type vector
