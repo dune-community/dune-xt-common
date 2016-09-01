@@ -20,7 +20,7 @@ const size_t wait_ms = 142;
 
 void scoped_busywait(const std::string& name, size_t ms)
 {
-  ScopedTiming scopedTiming(name) DUNE_UNUSED;
+  DUNE_UNUSED ScopedTiming scopedTiming(name);
   busywait(ms);
 }
 

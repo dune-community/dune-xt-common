@@ -85,7 +85,7 @@ TimedPrefixedStreamBuffer::TimedPrefixedStreamBuffer(const Timer& timer, const s
 
 int TimedPrefixedStreamBuffer::sync()
 {
-  std::lock_guard<std::mutex> guard(mutex_) DUNE_UNUSED;
+  DUNE_UNUSED std::lock_guard<std::mutex> guard(mutex_);
   const std::string tmp_str = str();
   if (prefix_needed_ && !tmp_str.empty()) {
     out_ << elapsed_time_str() << prefix_;
