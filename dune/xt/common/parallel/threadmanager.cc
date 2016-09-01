@@ -84,10 +84,9 @@ void Dune::XT::Common::ThreadManager::set_max_threads(const size_t count)
 {
   DXTC_CONFIG.set("threading.max_count", count, true);
   max_threads_ = count;
-  const int int_count = boost::numeric_cast<int>(count);
-  WITH_DUNE_FEM_AND_THREADING(Dune::Fem::ThreadManager::setMaxNumberThreads(int_count);)
+  WITH_DUNE_FEM_AND_THREADING(Dune::Fem::ThreadManager::setMaxNumberThreads(boost::numeric_cast<int>(count));)
 #if HAVE_EIGEN
-  Eigen::setNbThreads(int_count);
+    Eigen::setNbThreads(boost::numeric_cast<int>(count));
 #endif
 }
 
