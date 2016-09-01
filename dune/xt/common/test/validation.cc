@@ -35,23 +35,24 @@ struct ValidationTest : public testing::Test
   typedef FIELD_TYPE T;
   typedef DefaultRNG<T> RNGType;
   static const T eps;
-  /** for some weird reason my compiler thinks ValidationTest is an abstract class
-   * if I don't implement "void TestBody();"
-   * \see common_math.cc testcases for why I think it's weird
-   **/
+  typedef VectorAbstraction<T>::S S;
+  typedef std::numeric_limits<S> limit;
+  const int eps_fac = 4;
+  const S scalar_eps = Epsilon<S>::value;
+
   void all()
   {
     using namespace boost::assign;
     {
-      typedef VectorAbstraction<T>::S S;
-      const auto scalar_eps = Epsilon<S>::value;
-      const T lower = init_bound<T>(std::numeric_limits<S>::min() / 6 + scalar_eps);
-      const T upper = init_bound<T>(std::numeric_limits<S>::max() / 6 - scalar_eps);
+      const S lower = S(0);
+      const S center = S(3);
+      const S upper = S(6);
 
-      for (auto&& arg : std::array<T, 3>{{lower, T(0), upper}}) {
-        test(lower, upper, arg);
-      }
-      RNGType rng(lower, upper);
+      test(lower, upper, lower+1);
+      test(lower, upper, center);
+      test(lower, upper, upper-1);
+
+      RNGType rng(init_bound<T>(lower), init_bound<T>(upper));
       boost::array<T, 10> ar = list_of<T>().repeat_fun(9, rng);
       ValidateInList<T, boost::array<T, 10>> validator(ar);
       for (T t : ar) {
@@ -60,28 +61,22 @@ struct ValidationTest : public testing::Test
       std::vector<T> a;
       EXPECT_FALSE(ValidateInList<T>(a)(rng()));
     }
-    std::cout << "\t\tfixed interval" << std::endl;
-    {
-      const T lower = init_bound<T>(0);
-      const T upper = init_bound<T>(2);
-      const T arg = init_bound<T>(1);
-      test(lower, upper, arg);
-      EXPECT_FALSE(ValidateLess<T>(upper)(lower));
-      EXPECT_FALSE(ValidateGreater<T>(lower)(upper));
-      EXPECT_FALSE(ValidateGreaterOrEqual<T>(lower)(upper + Epsilon<T>::value));
-    }
-    std::cout << "\t\tdone." << std::endl;
   }
 
-  void test(const T lower, const T upper, const T arg) const
+  void test(const S lower, const S upper, const S arg) const
   {
-    const T clamped_arg = clamp(arg, T(lower + eps), T(upper - eps));
-    EXPECT_TRUE(ValidateAny<T>()(arg));
-    EXPECT_TRUE(ValidateLess<T>(clamped_arg)(upper));
-    EXPECT_TRUE(ValidateGreaterOrEqual<T>(arg)(lower));
-    EXPECT_TRUE(ValidateGreater<T>(clamped_arg)(lower));
-    EXPECT_TRUE(ValidateInterval<T>(lower, upper)(arg));
-    EXPECT_FALSE(ValidateNone<T>()(arg));
+    const auto arg_T = init_bound<T>(arg);
+    const auto lower_T = init_bound<T>(lower);
+    const auto upper_T = init_bound<T>(upper);
+    EXPECT_TRUE(ValidateAny<T>()(arg_T));
+    EXPECT_TRUE(ValidateLess<T>(arg_T)(upper_T));
+    EXPECT_TRUE(ValidateLessOrEqual<T>(arg_T)(arg_T));
+    EXPECT_TRUE(ValidateLessOrEqual<T>(arg_T)(upper_T));
+    EXPECT_TRUE(ValidateGreaterOrEqual<T>(arg_T)(arg_T));
+    EXPECT_TRUE(ValidateGreaterOrEqual<T>(arg_T)(lower_T));
+    EXPECT_TRUE(ValidateGreater<T>(arg_T)(lower_T));
+    EXPECT_TRUE(ValidateInterval<T>(lower_T, upper_T)(arg_T));
+    EXPECT_FALSE(ValidateNone<T>()(arg_T));
   }
 };
 const FIELD_TYPE ValidationTest::eps = Epsilon<T>::value;

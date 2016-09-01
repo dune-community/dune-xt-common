@@ -195,9 +195,9 @@ private:
 
 INVERSE_VALIDATE(ValidateNone, ValidateAny);
 INVERSE_VALIDATE(ValidateGreaterOrEqual, ValidateLess);
-INVERSE_VALIDATE(ValidateNotLess, ValidateLess);
+INVERSE_VALIDATE(ValidateLessOrEqual, ValidateGreater);
 
-//! validate arg iff arg \in [min,max]
+//! validate arg iff rhs \in [min,max]
 template <class T>
 class ValidateInterval : public ValidatorInterface<T, ValidateInterval<T>>
 {
