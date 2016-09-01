@@ -39,6 +39,7 @@ struct FloatCmpTest : public testing::Test
   FloatCmpTest()
     : zero(create<V>(s_size, create<S>(0, 0)))
     , one(create<V>(s_size, create<S>(0, 1)))
+    , neg_one(create<V>(s_size, create<S>(0, -1)))
     , epsilon(create<V>(s_size, XT::Common::FloatCmp::DEFAULT_EPSILON::value()))
     , eps_plus(create<V>(s_size, XT::Common::FloatCmp::DEFAULT_EPSILON::value() * 1.1))
     , eps_minus(create<V>(s_size, XT::Common::FloatCmp::DEFAULT_EPSILON::value() * 0.9))
@@ -49,6 +50,7 @@ struct FloatCmpTest : public testing::Test
 
   const V zero;
   const V one;
+  const V neg_one;
   const V epsilon;
   const V eps_plus;
   const V eps_minus;
@@ -85,7 +87,6 @@ struct FloatCmpTest : public testing::Test
     TEST_DXTC_EXPECT_FLOAT_NE(zero, one);
     EXPECT_FALSE(FLOATCMP_NE(one, one + eps_minus));
     TEST_DXTC_EXPECT_FLOAT_NE(one, two);
-
     if (test_config["cmpstyle_is_relative"] == "true" && fieldtype_is_float)
       TEST_DXTC_EXPECT_FLOAT_NE(zero, eps_minus);
     else
@@ -169,6 +170,20 @@ struct FloatCmpTest : public testing::Test
     TEST_DXTC_EXPECT_FLOAT_LE(one, one + eps_plus);
     TEST_DXTC_EXPECT_FLOAT_LE(one, two);
   }
+
+  void negative_numbers()
+  {
+    TEST_DXTC_EXPECT_FLOAT_LT(neg_one, one);
+    TEST_DXTC_EXPECT_FLOAT_LT(neg_one, zero);
+    EXPECT_FALSE(FLOATCMP_LT(neg_one, neg_one));
+    TEST_DXTC_EXPECT_FLOAT_GT(one, neg_one);
+    EXPECT_FALSE(FLOATCMP_GT(neg_one, neg_one));
+    EXPECT_FALSE(FLOATCMP_LT(neg_one, neg_one));
+    TEST_DXTC_EXPECT_FLOAT_NE(neg_one, two);
+    EXPECT_FALSE(FLOATCMP_NE(neg_one, neg_one));
+    EXPECT_FALSE(FLOATCMP_EQ(zero, neg_one));
+    TEST_DXTC_EXPECT_FLOAT_EQ(neg_one, neg_one);
+  }
 }; // struct FloatCmpBase
 
 
@@ -200,4 +215,10 @@ TEST_F(FloatCmpTest, ge)
 TEST_F(FloatCmpTest, le)
 {
   this->check_le();
+}
+
+TEST_F(FloatCmpTest, neg)
+{
+  if (std::is_signed<XT::Common::VectorAbstraction<TESTTYPE>::ScalarType>::value)
+    this->negative_numbers();
 }
