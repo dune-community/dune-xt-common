@@ -34,7 +34,7 @@ macro(BEGIN_TESTCASES)
 		get_filename_component(testbase ${source} NAME_WE)
                 if( EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.mini )
 		    set( inifile ${testbase}.mini)
-    		    dune_add_system_test(SOURCE ${testbase}.cc
+                    dune_add_system_test(SOURCE ${testbase}.cc ${COMMON_HEADER}
                                          INIFILE ${inifile}
                                          BASENAME test_${testbase}
                                          CREATED_TARGETS targetlist_${testbase}

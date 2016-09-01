@@ -11,8 +11,6 @@ enable_testing()
 
 DEPENDENCYCHECK( ${xtcommon} )
 
-set_source_files_properties( ${DUNE_HEADERS} PROPERTIES HEADER_FILE_ONLY 1 )
-
 BEGIN_TESTCASES(dunextcommon)
 
 END_TESTCASES()
