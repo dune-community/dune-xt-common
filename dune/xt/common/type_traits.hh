@@ -224,7 +224,7 @@ struct is_complex<std::complex<T>> : public std::true_type
     };                                                                                                                 \
                                                                                                                        \
     static const bool value = helper<T_local>::value;                                                                  \
-  };
+  }
 
 /**
   * \brief Macro to statically check a type for a typedef.
@@ -258,7 +258,7 @@ DXTC_has_typedef(Bar)< Foo >::value
     static std::false_type helper(...);                                                                                \
                                                                                                                        \
     static const bool value = decltype(helper<T_local>(0))::value;                                                     \
-  };
+  }
 
 /**
   * \brief Macro to statically check a class or struct for a static member.
