@@ -94,12 +94,13 @@ include(GridUtils)
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 dune_symlink_to_source_files(FILES bin/dune_execute.py)
 
+add_header_listing()
+make_dependent_modules_sys_included()
+
 add_subdirectory(dune)
 add_subdirectory("cmake/modules")
 add_subdirectory(doc/doxygen)
 
-add_header_listing()
-make_dependent_modules_sys_included()
 add_format(${CMAKE_CURRENT_SOURCE_DIR})
 add_tidy(${CMAKE_CURRENT_SOURCE_DIR})
 
