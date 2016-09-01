@@ -105,3 +105,6 @@ add_format(${CMAKE_CURRENT_SOURCE_DIR})
 add_tidy(${CMAKE_CURRENT_SOURCE_DIR})
 
 finalize_dune_project(GENERATE_CONFIG_H_CMAKE)
+
+# patch config.h to remove warnings about unused HAVE_GRIDTYPE
+execute_process(COMMAND sed -i -e "s,^\\([ ]*\\)\#if HAVE_GRIDTYPE$,\\1\#if defined(HAVE_GRIDTYPE) \\&\\& HAVE_GRIDTYPE,g" ${CMAKE_CURRENT_BINARY_DIR}/config.h )

@@ -56,7 +56,7 @@
 
 /*** Silence implicitly False evaluation of undefined macro warnings ****/
 #ifndef HAVE_DUNE_FEM
-# define HAVE_FUNE_FEM 0
+# define HAVE_DUNE_FEM 0
 #endif
 
 #ifndef HAVE_DUNE_GRID_MULTISCALE
