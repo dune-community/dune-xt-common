@@ -167,7 +167,7 @@ int CombinedBuffer::pubsync()
 {
   if (!enabled())
     return 0;
-  int ret;
+  int ret = 0;
   for (auto&& buffer_ptr : buffer_)
     ret = buffer_ptr->pubsync();
   return ret;
@@ -175,7 +175,7 @@ int CombinedBuffer::pubsync()
 
 std::streamsize CombinedBuffer::xsputn(const char_type* s, std::streamsize count)
 {
-  std::streamsize ret;
+  std::streamsize ret = 0;
   for (auto&& buffer_ptr : buffer_)
     ret = buffer_ptr->xsputn(s, count);
   return ret;
@@ -183,7 +183,7 @@ std::streamsize CombinedBuffer::xsputn(const char_type* s, std::streamsize count
 
 CombinedBuffer::int_type CombinedBuffer::overflow(int_type ch)
 {
-  int_type ret;
+  int_type ret = 0;
   for (auto&& buffer_ptr : buffer_)
     ret = buffer_ptr->overflow(ch);
   return ret;
@@ -191,7 +191,7 @@ CombinedBuffer::int_type CombinedBuffer::overflow(int_type ch)
 
 int CombinedBuffer::sync()
 {
-  int ret;
+  int ret = 0;
   for (auto&& buffer_ptr : buffer_)
     ret = buffer_ptr->sync();
   return ret;
