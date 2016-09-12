@@ -16,11 +16,13 @@
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wall"
 #pragma GCC diagnostic ignored "-Wcovered-switch-default"
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #pragma GCC diagnostic ignored "-Wdeprecated-register"
 #pragma GCC diagnostic ignored "-Wextra"
 #pragma GCC diagnostic ignored "-Wfloat-equal"
 #pragma GCC diagnostic ignored "-Wignored-qualifiers"
 #pragma GCC diagnostic ignored "-Wlogical-not-parentheses"
+#pragma GCC diagnostic ignored "-Wlogical-op"
 #pragma GCC diagnostic ignored "-Wlogical-op-parentheses"
 #pragma GCC diagnostic ignored "-Wmismatched-tags"
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
@@ -42,9 +44,11 @@
 #elif defined(BOOST_GCC) && BOOST_GCC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wall"
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #pragma GCC diagnostic ignored "-Wextra"
 #pragma GCC diagnostic ignored "-Wfloat-equal"
 #pragma GCC diagnostic ignored "-Wignored-qualifiers"
+#pragma GCC diagnostic ignored "-Wlogical-op"
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 #pragma GCC diagnostic ignored "-Woverloaded-virtual"
