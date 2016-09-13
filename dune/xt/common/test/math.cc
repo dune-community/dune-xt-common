@@ -115,7 +115,7 @@ TEST(OtherMath, AbsoluteValue)
 {
   EXPECT_EQ(abs(1.0f), 1.0f);
   EXPECT_EQ(abs(-1l), 1l);
-  EXPECT_EQ(abs(0u), 0u);
+  EXPECT_EQ(Dune::XT::Common::abs(0u), 0u);
   EXPECT_EQ(abs(0), 0);
   EXPECT_EQ(abs(std::complex<int>(0)), 0);
   EXPECT_EQ(abs(std::complex<int>(-1)), 1);
