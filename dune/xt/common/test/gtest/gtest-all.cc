@@ -366,7 +366,7 @@ private:
 #include <sys/types.h> // NOLINT
 #include <sys/stat.h> // NOLINT
 
-#if GTEST_OS_WINDOWS_MINGW
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS_MINGW
 // MinGW has gettimeofday() but not _ftime64().
 // TODO(kenton@google.com): Use autoconf to detect availability of
 //   gettimeofday().
@@ -474,7 +474,7 @@ private:
 #include <netdb.h> // NOLINT
 #endif
 
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 #include <windows.h> // NOLINT
 #endif // GTEST_OS_WINDOWS
 
@@ -810,7 +810,7 @@ public:
   // name and the test name.
   static bool FilterMatchesTest(const std::string& test_case_name, const std::string& test_name);
 
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
   // Function for supporting the gtest_catch_exception flag.
 
   // Returns EXCEPTION_EXECUTE_HANDLER if Google Test should handle the
@@ -1407,7 +1407,7 @@ inline UnitTestImpl* GetUnitTestImpl()
   return UnitTest::GetInstance()->impl();
 }
 
-#if GTEST_USES_SIMPLE_RE
+#if defined(GTEST_USES_SIMPLE_RE) && GTEST_USES_SIMPLE_RE
 
 // Internal helper functions for implementing the simple regular
 // expression matcher.
@@ -1437,7 +1437,7 @@ GTEST_API_ void ParseGoogleTestFlagsOnly(int* argc, wchar_t** argv);
 // platform.
 GTEST_API_ std::string GetLastErrnoDescription();
 
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 // Provides leak-safe Windows kernel handle ownership.
 class AutoHandle
 {
@@ -1499,7 +1499,7 @@ bool ParseNaturalNumber(const ::std::string& str, Integer* number)
 // BiggestConvertible is the largest integer type that system-provided
 // string-to-number conversion routines can return.
 
-#if GTEST_OS_WINDOWS && !defined(__GNUC__)
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS && !defined(__GNUC__)
 
   // MSVC and C++ Builder define __int64 instead of the standard long long.
   typedef unsigned __int64 BiggestConvertible;
@@ -1739,7 +1739,7 @@ private:
 #endif // GTEST_SRC_GTEST_INTERNAL_INL_H_
 #undef GTEST_IMPLEMENTATION_
 
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 #define vsnprintf _vsnprintf
 #endif // GTEST_OS_WINDOWS
 
@@ -1971,7 +1971,7 @@ FilePath GetCurrentExecutableName()
 {
   FilePath result;
 
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
   result.Set(FilePath(g_executable_path).RemoveExtension("exe"));
 #else
   result.Set(FilePath(g_executable_path));
@@ -2388,7 +2388,7 @@ std::string UnitTestImpl::CurrentOsStackTraceExceptTop(int skip_count)
 // Returns the current time in milliseconds.
 TimeInMillis GetTimeInMillis()
 {
-#if GTEST_OS_WINDOWS_MOBILE || defined(__BORLANDC__)
+#if (defined(GTEST_OS_WINDOWS_MOBILE) && GTEST_OS_WINDOWS_MOBILE) || defined(__BORLANDC__)
   // Difference between 1970-01-01 and 1601-01-01 in milliseconds.
   // http://analogous.blogspot.com/2005/04/epoch.html
   const TimeInMillis kJavaEpochToWinFileTimeDelta = static_cast<TimeInMillis>(116444736UL) * 100000UL;
@@ -2407,7 +2407,7 @@ TimeInMillis GetTimeInMillis()
     return now_int64.QuadPart;
   }
   return 0;
-#elif GTEST_OS_WINDOWS && !GTEST_HAS_GETTIMEOFDAY_
+#elif defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS && !GTEST_HAS_GETTIMEOFDAY_
   __timeb64 now;
 
 #ifdef _MSC_VER
@@ -2440,7 +2440,7 @@ TimeInMillis GetTimeInMillis()
 
 // class String.
 
-#if GTEST_OS_WINDOWS_MOBILE
+#if defined(GTEST_OS_WINDOWS_MOBILE) && GTEST_OS_WINDOWS_MOBILE
 // Creates a UTF-16 wide string from the given ANSI string, allocating
 // memory using new. The caller is responsible for deleting the return
 // value using delete[]. Returns the wide string, or NULL if the
@@ -2937,14 +2937,14 @@ AssertionResult IsNotSubstring(const char* needle_expr,
 
 namespace internal {
 
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 
 namespace {
 
 // Helper function for IsHRESULT{SuccessFailure} predicates
 AssertionResult HRESULTFailureHelper(const char* expr, const char* expected, long hr)
 { // NOLINT
-#if GTEST_OS_WINDOWS_MOBILE
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS_MOBILE
 
   // Windows CE doesn't support FormatMessage.
   const char error_text[] = "";
@@ -3211,9 +3211,9 @@ bool String::CaseInsensitiveWideCStringEquals(const wchar_t* lhs, const wchar_t*
   if (rhs == NULL)
     return false;
 
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
   return _wcsicmp(lhs, rhs) == 0;
-#elif GTEST_OS_LINUX && !GTEST_OS_LINUX_ANDROID
+#elif GTEST_OS_LINUX && (!defined(GTEST_OS_LINUX_ANDROID) || !GTEST_OS_LINUX_ANDROID)
   return wcscasecmp(lhs, rhs) == 0;
 #else
   // Android, Mac OS X and Cygwin don't define wcscasecmp.
@@ -4152,7 +4152,7 @@ static void PrintTestPartResult(const TestPartResult& test_part_result)
 // following statements add the test part result message to the Output
 // window such that the user can double-click on it to jump to the
 // corresponding source code location; otherwise they do nothing.
-#if GTEST_OS_WINDOWS && !GTEST_OS_WINDOWS_MOBILE
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS && (!defined(GTEST_OS_WINDOWS_MOBILE) || !GTEST_OS_WINDOWS_MOBILE)
   // We don't call OutputDebugString*() on Windows Mobile, as printing
   // to stdout is done by OutputDebugString() there already - we don't
   // want the same message printed twice.
@@ -4171,7 +4171,7 @@ enum GTestColor
   COLOR_YELLOW
 };
 
-#if GTEST_OS_WINDOWS && !GTEST_OS_WINDOWS_MOBILE
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS && (!defined(GTEST_OS_WINDOWS_MOBILE) || !GTEST_OS_WINDOWS_MOBILE)
 
 // Returns the character attribute for the given color.
 WORD GetColorAttribute(GTestColor color)
@@ -4214,7 +4214,7 @@ bool ShouldUseColor(bool stdout_is_tty)
   const char* const gtest_color = GTEST_FLAG(color).c_str();
 
   if (String::CaseInsensitiveCStringEquals(gtest_color, "auto")) {
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
     // On Windows the TERM variable is usually not set, but the
     // console there does support colors.
     return stdout_is_tty;
@@ -4247,7 +4247,7 @@ void ColoredPrintf(GTestColor color, const char* fmt, ...)
   va_list args;
   va_start(args, fmt);
 
-#if GTEST_OS_WINDOWS_MOBILE || GTEST_OS_SYMBIAN || GTEST_OS_ZOS || GTEST_OS_IOS
+#if (defined(GTEST_OS_WINDOWS_MOBILE) && GTEST_OS_WINDOWS_MOBILE) || (defined(GTEST_OS_SYMBIAN) && GTEST_OS_SYMBIAN) || (defined(GTEST_OS_ZOS) && GTEST_OS_ZOS) || (defined(GTEST_OS_IOS) && GTEST_OS_IOS)
   const bool use_color = false;
 #else
   static const bool in_color_mode = ShouldUseColor(posix::IsATTY(posix::FileNo(stdout)) != 0);
@@ -4261,7 +4261,7 @@ void ColoredPrintf(GTestColor color, const char* fmt, ...)
     return;
   }
 
-#if GTEST_OS_WINDOWS && !GTEST_OS_WINDOWS_MOBILE
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS && (!defined(GTEST_OS_WINDOWS_MOBILE) || !GTEST_OS_WINDOWS_MOBILE)
   const HANDLE stdout_handle = GetStdHandle(STD_OUTPUT_HANDLE);
 
   // Gets the current text color.
@@ -5282,7 +5282,7 @@ UnitTest* UnitTest::GetInstance()
 // default implementation.  Use this implementation to keep good OO
 // design with private destructor.
 
-#if (_MSC_VER == 1310 && !defined(_DEBUG)) || defined(__BORLANDC__)
+#if (defined(_MSC_VER) && _MSC_VER == 1310 && !defined(_DEBUG)) || defined(__BORLANDC__)
   static UnitTest* const instance = new UnitTest;
   return instance;
 #else
@@ -5469,7 +5469,7 @@ void UnitTest::AddTestPartResult(TestPartResult::Type result_type,
     // with another testing framework) and specify the former on the
     // command line for debugging.
     if (GTEST_FLAG(break_on_failure)) {
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
       // Using DebugBreak on Windows allows gtest to still break into a debugger
       // when a failure happens and both the --gtest_break_on_failure and
       // the --gtest_catch_exceptions flags are specified.
@@ -6531,7 +6531,7 @@ static const char kColorEncodedHelpMessage[] =
 #endif // GTEST_CAN_STREAM_RESULTS_
     "\n"
     "Assertion Behavior:\n"
-#if GTEST_HAS_DEATH_TEST && !GTEST_OS_WINDOWS
+#if GTEST_HAS_DEATH_TEST && (!defined(GTEST_OS_WINDOWS) || !GTEST_OS_WINDOWS)
     "  @G--" GTEST_FLAG_PREFIX_ "death_test_style=@Y(@Gfast@Y|@Gthreadsafe@Y)@D\n"
     "      Set the default death test style.\n"
 #endif // GTEST_HAS_DEATH_TEST && !GTEST_OS_WINDOWS
@@ -6718,7 +6718,7 @@ void InitGoogleTest(int* argc, wchar_t** argv)
 
 #if GTEST_HAS_DEATH_TEST
 
-#if GTEST_OS_MAC
+#if defined(GTEST_OS_MAC) && GTEST_OS_MAC
 #include <crt_externs.h>
 #endif // GTEST_OS_MAC
 
@@ -6732,14 +6732,14 @@ void InitGoogleTest(int* argc, wchar_t** argv)
 
 #include <stdarg.h>
 
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 #include <windows.h>
 #else
 #include <sys/mman.h>
 #include <sys/wait.h>
 #endif // GTEST_OS_WINDOWS
 
-#if GTEST_OS_QNX
+#if defined(GTEST_OS_QNX) && GTEST_OS_QNX
 #include <spawn.h>
 #endif // GTEST_OS_QNX
 
@@ -6806,7 +6806,7 @@ static bool g_in_fast_death_test_child = false;
 // implementation of death tests.  User code MUST NOT use it.
 bool InDeathTestChild()
 {
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 
   // On Windows, death tests are thread-safe regardless of the value of the
   // death_test_style flag.
@@ -6832,7 +6832,7 @@ ExitedWithCode::ExitedWithCode(int exit_code)
 // ExitedWithCode function-call operator.
 bool ExitedWithCode::operator()(int exit_status) const
 {
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 
   return exit_status == exit_code_;
 
@@ -6843,7 +6843,7 @@ bool ExitedWithCode::operator()(int exit_status) const
 #endif // GTEST_OS_WINDOWS
 }
 
-#if !GTEST_OS_WINDOWS
+#if (!defined(GTEST_OS_WINDOWS) || !GTEST_OS_WINDOWS)
 // KilledBySignal constructor.
 KilledBySignal::KilledBySignal(int signum)
   : signum_(signum)
@@ -6867,7 +6867,7 @@ static std::string ExitSummary(int exit_code)
 {
   Message m;
 
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 
   m << "Exited with exit status " << exit_code;
 
@@ -6895,7 +6895,7 @@ bool ExitedUnsuccessfully(int exit_status)
   return !ExitedWithCode(0)(exit_status);
 }
 
-#if !GTEST_OS_WINDOWS
+#if (!defined(GTEST_OS_WINDOWS) || !GTEST_OS_WINDOWS)
 // Generates a textual failure message when a death test finds more than
 // one thread running, or cannot determine the number of threads, prior
 // to executing the given statement.  It is the responsibility of the
@@ -7323,7 +7323,7 @@ bool DeathTestImpl::Passed(bool status_ok)
   return success;
 }
 
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 // WindowsDeathTest implements death tests on Windows. Due to the
 // specifics of starting new processes on Windows, death tests there are
 // always threadsafe, and Google Test considers the
@@ -7680,7 +7680,7 @@ struct ExecDeathTestArgs
   int close_fd; // File descriptor to close; the read end of a pipe
 };
 
-#if GTEST_OS_MAC
+#if defined(GTEST_OS_MAC) && GTEST_OS_MAC
 inline char** GetEnviron()
 {
   // When Google Test is built as a framework on MacOS X, the environ variable
@@ -7698,7 +7698,7 @@ inline char** GetEnviron()
 }
 #endif // GTEST_OS_MAC
 
-#if !GTEST_OS_QNX
+#if (!defined(GTEST_OS_QNX) || !GTEST_OS_QNX)
 // The main function for a threadsafe-style death test child process.
 // This function is called in a clone()-ed process and thus must avoid
 // any potentially unsafe operations like malloc or libc functions.
@@ -7765,7 +7765,7 @@ static pid_t ExecDeathTestSpawnChild(char* const* argv, int close_fd)
   ExecDeathTestArgs args = {argv, close_fd};
   pid_t child_pid = -1;
 
-#if GTEST_OS_QNX
+#if defined(GTEST_OS_QNX) && GTEST_OS_QNX
   // Obtains the current directory and sets it to be closed in the child
   // process.
   const int cwd_fd = open(".", O_RDONLY);
@@ -7923,7 +7923,7 @@ bool DefaultDeathTestFactory::Create(
     }
   }
 
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 
   if (GTEST_FLAG(death_test_style) == "threadsafe" || GTEST_FLAG(death_test_style) == "fast") {
     *test = new WindowsDeathTest(statement, regex, file, line);
@@ -7968,7 +7968,7 @@ static void SplitString(const ::std::string& str, char delimiter, ::std::vector<
   dest->swap(parsed);
 }
 
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 // Recreates the pipe and event handles from the provided parameters,
 // signals the event, and returns a file descriptor wrapped around the pipe
 // handle. This function is called in the child process only.
@@ -8051,7 +8051,7 @@ InternalRunDeathTestFlag* ParseInternalRunDeathTestFlag()
   SplitString(GTEST_FLAG(internal_run_death_test).c_str(), '|', &fields);
   int write_fd = -1;
 
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 
   unsigned int parent_process_id = 0;
   size_t write_handle_as_size_t = 0;
@@ -8115,12 +8115,12 @@ InternalRunDeathTestFlag* ParseInternalRunDeathTestFlag()
 
 #include <stdlib.h>
 
-#if GTEST_OS_WINDOWS_MOBILE
+#if defined(GTEST_OS_WINDOWS_MOBILE) && GTEST_OS_WINDOWS_MOBILE
 #include <windows.h>
-#elif GTEST_OS_WINDOWS
+#elif defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 #include <direct.h>
 #include <io.h>
-#elif GTEST_OS_SYMBIAN
+#elif defined(GTEST_OS_SYMBIAN) && GTEST_OS_SYMBIAN
 // Symbian OpenC has PATH_MAX in sys/syslimits.h
 #include <sys/syslimits.h>
 #else
@@ -8128,7 +8128,7 @@ InternalRunDeathTestFlag* ParseInternalRunDeathTestFlag()
 #include <climits> // Some Linux distributions define PATH_MAX here.
 #endif // GTEST_OS_WINDOWS_MOBILE
 
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 #define GTEST_PATH_MAX_ _MAX_PATH
 #elif defined(PATH_MAX)
 #define GTEST_PATH_MAX_ PATH_MAX
@@ -8142,7 +8142,7 @@ InternalRunDeathTestFlag* ParseInternalRunDeathTestFlag()
 namespace testing {
 namespace internal {
 
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 // On Windows, '\\' is the standard path separator, but many tools and the
 // Windows API also accept '/' as an alternate path separator. Unless otherwise
 // noted, a file path can contain either kind of path separators, or a mixture
@@ -8151,7 +8151,7 @@ const char kPathSeparator = '\\';
 const char kAlternatePathSeparator = '/';
 const char kPathSeparatorString[] = "\\";
 const char kAlternatePathSeparatorString[] = "/";
-#if GTEST_OS_WINDOWS_MOBILE
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS_MOBILE
 // Windows CE doesn't have a current directory. You should not use
 // the current directory in tests on Windows CE, but this at least
 // provides a reasonable fallback.
@@ -8180,11 +8180,11 @@ static bool IsPathSeparator(char c)
 // Returns the current working directory, or "" if unsuccessful.
 FilePath FilePath::GetCurrentDir()
 {
-#if GTEST_OS_WINDOWS_MOBILE
+#if defined(GTEST_OS_WINDOWS_MOBILE) && GTEST_OS_WINDOWS_MOBILE
   // Windows CE doesn't have a current directory, so we just return
   // something reasonable.
   return FilePath(kCurrentDirectoryString);
-#elif GTEST_OS_WINDOWS
+#elif defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
   char cwd[GTEST_PATH_MAX_ + 1] = {'\0'};
   return FilePath(_getcwd(cwd, sizeof(cwd)) == NULL ? "" : cwd);
 #else
@@ -8283,7 +8283,7 @@ FilePath FilePath::ConcatPaths(const FilePath& directory, const FilePath& relati
 // either a file, directory, or whatever.
 bool FilePath::FileOrDirectoryExists() const
 {
-#if GTEST_OS_WINDOWS_MOBILE
+#if defined(GTEST_OS_WINDOWS_MOBILE) && GTEST_OS_WINDOWS_MOBILE
   LPCWSTR unicode = String::AnsiToUtf16(pathname_.c_str());
   const DWORD attributes = GetFileAttributes(unicode);
   delete[] unicode;
@@ -8299,7 +8299,7 @@ bool FilePath::FileOrDirectoryExists() const
 bool FilePath::DirectoryExists() const
 {
   bool result = false;
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
   // Don't strip off trailing separator if path is a root directory on
   // Windows (like "C:\\").
   const FilePath& path(IsRootDirectory() ? *this : RemoveTrailingPathSeparator());
@@ -8307,7 +8307,7 @@ bool FilePath::DirectoryExists() const
   const FilePath& path(*this);
 #endif
 
-#if GTEST_OS_WINDOWS_MOBILE
+#if defined(GTEST_OS_WINDOWS_MOBILE) && GTEST_OS_WINDOWS_MOBILE
   LPCWSTR unicode = String::AnsiToUtf16(path.c_str());
   const DWORD attributes = GetFileAttributes(unicode);
   delete[] unicode;
@@ -8326,7 +8326,7 @@ bool FilePath::DirectoryExists() const
 // root directory per disk drive.)
 bool FilePath::IsRootDirectory() const
 {
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
   // TODO(wan@google.com): on Windows a network share like
   // \\server\share can be a root directory, although it cannot be the
   // current directory.  Handle this properly.
@@ -8340,7 +8340,7 @@ bool FilePath::IsRootDirectory() const
 bool FilePath::IsAbsolutePath() const
 {
   const char* const name = pathname_.c_str();
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
   return pathname_.length() >= 3 && ((name[0] >= 'a' && name[0] <= 'z') || (name[0] >= 'A' && name[0] <= 'Z'))
          && name[1] == ':' && IsPathSeparator(name[2]);
 #else
@@ -8397,12 +8397,12 @@ bool FilePath::CreateDirectoriesRecursively() const
 // exist. Not named "CreateDirectory" because that's a macro on Windows.
 bool FilePath::CreateFolder() const
 {
-#if GTEST_OS_WINDOWS_MOBILE
+#if defined(GTEST_OS_WINDOWS_MOBILE) && GTEST_OS_WINDOWS_MOBILE
   FilePath removed_sep(this->RemoveTrailingPathSeparator());
   LPCWSTR unicode = String::AnsiToUtf16(removed_sep.c_str());
   int result = CreateDirectory(unicode, NULL) ? 0 : -1;
   delete[] unicode;
-#elif GTEST_OS_WINDOWS
+#elif defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
   int result = _mkdir(pathname_.c_str());
 #else
   int result = mkdir(pathname_.c_str(), 0777);
@@ -8496,22 +8496,22 @@ void FilePath::Normalize()
 #include <stdio.h>
 #include <string.h>
 
-#if GTEST_OS_WINDOWS_MOBILE
+#if defined(GTEST_OS_WINDOWS_MOBILE) && GTEST_OS_WINDOWS_MOBILE
 #include <windows.h> // For TerminateProcess()
-#elif GTEST_OS_WINDOWS
+#elif defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 #include <io.h>
 #include <sys/stat.h>
 #else
 #include <unistd.h>
 #endif // GTEST_OS_WINDOWS_MOBILE
 
-#if GTEST_OS_MAC
+#if defined(GTEST_OS_MAC) && GTEST_OS_MAC
 #include <mach/mach_init.h>
 #include <mach/task.h>
 #include <mach/vm_map.h>
 #endif // GTEST_OS_MAC
 
-#if GTEST_OS_QNX
+#if defined(GTEST_OS_QNX) && GTEST_OS_QNX
 #include <devctl.h>
 #include <sys/procfs.h>
 #endif // GTEST_OS_QNX
@@ -8537,7 +8537,7 @@ const int kStdOutFileno = STDOUT_FILENO;
 const int kStdErrFileno = STDERR_FILENO;
 #endif // _MSC_VER
 
-#if GTEST_OS_MAC
+#if defined(GTEST_OS_MAC) && GTEST_OS_MAC
 
 // Returns the number of threads running in the process, or 0 to indicate that
 // we cannot detect it.
@@ -8557,7 +8557,8 @@ size_t GetThreadCount()
   }
 }
 
-#elif GTEST_OS_QNX
+#elif defined(GTEST_OS_QNX) && GTEST_OS_QNX
+
 
 // Returns the number of threads running in the process, or 0 to indicate that
 // we cannot detect it.
@@ -9001,7 +9002,7 @@ public:
     : fd_(fd)
     , uncaptured_fd_(dup(fd))
   {
-#if GTEST_OS_WINDOWS
+#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
     char temp_dir_path[MAX_PATH + 1] = {'\0'}; // NOLINT
     char temp_file_path[MAX_PATH + 1] = {'\0'}; // NOLINT
 
@@ -9019,7 +9020,7 @@ public:
 // directory, so we create the temporary file in the /tmp directory
 // instead. We use /tmp on most systems, and /sdcard on Android.
 // That's because Android doesn't have /tmp.
-#if GTEST_OS_LINUX_ANDROID
+#if defined(GTEST_OS_LINUX_ANDROID) && GTEST_OS_LINUX_ANDROID
     // Note: Android applications are expected to call the framework's
     // Context.getExternalStorageDirectory() method through JNI to get
     // the location of the world-writable SD Card directory. However,
@@ -9189,7 +9190,7 @@ const ::std::vector<testing::internal::string>& GetInjectableArgvs()
 }
 #endif // GTEST_HAS_DEATH_TEST
 
-#if GTEST_OS_WINDOWS_MOBILE
+#if defined(GTEST_OS_WINDOWS_MOBILE) && GTEST_OS_WINDOWS_MOBILE
 namespace posix {
 void Abort()
 {
