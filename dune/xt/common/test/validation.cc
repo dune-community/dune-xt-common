@@ -48,9 +48,9 @@ struct ValidationTest : public testing::Test
       const S center = S(3);
       const S upper = S(6);
 
-      test(lower, upper, lower+1);
+      test(lower, upper, lower + 1);
       test(lower, upper, center);
-      test(lower, upper, upper-1);
+      test(lower, upper, upper - 1);
 
       RNGType rng(init_bound<T>(lower), init_bound<T>(upper));
       boost::array<T, 10> ar = list_of<T>().repeat_fun(9, rng);

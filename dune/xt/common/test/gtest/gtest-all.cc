@@ -4247,7 +4247,8 @@ void ColoredPrintf(GTestColor color, const char* fmt, ...)
   va_list args;
   va_start(args, fmt);
 
-#if (defined(GTEST_OS_WINDOWS_MOBILE) && GTEST_OS_WINDOWS_MOBILE) || (defined(GTEST_OS_SYMBIAN) && GTEST_OS_SYMBIAN) || (defined(GTEST_OS_ZOS) && GTEST_OS_ZOS) || (defined(GTEST_OS_IOS) && GTEST_OS_IOS)
+#if (defined(GTEST_OS_WINDOWS_MOBILE) && GTEST_OS_WINDOWS_MOBILE) || (defined(GTEST_OS_SYMBIAN) && GTEST_OS_SYMBIAN)   \
+    || (defined(GTEST_OS_ZOS) && GTEST_OS_ZOS) || (defined(GTEST_OS_IOS) && GTEST_OS_IOS)
   const bool use_color = false;
 #else
   static const bool in_color_mode = ShouldUseColor(posix::IsATTY(posix::FileNo(stdout)) != 0);
