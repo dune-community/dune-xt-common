@@ -196,13 +196,13 @@ Configuration& Configuration::add(const ParameterTree& other, const std::string 
   return *this;
 } // ... add(...)
 
-Configuration& Configuration::operator+=(Configuration& other)
+Configuration& Configuration::operator+=(const Configuration& other)
 {
   add(other);
   return *this;
 } // ... operator+=
 
-Configuration Configuration::operator+(Configuration& other)
+Configuration Configuration::operator+(const Configuration& other) const
 {
   Configuration ret(*this);
   ret += other;

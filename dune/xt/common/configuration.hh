@@ -300,10 +300,10 @@ public:
   Configuration& add(const ParameterTree& other, const std::string sub_id = "", const bool overwrite = false);
 
   //! add another Configuration to this (merge tree_s and requests_map_s)
-  Configuration& operator+=(Configuration& other);
+  Configuration& operator+=(const Configuration& other);
 
   //! add this and another Configuration (merge tree_s and requests_map_s)
-  Configuration operator+(Configuration& other);
+  Configuration operator+(const Configuration& other) const;
 
   /**
    * \}
