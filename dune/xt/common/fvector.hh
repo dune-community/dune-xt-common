@@ -133,7 +133,7 @@ public:
     : BaseType(value)
   {
   }
-}; // class FieldVector
+}; // class ValueInitFieldVector
 
 //! Specialization of VectorAbstraction for Dune::XT::Common::FieldVector
 template <class K, int SIZE>
