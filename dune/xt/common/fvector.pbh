@@ -1,0 +1,110 @@
+// This file is part of the dune-xt-common project:
+//   https://github.com/dune-community/dune-xt-common
+// The copyright lies with the authors of this file (see below).
+// License: Dual licensed as  BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+//      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
+//          with "runtime exception" (http://www.dune-project.org/license.html)
+// Authors:
+//   Felix Schindler (2016)
+
+#ifndef DUNE_XT_COMMON_FVECTOR_PBH
+#define DUNE_XT_COMMON_FVECTOR_PBH
+#if HAVE_DUNE_PYBINDXI
+
+#include <sstream>
+
+#include <dune/pybindxi/pybind11.h>
+#include <dune/pybindxi/operators.h>
+
+#include "string.hh"
+#include "fvector.hh"
+
+namespace Dune {
+namespace XT {
+namespace Common {
+
+
+/** \todo Add list <-> FieldVector voncersion, see pybind11/stl.hh **/
+template <class K, int SIZE>
+pybind11::class_<Dune::XT::Common::FieldVector<K, SIZE>> bind_FieldVector(pybind11::module& m, const std::string& K_str)
+{
+  namespace py = pybind11;
+  using namespace pybind11::literals;
+
+  typedef Dune::XT::Common::FieldVector<K, SIZE> C;
+
+  py::class_<C> c(m,
+                  std::string("FieldVector_" + K_str + "_" + to_string(SIZE)).c_str(),
+                  std::string("FieldVector_" + K_str + "_" + to_string(SIZE)).c_str());
+
+  c.def(py::init<K>(), "value"_a = 0, "Assigns all elements of the vector with the given value.");
+  c.def("__init__",
+        [](C& vec, py::iterable it) {
+          new (&vec) C(0);
+          try {
+            size_t ii = 0;
+            for (py::handle h : it) {
+              if (ii >= vec.size())
+                throw pybind11::index_error(to_string(ii));
+              vec[ii++] = h.cast<K>();
+            }
+          } catch (...) {
+            vec.~C();
+            throw;
+          }
+        },
+        "Assigns the elements of the iterable to the first elements of the vector and fills the rest with 0. "
+        "Throws an error if the iterable has too many elements");
+
+  c.def("__repr__", [K_str](const C& self) {
+    return "FieldVector_" + K_str + "_" + to_string(SIZE) + "(" + to_string(self) + ")";
+  });
+  c.def("__len__", [](const C& /*self*/) { return SIZE; });
+  c.def("__getitem__", [](const C& vec, size_t ii) -> K {
+    if (ii >= vec.size())
+      throw pybind11::index_error();
+    return vec[ii];
+  });
+  c.def("__setitem__", [](C& vec, size_t ii, const K& value) {
+    if (ii >= vec.size())
+      throw pybind11::index_error();
+    vec[ii] = value;
+  });
+  c.def("__iter__",
+        [](C& vec) {
+          return py::
+              make_iterator<py::return_value_policy::reference_internal, typename C::iterator, typename C::iterator, K>(
+                  vec.begin(), vec.end());
+        },
+        pybind11::keep_alive<0, 1>() /*Essential: keep object alive while iterator exists!*/);
+
+  c.def(py::self == py::self);
+  c.def(py::self != py::self);
+  //  c.def(py::self + py::self); // see below
+  c.def(py::self += py::self);
+  //  c.def(py::self - py::self); // see below
+  c.def(py::self -= py::self);
+  c.def(py::self * py::self);
+  c.def(py::self * K());
+  //  c.def(py::self *= K()); // TypeError: Unable to convert function return value to a Python type! The signature was
+  //  c.def(py::self /= K()); //            (self: common.FieldVector_int_4, arg0: int) -> Dune::FieldVector<long, 4>
+
+  c.def("assign_from", [](C& self, const C& other) { self = other; }, "other"_a);
+  c.def("size", &C::size);
+  c.def("axpy", [](C& self, const K& a, const C& y) { self.axpy(a, y); }, "a"_a, "y"_a);
+  c.def("dot", [](C& self, const C& y) { self.dot(y); }, "y"_a);
+  c.def("one_norm", [](const C& self) { return self.one_norm(); });
+  c.def("two_norm", &C::two_norm);
+  c.def("two_norm2", &C::two_norm2);
+  c.def("infinity_norm", &C::infinity_norm);
+
+  return c;
+} // bind_Configuration
+
+
+} // namespace Common
+} // namespace XT
+} // namespace Dune
+
+#endif // HAVE_DUNE_PYBINDXI
+#endif // DUNE_XT_COMMON_FVECTOR_PBH
