@@ -38,20 +38,26 @@ macro(BEGIN_TESTCASES)
                                          INIFILE ${inifile}
                                          BASENAME test_${testbase}
                                          CREATED_TARGETS targetlist_${testbase}
+                                         ADDED_TESTS testlist_${testbase}
                                          SCRIPT ${dune-xt-common-path}/bin/dune_execute.py
                                          ${DEBUG_MACRO_TESTS})
-                    foreach(testname ${targetlist_${testbase}})
-                        target_link_libraries( ${testname} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common )
-                        list(APPEND dxt_test_binaries ${testname} )
-                    endforeach(testname)
+                    foreach(target ${targetlist_${testbase}})
+                        target_link_libraries( ${target} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common )
+                        list(APPEND dxt_test_binaries ${target} )
+                        set(dxt_test_names_${target} ${testlist_${testbase}_${target}})
+                    endforeach(target)
+
                 else( EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.mini )
-                    add_executable( test_${testbase} ${source} ${COMMON_HEADER} )
-                    target_link_libraries( test_${testbase} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common )
-                    add_test( NAME test_${testbase} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/test_${testbase}
-                                          --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/test_${testbase}.xml )
-                    list(APPEND dxt_test_binaries test_${testbase} )
+                    set(target test_${testbase})
+                    add_executable( ${target} ${source} ${COMMON_HEADER} )
+                    target_link_libraries( ${target} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common )
+                    add_test( NAME ${target} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${target}
+                                          --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/${target}.xml )
+                    list(APPEND dxt_test_binaries ${target} )
+                    set(dxt_test_names_${target} ${target})
 	        endif( EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.mini )
         endforeach( source )
+        message(STATUS LLL "${dxt_test_names}")
 endmacro(BEGIN_TESTCASES)
 
 macro(END_TESTCASES)
