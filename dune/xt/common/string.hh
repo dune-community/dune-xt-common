@@ -56,7 +56,7 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
-// forward, std::string variant needed in internal::from_string
+// forward, std::string variant needed in internal::convert_from_string
 
 /**
  * \brief  convenience wrapper around boost::algorithm::split to split one string into a vector of strings
@@ -86,7 +86,7 @@ static constexpr const std::size_t default_to_string_precision = 6u;
 
 /**
  * \brief Reads an object from a string.
- * \sa    internal::from_string for implementations
+ * \sa    internal::convert_from_string for implementations
  * \param ss   string to read from
  * \param size Determines the size of the returning container (size if T is a vector type, rows if T is a matrix type,
  *             ignored if T is a scalar type; 0 means automatic).
@@ -96,17 +96,17 @@ static constexpr const std::size_t default_to_string_precision = 6u;
 template <class T>
 static inline T from_string(std::string ss, const size_t size = 0, const size_t cols = 0)
 {
-  return internal::from_string<T>(ss, size, cols);
+  return internal::convert_from_string<T>(ss, size, cols);
 }
 
 /**
  * \brief Converts an object to string.
- * \sa    internal::to_string for implementations
+ * \sa    internal::convert_to_string for implementations
  */
 template <class T>
 static inline std::string to_string(const T& ss, const size_t precision = default_to_string_precision)
 {
-  return internal::to_string(ss, precision);
+  return internal::convert_to_string(ss, precision);
 }
 
 /**
