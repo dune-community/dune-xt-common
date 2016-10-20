@@ -98,7 +98,7 @@ static inline T convert_safely(std::string ss)
 template <class T, bool anything = true>
 struct Helper
 {
-  static inline T from_string(std::string ss)
+  static inline T convert_from_string(std::string ss)
   {
     return convert_safely<T>(ss);
   }
@@ -108,7 +108,7 @@ struct Helper
 template <bool anything>
 struct Helper<bool, anything>
 {
-  static inline bool from_string(std::string ss)
+  static inline bool convert_from_string(std::string ss)
   {
     std::string ss_lower_case = ss;
     std::transform(ss_lower_case.begin(), ss_lower_case.end(), ss_lower_case.begin(), ::tolower);
@@ -126,7 +126,7 @@ struct Helper<bool, anything>
   template <bool anything>                                                                                             \
   struct Helper<tn, anything>                                                                                          \
   {                                                                                                                    \
-    static inline tn from_string(std::string ss)                                                                       \
+    static inline tn convert_from_string(std::string ss)                                                               \
     {                                                                                                                  \
       return std::sto##tns(ss);                                                                                        \
     }                                                                                                                  \
@@ -146,16 +146,16 @@ DUNE_XT_COMMON_STRING_GENERATE_HELPER(long double, ld)
 // variant for everything that is not a matrix or a vector or complex value
 template <class T>
 static inline typename std::enable_if<!is_vector<T>::value && !is_matrix<T>::value && !is_complex<T>::value, T>::type
-from_string(std::string ss, const size_t DXTC_DEBUG_ONLY(rows) = 0, const size_t DXTC_DEBUG_ONLY(cols) = 0)
+convert_from_string(std::string ss, const size_t DXTC_DEBUG_ONLY(rows) = 0, const size_t DXTC_DEBUG_ONLY(cols) = 0)
 {
   assert(rows == 0);
   assert(cols == 0);
-  return Helper<T>::from_string(ss);
+  return Helper<T>::convert_from_string(ss);
 }
 
 template <class V>
 static inline typename std::enable_if<is_complex<V>::value, V>::type
-from_string(std::string ss, const size_t /*size*/ = 0, const size_t /*cols*/ = 0)
+convert_from_string(std::string ss, const size_t /*size*/ = 0, const size_t /*cols*/ = 0)
 {
   boost::algorithm::trim(ss);
   if (ss.size() < 1)
@@ -164,20 +164,20 @@ from_string(std::string ss, const size_t /*size*/ = 0, const size_t /*cols*/ = 0
   typedef typename V::value_type T;
   T re(0), im(0);
   const auto sign_pos = ss.find("+", 1) != string::npos ? ss.find("+", 1) : ss.find("-", 1);
-  re = from_string<T>(ss.substr(0, sign_pos));
+  re = convert_from_string<T>(ss.substr(0, sign_pos));
   if (sign_pos != string::npos) {
     ss = ss.substr(sign_pos);
     const auto im_pos = ss.find("i");
     if (im_pos == string::npos)
       DUNE_THROW(Exceptions::conversion_error, "Error converting " << ss << " no imaginary unit");
-    im = from_string<T>(ss.substr(0, im_pos));
+    im = convert_from_string<T>(ss.substr(0, im_pos));
   }
   return V(re, im);
 }
 
 template <class VectorType>
 static inline typename std::enable_if<is_vector<VectorType>::value, VectorType>::type
-from_string(std::string ss, const size_t size, const size_t DXTC_DEBUG_ONLY(cols) = 0)
+convert_from_string(std::string ss, const size_t size, const size_t DXTC_DEBUG_ONLY(cols) = 0)
 {
   auto vector_str = ss;
   typedef typename VectorAbstraction<VectorType>::S S;
@@ -210,11 +210,11 @@ from_string(std::string ss, const size_t size, const size_t DXTC_DEBUG_ONLY(cols
                                                            << "]'");
     VectorType ret = VectorAbstraction<VectorType>::create(actual_size);
     for (size_t ii = 0; ii < actual_size; ++ii)
-      ret[ii] = from_string<S>(trim_copy_safely(tokens[ii]));
+      ret[ii] = convert_from_string<S>(trim_copy_safely(tokens[ii]));
     return ret;
   } else {
     // we treat this as a scalar
-    const auto val = from_string<S>(trim_copy_safely(vector_str));
+    const auto val = convert_from_string<S>(trim_copy_safely(vector_str));
     const size_t automatic_size = (size == 0 ? 1 : size);
     const size_t actual_size =
         VectorAbstraction<VectorType>::has_static_size ? VectorAbstraction<VectorType>::static_size : automatic_size;
@@ -233,11 +233,11 @@ from_string(std::string ss, const size_t size, const size_t DXTC_DEBUG_ONLY(cols
       ret[ii] = val;
     return ret;
   }
-} // ... from_string(...)
+} // ... convert_from_string(...)
 
 template <class MatrixType>
 static inline typename std::enable_if<is_matrix<MatrixType>::value, MatrixType>::type
-from_string(std::string matrix_str, const size_t rows, const size_t cols)
+convert_from_string(std::string matrix_str, const size_t rows, const size_t cols)
 {
   typedef typename MatrixAbstraction<MatrixType>::S S;
   // check if this is a matrix
@@ -301,12 +301,13 @@ from_string(std::string matrix_str, const size_t rows, const size_t cols)
       const std::string row_token = boost::algorithm::trim_copy(row_tokens[rr]);
       const auto column_tokens = tokenize<std::string>(row_token, " ", boost::algorithm::token_compress_on);
       for (size_t cc = 0; cc < actual_cols; ++cc)
-        MatrixAbstraction<MatrixType>::set_entry(ret, rr, cc, from_string<S>(trim_copy_safely(column_tokens[cc])));
+        MatrixAbstraction<MatrixType>::set_entry(
+            ret, rr, cc, convert_from_string<S>(trim_copy_safely(column_tokens[cc])));
     }
     return ret;
   } else {
     // we treat this as a scalar
-    const S val = from_string<S>(trim_copy_safely(matrix_str));
+    const S val = convert_from_string<S>(trim_copy_safely(matrix_str));
     const size_t automatic_rows = (rows == 0 ? 1 : rows);
     const size_t actual_rows =
         MatrixAbstraction<MatrixType>::has_static_size ? MatrixAbstraction<MatrixType>::static_rows : automatic_rows;
@@ -339,12 +340,12 @@ from_string(std::string matrix_str, const size_t rows, const size_t cols)
         MatrixAbstraction<MatrixType>::set_entry(ret, rr, cc, val);
     return ret;
   }
-} // ... from_string(...)
+} // ... convert_from_string(...)
 
 // variant for everything that is not a matrix, a vector or any of the types specified below
 template <class T>
 static inline typename std::enable_if<!is_vector<T>::value && !is_matrix<T>::value, std::string>::type
-to_string(const T& ss, const std::size_t precision)
+convert_to_string(const T& ss, const std::size_t precision)
 {
   std::ostringstream out;
   out << std::setprecision(boost::numeric_cast<int>(precision)) << ss;
@@ -352,58 +353,58 @@ to_string(const T& ss, const std::size_t precision)
 }
 
 template <typename T>
-static inline std::string to_string(const std::complex<T>& val, const std::size_t precision)
+static inline std::string convert_to_string(const std::complex<T>& val, const std::size_t precision)
 {
   using namespace std;
   stringstream os;
   const auto im = imag(val);
   const string sign = signum(im) < 0 ? "" : "+";
-  const auto real_str = internal::to_string(real(val), precision);
-  const auto imag_str = internal::to_string(im, precision);
+  const auto real_str = convert_to_string(real(val), precision);
+  const auto imag_str = convert_to_string(im, precision);
   os << real_str << sign << imag_str << "i";
   return os.str();
 }
 
 template <int size>
-static inline std::string to_string(const Dune::bigunsignedint<size>& ss, const std::size_t /*precision*/)
+static inline std::string convert_to_string(const Dune::bigunsignedint<size>& ss, const std::size_t /*precision*/)
 {
   std::stringstream os;
   os << ss;
   return os.str();
 }
 
-inline std::string to_string(const char* ss, const std::size_t /*precision*/)
+inline std::string convert_to_string(const char* ss, const std::size_t /*precision*/)
 {
   return std::string(ss);
 }
 
-inline std::string to_string(char ss, const std::size_t /*precision*/)
+inline std::string convert_to_string(char ss, const std::size_t /*precision*/)
 {
   return std::string(1, ss);
 }
 
-inline std::string to_string(const std::string ss, const std::size_t /*precision*/)
+inline std::string convert_to_string(const std::string ss, const std::size_t /*precision*/)
 {
   return std::string(ss);
 }
 
 template <class V>
-static inline typename std::enable_if<is_vector<V>::value, std::string>::type to_string(const V& vec,
-                                                                                        const std::size_t precision)
+static inline typename std::enable_if<is_vector<V>::value, std::string>::type
+convert_to_string(const V& vec, const std::size_t precision)
 {
   std::string ret = "[";
   for (auto ii : value_range(vec.size())) {
     if (ii > 0)
       ret += " ";
-    ret += internal::to_string(vec[ii], precision);
+    ret += convert_to_string(vec[ii], precision);
   }
   ret += "]";
   return ret;
-} // ... to_string(...)
+} // ... convert_to_string(...)
 
 template <class M>
-static inline typename std::enable_if<is_matrix<M>::value, std::string>::type to_string(const M& mat,
-                                                                                        const std::size_t precision)
+static inline typename std::enable_if<is_matrix<M>::value, std::string>::type
+convert_to_string(const M& mat, const std::size_t precision)
 {
   std::string ret = "[";
   for (auto rr : value_range(MatrixAbstraction<M>::rows(mat))) {
@@ -412,12 +413,12 @@ static inline typename std::enable_if<is_matrix<M>::value, std::string>::type to
     for (auto cc : value_range(MatrixAbstraction<M>::cols(mat))) {
       if (cc > 0)
         ret += " ";
-      ret += internal::to_string(MatrixAbstraction<M>::get_entry(mat, rr, cc), precision);
+      ret += convert_to_string(MatrixAbstraction<M>::get_entry(mat, rr, cc), precision);
     }
   }
   ret += "]";
   return ret;
-} // ... to_string(...)
+} // ... convert_to_string(...)
 
 } // namespace internal
 } // namespace Common
