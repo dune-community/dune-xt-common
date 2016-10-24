@@ -25,7 +25,6 @@ set(lib_dune_xt_common_sources common/filesystem.cc
 dune_library_add_sources(dunextcommon SOURCES ${lib_dune_xt_common_sources})
 
 add_analyze(${lib_dune_xt_common_sources})
-FILE( GLOB_RECURSE _header "${CMAKE_CURRENT_SOURCE_DIR}/*.hh" )
 
 install(DIRECTORY ${DUNE_XT_COMMON_TEST_DIR}/gtest
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/xt/test/
