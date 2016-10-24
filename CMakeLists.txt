@@ -90,8 +90,6 @@ dune_enable_all_packages(INCLUDE_DIRS ${dune-xt-common_SOURCE_DIR}/dune
 include(DuneUtils)
 include(GridUtils)
 
-include(DunePybindxiUtils)
-
 add_header_listing()
 make_dependent_modules_sys_included()
 
