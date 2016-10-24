@@ -25,6 +25,11 @@ set(lib_dune_xt_common_sources common/filesystem.cc
 
 dune_library_add_sources(dunextcommon SOURCES ${lib_dune_xt_common_sources})
 
+if(dune-pybindxi_FOUND)
+  dune_pybindxi_add_module(common common/bindings.cc)
+  target_link_dune_default_libraries(common)
+endif()
+
 add_analyze(${lib_dune_xt_common_sources})
 
 install(DIRECTORY ${DUNE_XT_COMMON_TEST_DIR}/gtest
