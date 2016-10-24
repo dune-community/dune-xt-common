@@ -1,0 +1,93 @@
+// This file is part of the dune-xt-common project:
+//   https://github.com/dune-community/dune-xt-common
+// The copyright lies with the authors of this file (see below).
+// License: Dual licensed as  BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+//      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
+//          with "runtime exception" (http://www.dune-project.org/license.html)
+// Authors:
+//   Felix Schindler (2016)
+
+#ifndef DUNE_XT_COMMON_CONFIGURATION_PBH
+#define DUNE_XT_COMMON_CONFIGURATION_PBH
+#if HAVE_DUNE_PYBINDXI
+
+#include <dune/pybindxi/pybind11.h>
+#include <dune/pybindxi/operators.h>
+#include <dune/pybindxi/stl.h>
+
+#include "configuration.hh"
+
+namespace Dune {
+namespace XT {
+namespace Common {
+
+
+pybind11::class_<Configuration> bind_Configuration(pybind11::module& m)
+{
+  namespace py = pybind11;
+  using namespace pybind11::literals;
+
+  py::class_<Configuration> c(m, "Configuration", "Configuration");
+
+  c.def(py::init<>());
+  c.def(py::init<std::string, ssize_t>());
+  c.def(py::init<std::string, std::string>());
+  c.def(py::init<std::string, double>());
+
+  c.def("__repr__", [](const Configuration& cfg) { return "Configuration: " + cfg.report_string(); });
+
+  c.def("has_key", &Configuration::has_key);
+  c.def("has_sub", &Configuration::has_sub);
+  c.def("sub", &Configuration::sub, "sub_id"_a);
+  c.def("get_int",
+        [](const Configuration& self, const std::string& key) { return self.template get<ssize_t>(key); },
+        "key"_a);
+  c.def("get_str",
+        [](const Configuration& self, const std::string& key) { return self.template get<std::string>(key); },
+        "key"_a);
+  c.def("get_float",
+        [](const Configuration& self, const std::string& key) { return self.template get<double>(key); },
+        "key"_a);
+  c.def("set",
+        (void (Configuration::*)(std::string, const ssize_t&, const bool)) & Configuration::set,
+        "key"_a,
+        "value"_a,
+        "overwrite"_a = false);
+  c.def("set",
+        (void (Configuration::*)(std::string, const std::string&, const bool)) & Configuration::set,
+        "key"_a,
+        "value"_a,
+        "overwrite"_a = false);
+  c.def("set",
+        (void (Configuration::*)(std::string, const double&, const bool)) & Configuration::set,
+        "key"_a,
+        "value"_a,
+        "overwrite"_a = false);
+  c.def("add",
+        (Configuration & (Configuration::*)(const Configuration&, const std::string, const bool)) & Configuration::add,
+        "other"_a,
+        "sub_id"_a,
+        "overwrite"_a);
+  c.def("empty", &Configuration::empty);
+  c.def("flatten", &Configuration::flatten);
+
+  c.def(py::self + py::self);
+  c.def(py::self += py::self);
+
+  c.def("__setitem__", [](Configuration& self, const std::string& key, ssize_t value) { self.set(key, value, true); });
+  c.def("__setitem__",
+        [](Configuration& self, const std::string& key, const std::string& value) { self.set(key, value, true); });
+  c.def("__setitem__",
+        [](Configuration& self, const std::string& key, const double& value) { self.set(key, value, true); });
+  c.def("__getitem__", [](const Configuration& self, const std::string& key) { return self[key]; });
+
+  return c;
+} // bind_Configuration
+
+
+} // namespace Common
+} // namespace XT
+} // namespace Dune
+
+#endif // HAVE_DUNE_PYBINDXI
+#endif // DUNE_XT_COMMON_CONFIGURATION_PBH
