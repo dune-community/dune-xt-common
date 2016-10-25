@@ -32,6 +32,8 @@ PYBIND11_PLUGIN(common)
 {
   py::module m("common", "dune-xt-common");
 
+  Dune::XT::Common::bind_Exception(m);
+
   m.def("init_mpi",
         [](const std::vector<std::string>& args) {
           int argc = args.size();
@@ -40,8 +42,6 @@ PYBIND11_PLUGIN(common)
         },
         "args"_a = std::vector<std::string>());
 
-  Dune::XT::Common::bind_Exception(m);
-
 #define BIND_FIELD_VECTOR(V, T, S)                                                                                     \
   V<T, 0>(m, S);                                                                                                       \
   V<T, 1>(m, S);                                                                                                       \
@@ -49,9 +49,9 @@ PYBIND11_PLUGIN(common)
   V<T, 3>(m, S);                                                                                                       \
   V<T, 4>(m, S)
 
-  BIND_FIELD_VECTOR(Dune::XT::Common::bind_FieldVector, double, "float");
+  BIND_FIELD_VECTOR(Dune::XT::Common::bind_FieldVector, double, "double");
   BIND_FIELD_VECTOR(Dune::XT::Common::bind_FieldVector, ssize_t, "int");
-  BIND_FIELD_VECTOR(Dune::XT::Common::bind_XtCommonFieldVector, double, "float");
+  BIND_FIELD_VECTOR(Dune::XT::Common::bind_XtCommonFieldVector, double, "double");
   BIND_FIELD_VECTOR(Dune::XT::Common::bind_XtCommonFieldVector, ssize_t, "int");
 
 #undef BIND_FIELD_VECTOR
