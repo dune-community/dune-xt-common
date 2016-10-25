@@ -14,10 +14,12 @@
 #include <sstream>
 
 #include <dune/pybindxi/pybind11.h>
+#include <dune/pybindxi/cast.h>
 #include <dune/pybindxi/operators.h>
 
 #include "string.hh"
 #include "fvector.hh"
+
 
 namespace Dune {
 namespace XT {
@@ -53,7 +55,6 @@ void addbind_FieldVector_ctor_from_iterable(T& c)
 } // namespace internal
 
 
-/** \todo Add list <-> FieldVector conversion, see pybind11/stl.hh **/
 template <class K, int SIZE>
 pybind11::class_<Dune::XT::Common::FieldVector<K, SIZE>> bind_FieldVector(pybind11::module& m, const std::string& K_str)
 {
@@ -140,6 +141,65 @@ pybind11::class_<Dune::XT::Common::FieldVector<K, SIZE>> bind_XtCommonFieldVecto
 } // namespace Common
 } // namespace XT
 } // namespace Dune
+NAMESPACE_BEGIN(pybind11)
+NAMESPACE_BEGIN(detail)
+
+
+template <class Type>
+struct FieldVector_type_caster
+{
+  typedef typename Type::value_type K;
+  using type = Type;
+  using value_conv = make_caster<K>;
+
+  bool load(handle src, bool convert)
+  {
+    sequence s(src, true);
+    if (!s.check())
+      return false;
+    value_conv conv;
+    value *= K(0.0);
+    size_t ii = 0;
+    for (auto it : s) {
+      if (ii >= value.size())
+        return false;
+      if (!conv.load(it, convert))
+        return false;
+      value[ii++] = K(conv);
+    }
+    return true;
+  } // ... load(...)
+
+  static handle cast(const Type& src, return_value_policy policy, handle parent)
+  {
+    list l(src.size());
+    for (size_t ii = 0; ii < src.size(); ++ii) {
+      object val = object(value_conv::cast(src[ii], policy, parent), false);
+      if (!val)
+        return handle();
+      PyList_SET_ITEM(l.ptr(), ii, val.release().ptr()); // steals a reference
+    }
+    return l.release();
+  } // ... cast(...)
+
+  PYBIND11_TYPE_CASTER(Type, _("List[") + value_conv::name() + _("]"));
+}; // struct FieldVector_type_caster
+
+
+template <class K, int SIZE>
+struct type_caster<Dune::FieldVector<K, SIZE>> : public FieldVector_type_caster<Dune::FieldVector<K, SIZE>>
+{
+};
+
+template <class K, int SIZE>
+struct type_caster<Dune::XT::Common::FieldVector<K, SIZE>>
+    : public FieldVector_type_caster<Dune::XT::Common::FieldVector<K, SIZE>>
+{
+};
+
+
+NAMESPACE_END(detail)
+NAMESPACE_END(pybind11)
 
 #endif // HAVE_DUNE_PYBINDXI
 #endif // DUNE_XT_COMMON_FVECTOR_PBH
