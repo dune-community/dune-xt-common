@@ -71,7 +71,8 @@ std::string print_vector(const std::vector<double>& vec)
 } // namespace internal
 
 void check_eoc_study_for_success(const Common::ConvergenceStudy& study,
-                                 const std::map<std::string, std::vector<double>>& results_map)
+                                 const std::map<std::string, std::vector<double>>& results_map,
+                                 const double& zero_tolerance)
 {
   for (const auto& norm : study.used_norms()) {
     const auto expected_results = study.expected_results(norm);
@@ -84,24 +85,33 @@ void check_eoc_study_for_success(const Common::ConvergenceStudy& study,
     if (actual_results.size() > expected_results.size())
       return;
     for (size_t ii = 0; ii < actual_results.size(); ++ii) {
-      const auto actual_result = internal::convert_to_scientific(actual_results[ii], 2);
-      const auto expected_result = internal::convert_to_scientific(expected_results[ii], 2);
-      const auto actual_exponent = actual_result.second;
-      const auto expected_exponent = expected_result.second;
-      EXPECT_EQ(expected_exponent, actual_exponent)
-          << "          Exponent comparison (in scientific notation, precision 2) failed for\n"
-          << "          norm: " << norm << "\n"
-          << "          actual_results[" << ii << "]   = " << actual_results[ii] << "\n"
-          << "          expected_results[" << ii << "] = " << expected_results[ii];
-      if (actual_exponent != expected_exponent)
-        return;
-      const auto actual_coefficient = actual_result.first;
-      const auto expected_coefficient = expected_result.first;
-      EXPECT_EQ(expected_coefficient, actual_coefficient)
-          << "          Coefficient comparison (in scientific notation, precision 2) failed for\n"
-          << "          norm: " << norm << "\n"
-          << "          actual_results[" << ii << "]   = " << actual_results[ii] << "\n"
-          << "          expected_results[" << ii << "] = " << expected_results[ii];
+      if (!(expected_results[ii] < 0.0 || expected_results[ii] > 0.0)) {
+        if (std::abs(actual_results[ii]) > zero_tolerance) {
+          EXPECT_TRUE(false) << "Expected result is interpreted as zero and result is not close enough to zero!\n"
+                             << "          zero_tolerance: " << zero_tolerance << "\n"
+                             << "          actual_results[" << ii << "]   = " << actual_results[ii] << "\n"
+                             << "          expected_results[" << ii << "] = " << expected_results[ii];
+        }
+      } else {
+        const auto actual_result = internal::convert_to_scientific(actual_results[ii], 2);
+        const auto expected_result = internal::convert_to_scientific(expected_results[ii], 2);
+        const auto actual_exponent = actual_result.second;
+        const auto expected_exponent = expected_result.second;
+        EXPECT_EQ(expected_exponent, actual_exponent)
+            << "          Exponent comparison (in scientific notation, precision 2) failed for\n"
+            << "          norm: " << norm << "\n"
+            << "          actual_results[" << ii << "]   = " << actual_results[ii] << "\n"
+            << "          expected_results[" << ii << "] = " << expected_results[ii];
+        if (actual_exponent != expected_exponent)
+          return;
+        const auto actual_coefficient = actual_result.first;
+        const auto expected_coefficient = expected_result.first;
+        EXPECT_EQ(expected_coefficient, actual_coefficient)
+            << "          Coefficient comparison (in scientific notation, precision 2) failed for\n"
+            << "          norm: " << norm << "\n"
+            << "          actual_results[" << ii << "]   = " << actual_results[ii] << "\n"
+            << "          expected_results[" << ii << "] = " << expected_results[ii];
+      }
     }
   }
 } // ... check_eoc_study_for_success(...)
