@@ -39,7 +39,7 @@ macro(BEGIN_TESTCASES)
                                          BASENAME test_${testbase}
                                          CREATED_TARGETS targetlist_${testbase}
                                          ADDED_TESTS testlist_${testbase}
-                                         SCRIPT ${dune-xt-common-path}/bin/dune_execute.py
+                                         SCRIPT dune_xt_execute.py
                                          ${DEBUG_MACRO_TESTS})
                     foreach(target ${targetlist_${testbase}})
                         target_link_libraries( ${target} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common )

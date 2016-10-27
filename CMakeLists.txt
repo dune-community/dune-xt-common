@@ -90,10 +90,6 @@ dune_enable_all_packages(INCLUDE_DIRS ${dune-xt-common_SOURCE_DIR}/dune
 include(DuneUtils)
 include(GridUtils)
 
-# add symlink for dune_execute.py to build-directory to be able to access it from other (xt-) modules
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
-dune_symlink_to_source_files(FILES bin/dune_execute.py)
-
 add_header_listing()
 make_dependent_modules_sys_included()
 
