@@ -13,4 +13,5 @@ setup(name='dune.xt',
       packages=['dune.xt'],
       install_requires=['binpacking==1.3'],
       scripts=['./scripts/generate_compare_functions.py',
-            './wrapper/dune_xt_execute.py'])
+               './scripts/distribute_testing.py'
+               './wrapper/dune_xt_execute.py'])

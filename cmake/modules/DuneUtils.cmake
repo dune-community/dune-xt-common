@@ -75,6 +75,11 @@ macro(END_TESTCASES)
                         DEPENDS test_binaries)
     add_custom_target(recheck COMMAND ${CMAKE_CTEST_COMMAND} --timeout ${DXT_TEST_TIMEOUT} --rerun-failed -j ${DXT_TEST_PROCS}
                         DEPENDS test_binaries)
+    foreach (target ${dxt_test_binaries})
+        set(all_sorted_testnames "${all_sorted_testnames}/${dxt_test_names_${target}}")
+    endforeach (target ${dxt_test_binaries})
+    add_custom_target(refresh_test_timings distribute_testing.py
+                        "${CMAKE_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" "${dxt_test_binaries}" "${all_sorted_testnames}" VERBATIM)
 endmacro(END_TESTCASES)
 
 ENABLE_TESTING()
