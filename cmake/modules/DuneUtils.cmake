@@ -22,6 +22,22 @@ endfunction()
 
 enable_testing()
 
+macro(get_headercheck_targets)
+# this is mostly c&p from dune-common, since we need a way to extract
+# all target names to pass to our load balancing script
+  if(ENABLE_HEADERCHECK)
+    get_property(headerlist GLOBAL PROPERTY headercheck_list)
+    foreach(header ${headerlist})
+      #do some name conversion
+      string(REGEX REPLACE ".*/([^/]*)" "\\1" simple ${header})
+      string(REPLACE ${PROJECT_SOURCE_DIR} "" rel ${header})
+      string(REGEX REPLACE "(.*)/[^/]*" "\\1" relpath ${rel})
+      string(REGEX REPLACE "/" "_" targname ${rel})
+      list(APPEND dxt_headercheck_targets "headercheck_${targname}")
+    endforeach(header ${headerlist})
+  endif(ENABLE_HEADERCHECK)
+endmacro(get_headercheck_targets)
+
 macro(BEGIN_TESTCASES)
 # https://cmake.org/cmake/help/v3.0/module/FindGTest.html http://purplekarrot.net/blog/cmake-and-test-suites.html
 	file( GLOB test_sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cc" )
@@ -57,7 +73,6 @@ macro(BEGIN_TESTCASES)
                     set(dxt_test_names_${target} ${target})
 	        endif( EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.mini )
         endforeach( source )
-        message(STATUS LLL "${dxt_test_names}")
 endmacro(BEGIN_TESTCASES)
 
 macro(END_TESTCASES)
@@ -78,11 +93,12 @@ macro(END_TESTCASES)
     foreach (target ${dxt_test_binaries})
         set(all_sorted_testnames "${all_sorted_testnames}/${dxt_test_names_${target}}")
     endforeach (target ${dxt_test_binaries})
-    add_custom_target(refresh_test_timings distribute_testing.py
-                        "${CMAKE_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" "${dxt_test_binaries}" "${all_sorted_testnames}" VERBATIM)
+    set(dxt_headercheck_targets "")
+    get_headercheck_targets(dxt_headercheck_targets)
+    add_custom_target(refresh_test_timings ${CMAKE_BINARY_DIR}/dune-env-3 distribute_testing.py
+                        "${CMAKE_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" "${dxt_test_binaries}"
+                        "${all_sorted_testnames}" "${dxt_headercheck_targets}" VERBATIM)
 endmacro(END_TESTCASES)
-
-ENABLE_TESTING()
 
 macro(add_header_listing)
     # header

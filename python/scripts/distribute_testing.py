@@ -66,27 +66,29 @@ def _redo(processes, keys, *args):
         print('*' * 79)
         raise cpe
 
-def do_timings(builddir, pickledir, binaries, testnames, processes):
+def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
     os.chdir(builddir)
     testlimit = -1
 
     binaries = binaries[:testlimit]
+    headerlibs = headerlibs[:testlimit]
+    targets = binaries+headerlibs
     compiles_fn = os.path.join(pickledir, 'compiles_' + pickle_file)
     try:
         compiles = pickle.load(open(compiles_fn, 'rb'))
-        if set(compiles.keys()) != set(binaries):
+        if set(compiles.keys()) != set(targets):
             print('redoing compiles due to mismatched binaries')
-            compiles = _redo(processes, binaries, _compile, binaries)
+            compiles = _redo(processes, targets, _compile, targets)
     except FileNotFoundError:
         print('redoing compiles due to missing pickle')
-        compiles = _redo(processes, binaries, _compile, binaries)
+        compiles = _redo(processes, targets, _compile, targets)
     pickle.dump(compiles, open(compiles_fn, 'wb'))
 
     testnames = testnames[:testlimit]
     testruns_fn = os.path.join(pickledir, 'testruns_' + pickle_file)
     try:
         loaded_testnames, testruns = pickle.load(open(testruns_fn, 'rb'))
-        if set(compiles.keys()) != set(binaries) or loaded_testnames != testnames:
+        if set(compiles.keys()) != set(targets) or loaded_testnames != testnames:
             print('redoing tests due to mismatched binaries/testnames')
             testruns = _redo(processes, binaries, _run_tests, zip(binaries, testnames))
     except FileNotFoundError:
@@ -95,6 +97,8 @@ def do_timings(builddir, pickledir, binaries, testnames, processes):
     pickle.dump((testnames, testruns), open(testruns_fn, 'wb'))
 
     totals = {n: compiles[n]+testruns[n] for n in binaries}
+    # add totals for headerlib compiles that do not have associated testruns
+    totals.update({n: compiles[n] for n in headerlibs})
     pickle.dump(totals, open(os.path.join(pickledir, pickle_file), 'wb'))
     # print('totals')
     # pprint(totals)
@@ -107,10 +111,11 @@ builddir = sys.argv[1]
 testdir = sys.argv[2]
 cmake_outfile = os.path.join(testdir, 'builder_definitions.cmake')
 binaries = sys.argv[3].split(';')
+headerlibs = sys.argv[5].split(';')
 testname_map = {b: t.split(';') for b,t in zip(binaries, all_testnames)}
 processes = cpu_count()
 
-totals = do_timings(builddir, testdir, binaries, all_testnames, processes)
+totals = do_timings(builddir, testdir, binaries, all_testnames, processes, headerlibs)
 
 b = list(totals.keys())
 bins = binpacking.to_constant_volume(totals, MAXTIME)
@@ -122,5 +127,6 @@ with open(cmake_outfile, 'wt') as out:
     for idx, bin in enumerate(bins):
         out.write('add_custom_target(test_binaries_builder_{} DEPENDS {})\n'.format(idx, ' '.join(bin.keys())))
         for binary in bin.keys():
-            for testname in testname_map[binary]:
-                out.write('set_tests_properties({} PROPERTIES LABELS "builder_{}")\n'.format(testname, idx))
+            if binary not in headerlibs:
+                for testname in testname_map[binary]:
+                    out.write('set_tests_properties({} PROPERTIES LABELS "builder_{}")\n'.format(testname, idx))
