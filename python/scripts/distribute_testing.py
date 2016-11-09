@@ -11,7 +11,7 @@ import binpacking
 from multiprocessing import Pool, cpu_count
 
 
-MAXTIME = 7*60
+MAXTIME = 23*60
 pickle_file = 'totals.pickle'
 
 
@@ -112,18 +112,28 @@ testdir = sys.argv[2]
 cmake_outfile = os.path.join(testdir, 'builder_definitions.cmake')
 binaries = sys.argv[3].split(';')
 headerlibs = sys.argv[5].split(';')
+try:
+    bincount = int(sys.argv[6])
+except:
+    bincount = 13
 testname_map = {b: t.split(';') for b,t in zip(binaries, all_testnames)}
 processes = cpu_count()
 
 totals = do_timings(builddir, testdir, binaries, all_testnames, processes, headerlibs)
 
-b = list(totals.keys())
 bins = binpacking.to_constant_volume(totals, MAXTIME)
-# for idx, bin in enumerate(bins):
-#     pprint('Bin {} vol: {}'.format(idx, sum(bin.values())))
-#     pprint(bin)
+bins = binpacking.to_constant_bin_number(totals, bincount)
+#for idx, bin in enumerate(bins):
+    #pprint('Bin {} vol: {}'.format(idx, sum(bin.values())))
+    #pprint(bin)
+from statistics import mean, stdev
+vols = [sum(bi.values()) for bi in bins]
+norm = 100/MAXTIME
+print('Generated {} bins.\nRelative volumes:\n\t\tMin {:.2f}%\n\t\tMax {:.2f}%\n\t\tAvg {:.2f}%\n'.format(
+    len(bins), min(vols)*norm, max(vols)*norm, mean(vols)*norm, stdev(vols)))
 
 with open(cmake_outfile, 'wt') as out:
+    out.write('set(DXT_BIN_COUNT "{}" CACHE STRING "number of bins for test targets" )\n'.format(len(bins)))
     for idx, bin in enumerate(bins):
         out.write('add_custom_target(test_binaries_builder_{} DEPENDS {})\n'.format(idx, ' '.join(bin.keys())))
         for binary in bin.keys():

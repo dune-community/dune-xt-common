@@ -97,7 +97,7 @@ macro(END_TESTCASES)
     get_headercheck_targets(dxt_headercheck_targets)
     add_custom_target(refresh_test_timings ${CMAKE_BINARY_DIR}/dune-env-3 distribute_testing.py
                         "${CMAKE_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" "${dxt_test_binaries}"
-                        "${all_sorted_testnames}" "${dxt_headercheck_targets}" VERBATIM)
+                        "${all_sorted_testnames}" "${dxt_headercheck_targets}" "${DXT_BIN_COUNT}" VERBATIM)
 endmacro(END_TESTCASES)
 
 macro(add_header_listing)
