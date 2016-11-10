@@ -11,7 +11,7 @@ setup(name='dune.xt',
       author_email='dune-xt-dev@listserv.uni-muenster.de',
       url='https://github.com/dune-community/dune-xt-common',
       packages=['dune.xt'],
-      install_requires=['binpacking==1.3'],
+      install_requires=['binpacking==1.3, jinja2'],
       scripts=['./scripts/generate_compare_functions.py',
                './scripts/distribute_testing.py',
                './wrapper/dune_xt_execute.py'])
