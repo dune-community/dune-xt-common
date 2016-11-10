@@ -2,6 +2,7 @@
 
 import os
 import pickle
+import json
 import sys
 from pprint import pprint
 import subprocess
@@ -9,11 +10,11 @@ import time
 from contextlib import contextmanager
 import binpacking
 from multiprocessing import Pool, cpu_count
-
+from collections import OrderedDict
 
 MAXTIME = 23*60
 pickle_file = 'totals.pickle'
-
+PROTOCOL = 0
 
 @contextmanager
 def elapsed_timer():
@@ -23,6 +24,15 @@ def elapsed_timer():
     yield lambda: elapser()
     end = clock()
     elapser = lambda: end-start
+
+def _dump(obj, fn):
+    json.dump(obj, open(fn, 'wt'), sort_keys=True)
+
+def _load(fn):
+    try:
+        return json.load(open(fn, 'rt'))
+    except:
+        return pickle.load(open(fn, 'rb'))
 
 
 def _compile(binary):
@@ -75,31 +85,31 @@ def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
     targets = binaries+headerlibs
     compiles_fn = os.path.join(pickledir, 'compiles_' + pickle_file)
     try:
-        compiles = pickle.load(open(compiles_fn, 'rb'))
+        compiles = _load(compiles_fn)
         if set(compiles.keys()) != set(targets):
             print('redoing compiles due to mismatched binaries')
             compiles = _redo(processes, targets, _compile, targets)
     except FileNotFoundError:
         print('redoing compiles due to missing pickle')
         compiles = _redo(processes, targets, _compile, targets)
-    pickle.dump(compiles, open(compiles_fn, 'wb'))
+    _dump(compiles, compiles_fn)
 
     testnames = testnames[:testlimit]
     testruns_fn = os.path.join(pickledir, 'testruns_' + pickle_file)
     try:
-        loaded_testnames, testruns = pickle.load(open(testruns_fn, 'rb'))
+        loaded_testnames, testruns = _load(testruns_fn)
         if set(compiles.keys()) != set(targets) or loaded_testnames != testnames:
             print('redoing tests due to mismatched binaries/testnames')
             testruns = _redo(processes, binaries, _run_tests, zip(binaries, testnames))
     except FileNotFoundError:
         print('redoing tests due to missing pickle')
         testruns = _redo(processes, binaries, _run_tests, zip(binaries, testnames))
-    pickle.dump((testnames, testruns), open(testruns_fn, 'wb'))
+    _dump((testnames, testruns), testruns_fn)
 
     totals = {n: compiles[n]+testruns[n] for n in binaries}
     # add totals for headerlib compiles that do not have associated testruns
     totals.update({n: compiles[n] for n in headerlibs})
-    pickle.dump(totals, open(os.path.join(pickledir, pickle_file), 'wb'))
+    _dump(totals, os.path.join(pickledir, pickle_file))
     # print('totals')
     # pprint(totals)
     return totals
@@ -121,7 +131,7 @@ processes = cpu_count()
 
 totals = do_timings(builddir, testdir, binaries, all_testnames, processes, headerlibs)
 
-bins = binpacking.to_constant_volume(totals, MAXTIME)
+#bins = binpacking.to_constant_volume(totals, MAXTIME)
 bins = binpacking.to_constant_bin_number(totals, bincount)
 #for idx, bin in enumerate(bins):
     #pprint('Bin {} vol: {}'.format(idx, sum(bin.values())))
@@ -135,8 +145,8 @@ print('Generated {} bins.\nRelative volumes:\n\t\tMin {:.2f}%\n\t\tMax {:.2f}%\n
 with open(cmake_outfile, 'wt') as out:
     out.write('set(DXT_BIN_COUNT "{}" CACHE STRING "number of bins for test targets" )\n'.format(len(bins)))
     for idx, bin in enumerate(bins):
-        out.write('add_custom_target(test_binaries_builder_{} DEPENDS {})\n'.format(idx, ' '.join(bin.keys())))
-        for binary in bin.keys():
+        out.write('add_custom_target(test_binaries_builder_{} DEPENDS {})\n'.format(idx, ' '.join(sorted(bin.keys()))))
+        for binary in sorted(bin.keys()):
             if binary not in headerlibs:
                 for testname in testname_map[binary]:
                     out.write('set_tests_properties({} PROPERTIES LABELS "builder_{}")\n'.format(testname, idx))
