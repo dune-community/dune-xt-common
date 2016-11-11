@@ -348,7 +348,7 @@ public:
   }
 
   /**
-   * \attention This ctor transfers ownership to StorageProvider, do not delete tt manually!
+   * \attention This ctor transfers ownership to StorageProvider, do not delete it manually!
    */
   explicit StorageProvider(T*&& tt)
     : storage_(Common::make_unique<internal::AccessByPointer<T>>(std::move(tt)))
