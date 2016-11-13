@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-
+import logging
 import os
 import pickle
 import json
@@ -25,8 +25,10 @@ def elapsed_timer():
     end = clock()
     elapser = lambda: end-start
 
+
 def _dump(obj, fn):
     json.dump(obj, open(fn, 'wt'), sort_keys=True)
+
 
 def _load(fn):
     try:
@@ -70,10 +72,10 @@ def _redo(processes, keys, *args):
             result = pool.map(*args)
         return {k: v for k,v in zip(keys, result)}
     except subprocess.CalledProcessError as cpe:
-        print('*'*79)
-        print(cpe.stdout)
-        print(cpe.stderr)
-        print('*' * 79)
+        logging.error('*'*79)
+        logging.error(cpe.stdout)
+        logging.error(cpe.stderr)
+        logging.error('*' * 79)
         raise cpe
 
 def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
@@ -87,12 +89,12 @@ def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
     try:
         compiles = _load(compiles_fn)
         if set(compiles.keys()) != set(targets):
-            print('redoing compiles due to mismatched binaries')
-            print('Removed: {}'.format(pprint.pformat(set(compiles.keys()) - set(targets))))
-            print('New: {}'.format(pprint.pformat(set(targets) - set(compiles.keys()))))
+            logging.error('redoing compiles due to mismatched binaries')
+            logging.error('Removed: {}'.format(pprint.pformat(set(compiles.keys()) - set(targets))))
+            logging.error('New: {}'.format(pprint.pformat(set(targets) - set(compiles.keys()))))
             compiles = _redo(processes, targets, _compile, targets)
     except FileNotFoundError:
-        print('redoing compiles due to missing pickle')
+        logging.error('redoing compiles due to missing pickle')
         compiles = _redo(processes, targets, _compile, targets)
     _dump(compiles, compiles_fn)
 
@@ -101,12 +103,12 @@ def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
     try:
         loaded_testnames, testruns = _load(testruns_fn)
         if set(compiles.keys()) != set(targets) or loaded_testnames != testnames:
-            print('redoing tests due to mismatched binaries/testnames')
-            print('Removed: {}'.format(pprint.pformat([f for f in loaded_testnames if f not in set(testnames)])))
-            print('New: {}'.format(pprint.pformat([n for n in testnames if n not in set(loaded_testnames)])))
+            logging.error('redoing tests due to mismatched binaries/testnames')
+            logging.error('Removed: {}'.format(pprint.pformat([f for f in loaded_testnames if f not in set(testnames)])))
+            logging.error('New: {}'.format(pprint.pformat([n for n in testnames if n not in set(loaded_testnames)])))
             testruns = _redo(processes, binaries, _run_tests, zip(binaries, testnames))
     except FileNotFoundError:
-        print('redoing tests due to missing pickle')
+        logging.error('redoing tests due to missing pickle')
         testruns = _redo(processes, binaries, _run_tests, zip(binaries, testnames))
     _dump((testnames, testruns), testruns_fn)
 
@@ -130,6 +132,7 @@ try:
     bincount = int(sys.argv[6])
 except:
     bincount = 13
+logging.basicConfig(level=logging.DEBUG)
 testname_map = {b: t.split(';') for b,t in zip(binaries, all_testnames)}
 processes = cpu_count()
 
