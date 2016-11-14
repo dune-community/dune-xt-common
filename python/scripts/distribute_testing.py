@@ -4,7 +4,7 @@ import os
 import pickle
 import json
 import sys
-from pprint import pprint
+import pprint
 import subprocess
 import time
 from contextlib import contextmanager
@@ -38,7 +38,7 @@ def _load(fn):
 def _compile(binary):
     with elapsed_timer() as timer:
         try:
-            _ = subprocess.check_output(['ninja', '-j1', binary], universal_newlines=True, stderr=subprocess.STDOUT)
+            _ = subprocess.check_output(['cmake', '--build', '.', '--', '-j1', binary], universal_newlines=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as cpe:
             if 'Timeout' not in cpe.output:
                 raise cpe
@@ -88,6 +88,8 @@ def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
         compiles = _load(compiles_fn)
         if set(compiles.keys()) != set(targets):
             print('redoing compiles due to mismatched binaries')
+            print('Removed: {}'.format(pprint.pformat(set(compiles.keys()) - set(targets))))
+            print('New: {}'.format(pprint.pformat(set(targets) - set(compiles.keys()))))
             compiles = _redo(processes, targets, _compile, targets)
     except FileNotFoundError:
         print('redoing compiles due to missing pickle')
@@ -100,6 +102,8 @@ def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
         loaded_testnames, testruns = _load(testruns_fn)
         if set(compiles.keys()) != set(targets) or loaded_testnames != testnames:
             print('redoing tests due to mismatched binaries/testnames')
+            print('Removed: {}'.format(pprint.pformat([f for f in loaded_testnames if f not in set(testnames)])))
+            print('New: {}'.format(pprint.pformat([n for n in testnames if n not in set(loaded_testnames)])))
             testruns = _redo(processes, binaries, _run_tests, zip(binaries, testnames))
     except FileNotFoundError:
         print('redoing tests due to missing pickle')
@@ -111,7 +115,7 @@ def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
     totals.update({n: compiles[n] for n in headerlibs})
     _dump(totals, os.path.join(pickledir, pickle_file))
     # print('totals')
-    # pprint(totals)
+    # pprint.pprint(totals)
     return totals
 
 
@@ -135,7 +139,7 @@ totals = do_timings(builddir, testdir, binaries, all_testnames, processes, heade
 bins = binpacking.to_constant_bin_number(totals, bincount)
 #for idx, bin in enumerate(bins):
     #pprint('Bin {} vol: {}'.format(idx, sum(bin.values())))
-    #pprint(bin)
+    #pprint.pprint(bin)
 from statistics import mean, stdev
 vols = [sum(bi.values()) for bi in bins]
 norm = 100/MAXTIME
