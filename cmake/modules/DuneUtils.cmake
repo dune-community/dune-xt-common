@@ -95,9 +95,15 @@ macro(END_TESTCASES)
     endforeach (target ${dxt_test_binaries})
     set(dxt_headercheck_targets "")
     get_headercheck_targets(dxt_headercheck_targets)
-    add_custom_target(refresh_test_timings ${CMAKE_BINARY_DIR}/dune-env-3 distribute_testing.py
+    add_custom_target(rerun_test_distribution ${CMAKE_BINARY_DIR}/dune-env-3 distribute_testing.py
                         "${CMAKE_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}" "${dxt_test_binaries}"
                         "${all_sorted_testnames}" "${dxt_headercheck_targets}" "${DXT_BIN_COUNT}" VERBATIM)
+    add_custom_target(copy_builders_if_different
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_BINARY_DIR}/builder_definitions.cmake"
+        "${CMAKE_CURRENT_SOURCE_DIR}/builder_definitions.cmake")
+    add_custom_target(refresh_test_timings)
+    add_dependencies(copy_builders_if_different rerun_test_distribution)
+    add_dependencies(refresh_test_timings copy_builders_if_different)
 endmacro(END_TESTCASES)
 
 macro(add_header_listing)

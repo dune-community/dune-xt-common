@@ -125,7 +125,7 @@ def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
 all_testnames = sys.argv[4].split('/')[1:]
 builddir = sys.argv[1]
 testdir = sys.argv[2]
-cmake_outfile = os.path.join(testdir, 'builder_definitions.cmake')
+cmake_outfile = os.path.join(builddir, 'builder_definitions.cmake')
 binaries = sys.argv[3].split(';')
 headerlibs = sys.argv[5].split(';')
 try:
