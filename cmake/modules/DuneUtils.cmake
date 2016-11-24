@@ -62,13 +62,12 @@ macro(BEGIN_TESTCASES)
                                          INIFILE ${inifile}
                                          BASENAME test_${testbase}
                                          CREATED_TARGETS targetlist_${testbase}
-                                         ADDED_TESTS testlist_${testbase}
                                          SCRIPT dune_xt_execute.py
                                          ${DEBUG_MACRO_TESTS})
                     foreach(target ${targetlist_${testbase}})
                         target_link_libraries( ${target} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common )
                         list(APPEND dxt_test_binaries ${target} )
-                        set(dxt_test_names_${target} ${testlist_${testbase}_${target}})
+			#                        set(dxt_test_names_${target} ${testlist_${testbase}_${target}})
                     endforeach(target)
 
                 else( EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.mini )
