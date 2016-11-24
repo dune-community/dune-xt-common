@@ -97,6 +97,38 @@ struct VectorAbstraction<std::vector<T>>
   }
 };
 
+template <class K, size_t SIZE>
+struct VectorAbstraction<std::array<K, SIZE>>
+{
+  typedef std::array<K, SIZE> VectorType;
+  typedef K ScalarType;
+  typedef K RealType;
+  typedef ScalarType S;
+  typedef RealType R;
+
+  static constexpr bool is_vector = true;
+
+  static constexpr bool has_static_size = true;
+
+  static constexpr size_t static_size = SIZE;
+
+  static inline VectorType create(const size_t sz)
+  {
+    if (sz != SIZE)
+      DUNE_THROW(Exceptions::shapes_do_not_match, "sz = " << sz << "\nSIZE = " << int(SIZE));
+    return VectorType();
+  }
+
+  static inline VectorType create(const size_t sz, const ScalarType& val)
+  {
+    if (sz != SIZE)
+      DUNE_THROW(Exceptions::shapes_do_not_match, "sz = " << sz << "\nSIZE = " << int(SIZE));
+    VectorType array;
+    array.fill(val);
+    return array;
+  }
+};
+
 template <class K>
 struct VectorAbstraction<Dune::DynamicVector<K>>
 {

@@ -11,8 +11,8 @@ __local.default_eps = DefaultEpsilon<S>, DefaultEpsilon<S\,Style::{__local.cmpst
 
 __local.fieldtype = std::size_t, long, double, std::complex<double>, unsigned | expand field
 __local.fieldtype_short = std_size_t, long, double, complex, unsigned | expand field
-__local.vectortype = std::vector<{__local.fieldtype}>, Dune::FieldVector<{__local.fieldtype}\,{__local.vec_size}>, Dune::XT::Common::FieldVector<{__local.fieldtype}\,{__local.vec_size}>, Dune::DynamicVector<{__local.fieldtype}> | expand vector
-__local.vectortype_short = std_vector, dune_fieldvector, xt_fieldvector, dynamic_vector | expand vector
+__local.vectortype = std::vector<{__local.fieldtype}>, std::array<{__local.fieldtype}\,{__local.vec_size}>, Dune::FieldVector<{__local.fieldtype}\,{__local.vec_size}>, Dune::XT::Common::FieldVector<{__local.fieldtype}\,{__local.vec_size}>, Dune::DynamicVector<{__local.fieldtype}> | expand vector
+__local.vectortype_short = std_vector, std_array, dune_fieldvector, xt_fieldvector, dynamic_vector | expand vector
 __local.testtype = {__local.fieldtype}, {__local.vectortype} | expand test
 __local.testtype_short = {__local.fieldtype_short}, {__local.vectortype_short}_{__local.fieldtype_short} | expand test
 
