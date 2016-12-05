@@ -20,6 +20,19 @@ function(TO_LIST_SPACES _LIST_NAME OUTPUT_VAR)
   set(${OUTPUT_VAR} "${NEW_LIST_SPACE}" PARENT_SCOPE)
 endfunction()
 
+if ( DEFINED dune-xt-common_DIR )
+    set( dune-xt-common-path ${dune-xt-common_DIR} )
+else ( DEFINED dune-xt-common_DIR )
+    set( dune-xt-common-path ${dune-xt-common_SOURCE_DIR} )
+endif ( DEFINED dune-xt-common_DIR )
+if ( DEFINED dune-xt-common_MODULE_PATH )
+    # dependent modules
+    set( dune-xt-common-module-path ${dune-xt-common_MODULE_PATH} )
+else ( DEFINED dune-xt-common_MODULE_PATH )
+    # xt-common itself
+    set( dune-xt-common-module-path ${PROJECT_SOURCE_DIR}/cmake/modules )
+endif ( DEFINED dune-xt-common_MODULE_PATH )
+
 enable_testing()
 
 macro(get_headercheck_targets)
@@ -41,11 +54,6 @@ endmacro(get_headercheck_targets)
 macro(BEGIN_TESTCASES)
 # https://cmake.org/cmake/help/v3.0/module/FindGTest.html http://purplekarrot.net/blog/cmake-and-test-suites.html
 	file( GLOB test_sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cc" )
-        if ( DEFINED dune-xt-common_DIR )
-            set( dune-xt-common-path ${dune-xt-common_DIR} )
-        else ( DEFINED dune-xt-common_DIR )
-            set( dune-xt-common-path ${dune-xt-common_SOURCE_DIR} )
-        endif ( DEFINED dune-xt-common_DIR )
 	foreach( source ${test_sources} )
 		get_filename_component(testbase ${source} NAME_WE)
                 if( EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.mini )
@@ -95,11 +103,11 @@ macro(END_TESTCASES)
     endforeach (target ${dxt_test_binaries})
     set(dxt_headercheck_targets "")
     get_headercheck_targets(dxt_headercheck_targets)
-    configure_file(${dune-xt-common_MODULE_PATH}/dxt_test_binaries.cmake.in
+    configure_file(${dune-xt-common-module-path}/dxt_test_binaries.cmake.in
                    ${CMAKE_CURRENT_BINARY_DIR}/dxt_test_binaries.cmake)
-    configure_file(${dune-xt-common_MODULE_PATH}/dxt_all_sorted_testnames.cmake.in
+    configure_file(${dune-xt-common-module-path}/dxt_all_sorted_testnames.cmake.in
                    ${CMAKE_CURRENT_BINARY_DIR}/dxt_all_sorted_testnames.cmake)
-    configure_file(${dune-xt-common_MODULE_PATH}/dxt_headercheck_targets.cmake.in
+    configure_file(${dune-xt-common-module-path}/dxt_headercheck_targets.cmake.in
                    ${CMAKE_CURRENT_BINARY_DIR}/dxt_headercheck_targets.cmake)
     add_custom_target(rerun_test_distribution ${CMAKE_BINARY_DIR}/dune-env-3 distribute_testing.py
                         "${CMAKE_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
