@@ -11,12 +11,12 @@
 #ifndef DUNE_XT_COMMON_TEST_MAIN_COMMON_HH
 #define DUNE_XT_COMMON_TEST_MAIN_COMMON_HH
 
-#include <string>
 #include <map>
-#include <vector>
+#include <string>
+#include <tuple>
 #include <utility>
+#include <vector>
 
-#include <dune/common/tuples.hh>
 #include <dune/common/tupleutility.hh>
 
 #include <dune/xt/common/convergence-study.hh>
@@ -51,7 +51,7 @@ struct Int
   static const int value = i;
 };
 
-typedef Dune::tuple<double,
+typedef std::tuple<double,
                     float
                     //                   , Dune::bigunsignedint
                     ,
