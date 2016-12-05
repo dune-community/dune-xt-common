@@ -122,12 +122,12 @@ def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
 
 
 # list comes with a leading empty entry
-all_testnames = sys.argv[4].split('/')[1:]
+all_testnames = open(sys.argv[4], 'rt').read().split('/')[1:]
 builddir = sys.argv[1]
 testdir = sys.argv[2]
 cmake_outfile = os.path.join(builddir, 'builder_definitions.cmake')
-binaries = sys.argv[3].split(';')
-headerlibs = sys.argv[5].split(';')
+binaries = open(sys.argv[3], 'rt').read().split(';')
+headerlibs = open(sys.argv[5], 'rt').read().split(';')
 try:
     bincount = int(sys.argv[6])
 except:
