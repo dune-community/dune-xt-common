@@ -151,15 +151,13 @@ corresponding header, e.g. `dune/xt/common/test/foo_bar.cc` contains tests for `
 
 # clang-format
 
-You need to have clang-format in version 3.7 installed (use `clang-format --version` to check).
+You need to have clang-format in version 3.8 installed (use `clang-format --version` to check).
 To apply clang-format to all files in this project, call `make format` in your build directory.
 _Note that clang-format changes the files inplace, so save your work in your editor beforehand!_
 
-You can install a pre-commit hook to test for compliance by placing [this
-file](https://github.com/wwu-numerik/git-hooks/blob/master/pre-commit.clang-format) in the following location:
-`dune-xt-common/.git/hooks/pre-commit`.
+A pre-commit hook to test for compliance is automatically installed by ```dunecontrol {vcsetup,all}```.
 
-If you do not have clang-format in version 3.7 available or forgot to apply it, the code you publish will fail the
+If you do not have clang-format in version 3.8 available or forgot to apply it, the code you publish will fail the
 corresponding travis check.
 Upon failure you are provided with more information on the github pull request page on how to proceed.
 In particular you are provided with the required changes which you may download and incorporate into your code.
