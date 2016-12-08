@@ -13,7 +13,6 @@
 #ifndef DUNE_XT_COMMON_TUPLE_HH
 #define DUNE_XT_COMMON_TUPLE_HH
 
-#include <dune/common/tuples.hh>
 #include <dune/common/typetraits.hh>
 
 #include <boost/mpl/if.hpp>
@@ -24,67 +23,67 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/type_traits.hpp>
 
-#define TMAX(t_, no_) (Dune::tuple_size<t_>::value >= (no_ + 1) ? no_ : 0)
-#define TELE(t_, s_, no_) typename Dune::tuple_element<TMAX(t_, no_), t_>::type::s_
+#define TMAX(t_, no_) (std::tuple_size<t_>::value >= (no_ + 1) ? no_ : 0)
+#define TELE(t_, s_, no_) typename std::tuple_element<TMAX(t_, no_), t_>::type::s_
 
 template <class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9, size_t Size>
 struct RightTrimTuple
 {
-  typedef Dune::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9> type;
+  typedef std::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9> type;
 };
 
 template <class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
 struct RightTrimTuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, 9>
 {
-  typedef Dune::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9> type;
+  typedef std::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9> type;
 };
 
 template <class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
 struct RightTrimTuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, 8>
 {
-  typedef Dune::tuple<T1, T2, T3, T4, T5, T6, T7, T8> type;
+  typedef std::tuple<T1, T2, T3, T4, T5, T6, T7, T8> type;
 };
 
 template <class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
 struct RightTrimTuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, 7>
 {
-  typedef Dune::tuple<T1, T2, T3, T4, T5, T6, T7> type;
+  typedef std::tuple<T1, T2, T3, T4, T5, T6, T7> type;
 };
 
 template <class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
 struct RightTrimTuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, 6>
 {
-  typedef Dune::tuple<T1, T2, T3, T4, T5, T6> type;
+  typedef std::tuple<T1, T2, T3, T4, T5, T6> type;
 };
 
 template <class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
 struct RightTrimTuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, 5>
 {
-  typedef Dune::tuple<T1, T2, T3, T4, T5> type;
+  typedef std::tuple<T1, T2, T3, T4, T5> type;
 };
 
 template <class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
 struct RightTrimTuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, 4>
 {
-  typedef Dune::tuple<T1, T2, T3, T4> type;
+  typedef std::tuple<T1, T2, T3, T4> type;
 };
 
 template <class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
 struct RightTrimTuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, 3>
 {
-  typedef Dune::tuple<T1, T2, T3> type;
+  typedef std::tuple<T1, T2, T3> type;
 };
 
 template <class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
 struct RightTrimTuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, 2>
 {
-  typedef Dune::tuple<T1, T2> type;
+  typedef std::tuple<T1, T2> type;
 };
 
 template <class T1, class T2, class T3, class T4, class T5, class T6, class T7, class T8, class T9>
 struct RightTrimTuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, 1>
 {
-  typedef Dune::tuple<T1> type;
+  typedef std::tuple<T1> type;
 };
 
 #define TUPLE_TYPEDEFS_2_TUPLE(t_, s_)                                                                                 \
@@ -97,13 +96,13 @@ struct RightTrimTuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, 1>
                           TELE(t_, s_, 6),                                                                             \
                           TELE(t_, s_, 7),                                                                             \
                           TELE(t_, s_, 8),                                                                             \
-                          Dune::tuple_size<t_>::value>::type
+                          std::tuple_size<t_>::value>::type
 
 /**
  * @def TUPLE_TYPEDEFS_2_TUPLE( t_, s_ )
  *
- * @brief extracts types of the elements of a Dune::tuple and
- * creates a new Dune::tuple with these extracted types.
+ * @brief extracts types of the elements of a std::tuple and
+ * creates a new std::tuple with these extracted types.
  *
  * first argument: the tuple type
  * second argument: the typedef of the elements of the tuple
@@ -128,14 +127,14 @@ struct RightTrimTuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, 1>
  * Define a tuple, i.e.
  *
  * @code
- * typedef Dune::tuple< A, B, B >
+ * typedef std::tuple< A, B, B >
  *   MyTuple;
  * @endcode
  *
  * Instead of writing
  *
  * @code
- * typedef Dune::tuple< typename tuple_element<0,MyTuple>::type::MyFancyType,
+ * typedef std::tuple< typename tuple_element<0,MyTuple>::type::MyFancyType,
  *                      typename tuple_element<1,MyTuple>::type::MyFancyType,
  *                      typename tuple_element<2,MyTuple>::type::MyFancyType >
  *   MySubTupleType;
