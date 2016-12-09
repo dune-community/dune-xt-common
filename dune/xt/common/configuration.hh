@@ -46,7 +46,7 @@ static const std::string configuration_logfile = "data/log/dxtc_parameter.log";
 template <class T>
 struct Typer
 {
-  typedef typename std::conditional<std::is_convertible<T, std::string>::value, std::string, T>::type type;
+  typedef typename std::conditional<std::is_same<T, const char*>::value, std::string, T>::type type;
 };
 
 } // namespace internal
