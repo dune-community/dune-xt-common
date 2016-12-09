@@ -15,7 +15,6 @@
 #include <dune/xt/common/type_traits.hh>
 #include <dune/xt/common/math.hh>
 #include <dune/xt/common/random.hh>
-#include <dune/common/tuples.hh>
 #include <dune/common/tupleutility.hh>
 #include <dune/common/exceptions.hh>
 #include <dune/common/bigunsignedint.hh>

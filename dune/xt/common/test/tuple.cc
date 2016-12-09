@@ -9,6 +9,8 @@
 //   Rene Milk       (2012 - 2015)
 //   Tobias Leibner  (2014)
 
+#include <tuple>
+
 #include <dune/xt/common/test/main.hxx>
 
 #include <dune/common/dynmatrix.hh>
@@ -31,7 +33,7 @@ public:
   typedef int MyFancyType;
 };
 
-typedef Dune::tuple<A, B, B> MyTuple;
+typedef std::tuple<A, B, B> MyTuple;
 
 struct print_value
 {

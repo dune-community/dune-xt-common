@@ -20,7 +20,6 @@
 #include <boost/iterator/iterator_facade.hpp>
 #include <boost/assign/list_of.hpp>
 #include <dune/common/exceptions.hh>
-#include <dune/common/nullptr.hh>
 
 namespace Dune {
 namespace XT {
