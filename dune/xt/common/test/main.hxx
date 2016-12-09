@@ -42,6 +42,7 @@
 #include <dune/fem/misc/mpimanager.hh>
 #endif
 
+#include <dune/xt/common/vector.hh>
 #include <dune/xt/common/test/gtest/gtest.h>
 #include <dune/xt/common/configuration.hh>
 #include <dune/xt/common/exceptions.hh>
@@ -49,7 +50,6 @@
 #include <dune/xt/common/timedlogging.hh>
 #include <dune/xt/common/convergence-study.hh>
 #include <dune/xt/common/parallel/threadmanager.hh>
-#include <dune/xt/common/vector.hh>
 
 
 #if HAVE_TBB

@@ -101,8 +101,8 @@ template <class K, size_t SIZE>
 struct VectorAbstraction<std::array<K, SIZE>>
 {
   typedef std::array<K, SIZE> VectorType;
-  typedef K ScalarType;
-  typedef K RealType;
+  typedef typename Dune::FieldTraits<K>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<K>::real_type RealType;
   typedef ScalarType S;
   typedef RealType R;
 
