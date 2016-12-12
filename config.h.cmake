@@ -49,10 +49,6 @@
 
 #define HAVE_DUNE_FEM_PARAMETER_REPLACE 0
 
-#ifndef HAVE_ALUGRID
-#  define DUNE_FEM_DONT_WARN_IN_COMM_MANAGER 1
-#endif
-
 /* needed in dune/xt/common/profiler.hh */
 #ifndef DUNE_XT_COMMON_DO_TIMING
 # define DUNE_XT_COMMON_DO_TIMING 0
@@ -69,10 +65,6 @@
 
 #ifndef HAVE_ALBERTA
 # define HAVE_ALBERTA 0
-#endif
-
-#ifndef HAVE_ALUGRID
-# define HAVE_ALUGRID 0
 #endif
 
 #ifndef HAVE_DUNE_SPGRID
