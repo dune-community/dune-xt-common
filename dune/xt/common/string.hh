@@ -130,8 +130,9 @@ std::string whitespaceify(const T& t, const char whitespace = ' ')
 {
   const std::string s = to_string(t);
   std::string ret = "";
-  for (auto DXTC_UNUSED(ii) : value_range(s.size())) {
+  for (auto ii : value_range(s.size())) {
     ret += whitespace;
+    (void)ii;
   }
   return ret;
 } // ... whitespaceify(...)
