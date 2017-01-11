@@ -109,6 +109,16 @@ static inline std::string to_string(const T& ss, const size_t precision = defaul
   return internal::convert_to_string(ss, precision);
 }
 
+
+/**
+ * \brief Converts each character of a string to lower case using std::tolower.
+ * \note  This might not do what you expect, given your locale.
+ * \sa    http://en.cppreference.com/w/cpp/string/byte/tolower
+ * /sa    ::tolower
+ */
+std::string to_lower(const std::string& ss);
+
+
 /**
   \brief Returns a string of lengths t' whitespace (or whitespace chars).
   \param[in]  t          defines the length of the return string (after conversion to string)

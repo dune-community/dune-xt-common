@@ -20,6 +20,7 @@ set(lib_dune_xt_common_sources common/filesystem.cc
   common/misc.cc
   common/parallel/threadmanager.cc
   common/parallel/helper.cc
+  common/string.cc
   common/test/common.cxx)
 
 dune_library_add_sources(dunextcommon SOURCES ${lib_dune_xt_common_sources})
