@@ -42,8 +42,6 @@ PYBIND11_PLUGIN(common)
         },
         "args"_a = std::vector<std::string>());
 
-  Dune::XT::Common::bind_Configuration(m);
-
   return m.ptr();
 }
 

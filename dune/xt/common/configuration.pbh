@@ -12,82 +12,10 @@
 #if HAVE_DUNE_PYBINDXI
 
 #include <dune/pybindxi/pybind11.h>
-#include <dune/pybindxi/operators.h>
-#include <dune/pybindxi/stl.h>
+#include <dune/pybindxi/cast.h>
 
 #include "configuration.hh"
 
-namespace Dune {
-namespace XT {
-namespace Common {
-
-
-pybind11::class_<Configuration> bind_Configuration(pybind11::module& m)
-{
-  namespace py = pybind11;
-  using namespace pybind11::literals;
-
-  py::class_<Configuration> c(m, "Configuration", "Configuration");
-
-  c.def(py::init<>());
-  c.def(py::init<std::string, ssize_t>());
-  c.def(py::init<std::string, std::string>());
-  c.def(py::init<std::string, double>());
-
-  c.def("__repr__", [](const Configuration& cfg) { return "Configuration: " + cfg.report_string(); });
-
-  c.def("has_key", &Configuration::has_key);
-  c.def("has_sub", &Configuration::has_sub);
-  c.def("sub", &Configuration::sub, "sub_id"_a);
-  c.def("get_int",
-        [](const Configuration& self, const std::string& key) { return self.template get<ssize_t>(key); },
-        "key"_a);
-  c.def("get_str",
-        [](const Configuration& self, const std::string& key) { return self.template get<std::string>(key); },
-        "key"_a);
-  c.def("get_float",
-        [](const Configuration& self, const std::string& key) { return self.template get<double>(key); },
-        "key"_a);
-  c.def("set",
-        (void (Configuration::*)(std::string, const ssize_t&, const bool)) & Configuration::set,
-        "key"_a,
-        "value"_a,
-        "overwrite"_a = false);
-  c.def("set",
-        (void (Configuration::*)(std::string, const std::string&, const bool)) & Configuration::set,
-        "key"_a,
-        "value"_a,
-        "overwrite"_a = false);
-  c.def("set",
-        (void (Configuration::*)(std::string, const double&, const bool)) & Configuration::set,
-        "key"_a,
-        "value"_a,
-        "overwrite"_a = false);
-  c.def("add",
-        (Configuration & (Configuration::*)(const Configuration&, const std::string, const bool)) & Configuration::add,
-        "other"_a,
-        "sub_id"_a,
-        "overwrite"_a);
-  c.def("empty", &Configuration::empty);
-  c.def("flatten", &Configuration::flatten);
-
-  c.def(py::self + py::self);
-  c.def(py::self += py::self);
-
-  c.def("__setitem__", [](Configuration& self, const std::string& key, ssize_t value) { self.set(key, value, true); });
-  c.def("__setitem__",
-        [](Configuration& self, const std::string& key, const std::string& value) { self.set(key, value, true); });
-  c.def("__setitem__",
-        [](Configuration& self, const std::string& key, const double& value) { self.set(key, value, true); });
-  c.def("__getitem__", [](const Configuration& self, const std::string& key) { return self[key]; });
-
-  return c;
-} // bind_Configuration
-
-
-} // namespace Common
-} // namespace XT
-} // namespace Dune
 NAMESPACE_BEGIN(pybind11)
 NAMESPACE_BEGIN(detail)
 
@@ -95,35 +23,34 @@ NAMESPACE_BEGIN(detail)
 template <>
 struct type_caster<Dune::XT::Common::Configuration>
 {
-  typedef Dune::XT::Common::Configuration Type;
+  typedef Dune::XT::Common::Configuration type;
   typedef std::string S;
-  using type = Type;
+  //  using type = Type;
   using key_conv = make_caster<S>;
   using value_conv = make_caster<S>;
 
   bool load(handle src, bool convert)
   {
-    dict d(src, true);
-    if (!d.check())
+    if (!isinstance<dict>(src))
       return false;
+    auto d = reinterpret_borrow<dict>(src);
     key_conv kconv;
     value_conv vconv;
-    value = Type();
+    value = type();
     for (auto it : d) {
       if (!kconv.load(it.first.ptr(), convert) || !vconv.load(it.second.ptr(), convert))
         return false;
-      value[(S)kconv] = (S)vconv;
+      value[cast_op<S>(kconv)] = cast_op<S>(vconv);
     }
     return true;
   } // ... load(...)
 
   static handle cast(const type& src, return_value_policy policy, handle parent)
   {
-    auto flat_map = src.flatten();
     dict d;
-    for (auto const& kv : flat_map) {
-      object key = object(key_conv::cast(kv.first, policy, parent), false);
-      object value = object(value_conv::cast(kv.second, policy, parent), false);
+    for (auto const& kv : src.flatten()) {
+      auto key = reinterpret_steal<object>(key_conv::cast(kv.first, policy, parent));
+      auto value = reinterpret_steal<object>(value_conv::cast(kv.second, policy, parent));
       if (!key || !value)
         return handle();
       d[key] = value;
