@@ -42,20 +42,6 @@ PYBIND11_PLUGIN(common)
         },
         "args"_a = std::vector<std::string>());
 
-#define BIND_FIELD_VECTOR(V, T, S)                                                                                     \
-  V<T, 0>(m, S);                                                                                                       \
-  V<T, 1>(m, S);                                                                                                       \
-  V<T, 2>(m, S);                                                                                                       \
-  V<T, 3>(m, S);                                                                                                       \
-  V<T, 4>(m, S)
-
-  BIND_FIELD_VECTOR(Dune::XT::Common::bind_FieldVector, double, "double");
-  BIND_FIELD_VECTOR(Dune::XT::Common::bind_FieldVector, ssize_t, "int");
-  BIND_FIELD_VECTOR(Dune::XT::Common::bind_XtCommonFieldVector, double, "double");
-  BIND_FIELD_VECTOR(Dune::XT::Common::bind_XtCommonFieldVector, ssize_t, "int");
-
-#undef BIND_FIELD_VECTOR
-
   Dune::XT::Common::bind_Configuration(m);
 
   return m.ptr();
