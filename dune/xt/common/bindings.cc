@@ -14,6 +14,7 @@
 
 #include "exceptions.pbh"
 #include "fvector.pbh"
+#include "fmatrix.pbh"
 #include "configuration.pbh"
 
 namespace py = pybind11;
