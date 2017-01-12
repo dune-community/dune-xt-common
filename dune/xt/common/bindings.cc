@@ -8,15 +8,7 @@
 #include <dune/common/parallel/mpihelper.hh>
 
 #include <dune/pybindxi/pybind11.h>
-//#include <dune/pybindxi/stl_bind.h> // <- leads to a segfault when using list <-> std::vector conversion in
-//                                          in Configuration
-// PYBIND11_MAKE_OPAQUE(std::vector<ssize_t>);
-// PYBIND11_MAKE_OPAQUE(std::vector<std::string>);
-// PYBIND11_MAKE_OPAQUE(std::vector<double>);
-
-// PYBIND11_MAKE_OPAQUE(std::vector<std::vector<ssize_t>>);
-// PYBIND11_MAKE_OPAQUE(std::vector<std::vector<std::string>>);
-// PYBIND11_MAKE_OPAQUE(std::vector<std::vector<double>>);
+#include <dune/pybindxi/stl.h>
 
 #include <dune/xt/common/string.hh>
 
