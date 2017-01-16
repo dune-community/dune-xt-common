@@ -222,6 +222,102 @@ int main()
  */
 TimedLogging& TimedLogger();
 
+
+/**
+ * \brief Base class to generate debug output using the TimedLogging about object creation and deletion.
+ * \sa    TimedLogging, TimedLogger
+ * \note  Output is only generated in debug builds (when NDEBUG is not defined) and when the TimedLogger is active.
+ *
+ *        Simply derive from this class
+\code
+class Foo : EnableDebugLoggingForCtors<>
+{
+public:
+  Foo() : EnableDebugLoggingForCtors<>("dune.xt.foo", "Foo") {}
+};
+\endcode
+ *        and provide the prefix (for the logger) as well as the class name. Using your class, i.e. as in
+\code
+int main() {
+
+  Foo foo;
+  Foo bar(foo);
+}
+\endcode
+ *        should yield an output like
+\code
+00:00|dune.xt.foo: Foo(this=0x0001)
+00:00|dune.xt.foo: Foo(this=0x0002, other=0x0001)
+00:00|dune.xt.foo: ~Foo(this=0x0002)
+00:00|dune.xt.foo: ~Foo(this=0x0001)
+\endcode
+ * The same holds for the move ctor.
+ */
+template <typename T = void>
+class EnableDebugLoggingForCtors
+{
+public:
+  EnableDebugLoggingForCtors(const std::string&
+#ifndef NDEBUG
+                                 prefix,
+#endif
+                             const std::string&
+#ifndef NDEBUG
+                                 class_id
+#endif
+                             )
+#ifndef NDEBUG
+    : logger_(TimedLogger().get(prefix))
+    , class_id_(class_id)
+  {
+    logger_.debug() << class_id_ << "(this=" << this << ")" << std::endl;
+  }
+#else
+  {
+  }
+#endif
+
+  EnableDebugLoggingForCtors(const EnableDebugLoggingForCtors<T>& other)
+#ifndef NDEBUG
+    : logger_(other.logger_)
+    , class_id_(other.class_id_)
+  {
+    logger_.debug() << class_id_ << "(this=" << this << ", other=" << &other << ")" << std::endl;
+  }
+#else
+      = default;
+#endif
+
+  EnableDebugLoggingForCtors(EnableDebugLoggingForCtors<T>&& source)
+#ifndef NDEBUG
+    : logger_(std::move(source.logger_))
+    , class_id_(std::move(source.class_id_))
+  {
+    logger_.debug() << class_id_ << "(this=" << this << ", source=" << &source << ")" << std::endl;
+  }
+#else
+      = default;
+#endif
+
+  ~EnableDebugLoggingForCtors()
+#ifndef NDEBUG
+  {
+    logger_.debug() << "~" << class_id_ << "(this=" << this << ")" << std::endl;
+  }
+#else
+      = default;
+#endif
+
+#ifndef NDEBUG
+protected:
+  TimedLogManager logger_;
+
+private:
+  const std::string class_id_;
+#endif
+}; // class EnableDebugLoggingForCtors
+
+
 } // namespace Common
 } // namespace XT
 } // namespace Dune
