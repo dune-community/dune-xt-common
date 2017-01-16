@@ -84,7 +84,7 @@ public:
   static const bool default_enable_colors = true;
   static const std::string default_info_color()
   {
-    return "white";
+    return "blue";
   }
   static const std::string default_debug_color()
   {
@@ -203,18 +203,18 @@ int main()
 \code
 int main()
 {
-  TimedLogger().create(10,          // max info level
-                       2,           // max debug level
-                       true,        // warnings are enabled (the default)
-                       true,        // colors are enabled (the default)
-                       "white",     // info color (the default)
-                       "lightgrey", // debug color (the default)
-                       "red"        // warning color (the default)
+  TimedLogger().create(10,         // max info level
+                       2,          // max debug level
+                       true,       // warnings are enabled (the default)
+                       true,       // colors are enabled (the default)
+                       "blue",     // info color (the default)
+                       "darkgrey", // debug color (the default)
+                       "red"       // warning color (the default)
                       );
 
   auto logger = TimedLogger().get("main");
-  logger.info() << "<- The 'main' prefix left of this should be white!" << std::endl;
-  logger.warn() << "<- The 'warn' prefix left of this should be red!"   << std::endl;
+  logger.info() << "<- The 'main' prefix left of this should be blue!" << std::endl;
+  logger.warn() << "<- The 'warn' prefix left of this should be red!"  << std::endl;
 }
 \endcode
  * \note Debug logging is only enabled if NDEBUG is not defined but you might still want to guard calls to
