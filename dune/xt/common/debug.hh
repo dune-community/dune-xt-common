@@ -12,15 +12,19 @@
 #define DUNE_XT_COMMON_DEBUG_HH
 
 #include <cstring>
+
 #include <boost/assert.hpp>
 #include <boost/format.hpp>
+
 #include "unused.hh"
+
 
 #define SEGFAULT                                                                                                       \
   {                                                                                                                    \
     int* J = 0;                                                                                                        \
     *J = 9;                                                                                                            \
   }
+
 
 inline char* charcopy(const char* s)
 {
@@ -30,9 +34,11 @@ inline char* charcopy(const char* s)
     t[i] = s[i];
   }
   return t;
-} // copy
+} // ... charcopy(...)
+
 
 #define __CLASS__ strtok(charcopy(__PRETTY_FUNCTION__), "<(")
+
 
 #ifndef ASSERT_LT
 #define ASSERT_LT(expt, actual)                                                                                        \
@@ -41,11 +47,13 @@ inline char* charcopy(const char* s)
       (boost::format("assertion %1% < %2% failed: %3% >= %4%") % #expt % #actual % expt % actual).str().c_str())
 #endif
 
+
 #ifndef ASSERT_EQ
 #define ASSERT_EQ(expt, actual)                                                                                        \
   BOOST_ASSERT_MSG(                                                                                                    \
       (expt == actual),                                                                                                \
       (boost::format("assertion %1% == %2% failed: %3% != %4%") % #expt % #actual % expt % actual).str().c_str())
 #endif
+
 
 #endif // DUNE_XT_COMMON_DEBUG_HH
