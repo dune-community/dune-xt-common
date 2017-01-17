@@ -156,6 +156,11 @@ To apply clang-format to all files in this project, call `make format` in your b
 _Note that clang-format changes the files inplace, so save your work in your editor beforehand!_
 
 A pre-commit hook to test for compliance is automatically installed by ```dunecontrol {vcsetup,all}```.
+If you have several versions of clang-format installed you can manually specify the name of the
+executble by setting:
+```
+git config hooks.clangformat my-custom-clang-format-version
+```
 
 If you do not have clang-format in version 3.8 available or forgot to apply it, the code you publish will fail the
 corresponding travis check.
