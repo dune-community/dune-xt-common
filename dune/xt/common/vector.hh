@@ -238,9 +238,19 @@ create(const size_t /*sz*/,
   return val;
 }
 
+// for compatibility with matrix types
+template <class VectorType>
+typename std::enable_if<is_vector<VectorType>::value, VectorType>::type
+create(const size_t rows, const size_t /*cols*/, const typename VectorAbstraction<VectorType>::S& val)
+{
+  return VectorAbstraction<VectorType>::create(rows, val);
+}
+
+
 } // namespace Common
 } // namespace XT
 } // namespace Dune
+
 
 template <class S, class V>
 typename std::enable_if<std::is_arithmetic<S>::value && Dune::XT::Common::is_vector<V>::value, V>::type

@@ -13,10 +13,13 @@ __local.fieldtype = std::size_t, long, double, std::complex<double>, unsigned | 
 __local.fieldtype_short = std_size_t, long, double, complex, unsigned | expand field
 __local.vectortype = std::vector<{__local.fieldtype}>, std::array<{__local.fieldtype}\,{__local.vec_size}>, Dune::FieldVector<{__local.fieldtype}\,{__local.vec_size}>, Dune::XT::Common::FieldVector<{__local.fieldtype}\,{__local.vec_size}>, Dune::DynamicVector<{__local.fieldtype}> | expand vector
 __local.vectortype_short = std_vector, std_array, dune_fieldvector, xt_fieldvector, dynamic_vector | expand vector
-__local.testtype = {__local.fieldtype}, {__local.vectortype} | expand test
-__local.testtype_short = {__local.fieldtype_short}, {__local.vectortype_short}_{__local.fieldtype_short} | expand test
+__local.matrixtype = Dune::FieldMatrix<{__local.fieldtype}\,{__local.vec_size}\,{__local.num_cols}>, Dune::XT::Common::FieldMatrix<{__local.fieldtype}\,{__local.vec_size}\,{__local.num_cols}>, Dune::DynamicMatrix<{__local.fieldtype}> | expand matrix
+__local.matrixtype_short = dune_fieldmatrix, xt_fieldmatrix, dynamic_matrix | expand matrix
+__local.testtype = {__local.fieldtype}, {__local.vectortype}, {__local.matrixtype} | expand test
+__local.testtype_short = {__local.fieldtype_short}, {__local.vectortype_short}_{__local.fieldtype_short}, {__local.matrixtype_short}_{__local.fieldtype_short}  | expand test
 
 __local.vec_size = 4
+__local.num_cols = 4
 
 [test_common_float_cmp]
 cmpstyle_is_relative = false, {__local.cmpstyle_is_relative} | expand cmpstyle_templ
@@ -25,6 +28,7 @@ cmpstyle_is_numpy = true, {__local.cmpstyle_is_numpy} | expand cmpstyle_templ
 [__static]
 TESTTYPE = {__local.testtype}
 VECSIZE = {__local.vec_size}
+NUMCOLS = {__local.num_cols}
 DEFAULT_EPSILON = {__local.default_eps}
 FLOATCMP_EQ = Dune::XT::Common::FloatCmp::eq{__local.cmpstyle_template}
 FLOATCMP_NE = Dune::XT::Common::FloatCmp::ne{__local.cmpstyle_template}

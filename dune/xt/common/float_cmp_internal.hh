@@ -86,9 +86,9 @@ float_cmp_eq(const XType& xx, const YType& yy, const TolType& rtol, const TolTyp
 } // ... float_cmp(...)
 
 template <class XType, class YType, class TolType>
-typename std::enable_if<is_matrix<XType>::value && is_matrix<YType>::value && std::is_arithmetic<TolType>::value
-                            && std::is_same<typename MatrixAbstraction<XType>::R, TolType>::value
-                            && std::is_same<typename MatrixAbstraction<YType>::R, TolType>::value,
+typename std::enable_if<is_matrix<XType>::value && is_matrix<YType>::value
+                            && std::is_same<typename MatrixAbstraction<XType>::S, TolType>::value
+                            && std::is_same<typename MatrixAbstraction<YType>::S, TolType>::value,
                         bool>::type
 float_cmp_eq(const XType& xx, const YType& yy, const TolType& rtol, const TolType& atol)
 {
@@ -138,9 +138,9 @@ dune_float_cmp_eq(const XType& xx, const YType& yy, const EpsType& eps)
 } // ... dune_float_cmp(...)
 
 template <Dune::FloatCmp::CmpStyle style, class XType, class YType, class EpsType>
-typename std::enable_if<is_matrix<XType>::value && is_matrix<YType>::value && std::is_arithmetic<EpsType>::value
-                            && std::is_same<typename MatrixAbstraction<XType>::R, EpsType>::value
-                            && std::is_same<typename MatrixAbstraction<YType>::R, EpsType>::value,
+typename std::enable_if<is_matrix<XType>::value && is_matrix<YType>::value
+                            && std::is_same<typename MatrixAbstraction<XType>::S, EpsType>::value
+                            && std::is_same<typename MatrixAbstraction<YType>::S, EpsType>::value,
                         bool>::type
 dune_float_cmp_eq(const XType& xx, const YType& yy, const EpsType& eps)
 {
