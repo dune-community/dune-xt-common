@@ -149,6 +149,10 @@ norm = 100/MAXTIME
 print('Generated {} bins.\nRelative volumes:\n\t\tMin {:.2f}%\n\t\tMax {:.2f}%\n\t\tAvg {:.2f}%\n'.format(
     len(bins), min(vols)*norm, max(vols)*norm, mean(vols)*norm, stdev(vols)))
 
+set_tpl = '''if(TEST {testname})\n
+    set_tests_properties({testname} PROPERTIES LABELS "builder_{idx}")\n
+endif(TEST {testname})
+'''
 with open(cmake_outfile, 'wt') as out:
     out.write('set(DXT_BIN_COUNT "{}" CACHE STRING "number of bins for test targets" )\n'.format(len(bins)))
     for idx, bin in enumerate(bins):
@@ -156,4 +160,4 @@ with open(cmake_outfile, 'wt') as out:
         for binary in sorted(bin.keys()):
             if binary not in headerlibs:
                 for testname in testname_map[binary]:
-                    out.write('set_tests_properties({} PROPERTIES LABELS "builder_{}")\n'.format(testname, idx))
+                    out.write(set_tpl.format(testname=testname, idx=idx))
