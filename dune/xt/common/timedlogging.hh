@@ -261,8 +261,9 @@ class EnableDebugLoggingForCtors
 public:
   EnableDebugLoggingForCtors(const std::string&
 #ifndef NDEBUG
-                                 prefix,
+                                 prefix
 #endif
+                             ,
                              const std::string&
 #ifndef NDEBUG
                                  class_id
