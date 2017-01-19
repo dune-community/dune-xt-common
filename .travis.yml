@@ -138,13 +138,10 @@ matrix:
       env: CXX=g++-4.9 CC=gcc-4.9 MODULES_TO_DELETE="dune-xt-grid dune-xt-la dune-xt-functions"
     - os: linux
       addons: *gcc49
-      env: CXX=g++-4.9 CC=gcc-4.9 MODULES_TO_DELETE="dune-xt-grid dune-xt-la dune-xt-functions dune-fem dune-pdelab dune-typetree dune-grid dune-istl"
-    - os: linux
-      addons: *gcc49
-      env: CXX=g++-4.9 CC=gcc-4.9 MODULES_TO_DELETE="dune-xt-grid dune-xt-la dune-xt-functions dune-fem dune-pdelab"
+      env: CXX=g++-4.9 CC=gcc-4.9 MODULES_TO_DELETE="dune-xt-grid dune-xt-la dune-xt-functions dune-fem dune-pdelab dune-typetree dune-grid dune-istl dune-pybindxi"
 
     - os: linux
-      addons:
+      addons: &gcc5
         apt:
           sources:
           - *commonsources
@@ -153,9 +150,12 @@ matrix:
           - *commonpackages
           - ['g++-5', 'gcc-5']
       env: CXX=g++-5 CC=gcc-5 MODULES_TO_DELETE="dune-xt-grid dune-xt-la dune-xt-functions"
+    - os: linux
+      addons: *gcc5
+      env: CXX=g++-5 CC=gcc-5 MODULES_TO_DELETE="dune-xt-grid dune-xt-la dune-xt-functions dune-fem dune-pdelab dune-typetree dune-grid dune-istl dune-pybindxi"
 
     - os: linux
-      addons:
+      addons: &clang38
         apt:
           sources:
           - *commonsources
@@ -163,6 +163,9 @@ matrix:
           packages:
           - *commonpackages
       env: CXX=clang++-3.8 CC=clang-3.8 MODULES_TO_DELETE="dune-xt-grid dune-xt-la dune-xt-functions" CLANG_FORMAT="/usr/bin/clang-format-3.8"
+    - os: linux
+      addons: *clang38
+      env: CXX=clang++-3.8 CC=clang-3.8 MODULES_TO_DELETE="dune-xt-grid dune-xt-la dune-xt-functions dune-fem dune-pdelab dune-typetree dune-grid dune-istl dune-pybindxi" CLANG_FORMAT="/usr/bin/clang-format-3.8"
 
     - os: linux
       addons:
@@ -175,13 +178,3 @@ matrix:
       # fake last module to delete to distinguish testlogs
       env: OPTS=config.opts/travis.make BUILD_CMD="make -k -j2" CXX=clang++-3.8 CC=clang-3.8 MODULES_TO_DELETE="dune-xt-grid dune-xt-la dune-xt-functions with-make"
 
-    #- os: linux
-      #addons:
-        #apt:
-          #sources:
-          #- *commonsources
-          #- ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.8']
-          #packages:
-          #- *commonpackages
-          #- ['clang-3.8']
-      #env: CXX=clang++-3.8 CC=clang-3.8 MODULES_TO_DELETE="dune-xt-grid dune-xt-la dune-xt-functions"
