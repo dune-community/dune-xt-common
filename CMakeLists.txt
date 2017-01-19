@@ -92,6 +92,9 @@ include(GridUtils)
 
 add_header_listing()
 make_dependent_modules_sys_included()
+if (EIGEN3_FOUND)
+  add_definitions("-isystem ${EIGEN3_INCLUDE_DIR}")
+endif (EIGEN3_FOUND)
 
 add_subdirectory(dune)
 add_subdirectory("cmake/modules")

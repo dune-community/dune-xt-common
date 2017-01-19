@@ -193,7 +193,10 @@ public:
   {
     if (!has_key(key))
       DUNE_THROW(Exceptions::configuration_error,
-                 "Configuration does not have this key and there was no default value provided");
+                 "This Configuration (see below) does not contain the key '"
+                     << key
+                     << "' and there was no default value provided!\n======================\n"
+                     << report_string());
     return get_valid_value(key, T(), validator, size, cols);
   } // ... get(...)
 
@@ -206,7 +209,10 @@ public:
   {
     if (!has_key(key))
       DUNE_THROW(Exceptions::configuration_error,
-                 "Configuration does not have this key and there was no default value provided");
+                 "This Configuration (see below) does not contain the key '"
+                     << key
+                     << "' and there was no default value provided!\n======================\n"
+                     << report_string());
     return get_valid_value(key, T(), validator, 0, 0);
   } // ... get(...)
 

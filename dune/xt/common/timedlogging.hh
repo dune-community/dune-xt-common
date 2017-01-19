@@ -84,7 +84,7 @@ public:
   static const bool default_enable_colors = true;
   static const std::string default_info_color()
   {
-    return "white";
+    return "blue";
   }
   static const std::string default_debug_color()
   {
@@ -203,24 +203,120 @@ int main()
 \code
 int main()
 {
-  TimedLogger().create(10,          // max info level
-                       2,           // max debug level
-                       true,        // warnings are enabled (the default)
-                       true,        // colors are enabled (the default)
-                       "white",     // info color (the default)
-                       "lightgrey", // debug color (the default)
-                       "red"        // warning color (the default)
+  TimedLogger().create(10,         // max info level
+                       2,          // max debug level
+                       true,       // warnings are enabled (the default)
+                       true,       // colors are enabled (the default)
+                       "blue",     // info color (the default)
+                       "darkgrey", // debug color (the default)
+                       "red"       // warning color (the default)
                       );
 
   auto logger = TimedLogger().get("main");
-  logger.info() << "<- The 'main' prefix left of this should be white!" << std::endl;
-  logger.warn() << "<- The 'warn' prefix left of this should be red!"   << std::endl;
+  logger.info() << "<- The 'main' prefix left of this should be blue!" << std::endl;
+  logger.warn() << "<- The 'warn' prefix left of this should be red!"  << std::endl;
 }
 \endcode
  * \note Debug logging is only enabled if NDEBUG is not defined but you might still want to guard calls to
  *       logger.debug() for performance reasons.
  */
 TimedLogging& TimedLogger();
+
+
+/**
+ * \brief Base class to generate debug output using the TimedLogging about object creation and deletion.
+ * \sa    TimedLogging, TimedLogger
+ * \note  Output is only generated in debug builds (when NDEBUG is not defined) and when the TimedLogger is active.
+ *
+ *        Simply derive from this class
+\code
+class Foo : EnableDebugLoggingForCtors<>
+{
+public:
+  Foo() : EnableDebugLoggingForCtors<>("dune.xt.foo", "Foo") {}
+};
+\endcode
+ *        and provide the prefix (for the logger) as well as the class name. Using your class, i.e. as in
+\code
+int main() {
+
+  Foo foo;
+  Foo bar(foo);
+}
+\endcode
+ *        should yield an output like
+\code
+00:00|dune.xt.foo: Foo(this=0x0001)
+00:00|dune.xt.foo: Foo(this=0x0002, other=0x0001)
+00:00|dune.xt.foo: ~Foo(this=0x0002)
+00:00|dune.xt.foo: ~Foo(this=0x0001)
+\endcode
+ * The same holds for the move ctor.
+ */
+template <typename T = void>
+class EnableDebugLoggingForCtors
+{
+public:
+  EnableDebugLoggingForCtors(const std::string&
+#ifndef NDEBUG
+                                 prefix,
+#endif
+                             const std::string&
+#ifndef NDEBUG
+                                 class_id
+#endif
+                             )
+#ifndef NDEBUG
+    : logger_(TimedLogger().get(prefix))
+    , class_id_(class_id)
+  {
+    logger_.debug() << class_id_ << "(this=" << this << ")" << std::endl;
+  }
+#else
+  {
+  }
+#endif
+
+  EnableDebugLoggingForCtors(const EnableDebugLoggingForCtors<T>& other)
+#ifndef NDEBUG
+    : logger_(other.logger_)
+    , class_id_(other.class_id_)
+  {
+    logger_.debug() << class_id_ << "(this=" << this << ", other=" << &other << ")" << std::endl;
+  }
+#else
+      = default;
+#endif
+
+  EnableDebugLoggingForCtors(EnableDebugLoggingForCtors<T>&& source)
+#ifndef NDEBUG
+    : logger_(std::move(source.logger_))
+    , class_id_(std::move(source.class_id_))
+  {
+    logger_.debug() << class_id_ << "(this=" << this << ", source=" << &source << ")" << std::endl;
+  }
+#else
+      = default;
+#endif
+
+  ~EnableDebugLoggingForCtors()
+#ifndef NDEBUG
+  {
+    logger_.debug() << "~" << class_id_ << "(this=" << this << ")" << std::endl;
+  }
+#else
+      = default;
+#endif
+
+#ifndef NDEBUG
+protected:
+  TimedLogManager logger_;
+
+private:
+  const std::string class_id_;
+#endif
+}; // class EnableDebugLoggingForCtors
+
 
 } // namespace Common
 } // namespace XT
