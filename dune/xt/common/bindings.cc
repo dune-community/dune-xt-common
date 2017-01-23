@@ -1,3 +1,12 @@
+// This file is part of the dune-xt-common project:
+//   https://github.com/dune-community/dune-xt-common
+// The copyright lies with the authors of this file (see below).
+// License: Dual licensed as BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+//      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
+//          with "runtime exception" (http://www.dune-project.org/license.html)
+// Authors:
+//   Felix Schindler (2016 - 2017)
+
 #include "config.h"
 
 #if HAVE_DUNE_PYBINDXI
@@ -22,9 +31,9 @@ namespace py = pybind11;
 using namespace pybind11::literals;
 
 
-PYBIND11_PLUGIN(common)
+PYBIND11_PLUGIN(_common)
 {
-  py::module m("common", "dune-xt-common");
+  py::module m("_common", "dune-xt-common");
 
   Dune::XT::Common::bind_Exception(m);
 
