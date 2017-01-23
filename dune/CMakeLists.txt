@@ -12,6 +12,3 @@ install(DIRECTORY xt
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/
         FILES_MATCHING PATTERN "*.hh")
 
-install(FILES
-        __init__.py
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/dune/)

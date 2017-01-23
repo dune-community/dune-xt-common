@@ -37,9 +37,6 @@ install(DIRECTORY ${DUNE_XT_COMMON_TEST_DIR}/gtest
         FILES_MATCHING PATTERN "*")
 install(FILES ${DUNE_XT_COMMON_TEST_DIR}/main.hxx
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/xt/test/)
-install(FILES
-        __init__.py
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/dune/xt/)
 
 include_directories(SYSTEM ${DUNE_XT_COMMON_TEST_DIR}/gtest )
 add_subdirectory(common/test EXCLUDE_FROM_ALL)
