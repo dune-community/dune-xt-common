@@ -10,6 +10,12 @@ coverage:
     patch: true
     changes: false
 
+    project:
+      target: 50%
+
+    patch:
+      target: 0%
+
 comment:
   layout: "header, diff"
   behavior: default  # update if exists else create new
