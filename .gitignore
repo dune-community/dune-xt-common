@@ -38,3 +38,4 @@ data
 *.o
 *.la
 *.user
+*.pyc
