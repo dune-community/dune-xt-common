@@ -14,6 +14,8 @@
 #include <string>
 #include <vector>
 
+#include <boost/numeric/conversion/cast.hpp>
+
 #include <dune/common/parallel/mpihelper.hh>
 
 #include <dune/pybindxi/pybind11.h>
@@ -39,7 +41,7 @@ PYBIND11_PLUGIN(_common)
 
   m.def("init_mpi",
         [](const std::vector<std::string>& args) {
-          int argc = args.size();
+          int argc = boost::numeric_cast<int>(args.size());
           char** argv = Dune::XT::Common::vector_to_main_args(args);
           Dune::MPIHelper::instance(argc, argv);
         },
