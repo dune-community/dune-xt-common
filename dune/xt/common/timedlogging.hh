@@ -256,6 +256,8 @@ int main() {
 template <typename T = void>
 class EnableDebugLoggingForCtors
 {
+  typedef EnableDebugLoggingForCtors<T> ThisType;
+
 public:
   EnableDebugLoggingForCtors(const std::string&
 #ifndef NDEBUG
@@ -278,7 +280,7 @@ public:
   }
 #endif
 
-  EnableDebugLoggingForCtors(const EnableDebugLoggingForCtors<T>& other)
+  EnableDebugLoggingForCtors(const ThisType& other)
 #ifndef NDEBUG
     : logger_(other.logger_)
     , class_id_(other.class_id_)
@@ -289,7 +291,7 @@ public:
       = default;
 #endif
 
-  EnableDebugLoggingForCtors(EnableDebugLoggingForCtors<T>&& source)
+  EnableDebugLoggingForCtors(ThisType&& source)
 #ifndef NDEBUG
     : logger_(std::move(source.logger_))
     , class_id_(std::move(source.class_id_))
@@ -308,6 +310,25 @@ public:
 #else
       = default;
 #endif
+
+  ThisType& operator=(const ThisType& other)
+#ifndef NDEBUG
+  {
+    logger_.debug() << class_id_ << "operator=(this=" << this << ", other=" << &other << ")" << std::endl;
+  }
+#else
+      = default;
+#endif
+
+  ThisType& operator=(ThisType&& source)
+#ifndef NDEBUG
+  {
+    logger_.debug() << class_id_ << "operator=(this=" << this << ", source=" << &source << ")" << std::endl;
+  }
+#else
+      = default;
+#endif
+
 
 #ifndef NDEBUG
 protected:
