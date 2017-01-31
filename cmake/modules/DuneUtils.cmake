@@ -109,7 +109,7 @@ macro(END_TESTCASES)
                    ${CMAKE_CURRENT_BINARY_DIR}/dxt_all_sorted_testnames.cmake)
     configure_file(${dune-xt-common-module-path}/dxt_headercheck_targets.cmake.in
                    ${CMAKE_CURRENT_BINARY_DIR}/dxt_headercheck_targets.cmake)
-    add_custom_target(rerun_test_distribution ${CMAKE_BINARY_DIR}/dune-env-3 distribute_testing.py
+    add_custom_target(rerun_test_distribution ${CMAKE_BINARY_DIR}/dune-env distribute_testing.py
                         "${CMAKE_BINARY_DIR}" "${CMAKE_CURRENT_SOURCE_DIR}"
                         "${CMAKE_CURRENT_BINARY_DIR}/dxt_test_binaries.cmake"
                         "${CMAKE_CURRENT_BINARY_DIR}/dxt_all_sorted_testnames.cmake"
