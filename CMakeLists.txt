@@ -53,40 +53,7 @@ execute_process(
     OUTPUT_STRIP_TRAILING_WHITESPACE
 )
 
-SET( DS_FLAGS_Release
-  "-fPIC"
-  CACHE STRING "")
-set(DS_FLAGS_RelWithDebInfo
-  "-fPIC"
-  CACHE STRING "")
-SET( DS_FLAGS_Debug
-  "-O0" "-g3" "-ggdb" "-Wunused-variable" "-fno-strict-aliasing" "-fPIC" "-Wall" "-Wextra" "-Wparentheses" "-pedantic"  "-Wshadow" "-Wundef" "-Wnon-virtual-dtor"
-  CACHE STRING "")
-
-#aka anything but intel, but cmake has identifier for icc
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  list( APPEND DS_FLAGS_Debug
-         -Wc++0x-compat -Wredundant-decls -Winline  -ftemplate-backtrace-limit=0
-      )
-else ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  # for us effectively icc
-  list( APPEND DS_FLAGS_Debug
-        -Wcast-qual -Wformat=2 -Winit-self -Woverloaded-virtual -Wshadow -Wsign-conversion -Wsign-promo -Wundef  -Wno-unused)
-endif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-
-if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-  list( APPEND DS_FLAGS_Debug
-        -Wnon-literal-null-conversion -Wused-but-marked-unused -Wno-tautological-compare -Wfloat-equal -Wdisabled-macro-expansion -Wcovered-switch-default -Wswitch-enum -Wunreachable-code -Wshorten-64-to-32
-      )
-elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-  list( APPEND DS_FLAGS_Debug
-        -Wlogical-op  -Og
-      )
-endif()
-
 dune_enable_all_packages(INCLUDE_DIRS ${dune-xt-common_SOURCE_DIR}/dune
-                         COMPILE_DEFINITIONS DNDEBUG DDNDEBUG
-                         COMPILE_OPTIONS ${DS_FLAGS_${CMAKE_BUILD_TYPE}}
                          MODULE_LIBRARIES dunextcommon gtest_dune_xt_common
                          )
 
