@@ -45,7 +45,9 @@
 #elif defined(BOOST_GCC) && BOOST_GCC
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wall"
+#if (__GNUC__ > 4)
 #pragma GCC diagnostic ignored "-Wmisleading-indentation"
+#endif
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #pragma GCC diagnostic ignored "-Wextra"
 #pragma GCC diagnostic ignored "-Wfloat-equal"
