@@ -116,14 +116,14 @@ long Timings::stop(const std::string section_name)
   known_timers_map_[section_name].first = false; // marks as not running
   TimingData& timing = *(known_timers_map_[section_name].second);
   timing.stop();
-  const auto delta = timing.delta();
+  const auto dlt = timing.delta();
   if (commited_deltas_.find(section_name) == commited_deltas_.end())
-    commited_deltas_[section_name] = delta;
+    commited_deltas_[section_name] = dlt;
   else {
-    for (auto i : value_range(delta.size()))
-      commited_deltas_[section_name][i] += delta[i];
+    for (auto i : value_range(dlt.size()))
+      commited_deltas_[section_name][i] += dlt[i];
   }
-  return delta[0];
+  return dlt[0];
 } // StopTiming
 
 TimingData::TimeType Timings::walltime(const std::string section_name) const
