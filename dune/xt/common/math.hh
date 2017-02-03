@@ -262,6 +262,19 @@ bool isinf(std::complex<T> val)
   return isinf(std::real(val)) || isinf(std::imag(val));
 }
 
+constexpr size_t factorial(size_t n)
+{
+  return n > 0 ? n * factorial(n - 1) : 1;
+}
+
+inline double binomial_coefficient(const double n, const size_t k)
+{
+  double ret(1);
+  for (size_t ii = 1; ii <= k; ++ii)
+    ret *= (n + 1 - ii) / ii;
+  return ret;
+}
+
 } // namespace Common
 } // namespace XT
 } // namespace Dune
