@@ -42,10 +42,9 @@ std::vector<T>& operator+=(std::vector<T>& vec, const std::vector<T>& other)
   return vec;
 }
 
+template <class V>
 struct FloatCmpTest : public testing::Test
 {
-  typedef TESTTYPE V;
-
   typedef typename std::conditional<XT::Common::is_matrix<V>::value,
                                     typename XT::Common::MatrixAbstraction<V>::ScalarType,
                                     typename XT::Common::VectorAbstraction<V>::ScalarType>::type S;
@@ -221,38 +220,39 @@ struct FloatCmpTest : public testing::Test
 }; // struct FloatCmpBase
 
 
-TEST_F(FloatCmpTest, eq)
+TYPED_TEST_CASE(FloatCmpTest, TESTTYPES);
+TYPED_TEST(FloatCmpTest, eq)
 {
   this->check_eq();
 }
 
-TEST_F(FloatCmpTest, ne)
+TYPED_TEST(FloatCmpTest, ne)
 {
   this->check_ne();
 }
 
-TEST_F(FloatCmpTest, gt)
+TYPED_TEST(FloatCmpTest, gt)
 {
   this->check_gt();
 }
 
-TEST_F(FloatCmpTest, lt)
+TYPED_TEST(FloatCmpTest, lt)
 {
   this->check_lt();
 }
 
-TEST_F(FloatCmpTest, ge)
+TYPED_TEST(FloatCmpTest, ge)
 {
   this->check_ge();
 }
 
-TEST_F(FloatCmpTest, le)
+TYPED_TEST(FloatCmpTest, le)
 {
   this->check_le();
 }
 
-TEST_F(FloatCmpTest, neg)
+TYPED_TEST(FloatCmpTest, neg)
 {
-  if (std::is_signed<XT::Common::VectorAbstraction<TESTTYPE>::ScalarType>::value)
+  if (std::is_signed<typename XT::Common::VectorAbstraction<TypeParam>::ScalarType>::value)
     this->negative_numbers();
 }

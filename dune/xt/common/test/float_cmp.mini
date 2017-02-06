@@ -1,5 +1,5 @@
-__name = {__local.testtype_short}_{__local.cmpstyle_template_short}
-__exec_suffix = {__local.testtype_short}_{__local.cmpstyle_template_short}
+__name = {__local.fieldtype_short}_{__local.cmpstyle_template_short}
+__exec_suffix = {__local.fieldtype_short}_{__local.cmpstyle_template_short}
 
 __local.cmpstyles = numpy, relativeWeak, relativeStrong, absolute, defaultStyle | expand cmpstyles
 __local.cmpstyle_is_relative = false, true, true, false, false | expand cmpstyles
@@ -11,12 +11,9 @@ __local.default_eps = DefaultEpsilon<S>, DefaultEpsilon<S\,Style::{__local.cmpst
 
 __local.fieldtype = std::size_t, long, double, std::complex<double> | expand field
 __local.fieldtype_short = std_size_t, long, double, complex | expand field
-__local.vectortype = std::vector<{__local.fieldtype}>, std::array<{__local.fieldtype}\,{__local.vec_size}>, Dune::FieldVector<{__local.fieldtype}\,{__local.vec_size}>, Dune::XT::Common::FieldVector<{__local.fieldtype}\,{__local.vec_size}>, Dune::DynamicVector<{__local.fieldtype}> | expand vector
-__local.vectortype_short = std_vector, std_array, dune_fieldvector, xt_fieldvector, dynamic_vector | expand vector
-__local.matrixtype = Dune::FieldMatrix<{__local.fieldtype}\,{__local.vec_size}\,{__local.num_cols}>, Dune::XT::Common::FieldMatrix<{__local.fieldtype}\,{__local.vec_size}\,{__local.num_cols}>, Dune::DynamicMatrix<{__local.fieldtype}> | expand matrix
-__local.matrixtype_short = dune_fieldmatrix, xt_fieldmatrix, dynamic_matrix | expand matrix
-__local.testtype = {__local.fieldtype}, {__local.vectortype}, {__local.matrixtype} | expand test
-__local.testtype_short = {__local.fieldtype_short}, {__local.vectortype_short}_{__local.fieldtype_short}, {__local.matrixtype_short}_{__local.fieldtype_short}  | expand test
+__local.vectortype = std::vector<{__local.fieldtype}>, std::array<{__local.fieldtype}, {__local.vec_size}>, Dune::FieldVector<{__local.fieldtype},{__local.vec_size}>, Dune::XT::Common::FieldVector<{__local.fieldtype},{__local.vec_size}>, Dune::DynamicVector<{__local.fieldtype}>
+__local.matrixtype = Dune::FieldMatrix<{__local.fieldtype}, {__local.vec_size}, {__local.num_cols}>, Dune::XT::Common::FieldMatrix<{__local.fieldtype},{__local.vec_size},{__local.num_cols}>, Dune::DynamicMatrix<{__local.fieldtype}>
+__local.testtype = ::testing::Types<{__local.fieldtype}, {__local.vectortype}, {__local.matrixtype}>
 
 __local.vec_size = 4
 __local.num_cols = 4
@@ -26,7 +23,7 @@ cmpstyle_is_relative = false, {__local.cmpstyle_is_relative} | expand cmpstyle_t
 cmpstyle_is_numpy = true, {__local.cmpstyle_is_numpy} | expand cmpstyle_templ
 
 [__static]
-TESTTYPE = {__local.testtype}
+TESTTYPES = {__local.testtype}
 VECSIZE = {__local.vec_size}
 NUMCOLS = {__local.num_cols}
 DEFAULT_EPSILON = {__local.default_eps}
