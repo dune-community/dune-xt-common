@@ -69,7 +69,6 @@ macro(BEGIN_TESTCASES)
                         list(APPEND dxt_test_binaries ${target} )
 			#                        set(dxt_test_names_${target} ${testlist_${testbase}_${target}})
                     endforeach(target)
-
                 else( EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.mini )
                     set(target test_${testbase})
 		    dune_add_test( NAME ${target}
@@ -81,6 +80,26 @@ macro(BEGIN_TESTCASES)
                     set(dxt_test_names_${target} ${target})
 	        endif( EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.mini )
         endforeach( source )
+        file( GLOB test_templates "${CMAKE_CURRENT_SOURCE_DIR}/*.tpl" )
+        foreach( template ${test_templates} )
+            get_filename_component(testbase ${template} NAME_WE)
+            set(config_fn ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.py)
+            set(tpl_fn ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.tpl)
+            set(out_fn ${CMAKE_BINARY_DIR}/${testbase}.tpl.cc)
+            add_custom_command(OUTPUT ${out_fn}
+                               COMMAND ${CMAKE_BINARY_DIR}/dune-env dxt_code_generation.py
+                                      "${config_fn}" "${tpl_fn}"  "${CMAKE_BINARY_DIR}" "${out_fn}"
+                               DEPENDS "${config_fn}" "${tpl_fn}" "${CMAKE_CURRENT_SOURCE_DIR}/spaces.py"
+                               VERBATIM USES_TERMINAL)
+            set(target test_${testbase})
+            add_executable( ${target} ${out_fn} ${COMMON_HEADER} )
+            target_link_libraries( ${target} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common )
+            add_test( NAME ${target} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${target}
+                                    --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/${target}.xml )
+            list(APPEND dxt_test_binaries ${target} )
+            set(dxt_test_names_${target} ${target})
+        endforeach( source )
+        add_custom_target(test_templates SOURCES ${test_templates})
 endmacro(BEGIN_TESTCASES)
 
 macro(END_TESTCASES)
@@ -135,6 +154,7 @@ macro(add_header_listing)
         list(APPEND COMMON_HEADER ${HEADER_LIST})
     endforeach(_mod DEPENDENCIES)
     set_source_files_properties(${COMMON_HEADER} PROPERTIES HEADER_FILE_ONLY 1)
+    add_custom_target(common_header SOURCES ${COMMON_HEADER})
 endmacro(add_header_listing)
 
 macro(make_dependent_modules_sys_included)
