@@ -55,6 +55,13 @@ public:
   {
   }
 
+  ThisType operator+(const ThisType& other) const
+  {
+    ThisType ret = *this;
+    ret += other;
+    return ret;
+  }
+
   Dune::FieldVector<K, ROWS> operator*(const Dune::FieldVector<K, COLS>& vec) const
   {
     Dune::FieldVector<K, ROWS> ret;
@@ -128,6 +135,13 @@ public:
   {
     BaseType::operator=(other[0]);
     return *this;
+  }
+
+  ThisType operator+(const ThisType& other) const
+  {
+    ThisType ret = *this;
+    ret += other;
+    return ret;
   }
 
   ThisType operator*(const K& scal) const
