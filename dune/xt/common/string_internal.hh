@@ -92,6 +92,7 @@ static inline T convert_safely(std::string ss)
                "Error in the stl while converting the string '" << ss << "' to type '" << Typename<T>::value() << "':\n"
                                                                 << e.what());
   }
+  return T();
 } // ... convert_safely(...)
 
 // unspecialized variant
