@@ -118,7 +118,7 @@ function(parse_tbb_vars_sh)
       OUTPUT_VARIABLE shell_out
       )
     find_path(
-      TBB_INCLUDE_DIR
+      TBB_INCLUDE_DIRS
       NAMES tbb/task_scheduler_init.h
       PATHS ${shell_out}
       DOC "Path to TBB include directory"
@@ -153,9 +153,9 @@ if (TBB_VARS_SH)
 else()
   # Try to find TBB in standard include paths
   find_path(
-    TBB_INCLUDE_DIR
+    TBB_INCLUDE_DIRS
     tbb/task_scheduler_init.h
-    PATHS ENV CPATH
+    PATHS ENV CPATH ${TBB_INCLUDE_DIR}
     DOC "Path to TBB include directory"
     )
   # Try to find some version of the TBB library in standard library paths
@@ -168,7 +168,6 @@ else()
     PATHS ENV LIBRARY_PATH
     DOC "Path to TBB library directory"
     )
-  message(STATUS "Library dir: ${TBB_LIBRARY_DIR}")
 endif()
 
 
@@ -346,7 +345,7 @@ endif()
 
 # make sure everything works
 cmake_push_check_state(RESET)
-set(CMAKE_REQUIRED_INCLUDES ${TBB_INCLUDE_DIR})
+set(CMAKE_REQUIRED_INCLUDES ${TBB_INCLUDE_DIRS})
 foreach(_definition ${TBB_COMPILE_DEFINITIONS})
   list(APPEND CMAKE_REQUIRED_DEFINITIONS "-D${_definition}")
 endforeach()
@@ -375,7 +374,6 @@ if(TBB_INTEL_COMPILER_INTERNAL_TBB)
     )
 else()
 
-  set(TBB_INCLUDE_DIRS ${TBB_INCLUDE_DIR})
 
   find_package_handle_standard_args(
     TBB
