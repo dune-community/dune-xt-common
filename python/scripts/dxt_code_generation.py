@@ -12,7 +12,7 @@ cmake_binary_dir = sys.argv[3]
 out_fn = sys.argv[4]
 cache, _ = parse_cache(os.path.join(cmake_binary_dir, 'CMakeCache.txt'))
 sys.path.append(os.path.dirname(config_fn))
-config = run_path(config_fn,init_globals=locals())
+config = run_path(config_fn,init_globals=locals(), run_name='__dxt_codegen__')
 
 template = Template(open(tpl_fn).read())
 with open(out_fn, 'w') as out:

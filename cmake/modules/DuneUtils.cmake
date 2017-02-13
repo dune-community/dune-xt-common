@@ -92,9 +92,10 @@ macro(BEGIN_TESTCASES)
                                DEPENDS "${config_fn}" "${tpl_fn}" "${CMAKE_CURRENT_SOURCE_DIR}/spaces.py"
                                VERBATIM USES_TERMINAL)
             set(target test_${testbase})
-            add_executable( ${target} ${out_fn} ${COMMON_HEADER} )
-            target_link_libraries( ${target} ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common )
-            add_test( NAME ${target} COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${target}
+            dune_add_test( NAME ${target}
+                           SOURCES ${out_fn} ${COMMON_HEADER}
+                           LINK_LIBRARIES ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common
+                           COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${target}
                                     --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/${target}.xml )
             list(APPEND dxt_test_binaries ${target} )
             set(dxt_test_names_${target} ${target})
