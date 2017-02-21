@@ -40,3 +40,4 @@ data
 *.user
 .idea
 cmake/modules/petsc
+*.pyc

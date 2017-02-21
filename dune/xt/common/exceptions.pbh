@@ -1,0 +1,46 @@
+// This file is part of the dune-xt-common project:
+//   https://github.com/dune-community/dune-xt-common
+// The copyright lies with the authors of this file (see below).
+// License: Dual licensed as BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+//      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
+//          with "runtime exception" (http://www.dune-project.org/license.html)
+// Authors:
+//   Felix Schindler (2016)
+
+#ifndef DUNE_XT_COMMON_EXCEPTIONS_PBH
+#define DUNE_XT_COMMON_EXCEPTIONS_PBH
+#if HAVE_DUNE_PYBINDXI
+
+#include <dune/pybindxi/pybind11.h>
+
+#include "exceptions.hh"
+
+namespace Dune {
+namespace XT {
+namespace Common {
+
+
+void bind_Exception(pybind11::module& m)
+{
+  namespace py = pybind11;
+
+  static py::exception<Exception> exc(m, "DuneError");
+
+  py::register_exception_translator([](std::exception_ptr p) {
+    try {
+      if (p)
+        std::rethrow_exception(p);
+    } catch (const Exception& e) {
+      exc(e.what().c_str());
+    }
+  });
+
+} // ... bind_Exception(...)
+
+
+} // namespace Common
+} // namespace XT
+} // namespace Dune
+
+#endif // HAVE_DUNE_PYBINDXI
+#endif // DUNE_XT_COMMON_EXCEPTIONS_PBH

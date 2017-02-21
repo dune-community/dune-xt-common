@@ -35,6 +35,10 @@
 #define DXT_DISABLE_LARGE_TESTS 0
 #endif
 
+#ifndef HAVE_DUNE_PYBINDXI
+#define HAVE_DUNE_PYBINDXI 0
+#endif
+
 #cmakedefine HAS_WORKING_UNUSED_ATTRIBUTE  1
 
 #define HAVE_LIKWID ${HAVE_LIKWID}

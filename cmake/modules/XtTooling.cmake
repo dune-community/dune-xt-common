@@ -26,7 +26,7 @@ macro(add_format glob_dir)
     endif (NOT TARGET format)
     string(REPLACE "/" "_" fn ${glob_dir})
     file(GLOB_RECURSE _files "${glob_dir}/*.hh" "${glob_dir}/*.cc"
-        "${glob_dir}/*.cxx" "${glob_dir}/*.hxx" "${glob_dir}/*.h" "${glob_dir}/*.c")
+        "${glob_dir}/*.cxx" "${glob_dir}/*.hxx" "${glob_dir}/*.h" "${glob_dir}/*.c" "${glob_dir}/*.pbh")
     add_custom_target("format_${fn}" ${ClangFormat_EXECUTABLE} -i -style=file -fallback-style=none ${_files} ) 
     add_dependencies( format "format_${fn}" )
   else()
