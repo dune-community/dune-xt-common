@@ -1,13 +1,13 @@
 // This file is part of the dune-xt-common project:
 //   https://github.com/dune-community/dune-xt-common
-// The copyright lies with the authors of this file (see below).
-// License: Dual licensed as  BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+// Copyright 2009-2017 dune-xt-common developers and contributors. All rights reserved.
+// License: Dual licensed as BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 //      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Andreas Buhr    (2014)
-//   Felix Schindler (2009, 2012 - 2016)
-//   Rene Milk       (2009 - 2015)
+//   Felix Schindler (2009, 2012 - 2017)
+//   Rene Milk       (2009 - 2016)
 //   Sven Kaulmann   (2011 - 2012)
 //   Tobias Leibner  (2014)
 
