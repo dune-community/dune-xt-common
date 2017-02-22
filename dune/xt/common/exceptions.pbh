@@ -11,6 +11,8 @@
 #define DUNE_XT_COMMON_EXCEPTIONS_PBH
 #if HAVE_DUNE_PYBINDXI
 
+#include <string>
+
 #include <dune/pybindxi/pybind11.h>
 
 #include "exceptions.hh"
@@ -31,7 +33,7 @@ void bind_Exception(pybind11::module& m)
       if (p)
         std::rethrow_exception(p);
     } catch (const Exception& e) {
-      exc(e.what().c_str());
+      exc(std::string(e.what()).c_str());
     }
   });
 
