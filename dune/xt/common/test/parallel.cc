@@ -94,7 +94,7 @@ TYPED_TEST(ThreadValueTest, All)
   check_eq(bar, new_value);
 }
 
-TEST(ThreadManager, All)
+GTEST_TEST(ThreadManager, All)
 {
   auto& tm = Dune::XT::Common::threadManager();
   EXPECT_LE(tm.current_threads(), tm.max_threads());

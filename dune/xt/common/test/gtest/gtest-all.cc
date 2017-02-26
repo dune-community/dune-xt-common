@@ -35,6 +35,7 @@
 // This file serves this purpose.
 
 #include <dune/xt/common/disable_warnings.hh>
+#define GTEST_DONT_DEFINE_TEST 1
 // This line ensures that gtest.h can be compiled on its own, even
 // when it's fused.
 #include "gtest.h"

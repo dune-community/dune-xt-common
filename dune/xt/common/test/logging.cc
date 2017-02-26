@@ -31,7 +31,7 @@ void do_something_that_takes_long(std::ostream& out)
   out << std::endl;
 } // void do_something_that_takes_long()
 
-TEST(LoggerTest, all)
+GTEST_TEST(LoggerTest, all)
 {
   using namespace Dune::XT::Common;
   Logger().create(LOG_CONSOLE | LOG_ERROR);
@@ -64,7 +64,7 @@ TEST(LoggerTest, all)
   std::cout << "end   Logger().error() test" << std::endl;
 }
 
-TEST(LoggerTest, file)
+GTEST_TEST(LoggerTest, file)
 {
   using namespace Dune::XT::Common;
   Logger().create(LOG_INFO | LOG_CONSOLE | LOG_FILE, "test_common_logger", "", "");

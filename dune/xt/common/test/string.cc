@@ -109,7 +109,7 @@ TYPED_TEST(VectorStringTestInt, CheckInt)
 }
 
 // Additional from_string/to_string tests
-TEST(StringTest, ConvertTo)
+GTEST_TEST(StringTest, ConvertTo)
 {
   EXPECT_EQ("9", to_string(from_string<int>("9")));
   EXPECT_EQ("P", to_string(from_string<char>("P")));
@@ -128,7 +128,7 @@ TEST(StringTest, ConvertTo)
   EXPECT_EQ("0-1i", to_string(from_string<Complex>("0-1i")));
 }
 
-TEST(StringTest, ConvertFrom)
+GTEST_TEST(StringTest, ConvertFrom)
 {
   EXPECT_EQ(9, from_string<int>("9"));
   EXPECT_EQ(0, from_string<int>("0"));
@@ -149,18 +149,18 @@ TEST(StringTest, ConvertFrom)
 }
 
 // Hex, whitespacify, tokenize, stringFromTime tests
-TEST(StringTest, Hex)
+GTEST_TEST(StringTest, Hex)
 {
   EXPECT_GT(boost::lexical_cast<HexToString<unsigned long>>(&cout), 0u);
   EXPECT_EQ(boost::lexical_cast<HexToString<unsigned long>>("0x00000F"), 15u);
 }
 
-TEST(StringTest, Whitespace)
+GTEST_TEST(StringTest, Whitespace)
 {
   EXPECT_EQ("---------", whitespaceify("\t\t\t\t\t\t\t\t\t", '-'));
 }
 
-TEST(StringTest, Tokenizer)
+GTEST_TEST(StringTest, Tokenizer)
 {
   const string seps(" \t;");
   const string msg("a t\tkk;;g");
@@ -175,7 +175,7 @@ TEST(StringTest, Tokenizer)
   EXPECT_EQ(numbers_compressed, tokenize<int>(num_msg, seps, boost::algorithm::token_compress_on));
 }
 
-TEST(StringTest, TimeString)
+GTEST_TEST(StringTest, TimeString)
 {
   string ts = stringFromTime(-1);
 }

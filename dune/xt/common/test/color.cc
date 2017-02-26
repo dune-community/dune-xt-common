@@ -15,7 +15,7 @@
 
 using namespace Dune::XT::Common;
 
-TEST(Color, All)
+GTEST_TEST(Color, All)
 {
   std::cout << "Testing some color codes for this terminal." << std::endl;
   std::cout << "WARNING: This test will succeed although some of the color codes" << std::endl;

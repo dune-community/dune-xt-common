@@ -50,12 +50,12 @@ struct print_value
   }
 };
 
-TEST(TypeTransform, All)
+GTEST_TEST(TypeTransform, All)
 {
   typedef TUPLE_TYPEDEFS_2_TUPLE(MyTuple, MyFancyType) MySubTupleType DUNE_UNUSED;
 }
 
-TEST(Product, All)
+GTEST_TEST(Product, All)
 {
   using namespace Dune::XT::Common::TupleProduct;
   typedef boost::mpl::vector<Int<1>, Int<2>> u_types;

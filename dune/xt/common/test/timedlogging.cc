@@ -62,7 +62,7 @@ void fool_level_tracking()
   fool_level_tracking_inner();
 }
 
-TEST(TimedPrefixedLogStream, all)
+GTEST_TEST(TimedPrefixedLogStream, all)
 {
   Timer timer;
   TimedPrefixedLogStream out(timer, "prefix: ", std::cout);
@@ -71,7 +71,7 @@ TEST(TimedPrefixedLogStream, all)
   out << "\n" << 3 << "\n\nend" << std::endl;
 } // TEST(TimedPrefixedLogStream, all)
 
-TEST(TimedLogger, before_create)
+GTEST_TEST(TimedLogger, before_create)
 {
   auto logger = TimedLogger().get("main");
   auto& info = logger.info();
@@ -81,7 +81,7 @@ TEST(TimedLogger, before_create)
   before_create();
 }
 
-TEST(TimedLogger, after_create)
+GTEST_TEST(TimedLogger, after_create)
 {
   TimedLogger().create(10, 1, false, true, "blue", "yellow");
   auto logger = TimedLogger().get("main");
@@ -91,7 +91,7 @@ TEST(TimedLogger, after_create)
   after_create();
 }
 
-TEST(TimedLogger, fool_level_tracking)
+GTEST_TEST(TimedLogger, fool_level_tracking)
 {
   auto logger = TimedLogger().get("");
   logger.info() << "this info should be visible in blue" << std::endl;

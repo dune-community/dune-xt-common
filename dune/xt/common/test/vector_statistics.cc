@@ -17,7 +17,7 @@
 using namespace Dune::XT::Common;
 using namespace std;
 
-TEST(STDDEV, Vector)
+GTEST_TEST(STDDEV, Vector)
 {
   const auto vec = VectorAbstraction<VECTOR_TYPE>::create(VECTOR_SIZE, 0);
   EXPECT_DOUBLE_EQ(standard_deviation(vec), 0);

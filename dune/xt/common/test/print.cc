@@ -16,7 +16,7 @@
 using namespace Dune::XT::Common;
 using namespace std;
 
-TEST(OutputIterator, All)
+GTEST_TEST(OutputIterator, All)
 {
   const vector<int> ints{0, 1, 2};
   const string s_ints("0,1,2");

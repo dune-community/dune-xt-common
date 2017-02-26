@@ -24,7 +24,7 @@ struct Moveable
   int v;
 };
 
-TEST(MoveIfTest, All)
+GTEST_TEST(MoveIfTest, All)
 {
   using namespace std;
   typedef vector<unique_ptr<Moveable>> Vec;

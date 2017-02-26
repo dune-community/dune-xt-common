@@ -88,7 +88,7 @@ TYPED_TEST(MinMaxAvgTest, All)
   mmCheck<MinMaxAvg<TypeParam>, TypeParam>(mmb);
 }
 
-TEST(OtherMath, Range)
+GTEST_TEST(OtherMath, Range)
 {
   EXPECT_EQ((std::vector<unsigned int>{0, 1, 2, 3}), value_range(4u));
   EXPECT_EQ((std::vector<int>{4, 3, 2, 1}), value_range(4, 0, -1));
@@ -103,7 +103,7 @@ TEST(OtherMath, Range)
   EXPECT_DOUBLE_EQ(dMatrix[1][1], 0.0);
 }
 
-TEST(OtherMath, Sign)
+GTEST_TEST(OtherMath, Sign)
 {
   EXPECT_EQ(signum(1), 1);
   EXPECT_EQ(signum(-1), -1);
@@ -111,7 +111,7 @@ TEST(OtherMath, Sign)
   EXPECT_EQ(signum(-1.), -1);
 }
 
-TEST(OtherMath, AbsoluteValue)
+GTEST_TEST(OtherMath, AbsoluteValue)
 {
   EXPECT_EQ(abs(1.0f), 1.0f);
   EXPECT_EQ(abs(-1l), 1l);
@@ -121,7 +121,7 @@ TEST(OtherMath, AbsoluteValue)
   EXPECT_EQ(abs(std::complex<double>(-1)), 1);
 }
 
-TEST(OtherMath, FloatCmp)
+GTEST_TEST(OtherMath, FloatCmp)
 {
   std::vector<double> ones{1., 1.};
   std::vector<double> twos{2., 2.};

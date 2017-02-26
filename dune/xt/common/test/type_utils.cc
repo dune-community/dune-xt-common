@@ -21,7 +21,7 @@ DUNE_XT_COMMON_TYPENAME(Dune::MPIHelper)
 using namespace Dune::XT::Common;
 using namespace std;
 
-TEST(Typename, Knowns)
+GTEST_TEST(Typename, Knowns)
 {
   EXPECT_EQ(Typename<unsigned long>::value(), "unsigned long");
   EXPECT_EQ(Typename<unsigned long>::value(), "unsigned long");
@@ -35,12 +35,12 @@ TEST(Typename, Knowns)
   EXPECT_EQ(Typename<char>::value(), "char");
 }
 
-TEST(Typename, Unknowns)
+GTEST_TEST(Typename, Unknowns)
 {
   EXPECT_NE(Typename<Dune::Exception>::value(), string());
 }
 
-TEST(Typename, Extended)
+GTEST_TEST(Typename, Extended)
 {
   EXPECT_EQ(Typename<Dune::MPIHelper>::value(), string("Dune::MPIHelper"));
   {

@@ -22,7 +22,7 @@ using namespace Dune::XT::Common;
 using namespace Dune::XT::Test;
 using namespace std;
 
-TEST(Init, Random)
+GTEST_TEST(Init, Random)
 {
   typedef RNG_FIELD_TYPE T;
   typedef DefaultRNG<T> RNG;

@@ -24,6 +24,8 @@
 #define DUNE_XT_COMMON_TEST_MAIN_ENABLE_TIMED_LOGGING 0
 #endif
 
+#define GTEST_DONT_DEFINE_TEST 1
+
 #include <string>
 #include <vector>
 #include <map>

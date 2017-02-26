@@ -29,7 +29,7 @@ static double confidence_margin()
   return 0.90f;
 }
 
-TEST(ProfilerTest, Timing)
+GTEST_TEST(ProfilerTest, Timing)
 {
   for (auto i : value_range(1, 4)) {
     DXTC_TIMINGS.start("ProfilerTest.Timing");
@@ -41,7 +41,7 @@ TEST(ProfilerTest, Timing)
   }
 }
 
-TEST(ProfilerTest, ScopedTiming)
+GTEST_TEST(ProfilerTest, ScopedTiming)
 {
   const auto dvalue_range = value_range(1, 4);
   for (auto i DUNE_UNUSED : dvalue_range) {
@@ -50,7 +50,7 @@ TEST(ProfilerTest, ScopedTiming)
   EXPECT_GE(DXTC_TIMINGS.walltime("ProfilerTest.ScopedTiming"), long(dvalue_range.size() * wait_ms));
 }
 
-TEST(ProfilerTest, OutputConstness)
+GTEST_TEST(ProfilerTest, OutputConstness)
 {
   DXTC_TIMINGS.reset();
   const auto& prof = DXTC_TIMINGS;
@@ -59,12 +59,12 @@ TEST(ProfilerTest, OutputConstness)
   prof.output_simple(dev_null);
 }
 
-TEST(ProfilerTest, ExpectedFailures)
+GTEST_TEST(ProfilerTest, ExpectedFailures)
 {
   EXPECT_THROW(DXTC_TIMINGS.stop("This_section_was_never_started"), Dune::RangeError);
 }
 
-TEST(ProfilerTest, NestedTiming)
+GTEST_TEST(ProfilerTest, NestedTiming)
 {
   auto& prof = DXTC_TIMINGS;
   prof.reset();
@@ -77,7 +77,7 @@ TEST(ProfilerTest, NestedTiming)
   EXPECT_GT(outer, inner);
 }
 
-TEST(ProfilerTest, Example)
+GTEST_TEST(ProfilerTest, Example)
 {
   timings().reset();
   using namespace Dune::XT::Common;

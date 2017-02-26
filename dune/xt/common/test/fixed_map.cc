@@ -21,7 +21,7 @@
 
 using namespace Dune::XT::Common;
 
-TEST(FixedMapTest, All)
+GTEST_TEST(FixedMapTest, All)
 {
   const std::initializer_list<std::pair<std::string, int>> values{{"0", 0}, {"1", 1}, {"2", 2}};
 
