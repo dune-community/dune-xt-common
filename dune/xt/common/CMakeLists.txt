@@ -8,24 +8,25 @@
 #   Felix Schindler (2017)
 
 set(lib_dune_xt_common_sources
-    filesystem.cc
     color.cc
+    configuration.cc
     convergence-study.cc
     exceptions.cc
+    filesystem.cc
     localization-study.cc
     logging.cc
-    timedlogging.cc
     logstreams.cc
-    timings.cc
-    configuration.cc
-    signals.cc
     math.cc
     memory.cc
     misc.cc
     parallel/threadmanager.cc
     parallel/helper.cc
+    parameter.cc
+    signals.cc
     string.cc
     test/common.cxx
+    timedlogging.cc
+    timings.cc
    )
 
 dune_library_add_sources(dunextcommon SOURCES ${lib_dune_xt_common_sources})
