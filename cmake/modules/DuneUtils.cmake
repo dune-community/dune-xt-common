@@ -55,13 +55,13 @@ endmacro(get_headercheck_targets)
 
 macro(BEGIN_TESTCASES)
 # https://cmake.org/cmake/help/v3.0/module/FindGTest.html http://purplekarrot.net/blog/cmake-and-test-suites.html
-	file( GLOB test_sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cc" )
+	file( GLOB_RECURSE test_sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cc" )
 	foreach( source ${test_sources} )
 		get_filename_component(testbase ${source} NAME_WE)
-                if( EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.mini )
-		    set( inifile ${testbase}.mini)
-                    dune_add_system_test(SOURCE ${testbase}.cc ${COMMON_HEADER}
-                                         INIFILE ${inifile}
+		string(REPLACE ".cc" ".mini" minifile ${source})
+                if( EXISTS ${minifile} )
+                    dune_add_system_test(SOURCE ${source} ${COMMON_HEADER}
+                                         INIFILE ${minifile}
                                          BASENAME test_${testbase}
                                          CREATED_TARGETS targetlist_${testbase}
                                          SCRIPT dune_xt_execute.py
@@ -71,7 +71,7 @@ macro(BEGIN_TESTCASES)
                         list(APPEND dxt_test_binaries ${target} )
 			#                        set(dxt_test_names_${target} ${testlist_${testbase}_${target}})
                     endforeach(target)
-                else( EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.mini )
+                else( EXISTS ${minifile} )
                     set(target test_${testbase})
 		    dune_add_test( NAME ${target}
 			           SOURCES ${source} ${COMMON_HEADER}
@@ -80,18 +80,19 @@ macro(BEGIN_TESTCASES)
                                           --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/${target}.xml )
                     list(APPEND dxt_test_binaries ${target} )
                     set(dxt_test_names_${target} ${target})
-	        endif( EXISTS ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.mini )
+	        endif( EXISTS ${minifile} )
         endforeach( source )
-        file( GLOB test_templates "${CMAKE_CURRENT_SOURCE_DIR}/*.tpl" )
+        file( GLOB_RECURSE test_templates "${CMAKE_CURRENT_SOURCE_DIR}/*.tpl" )
         foreach( template ${test_templates} )
             get_filename_component(testbase ${template} NAME_WE)
-            set(config_fn ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.py)
-            set(tpl_fn ${CMAKE_CURRENT_SOURCE_DIR}/${testbase}.tpl)
-            set(out_fn ${CMAKE_BINARY_DIR}/${testbase}.tpl.cc)
+            string(REPLACE ".tpl" ".py" config_fn "${template}")
+            string(REPLACE ".tpl" ".tpl.cc" out_fn "${template}")
+            string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}" out_fn "${out_fn}")
+            message(STATUS "FFF ${out_fn} ${config_fn} ${template}" )
             add_custom_command(OUTPUT ${out_fn}
                                COMMAND ${CMAKE_BINARY_DIR}/dune-env dxt_code_generation.py
-                                      "${config_fn}" "${tpl_fn}"  "${CMAKE_BINARY_DIR}" "${out_fn}"
-                               DEPENDS "${config_fn}" "${tpl_fn}" "${CMAKE_CURRENT_SOURCE_DIR}/spaces.py"
+                                      "${config_fn}" "${template}"  "${CMAKE_BINARY_DIR}" "${out_fn}"
+                               DEPENDS "${config_fn}" "${template}" "${CMAKE_CURRENT_SOURCE_DIR}/spaces.py"
                                VERBATIM USES_TERMINAL)
             set(target test_${testbase})
             dune_add_test( NAME ${target}
