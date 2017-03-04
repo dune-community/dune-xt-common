@@ -71,6 +71,10 @@
 # define HAVE_ALBERTA 0
 #endif
 
+#ifndef ALBERTA_DIM
+# define ALBERTA_DIM 2
+#endif
+
 #ifndef HAVE_DUNE_SPGRID
 # define HAVE_DUNE_SPGRID 0
 #endif
