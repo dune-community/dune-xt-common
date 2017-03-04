@@ -88,7 +88,6 @@ macro(BEGIN_TESTCASES)
             string(REPLACE ".tpl" ".py" config_fn "${template}")
             string(REPLACE ".tpl" ".tpl.cc" out_fn "${template}")
             string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}" out_fn "${out_fn}")
-            message(STATUS "FFF ${out_fn} ${config_fn} ${template}" )
             add_custom_command(OUTPUT ${out_fn}
                                COMMAND ${CMAKE_BINARY_DIR}/dune-env dxt_code_generation.py
                                       "${config_fn}" "${template}"  "${CMAKE_BINARY_DIR}" "${out_fn}"
