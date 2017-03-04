@@ -25,6 +25,9 @@ cache, _ = parse_cache(os.path.join(cmake_binary_dir, 'CMakeCache.txt'))
 sys.path.append(os.path.dirname(config_fn))
 config = run_path(config_fn,init_globals=locals(), run_name='__dxt_codegen__')
 
+dir_base = os.path.dirname(out_fn)
+if not os.path.isdir(dir_base):
+    os.makedirs(dir_base)
 template = Template(open(tpl_fn).read())
 with open(out_fn, 'w') as out:
     out.write(template.render(config=config, cache=cache))
