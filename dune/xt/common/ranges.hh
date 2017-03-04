@@ -19,6 +19,10 @@
 #include <boost/iterator/iterator_facade.hpp>
 
 #if HAVE_DUNE_FEM
+#include <dune/grid/io/file/dgfparser.hh> //                      <- the correct specialization of dgf parser is missing
+#if HAVE_DUNE_ALUGRID
+#include <dune/alugrid/dgf.hh> //                                                                 without these includes
+#endif
 #include <dune/fem/function/common/discretefunction.hh>
 #include <dune/fem/gridpart/common/gridpart.hh>
 #include <dune/fem/space/lagrange/lagrangepoints.hh>
