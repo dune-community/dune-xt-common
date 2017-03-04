@@ -15,3 +15,18 @@ def typeid_to_typedef_name(typeid, replacement='_'):
     for ch in illegal_chars:
         typeid = typeid.replace(ch, replacement)
     return typeid
+
+
+def _is_found(cache, name):
+    if name in cache.keys():
+        return 'notfound' not in cache[name].lower()
+    return false
+
+
+def la_backends(cache):
+    ret = []
+    if _is_found(cache, 'EIGEN3_INCLUDE_DIR'):
+        ret.append('eigen_sparse')
+    if _is_found(cache, 'dune-istl_DIR'):
+        ret.append('istl_sparse')
+    return ret
