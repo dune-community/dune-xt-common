@@ -41,7 +41,7 @@ if(dune-pybindxi_FOUND)
 endif()
 
 include_directories(SYSTEM ${DUNE_XT_COMMON_TEST_DIR}/gtest)
-dune_library_add_sources(gtest_dune_xt_common SOURCES test/gtest/gtest-all.cc)
+dune_library_add_sources(gtest_dune_xt_common SOURCES test/gtest/gtest-all.cxx)
 
 install(DIRECTORY ${DUNE_XT_COMMON_TEST_DIR}/gtest
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/xt/test/
