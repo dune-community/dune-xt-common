@@ -61,3 +61,10 @@ if(NOT DS_HEADERCHECK_DISABLE)
 endif(NOT DS_HEADERCHECK_DISABLE)
 set( DXT_TEST_TIMEOUT 180 CACHE STRING "per-test timeout in seconds")
 set( DXT_TEST_PROCS 1   CACHE STRING "run N tests in parallel")
+
+# we inherit alberta via dune-fem -> dune-grid
+if(ALBERTA_FOUND)
+  add_definitions("-DENABLE_ALBERTA=1")
+  add_definitions("-DALBERTA_DIM=2")
+  include_directories(${ALBERTA_INCLUDES})
+endif()
