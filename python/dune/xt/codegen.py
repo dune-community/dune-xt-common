@@ -17,7 +17,7 @@ def typeid_to_typedef_name(typeid, replacement='_'):
     return typeid
 
 
-def _is_found(cache, name):
+def is_found(cache, name):
     if name in cache.keys():
         return 'notfound' not in cache[name].lower()
     return false
@@ -25,8 +25,8 @@ def _is_found(cache, name):
 
 def la_backends(cache):
     ret = []
-    if _is_found(cache, 'EIGEN3_INCLUDE_DIR'):
+    if is_found(cache, 'EIGEN3_INCLUDE_DIR'):
         ret.append('eigen_sparse')
-    if _is_found(cache, 'dune-istl_DIR'):
+    if is_found(cache, 'dune-istl_DIR'):
         ret.append('istl_sparse')
     return ret
