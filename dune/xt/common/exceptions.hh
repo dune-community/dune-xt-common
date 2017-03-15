@@ -20,6 +20,11 @@
 #undef DUNE_THROW
 #endif
 
+#if HAVE_TBB
+namespace tbb {
+class tbb_exception;
+}
+#endif
 /**
  *  \brief Macro to throw a colorfull exception.
  *
@@ -127,6 +132,12 @@ class spe10_data_file_missing : public Dune::IOError
 };
 
 } // namespace Exceptions
+
+int handle_exception(const Dune::Exception& exp);
+int handle_exception(const std::exception& exp);
+#if HAVE_TBB
+int handle_exception(const tbb::tbb_exception& exp);
+#endif
 } // namespace Common
 } // namespace XT
 } // namespace Dune

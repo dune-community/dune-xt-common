@@ -389,6 +389,10 @@ private:
   std::unique_ptr<internal::AccessInterface<T>> storage_;
 }; // class StorageProvider
 
+//! dumps kernel stats into a file
+void mem_usage(std::string filename);
+void mem_usage();
+
 } // namespace Common
 } // namespace XT
 } // namespace Dune

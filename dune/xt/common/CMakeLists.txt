@@ -11,6 +11,7 @@ set(lib_dune_xt_common_sources
     filesystem.cc
     color.cc
     convergence-study.cc
+    exceptions.cc
     localization-study.cc
     logging.cc
     timedlogging.cc
@@ -19,6 +20,7 @@ set(lib_dune_xt_common_sources
     configuration.cc
     signals.cc
     math.cc
+    memory.cc
     misc.cc
     parallel/threadmanager.cc
     parallel/helper.cc
