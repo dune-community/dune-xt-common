@@ -61,6 +61,12 @@ float_cmp_eq(const T& xx, const T& yy, const T& rtol, const T& atol)
   return absolute_difference(xx, yy) <= atol + Dune::XT::Common::abs(yy) * rtol;
 }
 
+template <int k, class T>
+bool float_cmp_eq(const bigunsignedint<k>& xx, const bigunsignedint<k>& yy, const T& rtol, const T& atol)
+{
+  return xx == yy;
+}
+
 template <class T>
 typename std::enable_if<is_complex<T>::value, bool>::type
 float_cmp_eq(const T& xx, const T& yy, const T& rtol, const T& atol)
