@@ -25,7 +25,6 @@ struct type_caster<Dune::XT::Common::Configuration>
 {
   typedef Dune::XT::Common::Configuration type;
   typedef std::string S;
-  //  using type = Type;
   using key_conv = make_caster<S>;
   using value_conv = make_caster<S>;
 
