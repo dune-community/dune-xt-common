@@ -129,6 +129,12 @@ std::string to_upper(const std::string& ss);
 
 
 /**
+ * \brief Converts this_sample_string to ThisSampleString.
+ */
+std::string to_camel_case(const std::string& ss);
+
+
+/**
   \brief Returns a string of lengths t' whitespace (or whitespace chars).
   \param[in]  t          defines the length of the return string (after conversion to string)
   \param[in]  whitespace char, optional argument, defines entries of return string
