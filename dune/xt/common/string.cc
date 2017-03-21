@@ -29,6 +29,14 @@ std::string to_lower(const std::string& ss)
 }
 
 
+std::string to_upper(const std::string& ss)
+{
+  std::string out(ss);
+  std::transform(out.begin(), out.end(), out.begin(), ::toupper);
+  return out;
+}
+
+
 } // namespace Common
 } // namespace XT
 } // namespace Dune

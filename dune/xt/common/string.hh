@@ -120,6 +120,15 @@ std::string to_lower(const std::string& ss);
 
 
 /**
+ * \brief Converts each character of a string to upper case using std::toupper.
+ * \note  This might not do what you expect, given your locale.
+ * \sa    http://en.cppreference.com/w/cpp/string/byte/tolower
+ * /sa    ::toupper
+ */
+std::string to_upper(const std::string& ss);
+
+
+/**
   \brief Returns a string of lengths t' whitespace (or whitespace chars).
   \param[in]  t          defines the length of the return string (after conversion to string)
   \param[in]  whitespace char, optional argument, defines entries of return string
