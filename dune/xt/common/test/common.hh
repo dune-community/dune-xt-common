@@ -78,8 +78,7 @@ std::string print_vector(const std::vector<double>& vec);
 } // namespace internal
 
 void check_eoc_study_for_success(const Common::ConvergenceStudy& study,
-                                 const std::map<std::string, std::vector<double>>& errors_map,
-                                 const double& zero_tolerance = 1e-15);
+                                 const std::map<std::string, std::vector<double>>& errors_map);
 
 void print_collected_eoc_study_results(const std::map<std::string, std::vector<double>>& results,
                                        std::ostream& out = std::cout);
