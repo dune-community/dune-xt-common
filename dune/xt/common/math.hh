@@ -240,7 +240,8 @@ class numeric_limits<T, typename std::enable_if<std::numeric_limits<T>::is_speci
 template <class T>
 bool isnan(T val)
 {
-  return std::isnan(val);
+  using std::isnan;
+  return isnan(val);
 }
 
 //! override isnan for complex here so it doesn't bleed into the std namespace
@@ -254,7 +255,8 @@ bool isnan(std::complex<T> val)
 template <class T>
 bool isinf(T val)
 {
-  return std::isinf(val);
+  using std::isinf;
+  return isinf(val);
 }
 
 //! override isinf for complex here so it doesn't bleed into the std namespace
@@ -320,8 +322,6 @@ public:
 } // namespace XT
 } // namespace Dune
 
-namespace std {
-}
 
 template <class T>
 inline std::ostream& operator<<(std::ostream& s, const Dune::XT::Common::MinMaxAvg<T>& d)
