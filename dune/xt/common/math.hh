@@ -320,6 +320,45 @@ public:
 
 } // namespace Common
 } // namespace XT
+
+template <int k>
+Dune::bigunsignedint<k> abs(const Dune::bigunsignedint<k>& value)
+{
+  return value;
+}
+
+template <int k>
+inline Dune::bigunsignedint<k> pow(Dune::bigunsignedint<k> value, std::uintmax_t n)
+{
+  DUNE_THROW(Dune::NotImplemented, "pow not implemented for bigunisgnedint");
+  return Dune::bigunsignedint<k>();
+}
+
+template <int k>
+inline Dune::bigunsignedint<k> sqrt(Dune::bigunsignedint<k> value)
+{
+  DUNE_THROW(Dune::NotImplemented, "sqrt not implemented for bigunisgnedint");
+  return Dune::bigunsignedint<k>(std::sqrt(value.todouble()));
+}
+
+template <int k>
+inline Dune::bigunsignedint<k> conj(Dune::bigunsignedint<k> value)
+{
+  return value;
+}
+
+template <int k>
+inline bool isnan(Dune::bigunsignedint<k> /*value*/)
+{
+  return false;
+}
+
+template <int k>
+inline bool isinf(Dune::bigunsignedint<k> /*value*/)
+{
+  return false;
+}
+
 } // namespace Dune
 
 
