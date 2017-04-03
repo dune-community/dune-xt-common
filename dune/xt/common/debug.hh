@@ -55,5 +55,7 @@ inline char* charcopy(const char* s)
       (boost::format("assertion %1% == %2% failed: %3% != %4%") % #expt % #actual % expt % actual).str().c_str())
 #endif
 
+//! try to ensure var is not optimized out
+#define DXTC_DEBUG_AUTO(name) volatile auto DXTC_UNUSED(name)
 
 #endif // DUNE_XT_COMMON_DEBUG_HH
