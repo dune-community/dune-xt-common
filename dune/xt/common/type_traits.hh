@@ -190,6 +190,40 @@ struct is_complex<std::complex<T>> : public std::true_type
 };
 
 
+/**
+ * To be used e.g. with AlwaysFalse:
+\code
+enum class Switch
+{
+case_1,
+case_2,
+};
+
+template <Switch important_switch>
+struct do_something
+{
+  static_assert(AlwaysFalse<typename dependent<Switch>::_typename<important_switch>::type>::value,
+                "Not Implemented for this case!");
+};
+
+template <>
+struct do_something<Switch::case_1>
+{
+  // ...
+};
+\endcode
+ */
+template <typename T>
+struct dependent
+{
+  template <T S>
+  struct _typename
+  {
+    typedef void type;
+  };
+};
+
+
 } // namespace Common
 } // namespace XT
 } // namespace Dune
