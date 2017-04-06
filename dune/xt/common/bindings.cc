@@ -16,6 +16,8 @@
 
 #include <boost/numeric/conversion/cast.hpp>
 
+#include <dune/xt/common/exceptions.hh>
+
 #include <dune/common/parallel/mpihelper.hh>
 
 #if HAVE_DUNE_FEM
@@ -33,29 +35,28 @@
 #include "fmatrix.pbh"
 #include "configuration.pbh"
 
-namespace py = pybind11;
-using namespace pybind11::literals;
-
 
 PYBIND11_PLUGIN(_common)
 {
+  namespace py = pybind11;
+  using namespace pybind11::literals;
+
   py::module m("_common", "dune-xt-common");
 
   Dune::XT::Common::bind_Exception(m);
 
-  m.def("init_mpi",
+  m.def("_init_mpi",
         [](const std::vector<std::string>& args) {
           int argc = boost::numeric_cast<int>(args.size());
           char** argv = Dune::XT::Common::vector_to_main_args(args);
+          Dune::MPIHelper::instance(argc, argv);
 #if HAVE_DUNE_FEM
           Dune::Fem::MPIManager::initialize(argc, argv);
-#else
-          Dune::MPIHelper::instance(argc, argv);
 #endif
         },
         "args"_a = std::vector<std::string>());
 
-  m.def("init_logger",
+  m.def("_init_logger",
         [](const ssize_t max_info_level,
            const ssize_t max_debug_level,
            const bool enable_warnings,
