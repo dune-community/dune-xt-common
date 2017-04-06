@@ -114,6 +114,14 @@ public:
     return ret;
   }
 
+  operator std::array<K, SIZE>() const
+  {
+    std::array<K, SIZE> ret;
+    for (size_t ii = 0; ii < SIZE; ++ii)
+      ret[ii] = this->operator[](ii);
+    return ret;
+  }
+
   using BaseType::operator*;
 
   ThisType operator*(const K& scalar) const
@@ -131,6 +139,7 @@ public:
   }
 }; // class FieldVector
 
+//! this allows to set the init value of the FieldVector at compile time
 template <class K, int SIZE, K value>
 class ValueInitFieldVector : public Dune::XT::Common::FieldVector<K, SIZE>
 {
