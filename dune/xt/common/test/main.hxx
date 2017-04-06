@@ -71,10 +71,10 @@ int main(int argc, char** argv)
     testing::InitGoogleTest(&argc, argv);
     if (argc > 1)
       DXTC_CONFIG.read_command_line(argc, argv);
+
+    MPIHelper::instance(argc, argv);
 #if HAVE_DUNE_FEM
     Fem::MPIManager::initialize(argc, argv);
-#else
-  MPIHelper::instance(argc, argv);
 #endif
 
     Logger().create(
