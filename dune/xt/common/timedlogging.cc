@@ -41,10 +41,10 @@ TimedLogManager::TimedLogManager(const Timer& timer,
         timer_, info_prefix, current_level_ <= max_info_level ? enabled_out : disabled_out))
   , debug_(std::make_shared<TimedPrefixedLogStream>(timer_,
                                                     debug_prefix,
-#ifdef NDEBUG
-                                                    current_level_ <= max_debug_level ? enabled_out : dev_null))
-#else
+#if DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG
                                                     current_level_ <= max_debug_level ? enabled_out : disabled_out))
+#else
+                                                    current_level_ <= max_debug_level ? enabled_out : dev_null))
 #endif
   , warn_(std::make_shared<TimedPrefixedLogStream>(timer_, warning_prefix, enable_warnings ? warn_out : disabled_out))
 {

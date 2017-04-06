@@ -30,6 +30,14 @@
 #include <dune/xt/common/logstreams.hh>
 #include <dune/xt/common/color.hh>
 
+#ifndef DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG
+#ifdef NDEBUG
+#define DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG 1
+#else
+#define DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG 0
+#endif
+#endif
+
 namespace Dune {
 namespace XT {
 namespace Common {
@@ -217,8 +225,8 @@ int main()
   logger.warn() << "<- The 'warn' prefix left of this should be red!"  << std::endl;
 }
 \endcode
- * \note Debug logging is only enabled if NDEBUG is not defined but you might still want to guard calls to
- *       logger.debug() for performance reasons.
+ * \note Debug logging is only enabled if DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG is true (which is by default the case
+ *       if NDEBUG is not defined) but you might still want to guard calls to logger.debug() for performance reasons.
  */
 TimedLogging& TimedLogger();
 
@@ -226,7 +234,8 @@ TimedLogging& TimedLogger();
 /**
  * \brief Base class to generate debug output using the TimedLogging about object creation and deletion.
  * \sa    TimedLogging, TimedLogger
- * \note  Output is only generated in debug builds (when NDEBUG is not defined) and when the TimedLogger is active.
+ * \note  Output is only generated in debug builds (or when DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG is true) and when
+ *        the TimedLogger is active.
  *
  *        Simply derive from this class
 \code
@@ -260,16 +269,16 @@ class EnableDebugLoggingForCtors
 
 public:
   EnableDebugLoggingForCtors(const std::string&
-#ifndef NDEBUG
+#if DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG
                                  prefix
 #endif
                              ,
                              const std::string&
-#ifndef NDEBUG
+#if DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG
                                  class_id
 #endif
                              )
-#ifndef NDEBUG
+#if DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG
     : logger_(TimedLogger().get(prefix))
     , class_id_(class_id)
   {
@@ -281,7 +290,7 @@ public:
 #endif
 
   EnableDebugLoggingForCtors(const ThisType& other)
-#ifndef NDEBUG
+#if DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG
     : logger_(other.logger_)
     , class_id_(other.class_id_)
   {
@@ -292,7 +301,7 @@ public:
 #endif
 
   EnableDebugLoggingForCtors(ThisType&& source)
-#ifndef NDEBUG
+#if DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG
     : logger_(std::move(source.logger_))
     , class_id_(std::move(source.class_id_))
   {
@@ -303,7 +312,7 @@ public:
 #endif
 
   ~EnableDebugLoggingForCtors()
-#ifndef NDEBUG
+#if DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG
   {
     logger_.debug() << "~" << class_id_ << "(this=" << this << ")" << std::endl;
   }
@@ -312,7 +321,7 @@ public:
 #endif
 
   ThisType& operator=(const ThisType& other)
-#ifndef NDEBUG
+#if DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG
   {
     logger_.debug() << class_id_ << "operator=(this=" << this << ", other=" << &other << ")" << std::endl;
   }
@@ -321,7 +330,7 @@ public:
 #endif
 
   ThisType& operator=(ThisType&& source)
-#ifndef NDEBUG
+#if DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG
   {
     logger_.debug() << class_id_ << "operator=(this=" << this << ", source=" << &source << ")" << std::endl;
   }
@@ -330,7 +339,7 @@ public:
 #endif
 
 
-#ifndef NDEBUG
+#if DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG
 protected:
   TimedLogManager logger_;
 
