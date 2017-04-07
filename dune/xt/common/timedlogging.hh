@@ -338,7 +338,6 @@ public:
       = default;
 #endif
 
-
 #if DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG
 protected:
   TimedLogManager logger_;
