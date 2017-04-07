@@ -75,6 +75,14 @@ PYBIND11_PLUGIN(_common)
         "debug_color"_a = "darkgray",
         "warning_color"_a = "red");
 
+  m.def("_is_debug", []() {
+#ifndef NDEBUG
+    return true;
+#else
+    return false;
+#endif
+  });
+
   return m.ptr();
 }
 

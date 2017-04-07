@@ -23,6 +23,7 @@ to_import = [name for name in module if not name.startswith('_')]
 globals().update({name: module[name] for name in to_import})
 _init_logger_methods.append(module['_init_logger'])
 _init_mpi_methods.append(module['_init_mpi'])
+DEBUG = module['_is_debug']()
 del to_import
 del module
 
