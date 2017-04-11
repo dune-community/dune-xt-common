@@ -29,6 +29,7 @@ headertest*
 Makefile
 stamp-h1
 config.*
+!config.h.cmake
 dune-xt-common.pc
 *.swp
 CMakeLists.txt.user
