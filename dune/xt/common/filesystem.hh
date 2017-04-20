@@ -21,7 +21,8 @@
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
 
-namespace Dune {
+namespace Dune
+{
 namespace XT {
 namespace Common {
 
@@ -35,9 +36,12 @@ std::string filename_only(const std::string& _path);
 void test_create_directory(const std::string _path);
 
 //! pure c++ emulation of system's touch binary
-bool touch(const std::string& _path);
+bool touch(const
+   
+    std::string& _path);
 
 std::unique_ptr<boost::filesystem::ofstream> make_ofstream(const boost::filesystem::path& path,
+
                                                            const std::ios_base::openmode mode = std::ios_base::out);
 
 std::unique_ptr<boost::filesystem::ifstream> make_ifstream(const boost::filesystem::path& path,
