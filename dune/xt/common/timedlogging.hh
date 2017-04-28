@@ -31,7 +31,7 @@
 #include <dune/xt/common/color.hh>
 
 #ifndef DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG
-#ifdef NDEBUG
+#ifndef NDEBUG
 #define DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG 1
 #else
 #define DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG 0
@@ -232,7 +232,7 @@ TimedLogging& TimedLogger();
 
 
 /**
- * \brief Base class to generate debug output using the TimedLogging about object creation and deletion.
+ * \brief Base class to generate debug output about object creation and deletion using the TimedLogging.
  * \sa    TimedLogging, TimedLogger
  * \note  Output is only generated in debug builds (or when DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG is true) and when
  *        the TimedLogger is active.
@@ -260,7 +260,7 @@ int main() {
 00:00|dune.xt.foo: ~Foo(this=0x0002)
 00:00|dune.xt.foo: ~Foo(this=0x0001)
 \endcode
- * The same holds for the move ctor.
+ * The same holds for the move ctor as well as move and assignment operators.
  */
 template <typename T = void>
 class EnableDebugLoggingForCtors
