@@ -74,6 +74,8 @@
 #define DUNE_XT_COMMON_DO_TIMING 0
 #endif
 
+#cmakedefine01 DUNE_XT_WITH_PYTHON_BINDINGS
+
 /*** Silence implicitly False evaluation of undefined macro warnings ****/
 #ifndef HAVE_DUNE_FEM
 #define HAVE_DUNE_FEM 0
