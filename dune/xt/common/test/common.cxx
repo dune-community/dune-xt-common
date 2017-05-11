@@ -72,7 +72,8 @@ std::string print_vector(const std::vector<double>& vec)
 } // namespace internal
 
 void check_eoc_study_for_success(const Common::ConvergenceStudy& study,
-                                 const std::map<std::string, std::vector<double>>& results_map)
+                                 const std::map<std::string, std::vector<double>>& results_map,
+                                 const double& zero_tolerance)
 {
   for (const auto& norm : study.used_norms()) {
     const auto expected_results = study.expected_results(norm);
