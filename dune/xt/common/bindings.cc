@@ -16,7 +16,7 @@
 
 #include <boost/numeric/conversion/cast.hpp>
 
-#include <dune/xt/common/exceptions.hh>
+#include <dune/xt/common/exceptions.bindings.hh>
 
 #include <dune/common/parallel/mpihelper.hh>
 
@@ -30,7 +30,7 @@
 #include <dune/xt/common/string.hh>
 #include <dune/xt/common/timedlogging.hh>
 
-#include "exceptions.pbh"
+#include "exceptions.bindings.hh"
 #include "fvector.pbh"
 #include "fmatrix.pbh"
 #include "configuration.pbh"
@@ -43,7 +43,7 @@ PYBIND11_PLUGIN(_common)
 
   py::module m("_common", "dune-xt-common");
 
-  Dune::XT::Common::bind_Exception(m);
+  Dune::XT::Common::bindings::addbind_exceptions(m);
 
   m.def("_init_mpi",
         [](const std::vector<std::string>& args) {
