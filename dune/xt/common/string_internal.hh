@@ -346,58 +346,61 @@ convert_from_string(std::string matrix_str, const size_t rows, const size_t cols
 // variant for everything that is not a matrix, a vector or any of the types specified below
 template <class T>
 static inline typename std::enable_if<!is_vector<T>::value && !is_matrix<T>::value, std::string>::type
-convert_to_string(const T& ss, const std::size_t precision)
+convert_to_string(const T& ss, const std::size_t precision, const bool fixed)
 {
   std::ostringstream out;
+  if (fixed)
+    out << std::fixed;
   out << std::setprecision(boost::numeric_cast<int>(precision)) << ss;
   return out.str();
 }
 
 template <typename T>
-static inline std::string convert_to_string(const std::complex<T>& val, const std::size_t precision)
+static inline std::string convert_to_string(const std::complex<T>& val, const std::size_t precision, const bool fixed)
 {
   using namespace std;
   stringstream os;
   const auto im = imag(val);
   const string sign = signum(im) < 0 ? "" : "+";
-  const auto real_str = convert_to_string(real(val), precision);
-  const auto imag_str = convert_to_string(im, precision);
+  const auto real_str = convert_to_string(real(val), precision, fixed);
+  const auto imag_str = convert_to_string(im, precision, fixed);
   os << real_str << sign << imag_str << "i";
   return os.str();
 }
 
 template <int size>
-static inline std::string convert_to_string(const Dune::bigunsignedint<size>& ss, const std::size_t /*precision*/)
+static inline std::string
+convert_to_string(const Dune::bigunsignedint<size>& ss, const std::size_t /*precision*/, const bool /*fixed*/)
 {
   std::stringstream os;
   os << ss;
   return os.str();
 }
 
-inline std::string convert_to_string(const char* ss, const std::size_t /*precision*/)
+inline std::string convert_to_string(const char* ss, const std::size_t /*precision*/, const bool /*fixed*/)
 {
   return std::string(ss);
 }
 
-inline std::string convert_to_string(char ss, const std::size_t /*precision*/)
+inline std::string convert_to_string(char ss, const std::size_t /*precision*/, const bool /*fixed*/)
 {
   return std::string(1, ss);
 }
 
-inline std::string convert_to_string(const std::string ss, const std::size_t /*precision*/)
+inline std::string convert_to_string(const std::string ss, const std::size_t /*precision*/, const bool /*fixed*/)
 {
   return std::string(ss);
 }
 
 template <class V>
 static inline typename std::enable_if<is_vector<V>::value, std::string>::type
-convert_to_string(const V& vec, const std::size_t precision)
+convert_to_string(const V& vec, const std::size_t precision, const bool fixed)
 {
   std::string ret = "[";
   for (auto ii : value_range(vec.size())) {
     if (ii > 0)
       ret += " ";
-    ret += convert_to_string(vec[ii], precision);
+    ret += convert_to_string(vec[ii], precision, fixed);
   }
   ret += "]";
   return ret;
@@ -405,7 +408,7 @@ convert_to_string(const V& vec, const std::size_t precision)
 
 template <class M>
 static inline typename std::enable_if<is_matrix<M>::value, std::string>::type
-convert_to_string(const M& mat, const std::size_t precision)
+convert_to_string(const M& mat, const std::size_t precision, const bool fixed)
 {
   std::string ret = "[";
   for (auto rr : value_range(MatrixAbstraction<M>::rows(mat))) {
@@ -414,7 +417,7 @@ convert_to_string(const M& mat, const std::size_t precision)
     for (auto cc : value_range(MatrixAbstraction<M>::cols(mat))) {
       if (cc > 0)
         ret += " ";
-      ret += convert_to_string(MatrixAbstraction<M>::get_entry(mat, rr, cc), precision);
+      ret += convert_to_string(MatrixAbstraction<M>::get_entry(mat, rr, cc), precision, fixed);
     }
   }
   ret += "]";
