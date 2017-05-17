@@ -14,10 +14,6 @@
 #include <string>
 #include <vector>
 
-#include <boost/numeric/conversion/cast.hpp>
-
-#include <dune/xt/common/exceptions.bindings.hh>
-
 #include <dune/common/parallel/mpihelper.hh>
 
 #if HAVE_DUNE_FEM
@@ -27,13 +23,7 @@
 #include <dune/pybindxi/pybind11.h>
 #include <dune/pybindxi/stl.h>
 
-#include <dune/xt/common/string.hh>
-#include <dune/xt/common/timedlogging.hh>
-
-#include "exceptions.bindings.hh"
-#include "fvector.pbh"
-#include "fmatrix.pbh"
-#include "configuration.pbh"
+#include "bindings.hh"
 
 
 PYBIND11_PLUGIN(_common)
@@ -47,7 +37,7 @@ PYBIND11_PLUGIN(_common)
 
   m.def("_init_mpi",
         [](const std::vector<std::string>& args) {
-          int argc = boost::numeric_cast<int>(args.size());
+          int argc = Dune::XT::Common::numeric_cast<int>(args.size());
           char** argv = Dune::XT::Common::vector_to_main_args(args);
           Dune::MPIHelper::instance(argc, argv);
 #if HAVE_DUNE_FEM
