@@ -13,9 +13,9 @@ language: generic
 services: docker
 
 before_script:
-    - export IMAGE="dunecommunity/${MY_MODULE}-testing:${DOCKER_TAG}_${TRAVIS_BRANCH}"
+    - export IMAGE="dunecommunity/${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_BRANCH}"
     # get image with fallback to master branch of the super repo
-    - docker pull ${IMAGE} || export IMAGE="dunecommunity/${MY_MODULE}-testing:${DOCKER_TAG}_master" ; docker pull ${IMAGE}
+    - docker pull ${IMAGE} || export IMAGE="dunecommunity/${MY_MODULE}-testing_${DOCKER_TAG}:master" ; docker pull ${IMAGE}
     - export ENV_FILE=${HOME}/env
     - printenv | \grep TRAVIS > ${ENV_FILE}
     - printenv | \grep encrypt >> ${ENV_FILE}
@@ -49,10 +49,7 @@ env:
 
 matrix:
   include:
-    - env: DOCKER_TAG=gcc-6_full
-    - env: DOCKER_TAG=gcc-6_no_istl_no_disc
-    - env: DOCKER_TAG=gcc-6_no_disc
-    - env: DOCKER_TAG=clang-3.8_full
-
-    #- env: OPTS=config.opts/travis.make BUILD_CMD="make -k -j2" CXX=clang++-3.8 CC=clang-3.8 MODULES_TO_DELETE=" with-make"
-
+    - env: DOCKER_TAG=gcc_full
+    - env: DOCKER_TAG=gcc_no_istl_no_disc
+    - env: DOCKER_TAG=gcc_no_disc
+    - env: DOCKER_TAG=clang_full
