@@ -1,3 +1,12 @@
+// This file is part of the dune-xt-common project:
+//   https://github.com/dune-community/dune-xt-common
+// Copyright 2009-2017 dune-xt-common developers and contributors. All rights reserved.
+// License: Dual licensed as BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+//      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
+//          with "runtime exception" (http://www.dune-project.org/license.html)
+// Authors:
+//   Felix Schindler (2017)
+
 #ifndef DUNE_XT_COMMON_PARAMETER_HH
 #define DUNE_XT_COMMON_PARAMETER_HH
 
@@ -24,6 +33,8 @@ public:
 
   SimpleDict(const std::vector<std::pair<std::string, ValueType>>& key_value_pairs);
 
+  const std::vector<std::string>& keys() const;
+
   bool empty() const;
 
   bool has_key(const std::string& key) const;
@@ -40,11 +51,18 @@ public:
 
   size_t size() const;
 
-  //  std::string report() const;
-
 protected:
+  std::string report(const std::string& prefix) const;
+
+  void update_keys();
+
   std::map<std::string, ValueType> dict_;
+  std::vector<std::string> keys_;
 }; // class SimpleDict
+
+
+extern template class SimpleDict<size_t>;
+extern template class SimpleDict<std::vector<double>>;
 
 
 } // namespace internal
@@ -57,13 +75,21 @@ class ParameterType : public internal::SimpleDict<size_t>
 public:
   ParameterType();
 
+  ParameterType(const std::string& key);
+
   ParameterType(const std::string& key, const size_t& sz);
 
+  ParameterType(const std::pair<std::string, size_t>& key_size_pair);
+
+  ParameterType(const std::pair<const char*, int>& key_size_pair);
+
   ParameterType(const std::vector<std::pair<std::string, size_t>>& key_size_pairs);
+
+  std::string report() const;
 }; // class ParameterType
 
 
-// std::ostream& operator<<(std::ostream& out, const ParameterType& param_type);
+std::ostream& operator<<(std::ostream& out, const ParameterType& param_type);
 
 
 class Parameter : public internal::SimpleDict<std::vector<double>>
@@ -80,13 +106,27 @@ public:
 
   Parameter(const std::string& key, const ValueType& value);
 
-  //  Parameter(const ParameterType& param_type, const std::vector<ValueType>& values);
-
   ParameterType type() const;
+
+  std::string report() const;
 }; // class Parameter
 
 
-// std::ostream& operator<<(std::ostream& out, const Parameter& mu);
+std::ostream& operator<<(std::ostream& out, const Parameter& mu);
+
+
+class ParametricInterface
+{
+public:
+  virtual ~ParametricInterface() = default;
+
+  virtual bool is_parametric() const;
+
+  virtual const ParameterType& parameter_type() const;
+
+private:
+  const ParameterType none_parameter_type_;
+}; // class ParametricInterface
 
 
 } // namespace Common
