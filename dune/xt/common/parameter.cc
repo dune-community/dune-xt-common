@@ -256,6 +256,24 @@ const ParameterType& ParametricInterface::parameter_type() const
   return none_parameter_type_;
 }
 
+Parameter ParametricInterface::parse_parameter(const Parameter& mu) const
+{
+  const auto target_type = parameter_type();
+
+  if (mu.type() == target_type)
+    return mu;
+
+  if (target_type.size() == 1 && mu.size() == 1) {
+    const auto& target_key = target_type.keys().at(0);
+    const auto& mus_value = mu.get(mu.keys().at(0));
+    if (mus_value.size() != target_type.get(target_key))
+      return mu;
+    return Parameter(target_key, mus_value);
+  }
+
+  return mu;
+} // ... parse_parameter(...)
+
 
 } // namespace Common
 } // namespace XT

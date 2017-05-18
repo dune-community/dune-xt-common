@@ -124,6 +124,8 @@ public:
 
   virtual const ParameterType& parameter_type() const;
 
+  Parameter parse_parameter(const Parameter& mu) const;
+
 private:
   const ParameterType none_parameter_type_;
 }; // class ParametricInterface
