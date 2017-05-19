@@ -69,7 +69,7 @@ template <class ValueType>
 void SimpleDict<ValueType>::set(const std::string& key, const ValueType& value, const bool overwrite)
 {
   if (key.empty())
-    DUNE_THROW(Exceptions::wrong_input_given, "Given key must not be empty!");
+    DUNE_THROW(Exceptions::parameter_error, "Given key must not be empty!");
   const bool key_was_present = has_key(key);
   if (!overwrite && key_was_present)
     DUNE_THROW(Exceptions::parameter_error,
@@ -248,7 +248,7 @@ std::ostream& operator<<(std::ostream& out, const Parameter& mu)
 
 bool ParametricInterface::is_parametric() const
 {
-  return false;
+  return !parameter_type().empty();
 }
 
 const ParameterType& ParametricInterface::parameter_type() const
