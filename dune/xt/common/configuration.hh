@@ -177,7 +177,7 @@ public:
   /**
    * @attention Please note the difference to Dune::ParameterTree::sub (return: value vs. reference)!
    */
-  Configuration sub(const std::string sub_id) const;
+  Configuration sub(const std::string sub_id, bool fail_if_missing = true) const;
 
   /**
    * \}

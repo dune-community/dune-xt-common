@@ -157,12 +157,15 @@ bool Configuration::has_key(const std::string& key) const
   return BaseType::hasKey(key);
 }
 
-Configuration Configuration::sub(const std::string sub_id) const
+Configuration Configuration::sub(const std::string sub_id, bool fail_if_missing) const
 {
-  if (empty())
+  if (empty()) {
+    if (!fail_if_missing)
+      return Configuration();
     DUNE_THROW(Exceptions::configuration_error,
                "You can not get anything from an empty Configuration, use has_sub(\"" << sub_id
                                                                                       << "\") to check first!");
+  }
   if (sub_id.empty())
     DUNE_THROW(Exceptions::configuration_error, "Given sub_id must not be empty!");
   if (!has_sub(sub_id))
