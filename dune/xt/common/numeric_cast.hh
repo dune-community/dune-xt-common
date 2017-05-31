@@ -19,12 +19,12 @@ T numeric_cast(S source)
 {
   T target;
   try {
-    target = boost::numeric_cast<size_t>(source);
+    target = boost::numeric_cast<T>(source);
   } catch (boost::bad_numeric_cast& ee) {
     DUNE_THROW(XT::Common::Exceptions::external_error,
                "  The following error occured in boost while converting '" << source << "' to '"
                                                                            << XT::Common::Typename<size_t>::value()
-                                                                           << ":\n\n"
+                                                                           << "':\n\n   "
                                                                            << ee.what());
   }
   return target;
