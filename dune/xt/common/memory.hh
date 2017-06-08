@@ -318,11 +318,11 @@ public:
   {
   }
 
-  explicit ConstStorageProvider(const ConstStorageProvider<T>& other) = default;
+  explicit ConstStorageProvider(const ConstStorageProvider<T>& other) = delete;
   explicit ConstStorageProvider(ConstStorageProvider<T>&& source) = default;
 
   ConstStorageProvider<T>& operator=(const ConstStorageProvider<T>& other) = delete;
-  ConstStorageProvider<T>& operator=(ConstStorageProvider<T>&& source) = delete;
+  ConstStorageProvider<T>& operator=(ConstStorageProvider<T>&& source) = default;
 
   const T& access() const
   {
@@ -367,11 +367,11 @@ public:
   {
   }
 
-  explicit StorageProvider(const StorageProvider<T>& other) = default;
+  explicit StorageProvider(const StorageProvider<T>& other) = delete;
   explicit StorageProvider(StorageProvider<T>&& source) = default;
 
   StorageProvider<T>& operator=(const StorageProvider<T>& other) = delete;
-  StorageProvider<T>& operator=(StorageProvider<T>&& source) = delete;
+  StorageProvider<T>& operator=(StorageProvider<T>&& source) = default;
 
   T& access()
   {
