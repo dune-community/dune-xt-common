@@ -121,6 +121,13 @@ public:
     ret *= scalar;
     return ret;
   }
+
+  ThisType operator/(const K& scalar) const
+  {
+    ThisType ret(*this);
+    ret /= scalar;
+    return ret;
+  }
 }; // class FieldVector
 
 template <class K, int SIZE, K value>
