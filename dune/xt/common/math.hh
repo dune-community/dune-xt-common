@@ -22,21 +22,23 @@
 #include <type_traits>
 #include <complex>
 
+#include <dune/common/deprecated.hh>
+
 #include <dune/xt/common/disable_warnings.hh>
-#include <boost/static_assert.hpp>
-#include <boost/fusion/include/void.hpp>
-#include <boost/format.hpp>
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/stats.hpp>
 #include <boost/accumulators/statistics/max.hpp>
 #include <boost/accumulators/statistics/min.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
+#include <boost/format.hpp>
+#include <boost/fusion/include/void.hpp>
+#include <boost/geometry.hpp>
 #include <boost/math/special_functions/fpclassify.hpp>
+#include <boost/static_assert.hpp>
 #include <dune/xt/common/reenable_warnings.hh>
 
 #include <dune/xt/common/type_traits.hh>
 #include <dune/xt/common/vector.hh>
-#include <dune/common/deprecated.hh>
 
 namespace Dune {
 namespace XT {
@@ -261,6 +263,58 @@ bool isinf(std::complex<T> val)
 {
   return isinf(std::real(val)) || isinf(std::imag(val));
 }
+
+//! calculates factorial of n
+constexpr size_t factorial(size_t n)
+{
+  return n > 0 ? n * factorial(n - 1) : 1;
+}
+
+//! calculates binomial coefficient for arbitrary n
+inline double binomial_coefficient(const double n, const size_t k)
+{
+  double ret(1);
+  for (size_t ii = 1; ii <= k; ++ii)
+    ret *= (n + 1 - ii) / ii;
+  return ret;
+}
+
+
+/** Converts from (x, y, z) to (theta, phi) on the unit sphere s.t.
+ * (x, y, z) = (sin(theta) cos(phi), sin(theta) sin(phi), cos(theta))
+ * with 0 \leq \theta \leq \pi and 0 \leq \varphi < 2\pi. **/
+template <class DomainFieldType>
+class CoordinateConverter
+{
+  typedef typename boost::geometry::model::point<DomainFieldType, 3, typename boost::geometry::cs::cartesian>
+      BoostCartesianCoordType;
+  typedef typename boost::geometry::model::point<DomainFieldType,
+                                                 2,
+                                                 typename boost::geometry::cs::spherical<boost::geometry::radian>>
+      BoostSphericalCoordType;
+
+public:
+  typedef FieldVector<DomainFieldType, 3> CartesianCoordType;
+  typedef FieldVector<DomainFieldType, 2> SphericalCoordType;
+
+  static SphericalCoordType to_spherical(const CartesianCoordType& x)
+  {
+    BoostCartesianCoordType x_boost(x[0], x[1], x[2]);
+    BoostSphericalCoordType x_spherical_boost;
+    boost::geometry::transform(x_boost, x_spherical_boost);
+    return SphericalCoordType{boost::geometry::get<1>(x_spherical_boost), boost::geometry::get<0>(x_spherical_boost)};
+  }
+
+  static CartesianCoordType to_cartesian(const SphericalCoordType& x_spherical)
+  {
+    BoostSphericalCoordType x_spherical_boost(x_spherical[1], x_spherical[0]);
+    BoostCartesianCoordType x_boost;
+    boost::geometry::transform(x_spherical_boost, x_boost);
+    return CartesianCoordType{
+        boost::geometry::get<0>(x_boost), boost::geometry::get<1>(x_boost), boost::geometry::get<2>(x_boost)};
+  }
+};
+
 
 } // namespace Common
 } // namespace XT
