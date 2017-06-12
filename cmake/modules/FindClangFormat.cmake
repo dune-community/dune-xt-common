@@ -18,7 +18,7 @@
 #   this module set ClangFormat_EXECUTABLE, ClangFormat_VERSION
 #   and ClangFormat_FOUND accordingly
 
-find_program(ClangFormat_EXECUTABLE NAMES clang-format clang-format-3.6 clang-format-3.7 clang-format-3.8 clang-format-3.9 clang-format-4.0)
+find_program(ClangFormat_EXECUTABLE NAMES clang-format-3.8)
 if(EXISTS ${ClangFormat_EXECUTABLE})
   execute_process(COMMAND ${ClangFormat_EXECUTABLE} -version OUTPUT_VARIABLE clang_out )
   string(REGEX REPLACE ".*clang-format version ([0-9]+\\.[0-9]+).*"  "\\1" ClangFormat_VERSION ${clang_out})
