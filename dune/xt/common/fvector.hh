@@ -145,6 +145,8 @@ public:
 //! Specialization of VectorAbstraction for Dune::XT::Common::FieldVector
 template <class K, int SIZE>
 struct VectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>>
+    : public SubscriptOperatorGetAndSet<Dune::XT::Common::FieldVector<K, SIZE>,
+                                        typename Dune::FieldTraits<K>::field_type>
 {
   typedef Dune::XT::Common::FieldVector<K, SIZE> VectorType;
   typedef typename Dune::FieldTraits<K>::field_type ScalarType;
