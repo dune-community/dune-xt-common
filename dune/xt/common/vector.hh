@@ -69,10 +69,37 @@ struct VectorAbstraction
   {
     static_assert(AlwaysFalse<VecType>::value, "Do not call me if is_vector is false!");
   }
+
+  static inline /*ScalarType*/ void get_entry(const VectorType& /*vec*/, const size_t /*ii*/)
+  {
+    static_assert(AlwaysFalse<VecType>::value, "Do not call me if is_vector is false!");
+  }
+
+  static inline void set_entry(VectorType& /*vec*/, size_t /*ii*/, ScalarType& /*val*/)
+  {
+    static_assert(AlwaysFalse<VecType>::value, "Do not call me if is_vector is false!");
+  }
+};
+
+template <class VectorType, class ScalarType>
+struct SubscriptOperatorGetAndSet
+{
+  static inline ScalarType get_entry(const VectorType& vector, const size_t ii)
+  {
+    assert(ii < vector.size());
+    return vector[ii];
+  }
+
+  static inline void set_entry(VectorType& vector, const size_t ii, const ScalarType& val)
+  {
+    assert(ii < vector.size());
+    vector[ii] = val;
+  }
 };
 
 template <class T>
 struct VectorAbstraction<std::vector<T>>
+    : public SubscriptOperatorGetAndSet<std::vector<T>, typename Dune::FieldTraits<T>::field_type>
 {
   typedef std::vector<T> VectorType;
   typedef typename Dune::FieldTraits<T>::field_type ScalarType;
@@ -99,6 +126,7 @@ struct VectorAbstraction<std::vector<T>>
 
 template <class K, size_t SIZE>
 struct VectorAbstraction<std::array<K, SIZE>>
+    : public SubscriptOperatorGetAndSet<std::array<K, SIZE>, typename Dune::FieldTraits<K>::field_type>
 {
   typedef std::array<K, SIZE> VectorType;
   typedef typename Dune::FieldTraits<K>::field_type ScalarType;
@@ -131,6 +159,7 @@ struct VectorAbstraction<std::array<K, SIZE>>
 
 template <class K>
 struct VectorAbstraction<Dune::DynamicVector<K>>
+    : public SubscriptOperatorGetAndSet<Dune::DynamicVector<K>, typename Dune::FieldTraits<K>::field_type>
 {
   typedef Dune::DynamicVector<K> VectorType;
   typedef typename Dune::FieldTraits<K>::field_type ScalarType;
@@ -157,6 +186,7 @@ struct VectorAbstraction<Dune::DynamicVector<K>>
 
 template <class K, int SIZE>
 struct VectorAbstraction<Dune::FieldVector<K, SIZE>>
+    : public SubscriptOperatorGetAndSet<Dune::FieldVector<K, SIZE>, typename Dune::FieldTraits<K>::field_type>
 {
   typedef Dune::FieldVector<K, SIZE> VectorType;
   typedef typename Dune::FieldTraits<K>::field_type ScalarType;
@@ -209,9 +239,22 @@ struct VectorAbstraction<std::complex<T>>
   {
     return VectorType(val);
   }
+
   static inline VectorType create(const size_t /*sz*/, const RealType& val)
   {
     return VectorType(val, val);
+  }
+
+  static inline ScalarType get_entry(const VectorType& vector, const size_t ii)
+  {
+    assert(ii < 2);
+    return ii == 0 ? vector.real() : vector.imag();
+  }
+
+  static inline void set_entry(VectorType& vector, const size_t ii, const ScalarType& val)
+  {
+    assert(ii < 2);
+    ii == 0 ? vector.real(val) : vector.imag(val);
   }
 };
 
@@ -256,9 +299,10 @@ template <class S, class V>
 typename std::enable_if<std::is_arithmetic<S>::value && Dune::XT::Common::is_vector<V>::value, V>::type
 operator*(const S& scalar, const V& vec)
 {
-  V result(vec);
+  typedef Dune::XT::Common::VectorAbstraction<V> VecAbs;
+  V result = VecAbs::create(vec.size());
   for (size_t ii = 0; ii < vec.size(); ++ii)
-    result[ii] *= scalar;
+    VecAbs::set_entry(result, ii, VecAbs::get_entry(vec, ii) * scalar);
   return result;
 } // ... operator*(...)
 
@@ -273,9 +317,11 @@ operator+(const L& left, const R& right)
   if (right.size() != sz)
     DUNE_THROW(Dune::XT::Common::Exceptions::shapes_do_not_match,
                "left.size() = " << sz << "\nright.size() = " << right.size());
-  L result(left);
+  typedef Dune::XT::Common::VectorAbstraction<L> VecAbsL;
+  typedef Dune::XT::Common::VectorAbstraction<R> VecAbsR;
+  L result = VecAbsL::create(sz);
   for (size_t ii = 0; ii < sz; ++ii)
-    result[ii] += right[ii];
+    VecAbsL::set_entry(result, ii, VecAbsL::get_entry(left, ii) * VecAbsR::get_entry(right, ii));
   return result;
 } // ... operator+(...)
 
@@ -283,14 +329,15 @@ template <class V, class CharType, class CharTraits>
 typename std::enable_if<Dune::XT::Common::is_vector<V>::value, std::basic_ostream<CharType, CharTraits>&>::type
 operator<<(std::basic_ostream<CharType, CharTraits>& out, const V& vec)
 {
+  typedef Dune::XT::Common::VectorAbstraction<V> VecAbs;
   if (vec.size() == 0)
     out << "[]";
   else if (vec.size() == 1)
-    out << vec[0];
+    out << VecAbs::get_entry(vec, 0);
   else {
-    out << "[" << vec[0];
+    out << "[" << VecAbs::get_entry(vec, 0);
     for (decltype(vec.size()) ii = 1; ii < vec.size(); ++ii)
-      out << " " << vec[ii];
+      out << " " << VecAbs::get_entry(vec, ii);
     out << "]";
   }
   return out;

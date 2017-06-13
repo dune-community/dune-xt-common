@@ -81,7 +81,8 @@ float_cmp_eq(const XType& xx, const YType& yy, const TolType& rtol, const TolTyp
   if (yy.size() != sz)
     return false;
   for (size_t ii = 0; ii < sz; ++ii)
-    if (!float_cmp_eq(xx[ii], yy[ii], rtol, atol))
+    if (!float_cmp_eq(
+            VectorAbstraction<XType>::get_entry(xx, ii), VectorAbstraction<YType>::get_entry(yy, ii), rtol, atol))
       return false;
   return true;
 } // ... float_cmp(...)
