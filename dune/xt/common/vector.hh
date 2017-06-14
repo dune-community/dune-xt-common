@@ -321,7 +321,7 @@ operator+(const L& left, const R& right)
   typedef Dune::XT::Common::VectorAbstraction<R> VecAbsR;
   L result = VecAbsL::create(sz);
   for (size_t ii = 0; ii < sz; ++ii)
-    VecAbsL::set_entry(result, ii, VecAbsL::get_entry(left, ii) * VecAbsR::get_entry(right, ii));
+    VecAbsL::set_entry(result, ii, VecAbsL::get_entry(left, ii) + VecAbsR::get_entry(right, ii));
   return result;
 } // ... operator+(...)
 
