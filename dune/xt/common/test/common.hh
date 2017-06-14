@@ -18,6 +18,7 @@
 #include <utility>
 #include <vector>
 
+#include <dune/common/hybridutilities.hh>
 #include <dune/common/tupleutility.hh>
 
 #include <dune/xt/common/convergence-study.hh>
@@ -40,9 +41,9 @@ struct TestRunner
   static void run()
   {
     Tuple t;
-    Dune::ForEachValue<Tuple> fe(t);
     Visitor v;
-    fe.apply(v);
+    Dune::Hybrid::forEach(Dune::Std::make_index_sequence<std::tuple_size<Tuple>::value>{},
+                          [&](auto i) { v.visit(std::get<i>(t)); });
   }
 }; // struct TestRunner
 
