@@ -50,7 +50,7 @@ void addbind_exceptions(pybind11::module& m)
       dune_exc(e.what());
 #if HAVE_TBB
     } catch (const tbb::tbb_exception& e) {
-      tbb_exc(std::string(e.name() + ": " + e.what()).c_str());
+      tbb_exc((std::string(e.name()) + ": " + e.what()).c_str());
 #endif
     } catch (const std::exception& e) {
       std_exc(e.what());
