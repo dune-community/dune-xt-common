@@ -389,6 +389,11 @@ inline std::string convert_to_string(const std::string ss, const std::size_t /*p
   return std::string(ss);
 }
 
+// forward such that vectors of matrices can be converted
+template <class M>
+static inline typename std::enable_if<is_matrix<M>::value, std::string>::type
+convert_to_string(const M& /*mat*/, const std::size_t /*precision*/);
+
 template <class V>
 static inline typename std::enable_if<is_vector<V>::value, std::string>::type
 convert_to_string(const V& vec, const std::size_t precision)
@@ -420,6 +425,7 @@ convert_to_string(const M& mat, const std::size_t precision)
   ret += "]";
   return ret;
 } // ... convert_to_string(...)
+
 
 } // namespace internal
 } // namespace Common
