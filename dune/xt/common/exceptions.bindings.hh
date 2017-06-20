@@ -5,7 +5,8 @@
 //      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
-//   Felix Schindler (2016 - 2017)
+//   Felix Schindler (2017)
+//   Tobias Leibner  (2017)
 
 #ifndef DUNE_XT_COMMON_EXCEPTIONS_BINDINGS_HH
 #define DUNE_XT_COMMON_EXCEPTIONS_BINDINGS_HH

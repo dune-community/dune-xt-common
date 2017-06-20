@@ -7,7 +7,7 @@
 // Authors:
 //   Felix Schindler (2014 - 2017)
 //   Rene Milk       (2015 - 2016)
-//   Tobias Leibner  (2016)
+//   Tobias Leibner  (2016 - 2017)
 
 #ifndef DUNE_XT_COMMON_TEST_MAIN_COMMON_HH
 #define DUNE_XT_COMMON_TEST_MAIN_COMMON_HH

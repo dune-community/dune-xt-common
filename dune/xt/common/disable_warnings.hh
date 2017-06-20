@@ -7,8 +7,8 @@
 // Authors:
 //   Andreas Buhr    (2014)
 //   Felix Schindler (2012 - 2014, 2016 - 2017)
-//   Rene Milk       (2011 - 2012, 2014 - 2016)
-//   Tobias Leibner  (2014, 2016)
+//   Rene Milk       (2011 - 2012, 2014 - 2017)
+//   Tobias Leibner  (2014, 2016 - 2017)
 
 #include <boost/config.hpp>
 

@@ -9,7 +9,7 @@
 //   Felix Schindler (2012 - 2017)
 //   Rene Milk       (2010 - 2016)
 //   Sven Kaulmann   (2013)
-//   Tobias Leibner  (2014)
+//   Tobias Leibner  (2014, 2017)
 
 #ifndef DUNE_XT_COMMON_MATH_HH
 #define DUNE_XT_COMMON_MATH_HH

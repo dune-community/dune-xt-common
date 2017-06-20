@@ -6,7 +6,7 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2013 - 2017)
-//   Rene Milk       (2013 - 2016)
+//   Rene Milk       (2013 - 2017)
 //   Tobias Leibner  (2014, 2016)
 
 /* begin dune-xt-common */

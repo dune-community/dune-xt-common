@@ -7,7 +7,7 @@
 // Authors:
 //   Felix Schindler (2014 - 2017)
 //   Rene Milk       (2014 - 2016)
-//   Tobias Leibner  (2015 - 2016)
+//   Tobias Leibner  (2015 - 2017)
 
 #include "config.h"
 
