@@ -19,6 +19,7 @@
 #include <dune/common/fmatrix.hh>
 
 #include <dune/xt/common/exceptions.hh>
+#include <dune/xt/common/float_cmp.hh>
 #include <dune/xt/common/debug.hh>
 #include <dune/xt/common/vector.hh>
 
@@ -141,6 +142,23 @@ public:
   {
   }
 }; // class ValueInitFieldVector
+
+//! struct to be used as comparison function e.g. in a std::map<FieldVector<...>, ..., FieldVectorLess>
+struct FieldVectorLess
+{
+  template <class FieldType, int dimDomain>
+  bool operator()(const Dune::FieldVector<FieldType, dimDomain>& a,
+                  const Dune::FieldVector<FieldType, dimDomain>& b) const
+  {
+    for (size_t dd = 0; dd < dimDomain; ++dd) {
+      if (XT::Common::FloatCmp::lt(a[dd], b[dd]))
+        return true;
+      else if (XT::Common::FloatCmp::gt(a[dd], b[dd]))
+        return false;
+    }
+    return false;
+  }
+};
 
 //! Specialization of VectorAbstraction for Dune::XT::Common::FieldVector
 template <class K, int SIZE>
