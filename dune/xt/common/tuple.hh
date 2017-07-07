@@ -237,12 +237,16 @@ struct Combine
 
 } // namespace TupleProduct
 
-// from https://stackoverflow.com/questions/17424477/implementation-c14-make-integer-sequence/17426611
+//! from https://stackoverflow.com/questions/17424477/implementation-c14-make-integer-sequence/17426611
 template <size_t... Is>
 struct index_sequence
 {
   using type = index_sequence;
 };
+
+
+namespace internal {
+
 
 template <class S1, class S2>
 struct Concat;
@@ -256,6 +260,9 @@ struct Concat<index_sequence<I1...>, index_sequence<I2...>>
 };
 
 
+} // namespace internal
+
+
 template <size_t N>
 struct make_index_sequence;
 template <size_t N>
@@ -264,7 +271,7 @@ using make_index_sequence_t = typename make_index_sequence<N>::type;
 template <size_t N>
 struct make_index_sequence
 {
-  using type = Concat_t<make_index_sequence_t<N / 2>, make_index_sequence_t<N - N / 2>>;
+  using type = internal::Concat_t<make_index_sequence_t<N / 2>, make_index_sequence_t<N - N / 2>>;
 };
 
 // break conditions
@@ -296,6 +303,44 @@ struct make_identical_tuple<T, N, index_sequence<Indices...>>
   {
     return type(T_aliased<T, Indices>{t}...);
   }
+};
+
+//! implementation of std::tuple_element with O(log(N)) template recursion depth
+//! from https://stackoverflow.com/questions/18593057/stdtuple-element-need-deep-template-instantination
+namespace internal {
+template <std::size_t>
+struct Any
+{
+  Any(...)
+  {
+  }
+};
+
+template <typename T>
+struct wrapper
+{
+  using type = T;
+};
+
+template <std::size_t... Is>
+struct get_nth_helper
+{
+  template <typename T>
+  static auto deduce(Any<Is>..., wrapper<T>, ...) -> wrapper<T>;
+};
+
+template <std::size_t... Is, typename... Ts>
+auto deduce_seq(index_sequence<Is...>, wrapper<Ts>... pp) -> decltype(get_nth_helper<Is...>::deduce(pp...));
+}
+
+template <std::size_t N, class Tuple>
+struct tuple_element;
+
+template <std::size_t N, class... Ts>
+struct tuple_element<N, std::tuple<Ts...>>
+{
+  using wrapped_type = decltype(internal::deduce_seq(make_index_sequence_t<N>{}, internal::wrapper<Ts>()...));
+  using type = typename wrapped_type::type;
 };
 
 } // namespace Common
