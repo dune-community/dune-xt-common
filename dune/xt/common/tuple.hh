@@ -13,6 +13,8 @@
 #ifndef DUNE_XT_COMMON_TUPLE_HH
 #define DUNE_XT_COMMON_TUPLE_HH
 
+#include <utility>
+
 #include <dune/common/typetraits.hh>
 
 #include <boost/mpl/if.hpp>
@@ -255,16 +257,32 @@ struct create_indices<0, Indices...>
   typedef indices<Indices...> type;
 };
 
+
 //! T_aliased< T, Index > is always the type T, no matter what index is
 template <typename T, std::size_t index>
 using T_aliased = T;
 
 //! make_identical_tuple< T, N >::type is a std::tuple< T, ... , T > with a length of N
-template <typename T, std::size_t N, typename I = typename create_indices<N>::type>
+template <typename T,
+          std::size_t N,
+          typename I =
+#if __cplusplus >= 201402L
+              std::make_index_sequence<N>
+#else
+              typename create_indices<N>::type
+#endif
+          >
 struct make_identical_tuple;
 
 template <typename T, std::size_t N, std::size_t... Indices>
-struct make_identical_tuple<T, N, indices<Indices...>>
+struct make_identical_tuple<T,
+                            N,
+#if __cplusplus >= 201402L
+                            std::index_sequence<Indices...>
+#else
+                            indices<Indices...>
+#endif
+                            >
 {
   using type = std::tuple<T_aliased<T, Indices>...>;
 
