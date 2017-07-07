@@ -237,52 +237,58 @@ struct Combine
 
 } // namespace TupleProduct
 
-//! from
-//! https://stackoverflow.com/questions/16853552/how-to-create-a-type-list-for-variadic-templates-that-contains-n-times-the-sam
-template <std::size_t...>
-struct indices
+// from https://stackoverflow.com/questions/17424477/implementation-c14-make-integer-sequence/17426611
+template <size_t... Is>
+struct index_sequence
 {
+  using type = index_sequence;
 };
 
-//! call this without Indices (i.e. create_indices< N >::type)
-template <std::size_t N, std::size_t... Indices>
-struct create_indices : create_indices<N - 1, N - 1, Indices...>
+template <class S1, class S2>
+struct Concat;
+template <class S1, class S2>
+using Concat_t = typename Concat<S1, S2>::type;
+
+template <size_t... I1, size_t... I2>
+struct Concat<index_sequence<I1...>, index_sequence<I2...>>
 {
+  using type = index_sequence<I1..., (sizeof...(I1) + I2)...>;
 };
 
-//! terminating template
-template <std::size_t... Indices>
-struct create_indices<0, Indices...>
+
+template <size_t N>
+struct make_index_sequence;
+template <size_t N>
+using make_index_sequence_t = typename make_index_sequence<N>::type;
+
+template <size_t N>
+struct make_index_sequence
 {
-  typedef indices<Indices...> type;
+  using type = Concat_t<make_index_sequence_t<N / 2>, make_index_sequence_t<N - N / 2>>;
 };
 
+// break conditions
+template <>
+struct make_index_sequence<1>
+{
+  using type = index_sequence<0>;
+};
+template <>
+struct make_index_sequence<0>
+{
+  using type = index_sequence<>;
+};
 
 //! T_aliased< T, Index > is always the type T, no matter what index is
 template <typename T, std::size_t index>
 using T_aliased = T;
 
 //! make_identical_tuple< T, N >::type is a std::tuple< T, ... , T > with a length of N
-template <typename T,
-          std::size_t N,
-          typename I =
-#if __cplusplus >= 201402L
-              std::make_index_sequence<N>
-#else
-              typename create_indices<N>::type
-#endif
-          >
+template <typename T, std::size_t N, typename I = typename make_index_sequence<N>::type>
 struct make_identical_tuple;
 
 template <typename T, std::size_t N, std::size_t... Indices>
-struct make_identical_tuple<T,
-                            N,
-#if __cplusplus >= 201402L
-                            std::index_sequence<Indices...>
-#else
-                            indices<Indices...>
-#endif
-                            >
+struct make_identical_tuple<T, N, index_sequence<Indices...>>
 {
   using type = std::tuple<T_aliased<T, Indices>...>;
 
