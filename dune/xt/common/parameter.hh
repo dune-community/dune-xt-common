@@ -127,7 +127,7 @@ public:
   Parameter parse_parameter(const Parameter& mu) const;
 
 private:
-  const ParameterType none_parameter_type_;
+  ParameterType none_parameter_type_;
 }; // class ParametricInterface
 
 
