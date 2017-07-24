@@ -28,6 +28,15 @@
 #define HAVE_EIGEN ENABLE_EIGEN
 #endif
 
+#ifndef HAVE_QHULL
+#define HAVE_QHULL ${HAVE_QHULL}
+#endif
+
+#ifndef HAVE_LPSOLVE
+#define HAVE_LPSOLVE ${HAVE_LPSOLVE}
+#endif
+
+
 /* Define to 1 if threading building blocks were found, else 0 */
 #ifndef HAVE_TBB
 #define HAVE_TBB ${HAVE_TBB}
