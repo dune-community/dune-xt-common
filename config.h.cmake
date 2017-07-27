@@ -36,6 +36,9 @@
 #define HAVE_LPSOLVE ${HAVE_LPSOLVE}
 #endif
 
+#ifndef HAVE_LAPACKE
+#define HAVE_LAPACKE ${HAVE_LAPACKE}
+#endif
 
 /* Define to 1 if threading building blocks were found, else 0 */
 #ifndef HAVE_TBB
