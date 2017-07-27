@@ -258,7 +258,7 @@ const ParameterType& ParametricInterface::parameter_type() const
 
 Parameter ParametricInterface::parse_parameter(const Parameter& mu) const
 {
-  const auto target_type = parameter_type();
+  const auto& target_type = parameter_type();
 
   if (mu.type() == target_type)
     return mu;
@@ -279,11 +279,12 @@ Parameter ParametricInterface::parse_parameter(const Parameter& mu) const
 Parameter ParametricInterface::parse_and_check(const Parameter& mu) const
 {
   Common::Parameter parsed_mu;
-  if (!param_type_.empty()) {
+  const auto& target_type = parameter_type();
+  if (!target_type.empty()) {
     parsed_mu = this->parse_parameter(mu);
-    if (parsed_mu.type() != parameter_type())
+    if (parsed_mu.type() != target_type)
       DUNE_THROW(Exceptions::parameter_error,
-                 "parameter_type(): " << param_type_ << "\n   "
+                 "parameter_type(): " << target_type << "\n   "
                                       << "mu.type(): "
                                       << mu.type());
   }
