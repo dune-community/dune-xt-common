@@ -274,6 +274,21 @@ Parameter ParametricInterface::parse_parameter(const Parameter& mu) const
   return mu;
 } // ... parse_parameter(...)
 
+// TODO: Why doesn't parse_parameter check this? Is that additional block
+// in parse_parameter (if (both sizes == 1)) useful?
+Parameter ParametricInterface::parse_and_check(const Parameter& mu) const
+{
+  Common::Parameter parsed_mu;
+  if (!param_type_.empty()) {
+    parsed_mu = this->parse_parameter(mu);
+    if (parsed_mu.type() != parameter_type())
+      DUNE_THROW(Exceptions::parameter_error,
+                 "parameter_type(): " << param_type_ << "\n   "
+                                      << "mu.type(): "
+                                      << mu.type());
+  }
+  return parsed_mu;
+}
 
 } // namespace Common
 } // namespace XT
