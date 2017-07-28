@@ -84,8 +84,11 @@ def _redo(processes, keys, *args):
         return {k: v for k,v in zip(keys, result)}
     except subprocess.CalledProcessError as cpe:
         logging.error('*'*79)
-        logging.error(cpe.stdout)
-        logging.error(cpe.stderr)
+        try:
+            logging.error(cpe.stdout)
+            logging.error(cpe.stderr)
+        except AttributeError:
+            logging.error(cpe.output)
         logging.error('*' * 79)
         raise cpe
 
