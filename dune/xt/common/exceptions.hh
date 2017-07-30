@@ -7,7 +7,7 @@
 // Authors:
 //   Felix Schindler (2013 - 2017)
 //   Rene Milk       (2014 - 2017)
-//   Tobias Leibner  (2014)
+//   Tobias Leibner  (2014, 2017)
 
 #ifndef DUNE_XT_COMMON_EXCEPTIONS_HH
 #define DUNE_XT_COMMON_EXCEPTIONS_HH

@@ -8,7 +8,7 @@
 #   Felix Schindler (2012 - 2017)
 #   Rene Milk       (2010 - 2017)
 #   Sven Kaulmann   (2013)
-#   Tobias Leibner  (2015 - 2016)
+#   Tobias Leibner  (2015 - 2017)
 
 include(CheckCXXSourceCompiles)
 include(DuneXtCommonMacros)

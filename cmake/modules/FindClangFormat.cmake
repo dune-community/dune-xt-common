@@ -7,6 +7,7 @@
 # Authors:
 #   Felix Schindler (2017)
 #   Rene Milk       (2016)
+#   Tobias Leibner  (2017)
 #
 # Use this module by invoking find_package with the form::
 #

@@ -6,6 +6,8 @@
 #          with "runtime exception" (http://www.dune-project.org/license.html)
 # Authors:
 #   Felix Schindler (2017)
+#   Rene Milk       (2017)
+#   Tobias Leibner  (2017)
 
 set(lib_dune_xt_common_sources
     color.cc
