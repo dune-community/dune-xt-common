@@ -56,6 +56,7 @@ endmacro(get_headercheck_targets)
 find_package(Qhull)
 find_package(LPSolve)
 find_package(LAPACKE)
+find_package(MatExp)
 macro(BEGIN_TESTCASES)
 # https://cmake.org/cmake/help/v3.0/module/FindGTest.html http://purplekarrot.net/blog/cmake-and-test-suites.html
 	file( GLOB_RECURSE test_sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cc" )

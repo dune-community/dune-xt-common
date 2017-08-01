@@ -40,6 +40,10 @@
 #define HAVE_LAPACKE ${HAVE_LAPACKE}
 #endif
 
+#ifndef HAVE_MATEXP
+#define HAVE_MATEXP ${HAVE_MATEXP}
+#endif
+
 /* Define to 1 if threading building blocks were found, else 0 */
 #ifndef HAVE_TBB
 #define HAVE_TBB ${HAVE_TBB}
