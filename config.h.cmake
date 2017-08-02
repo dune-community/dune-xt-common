@@ -44,6 +44,10 @@
 #define HAVE_MATEXP ${HAVE_MATEXP}
 #endif
 
+#ifndef HAVE_LEBEDEV_DATA
+#define HAVE_LEBEDEV_DATA ${HAVE_LEBEDEV_DATA}
+#endif
+
 /* Define to 1 if threading building blocks were found, else 0 */
 #ifndef HAVE_TBB
 #define HAVE_TBB ${HAVE_TBB}
