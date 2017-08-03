@@ -62,14 +62,20 @@ public:
     return ret;
   }
 
-  Dune::FieldVector<K, ROWS> operator*(const Dune::FieldVector<K, COLS>& vec) const
+  template <int O_COLS>
+  Dune::XT::Common::FieldMatrix<K, ROWS, O_COLS> operator*(const Dune::FieldMatrix<K, COLS, O_COLS>& mat) const
+  {
+    return this->rightmultiplyany(mat);
+  }
+
+  Dune::XT::Common::FieldVector<K, ROWS> operator*(const Dune::FieldVector<K, COLS>& vec) const
   {
     Dune::FieldVector<K, ROWS> ret;
     this->mv(vec, ret);
     return ret;
   } // ... operator*(...)
 
-  Dune::FieldVector<K, ROWS> operator*(const FieldMatrix<K, 1, COLS>& mat) const
+  Dune::XT::Common::FieldVector<K, ROWS> operator*(const FieldMatrix<K, 1, COLS>& mat) const
   {
     Dune::FieldVector<K, ROWS> ret;
     this->mv(mat[0], ret);
