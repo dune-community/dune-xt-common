@@ -7,12 +7,20 @@
 # Authors:
 #   Tobias Leibner (2017)
 
+# cmake can't find OpenBLAS in older versions, so do it manually
+find_package(BLAS)
+find_library(OPENBLAS_LIBRARY openblas)
+if(NOT "${OPENBLAS_LIBRARY}" MATCHES "OPENBLAS_LIBRARY-NOTFOUND")
+  list(APPEND BLAS_LIBRARIES ${OPENBLAS_LIBRARY}) 
+endif(NOT "${OPENBLAS_LIBRARY}" MATCHES "OPENBLAS_LIBRARY-NOTFOUND")
+
 find_library(LAPACKE_LIBRARY lapacke HINTS "${CMAKE_SOURCE_DIR}/../local/lib/")
 if("${LAPACKE_LIBRARY}" MATCHES "LAPACKE_LIBRARY-NOTFOUND")
 	message("--   library 'LAPACKE' not found, make sure you have both LAPACK and LAPACKE installed")
 else("${LAPACKE_LIBRARY}" MATCHES "LAPACKE_LIBRARY-NOTFOUND")
   message("--   found LAPACKE library")
-  set(LAPACKE_LIBRARIES "${LAPACKE_LIBRARY}" "gfortran")
+  set(LAPACKE_LIBRARIES "${LAPACKE_LIBRARY}")
+  list(APPEND LAPACKE_LIBRARIES ${BLAS_LIBRARIES}) 
 endif("${LAPACKE_LIBRARY}" MATCHES "LAPACKE_LIBRARY-NOTFOUND")
 
 message("-- checking for lapacke.h header")
