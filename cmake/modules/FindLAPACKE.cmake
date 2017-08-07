@@ -7,7 +7,7 @@
 # Authors:
 #   Tobias Leibner (2017)
 
-find_library(LAPACKE_LIBRARY lapacke "${CMAKE_SOURCE_DIR}/../local/lib/" "/usr/lib/" "/usr/local/lib/")
+find_library(LAPACKE_LIBRARY lapacke HINTS "${CMAKE_SOURCE_DIR}/../local/lib/")
 if("${LAPACKE_LIBRARY}" MATCHES "LAPACKE_LIBRARY-NOTFOUND")
 	message("--   library 'LAPACKE' not found, make sure you have both LAPACK and LAPACKE installed")
 else("${LAPACKE_LIBRARY}" MATCHES "LAPACKE_LIBRARY-NOTFOUND")

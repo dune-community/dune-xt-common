@@ -8,7 +8,7 @@
 #   Tobias Leibner (2017)
 
 message("-- checking for 'lpsolve' library")
-find_library(LPSOLVE_LIBRARY NAMES lpsolve lpsolve55 HINTS "${CMAKE_SOURCE_DIR}/../local/lib/" PATHS "/usr/lib/" "/usr/local/lib/")
+find_library(LPSOLVE_LIBRARY NAMES lpsolve lpsolve55 HINTS "${CMAKE_SOURCE_DIR}/../local/lib/")
 if("${LPSOLVE_LIBRARY}" MATCHES "LPSOLVE_LIBRARY-NOTFOUND")
 	message("--   library 'lpsolve' not found")
 else("${LPSOLVE_LIBRARY}" MATCHES "LPSOLVE_LIBRARY-NOTFOUND")
