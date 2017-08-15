@@ -274,7 +274,7 @@ typename std::enable_if<is_complex<T>::value, T>::type create(const size_t /*sz*
 }
 
 template <class VectorType>
-typename std::enable_if<std::is_arithmetic<VectorType>::value, VectorType>::type
+typename std::enable_if<is_arithmetic<VectorType>::value, VectorType>::type
 create(const size_t /*sz*/,
        const typename VectorAbstraction<VectorType>::S& val = typename VectorAbstraction<VectorType>::S(0))
 {
@@ -296,7 +296,7 @@ create(const size_t rows, const size_t /*cols*/, const typename VectorAbstractio
 
 
 template <class S, class V>
-typename std::enable_if<std::is_arithmetic<S>::value && Dune::XT::Common::is_vector<V>::value, V>::type
+typename std::enable_if<is_arithmetic<S>::value && Dune::XT::Common::is_vector<V>::value, V>::type
 operator*(const S& scalar, const V& vec)
 {
   typedef Dune::XT::Common::VectorAbstraction<V> VecAbs;

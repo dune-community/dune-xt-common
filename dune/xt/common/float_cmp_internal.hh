@@ -55,7 +55,7 @@ namespace internal {
  *            https://github.com/numpy/numpy/blob/v1.9.1/numpy/core/numeric.py#L2238
  */
 template <class T>
-typename std::enable_if<std::is_arithmetic<T>::value, bool>::type
+typename std::enable_if<is_arithmetic<T>::value, bool>::type
 float_cmp_eq(const T& xx, const T& yy, const T& rtol, const T& atol)
 {
   return absolute_difference(xx, yy) <= atol + Dune::XT::Common::abs(yy) * rtol;
@@ -109,8 +109,7 @@ float_cmp_eq(const XType& xx, const YType& yy, const TolType& rtol, const TolTyp
 } // ... float_cmp(...)
 
 template <Dune::FloatCmp::CmpStyle style, class T>
-typename std::enable_if<std::is_arithmetic<T>::value, bool>::type
-dune_float_cmp_eq(const T& xx, const T& yy, const T& eps)
+typename std::enable_if<is_arithmetic<T>::value, bool>::type dune_float_cmp_eq(const T& xx, const T& yy, const T& eps)
 {
   return Dune::FloatCmp::eq<T, style>(xx, yy, eps);
 }
@@ -159,7 +158,7 @@ dune_float_cmp_eq(const XType& xx, const YType& yy, const EpsType& eps)
 } // ... float_cmp(...){
 
 template <class T>
-typename std::enable_if<std::is_arithmetic<T>::value, bool>::type cmp_gt(const T& xx, const T& yy)
+typename std::enable_if<is_arithmetic<T>::value, bool>::type cmp_gt(const T& xx, const T& yy)
 {
   return std::greater<T>()(xx, yy);
 }
@@ -206,7 +205,7 @@ cmp_gt(const XType& xx, const YType& yy)
 } // ... cmp_gt(...)
 
 template <class T>
-typename std::enable_if<std::is_arithmetic<T>::value, bool>::type cmp_lt(const T& xx, const T& yy)
+typename std::enable_if<is_arithmetic<T>::value, bool>::type cmp_lt(const T& xx, const T& yy)
 {
   return std::less<T>()(xx, yy);
 }
@@ -324,8 +323,8 @@ struct Call<FirstType, SecondType, ToleranceType, Style::numpy>
 template <class FirstType, class SecondType, class ToleranceType>
 struct cmp_type_check
 {
-  static constexpr bool is_ok_scalar = (std::is_arithmetic<FirstType>::value || is_complex<FirstType>::value)
-                                       && std::is_same<FirstType, SecondType>::value;
+  static constexpr bool is_ok_scalar =
+      (is_arithmetic<FirstType>::value || is_complex<FirstType>::value) && std::is_same<FirstType, SecondType>::value;
   static constexpr bool is_ok_vector = is_vector<FirstType>::value && is_vector<SecondType>::value
                                        && std::is_same<ToleranceType, typename VectorAbstraction<FirstType>::S>::value
                                        && std::is_same<ToleranceType, typename VectorAbstraction<SecondType>::S>::value;

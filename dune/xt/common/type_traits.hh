@@ -22,6 +22,7 @@
 #include <iostream>
 
 #include <dune/common/typetraits.hh>
+#include <dune/common/bigunsignedint.hh>
 
 
 /** use this to define Typename specializations in the GLOBAL namespace ONLY **/
@@ -189,6 +190,15 @@ struct is_complex<std::complex<T>> : public std::true_type
 {
 };
 
+template <class T>
+struct is_arithmetic : public std::is_arithmetic<T>
+{
+};
+
+template <int k>
+struct is_arithmetic<Dune::bigunsignedint<k>> : public std::true_type
+{
+};
 
 /**
  * To be used e.g. with AlwaysFalse:
