@@ -87,7 +87,8 @@ struct AbsoluteValue
 {
   static T result(const T& val)
   {
-    return std::abs(val);
+    using std::abs;
+    return abs(val);
   }
 };
 template <class T>
