@@ -296,7 +296,7 @@ create(const size_t rows, const size_t /*cols*/, const typename VectorAbstractio
 
 
 template <class S, class V>
-typename std::enable_if<is_arithmetic<S>::value && Dune::XT::Common::is_vector<V>::value, V>::type
+typename std::enable_if<Dune::XT::Common::is_arithmetic<S>::value && Dune::XT::Common::is_vector<V>::value, V>::type
 operator*(const S& scalar, const V& vec)
 {
   typedef Dune::XT::Common::VectorAbstraction<V> VecAbs;
