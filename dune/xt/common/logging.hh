@@ -93,7 +93,7 @@ public:
 
   //! flush all active streams
   void flush();
-  //! creates a new LogStream with given id
+  //! creates a new LogStream with given flags, returns new ID
   int add_stream(int flags);
 
   //! re-enable all logging below given priority level
