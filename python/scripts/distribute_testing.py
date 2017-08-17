@@ -22,6 +22,7 @@ from contextlib import contextmanager
 import binpacking
 from multiprocessing import Pool, cpu_count
 from collections import OrderedDict
+from statistics import mean, stdev
 
 MAXTIME = 23*60
 pickle_file = 'totals.pickle'
@@ -148,16 +149,12 @@ except:
     bincount = 13
 logging.basicConfig(level=logging.DEBUG)
 testname_map = {b: t.split(';') for b,t in zip(binaries, all_testnames)}
-processes = cpu_count()
+processes = 1 #cpu_count()
 
 totals = do_timings(builddir, testdir, binaries, all_testnames, processes, headerlibs)
 
 #bins = binpacking.to_constant_volume(totals, MAXTIME)
 bins = binpacking.to_constant_bin_number(totals, bincount)
-#for idx, bin in enumerate(bins):
-    #pprint('Bin {} vol: {}'.format(idx, sum(bin.values())))
-    #pprint.pprint(bin)
-from statistics import mean, stdev
 vols = [sum(bi.values()) for bi in bins]
 norm = 100/MAXTIME
 print('Generated {} bins.\nRelative volumes:\n\t\tMin {:.2f}%\n\t\tMax {:.2f}%\n\t\tAvg {:.2f}%\n'.format(
