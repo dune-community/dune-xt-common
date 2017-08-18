@@ -15,7 +15,7 @@ import os
 import pickle
 import json
 import sys
-import pprint
+from pprint import pprint, pformat
 import subprocess
 import time
 from contextlib import contextmanager
@@ -105,8 +105,8 @@ def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
         compiles = _load(compiles_fn)
         if set(compiles.keys()) != set(targets):
             logging.error('redoing compiles due to mismatched binaries')
-            logging.error('Removed: {}'.format(pprint.pformat(set(compiles.keys()) - set(targets))))
-            logging.error('New: {}'.format(pprint.pformat(set(targets) - set(compiles.keys()))))
+            logging.error('Removed: {}'.format(pformat(set(compiles.keys()) - set(targets))))
+            logging.error('New: {}'.format(pformat(set(targets) - set(compiles.keys()))))
             compiles = _redo(processes, targets, _compile, targets)
     except FileNotFoundError:
         logging.error('redoing compiles due to missing pickle')
@@ -119,8 +119,8 @@ def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
         loaded_testnames, testruns = _load(testruns_fn)
         if set(compiles.keys()) != set(targets) or loaded_testnames != testnames:
             logging.error('redoing tests due to mismatched binaries/testnames')
-            logging.error('Removed: {}'.format(pprint.pformat([f for f in loaded_testnames if f not in set(testnames)])))
-            logging.error('New: {}'.format(pprint.pformat([n for n in testnames if n not in set(loaded_testnames)])))
+            logging.error('Removed: {}'.format(pformat([f for f in loaded_testnames if f not in set(testnames)])))
+            logging.error('New: {}'.format(pformat([n for n in testnames if n not in set(loaded_testnames)])))
             testruns = _redo(processes, binaries, _run_tests, zip(binaries, testnames))
     except FileNotFoundError:
         logging.error('redoing tests due to missing pickle')
@@ -136,19 +136,19 @@ def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
     return totals
 
 
-# list comes with a leading empty entry
-all_testnames = open(sys.argv[4], 'rt').read().split('/')[1:]
 builddir = sys.argv[1]
 testdir = sys.argv[2]
 cmake_outfile = os.path.join(builddir, 'builder_definitions.cmake')
 binaries = open(sys.argv[3], 'rt').read().split(';')
+# list comes with a leading empty entry
+all_testnames = open(sys.argv[4], 'rt').read().split('/')[1:]
 headerlibs = open(sys.argv[5], 'rt').read().split(';')
 try:
     bincount = int(sys.argv[6])
 except:
     bincount = 13
 logging.basicConfig(level=logging.DEBUG)
-testname_map = {b: t.split(';') for b,t in zip(binaries, all_testnames)}
+testname_map = {b: t.strip().split(';') for b,t in zip(binaries, all_testnames)}
 processes = 1 #cpu_count()
 
 totals = do_timings(builddir, testdir, binaries, all_testnames, processes, headerlibs)
@@ -160,12 +160,11 @@ norm = 100/MAXTIME
 print('Generated {} bins.\nRelative volumes:\n\t\tMin {:.2f}%\n\t\tMax {:.2f}%\n\t\tAvg {:.2f}%\n'.format(
     len(bins), min(vols)*norm, max(vols)*norm, mean(vols)*norm, stdev(vols)))
 
-set_tpl = '''set_tests_properties({testname} PROPERTIES LABELS "builder_{idx}")\n'''
+set_tpl = '''set_tests_properties({} PROPERTIES LABELS "builder_{}")\n'''
 with open(cmake_outfile, 'wt') as out:
     out.write('set(DXT_BIN_COUNT "{}" CACHE STRING "number of bins for test targets" )\n'.format(len(bins)))
     for idx, bin in enumerate(bins):
         out.write('add_custom_target(test_binaries_builder_{} DEPENDS {})\n'.format(idx, ' '.join(sorted(bin.keys()))))
         for binary in sorted(bin.keys()):
             if binary not in headerlibs:
-                for testname in testname_map[binary]:
-                    out.write(set_tpl.format(testname=testname, idx=idx))
+                out.write(set_tpl.format(' '.join(testname_map[binary]), idx))
