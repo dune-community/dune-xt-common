@@ -6,6 +6,8 @@
 set -e
 set -x
 
+${SUPERDIR}/.ci/init_sshkey.bash ${encrypted_862ca47045d1_key} ${encrypted_862ca47045d1_iv} keys/dune-community/dune-xt-common-testlogs
+
 ${SRC_DCTRL} ${BLD} --only=${MY_MODULE} configure
 ${SRC_DCTRL} ${BLD} --only=${MY_MODULE} bexec ${BUILD_CMD}
 if [ x"${TESTS}" == x ] ; then
@@ -25,7 +27,6 @@ if [ x"${TESTS}" == x ] ; then
 else
     ${SRC_DCTRL} ${BLD} --only=${MY_MODULE} bexec ${CTEST} -L "^builder_${TESTS}$"
 fi
-${SUPERDIR}/.ci/init_sshkey.bash ${encrypted_862ca47045d1_key} ${encrypted_862ca47045d1_iv} keys/dune-community/dune-xt-common-testlogs
 # retry this step becuase of the implicated race condition in cloning and pushing with multiple builder running in parallel
 ${SUPERDIR}/scripts/bash/travis_upload_test_logs.bash ${DUNE_BUILD_DIR}/${MY_MODULE}/dune/xt/*/test/
 
