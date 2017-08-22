@@ -70,7 +70,9 @@ add_subdirectory(dune)
 add_subdirectory("cmake/modules")
 add_subdirectory(doc/doxygen)
 
+# indicate that the python subdir is a package to install
 dune_install_python_package(PATH python)
+
 if(dune-pybindxi_FOUND)
   foreach(_file
           dune/__init__.py

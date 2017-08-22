@@ -13,7 +13,7 @@
 import sys
 from setuptools import setup
 
-setup(name='dune.xt',
+setup(name='dune.xt.common',
       version='2.4',
       namespace_packages=['dune'],
       description='Python for Dune-Xt',
