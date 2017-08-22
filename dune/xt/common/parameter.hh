@@ -107,6 +107,11 @@ public:
 
   Parameter(const std::string& key, const ValueType& value);
 
+  //! NOTE this somehow necessary to make clang 3.8 happy (and cannot be defaulted)
+  ~Parameter()
+  {
+  }
+
   ParameterType type() const;
 
   std::string report() const;
