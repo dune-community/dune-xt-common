@@ -129,6 +129,30 @@ private:
 
   typedef FixedMap<key_imp, T, nin> ThisType;
 
+  template <class K> // for sfinae to work this needs to be a template although the type is already fixed
+  typename std::enable_if<std::is_convertible<K, std::string>::value, std::string>::type
+  range_error_message(K key) const
+  {
+    std::stringstream ss;
+    ss << "missing key '" << key << "' in FixedMap!";
+    return ss.str();
+  }
+
+  template <class K>
+  typename std::enable_if<std::is_convertible<K, int>::value, std::string>::type range_error_message(K key) const
+  {
+    std::stringstream ss;
+    ss << "missing key (converted to int)'" << int(key) << "' in FixedMap!";
+    return ss.str();
+  }
+
+  template <class K>
+  typename std::enable_if<!(std::is_convertible<K, int>::value || std::is_convertible<K, std::string>::value),
+                          std::string>::type range_error_message(K /*key*/) const
+  {
+    return "missing key is not printable";
+  }
+
 public:
   typedef key_imp key_type;
   typedef T mapped_type;
@@ -166,7 +190,7 @@ public:
   {
     const auto it = get_idx(key);
     if (it == N)
-      DUNE_THROW(RangeError, "missing key '" << key << "' in FixedMap!");
+      DUNE_THROW(RangeError, range_error_message(key));
     return map_[it].second;
   }
 
@@ -174,7 +198,7 @@ public:
   {
     const auto it = get_idx(key);
     if (it == N)
-      DUNE_THROW(RangeError, "missing key '" << key << "' in FixedMap!");
+      DUNE_THROW(RangeError, range_error_message(key));
     return map_[it].second;
   }
 

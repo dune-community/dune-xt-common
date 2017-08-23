@@ -21,6 +21,14 @@
 
 using namespace Dune::XT::Common;
 
+enum class TestEnum
+{
+  one,
+  two,
+  three
+};
+
+
 GTEST_TEST(FixedMapTest, All)
 {
   const std::initializer_list<std::pair<std::string, int>> values{{"0", 0}, {"1", 1}, {"2", 2}};
@@ -55,4 +63,7 @@ GTEST_TEST(FixedMapTest, All)
 
   EXPECT_EQ(std::make_pair(std::string("0"), 0), *too_big.begin());
   // EXPECT_DEATH(*too_big.end(), ".*");
+
+  FixedMap<TestEnum, std::string, 1> enum_names = {{TestEnum::one, "one"}};
+  EXPECT_EQ(std::string("one"), enum_names[TestEnum::one]);
 }
