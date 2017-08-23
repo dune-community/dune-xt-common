@@ -321,6 +321,9 @@ public:
 
 } // namespace Common
 } // namespace XT
+} // namespace Dune
+namespace std {
+
 
 template <int k>
 Dune::bigunsignedint<k> abs(const Dune::bigunsignedint<k>& value)
@@ -360,7 +363,8 @@ inline bool isinf(Dune::bigunsignedint<k> /*value*/)
   return false;
 }
 
-} // namespace Dune
+
+} // namespace std
 
 
 template <class T>
