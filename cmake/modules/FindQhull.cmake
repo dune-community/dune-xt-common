@@ -7,12 +7,12 @@
 # Authors:
 #   Tobias Leibner (2017)
 
-message("-- checking for 'qhull' library")
-find_library(QHULL_LIBRARY qhull HINTS "${CMAKE_SOURCE_DIR}/../local/lib/")
+message("-- checking for 'qhullstatic_r' library")
+find_library(QHULL_LIBRARY qhullstatic_r HINTS "${CMAKE_SOURCE_DIR}/../local/lib/")
 if("${QHULL_LIBRARY}" MATCHES "QHULL_LIBRARY-NOTFOUND")
-	message("--   library 'qhull' not found")
+	message("--   library 'qhullstatic_r' not found")
 else("${QHULL_LIBRARY}" MATCHES "QHULL_LIBRARY-NOTFOUND")
-  message("--   found qhull library")
+  message("--   found qhullstatic_r library")
   set(Qhull_LIBRARIES "${QHULL_LIBRARY}")
 endif("${QHULL_LIBRARY}" MATCHES "QHULL_LIBRARY-NOTFOUND")
 
