@@ -12,6 +12,8 @@
 #ifndef DUNE_XT_COMMON_FMATRIX_HH
 #define DUNE_XT_COMMON_FMATRIX_HH
 
+#include <initializer_list>
+
 #include <dune/common/fmatrix.hh>
 #include <dune/common/fvector.hh>
 
@@ -23,6 +25,7 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
+
 template <class K, int ROWS, int COLS>
 class FieldMatrix : public Dune::FieldMatrix<K, ROWS, COLS>
 {
@@ -33,7 +36,7 @@ public:
   FieldMatrix(const K kk = K(0))
     : BaseType(kk)
   {
-  } // ... FieldMatrix(...)
+  }
 
   FieldMatrix(const size_t DXTC_DEBUG_ONLY(rr), const size_t DXTC_DEBUG_ONLY(cc), const K kk = K(0))
     : BaseType(kk)
@@ -50,9 +53,53 @@ public:
 #endif // NDEBUG
   } // ... FieldMatrix(...)
 
+  FieldMatrix(std::initializer_list<std::initializer_list<K>> list_of_rows)
+    : BaseType(0.)
+  {
+#ifndef NDEBUG
+    if (list_of_rows.size() != ROWS)
+      DUNE_THROW(
+          Exceptions::wrong_input_given,
+          "You are trying to construct a FieldMatrix< ..., " << ROWS << ", " << COLS << " > (of "
+                                                             << "static size) from a list modeling a matrix with "
+                                                             << list_of_rows.size()
+                                                             << " rows!");
+#endif // NDEBUG
+    size_t rr = 0;
+    for (auto row : list_of_rows) {
+#ifndef NDEBUG
+      if (row.size() != COLS)
+        DUNE_THROW(
+            Exceptions::wrong_input_given,
+            "You are trying to construct a FieldMatrix< ..., " << ROWS << ", " << COLS << " > (of "
+                                                               << "static size) from a list with a row of length "
+                                                               << row.size()
+                                                               << "!");
+#endif // NDEBUG
+      size_t cc = 0;
+      for (auto entry : row)
+        (*this)[rr][cc++] = entry;
+      ++rr;
+    }
+  } // FieldMatrix(std::initializer_list<std::initializer_list<K>> list_of_rows)
+
   FieldMatrix(const BaseType& other)
     : BaseType(other)
   {
+  }
+
+  FieldMatrix(BaseType&& source)
+    : BaseType(source)
+  {
+  }
+
+  Dune::XT::Common::FieldMatrix<K, COLS, ROWS> transpose() const
+  {
+    Dune::XT::Common::FieldMatrix<K, COLS, ROWS> ret;
+    for (size_t rr = 0; rr < ROWS; ++rr)
+      for (size_t cc = 0; cc < COLS; ++cc)
+        ret[cc][rr] = (*this)[rr][cc];
+    return ret;
   }
 
   ThisType operator+(const ThisType& other) const
@@ -73,23 +120,22 @@ public:
     Dune::FieldVector<K, ROWS> ret;
     this->mv(vec, ret);
     return ret;
-  } // ... operator*(...)
+  }
 
   Dune::XT::Common::FieldVector<K, ROWS> operator*(const FieldMatrix<K, 1, COLS>& mat) const
   {
     Dune::FieldVector<K, ROWS> ret;
     this->mv(mat[0], ret);
     return ret;
-  } // ... operator*(...)
+  }
 
   ThisType operator*(const K& scal) const
   {
     ThisType ret(*this);
     ret *= scal;
     return ret;
-  } // ... operator*(...)
-
-}; // class FieldMatrix
+  }
+}; // class FieldMatrix<...>
 
 template <class K>
 class FieldMatrix<K, 1, 1> : public Dune::FieldMatrix<K, 1, 1>
@@ -104,6 +150,31 @@ public:
     : BaseType(kk)
   {
   }
+
+  FieldMatrix(std::initializer_list<std::initializer_list<K>> list_of_rows)
+    : BaseType(0.)
+  {
+#ifndef NDEBUG
+    if (list_of_rows.size() != ROWS)
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "You are trying to construct a FieldMatrix< ..., 1, 1 > (of "
+                     << "static size) from a list modeling a matrix with "
+                     << list_of_rows.size()
+                     << " rows!");
+#endif // NDEBUG
+    for (auto row : list_of_rows) {
+#ifndef NDEBUG
+      if (row.size() != COLS)
+        DUNE_THROW(Exceptions::wrong_input_given,
+                   "You are trying to construct a FieldMatrix< ..., 1, 1 > (of "
+                       << "static size) from a list with a row of length "
+                       << row.size()
+                       << "!");
+#endif // NDEBUG
+      for (auto entry : row)
+        (*this)[0][0] = entry;
+    }
+  } // FieldMatrix(std::initializer_list<std::initializer_list<K>> list_of_rows)
 
   FieldMatrix(const size_t DXTC_DEBUG_ONLY(rr), const size_t DXTC_DEBUG_ONLY(cc), const K kk = K(0))
     : BaseType(kk)
@@ -122,6 +193,11 @@ public:
 
   FieldMatrix(const BaseType& other)
     : BaseType(other)
+  {
+  }
+
+  FieldMatrix(BaseType& source)
+    : BaseType(source)
   {
   }
 
@@ -155,9 +231,9 @@ public:
     ThisType ret(*this);
     ret *= scal;
     return ret;
-  } // ... operator*(...)
-
+  }
 }; // class FieldMatrix
+
 
 } // namespace Common
 } // namespace XT
