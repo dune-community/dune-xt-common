@@ -27,6 +27,7 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
+
 template <class K, int SIZE>
 class FieldVector : public Dune::FieldVector<K, SIZE>
 {
@@ -56,6 +57,11 @@ public:
 
   FieldVector(const BaseType& other)
     : BaseType(other)
+  {
+  }
+
+  FieldVector(BaseType&& source)
+    : BaseType(source)
   {
   }
 
@@ -100,17 +106,28 @@ public:
       this->operator[](ii++) = element;
   } // FieldVector(...)
 
-  ThisType& operator=(const BaseType& other)
-  {
-    BaseType::operator=(other);
-    return *this;
-  }
 
   operator std::vector<K>() const
   {
     std::vector<K> ret(SIZE);
     for (size_t ii = 0; ii < SIZE; ++ii)
       ret[ii] = this->operator[](ii);
+    return ret;
+  }
+
+  operator Dune::FieldMatrix<K, 1, SIZE>() const
+  {
+    Dune::FieldMatrix<K, 1, SIZE> ret;
+    ret[0] = *this;
+    return ret;
+  }
+
+  template <int S>
+  operator typename std::enable_if<(S == SIZE) && (SIZE != 1), Dune::FieldMatrix<K, S, 1>>::type() const
+  {
+    Dune::FieldMatrix<K, SIZE, 1> ret;
+    for (size_t ii = 0; ii < SIZE; ++ii)
+      ret[ii][0] = this->operator[](ii);
     return ret;
   }
 
@@ -139,6 +156,7 @@ public:
   }
 }; // class FieldVector
 
+
 //! this allows to set the init value of the FieldVector at compile time
 template <class K, int SIZE, K value>
 class ValueInitFieldVector : public Dune::XT::Common::FieldVector<K, SIZE>
@@ -151,6 +169,7 @@ public:
   {
   }
 }; // class ValueInitFieldVector
+
 
 //! struct to be used as comparison function e.g. in a std::map<FieldVector<...>, ..., FieldVectorLess>
 struct FieldVectorLess
@@ -197,6 +216,7 @@ struct VectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>>
     return VectorType(sz, val);
   }
 };
+
 
 } // namespace Common
 } // namespace XT
