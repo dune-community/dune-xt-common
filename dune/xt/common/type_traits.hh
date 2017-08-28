@@ -95,6 +95,13 @@ std::string get_typename(const T&)
   return Typename<T>::value();
 }
 
+template <class T>
+std::string get_template_basename(const T&)
+{
+  const auto str = Typename<T>::value();
+  const auto r = str.find("<");
+  return str.substr(0, r);
+}
 
 template <class T, class Ptr = void>
 struct is_smart_ptr
