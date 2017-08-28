@@ -81,6 +81,25 @@ struct VectorAbstraction
   }
 };
 
+template <class SizeType>
+struct SizeTransfer
+{
+  template <template <class, SizeType...> class VectorTemplate, SizeType... values>
+  struct Base
+  {
+    template <class NewScalarType>
+    using Transfer = VectorTemplate<NewScalarType, values...>;
+  };
+};
+
+template <template <class, typename...> class VectorTemplate, typename... Ts>
+struct TypeTransferBase
+{
+  template <class NewScalarType>
+  using Transfer = VectorTemplate<NewScalarType, Ts...>;
+};
+
+
 template <class VectorType, class ScalarType>
 struct SubscriptOperatorGetAndSet
 {
@@ -99,7 +118,8 @@ struct SubscriptOperatorGetAndSet
 
 template <class T>
 struct VectorAbstraction<std::vector<T>>
-    : public SubscriptOperatorGetAndSet<std::vector<T>, typename Dune::FieldTraits<T>::field_type>
+    : public SubscriptOperatorGetAndSet<std::vector<T>, typename Dune::FieldTraits<T>::field_type>,
+      public TypeTransferBase<std::vector>
 {
   typedef std::vector<T> VectorType;
   typedef typename Dune::FieldTraits<T>::field_type ScalarType;
@@ -126,7 +146,8 @@ struct VectorAbstraction<std::vector<T>>
 
 template <class K, size_t SIZE>
 struct VectorAbstraction<std::array<K, SIZE>>
-    : public SubscriptOperatorGetAndSet<std::array<K, SIZE>, typename Dune::FieldTraits<K>::field_type>
+    : public SubscriptOperatorGetAndSet<std::array<K, SIZE>, typename Dune::FieldTraits<K>::field_type>,
+      public SizeTransfer<size_t>::Base<std::array, SIZE>
 {
   typedef std::array<K, SIZE> VectorType;
   typedef typename Dune::FieldTraits<K>::field_type ScalarType;
@@ -159,7 +180,8 @@ struct VectorAbstraction<std::array<K, SIZE>>
 
 template <class K>
 struct VectorAbstraction<Dune::DynamicVector<K>>
-    : public SubscriptOperatorGetAndSet<Dune::DynamicVector<K>, typename Dune::FieldTraits<K>::field_type>
+    : public SubscriptOperatorGetAndSet<Dune::DynamicVector<K>, typename Dune::FieldTraits<K>::field_type>,
+      public TypeTransferBase<Dune::DynamicVector>
 {
   typedef Dune::DynamicVector<K> VectorType;
   typedef typename Dune::FieldTraits<K>::field_type ScalarType;
@@ -186,7 +208,8 @@ struct VectorAbstraction<Dune::DynamicVector<K>>
 
 template <class K, int SIZE>
 struct VectorAbstraction<Dune::FieldVector<K, SIZE>>
-    : public SubscriptOperatorGetAndSet<Dune::FieldVector<K, SIZE>, typename Dune::FieldTraits<K>::field_type>
+    : public SubscriptOperatorGetAndSet<Dune::FieldVector<K, SIZE>, typename Dune::FieldTraits<K>::field_type>,
+      public SizeTransfer<int>::Base<Dune::FieldVector, SIZE>
 {
   typedef Dune::FieldVector<K, SIZE> VectorType;
   typedef typename Dune::FieldTraits<K>::field_type ScalarType;
@@ -216,7 +239,7 @@ struct VectorAbstraction<Dune::FieldVector<K, SIZE>>
 };
 
 template <class T>
-struct VectorAbstraction<std::complex<T>>
+struct VectorAbstraction<std::complex<T>> : public TypeTransferBase<std::complex>
 {
   typedef std::complex<T> VectorType;
   typedef std::complex<T> ScalarType;
