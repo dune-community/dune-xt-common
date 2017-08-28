@@ -147,22 +147,30 @@ typedef testing::Types<CreateByOperator,
                        CreateByOperatorAndAssign>
     ConfigurationCreators;
 
+constexpr const auto SEED = std::random_device::result_type(0);
+
 template <class T>
 static DefaultRNG<T> rng_setup()
 {
-  return DefaultRNG<T>();
+  return DefaultRNG<T>(std::numeric_limits<T>::min(), std::numeric_limits<T>::max(), T(SEED));
+}
+
+template <>
+DefaultRNG<std::string> rng_setup()
+{
+  return DefaultRNG<std::string>(12, SEED);
 }
 
 template <>
 DefaultRNG<std::complex<double>> rng_setup()
 {
-  return DefaultRNG<std::complex<double>>(-2, 2);
+  return DefaultRNG<std::complex<double>>(-2, 2, SEED);
 }
 
 template <>
 DefaultRNG<double> rng_setup()
 {
-  return DefaultRNG<double>(-2, 2);
+  return DefaultRNG<double>(-2, 2, SEED);
 }
 
 template <class T>
@@ -241,6 +249,18 @@ struct ConfigTest : public testing::Test
     Configuration to_add(vector<string>{"subsection.key"}, {0l});
     empty.add(to_add, "", true);
     EXPECT_TRUE(empty.has_sub("subsection"));
+  }
+
+  void add_overwrite(bool do_overwrite)
+  {
+    using namespace Dune::XT::Common;
+    using namespace std;
+    Configuration base(vector<string>{"subsection.key"}, {1l});
+    Configuration to_add(vector<string>{"subsection.otherkey"}, {0l});
+    base.add(to_add, "", do_overwrite);
+    EXPECT_TRUE(base.has_sub("subsection"));
+    EXPECT_EQ(base.get<long>("subsection.key"), 1l);
+    EXPECT_EQ(base.get<long>("subsection.otherkey"), 0l);
   }
 }; // struct ConfigTest
 
@@ -433,8 +453,10 @@ TYPED_TEST(ConfigTest, Set)
 }
 TYPED_TEST(ConfigTest, Other)
 {
-  //  this->other();
+  this->other();
   this->issue_42();
+  this->add_overwrite(true);
+  this->add_overwrite(false);
 }
 
 TYPED_TEST_CASE(ConfigurationTest, ConfigurationCreators);

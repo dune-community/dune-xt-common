@@ -29,6 +29,8 @@
 using namespace Dune::XT::Common;
 using namespace Dune::XT::Test;
 
+constexpr const auto SEED = std::random_device::result_type(0);
+
 struct ValidationTest : public testing::Test
 {
   typedef FIELD_TYPE T;
@@ -51,7 +53,10 @@ struct ValidationTest : public testing::Test
       test(lower, upper, center);
       test(lower, upper, upper - 1);
 
-      RNGType rng(init_bound<T>(lower), init_bound<T>(upper));
+      const auto vl = init_bound<T>(lower);
+      const auto vu = init_bound<T>(upper);
+      decltype(vu) vs(SEED);
+      RNGType rng(vl, vu, vs);
       boost::array<T, 10> ar = list_of<T>().repeat_fun(9, rng);
       ValidateInList<T, boost::array<T, 10>> validator(ar);
       for (T t : ar) {
