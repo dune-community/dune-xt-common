@@ -44,12 +44,6 @@ public:
 
   const ValueType& get(const std::string& key) const;
 
-  bool operator<(const SimpleDict<ValueType>& other) const;
-
-  bool operator==(const SimpleDict<ValueType>& other) const;
-
-  bool operator!=(const SimpleDict<ValueType>& other) const;
-
   size_t size() const;
 
 protected:
@@ -86,6 +80,19 @@ public:
 
   ParameterType(const std::vector<std::pair<std::string, size_t>>& key_size_pairs);
 
+  /**
+   * \note In the special case that this and other both have only a single key, and either of the keys is
+   *       '_unspecified', then they compare equal if the sizes corresponding to these keys compare equal.
+   * \sa   Take a look at test/parameter.cc for examples.
+   */
+  bool operator==(const ParameterType& other) const;
+
+  bool operator!=(const ParameterType& other) const;
+
+  bool operator<(const ParameterType& other) const;
+
+  bool operator<=(const ParameterType& other) const;
+
   std::string report() const;
 }; // class ParameterType
 
@@ -95,13 +102,15 @@ std::ostream& operator<<(std::ostream& out, const ParameterType& param_type);
 
 class Parameter : public internal::SimpleDict<std::vector<double>>
 {
-  typedef SimpleDict<std::vector<double>> BaseType;
+  typedef internal::SimpleDict<std::vector<double>> BaseType;
   typedef std::vector<double> ValueType;
 
 public:
   Parameter(const std::vector<std::pair<std::string, ValueType>>& key_value_pairs = {});
 
   Parameter(const double& value);
+
+  Parameter(const std::vector<double>& value);
 
   Parameter(const std::string& key, const double& value);
 
@@ -111,6 +120,8 @@ public:
   ~Parameter()
   {
   }
+
+  bool operator<(const Parameter& other) const;
 
   ParameterType type() const;
 
@@ -135,7 +146,7 @@ public:
   Parameter parse_and_check(const Parameter& mu) const;
 
 private:
-  ParameterType none_parameter_type_;
+  const ParameterType _unspecified_parameter_type_;
 }; // class ParametricInterface
 
 

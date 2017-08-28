@@ -92,24 +92,6 @@ const ValueType& SimpleDict<ValueType>::get(const std::string& key) const
 }
 
 template <class ValueType>
-bool SimpleDict<ValueType>::operator<(const SimpleDict<ValueType>& other) const
-{
-  return dict_ < other.dict_;
-}
-
-template <class ValueType>
-bool SimpleDict<ValueType>::operator==(const SimpleDict<ValueType>& other) const
-{
-  return dict_ == other.dict_;
-}
-
-template <class ValueType>
-bool SimpleDict<ValueType>::operator!=(const SimpleDict<ValueType>& other) const
-{
-  return dict_ != other.dict_;
-}
-
-template <class ValueType>
 size_t SimpleDict<ValueType>::size() const
 {
   return dict_.size();
@@ -186,6 +168,37 @@ ParameterType::ParameterType(const std::vector<std::pair<std::string, size_t>>& 
 {
 }
 
+bool ParameterType::operator==(const ParameterType& other) const
+{
+  if (this->size() == 1 && other.size() == 1) {
+    const auto& this_single_element = *this->dict_.begin();
+    const auto& other_single_element = *other.dict_.begin();
+    if (this_single_element.first == other_single_element.first || this_single_element.first == "_unspecified"
+        || other_single_element.first == "_unspecified") {
+      return this_single_element.second == other_single_element.second;
+    } else {
+      return false;
+    }
+  } else {
+    return this->dict_ == other.dict_;
+  }
+}
+
+bool ParameterType::operator!=(const ParameterType& other) const
+{
+  return !(*this == other);
+}
+
+bool ParameterType::operator<(const ParameterType& other) const
+{
+  return this->dict_ < other.dict_;
+}
+
+bool ParameterType::operator<=(const ParameterType& other) const
+{
+  return *this < other || *this == other;
+}
+
 std::string ParameterType::report() const
 {
   return "ParameterType(" + BaseType::report("ParameterType(") + ")";
@@ -203,7 +216,12 @@ std::ostream& operator<<(std::ostream& out, const ParameterType& param_type)
 // ===== Parameter =====
 // =====================
 Parameter::Parameter(const double& value)
-  : BaseType("None", {value})
+  : BaseType("_unspecified", {value})
+{
+}
+
+Parameter::Parameter(const std::vector<double>& value)
+  : BaseType("_unspecified", value)
 {
 }
 
@@ -220,6 +238,11 @@ Parameter::Parameter(const std::string& key, const ValueType& value)
 Parameter::Parameter(const std::vector<std::pair<std::string, ValueType>>& key_value_pairs)
   : BaseType(key_value_pairs)
 {
+}
+
+bool Parameter::operator<(const Parameter& other) const
+{
+  return this->dict_ < other.dict_;
 }
 
 ParameterType Parameter::type() const
@@ -254,25 +277,39 @@ bool ParametricInterface::is_parametric() const
 
 const ParameterType& ParametricInterface::parameter_type() const
 {
-  return none_parameter_type_;
+  return _unspecified_parameter_type_;
 }
 
 Parameter ParametricInterface::parse_parameter(const Parameter& mu) const
 {
-  const auto& target_type = parameter_type();
-
-  if (mu.type() == target_type)
-    return mu;
-
-  if (target_type.size() == 1 && mu.size() == 1) {
-    const auto& target_key = target_type.keys().at(0);
-    const auto& mus_value = mu.get(mu.keys().at(0));
-    if (mus_value.size() != target_type.get(target_key))
+  const auto& this_type = this->parameter_type();
+  const auto& mus_type = mu.type();
+  if (this_type.size() == 1 && mus_type.size() == 1) {
+    const auto this_single_key = this_type.keys().at(0);
+    const auto mus_single_key = mus_type.keys().at(0);
+    if (this_single_key == mus_single_key)
       return mu;
-    return Parameter(target_key, mus_value);
+    if (this_single_key == "_unspecified" || mus_single_key == "_unspecified") {
+      // these could be equivalent ...
+      if (mus_type.get(this_single_key) == this_type.get(this_single_key)) {
+        // .. and they are
+        return Parameter(this_single_key, mu.get(mus_single_key));
+      }
+    }
+    // they are both of length 1, but the keys don't match and neither is '_unspecified'
+    DUNE_THROW(Exceptions::parameter_error,
+               "this->parameter_type() = " << this_type << "\n   "
+                                           << "mu.type() = "
+                                           << mus_type);
   }
-
-  return mu;
+  // one of them is not lenght 1, so '_unspecified' does not play a role here
+  if (this_type <= mus_type)
+    return mu;
+  DUNE_THROW(Exceptions::parameter_error,
+             "this->parameter_type() = " << this_type << "\n   "
+                                         << "mu.type() = "
+                                         << mus_type);
+  return Parameter();
 } // ... parse_parameter(...)
 
 // TODO: Why doesn't parse_parameter check this? Is that additional block
