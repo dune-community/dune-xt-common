@@ -101,8 +101,8 @@ class RandomStrings : public RNG<std::string, std::uniform_int_distribution<int>
   const size_t length;
 
 public:
-  explicit RandomStrings(size_t l)
-    : BaseType(std::mt19937(std::random_device()()),
+  explicit RandomStrings(size_t l, std::random_device::result_type seed = std::random_device()())
+    : BaseType(std::mt19937(seed),
                std::uniform_int_distribution<int>(0, boost::numeric_cast<int>(alphanums.size() - 1)))
     , length(l)
   {
@@ -125,7 +125,7 @@ class DefaultRNG : public RNG<T, typename UniformDistributionSelector<T>::type, 
 public:
   explicit DefaultRNG(T min = std::numeric_limits<T>::min(),
                       T max = std::numeric_limits<T>::max(),
-                      T seed = std::random_device()())
+                      std::random_device::result_type seed = std::random_device()())
     : BaseType(std::default_random_engine(seed), typename UniformDistributionSelector<T>::type(min, max))
   {
   }
@@ -140,7 +140,7 @@ class DefaultRNG<std::complex<T>, false>
 public:
   DefaultRNG(T min = std::numeric_limits<T>::min(),
              T max = std::numeric_limits<T>::max(),
-             T seed = std::random_device()())
+             std::random_device::result_type seed = std::random_device()())
     : BaseType(std::default_random_engine(seed), typename UniformDistributionSelector<T>::type(min, max))
   {
   }
@@ -151,11 +151,12 @@ class DefaultRNG<VectorType, true>
 {
   typedef typename VectorAbstraction<VectorType>::S T;
   typedef DefaultRNG<T> RngType;
+  using SeedVector = typename VectorAbstraction<VectorType>::template Transfer<std::random_device::result_type>;
 
 public:
   DefaultRNG(VectorType min_vec = VectorType(std::numeric_limits<T>::min()),
              VectorType max_vec = VectorType(std::numeric_limits<T>::max()),
-             VectorType seed_vec = VectorType(std::random_device()()))
+             SeedVector seed_vec = SeedVector(std::random_device()()))
   {
     std::size_t idx = 0;
     for (auto&& min : min_vec) {
@@ -182,8 +183,8 @@ template <>
 class DefaultRNG<std::string> : public RandomStrings
 {
 public:
-  DefaultRNG(size_t ilength = 12)
-    : RandomStrings(ilength)
+  DefaultRNG(size_t ilength = 12, std::random_device::result_type seed = std::random_device()())
+    : RandomStrings(ilength, seed)
   {
   }
 };

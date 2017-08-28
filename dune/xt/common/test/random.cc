@@ -47,8 +47,9 @@ GTEST_TEST(Init, Random)
     RNG rng_a(lower_bound, upper_bound, seed);
     RNG rng_b(lower_bound, upper_bound, seed);
     // same seed -> same values
-    EXPECT_EQ(rng_a(), rng_b());
-    EXPECT_EQ(rng_a(), rng_b());
+    for (auto i : value_range(1000)) {
+      EXPECT_EQ(rng_a(), rng_b());
+    }
   }
   DefaultRNG<std::string> str_rng(2);
   std::string rstr = str_rng();
