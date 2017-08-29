@@ -262,6 +262,16 @@ struct ConfigTest : public testing::Test
     EXPECT_EQ(base.get<long>("subsection.key"), 1l);
     EXPECT_EQ(base.get<long>("subsection.otherkey"), 0l);
   }
+
+  void subtree_ctor()
+  {
+    using namespace Dune::XT::Common;
+    using namespace std;
+    Configuration to_add(vector<string>{"key"}, {1l});
+    Configuration base(to_add, string("subsection"));
+    EXPECT_TRUE(base.has_sub("subsection"));
+    EXPECT_EQ(base.get<long>("subsection.key"), 1l);
+  }
 }; // struct ConfigTest
 
 struct StaticCheck
@@ -457,6 +467,7 @@ TYPED_TEST(ConfigTest, Other)
   this->issue_42();
   this->add_overwrite(true);
   this->add_overwrite(false);
+  this->subtree_ctor();
 }
 
 TYPED_TEST_CASE(ConfigurationTest, ConfigurationCreators);

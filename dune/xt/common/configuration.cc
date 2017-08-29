@@ -195,7 +195,7 @@ Configuration& Configuration::add(const Configuration& other, const std::string 
 
 Configuration& Configuration::add(const ParameterTree& other, const std::string sub_id, const bool overwrite)
 {
-  add_tree_(other, sub_id, overwrite);
+  add_tree_(Configuration(other), sub_id, overwrite);
   return *this;
 } // ... add(...)
 

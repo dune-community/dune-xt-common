@@ -56,29 +56,21 @@ class Configuration : public Dune::ParameterTree
   typedef Dune::ParameterTree BaseType;
 
 public:
-  /** This ctor has to be marked explicit!
-   * enable_if trick to disambiguate const char* (which is implicitly convertible to bool/string) ctors
-   **/
-  template <typename T = bool>
-  explicit Configuration(const T /*record_defaults*/ = internal::configuration_record_defaults,
-                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                         const typename std::enable_if<!std::is_same<T, const char*>::value, bool>::type log_on_exit =
-                             internal::configuration_log_on_exit,
-                         const std::string logfile = internal::configuration_logfile)
+  Configuration()
     : BaseType()
-    , warn_on_default_access_(warn_on_default_access)
-    , log_on_exit_(log_on_exit)
-    , logfile_(logfile)
+    , warn_on_default_access_(internal::configuration_warn_on_default_access)
+    , log_on_exit_(internal::configuration_log_on_exit)
+    , logfile_(internal::configuration_logfile)
   {
     setup_();
   }
 
   // This ctor must not be marked explicit (needed internally)!
-  Configuration(const ParameterTree& tree,
-                const bool /*record_defaults*/ = internal::configuration_record_defaults,
-                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit = internal::configuration_log_on_exit,
-                const std::string logfile = internal::configuration_logfile);
+  explicit Configuration(const ParameterTree& tree,
+                         const bool /*record_defaults*/ = internal::configuration_record_defaults,
+                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
+                         const bool log_on_exit = internal::configuration_log_on_exit,
+                         const std::string logfile = internal::configuration_logfile);
 
   Configuration(const ParameterTree& tree_in, const std::string sub_id);
 
@@ -437,7 +429,7 @@ bool operator!=(const Configuration& left, const Configuration& right);
 //! global Configuration instance
 inline Configuration& Config()
 {
-  static Configuration parameters(false, true, true);
+  static Configuration parameters;
   return parameters;
 }
 
