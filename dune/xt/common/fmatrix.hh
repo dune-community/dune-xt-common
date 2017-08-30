@@ -33,12 +33,12 @@ class FieldMatrix : public Dune::FieldMatrix<K, ROWS, COLS>
   typedef FieldMatrix<K, ROWS, COLS> ThisType;
 
 public:
-  FieldMatrix(const K kk = K(0))
+  FieldMatrix(const K& kk = 0)
     : BaseType(kk)
   {
   }
 
-  FieldMatrix(const size_t DXTC_DEBUG_ONLY(rr), const size_t DXTC_DEBUG_ONLY(cc), const K kk = K(0))
+  FieldMatrix(const size_t DXTC_DEBUG_ONLY(rr), const size_t DXTC_DEBUG_ONLY(cc), const K& kk = 0)
     : BaseType(kk)
   {
 #ifndef NDEBUG
@@ -83,13 +83,10 @@ public:
     }
   } // FieldMatrix(std::initializer_list<std::initializer_list<K>> list_of_rows)
 
+  FieldMatrix(const ThisType& other) = default;
+
   FieldMatrix(const BaseType& other)
     : BaseType(other)
-  {
-  }
-
-  FieldMatrix(BaseType&& source)
-    : BaseType(source)
   {
   }
 
@@ -122,13 +119,6 @@ public:
     return ret;
   }
 
-  Dune::XT::Common::FieldVector<K, ROWS> operator*(const FieldMatrix<K, 1, COLS>& mat) const
-  {
-    Dune::FieldVector<K, ROWS> ret;
-    this->mv(mat[0], ret);
-    return ret;
-  }
-
   ThisType operator*(const K& scal) const
   {
     ThisType ret(*this);
@@ -146,7 +136,7 @@ class FieldMatrix<K, 1, 1> : public Dune::FieldMatrix<K, 1, 1>
   typedef FieldMatrix<K, ROWS, COLS> ThisType;
 
 public:
-  FieldMatrix(const K kk = K(0))
+  FieldMatrix(const K& kk = 0)
     : BaseType(kk)
   {
   }
@@ -176,7 +166,7 @@ public:
     }
   } // FieldMatrix(std::initializer_list<std::initializer_list<K>> list_of_rows)
 
-  FieldMatrix(const size_t DXTC_DEBUG_ONLY(rr), const size_t DXTC_DEBUG_ONLY(cc), const K kk = K(0))
+  FieldMatrix(const size_t DXTC_DEBUG_ONLY(rr), const size_t DXTC_DEBUG_ONLY(cc), const K& kk = 0)
     : BaseType(kk)
   {
 #ifndef NDEBUG
@@ -190,16 +180,6 @@ public:
                                                                     << " columns!");
 #endif // NDEBUG
   } // ... FieldMatrix(...)
-
-  FieldMatrix(const BaseType& other)
-    : BaseType(other)
-  {
-  }
-
-  FieldMatrix(BaseType& source)
-    : BaseType(source)
-  {
-  }
 
   FieldMatrix(const Dune::XT::Common::FieldVector<K, 1>& other)
     : BaseType(other[0])
@@ -219,12 +199,16 @@ public:
     return *this;
   }
 
+  using BaseType::operator+;
+
   ThisType operator+(const ThisType& other) const
   {
     ThisType ret = *this;
     ret += other;
     return ret;
   }
+
+  using BaseType::operator*;
 
   ThisType operator*(const K& scal) const
   {

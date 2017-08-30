@@ -13,6 +13,7 @@
 #define DUNE_XT_COMMON_FVECTOR_HH
 
 #include <initializer_list>
+#include <type_traits>
 #include <vector>
 
 #include <dune/common/fvector.hh>
@@ -37,12 +38,15 @@ class FieldVector : public Dune::FieldVector<K, SIZE>
   typedef FieldVector<K, SIZE> ThisType;
 
 public:
-  FieldVector(const K kk = K(0))
+  FieldVector(const K& kk = 0)
     : BaseType(kk)
   {
   }
 
-  FieldVector(const size_t DXTC_DEBUG_ONLY(sz), const K kk)
+  template <class K_>
+  FieldVector(
+      const size_t DXTC_DEBUG_ONLY(sz),
+      const typename std::enable_if<std::is_same<K_, K>::value && !std::is_integral<K_>::value, K_>::value& kk = 0)
     : BaseType(kk)
   {
 #ifndef NDEBUG
@@ -55,13 +59,10 @@ public:
 #endif // NDEBUG
   } // ... FieldVector(...)
 
+  FieldVector(const ThisType& other) = default;
+
   FieldVector(const BaseType& other)
     : BaseType(other)
-  {
-  }
-
-  FieldVector(BaseType&& source)
-    : BaseType(source)
   {
   }
 
@@ -76,7 +77,7 @@ public:
   }
 
   FieldVector(const std::vector<K>& vec)
-    : BaseType(K(0))
+    : BaseType(0)
   {
 #ifndef NDEBUG
     if (vec.size() != SIZE)
@@ -91,7 +92,7 @@ public:
   } // FieldVector(...)
 
   FieldVector(std::initializer_list<K> list)
-    : BaseType(K(0))
+    : BaseType(0)
   {
 #ifndef NDEBUG
     if (list.size() != SIZE)
@@ -105,7 +106,6 @@ public:
     for (auto element : list)
       this->operator[](ii++) = element;
   } // FieldVector(...)
-
 
   operator std::vector<K>() const
   {
@@ -187,6 +187,7 @@ struct FieldVectorLess
     return false;
   }
 };
+
 
 //! Specialization of VectorAbstraction for Dune::XT::Common::FieldVector
 template <class K, int SIZE>
