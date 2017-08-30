@@ -43,10 +43,7 @@ public:
   {
   }
 
-  template <class K_>
-  FieldVector(
-      const size_t DXTC_DEBUG_ONLY(sz),
-      const typename std::enable_if<std::is_same<K_, K>::value && !std::is_integral<K_>::value, K_>::value& kk = 0)
+  FieldVector(const size_t DXTC_DEBUG_ONLY(sz), const K& kk)
     : BaseType(kk)
   {
 #ifndef NDEBUG
