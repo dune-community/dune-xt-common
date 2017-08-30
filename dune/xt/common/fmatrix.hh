@@ -199,8 +199,6 @@ public:
     return *this;
   }
 
-  using BaseType::operator+;
-
   ThisType operator+(const ThisType& other) const
   {
     ThisType ret = *this;
