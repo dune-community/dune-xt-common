@@ -141,6 +141,15 @@ public:
 
   using BaseType::operator*;
 
+  template <int R>
+  typename std::enable_if<SIZE != 1 && R == SIZE, K>::type operator*(const Dune::FieldMatrix<K, R, 1>& mat) const
+  {
+    K ret = 0;
+    for (size_t ii = 0; ii < SIZE; ++ii)
+      ret += (*this)[ii] * mat[ii][0];
+    return ret;
+  }
+
   ThisType operator*(const K& scalar) const
   {
     ThisType ret(*this);
@@ -221,6 +230,19 @@ struct VectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>>
 
 } // namespace Common
 } // namespace XT
+
+
+template <class K, int SIZE>
+typename std::enable_if<SIZE != 1, K>::type operator*(const Dune::FieldVector<K, SIZE>& vec,
+                                                      const Dune::FieldMatrix<K, SIZE, 1>& mat)
+{
+  K ret = 0;
+  for (size_t ii = 0; ii < SIZE; ++ii)
+    ret += vec[ii] * mat[ii][0];
+  return ret;
+}
+
+
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_FVECTOR_HH
