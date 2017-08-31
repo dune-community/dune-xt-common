@@ -206,8 +206,6 @@ public:
     return ret;
   }
 
-  using BaseType::operator*;
-
   ThisType operator*(const K& scal) const
   {
     ThisType ret(*this);
