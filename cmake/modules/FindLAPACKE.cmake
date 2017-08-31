@@ -21,6 +21,7 @@ else("${LAPACKE_LIBRARY}" MATCHES "LAPACKE_LIBRARY-NOTFOUND")
   message("--   found LAPACKE library")
   set(LAPACKE_LIBRARIES "${LAPACKE_LIBRARY}")
   list(APPEND LAPACKE_LIBRARIES ${BLAS_LIBRARIES}) 
+  list(APPEND LAPACKE_LIBRARIES gfortran)
 endif("${LAPACKE_LIBRARY}" MATCHES "LAPACKE_LIBRARY-NOTFOUND")
 
 message("-- checking for lapacke.h header")
