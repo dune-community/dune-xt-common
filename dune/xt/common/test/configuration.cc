@@ -71,13 +71,13 @@ struct CreateByKeyAndValueAndAddConfiguration
 {
   static Configuration create()
   {
-    Configuration config("string", "string");
+    Configuration config({"string"}, {"string"});
     config.set("sub1.int", "1");
     config.set("sub2.size_t", 1);
-    config.add(Configuration("vector", "[0 1]"), "sub2.subsub1");
-    config.add(Configuration("matrix", "[0 1; 1 2]"), "sub2.subsub1");
-    Configuration config_1("bool", true);
-    Configuration config_2("int", int(1));
+    config.add(Configuration({"vector"}, {"[0 1]"}), "sub2.subsub1");
+    config.add(Configuration({"matrix"}, {"[0 1; 1 2]"}), "sub2.subsub1");
+    Configuration config_1({"bool"}, {true});
+    Configuration config_2({"int"}, {int(1)});
     return config;
   }
 };
@@ -86,7 +86,8 @@ struct CreateByKeyAndValueAndAddParameterTree
 {
   static Configuration create()
   {
-    Configuration config("string", "string");
+    const auto str = std::string("string");
+    Configuration config({str}, {str});
     config.set("sub1.int", "1");
     config.set("sub2.size_t", 1);
     Dune::ParameterTree paramtree;
@@ -101,7 +102,9 @@ struct CreateByKeyAndValueVectorsAndAddParameterTree
 {
   static Configuration create()
   {
-    Configuration config(std::vector<std::string>({"string", "sub1.int"}), std::vector<std::string>({"string", "1"}));
+    using namespace std;
+    const auto str = string("string");
+    Configuration config(vector<string>({str, "sub1.int"}), {str, string("1")});
     config.set("sub2.size_t", 1);
     Dune::ParameterTree paramtree;
     paramtree["vector"] = "[0 1]";

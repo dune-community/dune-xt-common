@@ -74,25 +74,12 @@ Configuration::Configuration(const Configuration& other)
 }
 
 Configuration::Configuration(std::istream& in, ConfigurationDefaults defaults)
-  : BaseType(initialize(in))
-  , warn_on_default_access_(defaults.warn_on_default_access)
-  , log_on_exit_(defaults.log_on_exit)
-  , logfile_(defaults.logfile)
-{
-}
-
-Configuration::Configuration(const std::string filename, ConfigurationDefaults defaults)
-  : Configuration::Configuration(initialize(filename), defaults)
+  : Configuration(initialize(in), defaults)
 {
 }
 
 Configuration::Configuration(int argc, char** argv, ConfigurationDefaults defaults)
   : Configuration::Configuration(initialize(argc, argv), defaults)
-{
-}
-
-Configuration::Configuration(int argc, char** argv, const std::string filename, ConfigurationDefaults defaults)
-  : Configuration::Configuration(initialize(argc, argv, filename), defaults)
 {
 }
 
@@ -415,24 +402,6 @@ bool operator==(const Configuration& left, const Configuration& right)
 bool operator!=(const Configuration& left, const Configuration& right)
 {
   return !(left == right);
-}
-
-Configuration::Configuration(const std::vector<std::string> keys,
-                             const std::vector<std::string> values_in,
-                             ConfigurationDefaults defaults)
-  : BaseType()
-  , warn_on_default_access_(defaults.warn_on_default_access)
-  , log_on_exit_(defaults.log_on_exit)
-  , logfile_(defaults.logfile)
-{
-  if (keys.size() != values_in.size())
-    DUNE_THROW(Exceptions::shapes_do_not_match,
-               "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' (" << values_in.size()
-                                      << ")!");
-  size_t ii = 0;
-  for (auto value : values_in)
-    set(keys[ii++], value);
-  setup_();
 }
 
 } // namespace Common

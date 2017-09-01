@@ -64,49 +64,37 @@ class Configuration : public Dune::ParameterTree
 public:
   Configuration();
 
-  // This ctor must not be marked explicit (needed internally)!
   explicit Configuration(const ParameterTree& tree, ConfigurationDefaults defaults = ConfigurationDefaults());
 
   Configuration(const ParameterTree& tree_in, const std::string sub_id);
 
   Configuration(const Configuration& other);
 
-  explicit Configuration(std::istream& in, // <- does not matter
-                         ConfigurationDefaults defaults = ConfigurationDefaults());
-
-  //! read ParameterTree from file and call Configuration(const ParameterTree& tree)
-  Configuration(const std::string filename, ConfigurationDefaults defaults);
+  explicit Configuration(std::istream& in, ConfigurationDefaults defaults = ConfigurationDefaults());
 
   //! read ParameterTree from given arguments and call Configuration(const ParameterTree& tree)
   Configuration(int argc, char** argv, ConfigurationDefaults defaults = ConfigurationDefaults());
-
-  //! read ParameterTree from given arguments and file and call Configuration(const ParameterTree& tree)
-  Configuration(int argc,
-                char** argv,
-                const std::string filename,
-                ConfigurationDefaults defaults = ConfigurationDefaults());
-
-  template <class T>
-  Configuration(std::string key, T value, ConfigurationDefaults defaults = ConfigurationDefaults())
-    : BaseType()
-    , warn_on_default_access_(defaults.warn_on_default_access)
-    , log_on_exit_(defaults.log_on_exit)
-    , logfile_(defaults.logfile)
-  {
-    set(key, value);
-    setup_();
-  }
-
-  Configuration(const std::vector<std::string> keys,
-                const std::vector<std::string> values_in,
-                ConfigurationDefaults defaults = ConfigurationDefaults());
 
   template <class T>
   Configuration(const std::vector<std::string> keys,
                 const std::initializer_list<T> values_in,
                 ConfigurationDefaults defaults = ConfigurationDefaults())
-    : Configuration(keys, make_string_sequence(values_in.begin(), values_in.end()), defaults)
+    : BaseType()
+    , warn_on_default_access_(defaults.warn_on_default_access)
+    , log_on_exit_(defaults.log_on_exit)
+    , logfile_(defaults.logfile)
   {
+    const auto values = make_string_sequence(values_in.begin(), values_in.end());
+    if (keys.size() != values.size()) {
+
+      DUNE_THROW(Exceptions::shapes_do_not_match,
+                 "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' (" << values_in.size()
+                                        << ")!");
+    }
+    size_t ii = 0;
+    for (auto value : values)
+      set(keys[ii++], value);
+    setup_();
   }
 
   ~Configuration();
