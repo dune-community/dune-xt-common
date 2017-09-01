@@ -38,11 +38,9 @@ namespace Common {
 
 struct ConfigurationDefaults
 {
-  ConfigurationDefaults(bool record_defaults_in = false,
-                        bool warn_on_default_access_in = false,
+  ConfigurationDefaults(bool warn_on_default_access_in = false,
                         bool log_on_exit_in = false,
                         std::string logfile_in = std::string("data/log/dxtc_parameter.log"));
-  const bool record_defaults;
   const bool warn_on_default_access;
   const bool log_on_exit;
   const std::string logfile;

@@ -26,12 +26,10 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
-ConfigurationDefaults::ConfigurationDefaults(bool record_defaults_in,
-                                             bool warn_on_default_access_in,
+ConfigurationDefaults::ConfigurationDefaults(bool warn_on_default_access_in,
                                              bool log_on_exit_in,
                                              std::string logfile_in)
-  : record_defaults(record_defaults_in)
-  , warn_on_default_access(warn_on_default_access_in)
+  : warn_on_default_access(warn_on_default_access_in)
   , log_on_exit(log_on_exit_in)
   , logfile(logfile_in)
 {
