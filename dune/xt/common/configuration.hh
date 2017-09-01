@@ -36,13 +36,19 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
+struct ConfigurationDefaults
+{
+  ConfigurationDefaults(bool record_defaults_in = false,
+                        bool warn_on_default_access_in = false,
+                        bool log_on_exit_in = false,
+                        std::string logfile_in = std::string("data/log/dxtc_parameter.log"));
+  const bool record_defaults;
+  const bool warn_on_default_access;
+  const bool log_on_exit;
+  const std::string logfile;
+};
+
 namespace internal {
-
-static const bool configuration_record_defaults = false;
-static const bool configuration_warn_on_default_access = false;
-static const bool configuration_log_on_exit = false;
-static const std::string configuration_logfile = "data/log/dxtc_parameter.log";
-
 template <class T>
 struct Typer
 {
@@ -56,67 +62,36 @@ class Configuration : public Dune::ParameterTree
   typedef Dune::ParameterTree BaseType;
 
 public:
-  Configuration()
-    : BaseType()
-    , warn_on_default_access_(internal::configuration_warn_on_default_access)
-    , log_on_exit_(internal::configuration_log_on_exit)
-    , logfile_(internal::configuration_logfile)
-  {
-    setup_();
-  }
+  Configuration();
 
   // This ctor must not be marked explicit (needed internally)!
-  explicit Configuration(const ParameterTree& tree,
-                         const bool /*record_defaults*/ = internal::configuration_record_defaults,
-                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                         const bool log_on_exit = internal::configuration_log_on_exit,
-                         const std::string logfile = internal::configuration_logfile);
+  explicit Configuration(const ParameterTree& tree, ConfigurationDefaults defaults = ConfigurationDefaults());
 
   Configuration(const ParameterTree& tree_in, const std::string sub_id);
 
   Configuration(const Configuration& other);
 
   explicit Configuration(std::istream& in, // <- does not matter
-                         const bool /*record_defaults*/ = internal::configuration_record_defaults,
-                         const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                         const bool log_on_exit = internal::configuration_log_on_exit,
-                         const std::string logfile = internal::configuration_logfile);
+                         ConfigurationDefaults defaults = ConfigurationDefaults());
 
   //! read ParameterTree from file and call Configuration(const ParameterTree& tree)
-  Configuration(const std::string filename,
-                const bool /*record_defaults*/,
-                const bool warn_on_default_access,
-                const bool log_on_exit,
-                const std::string logfile);
+  Configuration(const std::string filename, ConfigurationDefaults defaults);
 
   //! read ParameterTree from given arguments and call Configuration(const ParameterTree& tree)
-  Configuration(int argc,
-                char** argv,
-                const bool /*record_defaults*/ = internal::configuration_record_defaults,
-                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit = internal::configuration_log_on_exit,
-                const std::string logfile = internal::configuration_logfile);
+  Configuration(int argc, char** argv, ConfigurationDefaults defaults = ConfigurationDefaults());
 
   //! read ParameterTree from given arguments and file and call Configuration(const ParameterTree& tree)
   Configuration(int argc,
                 char** argv,
                 const std::string filename,
-                const bool /*record_defaults*/ = internal::configuration_record_defaults,
-                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit = internal::configuration_log_on_exit,
-                const std::string logfile = internal::configuration_logfile);
+                ConfigurationDefaults defaults = ConfigurationDefaults());
 
   template <class T>
-  Configuration(std::string key,
-                T value,
-                const bool /*record_defaults*/ = internal::configuration_record_defaults,
-                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit = internal::configuration_log_on_exit,
-                const std::string logfile = internal::configuration_logfile)
+  Configuration(std::string key, T value, ConfigurationDefaults defaults = ConfigurationDefaults())
     : BaseType()
-    , warn_on_default_access_(warn_on_default_access)
-    , log_on_exit_(log_on_exit)
-    , logfile_(logfile)
+    , warn_on_default_access_(defaults.warn_on_default_access)
+    , log_on_exit_(defaults.log_on_exit)
+    , logfile_(defaults.logfile)
   {
     set(key, value);
     setup_();
@@ -124,24 +99,13 @@ public:
 
   Configuration(const std::vector<std::string> keys,
                 const std::vector<std::string> values_in,
-                const bool /*record_defaults*/ = internal::configuration_record_defaults,
-                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit = internal::configuration_log_on_exit,
-                const std::string logfile = internal::configuration_logfile);
+                ConfigurationDefaults defaults = ConfigurationDefaults());
 
   template <class T>
   Configuration(const std::vector<std::string> keys,
                 const std::initializer_list<T> values_in,
-                const bool record_defaults = internal::configuration_record_defaults,
-                const bool warn_on_default_access = internal::configuration_warn_on_default_access,
-                const bool log_on_exit = internal::configuration_log_on_exit,
-                const std::string logfile = internal::configuration_logfile)
-    : Configuration(keys,
-                    make_string_sequence(values_in.begin(), values_in.end()),
-                    record_defaults,
-                    warn_on_default_access,
-                    log_on_exit,
-                    logfile)
+                ConfigurationDefaults defaults = ConfigurationDefaults())
+    : Configuration(keys, make_string_sequence(values_in.begin(), values_in.end()), defaults)
   {
   }
 
@@ -307,9 +271,9 @@ public:
   /**
    * \}
    */
-  void set_warn_on_default_access(const bool value = internal::configuration_warn_on_default_access);
-  void set_log_on_exit(const bool value = internal::configuration_log_on_exit);
-  void set_logfile(const std::string logfile = internal::configuration_logfile);
+  void set_warn_on_default_access(const bool value);
+  void set_log_on_exit(const bool value);
+  void set_logfile(const std::string logfile);
 
   //! check if tree_ is empty
   bool empty() const;
