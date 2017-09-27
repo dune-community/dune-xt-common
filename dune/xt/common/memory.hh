@@ -339,6 +339,12 @@ public:
     return storage_->access();
   }
 
+  template <typename... Args>
+  static ConstStorageProvider<T> make(Args&&... args)
+  {
+    return ConstStorageProvider<T>(new T(std::forward<Args>(args)...));
+  }
+
 private:
   std::unique_ptr<const internal::ConstAccessInterface<T>> storage_;
 }; // class ConstStorageProvider
@@ -347,7 +353,7 @@ private:
 template <typename T, typename... Args>
 ConstStorageProvider<T> make_const_storage(Args&&... args)
 {
-  return ConstStorageProvider<T>(new T(std::forward<Args>(args)...));
+  return ConstStorageProvider<T>::make(std::forward<Args>(args)...);
 }
 
 
@@ -409,6 +415,12 @@ public:
     return storage_->access();
   }
 
+  template <typename... Args>
+  static StorageProvider<T> make(Args&&... args)
+  {
+    return StorageProvider<T>(new T(std::forward<Args>(args)...));
+  }
+
 private:
   std::unique_ptr<internal::AccessInterface<T>> storage_;
 }; // class StorageProvider
@@ -417,9 +429,8 @@ private:
 template <typename T, typename... Args>
 StorageProvider<T> make_storage(Args&&... args)
 {
-  return StorageProvider<T>(new T(std::forward<Args>(args)...));
+  return StorageProvider<T>::make(std::forward<Args>(args)...);
 }
-
 
 //! dumps kernel stats into a file
 void mem_usage(std::string filename);
