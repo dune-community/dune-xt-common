@@ -24,7 +24,7 @@ macro(add_analyze)
     endif(EXISTS ${ANALYZER})
 endmacro(add_analyze)
 
-find_package(ClangFormat 3.8 EXACT)
+find_package(ClangFormat 3.9 EXACT)
 macro(add_format glob_dir)
   if(${ARGC} GREATER 1)
     message(WARNING "'add_format' API has changed. Please provide a single "
@@ -38,10 +38,10 @@ macro(add_format glob_dir)
     string(REPLACE "/" "_" fn ${glob_dir})
     file(GLOB_RECURSE _files "${glob_dir}/*.hh" "${glob_dir}/*.cc"
         "${glob_dir}/*.cxx" "${glob_dir}/*.hxx" "${glob_dir}/*.h" "${glob_dir}/*.c" "${glob_dir}/*.pbh")
-    add_custom_target("format_${fn}" ${ClangFormat_EXECUTABLE} -i -style=file -fallback-style=none ${_files} ) 
+    add_custom_target("format_${fn}" ${ClangFormat_EXECUTABLE} -i -style=file -fallback-style=none ${_files} )
     add_dependencies( format "format_${fn}" )
   else()
-    message(WARNING "not adding format target because clang-format is missing or " 
+    message(WARNING "not adding format target because clang-format is missing or "
                 "wrong version: ${ClangFormat_EXECUTABLE} ${ClangFormat_VERSION}")
   endif(ClangFormat_FOUND)
 endmacro(add_format)
@@ -58,7 +58,7 @@ macro(add_tidy glob_dir)
     add_custom_target("tidy_${fn}" ${ClangTidy_EXECUTABLE} -p=${CMAKE_CURRENT_BINARY_DIR} ${_files} )
     add_dependencies( tidy "tidy_${fn}" )
   else()
-    message(WARNING "not adding tidy target because clang-tidy is missing or" 
+    message(WARNING "not adding tidy target because clang-tidy is missing or"
                 "wrong version: ${ClangTidy_EXECUTABLE} ${ClangTidy_VERSION}")
   endif(ClangTidy_FOUND)
 endmacro(add_tidy)
