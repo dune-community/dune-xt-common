@@ -168,11 +168,11 @@ macro(add_header_listing)
 endmacro(add_header_listing)
 
 macro(make_dependent_modules_sys_included)
-    #disable most warnings from dependent modules
+    # disable most warnings from dependent modules
     foreach(_mod ${ALL_DEPENDENCIES})
         if(${_mod}_INCLUDE_DIRS)
             foreach( _idir ${${_mod}_INCLUDE_DIRS} )
-                add_definitions("-isystem ${_idir}")
+                INCLUDE_SYS_DIR(${_idir})
             endforeach( _idir )
         endif(${_mod}_INCLUDE_DIRS)
     endforeach(_mod DEPENDENCIES)
