@@ -148,7 +148,7 @@ public:
   Parameter DUNE_DEPRECATED_MSG("Use parse_parameter instead (28.08.2017)!") parse_and_check(const Parameter& mu) const;
 
 private:
-  const ParameterType _unspecified_parameter_type_;
+  ParameterType _unspecified_parameter_type_;
 }; // class ParametricInterface
 
 
