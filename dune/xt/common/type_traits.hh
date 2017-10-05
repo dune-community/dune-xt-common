@@ -157,9 +157,8 @@ template <class T>
 struct underlying_type
 {
 #if __GNUC__ == 4 && (__GNUC_MINOR__ < 7)
-  typedef typename std::conditional<T(-1) < T(0),
-                                    typename std::make_signed<T>::type,
-                                    typename std::make_unsigned<T>::type>::type type;
+  typedef typename std::
+      conditional<T(-1) < T(0), typename std::make_signed<T>::type, typename std::make_unsigned<T>::type>::type type;
 #else
   typedef typename std::underlying_type<T>::type type;
 #endif

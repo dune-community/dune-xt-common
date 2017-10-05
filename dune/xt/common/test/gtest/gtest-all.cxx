@@ -7214,9 +7214,9 @@ void DeathTestImpl::Abort(AbortReason reason)
   // The parent process considers the death test to be a failure if
   // it finds any data in our pipe.  So, here we write a single flag byte
   // to the pipe, then exit.
-  const char status_ch = reason == TEST_DID_NOT_DIE ? kDeathTestLived : reason == TEST_THREW_EXCEPTION
-                                                                            ? kDeathTestThrew
-                                                                            : kDeathTestReturned;
+  const char status_ch = reason == TEST_DID_NOT_DIE
+                             ? kDeathTestLived
+                             : reason == TEST_THREW_EXCEPTION ? kDeathTestThrew : kDeathTestReturned;
 
   GTEST_DEATH_TEST_CHECK_SYSCALL_(posix::Write(write_fd(), &status_ch, 1));
   // We are leaking the descriptor here because on some platforms (i.e.,
@@ -8971,9 +8971,9 @@ GTestLog::GTestLog(GTestLogSeverity severity, const char* file, int line)
   : severity_(severity)
 {
   const char* const marker =
-      severity == GTEST_INFO ? "[  INFO ]" : severity == GTEST_WARNING ? "[WARNING]" : severity == GTEST_ERROR
-                                                                                           ? "[ ERROR ]"
-                                                                                           : "[ FATAL ]";
+      severity == GTEST_INFO
+          ? "[  INFO ]"
+          : severity == GTEST_WARNING ? "[WARNING]" : severity == GTEST_ERROR ? "[ ERROR ]" : "[ FATAL ]";
   GetStream() << ::std::endl << marker << " " << FormatFileLocation(file, line).c_str() << ": ";
 }
 
@@ -9736,9 +9736,9 @@ std::string TestPartResult::ExtractSummary(const char* message)
 std::ostream& operator<<(std::ostream& os, const TestPartResult& result)
 {
   return os << result.file_name() << ":" << result.line_number() << ": "
-            << (result.type() == TestPartResult::kSuccess ? "Success" : result.type() == TestPartResult::kFatalFailure
-                                                                            ? "Fatal failure"
-                                                                            : "Non-fatal failure")
+            << (result.type() == TestPartResult::kSuccess
+                    ? "Success"
+                    : result.type() == TestPartResult::kFatalFailure ? "Fatal failure" : "Non-fatal failure")
             << ":\n"
             << result.message() << std::endl;
 }

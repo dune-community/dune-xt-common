@@ -26,24 +26,38 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
-Configuration::Configuration(const Dune::ParameterTree& tree_in,
-                             const bool /*record_defaults*/,
-                             const bool warn_on_default_access,
-                             const bool log_on_exit,
-                             const std::string logfile)
+ConfigurationDefaults::ConfigurationDefaults(bool warn_on_default_access_in,
+                                             bool log_on_exit_in,
+                                             std::string logfile_in)
+  : warn_on_default_access(warn_on_default_access_in)
+  , log_on_exit(log_on_exit_in)
+  , logfile(logfile_in)
+{
+}
+
+Configuration::Configuration()
+  : BaseType()
+  , warn_on_default_access_(ConfigurationDefaults().warn_on_default_access)
+  , log_on_exit_(ConfigurationDefaults().log_on_exit)
+  , logfile_(ConfigurationDefaults().logfile)
+{
+  setup_();
+}
+
+Configuration::Configuration(const Dune::ParameterTree& tree_in, ConfigurationDefaults defaults)
   : BaseType(tree_in)
-  , warn_on_default_access_(warn_on_default_access)
-  , log_on_exit_(log_on_exit)
-  , logfile_(logfile)
+  , warn_on_default_access_(defaults.warn_on_default_access)
+  , log_on_exit_(defaults.log_on_exit)
+  , logfile_(defaults.logfile)
 {
   setup_();
 }
 
 Configuration::Configuration(const ParameterTree& tree_in, const std::string sub_id)
   : BaseType()
-  , warn_on_default_access_(internal::configuration_warn_on_default_access)
-  , log_on_exit_(internal::configuration_log_on_exit)
-  , logfile_(internal::configuration_logfile)
+  , warn_on_default_access_(ConfigurationDefaults().warn_on_default_access)
+  , log_on_exit_(ConfigurationDefaults().log_on_exit)
+  , logfile_(ConfigurationDefaults().logfile)
 {
   setup_();
   add(tree_in, sub_id);
@@ -57,46 +71,13 @@ Configuration::Configuration(const Configuration& other)
 {
 }
 
-Configuration::Configuration(std::istream& in,
-                             const bool /*record_defaults*/,
-                             const bool warn_on_default_access,
-                             const bool log_on_exit,
-                             const std::string logfile)
-  : BaseType(initialize(in))
-  , warn_on_default_access_(warn_on_default_access)
-  , log_on_exit_(log_on_exit)
-  , logfile_(logfile)
+Configuration::Configuration(std::istream& in, ConfigurationDefaults defaults)
+  : Configuration(initialize(in), defaults)
 {
 }
 
-Configuration::Configuration(const std::string filename,
-                             const bool record_defaults,
-                             const bool warn_on_default_access,
-                             const bool log_on_exit,
-                             const std::string logfile)
-  : Configuration::Configuration(initialize(filename), record_defaults, warn_on_default_access, log_on_exit, logfile)
-{
-}
-
-Configuration::Configuration(int argc,
-                             char** argv,
-                             const bool record_defaults,
-                             const bool warn_on_default_access,
-                             const bool log_on_exit,
-                             const std::string logfile)
-  : Configuration::Configuration(initialize(argc, argv), record_defaults, warn_on_default_access, log_on_exit, logfile)
-{
-}
-
-Configuration::Configuration(int argc,
-                             char** argv,
-                             const std::string filename,
-                             const bool record_defaults,
-                             const bool warn_on_default_access,
-                             const bool log_on_exit,
-                             const std::string logfile)
-  : Configuration::Configuration(
-        initialize(argc, argv, filename), record_defaults, warn_on_default_access, log_on_exit, logfile)
+Configuration::Configuration(int argc, char** argv, ConfigurationDefaults defaults)
+  : Configuration::Configuration(initialize(argc, argv), defaults)
 {
 }
 
@@ -195,7 +176,7 @@ Configuration& Configuration::add(const Configuration& other, const std::string 
 
 Configuration& Configuration::add(const ParameterTree& other, const std::string sub_id, const bool overwrite)
 {
-  add_tree_(other, sub_id, overwrite);
+  add_tree_(Configuration(other), sub_id, overwrite);
   return *this;
 } // ... add(...)
 
@@ -277,7 +258,7 @@ void Configuration::read_options(int argc, char* argv[])
 void Configuration::setup_()
 {
   if (logfile_.empty())
-    logfile_ = boost::filesystem::path(internal::configuration_logfile).string();
+    logfile_ = boost::filesystem::path(ConfigurationDefaults().logfile).string();
   if (has_key("global.datadir") && has_key("logging.dir"))
     logfile_ = (boost::filesystem::path(get<std::string>("global.datadir")) / get<std::string>("logging.dir")
                 / "dxtc_parameter.log")
@@ -419,27 +400,6 @@ bool operator==(const Configuration& left, const Configuration& right)
 bool operator!=(const Configuration& left, const Configuration& right)
 {
   return !(left == right);
-}
-
-Configuration::Configuration(const std::vector<std::string> keys,
-                             const std::vector<std::string> values_in,
-                             const bool /*record_defaults*/,
-                             const bool warn_on_default_access,
-                             const bool log_on_exit,
-                             const std::string logfile)
-  : BaseType()
-  , warn_on_default_access_(warn_on_default_access)
-  , log_on_exit_(log_on_exit)
-  , logfile_(logfile)
-{
-  if (keys.size() != values_in.size())
-    DUNE_THROW(Exceptions::shapes_do_not_match,
-               "The size of 'keys' (" << keys.size() << ") does not match the size of 'values' (" << values_in.size()
-                                      << ")!");
-  size_t ii = 0;
-  for (auto value : values_in)
-    set(keys[ii++], value);
-  setup_();
 }
 
 } // namespace Common

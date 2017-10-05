@@ -2714,7 +2714,7 @@ inline void FlushInfoLog()
   if (::testing::internal::IsTrue(condition))                                                                          \
     ;                                                                                                                  \
   else                                                                                                                 \
-  GTEST_LOG_(FATAL) << "Condition " #condition " failed. "
+    GTEST_LOG_(FATAL) << "Condition " #condition " failed. "
 
 // An all-mode assert to verify that the given POSIX-style function
 // call returns 0 (indicating success).  Known limitation: this
@@ -20879,8 +20879,8 @@ private:
       goto GTEST_CONCAT_TOKEN_(gtest_label_testthrow_, __LINE__);                                                      \
     }                                                                                                                  \
   } else                                                                                                               \
-  GTEST_CONCAT_TOKEN_(gtest_label_testthrow_, __LINE__)                                                                \
-    : fail(gtest_msg.value)
+    GTEST_CONCAT_TOKEN_(gtest_label_testthrow_, __LINE__)                                                              \
+      : fail(gtest_msg.value)
 
 #define GTEST_TEST_NO_THROW_(statement, fail)                                                                          \
   GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                        \
@@ -20891,9 +20891,9 @@ private:
       goto GTEST_CONCAT_TOKEN_(gtest_label_testnothrow_, __LINE__);                                                    \
     }                                                                                                                  \
   } else                                                                                                               \
-  GTEST_CONCAT_TOKEN_(gtest_label_testnothrow_, __LINE__)                                                              \
-    : fail("Expected: " #statement " doesn't throw an exception.\n"                                                    \
-           "  Actual: it throws.")
+    GTEST_CONCAT_TOKEN_(gtest_label_testnothrow_, __LINE__)                                                            \
+      : fail("Expected: " #statement " doesn't throw an exception.\n"                                                  \
+             "  Actual: it throws.")
 
 #define GTEST_TEST_ANY_THROW_(statement, fail)                                                                         \
   GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                        \
@@ -20908,9 +20908,9 @@ private:
       goto GTEST_CONCAT_TOKEN_(gtest_label_testanythrow_, __LINE__);                                                   \
     }                                                                                                                  \
   } else                                                                                                               \
-  GTEST_CONCAT_TOKEN_(gtest_label_testanythrow_, __LINE__)                                                             \
-    : fail("Expected: " #statement " throws an exception.\n"                                                           \
-           "  Actual: it doesn't.")
+    GTEST_CONCAT_TOKEN_(gtest_label_testanythrow_, __LINE__)                                                           \
+      : fail("Expected: " #statement " throws an exception.\n"                                                         \
+             "  Actual: it doesn't.")
 
 
 // Implements Boolean test assertions such as EXPECT_TRUE. expression can be
@@ -20921,7 +20921,7 @@ private:
   if (const ::testing::AssertionResult gtest_ar_ = ::testing::AssertionResult(expression))                             \
     ;                                                                                                                  \
   else                                                                                                                 \
-  fail(::testing::internal::GetBoolAssertionFailureMessage(gtest_ar_, text, #actual, #expected).c_str())
+    fail(::testing::internal::GetBoolAssertionFailureMessage(gtest_ar_, text, #actual, #expected).c_str())
 
 #define GTEST_TEST_NO_FATAL_FAILURE_(statement, fail)                                                                  \
   GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                        \
@@ -20932,10 +20932,10 @@ private:
       goto GTEST_CONCAT_TOKEN_(gtest_label_testnofatal_, __LINE__);                                                    \
     }                                                                                                                  \
   } else                                                                                                               \
-  GTEST_CONCAT_TOKEN_(gtest_label_testnofatal_, __LINE__)                                                              \
-    : fail("Expected: " #statement " doesn't generate new fatal "                                                      \
-           "failures in the current thread.\n"                                                                         \
-           "  Actual: it does.")
+    GTEST_CONCAT_TOKEN_(gtest_label_testnofatal_, __LINE__)                                                            \
+      : fail("Expected: " #statement " doesn't generate new fatal "                                                    \
+             "failures in the current thread.\n"                                                                       \
+             "  Actual: it does.")
 
 // Expands to the name of the class that implements the given test.
 #define GTEST_TEST_CLASS_NAME_(test_case_name, test_name) test_case_name##_##test_name##_Test
@@ -21235,8 +21235,8 @@ GTEST_API_ bool ExitedUnsuccessfully(int exit_status);
       }                                                                                                                \
     }                                                                                                                  \
   } else                                                                                                               \
-  GTEST_CONCAT_TOKEN_(gtest_label_, __LINE__)                                                                          \
-    : fail(::testing::internal::DeathTest::LastMessage())
+    GTEST_CONCAT_TOKEN_(gtest_label_, __LINE__)                                                                        \
+      : fail(::testing::internal::DeathTest::LastMessage())
 // The symbol "fail" here expands to something into which a message
 // can be streamed.
 
@@ -21249,7 +21249,7 @@ GTEST_API_ bool ExitedUnsuccessfully(int exit_status);
   if (::testing::internal::AlwaysTrue()) {                                                                             \
     GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement);                                                         \
   } else                                                                                                               \
-  ::testing::Message()
+    ::testing::Message()
 
 // A class representing the parsed contents of the
 // --gtest_internal_run_death_test flag, as it existed when
@@ -21346,7 +21346,7 @@ InternalRunDeathTestFlag* ParseInternalRunDeathTestFlag();
     GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement);                                                         \
     terminator;                                                                                                        \
   } else                                                                                                               \
-  ::testing::Message()
+    ::testing::Message()
 
 #endif // GTEST_HAS_DEATH_TEST
 
@@ -39110,11 +39110,10 @@ INSTANTIATE_TYPED_TEST_CASE_P(My, FooTest, MyTypes);
     typedef gtest_TypeParam_ TypeParam;                                                                                \
     virtual void TestBody();                                                                                           \
   };                                                                                                                   \
-  bool gtest_##CaseName##_##TestName##_registered_ GTEST_ATTRIBUTE_UNUSED_ =                                           \
-      ::testing::internal::TypeParameterizedTest<CaseName,                                                             \
-                                                 ::testing::internal::TemplateSel<GTEST_TEST_CLASS_NAME_(CaseName,     \
-                                                                                                         TestName)>,   \
-                                                 GTEST_TYPE_PARAMS_(CaseName)>::Register("", #CaseName, #TestName, 0); \
+  bool gtest_##CaseName##_##TestName##_registered_ GTEST_ATTRIBUTE_UNUSED_ = ::testing::internal::                     \
+      TypeParameterizedTest<CaseName,                                                                                  \
+                            ::testing::internal::TemplateSel<GTEST_TEST_CLASS_NAME_(CaseName, TestName)>,              \
+                            GTEST_TYPE_PARAMS_(CaseName)>::Register("", #CaseName, #TestName, 0);                      \
   template <typename gtest_TypeParam_>                                                                                 \
   void GTEST_TEST_CLASS_NAME_(CaseName, TestName)<gtest_TypeParam_>::TestBody()
 
@@ -41276,7 +41275,7 @@ class TestWithParam : public Test, public WithParamInterface<T>
   if (const ::testing::AssertionResult gtest_ar = (expression))                                                        \
     ;                                                                                                                  \
   else                                                                                                                 \
-  on_failure(gtest_ar.failure_message())
+    on_failure(gtest_ar.failure_message())
 
 
 // Helper function for implementing {EXPECT|ASSERT}_PRED1.  Don't use
