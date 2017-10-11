@@ -45,8 +45,12 @@ def _dump(obj, fn):
 def _load(fn):
     try:
         return json.load(open(fn, 'rt'))
-    except:
+    except FileNotFoundError:
+        pass
+    try:
         return pickle.load(open(fn, 'rb'))
+    except FileNotFoundError:
+        return None
 
 
 def _compile(binary):
@@ -102,7 +106,7 @@ def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
     targets = binaries+headerlibs
     compiles_fn = os.path.join(pickledir, 'compiles_' + pickle_file)
     try:
-        compiles = _load(compiles_fn)
+        compiles = _load(compiles_fn) or {}
         if set(compiles.keys()) != set(targets):
             logging.error('redoing compiles due to mismatched binaries')
             logging.error('Removed: {}'.format(pformat(set(compiles.keys()) - set(targets))))
@@ -116,7 +120,7 @@ def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
     testnames = testnames[:testlimit]
     testruns_fn = os.path.join(pickledir, 'testruns_' + pickle_file)
     try:
-        loaded_testnames, testruns = _load(testruns_fn)
+        loaded_testnames, testruns = _load(testruns_fn) or ([], [])
         if set(compiles.keys()) != set(targets) or loaded_testnames != testnames:
             logging.error('redoing tests due to mismatched binaries/testnames')
             logging.error('Removed: {}'.format(pformat([f for f in loaded_testnames if f not in set(testnames)])))
