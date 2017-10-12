@@ -37,18 +37,28 @@ endif ( DEFINED dune-xt-common_MODULE_PATH )
 
 enable_testing()
 
+macro(dxt_headercheck_target_name arg)
+    string(REGEX REPLACE ".*/([^/]*)" "\\1" simple ${arg})
+    string(REPLACE ${PROJECT_SOURCE_DIR} "" rel ${arg})
+    string(REGEX REPLACE "(.*)/[^/]*" "\\1" relpath ${rel})
+    string(REGEX REPLACE "/" "_" targname ${rel})
+    set(targname "headercheck_${targname}")
+endmacro(dxt_headercheck_target_name)
+
 macro(get_headercheck_targets)
 # this is mostly c&p from dune-common, since we need a way to extract
 # all target names to pass to our load balancing script
   if(ENABLE_HEADERCHECK)
     get_property(headerlist GLOBAL PROPERTY headercheck_list)
     foreach(header ${headerlist})
-      #do some name conversion
-      string(REGEX REPLACE ".*/([^/]*)" "\\1" simple ${header})
-      string(REPLACE ${PROJECT_SOURCE_DIR} "" rel ${header})
-      string(REGEX REPLACE "(.*)/[^/]*" "\\1" relpath ${rel})
-      string(REGEX REPLACE "/" "_" targname ${rel})
-      list(APPEND dxt_headercheck_targets "headercheck_${targname}")
+        list (FIND dxt_ignore_header "${header}" _index)
+        if (${_index} GREATER -1)
+            continue()
+        endif()
+        #do some name conversion
+        set(targname ${header})
+        dxt_headercheck_target_name(${targname})
+        list(APPEND dxt_headercheck_targets "${targname}")
     endforeach(header ${headerlist})
   endif(ENABLE_HEADERCHECK)
 endmacro(get_headercheck_targets)
@@ -58,6 +68,7 @@ find_package(LPSolve)
 find_package(LAPACKE)
 find_package(MatExp)
 find_package(LebedevData)
+
 macro(BEGIN_TESTCASES)
 # https://cmake.org/cmake/help/v3.0/module/FindGTest.html http://purplekarrot.net/blog/cmake-and-test-suites.html
 	file( GLOB_RECURSE test_sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cc" )
@@ -150,6 +161,17 @@ macro(END_TESTCASES)
     add_dependencies(copy_builders_if_different rerun_test_distribution)
     add_dependencies(refresh_test_timings copy_builders_if_different)
 endmacro(END_TESTCASES)
+
+macro(dxt_exclude_from_headercheck)
+    exclude_from_headercheck(ARGV)
+    #make this robust to argument being passed with or without ""
+    string(REGEX REPLACE "[\ \n]+([^\ ])" ";\\1" list ${ARGV0})
+    set(list "${list};${ARGV}")
+    foreach(item ${list})
+        set(item ${CMAKE_CURRENT_SOURCE_DIR}/${item})
+        list(APPEND dxt_ignore_header ${item})
+    endforeach()
+endmacro(dxt_exclude_from_headercheck)
 
 macro(add_header_listing)
     # header
