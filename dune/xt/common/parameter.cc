@@ -285,16 +285,15 @@ Parameter ParametricInterface::parse_parameter(const Parameter& mu) const
   const auto& this_type = this->parameter_type();
   const auto& mus_type = mu.type();
   if (this_type.size() == 1 && mus_type.size() == 1) {
+    // one of them is not lenght 1, so on ekey might be '_unspecified'
     const auto this_single_key = this_type.keys().at(0);
     const auto mus_single_key = mus_type.keys().at(0);
     if (this_single_key == mus_single_key)
       return mu;
-    if (this_single_key == "_unspecified" || mus_single_key == "_unspecified") {
-      // these could be equivalent ...
-      if (mus_type.get(this_single_key) == this_type.get(this_single_key)) {
-        // .. and they are
-        return Parameter(this_single_key, mu.get(mus_single_key));
-      }
+    if (this_single_key == "_unspecified") {
+      return mu;
+    } else if (mus_single_key == "_unspecified") {
+      return Parameter(this_single_key, mu.get("_unspecified"));
     }
     // they are both of length 1, but the keys don't match and neither is '_unspecified'
     DUNE_THROW(Exceptions::parameter_error,
