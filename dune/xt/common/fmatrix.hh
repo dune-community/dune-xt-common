@@ -106,6 +106,13 @@ public:
     return ret;
   }
 
+  ThisType operator-(const ThisType& other) const
+  {
+    ThisType ret = *this;
+    ret -= other;
+    return ret;
+  }
+
   template <int O_COLS>
   Dune::XT::Common::FieldMatrix<K, ROWS, O_COLS> operator*(const Dune::FieldMatrix<K, COLS, O_COLS>& mat) const
   {
@@ -203,6 +210,13 @@ public:
   {
     ThisType ret = *this;
     ret += other;
+    return ret;
+  }
+
+  ThisType operator-(const ThisType& other) const
+  {
+    ThisType ret = *this;
+    ret -= other;
     return ret;
   }
 
