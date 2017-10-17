@@ -163,7 +163,7 @@ macro(END_TESTCASES)
 endmacro(END_TESTCASES)
 
 macro(dxt_exclude_from_headercheck)
-    exclude_from_headercheck(ARGV)
+    exclude_from_headercheck(${ARGV0})
     #make this robust to argument being passed with or without ""
     string(REGEX REPLACE "[\ \n]+([^\ ])" ";\\1" list ${ARGV0})
     set(list "${list};${ARGV}")
