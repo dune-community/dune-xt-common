@@ -269,6 +269,10 @@ std::ostream& operator<<(std::ostream& out, const Parameter& mu)
 // ===============================
 // ===== ParametricInterface =====
 // ===============================
+ParametricInterface::ParametricInterface(const ParameterType& param_type)
+  : parameter_type_(param_type)
+{
+}
 
 bool ParametricInterface::is_parametric() const
 {
@@ -277,7 +281,7 @@ bool ParametricInterface::is_parametric() const
 
 const ParameterType& ParametricInterface::parameter_type() const
 {
-  return _unspecified_parameter_type_;
+  return parameter_type_;
 }
 
 Parameter ParametricInterface::parse_parameter(const Parameter& mu) const
