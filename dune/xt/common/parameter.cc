@@ -173,8 +173,8 @@ bool ParameterType::operator==(const ParameterType& other) const
   if (this->size() == 1 && other.size() == 1) {
     const auto& this_single_element = *this->dict_.begin();
     const auto& other_single_element = *other.dict_.begin();
-    if (this_single_element.first == other_single_element.first || this_single_element.first == "_unspecified"
-        || other_single_element.first == "_unspecified") {
+    if (this_single_element.first == other_single_element.first || this_single_element.first == "__unspecified__"
+        || other_single_element.first == "__unspecified__") {
       return this_single_element.second == other_single_element.second;
     } else {
       return false;
@@ -216,12 +216,12 @@ std::ostream& operator<<(std::ostream& out, const ParameterType& param_type)
 // ===== Parameter =====
 // =====================
 Parameter::Parameter(const double& value)
-  : BaseType("_unspecified", {value})
+  : BaseType("__unspecified__", {value})
 {
 }
 
 Parameter::Parameter(const std::vector<double>& value)
-  : BaseType("_unspecified", value)
+  : BaseType("__unspecified__", value)
 {
 }
 
@@ -285,23 +285,23 @@ Parameter ParametricInterface::parse_parameter(const Parameter& mu) const
   const auto& this_type = this->parameter_type();
   const auto& mus_type = mu.type();
   if (this_type.size() == 1 && mus_type.size() == 1) {
-    // one of them is not lenght 1, so on ekey might be '_unspecified'
+    // both have only one key, so either key might be '__unspecified__'
     const auto this_single_key = this_type.keys().at(0);
     const auto mus_single_key = mus_type.keys().at(0);
     if (this_single_key == mus_single_key)
       return mu;
-    if (this_single_key == "_unspecified") {
+    if (this_single_key == "__unspecified__") {
       return mu;
-    } else if (mus_single_key == "_unspecified") {
-      return Parameter(this_single_key, mu.get("_unspecified"));
+    } else if (mus_single_key == "__unspecified__") {
+      return Parameter(this_single_key, mu.get("__unspecified__"));
     }
-    // they are both of length 1, but the keys don't match and neither is '_unspecified'
+    // both have only one key, but the keys don't match and neither is '__unspecified__'
     DUNE_THROW(Exceptions::parameter_error,
                "this->parameter_type() = " << this_type << "\n   "
                                            << "mu.type() = "
                                            << mus_type);
   }
-  // one of them is not lenght 1, so '_unspecified' does not play a role here
+  // one of them has more than one key, so '__unspecified__' does not play a role here
   if (this_type <= mus_type)
     return mu;
   DUNE_THROW(Exceptions::parameter_error,

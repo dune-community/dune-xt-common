@@ -84,7 +84,7 @@ public:
 
   /**
    * \note In the special case that this and other both have only a single key, and either of the keys is
-   *       '_unspecified', then they compare equal if the sizes corresponding to these keys compare equal.
+   *       '__unspecified__', then they compare equal if the sizes corresponding to these keys compare equal.
    * \sa   Take a look at test/parameter.cc for examples.
    */
   bool operator==(const ParameterType& other) const;
@@ -110,6 +110,9 @@ class Parameter : public internal::SimpleDict<std::vector<double>>
 public:
   Parameter(const std::vector<std::pair<std::string, ValueType>>& key_value_pairs = {});
 
+  /**
+   * \brief Same as Parameter({"__unspecified__", value});
+   */
   Parameter(const double& value);
 
   Parameter(const std::vector<double>& value);
@@ -118,7 +121,7 @@ public:
 
   Parameter(const std::string& key, const ValueType& value);
 
-  //! NOTE this somehow necessary to make clang 3.8 happy (and cannot be defaulted)
+  /// \note this somehow necessary to make clang 3.8 happy (and cannot be defaulted)
   ~Parameter()
   {
   }
