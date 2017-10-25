@@ -68,6 +68,24 @@ public:
 
   Configuration(const Configuration& other);
 
+  /**
+   * \brief Allows to construct from a list of key/value pairs.
+   *
+   *        This ctor is not marked explicit on purpose to allow for code such as
+\code
+Configuration default_config()
+{
+  return {{"type", "custom"},
+          {"tolerance", "1e-10"}};
+}
+\endcode
+   *        or:
+\code
+some_function_which_expects_a_config({{"type", "custom"}, {"tolerance", "1e-10"}});
+\endcode
+   */
+  Configuration(const std::initializer_list<std::pair<std::string, std::string>>& key_value_pairs);
+
   explicit Configuration(std::istream& in, ConfigurationDefaults defaults = ConfigurationDefaults());
 
   //! read ParameterTree from given arguments and call Configuration(const ParameterTree& tree)

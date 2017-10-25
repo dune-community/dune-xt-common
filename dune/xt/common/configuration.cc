@@ -71,6 +71,19 @@ Configuration::Configuration(const Configuration& other)
 {
 }
 
+Configuration::Configuration(const std::initializer_list<std::pair<std::string, std::string>>& key_value_pairs)
+  : BaseType()
+  , warn_on_default_access_(ConfigurationDefaults().warn_on_default_access)
+  , log_on_exit_(ConfigurationDefaults().log_on_exit)
+  , logfile_(ConfigurationDefaults().logfile)
+{
+  for (const auto& key_value_pair : key_value_pairs) {
+    const auto& key = key_value_pair.first;
+    const auto& value = key_value_pair.second;
+    set(key, value);
+  }
+}
+
 Configuration::Configuration(std::istream& in, ConfigurationDefaults defaults)
   : Configuration(initialize(in), defaults)
 {
