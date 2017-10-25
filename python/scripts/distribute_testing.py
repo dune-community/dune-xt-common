@@ -108,10 +108,13 @@ def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
     try:
         compiles = _load(compiles_fn) or {}
         if set(compiles.keys()) != set(targets):
+            removed = set(compiles.keys()) - set(targets)
+            new = set(targets) - set(compiles.keys())
             logging.error('redoing compiles due to mismatched binaries')
-            logging.error('Removed: {}'.format(pformat(set(compiles.keys()) - set(targets))))
-            logging.error('New: {}'.format(pformat(set(targets) - set(compiles.keys()))))
-            compiles = _redo(processes, targets, _compile, targets)
+            logging.error('Removed: {}'.format(pformat(removed)))
+            logging.error('New: {}'.format(pformat(new)))
+            compiles = {k: v for k, v in compiles.items() if k not in removed}
+            compiles.update(_redo(processes, new, _compile, new))
     except FileNotFoundError:
         logging.error('redoing compiles due to missing pickle')
         compiles = _redo(processes, targets, _compile, targets)
@@ -122,10 +125,14 @@ def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
     try:
         loaded_testnames, testruns = _load(testruns_fn) or ([], [])
         if set(compiles.keys()) != set(targets) or loaded_testnames != testnames:
+            removed = [f for f in loaded_testnames if f not in set(testnames)]
+            new = [n for n in testnames if n not in set(loaded_testnames)]
             logging.error('redoing tests due to mismatched binaries/testnames')
-            logging.error('Removed: {}'.format(pformat([f for f in loaded_testnames if f not in set(testnames)])))
-            logging.error('New: {}'.format(pformat([n for n in testnames if n not in set(loaded_testnames)])))
-            testruns = _redo(processes, binaries, _run_tests, zip(binaries, testnames))
+            logging.error('Removed: {}'.format(pformat(removed)))
+            logging.error('New: {}'.format(pformat(new)))
+            testruns = {k: v for k, v in testruns.items() if k not in removed}
+            new_map = [(b, t) for b, t in zip(binaries, testnames) if t not in removed]
+            testruns.update(_redo(processes, new, _run_tests, new_map))
     except FileNotFoundError:
         logging.error('redoing tests due to missing pickle')
         testruns = _redo(processes, binaries, _run_tests, zip(binaries, testnames))
