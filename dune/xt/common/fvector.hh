@@ -15,6 +15,9 @@
 #include <initializer_list>
 #include <type_traits>
 #include <vector>
+#include <functional>
+
+#include <boost/functional/hash.hpp>
 
 #include <dune/common/fvector.hh>
 #include <dune/common/fmatrix.hh>
@@ -241,5 +244,49 @@ typename std::enable_if<SIZE != 1, K>::type operator*(const Dune::FieldVector<K,
 
 
 } // namespace Dune
+namespace std {
+
+
+/**
+ * \sa http://en.cppreference.com/w/cpp/utility/hash
+ * \sa http://www.boost.org/doc/libs/1_55_0/doc/html/hash/combine.html
+ */
+template <class K, int SIZE>
+struct hash<Dune::FieldVector<K, SIZE>>
+{
+  typedef Dune::FieldVector<K, SIZE> argument_type;
+  typedef std::size_t result_type;
+
+  result_type operator()(argument_type const& s) const noexcept
+  {
+    std::size_t seed = 0;
+    for (size_t ii = 0; ii < s.size(); ++ii)
+      boost::hash_combine(seed, s[ii]);
+    return seed;
+  }
+}; // struct hash<Dune::FieldVector<...>>
+
+
+/**
+ * \sa http://en.cppreference.com/w/cpp/utility/hash
+ * \sa http://www.boost.org/doc/libs/1_55_0/doc/html/hash/combine.html
+ */
+template <class K, int SIZE>
+struct hash<Dune::XT::Common::FieldVector<K, SIZE>>
+{
+  typedef Dune::XT::Common::FieldVector<K, SIZE> argument_type;
+  typedef std::size_t result_type;
+
+  result_type operator()(argument_type const& s) const noexcept
+  {
+    std::size_t seed = 0;
+    for (size_t ii = 0; ii < s.size(); ++ii)
+      boost::hash_combine(seed, s[ii]);
+    return seed;
+  }
+}; // struct hash<Dune::XT::Common::FieldVector<...>>
+
+
+} // namespace std
 
 #endif // DUNE_XT_COMMON_FVECTOR_HH
