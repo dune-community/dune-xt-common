@@ -318,36 +318,6 @@ create(const size_t rows, const size_t /*cols*/, const typename VectorAbstractio
 } // namespace Dune
 
 
-template <class S, class V>
-typename std::enable_if<Dune::XT::Common::is_arithmetic<S>::value && Dune::XT::Common::is_vector<V>::value, V>::type
-operator*(const S& scalar, const V& vec)
-{
-  typedef Dune::XT::Common::VectorAbstraction<V> VecAbs;
-  V result = VecAbs::create(vec.size());
-  for (size_t ii = 0; ii < vec.size(); ++ii)
-    VecAbs::set_entry(result, ii, VecAbs::get_entry(vec, ii) * scalar);
-  return result;
-} // ... operator*(...)
-
-template <class L, class R>
-typename std::enable_if<Dune::XT::Common::is_vector<L>::value && Dune::XT::Common::is_vector<R>::value
-                            && std::is_same<typename Dune::XT::Common::VectorAbstraction<L>::S,
-                                            typename Dune::XT::Common::VectorAbstraction<R>::S>::value,
-                        L>::type
-operator+(const L& left, const R& right)
-{
-  const auto sz = left.size();
-  if (right.size() != sz)
-    DUNE_THROW(Dune::XT::Common::Exceptions::shapes_do_not_match,
-               "left.size() = " << sz << "\nright.size() = " << right.size());
-  typedef Dune::XT::Common::VectorAbstraction<L> VecAbsL;
-  typedef Dune::XT::Common::VectorAbstraction<R> VecAbsR;
-  L result = VecAbsL::create(sz);
-  for (size_t ii = 0; ii < sz; ++ii)
-    VecAbsL::set_entry(result, ii, VecAbsL::get_entry(left, ii) + VecAbsR::get_entry(right, ii));
-  return result;
-} // ... operator+(...)
-
 template <class V, class CharType, class CharTraits>
 typename std::enable_if<Dune::XT::Common::is_vector<V>::value, std::basic_ostream<CharType, CharTraits>&>::type
 operator<<(std::basic_ostream<CharType, CharTraits>& out, const V& vec)
