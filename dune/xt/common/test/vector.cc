@@ -26,6 +26,6 @@ GTEST_TEST(VectorAbstraction, Transfer)
   {
     using Vec = std::array<int, 2>;
     using Abstract = VectorAbstraction<Vec>;
-    using Transferred = Abstract::TransferType<std::string>;
+    using Transferred = Abstract::TransferSize<std::string>;
   }
 }
