@@ -33,6 +33,9 @@ namespace XT {
 namespace Common {
 
 
+/**
+ * \todo We need to implement all operators from the base which return the base, to rather return ourselfes!
+ */
 template <class K, int SIZE>
 class FieldVector : public Dune::FieldVector<K, SIZE>
 {

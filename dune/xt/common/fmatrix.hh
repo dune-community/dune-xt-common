@@ -26,6 +26,9 @@ namespace XT {
 namespace Common {
 
 
+/**
+ * \todo We need to implement all operators from the base which return the base, to rather return ourselfes!
+ */
 template <class K, int ROWS, int COLS>
 class FieldMatrix : public Dune::FieldMatrix<K, ROWS, COLS>
 {
@@ -134,6 +137,9 @@ public:
   }
 }; // class FieldMatrix<...>
 
+/**
+ * \todo We need to implement all operators from the base which return the base, to rather return ourselfes!
+ */
 template <class K>
 class FieldMatrix<K, 1, 1> : public Dune::FieldMatrix<K, 1, 1>
 {
