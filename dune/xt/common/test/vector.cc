@@ -21,11 +21,11 @@ GTEST_TEST(VectorAbstraction, Transfer)
   {
     using Vec = std::vector<int>;
     using Abstract = VectorAbstraction<Vec>;
-    using Transferred = Abstract::Transfer<std::string>;
+    using Transferred = Abstract::TransferType<std::string>;
   }
   {
     using Vec = std::array<int, 2>;
     using Abstract = VectorAbstraction<Vec>;
-    using Transferred = Abstract::Transfer<std::string>;
+    using Transferred = Abstract::TransferType<std::string>;
   }
 }

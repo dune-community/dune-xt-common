@@ -151,7 +151,7 @@ class DefaultRNG<VectorType, true>
 {
   typedef typename VectorAbstraction<VectorType>::S T;
   typedef DefaultRNG<T> RngType;
-  using SeedVector = typename VectorAbstraction<VectorType>::template Transfer<std::random_device::result_type>;
+  using SeedVector = typename VectorAbstraction<VectorType>::template TransferType<std::random_device::result_type>;
 
 public:
   DefaultRNG(VectorType min_vec = VectorType(std::numeric_limits<T>::min()),
