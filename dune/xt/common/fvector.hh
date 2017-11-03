@@ -22,9 +22,10 @@
 #include <dune/common/fvector.hh>
 #include <dune/common/fmatrix.hh>
 
+#include <dune/xt/common/debug.hh>
+#include <dune/xt/common/densevector.hh>
 #include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/float_cmp.hh>
-#include <dune/xt/common/debug.hh>
 #include <dune/xt/common/vector.hh>
 
 namespace Dune {
@@ -201,29 +202,22 @@ struct FieldVectorLess
 //! Specialization of VectorAbstraction for Dune::XT::Common::FieldVector
 template <class K, int SIZE>
 struct VectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>>
-    : public SubscriptOperatorGetAndSet<Dune::XT::Common::FieldVector<K, SIZE>,
-                                        typename Dune::FieldTraits<K>::field_type>
+    : public internal::VectorAbstractionBase<Dune::XT::Common::FieldVector<K, SIZE>, K>,
+      public internal::HasSubscriptOperatorForVectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>,
+                                                                typename Dune::FieldTraits<K>::field_type>,
+      public internal::IsSizeTransferableForVectorAbstraction<int>::Base<Dune::XT::Common::FieldVector, SIZE>
 {
-  typedef Dune::XT::Common::FieldVector<K, SIZE> VectorType;
-  typedef typename Dune::FieldTraits<K>::field_type ScalarType;
-  typedef typename Dune::FieldTraits<K>::real_type RealType;
-  typedef ScalarType S;
-  typedef RealType R;
-
-  static const bool is_vector = true;
-
   static const bool has_static_size = true;
-
   static const size_t static_size = SIZE;
 
-  static inline VectorType create(const size_t sz)
+  static inline Dune::XT::Common::FieldVector<K, SIZE> create(const size_t sz)
   {
-    return VectorType(sz, ScalarType(0));
+    return Dune::XT::Common::FieldVector<K, SIZE>(sz);
   }
 
-  static inline VectorType create(const size_t sz, const ScalarType& val)
+  static inline Dune::XT::Common::FieldVector<K, SIZE> create(const size_t sz, const K& val)
   {
-    return VectorType(sz, val);
+    return Dune::XT::Common::FieldVector<K, SIZE>(sz, val);
   }
 };
 
