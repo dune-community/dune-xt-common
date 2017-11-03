@@ -37,24 +37,24 @@ GTEST_TEST(ParameterType, equality_comparison)
 {
   std::map<ParameterType, std::vector<ParameterType>> those_are_equal;
   those_are_equal[ParameterType()] = {ParameterType()};
-  those_are_equal[ParameterType("_unspecified")] = {ParameterType("_unspecified"),
-                                                    ParameterType("_unspecified", 1),
-                                                    ParameterType("And", 1),
-                                                    ParameterType("Any", 1),
-                                                    ParameterType("other", 1),
-                                                    ParameterType("singLe", 1),
-                                                    ParameterType("word", 1)};
-  those_are_equal[ParameterType("_unspecified", 3)] = {ParameterType("_unspecified", 3),
-                                                       ParameterType("And", 3),
-                                                       ParameterType("Any", 3),
-                                                       ParameterType("other", 3),
-                                                       ParameterType("singLe", 3),
-                                                       ParameterType("word", 3)};
+  those_are_equal[ParameterType("__unspecified__")] = {ParameterType("__unspecified__"),
+                                                       ParameterType("__unspecified__", 1),
+                                                       ParameterType("And", 1),
+                                                       ParameterType("Any", 1),
+                                                       ParameterType("other", 1),
+                                                       ParameterType("singLe", 1),
+                                                       ParameterType("word", 1)};
+  those_are_equal[ParameterType("__unspecified__", 3)] = {ParameterType("__unspecified__", 3),
+                                                          ParameterType("And", 3),
+                                                          ParameterType("Any", 3),
+                                                          ParameterType("other", 3),
+                                                          ParameterType("singLe", 3),
+                                                          ParameterType("word", 3)};
   those_are_equal[ParameterType("scalar")] = {ParameterType("scalar"),
                                               ParameterType("scalar", 1),
-                                              ParameterType("_unspecified"),
-                                              ParameterType("_unspecified", 1)};
-  those_are_equal[ParameterType("vector", 17)] = {ParameterType("vector", 17), ParameterType("_unspecified", 17)};
+                                              ParameterType("__unspecified__"),
+                                              ParameterType("__unspecified__", 1)};
+  those_are_equal[ParameterType("vector", 17)] = {ParameterType("vector", 17), ParameterType("__unspecified__", 17)};
   for (const auto& element : those_are_equal) {
     const auto& target = element.first;
     for (const auto& source : element.second)
@@ -65,23 +65,25 @@ GTEST_TEST(ParameterType, equality_comparison)
 GTEST_TEST(ParameterType, inequality_comparison)
 {
   std::map<ParameterType, std::vector<ParameterType>> those_are_not_equal;
-  those_are_not_equal[ParameterType()] = {
-      ParameterType("_unspecified"), ParameterType("scalar"), ParameterType("scalar", 1), ParameterType("vector", 17)};
-  those_are_not_equal[ParameterType("_unspecified")] = {
-      ParameterType(), ParameterType("_unspecified", 3), ParameterType("vector", 17)};
-  those_are_not_equal[ParameterType("_unspecified", 3)] = {ParameterType(),
-                                                           ParameterType("_unspecified"),
-                                                           ParameterType("scalar"),
-                                                           ParameterType("scalar", 1),
-                                                           ParameterType("vector", 17)};
+  those_are_not_equal[ParameterType()] = {ParameterType("__unspecified__"),
+                                          ParameterType("scalar"),
+                                          ParameterType("scalar", 1),
+                                          ParameterType("vector", 17)};
+  those_are_not_equal[ParameterType("__unspecified__")] = {
+      ParameterType(), ParameterType("__unspecified__", 3), ParameterType("vector", 17)};
+  those_are_not_equal[ParameterType("__unspecified__", 3)] = {ParameterType(),
+                                                              ParameterType("__unspecified__"),
+                                                              ParameterType("scalar"),
+                                                              ParameterType("scalar", 1),
+                                                              ParameterType("vector", 17)};
   those_are_not_equal[ParameterType("scalar")] = {ParameterType(),
                                                   ParameterType("another_scalar"),
                                                   ParameterType("scalar", 17),
-                                                  ParameterType("_unspecified", 3),
+                                                  ParameterType("__unspecified__", 3),
                                                   ParameterType("vector", 17)};
   those_are_not_equal[ParameterType("vector", 17)] = {ParameterType(),
-                                                      ParameterType("_unspecified"),
-                                                      ParameterType("_unspecified", 3),
+                                                      ParameterType("__unspecified__"),
+                                                      ParameterType("__unspecified__", 3),
                                                       ParameterType("scalar"),
                                                       ParameterType("another_vector", 17),
                                                       ParameterType("vector", 3)};
@@ -97,8 +99,8 @@ GTEST_TEST(Parameter, creation_and_report_and_ostreamout)
 {
   std::map<Parameter, std::string> expected_values = {
       {Parameter(), "Parameter({})"},
-      {Parameter(1.), "Parameter({_unspecified: 1})"},
-      {Parameter({1., 2.}), "Parameter({_unspecified: [1 2]})"},
+      {Parameter(1.), "Parameter({__unspecified__: 1})"},
+      {Parameter({1., 2.}), "Parameter({__unspecified__: [1 2]})"},
       {Parameter("scalar_value", 17.), "Parameter({scalar_value: 17})"},
       {Parameter("vector_value", {17., 42.}), "Parameter({vector_value: [17 42]})"},
       {Parameter({{"first_scalar_value", {1.}}, {"second_vector_value", {1., 2.}}}),
