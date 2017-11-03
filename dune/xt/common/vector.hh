@@ -17,6 +17,7 @@
 #include <vector>
 #include <ostream>
 
+#include <dune/common/densevector.hh>
 #include <dune/common/dynvector.hh>
 #include <dune/common/fvector.hh>
 #include <dune/common/ftraits.hh>
@@ -28,8 +29,11 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
+
+// forward
 template <class VecType>
 struct VectorAbstraction;
+
 
 //! logically and structurally this belongs in type_utils.hh, but the dependent implementation prohibits that
 template <class VectorType>
@@ -38,12 +42,86 @@ struct is_vector
   static const bool value = VectorAbstraction<VectorType>::is_vector;
 };
 
+
+namespace internal {
+
+
+/**
+ * \brief A base class to derive from when specializing \sa VectorAbstraction.
+ */
+template <class Vector, class Field>
+struct VectorAbstractionBase
+{
+  using VectorType = Vector;
+  using ScalarType = typename Dune::FieldTraits<Field>::field_type;
+  using RealType = typename Dune::FieldTraits<Field>::real_type;
+  using S = ScalarType;
+  using R = RealType;
+
+  static const constexpr bool is_vector = true;
+  static const constexpr bool has_static_size = false;
+  static const constexpr size_t static_size = std::numeric_limits<size_t>::max();
+  static const constexpr bool has_ostream = false;
+}; // struct VectorAbstractionBase
+
+
+/**
+ * \brief A base class to derive from when specializing \sa VectorAbstraction.
+ */
+template <class VectorType, class ScalarType>
+struct HasSubscriptOperatorForVectorAbstraction
+{
+  static inline ScalarType get_entry(const VectorType& vector, const size_t ii)
+  {
+    assert(ii < vector.size());
+    return vector[ii];
+  }
+
+  static inline void set_entry(VectorType& vector, const size_t ii, const ScalarType& val)
+  {
+    assert(ii < vector.size());
+    vector[ii] = val;
+  }
+};
+
+
+/**
+ * \brief A base class to derive from when specializing \sa VectorAbstraction.
+ */
+template <class SizeType>
+struct IsSizeTransferableForVectorAbstraction
+{
+  template <template <class, SizeType...> class VectorTemplate, SizeType... values>
+  struct Base
+  {
+    template <class NewScalarType>
+    using TransferSize = VectorTemplate<NewScalarType, values...>;
+  };
+};
+
+
+/**
+ * \brief A base class to derive from when specializing \sa VectorAbstraction.
+ */
+template <template <class, typename...> class VectorTemplate, typename... Ts>
+struct IsTypeTransferableForVectorAbstraction
+{
+  template <class NewScalarType>
+  using TransferType = VectorTemplate<NewScalarType, Ts...>;
+};
+
+
+} // namespace internal
+
+
 /**
  * \brief Traits to statically extract information of a (mathematical) vector.
  *
  *        If you want your vector class to benefit from the operators defined in this header you have to manually
  *        specify a specialization of this class in your code with is_vector defined to true and the appropriate
  *        static methods and members (see the specializations below).
+ * \sa internal::VectorAbstractionBase for further
+ * \sa internal::HasSubscriptOperatorForVectorAbstraction
  */
 template <class VecType>
 struct VectorAbstraction
@@ -54,11 +132,10 @@ struct VectorAbstraction
   typedef typename Dune::FieldTraits<VecType>::field_type S;
   typedef typename Dune::FieldTraits<VecType>::real_type R;
 
-  static constexpr bool is_vector = false;
-
-  static constexpr bool has_static_size = false;
-
-  static constexpr size_t static_size = std::numeric_limits<size_t>::max();
+  static const constexpr bool is_vector = false;
+  static const constexpr bool has_static_size = false;
+  static const constexpr size_t static_size = std::numeric_limits<size_t>::max();
+  static const constexpr bool has_ostream = true;
 
   static inline /*VectorType*/ void create(const size_t /*sz*/)
   {
@@ -81,98 +158,47 @@ struct VectorAbstraction
   }
 };
 
-template <class SizeType>
-struct SizeTransfer
-{
-  template <template <class, SizeType...> class VectorTemplate, SizeType... values>
-  struct Base
-  {
-    template <class NewScalarType>
-    using Transfer = VectorTemplate<NewScalarType, values...>;
-  };
-};
-
-template <template <class, typename...> class VectorTemplate, typename... Ts>
-struct TypeTransferBase
-{
-  template <class NewScalarType>
-  using Transfer = VectorTemplate<NewScalarType, Ts...>;
-};
-
-
-template <class VectorType, class ScalarType>
-struct SubscriptOperatorGetAndSet
-{
-  static inline ScalarType get_entry(const VectorType& vector, const size_t ii)
-  {
-    assert(ii < vector.size());
-    return vector[ii];
-  }
-
-  static inline void set_entry(VectorType& vector, const size_t ii, const ScalarType& val)
-  {
-    assert(ii < vector.size());
-    vector[ii] = val;
-  }
-};
 
 template <class T>
 struct VectorAbstraction<std::vector<T>>
-    : public SubscriptOperatorGetAndSet<std::vector<T>, typename Dune::FieldTraits<T>::field_type>,
-      public TypeTransferBase<std::vector>
+    : public internal::VectorAbstractionBase<std::vector<T>, T>,
+      public internal::HasSubscriptOperatorForVectorAbstraction<std::vector<T>,
+                                                                typename Dune::FieldTraits<T>::field_type>,
+      public internal::IsTypeTransferableForVectorAbstraction<std::vector>
 {
-  typedef std::vector<T> VectorType;
-  typedef typename Dune::FieldTraits<T>::field_type ScalarType;
-  typedef typename Dune::FieldTraits<T>::real_type RealType;
-  typedef ScalarType S;
-  typedef RealType R;
-
-  static constexpr bool is_vector = true;
-
-  static constexpr bool has_static_size = false;
-
-  static constexpr size_t static_size = std::numeric_limits<size_t>::max();
-
-  static inline VectorType create(const size_t sz)
+  static inline std::vector<T> create(const size_t sz)
   {
-    return VectorType(sz);
+    return std::vector<T>(sz);
   }
 
-  static inline VectorType create(const size_t sz, const ScalarType& val)
+  static inline std::vector<T> create(const size_t sz, const T& val)
   {
-    return VectorType(sz, val);
+    return std::vector<T>(sz, val);
   }
 };
 
 template <class K, size_t SIZE>
 struct VectorAbstraction<std::array<K, SIZE>>
-    : public SubscriptOperatorGetAndSet<std::array<K, SIZE>, typename Dune::FieldTraits<K>::field_type>,
-      public SizeTransfer<size_t>::Base<std::array, SIZE>
+    : public internal::VectorAbstractionBase<std::array<K, SIZE>, K>,
+      public internal::HasSubscriptOperatorForVectorAbstraction<std::array<K, SIZE>,
+                                                                typename Dune::FieldTraits<K>::field_type>,
+      public internal::IsSizeTransferableForVectorAbstraction<size_t>::Base<std::array, SIZE>
 {
-  typedef std::array<K, SIZE> VectorType;
-  typedef typename Dune::FieldTraits<K>::field_type ScalarType;
-  typedef typename Dune::FieldTraits<K>::real_type RealType;
-  typedef ScalarType S;
-  typedef RealType R;
+  static const constexpr bool has_static_size = true;
+  static const constexpr size_t static_size = SIZE;
 
-  static constexpr bool is_vector = true;
-
-  static constexpr bool has_static_size = true;
-
-  static constexpr size_t static_size = SIZE;
-
-  static inline VectorType create(const size_t sz)
+  static inline std::array<K, SIZE> create(const size_t sz)
   {
     if (sz != SIZE)
-      DUNE_THROW(Exceptions::shapes_do_not_match, "sz = " << sz << "\nSIZE = " << int(SIZE));
-    return VectorType();
+      DUNE_THROW(Exceptions::shapes_do_not_match, "requested size: " << sz << "\n   actual size: " << int(SIZE));
+    return std::array<K, SIZE>();
   }
 
-  static inline VectorType create(const size_t sz, const ScalarType& val)
+  static inline std::array<K, SIZE> create(const size_t sz, const K& val)
   {
     if (sz != SIZE)
-      DUNE_THROW(Exceptions::shapes_do_not_match, "sz = " << sz << "\nSIZE = " << int(SIZE));
-    VectorType array;
+      DUNE_THROW(Exceptions::shapes_do_not_match, "requested size: " << sz << "\n   actual size: " << int(SIZE));
+    std::array<K, SIZE> array;
     array.fill(val);
     return array;
   }
@@ -180,66 +206,54 @@ struct VectorAbstraction<std::array<K, SIZE>>
 
 template <class K>
 struct VectorAbstraction<Dune::DynamicVector<K>>
-    : public SubscriptOperatorGetAndSet<Dune::DynamicVector<K>, typename Dune::FieldTraits<K>::field_type>,
-      public TypeTransferBase<Dune::DynamicVector>
+    : public internal::VectorAbstractionBase<Dune::DynamicVector<K>, K>,
+      public internal::HasSubscriptOperatorForVectorAbstraction<Dune::DynamicVector<K>,
+                                                                typename Dune::FieldTraits<K>::field_type>,
+      public internal::IsTypeTransferableForVectorAbstraction<Dune::DynamicVector>
 {
-  typedef Dune::DynamicVector<K> VectorType;
-  typedef typename Dune::FieldTraits<K>::field_type ScalarType;
-  typedef typename Dune::FieldTraits<K>::real_type RealType;
-  typedef ScalarType S;
-  typedef RealType R;
-
-  static constexpr bool is_vector = true;
-
-  static constexpr bool has_static_size = false;
-
-  static constexpr size_t static_size = std::numeric_limits<size_t>::max();
-
-  static inline VectorType create(const size_t sz)
+  static inline Dune::DynamicVector<K> create(const size_t sz)
   {
-    return VectorType(sz);
+    return Dune::DynamicVector<K>(sz);
   }
 
-  static inline VectorType create(const size_t sz, const ScalarType& val)
+  static inline Dune::DynamicVector<K> create(const size_t sz, const K& val)
   {
-    return VectorType(sz, val);
+    return Dune::DynamicVector<K>(sz, val);
   }
 };
 
 template <class K, int SIZE>
 struct VectorAbstraction<Dune::FieldVector<K, SIZE>>
-    : public SubscriptOperatorGetAndSet<Dune::FieldVector<K, SIZE>, typename Dune::FieldTraits<K>::field_type>,
-      public SizeTransfer<int>::Base<Dune::FieldVector, SIZE>
+    : public internal::VectorAbstractionBase<Dune::FieldVector<K, SIZE>, K>,
+      public internal::HasSubscriptOperatorForVectorAbstraction<Dune::FieldVector<K, SIZE>,
+                                                                typename Dune::FieldTraits<K>::field_type>,
+      public internal::IsSizeTransferableForVectorAbstraction<int>::Base<Dune::FieldVector, SIZE>
 {
-  typedef Dune::FieldVector<K, SIZE> VectorType;
-  typedef typename Dune::FieldTraits<K>::field_type ScalarType;
-  typedef typename Dune::FieldTraits<K>::real_type RealType;
-  typedef ScalarType S;
-  typedef RealType R;
+  static const constexpr bool has_static_size = true;
+  static const constexpr size_t static_size = SIZE;
 
-  static constexpr bool is_vector = true;
-
-  static constexpr bool has_static_size = true;
-
-  static constexpr size_t static_size = SIZE;
-
-  static inline VectorType create(const size_t sz)
+  static inline Dune::FieldVector<K, SIZE> create(const size_t sz)
   {
     if (sz != SIZE)
-      DUNE_THROW(Exceptions::shapes_do_not_match, "sz = " << sz << "\nSIZE = " << int(SIZE));
-    return VectorType();
+      DUNE_THROW(Exceptions::shapes_do_not_match, "requested size: " << sz << "\n   actual size: " << int(SIZE));
+    return Dune::FieldVector<K, SIZE>();
   }
 
-  static inline VectorType create(const size_t sz, const ScalarType& val)
+  static inline Dune::FieldVector<K, SIZE> create(const size_t sz, const K& val)
   {
     if (sz != SIZE)
-      DUNE_THROW(Exceptions::shapes_do_not_match, "sz = " << sz << "\nSIZE = " << int(SIZE));
-    return VectorType(val);
+      DUNE_THROW(Exceptions::shapes_do_not_match, "requested size: " << sz << "\n   actual size: " << int(SIZE));
+    return Dune::FieldVector<K, SIZE>(val);
   }
 };
 
+template <class V>
+struct VectorAbstraction<Dune::DenseVector<V>> : public VectorAbstraction<typename Dune::DenseVector<V>::derived_type>
+{
+};
+
 template <class T>
-struct VectorAbstraction<std::complex<T>> : public TypeTransferBase<std::complex>
+struct VectorAbstraction<std::complex<T>> : public internal::IsTypeTransferableForVectorAbstraction<std::complex>
 {
   typedef std::complex<T> VectorType;
   typedef std::complex<T> ScalarType;
@@ -247,11 +261,9 @@ struct VectorAbstraction<std::complex<T>> : public TypeTransferBase<std::complex
   typedef ScalarType S;
   typedef RealType R;
 
-  static constexpr bool is_vector = false;
-
-  static constexpr bool has_static_size = true;
-
-  static constexpr size_t static_size = 2u;
+  static const constexpr bool is_vector = false;
+  static const constexpr bool has_static_size = true;
+  static const constexpr size_t static_size = 2u;
 
   static inline VectorType create(const size_t /*sz*/)
   {
@@ -280,6 +292,7 @@ struct VectorAbstraction<std::complex<T>> : public TypeTransferBase<std::complex
     ii == 0 ? vector.real(val) : vector.imag(val);
   }
 };
+
 
 template <class VectorType>
 typename std::enable_if<is_vector<VectorType>::value, VectorType>::type
@@ -319,24 +332,28 @@ create(const size_t rows, const size_t /*cols*/, const typename VectorAbstractio
 
 
 template <class V, class CharType, class CharTraits>
-typename std::enable_if<Dune::XT::Common::is_vector<V>::value, std::basic_ostream<CharType, CharTraits>&>::type
+typename std::enable_if<Dune::XT::Common::is_vector<V>::value && !Dune::XT::Common::VectorAbstraction<V>::has_ostream,
+                        std::basic_ostream<CharType, CharTraits>&>::type
 operator<<(std::basic_ostream<CharType, CharTraits>& out, const V& vec)
 {
-  typedef Dune::XT::Common::VectorAbstraction<V> VecAbs;
+  using Vector = Dune::XT::Common::VectorAbstraction<V>;
   if (vec.size() == 0)
     out << "[]";
   else if (vec.size() == 1)
-    out << VecAbs::get_entry(vec, 0);
+    out << Vector::get_entry(vec, 0);
   else {
-    out << "[" << VecAbs::get_entry(vec, 0);
+    out << "[" << Vector::get_entry(vec, 0);
     for (decltype(vec.size()) ii = 1; ii < vec.size(); ++ii)
-      out << " " << VecAbs::get_entry(vec, ii);
+      out << " " << Vector::get_entry(vec, ii);
     out << "]";
   }
   return out;
 } // ... operator<<(...)
 
+
 namespace std {
+
+
 /// clang 3.6 does not consider the overload in the ns for some reason during resultion of a call in gtest
 template <class V, class Alloc, class CharType, class CharTraits>
 std::basic_ostream<CharType, CharTraits>& operator<<(std::basic_ostream<CharType, CharTraits>& out,
@@ -345,6 +362,8 @@ std::basic_ostream<CharType, CharTraits>& operator<<(std::basic_ostream<CharType
   ::operator<<(out, vec);
   return out;
 } // ... operator<<(...)
-}
+
+
+} // namespace std
 
 #endif // DUNE_XT_COMMON_VECTOR_HH
