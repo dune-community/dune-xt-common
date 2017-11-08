@@ -21,6 +21,7 @@
 #include <dune/common/dynvector.hh>
 #include <dune/common/fvector.hh>
 #include <dune/common/ftraits.hh>
+#include <dune/common/streamoperators.hh> // for operator<<(stream, std::array<>)
 
 #include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/type_traits.hh>
@@ -186,6 +187,7 @@ struct VectorAbstraction<std::array<K, SIZE>>
 {
   static const constexpr bool has_static_size = true;
   static const constexpr size_t static_size = SIZE;
+  static const constexpr bool has_ostream = true; // provided in dune/common/streamoperators.hh
 
   static inline std::array<K, SIZE> create(const size_t sz)
   {
@@ -360,6 +362,16 @@ std::basic_ostream<CharType, CharTraits>& operator<<(std::basic_ostream<CharType
                                                      const std::vector<V, Alloc>& vec)
 {
   ::operator<<(out, vec);
+  return out;
+} // ... operator<<(...)
+
+
+/// clang 3.6 does not consider the overload in the ns for some reason during resultion of a call in gtest
+template <class CharType, class CharTraits, typename _Tp, std::size_t _Nm>
+std::basic_ostream<CharType, CharTraits>& operator<<(std::basic_ostream<CharType, CharTraits>& out,
+                                                     const std::array<_Tp, _Nm>& vec)
+{
+  Dune::operator<<(out, vec);
   return out;
 } // ... operator<<(...)
 
