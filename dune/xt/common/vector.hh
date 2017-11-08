@@ -86,32 +86,6 @@ struct HasSubscriptOperatorForVectorAbstraction
 };
 
 
-/**
- * \brief A base class to derive from when specializing \sa VectorAbstraction.
- */
-template <class SizeType>
-struct IsSizeTransferableForVectorAbstraction
-{
-  template <template <class, SizeType...> class VectorTemplate, SizeType... values>
-  struct Base
-  {
-    template <class NewScalarType>
-    using TransferSize = VectorTemplate<NewScalarType, values...>;
-  };
-};
-
-
-/**
- * \brief A base class to derive from when specializing \sa VectorAbstraction.
- */
-template <template <class, typename...> class VectorTemplate, typename... Ts>
-struct IsTypeTransferableForVectorAbstraction
-{
-  template <class NewScalarType>
-  using TransferType = VectorTemplate<NewScalarType, Ts...>;
-};
-
-
 } // namespace internal
 
 
@@ -164,8 +138,7 @@ template <class T>
 struct VectorAbstraction<std::vector<T>>
     : public internal::VectorAbstractionBase<std::vector<T>, T>,
       public internal::HasSubscriptOperatorForVectorAbstraction<std::vector<T>,
-                                                                typename Dune::FieldTraits<T>::field_type>,
-      public internal::IsTypeTransferableForVectorAbstraction<std::vector>
+                                                                typename Dune::FieldTraits<T>::field_type>
 {
   static inline std::vector<T> create(const size_t sz)
   {
@@ -182,8 +155,7 @@ template <class K, size_t SIZE>
 struct VectorAbstraction<std::array<K, SIZE>>
     : public internal::VectorAbstractionBase<std::array<K, SIZE>, K>,
       public internal::HasSubscriptOperatorForVectorAbstraction<std::array<K, SIZE>,
-                                                                typename Dune::FieldTraits<K>::field_type>,
-      public internal::IsSizeTransferableForVectorAbstraction<size_t>::Base<std::array, SIZE>
+                                                                typename Dune::FieldTraits<K>::field_type>
 {
   static const constexpr bool has_static_size = true;
   static const constexpr size_t static_size = SIZE;
@@ -210,8 +182,7 @@ template <class K>
 struct VectorAbstraction<Dune::DynamicVector<K>>
     : public internal::VectorAbstractionBase<Dune::DynamicVector<K>, K>,
       public internal::HasSubscriptOperatorForVectorAbstraction<Dune::DynamicVector<K>,
-                                                                typename Dune::FieldTraits<K>::field_type>,
-      public internal::IsTypeTransferableForVectorAbstraction<Dune::DynamicVector>
+                                                                typename Dune::FieldTraits<K>::field_type>
 {
   static inline Dune::DynamicVector<K> create(const size_t sz)
   {
@@ -228,8 +199,7 @@ template <class K, int SIZE>
 struct VectorAbstraction<Dune::FieldVector<K, SIZE>>
     : public internal::VectorAbstractionBase<Dune::FieldVector<K, SIZE>, K>,
       public internal::HasSubscriptOperatorForVectorAbstraction<Dune::FieldVector<K, SIZE>,
-                                                                typename Dune::FieldTraits<K>::field_type>,
-      public internal::IsSizeTransferableForVectorAbstraction<int>::Base<Dune::FieldVector, SIZE>
+                                                                typename Dune::FieldTraits<K>::field_type>
 {
   static const constexpr bool has_static_size = true;
   static const constexpr size_t static_size = SIZE;
@@ -255,7 +225,7 @@ struct VectorAbstraction<Dune::DenseVector<V>> : public VectorAbstraction<typena
 };
 
 template <class T>
-struct VectorAbstraction<std::complex<T>> : public internal::IsTypeTransferableForVectorAbstraction<std::complex>
+struct VectorAbstraction<std::complex<T>>
 {
   typedef std::complex<T> VectorType;
   typedef std::complex<T> ScalarType;

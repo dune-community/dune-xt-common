@@ -207,8 +207,7 @@ template <class K, int SIZE>
 struct VectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>>
     : public internal::VectorAbstractionBase<Dune::XT::Common::FieldVector<K, SIZE>, K>,
       public internal::HasSubscriptOperatorForVectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>,
-                                                                typename Dune::FieldTraits<K>::field_type>,
-      public internal::IsSizeTransferableForVectorAbstraction<int>::Base<Dune::XT::Common::FieldVector, SIZE>
+                                                                typename Dune::FieldTraits<K>::field_type>
 {
   static const bool has_static_size = true;
   static const size_t static_size = SIZE;
