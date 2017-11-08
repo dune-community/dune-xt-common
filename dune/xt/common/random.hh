@@ -16,9 +16,8 @@
 #include <limits>
 #include <complex>
 
-#include <boost/assign/list_of.hpp>
-#include <boost/numeric/conversion/cast.hpp>
-
+#include <dune/xt/common/exceptions.hh>
+#include <dune/xt/common/numeric_cast.hh>
 #include <dune/xt/common/vector.hh>
 
 namespace Dune {
@@ -102,8 +101,7 @@ class RandomStrings : public RNG<std::string, std::uniform_int_distribution<int>
 
 public:
   explicit RandomStrings(size_t l, std::random_device::result_type seed = std::random_device()())
-    : BaseType(std::mt19937(seed),
-               std::uniform_int_distribution<int>(0, boost::numeric_cast<int>(alphanums.size() - 1)))
+    : BaseType(std::mt19937(seed), std::uniform_int_distribution<int>(0, numeric_cast<int>(alphanums.size() - 1)))
     , length(l)
   {
   }
@@ -151,19 +149,19 @@ class DefaultRNG<VectorType, true>
 {
   typedef typename VectorAbstraction<VectorType>::S T;
   typedef DefaultRNG<T> RngType;
-  using SeedVector = typename VectorAbstraction<VectorType>::template TransferType<std::random_device::result_type>;
 
 public:
-  DefaultRNG(VectorType min_vec = VectorType(std::numeric_limits<T>::min()),
-             VectorType max_vec = VectorType(std::numeric_limits<T>::max()),
-             SeedVector seed_vec = SeedVector(std::random_device()()))
+  DefaultRNG(VectorType min_vec = VectorAbstraction<VectorType>::create(1, std::numeric_limits<T>::min(), false),
+             VectorType max_vec = VectorAbstraction<VectorType>::create(1, std::numeric_limits<T>::max(), false),
+             std::random_device::result_type seed = std::random_device()())
   {
-    std::size_t idx = 0;
-    for (auto&& min : min_vec) {
-      rngs_.emplace_back(min, max_vec[idx], seed_vec[idx]);
-      ++idx;
-    }
+    if (min_vec.size() != max_vec.size())
+      DUNE_THROW(Exceptions::shapes_do_not_match,
+                 "min_vec.size() = " << min_vec.size() << "\n   max_vec.size() = " << max_vec.size());
+    for (size_t idx = 0; idx < min_vec.size(); ++idx)
+      rngs_.emplace_back(min_vec[idx], max_vec[idx], seed);
   }
+
   inline VectorType operator()()
   {
     VectorType result_vec = VectorAbstraction<VectorType>::create(rngs_.size());

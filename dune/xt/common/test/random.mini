@@ -4,4 +4,4 @@ testtype = double, int, Dune::FieldVector<double\, 3> | expand field
 suf_testtype = double, int, field_vector_double_3 | expand field
 
 [__static]
-RNG_FIELD_TYPE = {testtype} 
+RNG_FIELD_TYPE = {testtype}
