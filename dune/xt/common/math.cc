@@ -16,9 +16,22 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
+
 // this is just for the test to compile
 const std::string Epsilon<std::string, false>::value = "_";
+
 
 } // namespace Common
 } // namespace XT
 } // namespace Dune
+
+namespace std {
+
+
+long unsigned int abs(const long unsigned int& value)
+{
+  return value;
+}
+
+
+} // namespace std

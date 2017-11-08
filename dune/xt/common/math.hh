@@ -324,6 +324,22 @@ public:
 namespace std {
 
 
+/**
+ * \note \attention This is not supposed to be here! But Dune::FloatCmp uses
+\code
+std::abs(value)
+\code
+ *                  somewhere, as opposed to
+\code
+using std::abs;
+abs(value)
+\code
+ *                  which would allow ADL to find the correct abs. So we have to povide std::abs for all types which
+ *                  we want to use in our FloatCmp.
+ */
+long unsigned int abs(const long unsigned int& value);
+
+
 template <int k>
 Dune::bigunsignedint<k> abs(const Dune::bigunsignedint<k>& value)
 {

@@ -16,10 +16,12 @@
 #include <type_traits>
 #include <complex>
 
-#include <dune/common/float_cmp.hh>
+#include <dune/xt/common/math.hh> // <- This include needs to be before the one from dune-common, otherwise
+#include <dune/common/float_cmp.hh> //  std::abs(long unsinged int) is indefined in dune-common!
 
-#include <dune/xt/common/type_traits.hh>
 #include <dune/xt/common/vector.hh>
+#include <dune/xt/common/type_traits.hh>
+
 #include "float_cmp_style.hh"
 #include "float_cmp_internal.hh"
 
@@ -27,6 +29,7 @@ namespace Dune {
 namespace XT {
 namespace Common {
 namespace FloatCmp {
+
 
 template <class T, Style style = Style::defaultStyle, bool = std::is_integral<T>::value>
 struct DefaultEpsilon
@@ -38,7 +41,6 @@ struct DefaultEpsilon
   }
 };
 
-//! since we treat complex like a vector its epsilon is (eps,eps) of its scalar type
 template <class T, Style style>
 struct DefaultEpsilon<std::complex<T>, style, false>
 {
