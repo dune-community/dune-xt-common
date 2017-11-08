@@ -35,7 +35,6 @@
 
 #include <boost/numeric/conversion/cast.hpp>
 
-#include <dune/common/float_cmp.hh>
 #include <dune/common/fvector.hh>
 #include <dune/common/fmatrix.hh>
 #include <dune/common/parallel/mpihelper.hh>
@@ -44,6 +43,7 @@
 #include <dune/fem/misc/mpimanager.hh>
 #endif
 
+#include <dune/xt/common/float_cmp.hh>
 #include <dune/xt/common/vector.hh>
 #include <dune/xt/common/test/gtest/gtest.h>
 #include <dune/xt/common/configuration.hh>
