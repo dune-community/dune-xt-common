@@ -43,7 +43,54 @@ std::vector<T>& operator+=(std::vector<T>& vec, const std::vector<T>& other)
   return vec;
 }
 
-template <class V>
+
+template <class T, class S>
+typename std::enable_if<XT::Common::is_arithmetic<T>::value, T>::type make_number(const S& number)
+{
+  return T(number);
+}
+
+template <class T, class S>
+typename std::enable_if<XT::Common::is_complex<T>::value, T>::type make_number(const S& number)
+{
+  return T(number, number); // <- This has to match the DEFAULT_EPSILON below!
+}
+
+
+template <class T>
+typename std::enable_if<XT::Common::is_arithmetic<T>::value, T>::type make_type(const T& number)
+{
+  return number;
+}
+
+template <class T>
+typename std::enable_if<XT::Common::is_complex<T>::value, T>::type make_type(const T& number)
+{
+  return number; // <- No special treatment here, already done above!
+}
+
+template <class T, class S>
+typename std::enable_if<XT::Common::is_vector<T>::value, T>::type make_type(const S& number)
+{
+  using Vec = XT::Common::VectorAbstraction<T>;
+  if (Vec::has_static_size)
+    return Vec::create(Vec::static_size, number);
+  else
+    return Vec::create(VECSIZE, number);
+}
+
+template <class T, class S>
+typename std::enable_if<XT::Common::is_matrix<T>::value, T>::type make_type(const S& number)
+{
+  using Mat = XT::Common::MatrixAbstraction<T>;
+  if (Mat::has_static_size)
+    return Mat::create(Mat::static_rows, Mat::static_cols, number);
+  else
+    return Mat::create(VECSIZE, NUMCOLS, number);
+}
+
+
+template <class T>
 struct FloatCmpTest : public testing::Test
 {
   typedef typename std::conditional<XT::Common::is_matrix<T>::value,
@@ -58,25 +105,14 @@ struct FloatCmpTest : public testing::Test
                                                               typename Dune::FieldTraits<T>::real_type>::type>::type R;
   static constexpr bool fieldtype_is_float = std::is_floating_point<R>::value;
 
-  static const size_t s_size =
-      XT::Common::is_matrix<V>::value
-          ? (XT::Common::MatrixAbstraction<V>::has_static_size ? XT::Common::MatrixAbstraction<V>::static_rows
-                                                               : VECSIZE)
-          : (XT::Common::VectorAbstraction<V>::has_static_size ? XT::Common::VectorAbstraction<V>::static_size
-                                                               : VECSIZE);
-  static const size_t s_cols = XT::Common::is_matrix<V>::value ? (XT::Common::MatrixAbstraction<V>::has_static_size
-                                                                      ? XT::Common::MatrixAbstraction<V>::static_cols
-                                                                      : NUMCOLS)
-                                                               : 1.;
-
   FloatCmpTest()
-    : zero(create<V>(s_size, s_cols, create<S>(0, 0)))
-    , one(create<V>(s_size, s_cols, create<S>(0, 1)))
-    , neg_one(create<V>(s_size, s_cols, create<S>(0, -1)))
-    , epsilon(create<V>(s_size, s_cols, XT::Common::FloatCmp::DEFAULT_EPSILON::value()))
-    , eps_plus(create<V>(s_size, s_cols, XT::Common::FloatCmp::DEFAULT_EPSILON::value() * 1.1))
-    , eps_minus(create<V>(s_size, s_cols, XT::Common::FloatCmp::DEFAULT_EPSILON::value() * 0.9))
-    , two(create<V>(s_size, s_cols, create<S>(0, 2)))
+    : zero(make_type<T>(make_number<S>(0)))
+    , one(make_type<T>(make_number<S>(1)))
+    , neg_one(make_type<T>(make_number<S>(-1)))
+    , epsilon(make_type<T>(XT::Common::FloatCmp::DEFAULT_EPSILON::value()))
+    , eps_plus(make_type<T>(XT::Common::FloatCmp::DEFAULT_EPSILON::value() * 1.1))
+    , eps_minus(make_type<T>(XT::Common::FloatCmp::DEFAULT_EPSILON::value() * 0.9))
+    , two(make_type<T>(make_number<S>(2)))
     , test_config(DXTC_CONFIG.sub("test_common_float_cmp"))
   {
     one_plus_eps_minus_ = one;
@@ -85,15 +121,15 @@ struct FloatCmpTest : public testing::Test
     one_plus_eps_plus_ += eps_plus;
   }
 
-  const V zero;
-  const V one;
-  const V neg_one;
-  const V epsilon;
-  const V eps_plus;
-  const V eps_minus;
-  const V two;
-  V one_plus_eps_minus_;
-  V one_plus_eps_plus_;
+  const T zero;
+  const T one;
+  const T neg_one;
+  const T epsilon;
+  const T eps_plus;
+  const T eps_minus;
+  const T two;
+  T one_plus_eps_minus_;
+  T one_plus_eps_plus_;
   const typename XT::Common::Configuration test_config;
 
   void check_eq()
