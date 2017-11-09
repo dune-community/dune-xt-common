@@ -224,47 +224,6 @@ struct VectorAbstraction<Dune::DenseVector<V>> : public VectorAbstraction<typena
 {
 };
 
-template <class T>
-struct VectorAbstraction<std::complex<T>>
-{
-  typedef std::complex<T> VectorType;
-  typedef std::complex<T> ScalarType;
-  typedef T RealType;
-  typedef ScalarType S;
-  typedef RealType R;
-
-  static const constexpr bool is_vector = false;
-  static const constexpr bool has_static_size = true;
-  static const constexpr size_t static_size = 2u;
-
-  static inline VectorType create(const size_t /*sz*/)
-  {
-    return VectorType(0, 0);
-  }
-
-  static inline VectorType create(const size_t /*sz*/, const ScalarType& val)
-  {
-    return VectorType(val);
-  }
-
-  static inline VectorType create(const size_t /*sz*/, const RealType& val)
-  {
-    return VectorType(val, val);
-  }
-
-  static inline ScalarType get_entry(const VectorType& vector, const size_t ii)
-  {
-    assert(ii < 2);
-    return ii == 0 ? vector.real() : vector.imag();
-  }
-
-  static inline void set_entry(VectorType& vector, const size_t ii, const ScalarType& val)
-  {
-    assert(ii < 2);
-    ii == 0 ? vector.real(val) : vector.imag(val);
-  }
-};
-
 
 template <class VectorType>
 typename std::enable_if<is_vector<VectorType>::value, VectorType>::type
