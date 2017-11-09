@@ -274,29 +274,6 @@ create(const size_t sz,
   return VectorAbstraction<VectorType>::create(sz, val);
 }
 
-template <class T, class SR>
-typename std::enable_if<is_complex<T>::value, T>::type create(const size_t /*sz*/,
-                                                              const SR& val = typename VectorAbstraction<T>::R(0))
-{
-  return VectorAbstraction<T>::create(0, val);
-}
-
-template <class VectorType>
-typename std::enable_if<is_arithmetic<VectorType>::value, VectorType>::type
-create(const size_t /*sz*/,
-       const typename VectorAbstraction<VectorType>::S& val = typename VectorAbstraction<VectorType>::S(0))
-{
-  return val;
-}
-
-// for compatibility with matrix types
-template <class VectorType>
-typename std::enable_if<is_vector<VectorType>::value, VectorType>::type
-create(const size_t rows, const size_t /*cols*/, const typename VectorAbstraction<VectorType>::S& val)
-{
-  return VectorAbstraction<VectorType>::create(rows, val);
-}
-
 
 } // namespace Common
 } // namespace XT

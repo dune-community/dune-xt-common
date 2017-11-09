@@ -253,20 +253,6 @@ create(const size_t rows, const size_t cols, const typename MatrixAbstraction<Ma
   return MatrixAbstraction<MatrixType>::create(rows, cols, val);
 }
 
-template <class T, class SR>
-typename std::enable_if<is_complex<T>::value, T>::type
-create(const size_t /*rows*/, const size_t /*cols*/, const SR& val)
-{
-  return VectorAbstraction<T>::create(0, val);
-}
-
-template <class MatrixType>
-typename std::enable_if<std::is_arithmetic<MatrixType>::value, MatrixType>::type
-create(const size_t /*rows*/, const size_t /*cols*/, const typename MatrixAbstraction<MatrixType>::S& val)
-{
-  return val;
-}
-
 
 } // namespace Common
 } // namespace XT
