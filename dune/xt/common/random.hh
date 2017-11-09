@@ -151,8 +151,8 @@ class DefaultRNG<VectorType, true>
   typedef DefaultRNG<T> RngType;
 
 public:
-  DefaultRNG(VectorType min_vec = VectorAbstraction<VectorType>::create(1, std::numeric_limits<T>::min(), false),
-             VectorType max_vec = VectorAbstraction<VectorType>::create(1, std::numeric_limits<T>::max(), false),
+  DefaultRNG(VectorType min_vec = VectorAbstraction<VectorType>::create(1, std::numeric_limits<T>::min()),
+             VectorType max_vec = VectorAbstraction<VectorType>::create(1, std::numeric_limits<T>::max()),
              std::random_device::result_type seed = std::random_device()())
   {
     if (min_vec.size() != max_vec.size())
