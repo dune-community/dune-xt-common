@@ -55,8 +55,7 @@ struct ValidationTest : public testing::Test
 
       const auto vl = init_bound<T>(lower);
       const auto vu = init_bound<T>(upper);
-      decltype(vu) vs(SEED);
-      RNGType rng(vl, vu, vs);
+      RNGType rng(vl, vu, SEED);
       boost::array<T, 10> ar = list_of<T>().repeat_fun(9, rng);
       ValidateInList<T, boost::array<T, 10>> validator(ar);
       for (T t : ar) {
