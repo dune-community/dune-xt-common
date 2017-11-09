@@ -92,20 +92,20 @@ struct HasSubscriptOperatorForVectorAbstraction
 /**
  * \brief Traits to statically extract information of a (mathematical) vector.
  *
- *        If you want your vector class to benefit from the operators defined in this header you have to manually
+ *        If you want your vector class to benefit from the functionality in this header you have to manually
  *        specify a specialization of this class in your code with is_vector defined to true and the appropriate
- *        static methods and members (see the specializations below).
- * \sa internal::VectorAbstractionBase for further
+ *        static methods implemented and members defined (see the specializations below).
+ * \sa internal::VectorAbstractionBase
  * \sa internal::HasSubscriptOperatorForVectorAbstraction
  */
 template <class VecType>
 struct VectorAbstraction
 {
   typedef VecType VectorType;
-  typedef VecType ScalarType;
-  typedef VecType RealType;
-  typedef typename Dune::FieldTraits<VecType>::field_type S;
-  typedef typename Dune::FieldTraits<VecType>::real_type R;
+  typedef typename Dune::FieldTraits<VecType>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<VecType>::real_type RealType;
+  typedef ScalarType S;
+  typedef RealType R;
 
   static const constexpr bool is_vector = false;
   static const constexpr bool has_static_size = false;
