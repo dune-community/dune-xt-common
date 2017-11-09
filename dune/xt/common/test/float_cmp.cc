@@ -46,12 +46,16 @@ std::vector<T>& operator+=(std::vector<T>& vec, const std::vector<T>& other)
 template <class V>
 struct FloatCmpTest : public testing::Test
 {
-  typedef typename std::conditional<XT::Common::is_matrix<V>::value,
-                                    typename XT::Common::MatrixAbstraction<V>::ScalarType,
-                                    typename XT::Common::VectorAbstraction<V>::ScalarType>::type S;
-  typedef typename std::conditional<XT::Common::is_matrix<V>::value,
-                                    typename XT::Common::MatrixAbstraction<V>::RealType,
-                                    typename XT::Common::VectorAbstraction<V>::RealType>::type R;
+  typedef typename std::conditional<XT::Common::is_matrix<T>::value,
+                                    typename XT::Common::MatrixAbstraction<T>::ScalarType,
+                                    typename std::conditional<XT::Common::is_vector<T>::value,
+                                                              typename XT::Common::VectorAbstraction<T>::ScalarType,
+                                                              T>::type>::type S;
+  typedef typename std::conditional<XT::Common::is_matrix<T>::value,
+                                    typename XT::Common::MatrixAbstraction<T>::RealType,
+                                    typename std::conditional<XT::Common::is_vector<T>::value,
+                                                              typename XT::Common::VectorAbstraction<T>::RealType,
+                                                              typename Dune::FieldTraits<T>::real_type>::type>::type R;
   static constexpr bool fieldtype_is_float = std::is_floating_point<R>::value;
 
   static const size_t s_size =
