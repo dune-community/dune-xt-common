@@ -90,7 +90,7 @@ struct HasSubscriptOperatorForVectorAbstraction
 
 
 /**
- * \brief Traits to statically extract information of a (mathematical) vector.
+ * \brief Traits to uniformly handle dense (mathematical) vectors.
  *
  *        If you want your vector class to benefit from the functionality in this header you have to manually
  *        specify a specialization of this class in your code with is_vector defined to true and the appropriate

@@ -27,12 +27,13 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
+
 /**
- * \brief Traits to statically extract the information of a (mathematical) matrix.
+ * \brief Traits to uniformly handle dense matrices.
  *
- *        If you want your matrix class to benefit from the operators defined in this header you have to manually
- *        specify a specialization of this class in your code with is_matrix defined to true and an appropriate
- *        static methods and members (see the specializations below).
+ *        If you want your matrix class to benefit from the functionality defined in this header you have to manually
+ *        specify a specialization of this class in your code with is_matrix defined to true and the appropriate
+ *        static methods implemented and members defined (see the specializations below).
  */
 template <class MatType>
 struct MatrixAbstraction
@@ -82,6 +83,15 @@ struct MatrixAbstraction
     static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
   }
 };
+
+
+//! logically and structurally this belongs in type_utils.hh, but the dependent implementation prohibits that
+template <class MatrixType>
+struct is_matrix
+{
+  static const bool value = MatrixAbstraction<MatrixType>::is_matrix;
+};
+
 
 template <class K>
 struct MatrixAbstraction<Dune::DynamicMatrix<K>>
@@ -235,11 +245,6 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
   }
 };
 
-template <class MatrixType>
-struct is_matrix
-{
-  static const bool value = MatrixAbstraction<MatrixType>::is_matrix;
-};
 
 template <class MatrixType>
 typename std::enable_if<is_matrix<MatrixType>::value, MatrixType>::type
