@@ -16,16 +16,4 @@
 using namespace Dune::XT::Common;
 using namespace std;
 
-GTEST_TEST(VectorAbstraction, Transfer)
-{
-  {
-    using Vec = std::vector<int>;
-    using Abstract = VectorAbstraction<Vec>;
-    using Transferred = Abstract::TransferType<std::string>;
-  }
-  {
-    using Vec = std::array<int, 2>;
-    using Abstract = VectorAbstraction<Vec>;
-    using Transferred = Abstract::TransferSize<std::string>;
-  }
-}
+
