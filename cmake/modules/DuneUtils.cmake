@@ -65,6 +65,7 @@ endmacro(get_headercheck_targets)
 
 find_package(Qhull)
 find_package(LPSolve)
+find_package(MKL)
 find_package(LAPACKE)
 find_package(MatExp)
 find_package(LebedevData)
