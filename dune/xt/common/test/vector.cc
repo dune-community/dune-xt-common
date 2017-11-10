@@ -15,5 +15,3 @@
 
 using namespace Dune::XT::Common;
 using namespace std;
-
-
