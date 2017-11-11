@@ -21,12 +21,14 @@
 
 #include <dune/common/fvector.hh>
 #include <dune/common/fmatrix.hh>
+#include <dune/common/promotiontraits.hh>
 
 #include <dune/xt/common/debug.hh>
 #include <dune/xt/common/densevector.hh>
 #include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/float_cmp.hh>
 #include <dune/xt/common/vector.hh>
+#include <dune/xt/common/type_traits.hh>
 
 namespace Dune {
 namespace XT {
@@ -222,6 +224,277 @@ struct VectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>>
     return Dune::XT::Common::FieldVector<K, SIZE>(sz, val);
   }
 };
+
+
+namespace internal {
+
+
+/**
+ * Most likely, you do not want to use this class directly, but \sa hstack instead.
+ */
+template <class K>
+struct hstack_decay
+{
+  static_assert(is_arithmetic<K>::value, "");
+  using type = K;
+};
+
+template <class K, int SIZE>
+struct hstack_decay<Dune::FieldVector<K, SIZE>>
+{
+  using type = Dune::XT::Common::FieldVector<K, SIZE>;
+};
+
+template <class K, int SIZE>
+struct hstack_decay<const Dune::FieldVector<K, SIZE>&> : public hstack_decay<Dune::FieldVector<K, SIZE>>
+{
+};
+
+template <class K, int SIZE>
+struct hstack_decay<Dune::XT::Common::FieldVector<K, SIZE>> : public hstack_decay<Dune::FieldVector<K, SIZE>>
+{
+};
+
+template <class K, int SIZE>
+struct hstack_decay<const Dune::XT::Common::FieldVector<K, SIZE>&> : public hstack_decay<Dune::FieldVector<K, SIZE>>
+{
+};
+
+
+/**
+ * Most likely, you do not want to use this, but \sa hstack instead.
+ */
+template <class T>
+using hstack_decay_t = typename hstack_decay<T>::type;
+
+
+/**
+ * Most likely, you do not want to use this class directly, but \sa hstack instead.
+ */
+template <class... Vectors>
+struct hstack_helper;
+
+template <class L, class R, class... Vectors>
+struct hstack_helper<L, R, Vectors...>
+{
+  using type =
+      typename hstack_helper<typename hstack_helper<hstack_decay_t<L>, hstack_decay_t<R>>::type, Vectors...>::type;
+};
+
+template <class K, int SIZE>
+struct hstack_helper<Dune::FieldVector<K, SIZE>>
+{
+  using type = hstack_decay_t<Dune::FieldVector<K, SIZE>>;
+};
+
+template <class K, int SIZE>
+struct hstack_helper<Dune::XT::Common::FieldVector<K, SIZE>> : public hstack_helper<Dune::FieldVector<K, SIZE>>
+{
+};
+
+template <class KL, class KR, int r>
+struct hstack_helper<KL, Dune::FieldVector<KR, r>>
+{
+  using type = hstack_decay_t<Dune::FieldVector<typename PromotionTraits<KL, KR>::PromotedType, 1 + r>>;
+};
+
+template <class KL, class KR, int r>
+struct hstack_helper<KL, Dune::XT::Common::FieldVector<KR, r>> : public hstack_helper<KL, Dune::FieldVector<KR, r>>
+{
+};
+
+template <class KL, int l, class KR>
+struct hstack_helper<Dune::FieldVector<KL, l>, KR>
+{
+  using type = hstack_decay_t<Dune::FieldVector<typename PromotionTraits<KL, KR>::PromotedType, l + 1>>;
+};
+
+template <class KL, int l, class KR>
+struct hstack_helper<Dune::XT::Common::FieldVector<KL, l>, KR> : public hstack_helper<Dune::FieldVector<KL, l>, KR>
+{
+};
+
+template <class KL, int l, class KR, int r>
+struct hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
+{
+  using type = hstack_decay_t<Dune::FieldVector<typename PromotionTraits<KL, KR>::PromotedType, l + r>>;
+};
+
+template <class KL, int l, class KR, int r>
+struct hstack_helper<Dune::XT::Common::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
+    : public hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
+{
+};
+
+template <class KL, int l, class KR, int r>
+struct hstack_helper<Dune::FieldVector<KL, l>, Dune::XT::Common::FieldVector<KR, r>>
+    : public hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
+{
+};
+
+template <class KL, int l, class KR, int r>
+struct hstack_helper<Dune::XT::Common::FieldVector<KL, l>, Dune::XT::Common::FieldVector<KR, r>>
+    : public hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
+{
+};
+
+// not sure why this is required, would've hoped the decay above would take care of it
+template <class KL, int l, class KR, int r>
+struct hstack_helper<Dune::FieldVector<KL, l>, const Dune::FieldVector<KR, r>&>
+    : public hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
+{
+};
+
+// not sure why this is required, would've hoped the decay above would take care of it
+template <class KL, int l, class KR, int r>
+struct hstack_helper<Dune::FieldVector<KL, l>, const Dune::XT::Common::FieldVector<KR, r>&>
+    : public hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
+{
+};
+
+
+} // namespace internal
+
+
+/// \brief Specialization of \sa hstack to stop the recursion.
+template <class K, int SIZE>
+Dune::XT::Common::FieldVector<K, SIZE> hstack(Dune::FieldVector<K, SIZE>&& vec)
+{
+  return std::move(vec);
+}
+
+/// \brief Specialization of \sa hstack to stop the recursion.
+template <class K, int SIZE>
+Dune::XT::Common::FieldVector<K, SIZE> hstack(Dune::XT::Common::FieldVector<K, SIZE>&& vec)
+{
+  return std::move(vec);
+}
+
+/// \brief Specialization of \sa hstack to stop the recursion.
+template <class K, int SIZE>
+Dune::XT::Common::FieldVector<K, SIZE> hstack(const Dune::FieldVector<K, SIZE>& vec)
+{
+  return vec;
+}
+
+/// \brief Specialization of \sa hstack to stop the recursion.
+template <class K, int SIZE>
+Dune::XT::Common::FieldVector<K, SIZE> hstack(const Dune::XT::Common::FieldVector<K, SIZE>& vec)
+{
+  return vec;
+}
+
+
+/// \brief Specialization of \sa hstack for two arguments.
+template <class KL, class KR, int r>
+typename std::enable_if<is_arithmetic<KL>::value && !is_field_vector<KL>::value,
+                        typename internal::hstack_helper<internal::hstack_decay_t<KL>,
+                                                         internal::hstack_decay_t<Dune::FieldVector<KR, r>>>::type>::
+    type
+    hstack(const KL& left, const Dune::FieldVector<KR, r>& right)
+{
+  typename internal::hstack_helper<internal::hstack_decay_t<KL>,
+                                   internal::hstack_decay_t<Dune::FieldVector<KR, r>>>::type ret;
+  ret[0] = left;
+  for (size_t ii = 0; ii < r; ++ii)
+    ret[ii + 1] = right[ii];
+  return ret;
+} // ... hstack<1, r>(...)
+
+/// \brief Specialization of \sa hstack for two arguments.
+template <class KL, class KR, int r>
+typename std::enable_if<is_arithmetic<KL>::value && !is_field_vector<KL>::value,
+                        typename internal::hstack_helper<internal::hstack_decay_t<KL>,
+                                                         internal::hstack_decay_t<Dune::FieldVector<KR, r>>>::type>::
+    type
+    hstack(const KL& left, const Dune::XT::Common::FieldVector<KR, r>& right)
+{
+  return hstack(left, static_cast<const Dune::FieldVector<KR, r>&>(right));
+}
+
+/// \brief Specialization of \sa hstack for two arguments.
+template <class KL, int l, class KR>
+typename std::enable_if<is_arithmetic<KR>::value && !is_field_vector<KR>::value,
+                        typename internal::hstack_helper<internal::hstack_decay_t<Dune::FieldVector<KL, l>>,
+                                                         internal::hstack_decay_t<KR>>::type>::type
+hstack(const Dune::FieldVector<KL, l>& left, const KR& right)
+{
+  typename internal::hstack_helper<internal::hstack_decay_t<Dune::FieldVector<KL, l>>,
+                                   internal::hstack_decay_t<KR>>::type ret;
+  for (size_t ii = 0; ii < l; ++ii)
+    ret[ii] = left[ii];
+  ret[l] = right;
+  return ret;
+} // ... hstack<l, 1>(...)
+
+/// \brief Specialization of \sa hstack for two arguments.
+template <class KL, int l, class KR>
+typename std::enable_if<is_arithmetic<KR>::value && !is_field_vector<KR>::value,
+                        typename internal::hstack_helper<internal::hstack_decay_t<Dune::FieldVector<KL, l>>,
+                                                         internal::hstack_decay_t<KR>>::type>::type
+hstack(const Dune::XT::Common::FieldVector<KL, l>& left, const KR& right)
+{
+  return hstack(static_cast<const Dune::FieldVector<KL, l>&>(left), right);
+}
+
+/// \brief Specialization of \sa hstack for two arguments.
+template <class KL, int l, class KR, int r>
+typename internal::hstack_helper<internal::hstack_decay_t<Dune::FieldVector<KL, l>>,
+                                 internal::hstack_decay_t<Dune::FieldVector<KR, r>>>::type
+hstack(const Dune::FieldVector<KL, l>& left, const Dune::FieldVector<KR, r>& right)
+{
+  typename internal::hstack_helper<internal::hstack_decay_t<Dune::FieldVector<KL, l>>,
+                                   internal::hstack_decay_t<Dune::FieldVector<KR, r>>>::type ret;
+  size_t ii = 0;
+  for (size_t jj = 0; jj < l; ++jj, ++ii)
+    ret[ii] = left[jj];
+  for (size_t jj = 0; jj < r; ++jj, ++ii)
+    ret[ii] = right[jj];
+  return ret;
+} // ... hstack<l, r>(...)
+
+/// \brief Specialization of \sa hstack for two arguments.
+template <class KL, int l, class KR, int r>
+typename internal::hstack_helper<internal::hstack_decay_t<Dune::FieldVector<KL, l>>,
+                                 internal::hstack_decay_t<Dune::FieldVector<KR, r>>>::type
+hstack(const Dune::XT::Common::FieldVector<KL, l>& left, const Dune::FieldVector<KR, r>& right)
+{
+  return hstack(static_cast<const Dune::FieldVector<KL, l>&>(left), right);
+}
+
+/// \brief Specialization of \sa hstack for two arguments.
+template <class KL, int l, class KR, int r>
+typename internal::hstack_helper<internal::hstack_decay_t<Dune::FieldVector<KL, l>>,
+                                 internal::hstack_decay_t<Dune::FieldVector<KR, r>>>::type
+hstack(const Dune::FieldVector<KL, l>& left, const Dune::XT::Common::FieldVector<KR, r>& right)
+{
+  return hstack(left, static_cast<const Dune::FieldVector<KR, r>&>(right));
+}
+
+/// \brief Specialization of \sa hstack for two arguments.
+template <class KL, int l, class KR, int r>
+typename internal::hstack_helper<internal::hstack_decay_t<Dune::FieldVector<KL, l>>,
+                                 internal::hstack_decay_t<Dune::FieldVector<KR, r>>>::type
+hstack(const Dune::XT::Common::FieldVector<KL, l>& left, const Dune::XT::Common::FieldVector<KR, r>& right)
+{
+  return hstack(static_cast<const Dune::FieldVector<KL, l>&>(left),
+                static_cast<const Dune::FieldVector<KR, r>&>(right));
+}
+
+
+/**
+ * \brief Stacks an arbitrary number of numbers and FieldVectors horizontally into one appropriate FieldVector.
+ * \note  At least one argument must be a FieldVector!
+ */
+template <class L, class R, class... Vectors>
+typename std::enable_if<is_field_vector<L>::value || is_field_vector<R>::value,
+                        typename internal::hstack_helper<internal::hstack_decay_t<L>,
+                                                         internal::hstack_decay_t<R>,
+                                                         Vectors...>::type>::type
+hstack(const L& left, const R& right, Vectors&&... vectors)
+{
+  return hstack(hstack(left, right), std::forward<Vectors>(vectors)...);
+}
 
 
 } // namespace Common
