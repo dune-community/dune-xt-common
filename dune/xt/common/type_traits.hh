@@ -44,8 +44,22 @@
 
 
 namespace Dune {
+
+
+// forward
+
+template <class K, int SIZE>
+class FieldVector;
+
+
 namespace XT {
 namespace Common {
+
+
+// forward
+
+template <class K, int SIZE>
+class FieldVector;
 
 
 inline std::string demangle_typename(const std::string& mangled_name)
@@ -205,6 +219,23 @@ template <int k>
 struct is_arithmetic<Dune::bigunsignedint<k>> : public std::true_type
 {
 };
+
+
+template <class T>
+struct is_field_vector : std::false_type
+{
+};
+
+template <class K, int SIZE>
+struct is_field_vector<Dune::FieldVector<K, SIZE>> : std::true_type
+{
+};
+
+template <class K, int SIZE>
+struct is_field_vector<Dune::XT::Common::FieldVector<K, SIZE>> : std::true_type
+{
+};
+
 
 /**
  * To be used e.g. with AlwaysFalse:
