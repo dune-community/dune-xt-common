@@ -14,13 +14,14 @@
 #ifndef DUNE_XT_COMMON_MATRIX_HH
 #define DUNE_XT_COMMON_MATRIX_HH
 
-#include <boost/numeric/conversion/cast.hpp>
+#include <memory>
 
 #include <dune/common/dynmatrix.hh>
 #include <dune/common/fmatrix.hh>
 
 #include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/fmatrix.hh>
+#include <dune/xt/common/numeric_cast.hh>
 #include <dune/xt/common/vector.hh>
 
 namespace Dune {
@@ -178,12 +179,12 @@ struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
 
   static inline size_t rows(const MatrixType& /*mat*/)
   {
-    return boost::numeric_cast<size_t>(N);
+    return numeric_cast<size_t>(N);
   }
 
   static inline size_t cols(const MatrixType& /*mat*/)
   {
-    return boost::numeric_cast<size_t>(M);
+    return numeric_cast<size_t>(M);
   }
 
   static inline void set_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)
@@ -251,6 +252,30 @@ typename std::enable_if<is_matrix<MatrixType>::value, MatrixType>::type
 create(const size_t rows, const size_t cols, const typename MatrixAbstraction<MatrixType>::S& val)
 {
   return MatrixAbstraction<MatrixType>::create(rows, cols, val);
+}
+
+
+template <class T, class M>
+typename std::enable_if<is_matrix<M>::value && is_arithmetic<T>::value, std::unique_ptr<T[]>>::type
+serialize_rowwise(const M& mat)
+{
+  using Mat = MatrixAbstraction<M>;
+  const size_t rows = Mat::rows(mat);
+  const size_t cols = Mat::cols(mat);
+  auto data = std::make_unique<T[]>(rows * cols);
+  size_t ii = 0;
+  for (size_t rr = 0; rr < rows; ++rr)
+    for (size_t cc = 0; cc < cols; ++cc)
+      data[ii++] = numeric_cast<T>(Mat::get_entry(mat, rr, cc));
+  return data;
+} // ... serialize_rowwise(...)
+
+
+template <class M>
+typename std::enable_if<is_matrix<M>::value, std::unique_ptr<typename MatrixAbstraction<M>::S[]>>::type
+serialize_rowwise(const M& mat)
+{
+  return serialize_rowwise<typename MatrixAbstraction<M>::ScalarType>(mat);
 }
 
 
