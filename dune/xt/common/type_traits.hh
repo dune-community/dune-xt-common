@@ -21,8 +21,8 @@
 #include <type_traits>
 #include <iostream>
 
-#include <dune/common/typetraits.hh>
 #include <dune/common/bigunsignedint.hh>
+#include <dune/common/typetraits.hh>
 
 
 /** use this to define Typename specializations in the GLOBAL namespace ONLY **/
@@ -51,6 +51,9 @@ namespace Dune {
 template <class K, int SIZE>
 class FieldVector;
 
+template <class K, int ROWS, int COLS>
+class FieldMatrix;
+
 
 namespace XT {
 namespace Common {
@@ -60,6 +63,9 @@ namespace Common {
 
 template <class K, int SIZE>
 class FieldVector;
+
+template <class K, int ROWS, int COLS>
+class FieldMatrix;
 
 
 inline std::string demangle_typename(const std::string& mangled_name)
@@ -210,6 +216,7 @@ struct is_complex<std::complex<T>> : public std::true_type
 {
 };
 
+
 template <class T>
 struct is_arithmetic : public std::is_arithmetic<T>
 {
@@ -233,6 +240,22 @@ struct is_field_vector<Dune::FieldVector<K, SIZE>> : std::true_type
 
 template <class K, int SIZE>
 struct is_field_vector<Dune::XT::Common::FieldVector<K, SIZE>> : std::true_type
+{
+};
+
+
+template <class T>
+struct is_field_matrix : std::false_type
+{
+};
+
+template <class K, int ROWS, int COLS>
+struct is_field_matrix<Dune::FieldMatrix<K, ROWS, COLS>> : std::true_type
+{
+};
+
+template <class K, int ROWS, int COLS>
+struct is_field_matrix<Dune::XT::Common::FieldMatrix<K, ROWS, COLS>> : std::true_type
 {
 };
 
