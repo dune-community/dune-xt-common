@@ -260,6 +260,49 @@ struct is_field_matrix<Dune::XT::Common::FieldMatrix<K, ROWS, COLS>> : std::true
 };
 
 
+template <class T>
+struct field_traits
+{
+  static_assert(is_arithmetic<T>::value, "If you think otherwise, specialize this class!");
+  using field_type = T;
+  using real_type = T;
+  using complex_type = std::complex<T>;
+};
+
+template <class T>
+struct field_traits<const T> : public field_traits<T>
+{
+};
+
+template <class T>
+struct field_traits<T&> : public field_traits<T>
+{
+};
+
+template <class T>
+struct field_traits<const T&> : public field_traits<T>
+{
+};
+
+template <class T>
+struct field_traits<std::complex<T>>
+{
+  static_assert(is_arithmetic<T>::value, "If you think otherwise, specialize this class!");
+  using field_type = std::complex<T>;
+  using real_type = T;
+  using complex_type = std::complex<T>;
+};
+
+template <class T>
+using field_t = typename field_traits<T>::field_type;
+
+template <class T>
+using real_t = typename field_traits<T>::real_type;
+
+template <class T>
+using complex_t = typename field_traits<T>::complex_type;
+
+
 /**
  * To be used e.g. with AlwaysFalse:
 \code
