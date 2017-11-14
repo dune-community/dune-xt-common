@@ -12,22 +12,26 @@
 // This one has to come first (includes the config.h)!
 #include <dune/xt/common/test/main.hxx>
 
-#include <dune/xt/common/validation.hh>
-#include <dune/xt/common/configuration.hh>
-#include <dune/xt/common/random.hh>
-#include <dune/xt/common/math.hh>
-#include <dune/xt/common/logging.hh>
-#include <dune/xt/common/exceptions.hh>
-#include <dune/xt/common/type_traits.hh>
-#include <dune/xt/common/float_cmp.hh>
-#include <dune/xt/common/matrix.hh>
-#include <dune/xt/common/tuple.hh>
-#include <dune/xt/common/test/float_cmp.hh>
-
 #include <array>
 #include <ostream>
+
 #include <boost/assign/list_of.hpp>
 #include <boost/array.hpp>
+
+#include <dune/xt/common/configuration.hh>
+#include <dune/xt/common/exceptions.hh>
+#include <dune/xt/common/float_cmp.hh>
+#include <dune/xt/common/fvector.hh>
+#include <dune/xt/common/fmatrix.hh>
+#include <dune/xt/common/logging.hh>
+#include <dune/xt/common/math.hh>
+#include <dune/xt/common/matrix.hh>
+#include <dune/xt/common/random.hh>
+#include <dune/xt/common/tuple.hh>
+#include <dune/xt/common/type_traits.hh>
+#include <dune/xt/common/validation.hh>
+
+#include <dune/xt/common/test/float_cmp.hh>
 
 // uncomment this for output
 // std::ostream& test_out = std::cout;
