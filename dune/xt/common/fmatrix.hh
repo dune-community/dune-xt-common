@@ -103,26 +103,6 @@ public:
     return ret;
   }
 
-  ThisType operator+(const ThisType& other) const
-  {
-    ThisType ret = *this;
-    ret += other;
-    return ret;
-  }
-
-  ThisType operator-(const ThisType& other) const
-  {
-    ThisType ret = *this;
-    ret -= other;
-    return ret;
-  }
-
-  template <int O_COLS>
-  Dune::XT::Common::FieldMatrix<K, ROWS, O_COLS> operator*(const Dune::FieldMatrix<K, COLS, O_COLS>& mat) const
-  {
-    return this->rightmultiplyany(mat);
-  }
-
   Dune::XT::Common::FieldVector<K, ROWS> operator*(const Dune::FieldVector<K, COLS>& vec) const
   {
     Dune::FieldVector<K, ROWS> ret;
@@ -287,6 +267,48 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
 
 } // namespace Common
 } // namespace XT
+
+
+template <class L, int ROWS, int COLS, class R>
+Dune::XT::Common::FieldMatrix<typename PromotionTraits<L, R>::PromotedType, ROWS, COLS>
+operator-(const Dune::FieldMatrix<L, ROWS, COLS>& left, const Dune::FieldMatrix<R, COLS, COLS>& right)
+{
+  Dune::XT::Common::FieldMatrix<typename PromotionTraits<L, R>::PromotedType, ROWS, COLS> ret = left;
+  ret -= right;
+  return ret;
+}
+
+
+template <class L, int ROWS, int COLS, class R>
+Dune::XT::Common::FieldMatrix<typename PromotionTraits<L, R>::PromotedType, ROWS, COLS>
+operator+(const Dune::FieldMatrix<L, ROWS, COLS>& left, const Dune::FieldMatrix<R, COLS, COLS>& right)
+{
+  Dune::XT::Common::FieldMatrix<typename PromotionTraits<L, R>::PromotedType, ROWS, COLS> ret = left;
+  ret += right;
+  return ret;
+}
+
+
+template <class K, int L_ROWS, int L_COLS, int R_COLS>
+Dune::XT::Common::FieldMatrix<K, L_ROWS, R_COLS> operator*(const Dune::FieldMatrix<K, L_ROWS, L_COLS>& left,
+                                                           const Dune::FieldMatrix<K, L_COLS, R_COLS>& right)
+{
+  return left.rightmultiplyany(right);
+}
+
+
+template <class L, int L_ROWS, int L_COLS, class R, int R_COLS>
+typename std::enable_if<!std::is_same<L, R>::value,
+                        Dune::XT::Common::FieldMatrix<typename PromotionTraits<L, R>::PromotedType, L_ROWS, R_COLS>>::
+    type
+    operator*(const Dune::FieldMatrix<L, L_ROWS, L_COLS>& left, const Dune::FieldMatrix<R, L_COLS, R_COLS>& right)
+{
+  using Promoted = Dune::XT::Common::FieldMatrix<typename PromotionTraits<L, R>::PromotedType, L_ROWS, R_COLS>;
+  using Dune::XT::Common::convert_to;
+  return convert_to<Promoted>(left).rightmultiplyany(convert_to<Promoted>(right));
+}
+
+
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_FMATRIX_HH
