@@ -230,7 +230,7 @@ set_matrix_entry(MatrixType& matrix, const size_t ii, const size_t jj, const S& 
 
 template <class MatrixType>
 typename std::enable_if<is_matrix<MatrixType>::value, MatrixType>::type
-create(const size_t rows, const size_t cols, const typename MatrixAbstraction<MatrixType>::S& val)
+create(const size_t rows, const size_t cols, const typename MatrixAbstraction<MatrixType>::S& val = 0)
 {
   return MatrixAbstraction<MatrixType>::create(rows, cols, val);
 }
