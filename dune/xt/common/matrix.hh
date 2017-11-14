@@ -248,6 +248,36 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
 
 
 template <class MatrixType>
+typename std::enable_if<is_matrix<MatrixType>::value, size_t>::type get_matrix_rows(const MatrixType& matrix)
+{
+  return MatrixAbstraction<MatrixType>::rows(matrix);
+}
+
+
+template <class MatrixType>
+typename std::enable_if<is_matrix<MatrixType>::value, size_t>::type get_matrix_cols(const MatrixType& matrix)
+{
+  return MatrixAbstraction<MatrixType>::cols(matrix);
+}
+
+
+template <class MatrixType>
+typename std::enable_if<is_matrix<MatrixType>::value, typename MatrixAbstraction<MatrixType>::S>::type
+get_matrix_entry(const MatrixType& matrix, const size_t ii, const size_t jj)
+{
+  return MatrixAbstraction<MatrixType>::get_entry(matrix, ii, jj);
+}
+
+
+template <class MatrixType, class S>
+typename std::enable_if<is_matrix<MatrixType>::value, void>::type
+set_matrix_entry(MatrixType& matrix, const size_t ii, const size_t jj, const S& value)
+{
+  MatrixAbstraction<MatrixType>::set_entry(matrix, ii, jj, value);
+}
+
+
+template <class MatrixType>
 typename std::enable_if<is_matrix<MatrixType>::value, MatrixType>::type
 create(const size_t rows, const size_t cols, const typename MatrixAbstraction<MatrixType>::S& val)
 {
