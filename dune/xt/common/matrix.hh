@@ -260,6 +260,30 @@ serialize_rowwise(const M& mat)
 }
 
 
+template <class RangeType, class SourceType>
+typename std::enable_if<is_matrix<SourceType>::value && is_matrix<RangeType>::value, RangeType>::type
+convert_to(const SourceType& source)
+{
+  const size_t rows = get_matrix_rows(source);
+  const size_t cols = get_matrix_cols(source);
+  auto ret = create<RangeType>(rows, cols);
+  for (size_t ii = 0; ii < rows; ++ii)
+    for (size_t jj = 0; jj < cols; ++jj)
+      set_matrix_entry(ret,
+                       ii,
+                       jj,
+#ifndef DXT_DISABLE_CHECKS
+                       numeric_cast<typename MatrixAbstraction<RangeType>::S>(
+#endif
+                           get_matrix_entry(source, ii, jj)
+#ifndef DXT_DISABLE_CHECKS
+                               )
+#endif
+                           );
+  return ret;
+} // ... convert_to(...)
+
+
 } // namespace Common
 } // namespace XT
 } // namespace Dune
