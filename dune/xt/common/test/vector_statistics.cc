@@ -12,6 +12,8 @@
 #include <dune/xt/common/test/main.hxx>
 
 #include <dune/xt/common/type_traits.hh>
+#include <dune/xt/common/fvector.hh>
+#include <dune/xt/common/vector.hh>
 #include <dune/xt/common/vector_statistics.hh>
 
 using namespace Dune::XT::Common;
