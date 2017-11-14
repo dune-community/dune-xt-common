@@ -17,6 +17,7 @@
 #include <tuple>
 #include <utility>
 #include <vector>
+#include <ostream>
 
 #include <dune/common/hybridutilities.hh>
 #include <dune/common/tupleutility.hh>
@@ -104,5 +105,74 @@ init_bound(typename Common::VectorAbstraction<T>::S val)
 } // namespace Test
 } // namespace XT
 } // namespace Dune
+namespace std {
+
+
+template <class T>
+ostream& operator<<(ostream& out, const vector<T>& results)
+{
+  if (results.size() == 0)
+    out << "{}";
+  else if (results.size() == 1)
+    out << "{" << *results.begin() << "}";
+  else {
+    auto iterator = results.begin();
+    out << "{" << *iterator;
+    ++iterator;
+    for (; iterator != results.end(); ++iterator) {
+      out << ", " << *iterator;
+    }
+    out << "}";
+  }
+  return out;
+}
+
+template <class T>
+ostream& operator<<(ostream& out, const set<T>& results)
+{
+  if (results.size() == 0)
+    out << "{}";
+  else if (results.size() == 1)
+    out << "{" << *results.begin() << "}";
+  else {
+    auto iterator = results.begin();
+    out << "{" << *iterator;
+    ++iterator;
+    for (; iterator != results.end(); ++iterator) {
+      out << ", " << *iterator;
+    }
+    out << "}";
+  }
+  return out;
+}
+
+template <class L, class R>
+ostream& operator<<(ostream& out, const pair<L, R>& results)
+{
+  out << "{" << results.first << ", " << results.second << "}";
+  return out;
+}
+
+template <class F, class S>
+ostream& operator<<(ostream& out, const map<F, S>& results)
+{
+  if (results.size() == 0)
+    out << "{}" << endl;
+  else if (results.size() == 1)
+    out << "{{" << results.begin()->first << ", " << results.begin()->second << "}}";
+  else {
+    auto iterator = results.begin();
+    out << "{{" << iterator->first << ", " << iterator->second << "}";
+    ++iterator;
+    for (; iterator != results.end(); ++iterator) {
+      out << ",\n {" << iterator->first << ", " << iterator->second << "}";
+    }
+    out << "}";
+  }
+  return out;
+}
+
+
+} // namespace std
 
 #endif // DUNE_XT_COMMON_TEST_MAIN_COMMON_HH
