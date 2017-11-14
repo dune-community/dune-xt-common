@@ -19,6 +19,7 @@
 
 #include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/debug.hh>
+#include <dune/xt/common/matrix.hh>
 #include <dune/xt/common/fvector.hh>
 
 namespace Dune {
@@ -233,6 +234,55 @@ public:
     return ret;
   }
 }; // class FieldMatrix
+
+
+template <class K, int N, int M>
+struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
+{
+  typedef Dune::XT::Common::FieldMatrix<K, N, M> MatrixType;
+  typedef typename Dune::FieldTraits<K>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<K>::real_type RealType;
+  typedef ScalarType S;
+  typedef RealType R;
+
+  static const bool is_matrix = true;
+
+  static const bool has_static_size = true;
+
+  static const size_t static_rows = N;
+
+  static const size_t static_cols = M;
+
+  static inline MatrixType create(const size_t rows, const size_t cols)
+  {
+    return MatrixType(rows, cols);
+  }
+
+  static inline MatrixType create(const size_t rows, const size_t cols, const ScalarType& val)
+  {
+    return MatrixType(rows, cols, val);
+  }
+
+  static inline size_t rows(const MatrixType& /*mat*/)
+  {
+    return N;
+  }
+
+  static inline size_t cols(const MatrixType& /*mat*/)
+  {
+    return M;
+  }
+
+  static inline void set_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)
+  {
+    mat[row][col] = val;
+  }
+
+  static inline ScalarType get_entry(const MatrixType& mat, const size_t row, const size_t col)
+  {
+    return mat[row][col];
+  }
+};
 
 
 } // namespace Common
