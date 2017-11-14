@@ -18,7 +18,8 @@ namespace Dune {
 
 
 template <class S, class V>
-typename std::enable_if<Dune::XT::Common::is_arithmetic<S>::value, typename DenseVector<V>::derived_type>::type
+typename std::enable_if<Dune::XT::Common::is_arithmetic<S>::value || Dune::XT::Common::is_complex<S>::value,
+                        typename DenseVector<V>::derived_type>::type
 operator*(const S& alpha, const DenseVector<V>& vec)
 {
   typename DenseVector<V>::derived_type ret = vec;
@@ -28,7 +29,8 @@ operator*(const S& alpha, const DenseVector<V>& vec)
 
 
 template <class V, class S>
-typename std::enable_if<Dune::XT::Common::is_arithmetic<S>::value, typename DenseVector<V>::derived_type>::type
+typename std::enable_if<Dune::XT::Common::is_arithmetic<S>::value || Dune::XT::Common::is_complex<S>::value,
+                        typename DenseVector<V>::derived_type>::type
 operator*(const DenseVector<V>& vec, const S& alpha)
 {
   typename DenseVector<V>::derived_type ret = vec;
@@ -38,7 +40,8 @@ operator*(const DenseVector<V>& vec, const S& alpha)
 
 
 template <class V, class S>
-typename std::enable_if<Dune::XT::Common::is_arithmetic<S>::value, typename DenseVector<V>::derived_type>::type
+typename std::enable_if<Dune::XT::Common::is_arithmetic<S>::value || Dune::XT::Common::is_complex<S>::value,
+                        typename DenseVector<V>::derived_type>::type
 operator/(const DenseVector<V>& vec, const S& alpha)
 {
   typename DenseVector<V>::derived_type ret = vec;
