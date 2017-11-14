@@ -22,6 +22,7 @@
 #include <dune/xt/common/float_cmp.hh>
 #include <dune/xt/common/test/float_cmp.hh>
 #include <dune/xt/common/fvector.hh>
+#include <dune/xt/common/fmatrix.hh>
 
 using namespace Dune;
 using XT::Common::create;
