@@ -303,6 +303,19 @@ template <class T>
 using complex_t = typename field_traits<T>::complex_type;
 
 
+template <class L, class R>
+struct plus_promotion
+{
+  using type = decltype(std::declval<L>() + std::declval<R>());
+};
+
+template <class L, class R>
+struct multiplication_promotion
+{
+  using type = decltype(std::declval<L>() * std::declval<R>());
+};
+
+
 /**
  * To be used e.g. with AlwaysFalse:
 \code
