@@ -234,6 +234,22 @@ create(const size_t sz,
 }
 
 
+template <class TargetVectorType, class SourceVectorType>
+typename std::enable_if<is_vector<TargetVectorType>::value && is_vector<SourceVectorType>::value,
+                        TargetVectorType>::type
+zeros_like(const SourceVectorType& source)
+{
+  return create<TargetVectorType>(source.size(), 0);
+}
+
+
+template <class VectorType>
+typename std::enable_if<is_vector<VectorType>::value, VectorType>::type zeros_like(const VectorType& source)
+{
+  return zeros_like<VectorType, VectorType>(source);
+}
+
+
 } // namespace Common
 } // namespace XT
 } // namespace Dune

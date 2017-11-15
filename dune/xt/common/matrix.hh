@@ -236,6 +236,22 @@ create(const size_t rows, const size_t cols, const typename MatrixAbstraction<Ma
 }
 
 
+template <class TargetMatrixType, class SourceMatrixType>
+typename std::enable_if<is_matrix<TargetMatrixType>::value && is_matrix<SourceMatrixType>::value,
+                        TargetMatrixType>::type
+zeros_like(const SourceMatrixType& source)
+{
+  return create<TargetMatrixType>(get_matrix_rows(source), get_matrix_cols(source), 0);
+}
+
+
+template <class MatrixType>
+typename std::enable_if<is_matrix<MatrixType>::value, MatrixType>::type zeros_like(const MatrixType& source)
+{
+  return zeros_like<MatrixType, MatrixType>(source);
+}
+
+
 template <class T, class M>
 typename std::enable_if<is_matrix<M>::value && is_arithmetic<T>::value, std::unique_ptr<T[]>>::type
 serialize_rowwise(const M& mat)
