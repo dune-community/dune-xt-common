@@ -40,6 +40,10 @@
 #define HAVE_LAPACKE ${HAVE_LAPACKE}
 #endif
 
+#ifndef HAVE_MKL
+#define HAVE_MKL ${HAVE_MKL}
+#endif
+
 #ifndef HAVE_MATEXP
 #define HAVE_MATEXP ${HAVE_MATEXP}
 #endif
