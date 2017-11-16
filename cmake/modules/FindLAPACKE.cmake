@@ -9,7 +9,7 @@
 
 if(NOT MKL_FOUND)
   find_package(BLAS)
-  if(${BLAS_LIBRARIES})
+  if(BLAS_FOUND)
     list(APPEND LAPACKE_LIBRARIES ${BLAS_LIBRARIES})
     list(APPEND LAPACKE_LIBRARIES gfortran)
   endif()
