@@ -265,6 +265,54 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
 };
 
 
+template <class M>
+typename std::enable_if<is_matrix<M>::value && MatrixAbstraction<M>::has_static_size,
+                        std::unique_ptr<FieldMatrix<typename MatrixAbstraction<M>::S,
+                                                    MatrixAbstraction<M>::static_rows,
+                                                    MatrixAbstraction<M>::static_cols>>>::type
+make_field_container_ptr(const M& mat)
+{
+  static const size_t rows = MatrixAbstraction<M>::static_rows;
+  static const size_t cols = MatrixAbstraction<M>::static_cols;
+  auto ret = std::make_unique<FieldMatrix<typename MatrixAbstraction<M>::S, rows, cols>>;
+  for (size_t ii = 0; ii < rows; ++ii)
+    for (size_t jj = 0; jj < cols; ++jj)
+      (*ret)[ii][jj] = get_matrix_entry(mat, ii, jj);
+  return std::move(ret);
+}
+
+
+template <class M>
+typename std::enable_if<is_matrix<M>::value && MatrixAbstraction<M>::has_static_size,
+                        FieldMatrix<typename MatrixAbstraction<M>::S,
+                                    MatrixAbstraction<M>::static_rows,
+                                    MatrixAbstraction<M>::static_cols>>::type
+make_field_container(const M& mat)
+{
+  static const size_t rows = MatrixAbstraction<M>::static_rows;
+  static const size_t cols = MatrixAbstraction<M>::static_cols;
+  FieldMatrix<typename MatrixAbstraction<M>::S, rows, cols> ret;
+  for (size_t ii = 0; ii < rows; ++ii)
+    for (size_t jj = 0; jj < cols; ++jj)
+      ret[ii][jj] = get_matrix_entry(mat, ii, jj);
+  return ret;
+}
+
+
+template <class K, int ROWS, int COLS>
+FieldMatrix<K, ROWS, COLS> make_field_container(Dune::FieldMatrix<K, ROWS, COLS>&& vec)
+{
+  return std::move(vec);
+}
+
+
+template <class K, int ROWS, int COLS>
+FieldMatrix<K, ROWS, COLS> make_field_container(FieldMatrix<K, ROWS, COLS>&& vec)
+{
+  return std::move(vec);
+}
+
+
 } // namespace Common
 } // namespace XT
 
