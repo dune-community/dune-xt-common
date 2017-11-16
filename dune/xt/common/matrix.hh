@@ -21,7 +21,6 @@
 
 #include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/numeric_cast.hh>
-#include <dune/xt/common/vector.hh>
 
 namespace Dune {
 namespace XT {
