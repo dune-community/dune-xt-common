@@ -10,8 +10,6 @@
 #ifndef DUNE_XT_COMMON_LAPACKE_HH
 #define DUNE_XT_COMMON_LAPACKE_HH
 
-#include "config.h"
-
 #if HAVE_MKL
 #include <mkl.h>
 #elif HAVE_LAPACKE
