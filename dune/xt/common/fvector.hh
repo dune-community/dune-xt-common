@@ -233,6 +233,45 @@ struct VectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>>
 };
 
 
+template <class V>
+typename std::
+    enable_if<is_vector<V>::value && VectorAbstraction<V>::has_static_size,
+              std::unique_ptr<FieldVector<typename VectorAbstraction<V>::S, VectorAbstraction<V>::static_size>>>::type
+    make_field_container_ptr(const V& vec)
+{
+  auto ret = std::make_unique<FieldVector<typename VectorAbstraction<V>::S, VectorAbstraction<V>::static_size>>;
+  for (size_t ii = 0; ii < ret->size(); ++ii)
+    (*ret)[ii] = vec[ii];
+  return std::move(ret);
+}
+
+
+template <class V>
+typename std::enable_if<is_vector<V>::value && VectorAbstraction<V>::has_static_size,
+                        FieldVector<typename VectorAbstraction<V>::S, VectorAbstraction<V>::static_size>>::type
+make_field_container(const V& vec)
+{
+  FieldVector<typename VectorAbstraction<V>::S, VectorAbstraction<V>::static_size> ret;
+  for (size_t ii = 0; ii < ret.size(); ++ii)
+    ret[ii] = vec[ii];
+  return ret;
+}
+
+
+template <class K, int SIZE>
+FieldVector<K, SIZE> make_field_container(Dune::FieldVector<K, SIZE>&& vec)
+{
+  return std::move(vec);
+}
+
+
+template <class K, int SIZE>
+FieldVector<K, SIZE> make_field_container(FieldVector<K, SIZE>&& vec)
+{
+  return std::move(vec);
+}
+
+
 namespace internal {
 
 

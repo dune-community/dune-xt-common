@@ -24,6 +24,7 @@
 #include <dune/common/streamoperators.hh> // for operator<<(stream, std::array<>)
 
 #include <dune/xt/common/exceptions.hh>
+#include <dune/xt/common/numeric_cast.hh>
 #include <dune/xt/common/type_traits.hh>
 
 namespace Dune {
@@ -248,6 +249,25 @@ typename std::enable_if<is_vector<VectorType>::value, VectorType>::type zeros_li
 {
   return zeros_like<VectorType, VectorType>(source);
 }
+
+
+template <class RangeType, class SourceType>
+typename std::enable_if<is_vector<SourceType>::value && is_vector<RangeType>::value, RangeType>::type
+convert_to(const SourceType& source)
+{
+  const size_t size = source.size();
+  auto ret = create<RangeType>(size);
+  for (size_t ii = 0; ii < size; ++ii)
+    ret[ii] =
+#ifndef DXT_DISABLE_CHECKS
+        numeric_cast<typename VectorAbstraction<RangeType>::S>(
+#endif
+            source[ii]
+#ifndef DXT_DISABLE_CHECKS
+#endif
+            );
+  return ret;
+} // ... convert_to(...)
 
 
 } // namespace Common
