@@ -262,7 +262,11 @@ serialize_rowwise(const M& mat)
   size_t ii = 0;
   for (size_t rr = 0; rr < rows; ++rr)
     for (size_t cc = 0; cc < cols; ++cc)
+#ifdef DXT_DISABLE_CHECKS
+      data[ii++] = Mat::get_entry(mat, rr, cc);
+#else
       data[ii++] = numeric_cast<T>(Mat::get_entry(mat, rr, cc));
+#endif
   return data;
 } // ... serialize_rowwise(...)
 
@@ -272,6 +276,34 @@ typename std::enable_if<is_matrix<M>::value, std::unique_ptr<typename MatrixAbst
 serialize_rowwise(const M& mat)
 {
   return serialize_rowwise<typename MatrixAbstraction<M>::ScalarType>(mat);
+}
+
+
+template <class T, class M>
+typename std::enable_if<is_matrix<M>::value && is_arithmetic<T>::value, std::unique_ptr<T[]>>::type
+serialize_colwise(const M& mat)
+{
+  using Mat = MatrixAbstraction<M>;
+  const size_t rows = Mat::rows(mat);
+  const size_t cols = Mat::cols(mat);
+  auto data = std::make_unique<T[]>(rows * cols);
+  size_t ii = 0;
+  for (size_t cc = 0; cc < cols; ++cc)
+    for (size_t rr = 0; rr < rows; ++rr)
+#ifdef DXT_DISABLE_CHECKS
+      data[ii++] = numeric_cast<T>(Mat::get_entry(mat, rr, cc));
+#else
+      data[ii++] = Mat::get_entry(mat, rr, cc);
+#endif
+  return data;
+} // ... serialize_colwise(...)
+
+
+template <class M>
+typename std::enable_if<is_matrix<M>::value, std::unique_ptr<typename MatrixAbstraction<M>::S[]>>::type
+serialize_colwise(const M& mat)
+{
+  return serialize_colwise<typename MatrixAbstraction<M>::ScalarType>(mat);
 }
 
 
