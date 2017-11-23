@@ -78,6 +78,8 @@ int main(int argc, char** argv)
   MPIHelper::instance(argc, argv);
 #endif
 
+    DXTC_CONFIG = Configuration(argc, argv);
+
     Logger().create(
 #if DUNE_XT_COMMON_TEST_MAIN_ENABLE_DEBUG_LOGGING
         LOG_CONSOLE | LOG_INFO | LOG_DEBUG | LOG_ERROR
