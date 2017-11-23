@@ -21,6 +21,7 @@
 #include <dune/xt/common/debug.hh>
 #include <dune/xt/common/matrix.hh>
 #include <dune/xt/common/fvector.hh>
+#include <dune/xt/common/type_traits.hh>
 
 namespace Dune {
 namespace XT {
@@ -185,6 +186,11 @@ public:
   {
   }
 
+  Dune::XT::Common::FieldMatrix<K, COLS, ROWS> transpose() const
+  {
+    return *this;
+  }
+
   using BaseType::operator=;
 
   ThisType& operator=(const FieldVector<K, 1>& other)
@@ -310,6 +316,94 @@ template <class K, int ROWS, int COLS>
 FieldMatrix<K, ROWS, COLS> make_field_container(FieldMatrix<K, ROWS, COLS>&& vec)
 {
   return std::move(vec);
+}
+
+
+template <class K, int ROWS, int COLS>
+typename std::enable_if<is_arithmetic<K>::value && !is_complex<K>::value, FieldMatrix<K, ROWS, COLS>>::type
+real(const Dune::FieldMatrix<K, ROWS, COLS>& real_mat)
+{
+  return real_mat;
+}
+
+template <class K, int ROWS, int COLS>
+typename std::enable_if<is_arithmetic<K>::value && !is_complex<K>::value, FieldMatrix<K, ROWS, COLS>>::type
+real(const FieldMatrix<K, ROWS, COLS>& real_mat)
+{
+  return real_mat;
+}
+
+template <class K, int ROWS, int COLS>
+typename std::enable_if<is_arithmetic<K>::value && !is_complex<K>::value, FieldMatrix<K, ROWS, COLS>>::type
+real(Dune::FieldMatrix<K, ROWS, COLS>&& real_mat)
+{
+  return std::move(real_mat);
+}
+
+template <class K, int ROWS, int COLS>
+typename std::enable_if<is_arithmetic<K>::value && !is_complex<K>::value, FieldMatrix<K, ROWS, COLS>>::type
+real(FieldMatrix<K, ROWS, COLS>&& real_mat)
+{
+  return std::move(real_mat);
+}
+
+template <class K, int ROWS, int COLS>
+typename std::enable_if<is_complex<K>::value, FieldMatrix<real_t<K>, ROWS, COLS>>::type
+real(const Dune::FieldMatrix<K, ROWS, COLS>& complex_mat)
+{
+  FieldMatrix<real_t<K>, ROWS, COLS> real_mat;
+  for (size_t ii = 0; ii < ROWS; ++ii)
+    for (size_t jj = 0; jj < COLS; ++jj)
+      real_mat[ii][jj] = complex_mat[ii][jj].real();
+  return real_mat;
+}
+
+template <class K, int ROWS, int COLS>
+typename std::enable_if<is_complex<K>::value, FieldMatrix<real_t<K>, ROWS, COLS>>::type
+real(const FieldMatrix<K, ROWS, COLS>& complex_mat)
+{
+  FieldMatrix<real_t<K>, ROWS, COLS> real_mat;
+  for (size_t ii = 0; ii < ROWS; ++ii)
+    for (size_t jj = 0; jj < COLS; ++jj)
+      real_mat[ii][jj] = complex_mat[ii][jj].real();
+  return real_mat;
+}
+
+
+template <class K, int ROWS, int COLS>
+typename std::enable_if<is_arithmetic<K>::value && !is_complex<K>::value, FieldMatrix<K, ROWS, COLS>>::type
+imag(const Dune::FieldMatrix<K, ROWS, COLS>& real_mat)
+{
+  return FieldMatrix<K, ROWS, COLS>(0);
+}
+
+template <class K, int ROWS, int COLS>
+typename std::enable_if<is_arithmetic<K>::value && !is_complex<K>::value, FieldMatrix<K, ROWS, COLS>>::type
+imag(const FieldMatrix<K, ROWS, COLS>& real_mat)
+{
+  return FieldMatrix<K, ROWS, COLS>(0);
+}
+
+template <class K, int ROWS, int COLS>
+typename std::enable_if<is_complex<K>::value, FieldMatrix<real_t<K>, ROWS, COLS>>::type
+imag(const Dune::FieldMatrix<K, ROWS, COLS>& complex_mat)
+{
+  FieldMatrix<real_t<K>, ROWS, COLS> real_mat;
+  for (size_t ii = 0; ii < ROWS; ++ii)
+    for (size_t jj = 0; jj < COLS; ++jj)
+      real_mat[ii][jj] = complex_mat[ii][jj].imag();
+  return real_mat;
+}
+
+template <class K, int ROWS, int COLS>
+typename std::enable_if<is_complex<K>::value, FieldMatrix<real_t<K>, ROWS, COLS>>::type
+imag(const FieldMatrix<K, ROWS, COLS>& complex_mat)
+{
+  FieldMatrix<real_t<K>, ROWS, COLS> real_mat;
+  for (size_t ii = 0; ii < ROWS; ++ii)
+    for (size_t jj = 0; jj < COLS; ++jj)
+      real_mat[ii][jj] = complex_mat[ii][jj].imag();
+  return real_mat;
 }
 
 
