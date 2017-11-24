@@ -33,7 +33,7 @@ T numeric_cast(S source)
   } catch (boost::bad_numeric_cast& ee) {
     DUNE_THROW(XT::Common::Exceptions::external_error,
                "  The following error occured in boost while converting '" << source << "' to '"
-                                                                           << XT::Common::Typename<size_t>::value()
+                                                                           << XT::Common::Typename<T>::value()
                                                                            << "':\n\n   "
                                                                            << ee.what());
   }

@@ -10,6 +10,11 @@
 #ifndef DUNE_XT_COMMON_LAPACKE_HH
 #define DUNE_XT_COMMON_LAPACKE_HH
 
+// without the following lapacke include <complex.h>, which will break dune/commontypetraits.hh^^
+#include <complex>
+#define lapack_complex_float std::complex<float>
+#define lapack_complex_double std::complex<double>
+
 #if HAVE_MKL
 #include <mkl.h>
 #elif HAVE_LAPACKE

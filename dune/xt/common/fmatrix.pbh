@@ -11,6 +11,7 @@
 #define DUNE_XT_COMMON_FMATRIX_PBH
 #if HAVE_DUNE_PYBINDXI
 
+#include <dune/pybindxi/complex.h>
 #include <dune/pybindxi/pybind11.h>
 #include <dune/pybindxi/cast.h>
 
