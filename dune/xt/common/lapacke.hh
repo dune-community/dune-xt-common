@@ -10,15 +10,53 @@
 #ifndef DUNE_XT_COMMON_LAPACKE_HH
 #define DUNE_XT_COMMON_LAPACKE_HH
 
-// without the following lapacke include <complex.h>, which will break dune/commontypetraits.hh^^
-#include <complex>
-#define lapack_complex_float std::complex<float>
-#define lapack_complex_double std::complex<double>
+namespace Dune {
+namespace XT {
+namespace Common {
+namespace Lapacke {
 
-#if HAVE_MKL
-#include <mkl.h>
-#elif HAVE_LAPACKE
-#include <lapacke.h>
-#endif
+
+/**
+ * \brief If true, calling any of the other mathods makes sense.
+ */
+bool available();
+
+
+/**
+ * \brief Wrapper around LAPACK_ROW_MAJOR
+ * \sa    LAPACK_ROW_MAJOR
+ */
+int row_major();
+
+
+/**
+ * \brief Wrapper around LAPACK_COL_MAJOR
+ * \sa    LAPACK_COL_MAJOR
+ */
+int col_major();
+
+
+/**
+ * \brief Wrapper around LAPACKE_dgeev
+ * \sa    LAPACKE_dgeev
+ */
+int dgeev(int matrix_layout,
+          char jobvl,
+          char jobvr,
+          int n,
+          double* a,
+          int lda,
+          double* wr,
+          double* wi,
+          double* vl,
+          int ldvl,
+          double* vr,
+          int ldvr);
+
+
+} // namespace Lapacke
+} // namespace Common
+} // namespace XT
+} // namespace Dune
 
 #endif // DUNE_XT_COMMON_LAPACKE_HH
