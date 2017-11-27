@@ -21,10 +21,14 @@
 #endif
 
 #if HAVE_TBB
+
 namespace tbb {
 class tbb_exception;
 }
+
 #endif
+
+
 /**
  *  \brief Macro to throw a colorfull exception.
  *
@@ -66,10 +70,12 @@ if (a.size() != b.size())
   } while (0)
 // DUNE_THROW
 
+
 namespace Dune {
 namespace XT {
 namespace Common {
 namespace Exceptions {
+
 
 class CRTP_check_failed : public Dune::Exception
 {
@@ -131,13 +137,21 @@ class spe10_data_file_missing : public Dune::IOError
 {
 };
 
+class dependency_missing : public Dune::Exception
+{
+};
+
+
 } // namespace Exceptions
+
 
 int handle_exception(const Dune::Exception& exp);
 int handle_exception(const std::exception& exp);
 #if HAVE_TBB
 int handle_exception(const tbb::tbb_exception& exp);
 #endif
+
+
 } // namespace Common
 } // namespace XT
 } // namespace Dune
