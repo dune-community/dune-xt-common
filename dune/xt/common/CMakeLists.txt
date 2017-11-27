@@ -15,14 +15,15 @@ set(lib_dune_xt_common_sources
     convergence-study.cc
     exceptions.cc
     filesystem.cc
+    lapacke.cc
     localization-study.cc
     logging.cc
     logstreams.cc
     math.cc
     memory.cc
     misc.cc
-    parallel/threadmanager.cc
     parallel/helper.cc
+    parallel/threadmanager.cc
     parameter.cc
     signals.cc
     string.cc
