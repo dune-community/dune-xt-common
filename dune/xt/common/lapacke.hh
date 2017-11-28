@@ -54,6 +54,27 @@ int dgeev(int matrix_layout,
           int ldvr);
 
 
+/**
+ * \brief Wrapper around LAPACKE_dptcon
+ * \sa    LAPACKE_dptcon
+ */
+int dptcon(int n, const double* d, const double* e, double anorm, double* rcond);
+
+
+/**
+ * \brief Wrapper around LAPACKE_dpttrf
+ * \sa    LAPACKE_dpttrf
+ */
+int dpttrf(int n, double* d, double* e);
+
+
+/**
+ * \brief Wrapper around LAPACKE_dpttrs
+ * \sa    LAPACKE_dpttrs
+ */
+int dpttrs(int matrix_layout, int n, int nrhs, const double* d, const double* e, double* b, int ldb);
+
+
 } // namespace Lapacke
 } // namespace Common
 } // namespace XT

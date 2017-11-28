@@ -43,7 +43,7 @@ int row_major()
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACK_ROW_MAJOR;
 #else
-  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl!");
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
 }
@@ -54,7 +54,7 @@ int col_major()
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACK_COL_MAJOR;
 #else
-  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl!");
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
 }
@@ -76,7 +76,40 @@ int dgeev(int matrix_layout,
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dgeev(matrix_layout, jobvl, jobvr, n, a, lda, wr, wi, vl, ldvl, vr, ldvr);
 #else
-  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl!");
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int dptcon(int n, const double* d, const double* e, double anorm, double* rcond)
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_dptcon(n, d, e, anorm, rcond);
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int dpttrf(int n, double* d, double* e)
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_dpttrf(n, d, e);
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int dpttrs(int matrix_layout, int n, int nrhs, const double* d, const double* e, double* b, int ldb)
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_dpttrs(matrix_layout, n, nrhs, d, e, b, ldb);
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
 }
