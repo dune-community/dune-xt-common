@@ -10,6 +10,7 @@
 #   Tobias Leibner  (2017)
 
 set(lib_dune_xt_common_sources
+    bindings.cc
     color.cc
     configuration.cc
     convergence-study.cc
@@ -21,8 +22,8 @@ set(lib_dune_xt_common_sources
     math.cc
     memory.cc
     misc.cc
-    parallel/threadmanager.cc
     parallel/helper.cc
+    parallel/threadmanager.cc
     parameter.cc
     signals.cc
     string.cc
