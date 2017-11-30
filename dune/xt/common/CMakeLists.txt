@@ -36,7 +36,7 @@ dune_library_add_sources(dunextcommon SOURCES ${lib_dune_xt_common_sources})
 add_analyze(${lib_dune_xt_common_sources})
 
 if(dune-pybindxi_FOUND)
-  dune_pybindxi_add_module(_common bindings.cc)
+  dune_pybindxi_add_module(_common common.bindings.cc)
   target_link_dune_default_libraries(_common)
   if(DUNE_XT_WITH_PYTHON_BINDINGS)
     add_custom_target(bindings ALL DEPENDS _common)
