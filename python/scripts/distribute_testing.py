@@ -176,11 +176,20 @@ norm = 100/MAXTIME
 print('Generated {} bins.\nRelative volumes:\n\t\tMin {:.2f}%\n\t\tMax {:.2f}%\n\t\tAvg {:.2f}%\n'.format(
     len(bins), min(vols)*norm, max(vols)*norm, mean(vols)*norm, stdev(vols)))
 
-set_tpl = '''set_tests_properties({} PROPERTIES LABELS "builder_{}")\n'''
+set_tpl = '''if(TEST {0})
+  set_tests_properties({0} PROPERTIES LABELS "builder_{1}")
+  list(APPEND test_binaries_builder_{1}_dependees {0})
+endif(TEST {0})
+'''
+
 with open(cmake_outfile, 'wt') as out:
     out.write('set(DXT_BIN_COUNT "{}" CACHE STRING "number of bins for test targets" )\n'.format(len(bins)))
     for idx, bin in enumerate(bins):
-        out.write('add_custom_target(test_binaries_builder_{} DEPENDS {})\n'.format(idx, ' '.join(sorted(bin.keys()))))
+
         for binary in sorted(bin.keys()):
             if binary not in headerlibs:
-                out.write(set_tpl.format(' '.join(testname_map[binary]), idx))
+                for testname in testname_map[binary]:
+                    out.write(set_tpl.format(testname, idx))
+            else:
+                out.write('list(APPEND test_binaries_builder_{1}_dependees {0})\n'.format(binary, idx))
+        out.write('add_custom_target(test_binaries_builder_{0} DEPENDS test_binaries_builder_{0}_dependees)\n'.format(idx))
