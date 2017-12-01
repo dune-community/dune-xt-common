@@ -123,7 +123,7 @@ def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
     testnames = testnames[:testlimit]
     testruns_fn = os.path.join(pickledir, 'testruns_' + pickle_file)
     try:
-        loaded_testnames, testruns = _load(testruns_fn) or ([], [])
+        loaded_testnames, testruns = _load(testruns_fn) or ([], dict())
         if set(compiles.keys()) != set(targets) or loaded_testnames != testnames:
             removed = [f for f in loaded_testnames if f not in set(testnames)]
             new = [n for n in testnames if n not in set(loaded_testnames)]
@@ -138,7 +138,12 @@ def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
         testruns = _redo(processes, binaries, _run_tests, zip(binaries, testnames))
     _dump((testnames, testruns), testruns_fn)
 
-    totals = {n: compiles[n]+testruns[n] for n in binaries}
+    totals = {n: compiles[n] for n in binaries}
+
+    testname_map = {b: t.strip().split(';') for b,t in zip(binaries, testnames)}
+    for binary, testnames in testname_map.items():
+        totals[binary] += testruns[';'.join(testnames)]
+
     # add totals for headerlib compiles that do not have associated testruns
     totals.update({n: compiles[n] for n in headerlibs})
     _dump(totals, os.path.join(pickledir, pickle_file))
