@@ -121,7 +121,7 @@ macro(BEGIN_TESTCASES)
                            TIMEOUT ${DXT_TEST_TIMEOUT} )
             list(APPEND dxt_test_binaries ${target} )
             set(dxt_test_names_${target} ${target})
-        endforeach( source )
+        endforeach( template ${test_templates} )
         add_custom_target(test_templates SOURCES ${test_templates})
 endmacro(BEGIN_TESTCASES)
 
