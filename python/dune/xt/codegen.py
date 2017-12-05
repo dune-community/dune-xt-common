@@ -23,10 +23,18 @@ def is_found(cache, name):
     return false
 
 
+def have_eigen(cache):
+    return is_found(cache, 'EIGEN3_INCLUDE_DIR')
+
+
+def have_istl(cache):
+    return is_found(cache, 'dune-istl_DIR')
+
+
 def la_backends(cache):
     ret = []
-    if is_found(cache, 'EIGEN3_INCLUDE_DIR'):
+    if have_eigen(cache):
         ret.append('eigen_sparse')
-    if is_found(cache, 'dune-istl_DIR'):
+    if have_istl:
         ret.append('istl_sparse')
     return ret
