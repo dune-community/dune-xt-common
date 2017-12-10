@@ -11,7 +11,7 @@ find_library(MKL_LP64_LIBRARY mkl_intel_lp64 HINTS "${CMAKE_SOURCE_DIR}/../local
 find_library(MKL_SEQUENTIAL_LIBRARY mkl_sequential HINTS "${CMAKE_SOURCE_DIR}/../local/mkl/lib/intel64/")
 find_library(MKL_CORE_LIBRARY mkl_core HINTS "${CMAKE_SOURCE_DIR}/../local/mkl/lib/intel64/")
 
-set(MKL_FOUND FALSE)
+set(MKL_FOUND 0)
 if("${MKL_LP64_LIBRARY}" MATCHES "MKL_LP64_LIBRARY-NOTFOUND")
   message("--   library 'mkl_intel_lp64' not found, make sure you have Intel MKL installed")
 else("${MKL_LP64_LIBRARY}" MATCHES "MKL_LP64_LIBRARY-NOTFOUND")
