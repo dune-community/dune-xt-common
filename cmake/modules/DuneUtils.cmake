@@ -74,6 +74,10 @@ macro(BEGIN_TESTCASES)
 # https://cmake.org/cmake/help/v3.0/module/FindGTest.html http://purplekarrot.net/blog/cmake-and-test-suites.html
 	file( GLOB_RECURSE test_sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cc" )
 	foreach( source ${test_sources} )
+                set(ranks "1")
+                if( source MATCHES "mpi" )
+                    list(APPEND ranks ${DUNE_MAX_TEST_CORES})
+                endif( source MATCHES "mpi" )
 		get_filename_component(testbase ${source} NAME_WE)
 		string(REPLACE ".cc" ".mini" minifile ${source})
                 if( EXISTS ${minifile} )
@@ -96,13 +100,18 @@ macro(BEGIN_TESTCASES)
 				   LINK_LIBRARIES ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common
 				   COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${target}
                                           --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/${target}.xml
-			           TIMEOUT ${DXT_TEST_TIMEOUT} )
+			           TIMEOUT ${DXT_TEST_TIMEOUT}
+			           MPI_RANKS ${ranks})
                     list(APPEND dxt_test_binaries ${target} )
                     set(dxt_test_names_${target} ${target})
 	        endif( EXISTS ${minifile} )
         endforeach( source )
         file( GLOB_RECURSE test_templates "${CMAKE_CURRENT_SOURCE_DIR}/*.tpl" )
         foreach( template ${test_templates} )
+            set(ranks "1")
+            if( template MATCHES "mpi" )
+                list(APPEND ranks ${DUNE_MAX_TEST_CORES})
+            endif( template MATCHES "mpi" )
             get_filename_component(testbase ${template} NAME_WE)
             string(REPLACE ".tpl" ".py" config_fn "${template}")
             string(REPLACE ".tpl" ".tpl.cc" out_fn "${template}")
@@ -118,7 +127,8 @@ macro(BEGIN_TESTCASES)
                            LINK_LIBRARIES ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common
                            COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${target}
                                     --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/${target}.xml
-                           TIMEOUT ${DXT_TEST_TIMEOUT} )
+                           TIMEOUT ${DXT_TEST_TIMEOUT}
+                           MPI_RANKS ${ranks})
             list(APPEND dxt_test_binaries ${target} )
             set(dxt_test_names_${target} ${target})
         endforeach( template ${test_templates} )
