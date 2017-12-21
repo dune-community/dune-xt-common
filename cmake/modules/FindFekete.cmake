@@ -7,7 +7,7 @@
 # Authors:
 #   Tobias Leibner (2017)
 
-find_library(FEKETE_LIBRARY fekete "${CMAKE_SOURCE_DIR}/../local/lib/")
+find_library(FEKETE_LIBRARY fekete HINTS "${CMAKE_SOURCE_DIR}/../local/lib/" "${CMAKE_SOURCE_DIR}/../local/environments/debian-minimal/local/lib/")
 if("${FEKETE_LIBRARY}" MATCHES "FEKETE_LIBRARY-NOTFOUND")
   message("--   library 'fekete' not found, make sure you have downloaded and build the external libraries!")
 else("${FEKETE_LIBRARY}" MATCHES "FEKETE_LIBRARY-NOTFOUND")
@@ -16,7 +16,7 @@ else("${FEKETE_LIBRARY}" MATCHES "FEKETE_LIBRARY-NOTFOUND")
 endif("${FEKETE_LIBRARY}" MATCHES "FEKETE_LIBRARY-NOTFOUND")
 
 message("-- checking for fekete.hpp header")
-find_path(FEKETE_INCLUDE_DIRS fekete.hpp HINTS "${CMAKE_SOURCE_DIR}/../local/include/")
+find_path(FEKETE_INCLUDE_DIRS fekete.hpp HINTS "${CMAKE_SOURCE_DIR}/../local/include/" "${CMAKE_SOURCE_DIR}/../local/environments/debian-minimal/local/include/")
 if("${FEKETE_INCLUDE_DIRS}" MATCHES "FEKETE_INCLUDE_DIRS-NOTFOUND")
   message("--   fekete.hpp header not found")
 else("${FEKETE_INCLUDE_DIRS}" MATCHES "FEKETE_INCLUDE_DIRS-NOTFOUND")

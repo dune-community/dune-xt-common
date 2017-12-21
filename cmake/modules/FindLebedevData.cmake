@@ -7,7 +7,7 @@
 # Authors:
 #   Tobias Leibner (2017)
 
-find_library(LEBEDEVDATA_LIBRARY lebedevdata "${CMAKE_SOURCE_DIR}/../local/lib/")
+find_library(LEBEDEVDATA_LIBRARY lebedevdata HINTS "${CMAKE_SOURCE_DIR}/../local/lib/" "${CMAKE_SOURCE_DIR}/../local/environments/debian-minimal/local/lib/")
 if("${LEBEDEVDATA_LIBRARY}" MATCHES "LEBEDEVDATA_LIBRARY-NOTFOUND")
   message("--   library 'lebedevdata' not found, make sure you have downloaded and build the external libraries!")
 else("${LEBEDEVDATA_LIBRARY}" MATCHES "LEBEDEVDATA_LIBRARY-NOTFOUND")
@@ -16,7 +16,7 @@ else("${LEBEDEVDATA_LIBRARY}" MATCHES "LEBEDEVDATA_LIBRARY-NOTFOUND")
 endif("${LEBEDEVDATA_LIBRARY}" MATCHES "LEBEDEVDATA_LIBRARY-NOTFOUND")
 
 message("-- checking for lebedev_data.hh header")
-find_path(LEBEDEVDATA_INCLUDE_DIRS lebedev_data.hh HINTS "${CMAKE_SOURCE_DIR}/../local/include/")
+find_path(LEBEDEVDATA_INCLUDE_DIRS lebedev_data.hh HINTS "${CMAKE_SOURCE_DIR}/../local/include/" "${CMAKE_SOURCE_DIR}/../local/environments/debian-minimal/local/include/")
 if("${LEBEDEVDATA_INCLUDE_DIRS}" MATCHES "LEBEDEVDATA_INCLUDE_DIRS-NOTFOUND")
   message("--   lebedev_data.hh header not found")
 else("${LEBEDEVDATA_INCLUDE_DIRS}" MATCHES "LEBEDEVDATA_INCLUDE_DIRS-NOTFOUND")
