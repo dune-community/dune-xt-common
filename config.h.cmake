@@ -48,6 +48,10 @@
 #define HAVE_MATEXP ${HAVE_MATEXP}
 #endif
 
+#ifndef HAVE_FEKETE
+#define HAVE_FEKETE ${HAVE_FEKETE}
+#endif
+
 #ifndef HAVE_LEBEDEVDATA
 #define HAVE_LEBEDEVDATA ${HAVE_LEBEDEVDATA}
 #endif
