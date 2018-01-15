@@ -120,7 +120,7 @@ macro(BEGIN_TESTCASES)
             add_custom_command(OUTPUT ${out_fn}
                                COMMAND ${CMAKE_BINARY_DIR}/dune-env dxt_code_generation.py
                                       "${config_fn}" "${template}"  "${CMAKE_BINARY_DIR}" "${out_fn}"
-                               DEPENDS "${config_fn}" "${template}" "${CMAKE_CURRENT_SOURCE_DIR}/spaces.py"
+                               DEPENDS "${config_fn}" "${template}"
                                VERBATIM USES_TERMINAL)
             set(target test_${testbase})
             dune_add_test( NAME ${target}
