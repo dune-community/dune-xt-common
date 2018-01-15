@@ -134,23 +134,28 @@ public:
   typedef T mapped_type;
   typedef FixedMapIterator<ThisType> iterator;
   typedef ConstFixedMapIterator<ThisType> const_iterator;
+  typedef std::function<std::string(key_type)> key_printer;
 
-  FixedMap()
+  FixedMap(key_printer kp = [=](key_type key) { return XT::Common::to_string(key); })
+    : key_printer_(kp)
   {
   }
   /** inserts key-value value pairs from  initializer list
    * if list.size() > N only the first N elements are considered
    * if list.size() < N the Map is padded with default constructed elements
    */
-  FixedMap(const std::initializer_list<value_type>& list)
+  FixedMap(const std::initializer_list<value_type>& list,
+           key_printer kp = [=](key_type key) { return XT::Common::to_string(key); })
     : map_(boost::assign::list_of<value_type>(*list.begin())
                .range(list.begin() + 1, list.end() - (N > list.size() ? size_t(0) : (list.size() - N)))
                .repeat(N > list.size() ? N - list.size() : size_t(0), std::make_pair(key_type(), T())))
+    , key_printer_(kp)
   {
   }
 
-  FixedMap(const MapType& map)
+  FixedMap(const MapType& map, key_printer kp = [=](key_type key) { return XT::Common::to_string(key); })
     : map_(map)
+    , key_printer_(kp)
   {
   }
 
@@ -166,7 +171,7 @@ public:
   {
     const auto it = get_idx(key);
     if (it == N)
-      DUNE_THROW(RangeError, "missing key '" << key << "' in FixedMap!");
+      DUNE_THROW(RangeError, "missing key '" << key_printer_(key) << "' in FixedMap!");
     return map_[it].second;
   }
 
@@ -174,7 +179,7 @@ public:
   {
     const auto it = get_idx(key);
     if (it == N)
-      DUNE_THROW(RangeError, "missing key '" << key << "' in FixedMap!");
+      DUNE_THROW(RangeError, "missing key '" << key_printer_(key) << "' in FixedMap!");
     return map_[it].second;
   }
 
@@ -224,6 +229,7 @@ public:
 
 private:
   MapType map_;
+  key_printer key_printer_;
 };
 
 template <class K, class T, std::size_t nin>
