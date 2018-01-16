@@ -48,6 +48,12 @@ else()
 endif()
 
 include(DuneTBB)
+find_package(Qhull)
+find_package(LPSolve)
+find_package(MKL)
+find_package(LAPACKE)
+find_package(MatExp)
+find_package(LebedevData)
 ################ end library checks  #####################################################################
 
 ################ misc vars  #########################################################################
