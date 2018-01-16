@@ -36,4 +36,5 @@ def call(executable, inifile=None, *additional_args):
 
 # Parse the given arguments
 args = get_args()
-sys.exit(call(args["exec"], args["ini"], "--gtest_output=xml:" + os.path.splitext(os.path.basename(args["exec"]))[0] + "_" + os.path.splitext(os.path.basename(args["ini"]))[0] + ".xml"))
+ini = args["ini"] if os.path.exists(args["ini"]) else None
+sys.exit(call(args["exec"], ini, "--gtest_output=xml:" + os.path.splitext(os.path.basename(args["exec"]))[0] + "_" + os.path.splitext(os.path.basename(args["ini"]))[0] + ".xml"))

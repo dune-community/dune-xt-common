@@ -70,6 +70,7 @@ find_package(LAPACKE)
 find_package(MatExp)
 find_package(LebedevData)
 
+include(DuneXTTesting)
 macro(BEGIN_TESTCASES)
 # https://cmake.org/cmake/help/v3.0/module/FindGTest.html http://purplekarrot.net/blog/cmake-and-test-suites.html
 	file( GLOB_RECURSE test_sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cc" )
@@ -95,12 +96,10 @@ macro(BEGIN_TESTCASES)
                     endforeach(target)
                 else( EXISTS ${minifile} )
                     set(target test_${testbase})
-		    dune_add_test( NAME ${target}
+		    dune_xt_add_test( NAME ${target}
 			           SOURCES ${source} ${COMMON_HEADER}
 				   LINK_LIBRARIES ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common
-				   COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${target}
-                                          --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/${target}.xml
-			           TIMEOUT ${DXT_TEST_TIMEOUT}
+				   TIMEOUT ${DXT_TEST_TIMEOUT}
 			           MPI_RANKS ${ranks})
                     list(APPEND dxt_test_binaries ${target} )
                     set(dxt_test_names_${target} ${target})
@@ -122,11 +121,9 @@ macro(BEGIN_TESTCASES)
                                DEPENDS "${config_fn}" "${template}" "${CMAKE_CURRENT_SOURCE_DIR}/spaces.py"
                                VERBATIM USES_TERMINAL)
             set(target test_${testbase})
-            dune_add_test( NAME ${target}
+            dune_xt_add_test(NAME ${target}
                            SOURCES ${out_fn} ${COMMON_HEADER}
                            LINK_LIBRARIES ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common
-                           COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${target}
-                                    --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/${target}.xml
                            TIMEOUT ${DXT_TEST_TIMEOUT}
                            MPI_RANKS ${ranks})
             list(APPEND dxt_test_binaries ${target} )
