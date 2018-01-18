@@ -129,6 +129,10 @@
 #define HAVE_EMPLACE 0
 #endif
 
+#ifndef HAVE_FASP
+#define HAVE_FASP 0
+#endif
+
 #ifndef ENABLE_SUPERLU
 #define ENABLE_SUPERLU 0
 #endif
