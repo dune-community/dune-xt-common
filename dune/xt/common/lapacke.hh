@@ -19,7 +19,7 @@ namespace Lapacke {
 
 
 /**
- * \brief If true, calling any of the other mathods makes sense.
+ * \brief If true, calling any of the other methods makes sense.
  */
 bool available();
 
