@@ -1,4 +1,13 @@
 #!/usr/bin/env python3
+#
+# This file is part of the dune-xt-common project:
+#   https://github.com/dune-community/dune-xt-common
+# Copyright 2009-2018 dune-xt-common developers and contributors. All rights reserved.
+# License: Dual licensed as BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+# Authors:
+#   Felix Schindler (2017)
+#   Rene Milk       (2017 - 2018)
+
 """Run a speedup series benchmark of a given executable on a node with libnuma
 
 Usage: numa_speedup.py MIN_CORE MAX_CORE ARG_FMT...
