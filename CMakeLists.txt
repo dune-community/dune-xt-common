@@ -83,6 +83,7 @@ endif()
 
 add_format(${CMAKE_CURRENT_SOURCE_DIR})
 add_tidy(${CMAKE_CURRENT_SOURCE_DIR})
+add_pylicense()
 
 finalize_dune_project(GENERATE_CONFIG_H_CMAKE)
 
