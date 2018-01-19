@@ -37,6 +37,12 @@ public:
 
   SimpleDict(const std::vector<std::pair<std::string, ValueType>>& key_value_pairs);
 
+  SimpleDict(const SimpleDict&) = default;
+  SimpleDict(SimpleDict&&) = default;
+
+  SimpleDict& operator=(const SimpleDict&) = default;
+  SimpleDict& operator=(SimpleDict&&) = default;
+
   const std::vector<std::string>& keys() const;
 
   bool empty() const;
@@ -83,6 +89,12 @@ public:
 
   ParameterType(const std::vector<std::pair<std::string, size_t>>& key_size_pairs);
 
+  ParameterType(const ParameterType&) = default;
+  ParameterType(ParameterType&&) = default;
+
+  ParameterType& operator=(const ParameterType&) = default;
+  ParameterType& operator=(ParameterType&&) = default;
+
   /**
    * \note In the special case that this and other both have only a single key, and either of the keys is
    *       '__unspecified__', then they compare equal if the sizes corresponding to these keys compare equal.
@@ -92,6 +104,10 @@ public:
 
   bool operator!=(const ParameterType& other) const;
 
+  /**
+   * Returns true, if each of our keys is contained in other (with equal respective lengths), and other contains
+   * additional keys.
+   */
   bool operator<(const ParameterType& other) const;
 
   bool operator<=(const ParameterType& other) const;
@@ -122,6 +138,12 @@ public:
 
   Parameter(const std::string& key, const ValueType& value);
 
+  Parameter(const Parameter&) = default;
+  Parameter(Parameter&&) = default;
+
+  Parameter& operator=(const Parameter&) = default;
+  Parameter& operator=(Parameter&&) = default;
+
   /// \note this somehow necessary to make clang 3.8 happy (and cannot be defaulted)
   ~Parameter()
   {
@@ -142,6 +164,12 @@ class ParametricInterface
 {
 public:
   ParametricInterface(const ParameterType& param_type = {});
+
+  ParametricInterface(const ParametricInterface&) = default;
+  ParametricInterface(ParametricInterface&&) = default;
+
+  ParametricInterface& operator=(const ParametricInterface&) = default;
+  ParametricInterface& operator=(ParametricInterface&&) = default;
 
   virtual ~ParametricInterface() = default;
 
