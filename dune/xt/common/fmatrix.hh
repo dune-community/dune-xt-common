@@ -308,6 +308,11 @@ public:
 #endif // NDEBUG
   } // ... FieldMatrix(...)
 
+  FieldMatrix(const BaseType& other)
+    : BaseType(other)
+  {
+  }
+
   FieldMatrix(const Dune::XT::Common::FieldVector<K, 1>& other)
     : BaseType(other[0])
   {
