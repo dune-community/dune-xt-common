@@ -22,8 +22,6 @@
 #include <type_traits>
 #include <complex>
 
-#include <dune/common/deprecated.hh>
-
 #include <dune/xt/common/disable_warnings.hh>
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/stats.hpp>
@@ -37,12 +35,16 @@
 #include <boost/static_assert.hpp>
 #include <dune/xt/common/reenable_warnings.hh>
 
+#include <dune/common/deprecated.hh>
+#include <dune/common/promotiontraits.hh>
+
 #include <dune/xt/common/type_traits.hh>
 #include <dune/xt/common/vector.hh>
 
 namespace Dune {
 namespace XT {
 namespace Common {
+
 
 /**
  * since std::numeric_limits<T>::epsilon() is 0 for integral types
@@ -316,6 +318,34 @@ public:
         boost::geometry::get<0>(x_boost), boost::geometry::get<1>(x_boost), boost::geometry::get<2>(x_boost)};
   }
 };
+
+
+template <class T>
+T max(const T& left, const T& right)
+{
+  return std::max(left, right);
+}
+
+template <class L, class R>
+typename PromotionTraits<L, R>::PromotedType max(const L& left, const R& right)
+{
+  using T = typename PromotionTraits<L, R>::PromotedType;
+  return std::max(T(left), T(right));
+}
+
+
+template <class T>
+T min(const T& left, const T& right)
+{
+  return std::min(left, right);
+}
+
+template <class L, class R>
+typename PromotionTraits<L, R>::PromotedType min(const L& left, const R& right)
+{
+  using T = typename PromotionTraits<L, R>::PromotedType;
+  return std::min(T(left), T(right));
+}
 
 
 } // namespace Common
