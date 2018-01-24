@@ -38,6 +38,10 @@ class FieldMatrix : public Dune::FieldMatrix<K, ROWS, COLS>
   typedef FieldMatrix<K, ROWS, COLS> ThisType;
 
 public:
+  using typename BaseType::value_type;
+  using typename BaseType::size_type;
+  using typename BaseType::field_type;
+
   FieldMatrix(const K& kk = 0)
     : BaseType(kk)
   {
@@ -117,7 +121,135 @@ public:
     ret *= scal;
     return ret;
   }
+
+  template <class Func>
+  void luDecomposition(ThisType& A, Func func) const;
+
+  void invert();
+
+private:
+  // copy from dune/common/densematrix.hh, we have to copy it as it is a private member of Dune::DenseMatrix
+  struct ElimPivot
+  {
+    ElimPivot(std::vector<size_type>& pivot)
+      : pivot_(pivot)
+    {
+      typedef typename std::vector<size_type>::size_type size_type;
+      for (size_type i = 0; i < pivot_.size(); ++i)
+        pivot_[i] = i;
+    }
+
+    void swap(int i, int j)
+    {
+      pivot_[i] = j;
+    }
+
+    template <typename T>
+    void operator()(const T&, int, int)
+    {
+    }
+
+    std::vector<size_type>& pivot_;
+  }; // struct ElimPivot
 }; // class FieldMatrix<...>
+
+// Direct copy of the luDecomposition function in dune/common/densematrix.hh
+// The only (functional) change is that this version always performs pivotization (the version in dune-common only
+// performs pivotization if the diagonal entry is below a certain threshold)
+// See dune/xt/la/test/matrixinverter_for_real_matrix_from_3d_pointsource.tpl for an example where the dune-common
+// version fails due to stability issues.
+template <class K, int ROWS, int COLS>
+template <typename Func>
+inline void FieldMatrix<K, ROWS, COLS>::luDecomposition(FieldMatrix<K, ROWS, COLS>& A, Func func) const
+{
+  typedef typename FieldTraits<value_type>::real_type real_type;
+  real_type norm = A.infinity_norm_real(); // for relative thresholds
+  real_type singthres =
+      std::max(FMatrixPrecision<real_type>::absolute_limit(), norm * FMatrixPrecision<real_type>::singular_limit());
+
+  // LU decomposition of A in A
+  for (size_type i = 0; i < ROWS; i++) // loop over all rows
+  {
+    typename FieldTraits<value_type>::real_type pivmax = fvmeta::absreal(A[i][i]);
+
+    // compute maximum of column
+    size_type imax = i;
+    typename FieldTraits<value_type>::real_type abs(0.0);
+    for (size_type k = i + 1; k < ROWS; k++)
+      if ((abs = fvmeta::absreal(A[k][i])) > pivmax) {
+        pivmax = abs;
+        imax = k;
+      }
+    // swap rows
+    if (imax != i) {
+      for (size_type j = 0; j < ROWS; j++)
+        std::swap(A[i][j], A[imax][j]);
+      func.swap(i, imax); // swap the pivot or rhs
+    }
+
+    // singular ?
+    if (pivmax < singthres)
+      DUNE_THROW(FMatrixError, "matrix is singular");
+
+    // eliminate
+    for (size_type k = i + 1; k < ROWS; k++) {
+      field_type factor = A[k][i] / A[i][i];
+      A[k][i] = factor;
+      for (size_type j = i + 1; j < ROWS; j++)
+        A[k][j] -= factor * A[i][j];
+      func(factor, k, i);
+    }
+  }
+}
+
+// Direct copy of the invert function in dune/common/densematrix.hh
+// The only (functional) change is the replacement of the luDecomposition of DenseMatrix by our own version.
+template <class K, int ROWS, int COLS>
+inline void FieldMatrix<K, ROWS, COLS>::invert()
+{
+  // never mind those ifs, because they get optimized away
+  if (ROWS != COLS)
+    DUNE_THROW(Dune::FMatrixError, "Can't invert a " << ROWS << "x" << COLS << " matrix!");
+  if (ROWS <= 3) {
+    BaseType::invert();
+  } else {
+    auto A = *this;
+    std::vector<size_type> pivot(ROWS);
+    this->luDecomposition(A, ElimPivot(pivot));
+    auto& L = A;
+    auto& U = A;
+
+    // initialize inverse
+    *this = field_type();
+
+    for (size_type i = 0; i < ROWS; ++i)
+      (*this)[i][i] = 1;
+
+    // L Y = I; multiple right hand sides
+    for (size_type i = 0; i < ROWS; i++)
+      for (size_type j = 0; j < i; j++)
+        for (size_type k = 0; k < ROWS; k++)
+          (*this)[i][k] -= L[i][j] * (*this)[j][k];
+
+    // U A^{-1} = Y
+    for (size_type i = ROWS; i > 0;) {
+      --i;
+      for (size_type k = 0; k < ROWS; k++) {
+        for (size_type j = i + 1; j < ROWS; j++)
+          (*this)[i][k] -= U[i][j] * (*this)[j][k];
+        (*this)[i][k] /= U[i][i];
+      }
+    }
+
+    for (size_type i = ROWS; i > 0;) {
+      --i;
+      if (i != pivot[i])
+        for (size_type j = 0; j < ROWS; ++j)
+          std::swap((*this)[j][pivot[i]], (*this)[j][i]);
+    }
+  }
+}
+
 
 /**
  * \todo We need to implement all operators from the base which return the base, to rather return ourselfes!
