@@ -97,6 +97,38 @@ int dgeev(int matrix_layout,
 }
 
 
+int dgeqp3(int matrix_layout, int m, int n, double* a, int lda, int* jpvt, double* tau)
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_dgeqp3(matrix_layout, m, n, a, lda, jpvt, tau);
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int dormqr(int matrix_layout,
+           char side,
+           char trans,
+           lapack_int m,
+           lapack_int n,
+           lapack_int k,
+           const double* a,
+           lapack_int lda,
+           const double* tau,
+           double* c,
+           lapack_int ldc)
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_dormqr(matrix_layout, side, trans, m, n, k, a, lda, tau, c, ldc);
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
 int dptcon(int n, const double* d, const double* e, double anorm, double* rcond)
 {
 #if HAVE_MKL || HAVE_LAPACKE
@@ -146,6 +178,168 @@ int dpttrs(int matrix_layout, int n, int nrhs, const double* d, const double* e,
 
 
 } // namespace Lapacke
+
+
+namespace Blas {
+
+
+/**
+ * \brief If true, calling any of the other methods makes sense.
+ */
+bool available()
+{
+#if HAVE_MKL
+  return true;
+#else
+  return false;
+#endif
+}
+
+
+int row_major()
+{
+#if HAVE_MKL
+  return CblasRowMajor;
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int col_major()
+{
+#if HAVE_MKL
+  return CblasColMajor;
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int left()
+{
+#if HAVE_MKL
+  return CblasLeft;
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int right()
+{
+#if HAVE_MKL
+  return CblasRight;
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int upper()
+{
+#if HAVE_MKL
+  return CblasUpper;
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int lower()
+{
+#if HAVE_MKL
+  return CblasLower;
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int trans()
+{
+#if HAVE_MKL
+  return CblasTrans;
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int no_trans()
+{
+#if HAVE_MKL
+  return CblasNoTrans;
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int unit()
+{
+#if HAVE_MKL
+  return CblasUnit;
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int non_unit()
+{
+#if HAVE_MKL
+  return CblasNonUnit;
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+void dtrsm(const int layout,
+           const int side,
+           const int uplo,
+           const int transa,
+           const int diag,
+           const int m,
+           const int n,
+           const double alpha,
+           const double* a,
+           const int lda,
+           double* b,
+           const int ldb)
+{
+#if HAVE_MKL
+  return cblas_dtrsm(static_cast<CBLAS_LAYOUT>(layout),
+                     static_cast<CBLAS_SIDE>(side),
+                     static_cast<CBLAS_UPLO>(uplo),
+                     static_cast<CBLAS_TRANSPOSE>(transa),
+                     static_cast<CBLAS_DIAG>(diag),
+                     m,
+                     n,
+                     alpha,
+                     a,
+                     lda,
+                     b,
+                     ldb);
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+} // namespace Blas
 } // namespace Common
 } // namespace XT
 } // namespace Dune

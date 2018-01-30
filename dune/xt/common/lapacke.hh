@@ -57,6 +57,29 @@ int dgeev(int matrix_layout,
 
 
 /**
+ * \brief Wrapper around LAPACKE_dgeqp3
+ * \sa    LAPACKE_dgeqp3
+ */
+int dgeqp3(int matrix_layout, int m, int n, double* a, int lda, int* jpvt, double* tau);
+
+/**
+ * \brief Wrapper around LAPACKE_dormqr
+ * \sa    LAPACKE_dormqr
+ */
+int dormqr(int matrix_layout,
+           char side,
+           char trans,
+           int m,
+           int n,
+           int k,
+           const double* a,
+           int lda,
+           const double* tau,
+           double* c,
+           int ldc);
+
+
+/**
  * \brief Wrapper around LAPACKE_dptcon
  * \sa    LAPACKE_dptcon
  */
@@ -78,6 +101,106 @@ int dpttrs(int matrix_layout, int n, int nrhs, const double* d, const double* e,
 
 
 } // namespace Lapacke
+
+
+namespace Blas {
+
+
+/**
+ * \brief If true, calling any of the other methods makes sense.
+ */
+bool available();
+
+
+/**
+ * \brief Wrapper around CBlasRowMajor
+ * \sa    CblasRowMajor
+ */
+int row_major();
+
+
+/**
+ * \brief Wrapper around CBlasColMajor
+ * \sa    CblasColMajor
+ */
+int col_major();
+
+
+/**
+ * \brief Wrapper around CBlasLeft
+ * \sa    CblasLeft
+ */
+int left();
+
+
+/**
+ * \brief Wrapper around CBlasRight
+ * \sa    CblasRight
+ */
+int right();
+
+
+/**
+ * \brief Wrapper around CblasUpper
+ * \sa    CblasUpper
+ */
+int upper();
+
+
+/**
+ * \brief Wrapper around CblasLower
+ * \sa    CblasLower
+ */
+int lower();
+
+
+/**
+ * \brief Wrapper around CblasTrans
+ * \sa    CblasTrans
+ */
+int trans();
+
+
+/**
+ * \brief Wrapper around CblasNoTrans
+ * \sa    CblasNoTrans
+ */
+int no_trans();
+
+
+/**
+ * \brief Wrapper around CblasUnit
+ * \sa    CblasUnit
+ */
+int unit();
+
+
+/**
+ * \brief Wrapper around CblasNonUnit
+ * \sa    CblasNonUnit
+ */
+int non_unit();
+
+
+/**
+ * \brief Wrapper around cblas_dtrsm
+ * \sa    cblas_dtrsm
+ */
+void dtrsm(const int layout,
+           const int side,
+           const int uplo,
+           const int transa,
+           const int diag,
+           const int m,
+           const int n,
+           const double alpha,
+           const double* a,
+           const int lda,
+           double* b,
+           const int ldb);
+
+
+} // namespace Blas
 } // namespace Common
 } // namespace XT
 } // namespace Dune
