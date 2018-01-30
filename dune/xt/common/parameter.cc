@@ -183,7 +183,7 @@ bool ParameterType::operator==(const ParameterType& other) const
   } else {
     return this->dict_ == other.dict_;
   }
-}
+} // ... operator==(...)
 
 bool ParameterType::operator!=(const ParameterType& other) const
 {
@@ -192,8 +192,25 @@ bool ParameterType::operator!=(const ParameterType& other) const
 
 bool ParameterType::operator<(const ParameterType& other) const
 {
-  return this->dict_ < other.dict_;
-}
+  if (this->dict_.size() >= other.dict_.size())
+    return false;
+  const auto other_end = other.dict_.end();
+  for (const auto& this_element : this->dict_) {
+    const auto& this_key = this_element.first;
+    const auto& this_keys_lenght = this_element.second;
+    const auto other_key_search_result = other.dict_.find(this_key);
+    if (other_key_search_result == other_end)
+      return false;
+    const auto& other_key_lenght = other_key_search_result->second;
+    if (other_key_lenght != this_keys_lenght)
+      return false;
+  }
+  // now we know that
+  // - each of our keys is contained in other
+  // - our length for each key equals the length of others keys
+  // - other contains more keys
+  return true;
+} // ... operator<(...)
 
 bool ParameterType::operator<=(const ParameterType& other) const
 {

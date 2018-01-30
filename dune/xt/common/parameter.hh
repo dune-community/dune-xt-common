@@ -92,6 +92,10 @@ public:
 
   bool operator!=(const ParameterType& other) const;
 
+  /**
+   * Returns true, if each of our keys is contained in other (with equal respective lengths), and other contains
+   * additional keys.
+   */
   bool operator<(const ParameterType& other) const;
 
   bool operator<=(const ParameterType& other) const;
@@ -121,11 +125,6 @@ public:
   Parameter(const std::string& key, const double& value);
 
   Parameter(const std::string& key, const ValueType& value);
-
-  /// \note this somehow necessary to make clang 3.8 happy (and cannot be defaulted)
-  ~Parameter()
-  {
-  }
 
   bool operator<(const Parameter& other) const;
 
