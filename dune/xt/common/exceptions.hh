@@ -70,6 +70,10 @@ if (a.size() != b.size())
   } while (0)
 // DUNE_THROW
 
+#define DUNE_THROW_IF(condition, E, m)                                                                                 \
+  if (condition) {                                                                                                     \
+    DUNE_THROW(E, m);                                                                                                  \
+  }
 
 namespace Dune {
 namespace XT {
