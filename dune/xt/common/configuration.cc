@@ -12,6 +12,7 @@
 
 #include "config.h"
 
+#include <boost/filesystem.hpp>
 #include <boost/format.hpp>
 
 #include <dune/common/parametertreeparser.hh>
@@ -226,15 +227,36 @@ std::string Configuration::report_string(const std::string& prefix) const
 
 void Configuration::read_command_line(int argc, char* argv[])
 {
-  if (argc < 2) {
-    boost::format usage("usage: %s parameter.file *[-section.key override-value]");
-    DUNE_THROW(Dune::Exception, (usage % argv[0]).str());
+  std::vector<std::string> arguments(argv, argv + argc);
+  int num_arguments = arguments.size();
+  if (argc > 1 && boost::filesystem::exists(argv[1])) {
+    Dune::ParameterTreeParser::readINITree(argv[1], *this);
+    arguments.erase(arguments.begin());
+    num_arguments = arguments.size();
   }
-  Dune::ParameterTreeParser::readINITree(argv[1], *this);
-  Dune::ParameterTreeParser::readOptions(argc, argv, *this);
+  try {
+    ParameterTreeParser::readNamedOptions(num_arguments, vector_to_main_args(arguments), *this, {});
+  } catch (const ParameterTreeParserError& ee) {
+    DUNE_THROW(
+        Exceptions::configuration_error,
+        "when trying to read from the command line (see below).\n"
+            << "Supported variants are:\n\n"
+            << "  "
+            << argv[0]
+            << " filename                                 # where filename is the path to an existing options file\n"
+            << "  "
+            << argv[0]
+            << " filename --key_1=value --key_2=value ... # with an arbitrary number of key/value pairs (overriding "
+               "values in filename), where filename is the path to an existing options file\n"
+            << "  "
+            << argv[0]
+            << " --key_1=value --key_2=value ...          # with an arbitrary number of key/value pairs\n\n"
+            << "This was the original error:\n\n"
+            << ee.what());
+  }
   // datadir and logdir may be given from the command line...
   setup_();
-} // readCommandLine
+} // read_command_line
 
 void Configuration::read_options(int argc, char* argv[])
 {
