@@ -66,10 +66,10 @@ int main(int argc, char** argv)
 #endif
 
     testing::InitGoogleTest(&argc, argv);
-    if (argc > 1)
-      DXTC_CONFIG.read_command_line(argc, argv);
 
     MPIHelper::instance(argc, argv);
+
+    DXTC_CONFIG.read_command_line(argc, argv);
 
     Logger().create(
 #if DUNE_XT_COMMON_TEST_MAIN_ENABLE_DEBUG_LOGGING
