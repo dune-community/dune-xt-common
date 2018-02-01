@@ -251,14 +251,13 @@ std::string Configuration::report_string(const std::string& prefix) const
 
 void Configuration::read_command_line(int argc, char* argv[])
 {
-  if (argc < 2) {
-    boost::format usage("usage: %s parameter.file *[-section.key override-value]");
-    DUNE_THROW(Dune::Exception, (usage % argv[0]).str());
+  if (argc > 1) {
+    const std::string possibly_config_filename(argv[1]);
+    if (possibly_config_filename.size() > 2 && possibly_config_filename.substr(0, 2) != "--")
+      Dune::ParameterTreeParser::readINITree(argv[1], *this);
   }
-  Dune::ParameterTreeParser::readINITree(argv[1], *this);
-  Dune::ParameterTreeParser::readOptions(argc, argv, *this);
+  ParameterTreeParser::readNamedOptions(argc, argv, *this, {});
   load_into_fem_parameter(*this);
-
   // datadir and logdir may be given from the command line...
   setup_();
 } // readCommandLine
