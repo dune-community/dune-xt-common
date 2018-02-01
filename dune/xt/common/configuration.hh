@@ -260,8 +260,16 @@ some_function_which_expects_a_config({{"type", "custom"}, {"tolerance", "1e-10"}
 
   std::map<std::string, std::string> flatten() const;
 
-  /** get parameters from parameter file or key-value pairs given on the command line and store in Configuration (and
-  load into fem parameter, if available) */
+  // clang-format off
+  /**
+   * Tries to fill the Configuration from given comman line parameters. Supported variants are
+   *
+\code
+./your_exe filename                                 # where filename is the path to an existing options file
+./your_exe filename --key_1=value --key_2=value ... # with an arbitrary number of key/value pairs (overriding values in filename), where filename is the path to an existing options file
+./your_exe --key_1=value --key_2=value ...          # with an arbitrary number of key/value pairs
+\endcode
+   */ // clang-format on
   void read_command_line(int argc, char* argv[]);
 
   //! search command line options for key-value pairs and add them to Configuration
