@@ -126,6 +126,11 @@ public:
 
   Parameter(const std::string& key, const ValueType& value);
 
+  /// \note this somehow necessary to make clang 3.8 happy (and cannot be defaulted)
+  ~Parameter()
+  {
+  }
+
   bool operator<(const Parameter& other) const;
 
   ParameterType type() const;
