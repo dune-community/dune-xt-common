@@ -9,9 +9,9 @@
 #      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
 #          with "runtime exception" (http://www.dune-project.org/license.html)
 
-find_library(MKL_LP64_LIBRARY mkl_intel_lp64 HINTS "${CMAKE_SOURCE_DIR}/../local/mkl/lib/intel64/")
-find_library(MKL_SEQUENTIAL_LIBRARY mkl_sequential HINTS "${CMAKE_SOURCE_DIR}/../local/mkl/lib/intel64/")
-find_library(MKL_CORE_LIBRARY mkl_core HINTS "${CMAKE_SOURCE_DIR}/../local/mkl/lib/intel64/")
+find_library(MKL_LP64_LIBRARY mkl_intel_lp64 HINTS "${CMAKE_SOURCE_DIR}/../local/mkl/lib/intel64/" "/opt/intel/mkl/lib/intel64/")
+find_library(MKL_SEQUENTIAL_LIBRARY mkl_sequential HINTS "${CMAKE_SOURCE_DIR}/../local/mkl/lib/intel64/" "/opt/intel/mkl/lib/intel64/")
+find_library(MKL_CORE_LIBRARY mkl_core HINTS "${CMAKE_SOURCE_DIR}/../local/mkl/lib/intel64/" "/opt/intel/mkl/lib/intel64/")
 
 set(MKL_FOUND 0)
 if("${MKL_LP64_LIBRARY}" MATCHES "MKL_LP64_LIBRARY-NOTFOUND")
@@ -34,7 +34,7 @@ else("${MKL_LP64_LIBRARY}" MATCHES "MKL_LP64_LIBRARY-NOTFOUND")
 endif("${LAPACKE_LIBRARY}" MATCHES "MKL_LP64_LIBRARY-NOTFOUND")
 
 message("-- checking for mkl.h header")
-find_path(LAPACKE_INCLUDE_DIRS mkl.h HINTS "${CMAKE_SOURCE_DIR}/../local/mkl/include/")
+find_path(LAPACKE_INCLUDE_DIRS mkl.h HINTS "${CMAKE_SOURCE_DIR}/../local/mkl/include/" "/opt/intel/mkl/include")
 if("${LAPACKE_INCLUDE_DIRS}" MATCHES "LAPACKE_INCLUDE_DIRS-NOTFOUND")
   message("--   mkl.h header not found")
 else("${LAPACKE_INCLUDE_DIRS}" MATCHES "LAPACKE_INCLUDE_DIRS-NOTFOUND")

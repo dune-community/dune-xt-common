@@ -333,7 +333,7 @@ void dtrsm(const int layout,
               b,
               ldb);
 #ifndef NDEBUG
-  for (size_t ii = 0; ii < m; ++ii)
+  for (int ii = 0; ii < m; ++ii)
     if (std::isnan(b[ii]) || std::isinf(b[ii]))
       DUNE_THROW(Dune::MathError, "Triangular solve using cblas_dtrsm failed!");
 #endif
