@@ -320,21 +320,25 @@ void dtrsm(const int layout,
            const int ldb)
 {
 #if HAVE_MKL
-  return cblas_dtrsm(static_cast<CBLAS_LAYOUT>(layout),
-                     static_cast<CBLAS_SIDE>(side),
-                     static_cast<CBLAS_UPLO>(uplo),
-                     static_cast<CBLAS_TRANSPOSE>(transa),
-                     static_cast<CBLAS_DIAG>(diag),
-                     m,
-                     n,
-                     alpha,
-                     a,
-                     lda,
-                     b,
-                     ldb);
+  cblas_dtrsm(static_cast<CBLAS_LAYOUT>(layout),
+              static_cast<CBLAS_SIDE>(side),
+              static_cast<CBLAS_UPLO>(uplo),
+              static_cast<CBLAS_TRANSPOSE>(transa),
+              static_cast<CBLAS_DIAG>(diag),
+              m,
+              n,
+              alpha,
+              a,
+              lda,
+              b,
+              ldb);
+#ifndef NDEBUG
+  for (size_t ii = 0; ii < m; ++ii)
+    if (std::isnan(b[ii]) || std::isinf(b[ii]))
+      DUNE_THROW(Dune::MathError, "Triangular solve using cblas_dtrsm failed!");
+#endif
 #else
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
-  return 1;
 #endif
 }
 

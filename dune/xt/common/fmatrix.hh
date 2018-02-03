@@ -386,6 +386,16 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
     return MatrixType(rows, cols, val);
   }
 
+  static inline std::unique_ptr<MatrixType> create_dynamic(const size_t rows, const size_t cols)
+  {
+    return std::make_unique<MatrixType>(rows, cols);
+  }
+
+  static inline std::unique_ptr<MatrixType> create_dynamic(const size_t rows, const size_t cols, const ScalarType& val)
+  {
+    return std::make_unique<MatrixType>(rows, cols, val);
+  }
+
   static inline size_t rows(const MatrixType& /*mat*/)
   {
     return N;
@@ -575,6 +585,19 @@ Dune::XT::Common::FieldMatrix<K, L_ROWS, R_COLS> operator*(const Dune::FieldMatr
   return left.rightmultiplyany(right);
 }
 
+template <class K, int L_ROWS, int L_COLS, int R_COLS>
+void rightmultiply(Dune::FieldMatrix<K, L_ROWS, R_COLS>& ret,
+                   const Dune::FieldMatrix<K, L_ROWS, L_COLS>& left,
+                   const Dune::FieldMatrix<K, L_COLS, R_COLS>& right)
+{
+  for (size_t ii = 0; ii < L_ROWS; ++ii) {
+    for (size_t jj = 0; jj < R_COLS; ++jj) {
+      ret[ii][jj] = 0.;
+      for (size_t kk = 0; kk < L_COLS; ++kk)
+        ret[ii][jj] += left[ii][kk] * right[kk][jj];
+    }
+  }
+}
 
 template <class L, int L_ROWS, int L_COLS, class R, int R_COLS>
 typename std::enable_if<!std::is_same<L, R>::value,
@@ -585,6 +608,35 @@ typename std::enable_if<!std::is_same<L, R>::value,
   using Promoted = Dune::XT::Common::FieldMatrix<typename PromotionTraits<L, R>::PromotedType, L_ROWS, R_COLS>;
   using Dune::XT::Common::convert_to;
   return convert_to<Promoted>(left).rightmultiplyany(convert_to<Promoted>(right));
+}
+
+// versions that do not allocate matrices on the stack (for large matrices)
+template <class K, int L_ROWS, int L_COLS, int R_COLS>
+std::unique_ptr<Dune::XT::Common::FieldMatrix<K, L_ROWS, R_COLS>>
+operator*(const std::unique_ptr<Dune::FieldMatrix<K, L_ROWS, L_COLS>>& left,
+          const Dune::FieldMatrix<K, L_COLS, R_COLS>& right)
+{
+  auto ret = std::make_unique<Dune::XT::Common::FieldMatrix<K, L_ROWS, R_COLS>>();
+  rightmultiply(*ret, *left, right);
+  return ret;
+}
+
+template <class K, int L_ROWS, int L_COLS, int R_COLS>
+std::unique_ptr<Dune::XT::Common::FieldMatrix<K, L_ROWS, R_COLS>>
+operator*(const Dune::FieldMatrix<K, L_ROWS, L_COLS>& left,
+          const std::unique_ptr<Dune::FieldMatrix<K, L_COLS, R_COLS>>& right)
+{
+  auto ret = std::make_unique<Dune::XT::Common::FieldMatrix<K, L_ROWS, R_COLS>>();
+  rightmultiply(*ret, left, *right);
+  return ret;
+}
+
+template <class K, int L_ROWS, int L_COLS, int R_COLS>
+std::unique_ptr<Dune::XT::Common::FieldMatrix<K, L_ROWS, R_COLS>>
+operator*(const std::unique_ptr<Dune::FieldMatrix<K, L_ROWS, L_COLS>>& left,
+          const std::unique_ptr<Dune::FieldMatrix<K, L_COLS, R_COLS>>& right)
+{
+  return left * *right;
 }
 
 

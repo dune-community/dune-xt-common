@@ -61,6 +61,12 @@ struct MatrixAbstraction
     static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
   }
 
+  static inline /*std::unique_ptr<MatrixType>*/ void
+  create_dynamic(const size_t /*rows*/, const size_t /*cols*/, const ScalarType& /*val*/)
+  {
+    static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
+  }
+
   static inline /*size_t*/ void rows(const MatrixType& /*mat*/)
   {
     static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
@@ -119,6 +125,16 @@ struct MatrixAbstraction<Dune::DynamicMatrix<K>>
     return MatrixType(rows, cols, val);
   }
 
+  static inline std::unique_ptr<MatrixType> create_dynamic(const size_t rows, const size_t cols)
+  {
+    return std::make_unique<MatrixType>(rows, cols);
+  }
+
+  static inline std::unique_ptr<MatrixType> create_dynamic(const size_t rows, const size_t cols, const ScalarType& val)
+  {
+    return std::make_unique<MatrixType>(rows, cols, val);
+  }
+
   static inline size_t rows(const MatrixType& mat)
   {
     return mat.rows();
@@ -173,6 +189,24 @@ struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
     if (cols != M)
       DUNE_THROW(Exceptions::shapes_do_not_match, "cols = " << cols << "\nM = " << int(M));
     return MatrixType(val);
+  }
+
+  static inline std::unique_ptr<MatrixType> create_dynamic(const size_t rows, const size_t cols)
+  {
+    if (rows != N)
+      DUNE_THROW(Exceptions::shapes_do_not_match, "rows = " << rows << "\nN = " << int(N));
+    if (cols != M)
+      DUNE_THROW(Exceptions::shapes_do_not_match, "cols = " << cols << "\nM = " << int(M));
+    return std::make_unique<MatrixType>();
+  }
+
+  static inline std::unique_ptr<MatrixType> create_dynamic(const size_t rows, const size_t cols, const ScalarType& val)
+  {
+    if (rows != N)
+      DUNE_THROW(Exceptions::shapes_do_not_match, "rows = " << rows << "\nN = " << int(N));
+    if (cols != M)
+      DUNE_THROW(Exceptions::shapes_do_not_match, "cols = " << cols << "\nM = " << int(M));
+    return std::make_unique<MatrixType>(val);
   }
 
   static inline size_t rows(const MatrixType& /*mat*/)
