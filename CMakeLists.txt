@@ -68,18 +68,12 @@ add_subdirectory(dune)
 add_subdirectory("cmake/modules")
 add_subdirectory(doc/doxygen)
 
-# indicate that the python subdir is a package to install
-dune_install_python_package(PATH python)
-
+# this symlinks all files in python/ to the binary dir and install into the virtualenv from there
+# thereby making the compiled extensions directly usable from the venv
 if(dune-pybindxi_FOUND)
-  foreach(_file
-          dune/__init__.py
-          dune/xt/__init__.py
-          dune/xt/common/__init__.py
-         )
-  execute_process(COMMAND ln -s ${CMAKE_CURRENT_SOURCE_DIR}/python/${_file} ${CMAKE_CURRENT_BINARY_DIR}/${_file})
-  endforeach()
+  add_subdirectory(python)
 endif()
+dune_xt_install_python_package(PATH python)
 
 
 add_format(${CMAKE_CURRENT_SOURCE_DIR})

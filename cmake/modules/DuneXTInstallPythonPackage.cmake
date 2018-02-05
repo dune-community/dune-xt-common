@@ -11,6 +11,13 @@ function(dune_xt_install_python_package)
     message(WARNING "Unparsed arguments in dune_install_python_package: This often indicates typos!")
   endif()
 
+  file(GLOB_RECURSE files ${CMAKE_CURRENT_SOURCE_DIR}/${PYINST_PATH} "*")
+  foreach(fn ${files})
+    file(RELATIVE_PATH rel_fn ${CMAKE_CURRENT_SOURCE_DIR} ${fn})
+    execute_process(COMMAND ${CMAKE_COMMAND} "-E" "create_symlink" "${CMAKE_CURRENT_SOURCE_DIR}/${rel_fn}" "${CMAKE_CURRENT_BINARY_DIR}/${rel_fn}")
+  endforeach()
+  set(PYINST_PATH "${CMAKE_CURRENT_BINARY_DIR}/${PYINST_PATH}")
+
   #
   # Install the given python package into dune-python's virtualenv
   #
