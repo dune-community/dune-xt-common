@@ -318,7 +318,7 @@ void dtrsm(const int layout,
            const int lda,
            double* b,
            const int ldb,
-           const bool DXTC_DEBUG_ONLY(check))
+           const bool check)
 {
 #if HAVE_MKL
   cblas_dtrsm(static_cast<CBLAS_LAYOUT>(layout),
@@ -338,6 +338,8 @@ void dtrsm(const int layout,
     for (int ii = 0; ii < m; ++ii)
       if (std::isnan(b[ii]) || std::isinf(b[ii]))
         DUNE_THROW(Dune::MathError, "Triangular solve using cblas_dtrsm failed!");
+#else
+  DUNE_UNUSED_PARAMETER(check);
 #endif
 #else
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
