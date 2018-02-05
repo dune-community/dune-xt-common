@@ -13,6 +13,7 @@
 
 include(XtCompilerSupport)
 include(XtTooling)
+include(DuneXTInstallPythonPackage)
 
 ################ library checks  #########################################################################
 set(DS_REQUIRED_BOOST_LIBS system thread filesystem date_time timer chrono)
