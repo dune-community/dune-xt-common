@@ -197,7 +197,8 @@ void dtrsm(const int layout,
            const double* a,
            const int lda,
            double* b,
-           const int ldb);
+           const int ldb,
+           bool check = false);
 
 
 } // namespace Blas
