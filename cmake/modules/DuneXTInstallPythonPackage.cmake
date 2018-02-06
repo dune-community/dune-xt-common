@@ -1,4 +1,38 @@
 # copy from dune-python with adjusted install path and such
+function(dune_xt_execute_process)
+  include(CMakeParseArguments)
+  cmake_parse_arguments(EXECUTE "" "ERROR_MESSAGE;RESULT_VARIABLE;OUTPUT_VARIABLE" "" ${ARGN})
+
+  execute_process(${EXECUTE_UNPARSED_ARGUMENTS}
+                  RESULT_VARIABLE retcode
+                  OUTPUT_VARIABLE log
+                  ERROR_VARIABLE log)
+
+  if(NOT "${retcode}" STREQUAL "0")
+    cmake_parse_arguments(ERR "" "" "COMMAND" ${EXECUTE_UNPARSED_ARGUMENTS})
+    message(FATAL_ERROR "${EXECUTE_ERROR_MESSAGE}\nRun command:${ERR_COMMAND}\nReturn code: ${retcode}\nDetailed log:\n${log}")
+  endif()
+
+  if(EXECUTE_RESULT_VARIABLE)
+    set(${EXECUTE_RESULT_VARIABLE} 0 PARENT_SCOPE)
+  endif()
+  if(EXECUTE_OUTPUT_VARIABLE)
+    set(${EXECUTE_OUTPUT_VARIABLE} ${log} PARENT_SCOPE)
+  endif()
+endfunction()
+
+macro(include_dependent_binary_python_dirs)
+    # disable most warnings from dependent modules
+    foreach(_mod ${ALL_DEPENDENCIES} ${PROJECT_NAME})
+      dune_module_path(MODULE ${_mod}
+                     RESULT ${_mod}_binary_dir
+                     BUILD_DIR)
+      set(tdir ${${_mod}_binary_dir})
+      if(IS_DIRECTORY ${tdir})
+        dune_register_package_flags(INCLUDE_DIRS ${tdir})
+      endif()
+    endforeach(_mod DEPENDENCIES)
+endmacro(include_dependent_binary_python_dirs)
 
 function(dune_xt_install_python_package)
   # Parse Arguments
@@ -11,14 +45,24 @@ function(dune_xt_install_python_package)
     message(WARNING "Unparsed arguments in dune_install_python_package: This often indicates typos!")
   endif()
 
-  file(GLOB_RECURSE files ${CMAKE_CURRENT_SOURCE_DIR}/${PYINST_PATH} "*")
+  # Determine a target name for installing this package
+  string(REPLACE "/" "_" name_suffix ${PYINST_PATH})
+  set(targetname "pyinstall_${DUNE_MOD_NAME}_${name_suffix}")
+  if(TARGET ${targetname})
+    return()
+  endif()
+
+  file(GLOB_RECURSE files ${PROJECT_SOURCE_DIR}/${PYINST_PATH}/ "*")
   foreach(fn ${files})
-    file(RELATIVE_PATH rel_fn ${CMAKE_CURRENT_SOURCE_DIR} ${fn})
-    get_filename_component(directory ${fn} DIRECTORY)
-    file(MAKE_DIRECTORY ${directory})
-    execute_process(COMMAND ${CMAKE_COMMAND} "-E" "create_symlink" "${CMAKE_CURRENT_SOURCE_DIR}/${rel_fn}" "${CMAKE_CURRENT_BINARY_DIR}/${rel_fn}")
+    file(RELATIVE_PATH rel_fn ${PROJECT_SOURCE_DIR} ${fn})
+    get_filename_component(directory ${rel_fn} DIRECTORY)
+    file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/${directory})
+    execute_process(COMMAND ${CMAKE_COMMAND} "-E" "create_symlink" "${PROJECT_SOURCE_DIR}/${rel_fn}" "${PROJECT_BINARY_DIR}/${rel_fn}")
   endforeach()
   set(PYINST_PATH "${CMAKE_CURRENT_BINARY_DIR}/${PYINST_PATH}")
+  dune_register_package_flags(
+    INCLUDE_DIRS ${PYINST_PATH}
+  )
 
   #
   # Install the given python package into dune-python's virtualenv
@@ -51,7 +95,7 @@ function(dune_xt_install_python_package)
   endif()
 
   # install the package into the virtual env
-  dune_execute_process(COMMAND ${DUNE_PYTHON_VIRTUALENV_INTERPRETER} ${VENV_INSTALL_COMMAND}
+  dune_xt_execute_process(COMMAND ${DUNE_PYTHON_VIRTUALENV_INTERPRETER} ${VENV_INSTALL_COMMAND}
                        WORKING_DIRECTORY ${PYINST_PATH}
                        ERROR_MESSAGE "Fatal error when installing the package at ${PYINST_PATH} into the env."
                        )
@@ -78,9 +122,6 @@ function(dune_xt_install_python_package)
                    RESULT DUNE_PYTHON_MODULE_DIR
                    CMAKE_MODULES)
 
-  # Determine a target name for installing this package
-  string(REPLACE "/" "_" name_suffix ${PYINST_PATH})
-  set(targetname "pyinstall_${name_suffix}")
 
   # Add a custom target that globally installs this package if requested
   add_custom_target(${targetname}

@@ -11,9 +11,11 @@
 #      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
 #          with "runtime exception" (http://www.dune-project.org/license.html)
 
+# enables "IN_LIST operator
+cmake_policy(SET CMP0057 NEW)
+
 include(XtCompilerSupport)
 include(XtTooling)
-include(DuneXTInstallPythonPackage)
 
 ################ library checks  #########################################################################
 set(DS_REQUIRED_BOOST_LIBS system thread filesystem date_time timer chrono)

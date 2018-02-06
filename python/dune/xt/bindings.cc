@@ -24,7 +24,7 @@
 #include <dune/pybindxi/pybind11.h>
 #include <dune/pybindxi/stl.h>
 
-#include "bindings.hh"
+#include <python/dune/xt/common/bindings.hh>
 
 
 PYBIND11_MODULE(_common, m)
