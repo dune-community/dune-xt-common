@@ -12,7 +12,7 @@
 #          with "runtime exception" (http://www.dune-project.org/license.html)
 
 import sys
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(name='dune.xt.common',
       version='2.4',
@@ -21,8 +21,10 @@ setup(name='dune.xt.common',
       author='The dune-xt devs',
       author_email='dune-xt-dev@listserv.uni-muenster.de',
       url='https://github.com/dune-community/dune-xt-common',
-      packages=['dune.xt'],
-      install_requires=['binpacking==1.3', 'cython', 'jinja2', 'docopt', 'pylicense3'],
+      packages = find_packages(),
+      zip_safe = 0,
+      package_data = {'': ['*.so']},
+      install_requires=['binpacking==1.3', 'cython', 'jinja2', 'docopt', 'pylicense3', 'ipython'],
       scripts=['./scripts/generate_compare_functions.py',
                './scripts/distribute_testing.py',
                './scripts/dxt_code_generation.py',

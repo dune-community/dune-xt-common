@@ -24,15 +24,13 @@
 #include <dune/pybindxi/pybind11.h>
 #include <dune/pybindxi/stl.h>
 
-#include "bindings.hh"
+#include <python/dune/xt/common/bindings.hh>
 
 
-PYBIND11_PLUGIN(_common)
+PYBIND11_MODULE(_common, m)
 {
   namespace py = pybind11;
   using namespace pybind11::literals;
-
-  py::module m("_common", "dune-xt-common");
 
   Dune::XT::Common::bindings::addbind_exceptions(m);
 
@@ -87,8 +85,6 @@ PYBIND11_PLUGIN(_common)
     return false;
 #endif
   });
-
-  return m.ptr();
 }
 
 #endif // HAVE_DUNE_PYBINDXI

@@ -15,7 +15,7 @@
 #include <dune/pybindxi/pybind11.h>
 #include <dune/pybindxi/cast.h>
 
-#include "configuration.hh"
+#include <dune/xt/common/configuration.hh>
 
 NAMESPACE_BEGIN(pybind11)
 NAMESPACE_BEGIN(detail)

@@ -23,7 +23,7 @@
 
 #include <dune/pybindxi/pybind11.h>
 
-#include "exceptions.hh"
+#include <dune/xt/common/exceptions.hh>
 
 namespace Dune {
 namespace XT {

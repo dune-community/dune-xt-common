@@ -21,7 +21,7 @@ _test_logger_methods = list()
 _init_mpi_methods = list()
 _other_modules = ('xt.la', 'xt.grid', 'xt.functions', 'gdt')
 
-from ._common import __dict__ as module
+from dune.xt._common import __dict__ as module
 to_import = [name for name in module if not name.startswith('_')]
 globals().update({name: module[name] for name in to_import})
 _init_logger_methods.append(module['_init_logger'])
