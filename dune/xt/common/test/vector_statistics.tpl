@@ -19,8 +19,12 @@
 using namespace Dune::XT::Common;
 using namespace std;
 
-GTEST_TEST(STDDEV, Vector)
+// clang-format off
+{% for name,vectortype in config.vectortypes %}
+GTEST_TEST({{name}}, Vector)
 {
-  const auto vec = VectorAbstraction<VECTOR_TYPE>::create(VECTOR_SIZE, 0);
+  const auto vec = VectorAbstraction<{{vectortype}}>::create(3, 0);
   EXPECT_DOUBLE_EQ(standard_deviation(vec), 0);
 }
+{% endfor %}
+// clang-format on
