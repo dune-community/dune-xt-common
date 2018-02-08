@@ -20,7 +20,7 @@ using namespace Dune::XT::Common;
 using namespace std;
 
 // clang-format off
-{% for name,vectortype in config.vectortypes %}
+{% for name,vectortype in config['vectortypes'] %}
 GTEST_TEST({{name}}, Vector)
 {
   const auto vec = VectorAbstraction<{{vectortype}}>::create(3, 0);
