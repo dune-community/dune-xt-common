@@ -1,3 +1,5 @@
+# DO NOT INCLUDE DuneUtils.cmake in this file
+
 # copy from dune-python with adjusted install path and such
 function(dune_xt_execute_process)
   include(CMakeParseArguments)
