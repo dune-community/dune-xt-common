@@ -22,7 +22,12 @@ config_fn = sys.argv[1]
 tpl_fn = sys.argv[2]
 cmake_binary_dir = sys.argv[3]
 out_fn = sys.argv[4]
-cache, _ = parse_cache(os.path.join(cmake_binary_dir, 'CMakeCache.txt'))
+backup_bindir = sys.argv[5]
+
+try:
+    cache, _ = parse_cache(os.path.join(cmake_binary_dir, 'CMakeCache.txt'))
+except FileNotFoundError:
+    cache, _ = parse_cache(os.path.join(backup_bindir, 'CMakeCache.txt'))
 sys.path.append(os.path.dirname(config_fn))
 config = run_path(config_fn,init_globals=locals(), run_name='__dxt_codegen__')
 
@@ -30,6 +35,12 @@ dir_base = os.path.dirname(out_fn)
 if not os.path.isdir(dir_base):
     os.makedirs(dir_base)
 template = Template(open(tpl_fn).read())
-with open(out_fn, 'w') as out:
-    out.write(template.render(config=config, cache=cache))
 
+try:
+  for postfix, cfg in config['multi_out'].items():
+    fn = '{}.{}'.format(out_fn, postfix)
+    with open(fn, 'w') as out:
+        out.write(template.render(config=cfg, cache=cache))
+except KeyError:
+    with open(out_fn, 'w') as out:
+        out.write(template.render(config=config, cache=cache))

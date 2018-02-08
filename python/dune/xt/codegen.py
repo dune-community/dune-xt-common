@@ -21,7 +21,7 @@ def typeid_to_typedef_name(typeid, replacement='_'):
 def is_found(cache, name):
     if name in cache.keys():
         return 'notfound' not in cache[name].lower()
-    return false
+    return False
 
 
 def have_eigen(cache):

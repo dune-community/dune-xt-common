@@ -58,7 +58,18 @@ dune_enable_all_packages(INCLUDE_DIRS ${dune-xt-common_SOURCE_DIR}/dune
                          MODULE_LIBRARIES dunextcommon gtest_dune_xt_common
                          )
 
+include(DuneXTInstallPythonPackage)
+# this symlinks all files in python/ to the binary dir and install into the virtualenv from there
+# thereby making the compiled extensions directly usable from the venv
+dune_xt_install_python_package(PATH python)
+include_dependent_binary_python_dirs()
+# do not change order here
 include(DuneUtils)
+if(dune-pybindxi_FOUND)
+  add_subdirectory(python)
+endif()
+
+
 include(GridUtils)
 
 add_header_listing()
@@ -68,15 +79,7 @@ add_subdirectory(dune)
 add_subdirectory("cmake/modules")
 add_subdirectory(doc/doxygen)
 
-include(DuneXTInstallPythonPackage)
-# this symlinks all files in python/ to the binary dir and install into the virtualenv from there
-# thereby making the compiled extensions directly usable from the venv
-dune_xt_install_python_package(PATH python)
-include_dependent_binary_python_dirs()
-# do not change order here
-if(dune-pybindxi_FOUND)
-  add_subdirectory(python)
-endif()
+
 
 
 
