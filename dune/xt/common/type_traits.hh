@@ -437,6 +437,41 @@ DXTC_has_static_member(bar)< Foo >::value
 #define DXTC_has_static_member(mmbr) DXTC_has_static_member_helper_##mmbr
 
 
+/**
+  * \brief Helper macro to be used before DXTC_has_method.
+  *
+  *        Inspired by https://stackoverflow.com/questions/40329684/sfinae-c-method-check
+  */
+#define DXTC_has_method_initialize_once(mthd_nm)                                                                       \
+  template <class T_local>                                                                                             \
+  struct DXTC_has_method_helper_##mthd_nm                                                                              \
+  {                                                                                                                    \
+    template <class TT_local>                                                                                          \
+    static std::true_type helper(decltype(&TT_local::mthd_nm));                                                        \
+                                                                                                                       \
+    template <class>                                                                                                   \
+    static std::false_type helper(...);                                                                                \
+                                                                                                                       \
+    static const bool value = decltype(helper<T_local>(0))::value;                                                     \
+  }
+
+
+/**
+  * \brief Macro to statically check a class or struct for a method.
+  *
+  *        To check if a class or struct Foo has a method bar, put this code somewhere, where a generated helper
+  *        struct may be defined (obviously only once for each method name!, note the trailing `;`!):
+\code
+DXTC_has_method_initialize_once(bar);
+\endcode
+  *        You can then check for bar (this will give you a static const bool):
+\code
+DXTC_has_method(bar)< Foo >::value
+\endcode
+  */
+#define DXTC_has_method(mthd_nm) DXTC_has_method_helper_##mthd_nm
+
+
 DUNE_XT_COMMON_TYPENAME(int)
 DUNE_XT_COMMON_TYPENAME(double)
 DUNE_XT_COMMON_TYPENAME(float)
