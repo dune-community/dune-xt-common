@@ -14,6 +14,7 @@
 include(CheckCXXSourceCompiles)
 include(DuneXtCommonMacros)
 include(CTest)
+include(DuneXTInstallPythonPackage)
 
 function(TO_LIST_SPACES _LIST_NAME OUTPUT_VAR)
   set(NEW_LIST_SPACE)
@@ -117,22 +118,46 @@ macro(BEGIN_TESTCASES)
             get_filename_component(testbase ${template} NAME_WE)
             string(REPLACE ".tpl" ".py" config_fn "${template}")
             string(REPLACE ".tpl" ".tpl.cc" out_fn "${template}")
-            string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_BINARY_DIR}" out_fn "${out_fn}")
-            add_custom_command(OUTPUT ${out_fn}
+            string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}" out_fn "${out_fn}")
+            # get the last completed cache for the codegen execution during configure time
+            foreach(_mod ${ALL_DEPENDENCIES} )
+                dune_module_path(MODULE ${_mod} RESULT ${_mod}_binary_dir BUILD_DIR)
+                if(IS_DIRECTORY ${${_mod}_binary_dir})
+                    set(last_dep_bindir ${${_mod}_binary_dir})
+                endif()
+            endforeach(_mod DEPENDENCIES)
+
+            dune_xt_execute_process(COMMAND ${CMAKE_BINARY_DIR}/dune-env dxt_code_generation.py
+                                      "${config_fn}" "${template}"  "${CMAKE_CURRENT_BINARY_DIR}"
+                                      "${out_fn}" "${last_dep_bindir}")
+            file( GLOB generated_sources "${out_fn}.*")
+            if("" STREQUAL "${generated_sources}")
+                set(generated_sources ${out_fn})
+            endif()
+            add_custom_command(OUTPUT "${generated_sources}"
                                COMMAND ${CMAKE_BINARY_DIR}/dune-env dxt_code_generation.py
-                                      "${config_fn}" "${template}"  "${CMAKE_BINARY_DIR}" "${out_fn}"
+                                      "${config_fn}" "${template}"  "${CMAKE_CURRENT_BINARY_DIR}"
+                                      "${out_fn}" "${last_dep_bindir}"
                                DEPENDS "${config_fn}" "${template}"
                                VERBATIM USES_TERMINAL)
-            set(target test_${testbase})
-            dune_add_test( NAME ${target}
-                           SOURCES ${out_fn} ${COMMON_HEADER}
-                           LINK_LIBRARIES ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common
-                           COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${target}
-                                    --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/${target}.xml
-                           TIMEOUT ${DXT_TEST_TIMEOUT}
-                           MPI_RANKS ${ranks})
-            list(APPEND dxt_test_binaries ${target} )
-            set(dxt_test_names_${target} ${target})
+            foreach(gen_source ${generated_sources})
+                string(REPLACE "${out_fn}." "" postfix "${gen_source}")
+                string(REPLACE "${out_fn}" "" postfix "${postfix}")
+                string(REPLACE ".cc" "" postfix "${postfix}")
+                if(NOT "" STREQUAL "${postfix}")
+                    set(postfix "__${postfix}")
+                endif()
+                set(target test_${testbase}${postfix})
+                dune_add_test( NAME ${target}
+                            SOURCES ${gen_source} ${COMMON_HEADER}
+                            LINK_LIBRARIES ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common
+                            COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${target}
+                                        --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/${target}.xml
+                            TIMEOUT ${DXT_TEST_TIMEOUT}
+                            MPI_RANKS ${ranks})
+                list(APPEND dxt_test_binaries ${target} )
+                set(dxt_test_names_${target} ${target})
+            endforeach()
         endforeach( template ${test_templates} )
         add_custom_target(test_templates SOURCES ${test_templates})
 endmacro(BEGIN_TESTCASES)
