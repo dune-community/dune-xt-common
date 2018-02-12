@@ -165,3 +165,11 @@ macro(dxt_exclude_from_headercheck)
         list(APPEND dxt_ignore_header ${item})
     endforeach()
 endmacro(dxt_exclude_from_headercheck)
+
+macro(dxt_add_python_tests)
+  add_custom_target(test_python
+                    "${CMAKE_BINARY_DIR}/dune-env" "py.test" "."
+                    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/python"
+                    DEPENDS bindings
+                    VERBATIM USES_TERMINAL)
+endmacro(dxt_add_python_tests)
