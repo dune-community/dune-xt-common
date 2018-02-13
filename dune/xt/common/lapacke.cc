@@ -111,14 +111,14 @@ int dgeqp3(int matrix_layout, int m, int n, double* a, int lda, int* jpvt, doubl
 int dormqr(int matrix_layout,
            char side,
            char trans,
-           lapack_int m,
-           lapack_int n,
-           lapack_int k,
+           int m,
+           int n,
+           int k,
            const double* a,
-           lapack_int lda,
+           int lda,
            const double* tau,
            double* c,
-           lapack_int ldc)
+           int ldc)
 {
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dormqr(matrix_layout, side, trans, m, n, k, a, lda, tau, c, ldc);
