@@ -271,6 +271,16 @@ FieldVector<K, SIZE> make_field_container(FieldVector<K, SIZE>&& vec)
   return std::move(vec);
 }
 
+template <class K>
+FieldVector<K, 3> cross_product(const FieldVector<K, 3>& u, const FieldVector<K, 3>& v)
+{
+  FieldVector<K, 3> ret;
+  ret[0] = u[1] * v[2] - u[2] * v[1];
+  ret[1] = u[2] * v[0] - u[0] * v[2];
+  ret[2] = u[0] * v[1] - u[1] * v[0];
+  return ret;
+}
+
 
 namespace internal {
 
