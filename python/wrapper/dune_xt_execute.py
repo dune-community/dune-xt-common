@@ -15,6 +15,7 @@
 # This is a modified version of dune_execute.py from dune-testtools.
 # It adds the --gtest_output option to the call.
 
+import os
 import os.path
 import subprocess
 import sys
@@ -33,8 +34,13 @@ def call(executable, inifile=None, *additional_args):
         command.append(iniargument)
     for arg in additional_args:
         command.append(arg)
-    return subprocess.call(command)
+    # forwarding the env ensures child is executed in the dune virtualenv
+    # since this script itself is always called in the dune virtualenv
+    return subprocess.call(command, env=os.environ)
 
 # Parse the given arguments
 args = get_args()
-sys.exit(call(args["exec"], args["ini"], "--gtest_output=xml:" + os.path.splitext(os.path.basename(args["exec"]))[0] + "_" + os.path.splitext(os.path.basename(args["ini"]))[0] + ".xml"))
+xml_out = "--gtest_output=xml:{}_{}.xml".format(os.path.splitext(os.path.basename(args["exec"]))[0],
+                                            os.path.splitext(os.path.basename(args["ini"]))[0])
+sys.exit(call(args["exec"], args["ini"],
+              ))
