@@ -37,18 +37,46 @@ class FieldMatrix : public Dune::FieldMatrix<K, ROWS, COLS>
   typedef Dune::FieldMatrix<K, ROWS, COLS> BaseType;
   typedef FieldMatrix<K, ROWS, COLS> ThisType;
 
+  template <bool is_number = (is_arithmetic<K>::value || is_complex<K>::value), bool anything = true>
+  struct suitable_default;
+
+  template <bool anything>
+  struct suitable_default<true, anything>
+  {
+    static K value()
+    {
+      return 0;
+    }
+  };
+
+  template <bool anything>
+  struct suitable_default<false, anything>
+  {
+    static K value()
+    {
+      return K();
+    }
+  };
+
 public:
   using typename BaseType::value_type;
   using typename BaseType::size_type;
   using typename BaseType::field_type;
 
-  FieldMatrix(const K& kk = 0)
-    : BaseType(kk)
+  FieldMatrix(const K& kk = suitable_default<>::value())
+    : BaseType()
   {
+    // This is required because BaseType(kk) does not work for std::string
+    for (size_t i = 0; i < ROWS; ++i) {
+      for (size_t j = 0; j < COLS; ++j)
+        (*this)[i][j] = kk;
+    }
   }
 
-  FieldMatrix(const size_t DXTC_DEBUG_ONLY(rr), const size_t DXTC_DEBUG_ONLY(cc), const K& kk = 0)
-    : BaseType(kk)
+  FieldMatrix(const size_t DXTC_DEBUG_ONLY(rr),
+              const size_t DXTC_DEBUG_ONLY(cc),
+              const K& kk = suitable_default<>::value())
+    : BaseType()
   {
 #ifndef NDEBUG
     if (rr != ROWS || cc != COLS)
@@ -60,10 +88,16 @@ public:
                                                                     << cc
                                                                     << " columns!");
 #endif // NDEBUG
+    // This is required because BaseType(kk) does not work for std::string
+    for (size_t i = 0; i < ROWS; ++i) {
+      for (size_t j = 0; j < COLS; ++j)
+        (*this)[i][j] = kk;
+    }
+
   } // ... FieldMatrix(...)
 
   FieldMatrix(std::initializer_list<std::initializer_list<K>> list_of_rows)
-    : BaseType(0.)
+    : BaseType()
   {
 #ifndef NDEBUG
     if (list_of_rows.size() != ROWS)
@@ -262,14 +296,35 @@ class FieldMatrix<K, 1, 1> : public Dune::FieldMatrix<K, 1, 1>
   typedef Dune::FieldMatrix<K, ROWS, COLS> BaseType;
   typedef FieldMatrix<K, ROWS, COLS> ThisType;
 
+  template <bool is_number = (is_arithmetic<K>::value || is_complex<K>::value), bool anything = true>
+  struct suitable_default;
+
+  template <bool anything>
+  struct suitable_default<true, anything>
+  {
+    static K value()
+    {
+      return 0;
+    }
+  };
+
+  template <bool anything>
+  struct suitable_default<false, anything>
+  {
+    static K value()
+    {
+      return K();
+    }
+  };
+
 public:
-  FieldMatrix(const K& kk = 0)
+  FieldMatrix(const K& kk = suitable_default<>::value())
     : BaseType(kk)
   {
   }
 
   FieldMatrix(std::initializer_list<std::initializer_list<K>> list_of_rows)
-    : BaseType(0.)
+    : BaseType()
   {
 #ifndef NDEBUG
     if (list_of_rows.size() != ROWS)
@@ -293,7 +348,9 @@ public:
     }
   } // FieldMatrix(std::initializer_list<std::initializer_list<K>> list_of_rows)
 
-  FieldMatrix(const size_t DXTC_DEBUG_ONLY(rr), const size_t DXTC_DEBUG_ONLY(cc), const K& kk = 0)
+  FieldMatrix(const size_t DXTC_DEBUG_ONLY(rr),
+              const size_t DXTC_DEBUG_ONLY(cc),
+              const K& kk = suitable_default<>::value())
     : BaseType(kk)
   {
 #ifndef NDEBUG

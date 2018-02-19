@@ -46,8 +46,29 @@ class FieldVector : public Dune::FieldVector<K, SIZE>
   typedef Dune::FieldVector<K, SIZE> BaseType;
   typedef FieldVector<K, SIZE> ThisType;
 
+  template <bool is_number = (is_arithmetic<K>::value || is_complex<K>::value), bool anything = true>
+  struct suitable_default;
+
+  template <bool anything>
+  struct suitable_default<true, anything>
+  {
+    static K value()
+    {
+      return 0;
+    }
+  };
+
+  template <bool anything>
+  struct suitable_default<false, anything>
+  {
+    static K value()
+    {
+      return K();
+    }
+  };
+
 public:
-  FieldVector(const K& kk = 0)
+  FieldVector(const K& kk = suitable_default<>::value())
     : BaseType(kk)
   {
   }
@@ -83,7 +104,7 @@ public:
   }
 
   FieldVector(const std::vector<K>& vec)
-    : BaseType(0)
+    : BaseType()
   {
 #ifndef NDEBUG
     if (vec.size() != SIZE)
@@ -98,7 +119,7 @@ public:
   } // FieldVector(...)
 
   FieldVector(std::initializer_list<K> list)
-    : BaseType(0)
+    : BaseType()
   {
 #ifndef NDEBUG
     if (list.size() != SIZE)
