@@ -50,13 +50,13 @@ macro(BEGIN_TESTCASES)
                     endforeach(target)
                 else( EXISTS ${minifile} )
                     set(target test_${testbase})
-		    dune_add_test( NAME ${target}
-			           SOURCES ${source} ${COMMON_HEADER}
-				   LINK_LIBRARIES ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common
-				   COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${target}
+                    dune_add_test( NAME ${target}
+                                  SOURCES ${source} ${COMMON_HEADER}
+                                  LINK_LIBRARIES ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common
+                                  COMMAND ${CMAKE_BINARY_DIR}/dune-env ${CMAKE_CURRENT_BINARY_DIR}/${target}
                                           --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/${target}.xml
-			           TIMEOUT ${DXT_TEST_TIMEOUT}
-			           MPI_RANKS ${ranks})
+                                  TIMEOUT ${DXT_TEST_TIMEOUT}
+                                  MPI_RANKS ${ranks})
                     list(APPEND dxt_test_binaries ${target} )
                     set(dxt_test_names_${target} ${target})
 	        endif( EXISTS ${minifile} )
@@ -103,7 +103,7 @@ macro(BEGIN_TESTCASES)
                 dune_add_test( NAME ${target}
                             SOURCES ${gen_source} ${COMMON_HEADER}
                             LINK_LIBRARIES ${ARGN} ${COMMON_LIBS} ${GRID_LIBS} gtest_dune_xt_common
-                            COMMAND ${CMAKE_CURRENT_BINARY_DIR}/${target}
+                            COMMAND ${CMAKE_BINARY_DIR}/dune-env ${CMAKE_CURRENT_BINARY_DIR}/${target}
                                         --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/${target}.xml
                             TIMEOUT ${DXT_TEST_TIMEOUT}
                             MPI_RANKS ${ranks})
