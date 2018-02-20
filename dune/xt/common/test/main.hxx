@@ -107,7 +107,7 @@ int main(int argc, char** argv)
 
     const size_t threads = DXTC_CONFIG.has_key("threading.max_count") // <- doing this so complicated to
                                ? DXTC_CONFIG.get<size_t>("threading.max_count") //    silence the WARNING: ...
-                               : Dune::XT::Common::ThreadManager::default_max_threads();
+                               : 1;
 #if HAVE_TBB
     tbb::task_scheduler_init tbb_init(boost::numeric_cast<int>(threads));
 #endif
