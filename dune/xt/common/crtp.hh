@@ -61,11 +61,13 @@
 namespace Dune {
 namespace XT {
 
-template <class InterfaceType, class Traits>
+
+template <class InterfaceType, class TraitsImp>
 class CRTPInterface
 {
 public:
-  typedef typename Traits::derived_type derived_type;
+  using Traits = TraitsImp;
+  using derived_type = typename Traits::derived_type;
 
   static inline derived_type& as_imp(InterfaceType& that)
   {
@@ -96,10 +98,13 @@ protected:
 #endif
 }; // CRTPInterface
 
+
 #ifndef NDEBUG
 template <class I, class T>
 std::recursive_mutex CRTPInterface<I, T>::crtp_mutex_;
 #endif
+
+
 } // namespace XT
 } // namespace Dune
 
