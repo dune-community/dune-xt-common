@@ -331,6 +331,26 @@ typename std::enable_if<is_vector<VectorType>::value, VectorType>::type zeros_li
 }
 
 
+template <class V, StorageLayout storage_layout = StorageLayout::dense_row_major>
+typename std::enable_if<is_vector<V>::value, std::unique_ptr<typename VectorAbstraction<V>::S[]>>::type
+serialize(const V& vec)
+{
+  typedef typename VectorAbstraction<V>::S S;
+  static_assert(storage_layout == StorageLayout::dense_row_major || storage_layout == StorageLayout::dense_column_major,
+                "You have to select either row_major or column_major as StorageLayout!");
+  using Vec = VectorAbstraction<V>;
+  const size_t size = Vec::size(vec);
+  auto data = std::make_unique<S[]>(size);
+  for (size_t ii = 0; ii < size; ++ii)
+#ifdef DXT_DISABLE_CHECKS
+    data[ii] = numeric_cast<T>(Vec::get_entry(vec, ii));
+#else
+    data[ii] = Vec::get_entry(vec, ii);
+#endif
+  return data;
+}
+
+
 template <class RangeType, class SourceType>
 typename std::enable_if<is_vector<SourceType>::value && is_vector<RangeType>::value, RangeType>::type
 convert_to(const SourceType& source)
