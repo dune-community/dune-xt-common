@@ -129,12 +129,13 @@ SparsityPatternDefault tridiagonal_pattern(const size_t rows, const size_t cols)
   return ret;
 }
 
-SparsityPatternDefault triangular_pattern(const size_t rows, const size_t cols, const Common::Triangular& uplo)
+SparsityPatternDefault triangular_pattern(const size_t rows, const size_t cols, const Common::MatrixPattern& uplo)
 {
   SparsityPatternDefault ret(rows);
   for (size_t ii = 0; ii < rows; ++ii) {
     for (size_t jj = 0; jj < cols; ++jj) {
-      if ((uplo == Common::Triangular::lower && ii >= jj) || (uplo == Common::Triangular::upper && ii <= jj))
+      if ((uplo == Common::MatrixPattern::lower_triangular && ii >= jj)
+          || (uplo == Common::MatrixPattern::upper_triangular && ii <= jj))
         ret.insert(ii, jj);
     }
   }

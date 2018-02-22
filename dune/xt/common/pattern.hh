@@ -70,8 +70,9 @@ SparsityPatternDefault dense_pattern(const size_t rows, const size_t cols);
 
 SparsityPatternDefault tridiagonal_pattern(const size_t rows, const size_t cols);
 
-SparsityPatternDefault
-triangular_pattern(const size_t rows, const size_t cols, const Common::Triangular& uplo = Common::Triangular::lower);
+SparsityPatternDefault triangular_pattern(const size_t rows,
+                                          const size_t cols,
+                                          const Common::MatrixPattern& uplo = Common::MatrixPattern::lower_triangular);
 
 SparsityPatternDefault diagonal_pattern(const size_t rows, const size_t cols, int offset = 0);
 
