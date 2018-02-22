@@ -109,6 +109,24 @@ public:
     return accumulate(ValueType(0), std::plus<ValueType>());
   }
 
+  typename ContainerType::iterator begin()
+  {
+    return values_.begin();
+  }
+  typename ContainerType::iterator end()
+  {
+    return values_.end();
+  }
+
+  typename ContainerType::const_iterator begin() const
+  {
+    return values_.begin();
+  }
+  typename ContainerType::const_iterator end() const
+  {
+    return values_.end();
+  }
+
 private:
   ContainerType values_;
 };
@@ -188,6 +206,24 @@ public:
   ValueType sum() const
   {
     return accumulate(ValueType(), std::plus<ValueType>());
+  }
+
+  typename ContainerType::iterator begin()
+  {
+    return values_->begin();
+  }
+  typename ContainerType::iterator end()
+  {
+    return values_->end();
+  }
+
+  typename ContainerType::const_iterator begin() const
+  {
+    return values_->begin();
+  }
+  typename ContainerType::const_iterator end() const
+  {
+    return values_->end();
   }
 
 private:
