@@ -401,7 +401,6 @@ void dtrsm(const int layout,
   DUNE_UNUSED_PARAMETER(lda);
   DUNE_UNUSED_PARAMETER(b);
   DUNE_UNUSED_PARAMETER(ldb);
-  DUNE_UNUSED_PARAMETER(check);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
 #endif
 }
