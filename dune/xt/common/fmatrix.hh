@@ -472,6 +472,22 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
   {
     return mat[row][col];
   }
+
+  static inline void add_to_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)
+  {
+    mat[row][col] += val;
+  }
+
+
+  static inline ScalarType* data(MatrixType& mat)
+  {
+    return &(mat[0][0]);
+  }
+
+  static inline const ScalarType* data(const MatrixType& mat)
+  {
+    return &(mat[0][0]);
+  }
 };
 
 
