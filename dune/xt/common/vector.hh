@@ -331,6 +331,22 @@ typename std::enable_if<is_vector<VectorType>::value, VectorType>::type zeros_li
 }
 
 
+template <class VectorType>
+typename std::enable_if<is_vector<VectorType>::value, typename VectorAbstraction<VectorType>::ScalarType*>::type
+data(VectorType& source)
+{
+  return VectorAbstraction<VectorType>::data(source);
+}
+
+
+template <class VectorType>
+const typename std::enable_if<is_vector<VectorType>::value, typename VectorAbstraction<VectorType>::ScalarType*>::type
+data(const VectorType& source)
+{
+  return VectorAbstraction<VectorType>::data(source);
+}
+
+
 template <class V, StorageLayout storage_layout = StorageLayout::dense_row_major>
 typename std::enable_if<is_vector<V>::value, std::unique_ptr<typename VectorAbstraction<V>::S[]>>::type
 serialize(const V& vec)
