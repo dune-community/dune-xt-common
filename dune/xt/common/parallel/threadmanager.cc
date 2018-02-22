@@ -13,9 +13,11 @@
 
 #if HAVE_TBB
 #include <thread>
+#include <tbb/concurrent_unordered_map.h>
 #endif
 
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/config.hpp>
 
 #if HAVE_EIGEN
 #include <dune/xt/common/disable_warnings.hh>
@@ -46,6 +48,25 @@
 
 #if HAVE_TBB
 
+struct ThreadIdHashCompare
+{
+  size_t hash(std::thread::id id) const
+  {
+    static std::hash<std::thread::id> hasher;
+    return hasher(id);
+  }
+
+  size_t operator()(std::thread::id id) const
+  {
+    return hash(id);
+  }
+
+  bool equal(std::thread::id a, std::thread::id b) const
+  {
+    return a == b;
+  }
+};
+
 size_t Dune::XT::Common::ThreadManager::max_threads()
 {
   const auto threads = DXTC_CONFIG_GET("threading.max_count", 1);
@@ -60,14 +81,25 @@ size_t Dune::XT::Common::ThreadManager::current_threads()
   return threads;
 }
 
+template <typename Key, typename T, typename MapType>
+std::pair<typename MapType::iterator, bool> tbb_map_emplace(MapType& map_in, Key key, T value)
+{
+#if BOOST_CLANG
+  return map_in.insert(typename MapType::value_type(key, value));
+#else
+  return map_in.emplace(key, value);
+#endif
+}
+
 size_t Dune::XT::Common::ThreadManager::thread()
 {
-  const auto tbb_id = std::this_thread::get_id();
-  static std::map<decltype(tbb_id), size_t> thread_ids;
+  const std::thread::id tbb_id = std::this_thread::get_id();
+  static tbb::concurrent_unordered_map<std::thread::id, size_t, ThreadIdHashCompare> thread_ids;
   const auto it = thread_ids.find(tbb_id);
-  if (it == thread_ids.end())
-    map_emplace(thread_ids, tbb_id, thread_ids.size());
-  return thread_ids.at(tbb_id);
+  if (it == thread_ids.end()) {
+    return tbb_map_emplace(thread_ids, tbb_id, thread_ids.size()).first->second;
+  }
+  return it->second;
 }
 
 //! both std::hw_concur and intel's default_thread_count fail for mic
