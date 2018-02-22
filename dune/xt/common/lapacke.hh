@@ -62,6 +62,14 @@ int dgeev(int matrix_layout,
  */
 int dgeqp3(int matrix_layout, int m, int n, double* a, int lda, int* jpvt, double* tau);
 
+
+/**
+ * \brief Wrapper around LAPACKE_dorgqr
+ * \sa    LAPACKE_dorqqr
+ */
+int dorgqr(int matrix_layout, int m, int n, int k, double* a, int lda, const double* tau);
+
+
 /**
  * \brief Wrapper around LAPACKE_dormqr
  * \sa    LAPACKE_dormqr
@@ -77,6 +85,13 @@ int dormqr(int matrix_layout,
            const double* tau,
            double* c,
            int ldc);
+
+
+/**
+ * \brief Wrapper around LAPACKE_dpotrf
+ * \sa    LAPACKE_dpotrf
+ */
+int dpotrf(int matrix_layout, char uplo, int n, double* a, int lda);
 
 
 /**
@@ -197,8 +212,7 @@ void dtrsm(const int layout,
            const double* a,
            const int lda,
            double* b,
-           const int ldb,
-           bool check = false);
+           const int ldb);
 
 
 } // namespace Blas
