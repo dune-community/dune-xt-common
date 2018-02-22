@@ -65,15 +65,7 @@ void check_eq(ThreadValue& foo, const typename ThreadValue::ValueType& value)
   Checker<ThreadValue>::check_eq(foo, value);
 }
 
-typedef testing::Types<FallbackPerThreadValue<int>,
-                       PerThreadValue<int>,
-#if HAVE_TBB
-                       TBBPerThreadValue<int>,
-                       TBBPerThreadValue<const int>,
-#endif
-                       FallbackPerThreadValue<const int>,
-                       PerThreadValue<const int>>
-    TLSTypes;
+typedef testing::Types<PerThreadValue<int>, PerThreadValue<const int>> TLSTypes;
 
 template <class T>
 struct ThreadValueTest : public testing::Test
@@ -84,14 +76,26 @@ TYPED_TEST_CASE(ThreadValueTest, TLSTypes);
 TYPED_TEST(ThreadValueTest, All)
 {
   typedef TypeParam PTVType;
-  typename PTVType::ValueType value(1);
-  PTVType foo(value);
-  check_eq(foo, value);
-  foo = typename PTVType::ValueType(1);
-  check_eq(foo, value);
-  const auto new_value = *foo;
-  const PTVType bar(*foo);
-  check_eq(bar, new_value);
+  {
+    typename PTVType::ValueType value(1);
+    PTVType foo(value);
+    check_eq(foo, value);
+    foo = typename PTVType::ValueType(1);
+    check_eq(foo, value);
+    const auto new_value = *foo;
+    const PTVType bar(*foo);
+    check_eq(bar, new_value);
+  }
+  {
+    typename PTVType::ValueType zero(0);
+    PTVType foo(zero);
+    auto sum = foo.accumulate(0, std::plus<typename PTVType::ValueType>());
+    EXPECT_EQ(Dune::XT::Common::threadManager().max_threads() * zero, sum);
+    typename PTVType::ValueType one = 1;
+    PTVType bar(one);
+    sum = bar.accumulate(0, std::plus<typename PTVType::ValueType>());
+    EXPECT_EQ(Dune::XT::Common::threadManager().max_threads() * one, sum);
+  }
 }
 
 GTEST_TEST(ThreadManager, All)

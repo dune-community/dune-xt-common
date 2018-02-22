@@ -17,9 +17,7 @@
 #include <type_traits>
 #include <numeric>
 
-#if HAVE_TBB
-#include <tbb/enumerable_thread_specific.h>
-#endif
+
 #include <boost/noncopyable.hpp>
 
 #include <dune/xt/common/type_traits.hh>
@@ -33,19 +31,19 @@ namespace Common {
 /** Automatic Storage of non-static, N thread-local values
  **/
 template <class ValueImp>
-class FallbackPerThreadValue : public boost::noncopyable
+class PerThreadValue : public boost::noncopyable
 {
 public:
   typedef ValueImp ValueType;
   typedef typename std::conditional<std::is_const<ValueImp>::value, ValueImp, const ValueImp>::type ConstValueType;
 
 private:
-  typedef FallbackPerThreadValue<ValueImp> ThisType;
+  typedef PerThreadValue<ValueImp> ThisType;
   typedef std::deque<std::unique_ptr<ValueType>> ContainerType;
 
 public:
   //! Initialization by copy construction of ValueType
-  explicit FallbackPerThreadValue(ConstValueType& value)
+  explicit PerThreadValue(ConstValueType& value)
     : values_(threadManager().max_threads())
   {
     std::generate(values_.begin(), values_.end(), [=]() { return Common::make_unique<ValueType>(value); });
@@ -53,16 +51,11 @@ public:
 
   //! Initialization by in-place construction ValueType with \param ctor_args
   template <class... InitTypes>
-  explicit FallbackPerThreadValue(InitTypes&&... ctor_args)
+  explicit PerThreadValue(InitTypes&&... ctor_args)
     : values_(threadManager().max_threads())
   {
-#if __GNUC__
-    // cannot unpack in lambda due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=47226
-    ValueType v(ctor_args...);
-    std::generate(values_.begin(), values_.end(), [&]() { return Common::make_unique<ValueType>(v); });
-#else
-    std::generate(values_.begin(), values_.end(), [&]() { return Common::make_unique<ValueType>(ctor_args...); });
-#endif
+    for (auto&& val : values_)
+      val = Common::make_unique<ValueType>(ctor_args...);
   }
 
   ThisType& operator=(ConstValueType&& value)
@@ -130,112 +123,6 @@ public:
 private:
   ContainerType values_;
 };
-
-#if HAVE_TBB
-/** Automatic Storage of non-static, N thread-local values
- **/
-template <class ValueImp>
-class TBBPerThreadValue : public boost::noncopyable
-{
-public:
-  typedef ValueImp ValueType;
-  typedef typename std::conditional<std::is_const<ValueImp>::value, ValueImp, const ValueImp>::type ConstValueType;
-
-private:
-  typedef TBBPerThreadValue<ValueImp> ThisType;
-  typedef tbb::enumerable_thread_specific<std::unique_ptr<ValueType>> ContainerType;
-
-public:
-  //! Initialization by copy construction of ValueType
-  explicit TBBPerThreadValue(ValueType value)
-    : values_(new ContainerType([=]() { return Common::make_unique<ValueType>(value); }))
-  {
-  }
-
-  //! Initialization by in-place construction ValueType with \param ctor_args
-  template <class... InitTypes>
-  explicit TBBPerThreadValue(InitTypes&&... ctor_args)
-#if __GNUC__
-      // cannot unpack in lambda due to https://gcc.gnu.org/bugzilla/show_bug.cgi?id=47226
-      : TBBPerThreadValue(ValueType(ctor_args...))
-#else
-    : values_(new ContainerType([=]() { return Common::make_unique<ValueType>(ctor_args...); }))
-#endif
-  {
-  }
-
-  ThisType& operator=(ValueType&& value)
-  {
-    values_ = Common::make_unique<ContainerType>([=]() { return Common::make_unique<ValueType>(value); });
-    return *this;
-  }
-
-  operator ValueImp() const
-  {
-    return this->operator*();
-  }
-
-  ValueType& operator*()
-  {
-    return *values_->local();
-  }
-
-  ConstValueType& operator*() const
-  {
-    return *values_->local();
-  }
-
-  ValueType* operator->()
-  {
-    return values_->local().get();
-  }
-
-  ConstValueType* operator->() const
-  {
-    return values_->local().get();
-  }
-
-  template <class BinaryOperation>
-  ValueType accumulate(ValueType init, BinaryOperation op) const
-  {
-    typedef const typename ContainerType::value_type ptr;
-    auto l = [&](ConstValueType& a, ptr& b) { return op(a, *b); };
-    return std::accumulate(values_->begin(), values_->end(), init, l);
-  }
-
-  ValueType sum() const
-  {
-    return accumulate(ValueType(), std::plus<ValueType>());
-  }
-
-  typename ContainerType::iterator begin()
-  {
-    return values_->begin();
-  }
-  typename ContainerType::iterator end()
-  {
-    return values_->end();
-  }
-
-  typename ContainerType::const_iterator begin() const
-  {
-    return values_->begin();
-  }
-  typename ContainerType::const_iterator end() const
-  {
-    return values_->end();
-  }
-
-private:
-  mutable std::unique_ptr<ContainerType> values_;
-};
-
-template <typename T>
-using PerThreadValue = TBBPerThreadValue<T>;
-#else // HAVE_TBB
-template <typename T>
-using PerThreadValue = FallbackPerThreadValue<T>;
-#endif
 
 } // namespace Common
 } // namespace XT
