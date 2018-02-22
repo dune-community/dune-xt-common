@@ -480,8 +480,48 @@ convert_to(const SourceType& source)
 } // ... convert_to(...)
 
 
+template <class MatrixType, class M = MatrixAbstraction<MatrixType>>
+typename std::enable_if<is_matrix<MatrixType>::value,
+                        typename M::template MatrixTypeTemplate<M::static_cols, M::static_rows>>::type
+transposed(const MatrixType& mat)
+{
+  auto ret = M::template create<M::static_cols, M::static_rows>(M::cols(mat), M::rows(mat), 0.);
+  for (size_t ii = 0; ii < M::rows(mat); ++ii)
+    for (size_t jj = 0; jj < M::cols(mat); ++jj)
+      set_matrix_entry(ret, jj, ii, get_matrix_entry(mat, ii, jj));
+  return ret;
+}
+
+
 } // namespace Common
 } // namespace XT
+
+
+template <class K>
+Dune::DynamicMatrix<K> operator*(const Dune::DynamicMatrix<K>& lhs, const Dune::DynamicMatrix<K>& rhs)
+{
+  Dune::DynamicMatrix<K> ret(lhs.rows(), rhs.cols(), 0.);
+  XT::Common::multiply_helper(lhs, rhs, ret);
+  return ret;
+}
+
+template <class K>
+Dune::DynamicMatrix<K> operator+(const Dune::DynamicMatrix<K>& lhs, const Dune::DynamicMatrix<K>& rhs)
+{
+  Dune::DynamicMatrix<K> ret(lhs);
+  ret += rhs;
+  return ret;
+}
+
+template <class K>
+Dune::DynamicMatrix<K> operator-(const Dune::DynamicMatrix<K>& lhs, const Dune::DynamicMatrix<K>& rhs)
+{
+  Dune::DynamicMatrix<K> ret(lhs);
+  ret -= rhs;
+  return ret;
+}
+
+
 } // namespace Dune
 
 #endif // DUNE_XT_COMMON_MATRIX_HH
