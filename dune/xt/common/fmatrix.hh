@@ -424,6 +424,8 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
   typedef typename Dune::FieldTraits<K>::real_type RealType;
   typedef ScalarType S;
   typedef RealType R;
+  template <size_t rows = N, size_t cols = M, class Field = K>
+  using MatrixTypeTemplate = Dune::XT::Common::FieldMatrix<Field, rows, cols>;
 
   static const bool is_matrix = true;
 
@@ -433,14 +435,23 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
 
   static const size_t static_cols = M;
 
-  static inline MatrixType create(const size_t rows, const size_t cols)
+  static const constexpr StorageLayout storage_layout = StorageLayout::dense_row_major;
+
+  template <size_t ROWS = static_rows, size_t COLS = static_cols, class Field = ScalarType>
+  static inline MatrixTypeTemplate<ROWS, COLS, Field>
+  create(const size_t rows, const size_t cols, const SparsityPatternDefault& /*pattern*/ = SparsityPatternDefault())
   {
-    return MatrixType(rows, cols);
+    return MatrixTypeTemplate<ROWS, COLS, Field>(rows, cols);
   }
 
-  static inline MatrixType create(const size_t rows, const size_t cols, const ScalarType& val)
+  template <size_t ROWS = static_rows, size_t COLS = static_cols, class Field = ScalarType>
+  static inline MatrixTypeTemplate<ROWS, COLS, Field>
+  create(const size_t rows,
+         const size_t cols,
+         const ScalarType& val,
+         const SparsityPatternDefault& /*pattern*/ = SparsityPatternDefault())
   {
-    return MatrixType(rows, cols, val);
+    return MatrixTypeTemplate<ROWS, COLS, Field>(rows, cols, val);
   }
 
   static inline std::unique_ptr<MatrixType> create_dynamic(const size_t rows, const size_t cols)
@@ -633,7 +644,7 @@ imag(const FieldMatrix<K, ROWS, COLS>& complex_mat)
 
 template <class L, int ROWS, int COLS, class R>
 Dune::XT::Common::FieldMatrix<typename PromotionTraits<L, R>::PromotedType, ROWS, COLS>
-operator-(const Dune::FieldMatrix<L, ROWS, COLS>& left, const Dune::FieldMatrix<R, COLS, COLS>& right)
+operator-(const Dune::FieldMatrix<L, ROWS, COLS>& left, const Dune::FieldMatrix<R, ROWS, COLS>& right)
 {
   Dune::XT::Common::FieldMatrix<typename PromotionTraits<L, R>::PromotedType, ROWS, COLS> ret = left;
   ret -= right;
@@ -643,7 +654,7 @@ operator-(const Dune::FieldMatrix<L, ROWS, COLS>& left, const Dune::FieldMatrix<
 
 template <class L, int ROWS, int COLS, class R>
 Dune::XT::Common::FieldMatrix<typename PromotionTraits<L, R>::PromotedType, ROWS, COLS>
-operator+(const Dune::FieldMatrix<L, ROWS, COLS>& left, const Dune::FieldMatrix<R, COLS, COLS>& right)
+operator+(const Dune::FieldMatrix<L, ROWS, COLS>& left, const Dune::FieldMatrix<R, ROWS, COLS>& right)
 {
   Dune::XT::Common::FieldMatrix<typename PromotionTraits<L, R>::PromotedType, ROWS, COLS> ret = left;
   ret += right;
