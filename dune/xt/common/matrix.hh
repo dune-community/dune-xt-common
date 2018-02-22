@@ -28,9 +28,6 @@ namespace XT {
 namespace Common {
 
 
-template <class FirstMatrixType, class SecondMatrixType, class ReturnMatrixType>
-void multiply_helper(const FirstMatrixType& first, const SecondMatrixType& second, ReturnMatrixType& ret);
-
 /**
  * \brief Traits to uniformly handle dense matrices.
  *
@@ -83,14 +80,16 @@ struct MatrixAbstraction
     static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
   }
 
-  static inline /*size_t*/ void rows(const MatrixType& /*mat*/)
+  static inline size_t rows(const MatrixType& /*mat*/)
   {
-    static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
+    DUNE_THROW(Dune::InvalidStateException, "Do not call me if is_matrix is false!");
+    return 0;
   }
 
-  static inline /*size_t*/ void cols(const MatrixType& /*mat*/)
+  static inline size_t cols(const MatrixType& /*mat*/)
   {
-    static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
+    DUNE_THROW(Dune::InvalidStateException, "Do not call me if is_matrix is false!");
+    return 0;
   }
 
   static inline void
@@ -110,14 +109,16 @@ struct MatrixAbstraction
     static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
   }
 
-  static inline ScalarType* data(MatrixType& /*mat*/)
+  static inline ScalarType* data(typename std::remove_const<MatrixType>::type& /*mat*/)
   {
     static_assert(AlwaysFalse<MatType>::value, "Do not call me if storage_layout is not dense!");
+    return nullptr;
   }
 
   static inline const ScalarType* data(const MatrixType& /*mat*/)
   {
     static_assert(AlwaysFalse<MatType>::value, "Do not call me if storage_layout is not dense!");
+    return nullptr;
   }
 };
 
@@ -360,14 +361,6 @@ create(const size_t rows,
 }
 
 
-template <class MatrixType>
-typename std::enable_if<is_matrix<MatrixType>::value, MatrixType>::type
-create(const size_t rows, const size_t cols, const typename MatrixAbstraction<MatrixType>::S& val = 0)
-{
-  return MatrixAbstraction<MatrixType>::create(rows, cols, val);
-}
-
-
 template <class TargetMatrixType, class SourceMatrixType>
 typename std::enable_if<is_matrix<TargetMatrixType>::value && is_matrix<SourceMatrixType>::value,
                         TargetMatrixType>::type
@@ -501,7 +494,13 @@ template <class K>
 Dune::DynamicMatrix<K> operator*(const Dune::DynamicMatrix<K>& lhs, const Dune::DynamicMatrix<K>& rhs)
 {
   Dune::DynamicMatrix<K> ret(lhs.rows(), rhs.cols(), 0.);
-  XT::Common::multiply_helper(lhs, rhs, ret);
+  for (size_t ii = 0; ii < lhs.rows(); ++ii) {
+    for (size_t jj = 0; jj < rhs.cols(); ++jj) {
+      ret[ii][jj] = 0.;
+      for (size_t kk = 0; kk < lhs.cols(); ++kk)
+        ret[ii][jj] += lhs[ii][kk] * rhs[kk][jj];
+    }
+  }
   return ret;
 }
 

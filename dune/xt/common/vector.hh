@@ -157,7 +157,7 @@ struct VectorAbstraction
     static_assert(AlwaysFalse<VecType>::value, "Do not call me if is_vector is false!");
   }
 
-  static inline ScalarType* data(VectorType& /*vec*/)
+  static inline ScalarType* data(typename std::remove_const<VectorType>::type& /*vec*/)
   {
     static_assert(AlwaysFalse<VecType>::value, "Do not call me if is_contiguous is false!");
     return nullptr;
@@ -340,7 +340,7 @@ data(VectorType& source)
 
 
 template <class VectorType>
-const typename std::enable_if<is_vector<VectorType>::value, typename VectorAbstraction<VectorType>::ScalarType*>::type
+typename std::enable_if<is_vector<VectorType>::value, const typename VectorAbstraction<VectorType>::ScalarType*>::type
 data(const VectorType& source)
 {
   return VectorAbstraction<VectorType>::data(source);
