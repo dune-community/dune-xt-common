@@ -241,15 +241,21 @@ struct VectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>>
 {
   static const bool has_static_size = true;
   static const size_t static_size = SIZE;
+  static const bool is_contiguous = true;
 
-  static inline Dune::XT::Common::FieldVector<K, SIZE> create(const size_t sz)
+  template <size_t SZ = SIZE, class Field = K>
+  using VectorTypeTemplate = Dune::XT::Common::FieldVector<Field, SZ>;
+
+  template <size_t SZ = SIZE, class Field = K>
+  static inline VectorTypeTemplate<SZ, Field> create(const size_t sz)
   {
-    return Dune::XT::Common::FieldVector<K, SIZE>(sz);
+    return VectorTypeTemplate<SZ, Field>(sz);
   }
 
-  static inline Dune::XT::Common::FieldVector<K, SIZE> create(const size_t sz, const K& val)
+  template <size_t SZ = SIZE, class Field = K>
+  static inline VectorTypeTemplate<SZ, Field> create(const size_t sz, const Field& val)
   {
-    return Dune::XT::Common::FieldVector<K, SIZE>(sz, val);
+    return VectorTypeTemplate<SZ, Field>(sz, val);
   }
 };
 
@@ -587,6 +593,13 @@ typename std::enable_if<SIZE != 1, K>::type operator*(const Dune::FieldVector<K,
     ret += vec[ii] * mat[ii][0];
   return ret;
 }
+
+template <class K, int SIZE>
+struct FieldTraits<XT::Common::FieldVector<K, SIZE>>
+{
+  typedef typename FieldTraits<K>::field_type field_type;
+  typedef typename FieldTraits<K>::real_type real_type;
+};
 
 
 } // namespace Dune
