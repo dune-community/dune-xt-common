@@ -16,7 +16,8 @@
 #include <numeric>
 #include <type_traits>
 #include <numeric>
-
+#include <list>
+#include <functional>
 
 #include <boost/noncopyable.hpp>
 
@@ -124,6 +125,43 @@ private:
   ContainerType values_;
 };
 
+template <class Imp, typename Result, class Reduction = std::plus<Result>>
+class ThreadResultPropagator
+{
+public:
+  ThreadResultPropagator(Imp* imp)
+    : imp_(imp)
+    , copies_({imp})
+  {
+  }
+
+  Imp* copy_imp()
+  {
+    auto cpy = new Imp(*imp_);
+    cpy->copies_.push_back(cpy);
+    assert(cpy->copies_.size() > 1);
+    return cpy;
+  }
+
+  void finalize_imp()
+  {
+    Reduction reduce;
+    Result result{0};
+    Imp* cpy = nullptr;
+    while (copies_.size() > 0) {
+      cpy = copies_.back();
+      copies_.pop_back();
+      if (cpy != nullptr) {
+        result = reduce(result, cpy->result());
+      }
+    }
+    cpy->set_result(result);
+  }
+
+private:
+  Imp* imp_;
+  std::list<Imp*> copies_;
+};
 } // namespace Common
 } // namespace XT
 } // namespace Dune
