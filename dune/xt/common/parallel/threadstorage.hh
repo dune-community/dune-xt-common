@@ -126,41 +126,37 @@ private:
 };
 
 template <class Imp, typename Result, class Reduction = std::plus<Result>>
-class ThreadResultPropagator
+class ThreadResultPropagator : public std::enable_shared_from_this<Imp>
 {
 public:
-  ThreadResultPropagator(Imp* imp)
-    : imp_(imp)
-    , copies_({imp})
+  ThreadResultPropagator()
   {
   }
 
-  Imp* copy_imp()
+  //! this cannot be done from ctor since the owning shared_ptr is not yet constructed
+  void init(std::shared_ptr<Imp> imp)
   {
-    auto cpy = new Imp(*imp_);
-    cpy->copies_.push_back(cpy);
-    assert(cpy->copies_.size() > 1);
+    parent_ = imp;
+  }
+
+  std::shared_ptr<Imp> copy_imp()
+  {
+    auto imp = std::enable_shared_from_this<Imp>::shared_from_this();
+    auto cpy = std::make_shared<Imp>(*imp);
+    cpy->init(imp);
     return cpy;
   }
 
   void finalize_imp()
   {
     Reduction reduce;
-    Result result{0};
-    Imp* cpy = nullptr;
-    while (copies_.size() > 0) {
-      cpy = copies_.back();
-      copies_.pop_back();
-      if (cpy != nullptr) {
-        result = reduce(result, cpy->result());
-      }
-    }
-    cpy->set_result(result);
+    const auto imp = std::enable_shared_from_this<Imp>::shared_from_this();
+    Result result = reduce(parent_->result(), imp->result());
+    parent_->set_result(result);
   }
 
 private:
-  Imp* imp_;
-  std::list<Imp*> copies_;
+  std::shared_ptr<Imp> parent_;
 };
 } // namespace Common
 } // namespace XT
