@@ -11,7 +11,6 @@
 
 #ifndef DUNE_XT_COMMON_EXCEPTIONS_BINDINGS_HH
 #define DUNE_XT_COMMON_EXCEPTIONS_BINDINGS_HH
-#if HAVE_DUNE_PYBINDXI
 
 #include <string>
 
@@ -66,5 +65,4 @@ void addbind_exceptions(pybind11::module& m)
 } // namespace XT
 } // namespace Dune
 
-#endif // HAVE_DUNE_PYBINDXI
 #endif // DUNE_XT_COMMON_EXCEPTIONS_BINDINGS_HH

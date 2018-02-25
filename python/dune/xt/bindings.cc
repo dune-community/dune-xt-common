@@ -10,8 +10,6 @@
 
 #include "config.h"
 
-#if HAVE_DUNE_PYBINDXI
-
 #include <string>
 #include <vector>
 
@@ -44,5 +42,3 @@ PYBIND11_MODULE(_common, m)
 #endif
   });
 }
-
-#endif // HAVE_DUNE_PYBINDXI
