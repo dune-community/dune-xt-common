@@ -60,23 +60,9 @@ jobs:
   - stage: test_cpp
     env: DOCKER_TAG=gcc_full
   - stage: test_cpp
-    env: DOCKER_TAG=gcc_no_istl_no_disc
-  - stage: test_cpp
-    env: DOCKER_TAG=gcc_no_disc
-  - stage: test_cpp
     env: DOCKER_TAG=clang_full
   - stage: test_python
     env: DOCKER_TAG=gcc_full
-    script: ${DOCKER_RUN} /root/src/dune-xt-common/.travis.test_python.bash
-    # overwrite other global/matrix settings
-    after_script: true
-  - stage: test_python
-    env: DOCKER_TAG=gcc_no_istl_no_disc
-    script: ${DOCKER_RUN} /root/src/dune-xt-common/.travis.test_python.bash
-    # overwrite other global/matrix settings
-    after_script: true
-  - stage: test_python
-    env: DOCKER_TAG=gcc_no_disc
     script: ${DOCKER_RUN} /root/src/dune-xt-common/.travis.test_python.bash
     # overwrite other global/matrix settings
     after_script: true

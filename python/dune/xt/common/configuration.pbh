@@ -10,7 +10,6 @@
 
 #ifndef DUNE_XT_COMMON_CONFIGURATION_PBH
 #define DUNE_XT_COMMON_CONFIGURATION_PBH
-#if HAVE_DUNE_PYBINDXI
 
 #include <dune/pybindxi/pybind11.h>
 #include <dune/pybindxi/cast.h>
@@ -65,5 +64,4 @@ struct type_caster<Dune::XT::Common::Configuration>
 NAMESPACE_END(detail)
 NAMESPACE_END(pybind11)
 
-#endif // HAVE_DUNE_PYBINDXI
 #endif // DUNE_XT_COMMON_CONFIGURATION_PBH
