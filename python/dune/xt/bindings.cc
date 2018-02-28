@@ -14,11 +14,6 @@
 #include <vector>
 
 #include <dune/common/parallel/mpihelper.hh>
-
-#if HAVE_DUNE_FEM
-#include <dune/fem/misc/mpimanager.hh>
-#endif
-
 #include <dune/pybindxi/pybind11.h>
 #include <dune/pybindxi/stl.h>
 

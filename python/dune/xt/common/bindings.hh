@@ -12,10 +12,6 @@
 #ifndef DUNE_XT_COMMON_BINDINGS_HH
 #define DUNE_XT_COMMON_BINDINGS_HH
 
-#if HAVE_DUNE_FEM
-#include <dune/fem/misc/mpimanager.hh>
-#endif
-
 #include <python/dune/xt/common/exceptions.bindings.hh>
 #include <python/dune/xt/common/fvector.pbh>
 #include <python/dune/xt/common/fmatrix.pbh>
@@ -48,9 +44,6 @@ static void add_initialization(pybind11::module& m, std::string logger_name)
           int argc = Dune::XT::Common::numeric_cast<int>(args.size());
           char** argv = Dune::XT::Common::vector_to_main_args(args);
           Dune::MPIHelper::instance(argc, argv);
-#if HAVE_DUNE_FEM
-          Dune::Fem::MPIManager::initialize(argc, argv);
-#endif
         },
         "args"_a = std::vector<std::string>());
 
