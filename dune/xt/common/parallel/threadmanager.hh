@@ -22,7 +22,7 @@ struct ThreadManager;
 ThreadManager& threadManager();
 
 /** abstractions of threading functionality
- *  currently controls tbb and forwards to dune-fem if possible, falls back to single-thread dummy imp
+ *  currently controls tbb, falls back to single-thread dummy imp
  **/
 struct ThreadManager
 {
