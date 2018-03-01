@@ -18,112 +18,11 @@
 #include <boost/serialization/static_warning.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 
-#if HAVE_DUNE_FEM
-#include <dune/grid/io/file/dgfparser.hh> //                      <- the correct specialization of dgf parser is missing
-#if HAVE_DUNE_ALUGRID
-#include <dune/alugrid/dgf.hh> //                                                                 without these includes
-#endif
-#include <dune/fem/function/common/discretefunction.hh>
-#include <dune/fem/gridpart/common/gridpart.hh>
-#include <dune/fem/space/lagrange/lagrangepoints.hh>
-#endif // HAVE_DUNE_FEM
-
 #include <dune/xt/common/math.hh>
 
 namespace Dune {
-
-#if HAVE_DUNE_FEM
-
-namespace Fem {
-
-template <class DiscreteFunctionTraits>
-auto begin(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> decltype(func.dbegin())
-{
-  return func.dbegin();
-}
-
-template <class DiscreteFunctionTraits>
-auto end(const Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> decltype(func.dend())
-{
-  return func.dend();
-}
-
-template <class DiscreteFunctionTraits>
-auto begin(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> decltype(func.dbegin())
-{
-  return func.dbegin();
-}
-
-template <class DiscreteFunctionTraits>
-auto end(Dune::Fem::DiscreteFunctionInterface<DiscreteFunctionTraits>& func) -> decltype(func.dend())
-{
-  return func.dend();
-}
-
-} // namespace Fem
-
-#endif // HAVE_DUNE_FEM
-
 namespace XT {
 namespace Common {
-
-#if HAVE_DUNE_FEM
-
-//! Range adapter for lagrange points from lagrange spaces
-template <class GridPartType, int order, int faceCodim>
-class LagrangePointSetRange
-{
-  typedef Dune::Fem::LagrangePointSet<GridPartType, order> LagrangePointSetType;
-  typedef typename LagrangePointSetType::template Codim<faceCodim>::SubEntityIteratorType SubEntityIteratorType;
-  const LagrangePointSetType& lp_set_;
-  const size_t subEntity_;
-
-public:
-  /** the template isn't lazyness here, the underlying set is templated on it too
-   */
-  template <class DiscreteFunctionspaceType, class EntityType>
-  LagrangePointSetRange(const DiscreteFunctionspaceType& space, const EntityType& entity, const size_t subEntity)
-    : lp_set_(space.lagrangePointSet(entity))
-    , subEntity_(subEntity)
-  {
-  }
-
-  LagrangePointSetRange(const LagrangePointSetType& lp_set, const size_t subEntity)
-    : lp_set_(lp_set)
-    , subEntity_(subEntity)
-  {
-  }
-
-  SubEntityIteratorType begin() const
-  {
-    return lp_set_.template beginSubEntity<faceCodim>(subEntity_);
-  }
-  SubEntityIteratorType end() const
-  {
-    return lp_set_.template endSubEntity<faceCodim>(subEntity_);
-  }
-};
-
-template <size_t codim, class DiscreteFunctionspaceType, class EntityType>
-LagrangePointSetRange<typename DiscreteFunctionspaceType::GridPartType,
-                      DiscreteFunctionspaceType::polynomialOrder,
-                      codim>
-lagrange_point_set_range(const DiscreteFunctionspaceType& space, const EntityType& entity, const size_t subEntity)
-{
-  return LagrangePointSetRange<typename DiscreteFunctionspaceType::GridPartType,
-                               DiscreteFunctionspaceType::polynomialOrder,
-                               codim>(space, entity, subEntity);
-}
-
-template <class LgPointSetType, size_t codim = 1>
-LagrangePointSetRange<typename LgPointSetType::GridPartType, LgPointSetType::polynomialOrder, codim>
-lagrange_point_set_range(const LgPointSetType& lpset, const size_t subEntity)
-{
-  return LagrangePointSetRange<typename LgPointSetType::GridPartType, LgPointSetType::polynomialOrder, codim>(
-      lpset, subEntity);
-}
-
-#endif // HAVE_DUNE_FEM
 
 //! get a vector with values in [start : increment : end)
 template <class T, class sequence = std::vector<T>>

@@ -14,13 +14,6 @@
 
 #include "configuration.hh"
 
-#if HAVE_DUNE_FEM
-#include <dune/fem/io/parameter.hh>
-#endif
-
-#ifndef HAVE_DUNE_FEM_PARAMETER_REPLACE
-#define HAVE_DUNE_FEM_PARAMETER_REPLACE 0
-#endif
 
 namespace Dune {
 namespace XT {
@@ -120,29 +113,6 @@ void Configuration::set_logfile(const std::string logfile)
     DUNE_THROW(Exceptions::wrong_input_given, "logfile must not be empty!");
   if (log_on_exit_)
     test_create_directory(directory_only(logfile_));
-}
-
-/**
- * \brief Load all key-value pairs from tree into fem parameter database.
- * \param tree ParameterTree to get values from.
- * \param pref Prefix that is added to each key and subkey (like this: pref.key), default is "".
- */
-void load_into_fem_parameter(const Dune::ParameterTree& tree, const std::string pref = "")
-{
-#if HAVE_DUNE_FEM_PARAMETER_REPLACE
-  for (auto key : tree.getValueKeys()) {
-    const auto val = tree.get(key, std::string());
-    key = pref + "." + key;
-    Dune::Fem::Parameter::replaceKey(key, val);
-  }
-  for (auto subkey : tree.getSubKeys()) {
-    const auto subpref = pref.empty() ? subkey : pref + "." + subkey;
-    load_into_fem_parameter(tree.sub(subkey), subpref);
-  }
-#else
-  (void)(tree);
-  (void)(pref);
-#endif
 }
 
 // method definitions for Configuration
@@ -257,8 +227,6 @@ void Configuration::read_command_line(int argc, char* argv[])
   }
   Dune::ParameterTreeParser::readINITree(argv[1], *this);
   Dune::ParameterTreeParser::readOptions(argc, argv, *this);
-  load_into_fem_parameter(*this);
-
   // datadir and logdir may be given from the command line...
   setup_();
 } // readCommandLine
