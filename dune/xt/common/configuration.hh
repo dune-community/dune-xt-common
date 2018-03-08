@@ -201,29 +201,6 @@ some_function_which_expects_a_config({{"type", "custom"}, {"tolerance", "1e-10"}
     return get_(key, def, validator, 0, 0);
   } // ... get(...)
 
-  //! get std::vector< T > from tree_
-  template <typename T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
-  std::vector<typename internal::Typer<T>::type>
-  get_list(std::string key,
-           T def = T(),
-           const std::string separators = ";",
-           const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
-               ValidateAny<typename internal::Typer<T>::type>()) const
-  {
-    typedef typename internal::Typer<T>::type Tt;
-    const auto def_t = static_cast<Tt>(def);
-    const auto value = get(key, to_string(def_t), ValidateAny<std::string>());
-    const auto tokens = tokenize<Tt>(value, separators);
-    for (auto token : tokens) {
-      if (!validator(token)) {
-        std::stringstream ss;
-        validator.print(ss);
-        DUNE_THROW(Exceptions::configuration_error, ss.str());
-      }
-    }
-    return tokens;
-  } // ... get_list(...)
-
   /**
    * \defgroup set ´´These methods allow to set key: value pairs.``
    * \{
