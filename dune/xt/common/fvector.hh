@@ -73,19 +73,6 @@ public:
   {
   }
 
-  FieldVector(const size_t DXTC_DEBUG_ONLY(sz), const K& kk)
-    : BaseType(kk)
-  {
-#ifndef NDEBUG
-    if (sz != SIZE)
-      DUNE_THROW(Exceptions::wrong_input_given,
-                 "You are trying to construct a FieldVector< ..., " << SIZE << " > (of "
-                                                                    << "static size) with "
-                                                                    << sz
-                                                                    << " elements!");
-#endif // NDEBUG
-  } // ... FieldVector(...)
-
   FieldVector(const ThisType& other) = default;
 
   FieldVector(const BaseType& other)
@@ -244,12 +231,24 @@ struct VectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>>
 
   static inline Dune::XT::Common::FieldVector<K, SIZE> create(const size_t sz)
   {
-    return Dune::XT::Common::FieldVector<K, SIZE>(sz);
+    if (sz != SIZE)
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "You are trying to construct a FieldVector< ..., " << SIZE << " > (of "
+                                                                    << "static size) with "
+                                                                    << sz
+                                                                    << " elements!");
+    return Dune::XT::Common::FieldVector<K, SIZE>();
   }
 
   static inline Dune::XT::Common::FieldVector<K, SIZE> create(const size_t sz, const K& val)
   {
-    return Dune::XT::Common::FieldVector<K, SIZE>(sz, val);
+    if (sz != SIZE)
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "You are trying to construct a FieldVector< ..., " << SIZE << " > (of "
+                                                                    << "static size) with "
+                                                                    << sz
+                                                                    << " elements!");
+    return Dune::XT::Common::FieldVector<K, SIZE>(val);
   }
 };
 
