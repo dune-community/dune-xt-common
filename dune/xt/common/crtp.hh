@@ -14,6 +14,8 @@
 #include <atomic>
 #include <mutex>
 
+#include <dune/xt/common/deprecated.hh>
+
 #include "exceptions.hh"
 
 #ifdef CHECK_CRTP
@@ -60,7 +62,7 @@
 
 namespace Dune {
 namespace XT {
-
+namespace Common {
 
 template <class InterfaceType, class TraitsImp>
 class CRTPInterface
@@ -92,6 +94,7 @@ public:
 protected:
   // nicely avoid warning about non-virtual dtor when derived classes have vfunc
   ~CRTPInterface() = default;
+
 #ifndef NDEBUG
   // needs to be static so diff instances don't clash in function local crtp check
   static std::recursive_mutex crtp_mutex_;
@@ -103,8 +106,12 @@ protected:
 template <class I, class T>
 std::recursive_mutex CRTPInterface<I, T>::crtp_mutex_;
 #endif
+} // namespace Common
 
 
+template <class I, class T>
+using CRTPInterface DXT_DEPRECATED_MSG("CRTPInterface was moved into Dune::XT:Common namespace (2018/3/16)") =
+    Common::CRTPInterface<I, T>;
 } // namespace XT
 } // namespace Dune
 
