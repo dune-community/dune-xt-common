@@ -137,6 +137,10 @@ class parameter_error : public Dune::Exception
 {
 };
 
+class spe10_data_file_missing : public Dune::IOError
+{
+};
+
 class dependency_missing : public Dune::Exception
 {
 };
