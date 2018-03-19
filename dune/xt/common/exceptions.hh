@@ -14,7 +14,7 @@
 
 #include <dune/common/exceptions.hh>
 #include <dune/common/parallel/mpihelper.hh>
-#include <dune/common/deprecated.hh>
+#include <dune/xt/common/deprecated.hh>
 
 #ifdef DUNE_THROW
 #undef DUNE_THROW
@@ -134,6 +134,11 @@ class reinterpretation_error : public Dune::Exception
 };
 
 class parameter_error : public Dune::Exception
+{
+};
+
+class DXT_DEPRECATED_MSG("moved into dune-xt-functions Dune::XT::Functions::Exceptions (2018/03/16")
+    spe10_data_file_missing : public Dune::IOError
 {
 };
 
