@@ -432,6 +432,82 @@ StorageProvider<T> make_storage(Args&&... args)
   return StorageProvider<T>::make(std::forward<Args>(args)...);
 }
 
+
+/**
+ * \brief Provides generic (const) access to objects of different origins (if applicable).
+ *
+ * \sa ConstStorageProvider
+ */
+template <class T>
+class ConstSharedStorageProvider
+{
+public:
+  /**
+   * \attention This ctor transfers ownership to ConstSharedStorageProvider, do not delete tt manually!
+   */
+  explicit ConstSharedStorageProvider(const T*&& tt)
+    : storage_(std::move(tt))
+  {
+  }
+
+  /**
+   * \attention This ctor transfers ownership to ConstSharedStorageProvider, do not delete tt manually!
+   */
+  explicit ConstSharedStorageProvider(T*&& tt)
+    : storage_(std::move(tt))
+  {
+  }
+
+  explicit ConstSharedStorageProvider(std::shared_ptr<const T> tt)
+    : storage_(tt)
+  {
+  }
+
+  explicit ConstSharedStorageProvider(std::shared_ptr<T> tt)
+    : storage_(tt)
+  {
+  }
+
+  explicit ConstSharedStorageProvider(std::unique_ptr<const T>&& tt)
+    : storage_(tt.release())
+  {
+  }
+
+  explicit ConstSharedStorageProvider(std::unique_ptr<T>&& tt)
+    : storage_(tt.release())
+  {
+  }
+
+  ConstSharedStorageProvider(const ConstSharedStorageProvider<T>& other) = default;
+  ConstSharedStorageProvider(ConstSharedStorageProvider<T>&& source) = default;
+
+  ConstSharedStorageProvider<T>& operator=(const ConstSharedStorageProvider<T>& other) = default;
+  ConstSharedStorageProvider<T>& operator=(ConstSharedStorageProvider<T>&& source) = default;
+
+  std::shared_ptr<const T> access() const
+  {
+    assert(storage_);
+    return storage_;
+  }
+
+  template <typename... Args>
+  static ConstSharedStorageProvider<T> make(Args&&... args)
+  {
+    return ConstSharedStorageProvider<T>(new T(std::forward<Args>(args)...));
+  }
+
+private:
+  std::shared_ptr<const T> storage_;
+}; // class ConstSharedStorageProvider
+
+
+template <typename T, typename... Args>
+ConstSharedStorageProvider<T> make_const_shared_storage(Args&&... args)
+{
+  return ConstSharedStorageProvider<T>::make(std::forward<Args>(args)...);
+}
+
+
 //! dumps kernel stats into a file
 void mem_usage(std::string filename);
 
