@@ -19,7 +19,7 @@
 #include <sstream>
 #include <ostream>
 
-#include <dune/common/deprecated.hh>
+#include <dune/xt/common/deprecated.hh>
 
 namespace Dune {
 namespace XT {
@@ -155,7 +155,7 @@ public:
 
   Parameter parse_parameter(const Parameter& mu) const;
 
-  Parameter DUNE_DEPRECATED_MSG("Use parse_parameter instead (28.08.2017)!") parse_and_check(const Parameter& mu) const;
+  DXT_DEPRECATED_MSG("Use parse_parameter instead (28.08.2017)!") Parameter parse_and_check(const Parameter& mu) const;
 
 private:
   ParameterType parameter_type_;

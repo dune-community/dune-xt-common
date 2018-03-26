@@ -319,8 +319,9 @@ class FieldMatrix<K, 1, 1> : public Dune::FieldMatrix<K, 1, 1>
 
 public:
   FieldMatrix(const K& kk = suitable_default<>::value())
-    : BaseType(kk)
+    : BaseType()
   {
+    (*this)[0][0] = kk;
   }
 
   FieldMatrix(std::initializer_list<std::initializer_list<K>> list_of_rows)
@@ -351,7 +352,7 @@ public:
   FieldMatrix(const size_t DXTC_DEBUG_ONLY(rr),
               const size_t DXTC_DEBUG_ONLY(cc),
               const K& kk = suitable_default<>::value())
-    : BaseType(kk)
+    : BaseType()
   {
 #ifndef NDEBUG
     if (rr != ROWS || cc != COLS)
@@ -363,6 +364,7 @@ public:
                                                                     << cc
                                                                     << " columns!");
 #endif // NDEBUG
+    (*this)[0][0] = kk;
   } // ... FieldMatrix(...)
 
   FieldMatrix(const BaseType& other)
@@ -371,13 +373,15 @@ public:
   }
 
   FieldMatrix(const Dune::XT::Common::FieldVector<K, 1>& other)
-    : BaseType(other[0])
+    : BaseType()
   {
+    (*this)[0][0] = other[0];
   }
 
   FieldMatrix(const Dune::FieldVector<K, 1>& other)
-    : BaseType(other[0])
+    : BaseType()
   {
+    (*this)[0][0] = other[0];
   }
 
   Dune::XT::Common::FieldMatrix<K, COLS, ROWS> transpose() const
@@ -391,20 +395,6 @@ public:
   {
     BaseType::operator=(other[0]);
     return *this;
-  }
-
-  ThisType operator+(const ThisType& other) const
-  {
-    ThisType ret = *this;
-    ret += other;
-    return ret;
-  }
-
-  ThisType operator-(const ThisType& other) const
-  {
-    ThisType ret = *this;
-    ret -= other;
-    return ret;
   }
 
   ThisType operator*(const K& scal) const

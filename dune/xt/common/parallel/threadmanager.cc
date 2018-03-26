@@ -33,18 +33,8 @@
 
 #include <dune/xt/common/configuration.hh>
 
-#if HAVE_DUNE_FEM
-#include <dune/fem/misc/threads/threadmanager.hh>
-#endif
-
 #include "threadmanager.hh"
 
-// some assertions only make sense if dune-fem's threading manager is non-trivial
-#if (defined(USE_PTHREADS) || defined(_OPENMP)) && HAVE_DUNE_FEM
-#define WITH_DUNE_FEM_AND_THREADING(expr) expr
-#else
-#define WITH_DUNE_FEM_AND_THREADING(expr)
-#endif
 
 #if HAVE_TBB
 
@@ -70,14 +60,12 @@ struct ThreadIdHashCompare
 size_t Dune::XT::Common::ThreadManager::max_threads()
 {
   const auto threads = DXTC_CONFIG_GET("threading.max_count", 1);
-  WITH_DUNE_FEM_AND_THREADING(assert(Dune::Fem::ThreadManager::maxThreads() == threads);)
   return threads;
 }
 
 size_t Dune::XT::Common::ThreadManager::current_threads()
 {
   const auto threads = max_threads();
-  WITH_DUNE_FEM_AND_THREADING(assert(long(Dune::Fem::ThreadManager::currentThreads()) == long(threads));)
   return threads;
 }
 
@@ -116,7 +104,6 @@ void Dune::XT::Common::ThreadManager::set_max_threads(const size_t count)
 {
   DXTC_CONFIG.set("threading.max_count", count, true);
   max_threads_ = count;
-  WITH_DUNE_FEM_AND_THREADING(Dune::Fem::ThreadManager::setMaxNumberThreads(boost::numeric_cast<int>(count));)
 #if HAVE_EIGEN
   Eigen::setNbThreads(boost::numeric_cast<int>(count));
 #endif
@@ -130,7 +117,6 @@ Dune::XT::Common::ThreadManager::ThreadManager()
   Eigen::initParallel();
   Eigen::setNbThreads(1);
 #endif
-  WITH_DUNE_FEM_AND_THREADING(Dune::Fem::ThreadManager::setMaxNumberThreads(1);)
 }
 
 #else // if HAVE_TBB

@@ -44,6 +44,7 @@
 
 #include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/logging.hh>
+#include <dune/xt/common/deprecated.hh>
 
 namespace Dune {
 namespace XT {
@@ -156,15 +157,13 @@ std::pair<typename MapType::iterator, bool> map_emplace(MapType& map_in, Key key
 }
 
 template <typename K, typename V, typename MapType>
-std::pair<typename MapType::iterator, bool>
-map_emplace(MapType& map_in, std::piecewise_construct_t pcw, K&& keys, V&& values)
+DXT_DEPRECATED_MSG("no longer needed with c++14 (2018/03/20)")
+std::pair<typename MapType::iterator, bool> map_emplace(MapType& map_in,
+                                                        std::piecewise_construct_t pcw,
+                                                        K&& keys,
+                                                        V&& values)
 {
-#if HAVE_MAP_EMPLACE
   return map_in.emplace(pcw, keys, values);
-#else
-  DXTC_LOG_DEBUG_0 << "using map.insert fallback instead of emplace\n";
-  return map_in.insert(typename MapType::value_type(pcw, keys, values));
-#endif
 }
 
 template <typename T>

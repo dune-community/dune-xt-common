@@ -73,19 +73,6 @@ public:
   {
   }
 
-  FieldVector(const size_t DXTC_DEBUG_ONLY(sz), const K& kk)
-    : BaseType(kk)
-  {
-#ifndef NDEBUG
-    if (sz != SIZE)
-      DUNE_THROW(Exceptions::wrong_input_given,
-                 "You are trying to construct a FieldVector< ..., " << SIZE << " > (of "
-                                                                    << "static size) with "
-                                                                    << sz
-                                                                    << " elements!");
-#endif // NDEBUG
-  } // ... FieldVector(...)
-
   FieldVector(const ThisType& other) = default;
 
   FieldVector(const BaseType& other)
@@ -249,13 +236,25 @@ struct VectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>>
   template <size_t SZ = SIZE, class Field = K>
   static inline VectorTypeTemplate<SZ, Field> create(const size_t sz)
   {
-    return VectorTypeTemplate<SZ, Field>(sz);
+    if (sz != SZ)
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "You are trying to construct a FieldVector< ..., " << SZ << " > (of "
+                                                                    << "static size) with "
+                                                                    << sz
+                                                                    << " elements!");
+    return VectorTypeTemplate<SZ, Field>();
   }
 
   template <size_t SZ = SIZE, class Field = K>
   static inline VectorTypeTemplate<SZ, Field> create(const size_t sz, const Field& val)
   {
-    return VectorTypeTemplate<SZ, Field>(sz, val);
+    if (sz != SZ)
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "You are trying to construct a FieldVector< ..., " << SZ << " > (of "
+                                                                    << "static size) with "
+                                                                    << sz
+                                                                    << " elements!");
+    return VectorTypeTemplate<SZ, Field>(val);
   }
 };
 

@@ -13,5 +13,4 @@
 Module: dune-xt-common
 Version: 2.5.0-dev
 Maintainer: dune-xt-dev@listserv.uni-muenster.de
-Depends: dune-common (>= 2.5) dune-testtools (>= 2.5)
-Suggests: dune-fem (>= 2.5) dune-istl (>= 2.5) dune-pybindxi (>= 2.2.1)
+Depends: dune-common (>= 2.5) dune-testtools (>= 2.5) dune-pybindxi (>= 2.2.1) dune-istl (>= 2.5)

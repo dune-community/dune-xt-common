@@ -10,7 +10,6 @@
 
 #ifndef DUNE_XT_COMMON_FMATRIX_PBH
 #define DUNE_XT_COMMON_FMATRIX_PBH
-#if HAVE_DUNE_PYBINDXI
 
 #include <dune/pybindxi/complex.h>
 #include <dune/pybindxi/pybind11.h>
@@ -89,5 +88,4 @@ struct type_caster<Dune::XT::Common::FieldMatrix<K, N, M>>
 NAMESPACE_END(detail)
 NAMESPACE_END(pybind11)
 
-#endif // HAVE_DUNE_PYBINDXI
 #endif // DUNE_XT_COMMON_FMATRIX_PBH
