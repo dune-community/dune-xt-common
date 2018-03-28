@@ -26,6 +26,7 @@
 
 #include <dune/common/parallel/mpihelper.hh>
 #include <dune/common/timer.hh>
+#include <dune/common/visibility.hh>
 
 #include <dune/xt/common/logstreams.hh>
 #include <dune/xt/common/color.hh>
@@ -228,7 +229,7 @@ int main()
  * \note Debug logging is only enabled if DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG is true (which is by default the case
  *       if NDEBUG is not defined) but you might still want to guard calls to logger.debug() for performance reasons.
  */
-TimedLogging& TimedLogger();
+DUNE_EXPORT TimedLogging& TimedLogger();
 
 
 /**

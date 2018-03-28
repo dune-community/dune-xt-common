@@ -20,6 +20,8 @@
 #include <string>
 #include <mutex>
 
+#include <dune/common/visibility.hh>
+
 #include <dune/xt/common/disable_warnings.hh>
 #include <boost/filesystem.hpp>
 #include <boost/filesystem/fstream.hpp>
@@ -150,7 +152,7 @@ private:
   Logging& operator=(const Logging&) = delete;
 };
 
-inline Logging& Logger()
+DUNE_EXPORT inline Logging& Logger()
 {
   static Logging log;
   return log;
