@@ -17,7 +17,7 @@
 
 #include <dune/xt/common/fmatrix.hh>
 
-#include "fvector.pbh"
+#include "fvector.hh"
 
 NAMESPACE_BEGIN(pybind11)
 NAMESPACE_BEGIN(detail)

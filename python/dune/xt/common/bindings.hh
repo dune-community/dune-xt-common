@@ -13,9 +13,9 @@
 #define DUNE_XT_COMMON_BINDINGS_HH
 
 #include <python/dune/xt/common/exceptions.bindings.hh>
-#include <python/dune/xt/common/fvector.pbh>
-#include <python/dune/xt/common/fmatrix.pbh>
-#include <python/dune/xt/common/configuration.pbh>
+#include <python/dune/xt/common/fvector.hh>
+#include <python/dune/xt/common/fmatrix.hh>
+#include <python/dune/xt/common/configuration.hh>
 #include <dune/xt/common/numeric_cast.hh>
 #include <dune/xt/common/string.hh>
 #include <dune/xt/common/timedlogging.hh>
