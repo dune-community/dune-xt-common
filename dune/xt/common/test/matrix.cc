@@ -29,6 +29,7 @@ struct SerializeRowwiseTest : public ::testing::Test
 {
   using MatrixType = typename std::tuple_element<0, Tuple>::type;
   using M = Dune::XT::Common::MatrixAbstraction<MatrixType>;
+  using ScalarType = typename M::ScalarType;
   static const constexpr size_t rows = std::tuple_element<1, Tuple>::type::value;
   static const constexpr size_t cols = std::tuple_element<2, Tuple>::type::value;
 
@@ -37,7 +38,7 @@ struct SerializeRowwiseTest : public ::testing::Test
   {
     for (size_t ii = 0; ii < rows; ++ii)
       for (size_t jj = 0; jj < cols; ++jj)
-        M::set_entry(matrix_, ii, jj, 100 * ii + jj);
+        M::set_entry(matrix_, ii, jj, static_cast<ScalarType>(100 * ii + jj));
   }
 
   template <class T>

@@ -377,7 +377,7 @@ Dune::bigunsignedint<k> abs(const Dune::bigunsignedint<k>& value)
 }
 
 template <int k>
-inline Dune::bigunsignedint<k> pow(Dune::bigunsignedint<k> value, std::uintmax_t n)
+inline Dune::bigunsignedint<k> pow(Dune::bigunsignedint<k> /*value*/, std::uintmax_t /*n*/)
 {
   DUNE_THROW(Dune::NotImplemented, "pow not implemented for bigunisgnedint");
   return Dune::bigunsignedint<k>();

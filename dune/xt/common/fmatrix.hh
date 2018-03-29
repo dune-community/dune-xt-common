@@ -593,14 +593,14 @@ real(const FieldMatrix<K, ROWS, COLS>& complex_mat)
 
 template <class K, int ROWS, int COLS>
 typename std::enable_if<is_arithmetic<K>::value && !is_complex<K>::value, FieldMatrix<K, ROWS, COLS>>::type
-imag(const Dune::FieldMatrix<K, ROWS, COLS>& real_mat)
+imag(const Dune::FieldMatrix<K, ROWS, COLS>& /*real_mat*/)
 {
   return FieldMatrix<K, ROWS, COLS>(0);
 }
 
 template <class K, int ROWS, int COLS>
 typename std::enable_if<is_arithmetic<K>::value && !is_complex<K>::value, FieldMatrix<K, ROWS, COLS>>::type
-imag(const FieldMatrix<K, ROWS, COLS>& real_mat)
+imag(const FieldMatrix<K, ROWS, COLS>& /*real_mat*/)
 {
   return FieldMatrix<K, ROWS, COLS>(0);
 }
