@@ -20,6 +20,7 @@
 #include <boost/format.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 
+#include <dune/common/visibility.hh>
 #include <dune/common/parametertree.hh>
 #include <dune/common/parametertreeparser.hh>
 
@@ -372,7 +373,7 @@ bool operator==(const Configuration& left, const Configuration& right);
 bool operator!=(const Configuration& left, const Configuration& right);
 
 //! global Configuration instance
-inline Configuration& Config()
+DUNE_EXPORT inline Configuration& Config()
 {
   static Configuration parameters;
   return parameters;
