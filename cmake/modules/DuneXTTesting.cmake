@@ -1,3 +1,15 @@
+# ~~~
+# This file is part of the dune-xt-common project:
+#   https://github.com/dune-community/dune-xt-common
+# Copyright 2009-2018 dune-xt-common developers and contributors. All rights reserved.
+# License: Dual licensed as BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+# Authors:
+#   Felix Schindler (2012 - 2017)
+#   Rene Milk       (2010 - 2018)
+#   Sven Kaulmann   (2013)
+#   Tobias Leibner  (2015 - 2017)
+# ~~~
+
 macro(dxt_headercheck_target_name arg)
     string(REGEX REPLACE ".*/([^/]*)" "\\1" simple ${arg})
     string(REPLACE ${PROJECT_SOURCE_DIR} "" rel ${arg})

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 #
+# ~~~
 # This file is part of the dune-xt-common project:
 #   https://github.com/dune-community/dune-xt-common
 # Copyright 2009-2018 dune-xt-common developers and contributors. All rights reserved.
@@ -14,6 +15,7 @@
 #
 # This is a modified version of dune_execute.py from dune-testtools.
 # It adds the --gtest_output option to the call.
+# ~~~
 
 import os
 import os.path

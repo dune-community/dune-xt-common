@@ -1,13 +1,15 @@
+# ~~~
 # This file is part of the dune-xt-common project:
 #   https://github.com/dune-community/dune-xt-common
 # Copyright 2009-2018 dune-xt-common developers and contributors. All rights reserved.
 # License: Dual licensed as BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
 # Authors:
 #   Rene Milk      (2018)
-#   Tobias Leibner (2017)
+#   Tobias Leibner (2017 - 2018)
 #
 #      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
 #          with "runtime exception" (http://www.dune-project.org/license.html)
+# ~~~
 
 find_library(MATEXP_LIBRARY matrix_exponential HINTS "${CMAKE_SOURCE_DIR}/../local/lib/" "${CMAKE_SOURCE_DIR}/../environments/debian-minimal/local/lib/")
 if("${MATEXP_LIBRARY}" MATCHES "MATEXP_LIBRARY-NOTFOUND")
