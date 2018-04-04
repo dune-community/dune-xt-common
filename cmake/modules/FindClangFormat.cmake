@@ -1,3 +1,4 @@
+# ~~~
 # This file is part of the dune-xt-common project:
 #   https://github.com/dune-community/dune-xt-common
 # Copyright 2009-2018 dune-xt-common developers and contributors. All rights reserved.
@@ -19,6 +20,7 @@
 #   optionally pass the minimal version you require like so find_package(ClangFormat 3.7)
 #   this module set ClangFormat_EXECUTABLE, ClangFormat_VERSION
 #   and ClangFormat_FOUND accordingly
+# ~~~
 
 find_program(ClangFormat_EXECUTABLE NAMES clang-format clang-format-3.9 )
 if(EXISTS ${ClangFormat_EXECUTABLE})

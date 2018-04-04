@@ -1,3 +1,4 @@
+# ~~~
 # This file is part of the dune-xt-common project:
 #   https://github.com/dune-community/dune-xt-common
 # Copyright 2009-2018 dune-xt-common developers and contributors. All rights reserved.
@@ -17,6 +18,7 @@
 #
 # Adds the above flags and libraries to the specified targets.
 # tries to link _debug libraries if cmake build mode matches DEBUG
+# ~~~
 
 find_package(TBB)
 

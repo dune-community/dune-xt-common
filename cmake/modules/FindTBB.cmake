@@ -1,3 +1,4 @@
+# ~~~
 # This file is part of the dune-xt-common project:
 #   https://github.com/dune-community/dune-xt-common
 # Copyright 2009-2018 dune-xt-common developers and contributors. All rights reserved.
@@ -42,6 +43,7 @@
 #
 #
 # This module supports additional components of TBB that can be listed in the find_package() call:
+# ~~~
 
 # cpf               Use comunity preview edition (links to libtbb_preview instead of libtbb). cpf
 #                   is not available for the built-in version of the Intel Compiler, but see the note

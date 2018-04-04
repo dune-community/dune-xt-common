@@ -1,3 +1,4 @@
+# ~~~
 # This file is part of the dune-xt-common project:
 #   https://github.com/dune-community/dune-xt-common
 # Copyright 2009-2018 dune-xt-common developers and contributors. All rights reserved.
@@ -20,6 +21,7 @@
 #  EIGEN3_FOUND - system has eigen lib with correct version
 #  EIGEN3_INCLUDE_DIR - the eigen include directory
 #  EIGEN3_VERSION - eigen version
+# ~~~
 
 # Copyright (c) 2006, 2007 Montel Laurent, <montel@kde.org>
 # Copyright (c) 2008, 2009 Gael Guennebaud, <g.gael@free.fr>

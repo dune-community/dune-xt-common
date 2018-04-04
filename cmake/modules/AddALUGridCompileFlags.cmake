@@ -1,3 +1,4 @@
+# ~~~
 # This file is part of the dune-xt-common project:
 #   https://github.com/dune-community/dune-xt-common
 # Copyright 2009-2018 dune-xt-common developers and contributors. All rights reserved.
@@ -40,6 +41,7 @@
 #     add_dune_alugrid_compile_flags(obj_foo)
 #
 # to make it compile.
+# ~~~
 
 function(add_dune_alugrid_compile_flags)
   if(ALUGRID_FOUND)
