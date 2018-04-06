@@ -431,17 +431,13 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
 
   static const constexpr StorageLayout storage_layout = StorageLayout::dense_row_major;
 
-  template <size_t ROWS = static_rows,
-            size_t COLS = static_cols,
-            class FieldType = ScalarType,
-            class SparsityPatternType = FullPattern>
-  static inline MatrixTypeTemplate<ROWS, COLS, FieldType>
-  create(const size_t rows,
-         const size_t cols,
-         const FieldType& val = FieldType(0),
-         const SparsityPatternType& /*pattern*/ = SparsityPatternType())
+  template <size_t ROWS = static_rows, size_t COLS = static_cols, class SparsityPatternType = FullPattern>
+  static inline MatrixTypeTemplate<ROWS, COLS> create(const size_t rows,
+                                                      const size_t cols,
+                                                      const ScalarType& val = ScalarType(0),
+                                                      const SparsityPatternType& /*pattern*/ = SparsityPatternType())
   {
-    return MatrixTypeTemplate<ROWS, COLS, FieldType>(rows, cols, val);
+    return MatrixTypeTemplate<ROWS, COLS>(rows, cols, val);
   }
 
   static inline size_t rows(const MatrixType& /*mat*/)

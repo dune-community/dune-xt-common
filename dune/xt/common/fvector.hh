@@ -233,8 +233,8 @@ struct VectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>>
   template <size_t SZ = SIZE, class Field = K>
   using VectorTypeTemplate = Dune::XT::Common::FieldVector<Field, SZ>;
 
-  template <size_t SZ = SIZE, class Field = K>
-  static inline VectorTypeTemplate<SZ, Field> create(const size_t sz)
+  template <size_t SZ = SIZE>
+  static inline VectorTypeTemplate<SZ> create(const size_t sz, const K& val = K(0))
   {
     if (sz != SZ)
       DUNE_THROW(Exceptions::wrong_input_given,
@@ -242,19 +242,7 @@ struct VectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>>
                                                                     << "static size) with "
                                                                     << sz
                                                                     << " elements!");
-    return VectorTypeTemplate<SZ, Field>();
-  }
-
-  template <size_t SZ = SIZE, class Field = K>
-  static inline VectorTypeTemplate<SZ, Field> create(const size_t sz, const Field& val)
-  {
-    if (sz != SZ)
-      DUNE_THROW(Exceptions::wrong_input_given,
-                 "You are trying to construct a FieldVector< ..., " << SZ << " > (of "
-                                                                    << "static size) with "
-                                                                    << sz
-                                                                    << " elements!");
-    return VectorTypeTemplate<SZ, Field>(val);
+    return VectorTypeTemplate<SZ>(val);
   }
 };
 

@@ -61,10 +61,7 @@ struct MatrixAbstraction
 
   static const constexpr StorageLayout storage_layout = XT::Common::StorageLayout::other;
 
-  template <size_t ROWS = static_rows,
-            size_t COLS = static_cols,
-            class FieldType = ScalarType,
-            class SparsityPatternType = FullPattern>
+  template <size_t ROWS = static_rows, size_t COLS = static_cols, class SparsityPatternType = FullPattern>
   static inline /*MatrixType*/ void create(const size_t /*rows*/,
                                            const size_t /*cols*/,
                                            const ScalarType& /*val*/ = ScalarType(0),
@@ -145,15 +142,11 @@ struct MatrixAbstraction<Dune::DynamicMatrix<K>>
 
   static const constexpr StorageLayout storage_layout = StorageLayout::other;
 
-  template <size_t ROWS = static_rows,
-            size_t COLS = static_cols,
-            class FieldType = ScalarType,
-            class SparsityPatternType = FullPattern>
-  static inline MatrixTypeTemplate<ROWS, COLS, FieldType>
-  create(const size_t rows,
-         const size_t cols,
-         const FieldType& val = FieldType(0),
-         const SparsityPatternType& /*pattern*/ = SparsityPatternType())
+  template <size_t ROWS = static_rows, size_t COLS = static_cols, class SparsityPatternType = FullPattern>
+  static inline MatrixTypeTemplate<ROWS, COLS> create(const size_t rows,
+                                                      const size_t cols,
+                                                      const ScalarType& val = ScalarType(0),
+                                                      const SparsityPatternType& /*pattern*/ = SparsityPatternType())
   {
     return MatrixType(rows, cols, val);
   }
@@ -215,21 +208,17 @@ struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
 
   static const constexpr StorageLayout storage_layout = StorageLayout::dense_row_major;
 
-  template <size_t ROWS = static_rows,
-            size_t COLS = static_cols,
-            class FieldType = ScalarType,
-            class SparsityPatternType = FullPattern>
-  static inline MatrixTypeTemplate<ROWS, COLS, FieldType>
-  create(const size_t rows,
-         const size_t cols,
-         const FieldType& val = FieldType(0),
-         const SparsityPatternType& /*pattern*/ = SparsityPatternType())
+  template <size_t ROWS = static_rows, size_t COLS = static_cols, class SparsityPatternType = FullPattern>
+  static inline MatrixTypeTemplate<ROWS, COLS> create(const size_t rows,
+                                                      const size_t cols,
+                                                      const ScalarType& val = ScalarType(0),
+                                                      const SparsityPatternType& /*pattern*/ = SparsityPatternType())
   {
     if (rows != ROWS)
       DUNE_THROW(Exceptions::shapes_do_not_match, "rows = " << rows << "\nN = " << int(N));
     if (cols != COLS)
       DUNE_THROW(Exceptions::shapes_do_not_match, "cols = " << cols << "\nM = " << int(M));
-    return MatrixTypeTemplate<ROWS, COLS, FieldType>(val);
+    return MatrixTypeTemplate<ROWS, COLS>(val);
   }
 
   static inline size_t rows(const MatrixType& /*mat*/)
@@ -302,17 +291,15 @@ set_matrix_entry(MatrixType& matrix, const size_t ii, const size_t jj, const S& 
 template <class MatrixType,
           size_t ROWS = MatrixAbstraction<MatrixType>::static_rows,
           size_t COLS = MatrixAbstraction<MatrixType>::static_cols,
-          class FieldType = typename MatrixAbstraction<MatrixType>::ScalarType,
           class SparsityPatternType = FullPattern>
 typename std::enable_if<is_matrix<MatrixType>::value,
-                        typename MatrixAbstraction<MatrixType>::template MatrixTypeTemplate<ROWS, COLS, FieldType>>::
-    type
-    create(const size_t rows,
-           const size_t cols,
-           const typename MatrixAbstraction<MatrixType>::S& val = 0,
-           const SparsityPatternType& pattern = SparsityPatternType())
+                        typename MatrixAbstraction<MatrixType>::template MatrixTypeTemplate<ROWS, COLS>>::type
+create(const size_t rows,
+       const size_t cols,
+       const typename MatrixAbstraction<MatrixType>::S& val = 0,
+       const SparsityPatternType& pattern = SparsityPatternType())
 {
-  return MatrixAbstraction<MatrixType>::template create<ROWS, COLS, FieldType>(rows, cols, val, pattern);
+  return MatrixAbstraction<MatrixType>::template create<ROWS, COLS>(rows, cols, val, pattern);
 }
 
 
