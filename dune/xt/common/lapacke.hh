@@ -12,6 +12,8 @@
 #ifndef DUNE_XT_COMMON_LAPACKE_HH
 #define DUNE_XT_COMMON_LAPACKE_HH
 
+#include <complex>
+
 namespace Dune {
 namespace XT {
 namespace Common {
@@ -115,9 +117,31 @@ int dpttrf(int n, double* d, double* e);
 int dpttrs(int matrix_layout, int n, int nrhs, const double* d, const double* e, double* b, int ldb);
 
 
+/**
+ * \brief Wrapper around LAPACKE_zgeqp3
+ * \sa    LAPACKE_zgeqp3
+ */
+int zgeqp3(int matrix_layout, int m, int n, std::complex<double>* a, int lda, int* jpvt, std::complex<double>* tau);
+
+
+/**
+ * \brief Wrapper around LAPACKE_zunmqr
+ * \sa    LAPACKE_zunmqr
+ */
+int zunmqr(int matrix_layout,
+           char side,
+           char trans,
+           int m,
+           int n,
+           int k,
+           const std::complex<double>* a,
+           int lda,
+           const std::complex<double>* tau,
+           std::complex<double>* c,
+           int ldc);
+
+
 } // namespace Lapacke
-
-
 namespace Blas {
 
 
@@ -212,6 +236,24 @@ void dtrsm(const int layout,
            const double* a,
            const int lda,
            double* b,
+           const int ldb);
+
+
+/**
+ * \brief Wrapper around cblas_ztrsm
+ * \sa    cblas_ztrsm
+ */
+void ztrsm(const int layout,
+           const int side,
+           const int uplo,
+           const int transa,
+           const int diag,
+           const int m,
+           const int n,
+           const void* alpha,
+           const void* a,
+           const int lda,
+           void* b,
            const int ldb);
 
 
