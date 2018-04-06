@@ -26,7 +26,6 @@ set(lib_dune_xt_common_sources
     parallel/helper.cc
     parallel/threadmanager.cc
     parameter.cc
-    pattern.cc
     signals.cc
     string.cc
     test/common.cxx

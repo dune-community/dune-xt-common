@@ -192,6 +192,8 @@ private:
 // performs pivotization if the diagonal entry is below a certain threshold)
 // See dune/xt/la/test/matrixinverter_for_real_matrix_from_3d_pointsource.tpl for an example where the dune-common
 // version fails due to stability issues.
+// TODO: Fixed in dune-common master (see MR !449 in dune-common's gitlab), remove this copy once we depend on a
+// suitable version of dune-common (probably 2.7).
 template <class K, int ROWS, int COLS>
 template <typename Func>
 inline void FieldMatrix<K, ROWS, COLS>::luDecomposition(FieldMatrix<K, ROWS, COLS>& A, Func func) const
@@ -238,6 +240,8 @@ inline void FieldMatrix<K, ROWS, COLS>::luDecomposition(FieldMatrix<K, ROWS, COL
 
 // Direct copy of the invert function in dune/common/densematrix.hh
 // The only (functional) change is the replacement of the luDecomposition of DenseMatrix by our own version.
+// TODO: Fixed in dune-common master (see MR !449 in dune-common's gitlab), remove this copy once we depend on a
+// suitable version of dune-common (probably 2.7).
 template <class K, int ROWS, int COLS>
 inline void FieldMatrix<K, ROWS, COLS>::invert()
 {
@@ -414,8 +418,8 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
   typedef typename Dune::FieldTraits<K>::real_type RealType;
   typedef ScalarType S;
   typedef RealType R;
-  template <size_t rows = N, size_t cols = M, class Field = K>
-  using MatrixTypeTemplate = Dune::XT::Common::FieldMatrix<Field, rows, cols>;
+  template <size_t rows = N, size_t cols = M, class FieldType = K>
+  using MatrixTypeTemplate = Dune::XT::Common::FieldMatrix<FieldType, rows, cols>;
 
   static const bool is_matrix = true;
 
@@ -427,31 +431,17 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
 
   static const constexpr StorageLayout storage_layout = StorageLayout::dense_row_major;
 
-  template <size_t ROWS = static_rows, size_t COLS = static_cols, class Field = ScalarType>
-  static inline MatrixTypeTemplate<ROWS, COLS, Field>
-  create(const size_t rows, const size_t cols, const SparsityPatternDefault& /*pattern*/ = SparsityPatternDefault())
-  {
-    return MatrixTypeTemplate<ROWS, COLS, Field>(rows, cols);
-  }
-
-  template <size_t ROWS = static_rows, size_t COLS = static_cols, class Field = ScalarType>
-  static inline MatrixTypeTemplate<ROWS, COLS, Field>
+  template <size_t ROWS = static_rows,
+            size_t COLS = static_cols,
+            class FieldType = ScalarType,
+            class SparsityPatternType = FullPattern>
+  static inline MatrixTypeTemplate<ROWS, COLS, FieldType>
   create(const size_t rows,
          const size_t cols,
-         const ScalarType& val,
-         const SparsityPatternDefault& /*pattern*/ = SparsityPatternDefault())
+         const FieldType& val = FieldType(0),
+         const SparsityPatternType& /*pattern*/ = SparsityPatternType())
   {
-    return MatrixTypeTemplate<ROWS, COLS, Field>(rows, cols, val);
-  }
-
-  static inline std::unique_ptr<MatrixType> create_dynamic(const size_t rows, const size_t cols)
-  {
-    return std::make_unique<MatrixType>(rows, cols);
-  }
-
-  static inline std::unique_ptr<MatrixType> create_dynamic(const size_t rows, const size_t cols, const ScalarType& val)
-  {
-    return std::make_unique<MatrixType>(rows, cols, val);
+    return MatrixTypeTemplate<ROWS, COLS, FieldType>(rows, cols, val);
   }
 
   static inline size_t rows(const MatrixType& /*mat*/)
