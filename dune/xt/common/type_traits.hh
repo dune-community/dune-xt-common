@@ -350,6 +350,32 @@ struct dependent
 };
 
 
+//! enums for matrix algorithms
+enum class StorageLayout
+{
+  dense_row_major,
+  dense_column_major,
+  csr,
+  csc,
+  other
+};
+
+enum class MatrixPattern
+{
+  dense,
+  upper_triangular,
+  lower_triangular,
+  tridiagonal,
+  diagonal
+};
+
+enum class Transpose
+{
+  no,
+  yes
+};
+
+
 } // namespace Common
 } // namespace XT
 } // namespace Dune

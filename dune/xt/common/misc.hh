@@ -157,8 +157,11 @@ std::pair<typename MapType::iterator, bool> map_emplace(MapType& map_in, Key key
 }
 
 template <typename K, typename V, typename MapType>
-DXT_DEPRECATED_MSG("no longer needed with c++14 (2018/03/20)") std::pair<typename MapType::iterator, bool>
- map_emplace(MapType& map_in, std::piecewise_construct_t pcw, K&& keys, V&& values)
+DXT_DEPRECATED_MSG("no longer needed with c++14 (2018/03/20)")
+std::pair<typename MapType::iterator, bool> map_emplace(MapType& map_in,
+                                                        std::piecewise_construct_t pcw,
+                                                        K&& keys,
+                                                        V&& values)
 {
   return map_in.emplace(pcw, keys, values);
 }

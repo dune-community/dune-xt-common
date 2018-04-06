@@ -19,13 +19,7 @@
 #ifndef DUNE_XT_COMMON_STRING_HH
 #define DUNE_XT_COMMON_STRING_HH
 
-#include <cstring>
-#include <ctime>
-#include <map>
-#include <cassert>
 #include <algorithm>
-#include <ostream>
-#include <iomanip>
 #include <vector>
 #include <string>
 #include <ctime>
@@ -37,20 +31,7 @@
 #include <boost/numeric/conversion/cast.hpp>
 #include <dune/xt/common/reenable_warnings.hh>
 
-#include <dune/common/array.hh>
-#include <dune/common/bigunsignedint.hh>
-#include <dune/common/fmatrix.hh>
-#include <dune/common/densematrix.hh>
-#include <dune/common/fvector.hh>
-#include <dune/common/dynmatrix.hh>
-#include <dune/common/dynvector.hh>
-#include <dune/common/densevector.hh>
-
-#include <dune/xt/common/exceptions.hh>
-#include <dune/xt/common/debug.hh>
-#include <dune/xt/common/ranges.hh>
-#include <dune/xt/common/type_traits.hh>
-#include <dune/xt/common/vector.hh>
+//#include <dune/xt/common/type_traits.hh>
 
 namespace Dune {
 namespace XT {

@@ -52,9 +52,16 @@ typename std::enable_if<XT::Common::is_arithmetic<T>::value, T>::type make_numbe
 }
 
 template <class T, class S>
-typename std::enable_if<XT::Common::is_complex<T>::value, T>::type make_number(const S& number)
+typename std::enable_if<XT::Common::is_complex<T>::value && !XT::Common::is_complex<S>::value, T>::type
+make_number(const S& number)
 {
   return T(number, number); // <- This has to match the DEFAULT_EPSILON below!
+}
+
+template <class T>
+typename std::enable_if<XT::Common::is_complex<T>::value, T>::type make_number(const T& number)
+{
+  return number;
 }
 
 
@@ -110,9 +117,9 @@ struct FloatCmpTest : public testing::Test
     : zero(make_type<T>(make_number<S>(0)))
     , one(make_type<T>(make_number<S>(1)))
     , neg_one(make_type<T>(make_number<S>(-1)))
-    , epsilon(make_type<T>(XT::Common::FloatCmp::DEFAULT_EPSILON::value()))
-    , eps_plus(make_type<T>(XT::Common::FloatCmp::DEFAULT_EPSILON::value() * 1.1))
-    , eps_minus(make_type<T>(XT::Common::FloatCmp::DEFAULT_EPSILON::value() * 0.9))
+    , epsilon(make_type<T>(make_number<S>(XT::Common::FloatCmp::DEFAULT_EPSILON::value())))
+    , eps_plus(make_type<T>(make_number<S>(XT::Common::FloatCmp::DEFAULT_EPSILON::value() * 1.1)))
+    , eps_minus(make_type<T>(make_number<S>(XT::Common::FloatCmp::DEFAULT_EPSILON::value() * 0.9)))
     , two(make_type<T>(make_number<S>(2)))
     , test_config(DXTC_CONFIG.sub("test_common_float_cmp"))
   {

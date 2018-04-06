@@ -51,12 +51,12 @@ namespace internal {
 /**
  * \brief A base class to derive from when specializing \sa VectorAbstraction.
  */
-template <class Vector, class Field>
+template <class Vector, class K>
 struct VectorAbstractionBase
 {
-  using VectorType = Vector;
-  using ScalarType = typename Dune::FieldTraits<Field>::field_type;
-  using RealType = typename Dune::FieldTraits<Field>::real_type;
+  typedef Vector VectorType;
+  using ScalarType = typename Dune::FieldTraits<K>::field_type;
+  using RealType = typename Dune::FieldTraits<K>::real_type;
   using S = ScalarType;
   using R = RealType;
 
@@ -64,6 +64,10 @@ struct VectorAbstractionBase
   static const constexpr bool has_static_size = false;
   static const constexpr size_t static_size = std::numeric_limits<size_t>::max();
   static const constexpr bool has_ostream = false;
+  static const constexpr bool is_contiguous = false;
+
+  template <size_t SIZE = static_size, class FieldType = ScalarType>
+  using VectorTypeTemplate = Vector;
 }; // struct VectorAbstractionBase
 
 
@@ -83,6 +87,22 @@ struct HasSubscriptOperatorForVectorAbstraction
   {
     assert(ii < vector.size());
     vector[ii] = val;
+  }
+
+  static inline void add_to_entry(VectorType& vector, const size_t ii, const ScalarType& val)
+  {
+    assert(ii < vector.size());
+    vector[ii] += val;
+  }
+
+  static inline ScalarType* data(VectorType& vec)
+  {
+    return &(vec[0]);
+  }
+
+  static inline const ScalarType* data(const VectorType& vec)
+  {
+    return &(vec[0]);
   }
 };
 
@@ -112,6 +132,10 @@ struct VectorAbstraction
   static const constexpr bool has_static_size = false;
   static const constexpr size_t static_size = std::numeric_limits<size_t>::max();
   static const constexpr bool has_ostream = true;
+  static const constexpr bool is_contiguous = false;
+
+  template <size_t SIZE = static_size, class FieldType = ScalarType>
+  using VectorTypeTemplate = VecType;
 
   static inline /*VectorType*/ void create(const size_t /*sz*/)
   {
@@ -132,6 +156,18 @@ struct VectorAbstraction
   {
     static_assert(AlwaysFalse<VecType>::value, "Do not call me if is_vector is false!");
   }
+
+  static inline ScalarType* data(typename std::remove_const<VectorType>::type& /*vec*/)
+  {
+    static_assert(AlwaysFalse<VecType>::value, "Do not call me if is_contiguous is false!");
+    return nullptr;
+  }
+
+  static inline const ScalarType* data(const VectorType& /*vec*/)
+  {
+    static_assert(AlwaysFalse<VecType>::value, "Do not call me if is_contiguous is false!");
+    return nullptr;
+  }
 };
 
 
@@ -141,14 +177,23 @@ struct VectorAbstraction<std::vector<T>>
       public internal::HasSubscriptOperatorForVectorAbstraction<std::vector<T>,
                                                                 typename Dune::FieldTraits<T>::field_type>
 {
-  static inline std::vector<T> create(const size_t sz)
-  {
-    return std::vector<T>(sz);
-  }
+  static const constexpr bool is_contiguous = true;
+  static const constexpr bool static_size = std::numeric_limits<size_t>::max();
 
-  static inline std::vector<T> create(const size_t sz, const T& val)
+  template <size_t SIZE = static_size>
+  static inline std::vector<T> create(const size_t sz, const T& val = T(0))
   {
     return std::vector<T>(sz, val);
+  }
+
+  static inline T* data(std::vector<T>& vec)
+  {
+    return vec.data();
+  }
+
+  static inline const T* data(const std::vector<T>& vec)
+  {
+    return vec.data();
   }
 };
 
@@ -161,21 +206,29 @@ struct VectorAbstraction<std::array<K, SIZE>>
   static const constexpr bool has_static_size = true;
   static const constexpr size_t static_size = SIZE;
   static const constexpr bool has_ostream = true; // provided in dune/common/streamoperators.hh
+  static const constexpr bool is_contiguous = true;
 
-  static inline std::array<K, SIZE> create(const size_t sz)
+  template <size_t SZ = SIZE, class FieldType = K>
+  using VectorTypeTemplate = std::array<FieldType, SZ>;
+
+  template <size_t SZ = SIZE>
+  static inline VectorTypeTemplate<SZ> create(const size_t sz, const K& val = K(0))
   {
-    if (sz != SIZE)
-      DUNE_THROW(Exceptions::shapes_do_not_match, "requested size: " << sz << "\n   actual size: " << int(SIZE));
-    return std::array<K, SIZE>();
+    if (sz != SZ)
+      DUNE_THROW(Exceptions::shapes_do_not_match, "requested size: " << sz << "\n   actual size: " << int(SZ));
+    VectorTypeTemplate<SZ> ret;
+    ret.fill(val);
+    return ret;
   }
 
-  static inline std::array<K, SIZE> create(const size_t sz, const K& val)
+  static inline K* data(std::array<K, SIZE>& vec)
   {
-    if (sz != SIZE)
-      DUNE_THROW(Exceptions::shapes_do_not_match, "requested size: " << sz << "\n   actual size: " << int(SIZE));
-    std::array<K, SIZE> array;
-    array.fill(val);
-    return array;
+    return vec.data();
+  }
+
+  static inline const K* data(const std::array<K, SIZE>& vec)
+  {
+    return vec.data();
   }
 };
 
@@ -185,12 +238,11 @@ struct VectorAbstraction<Dune::DynamicVector<K>>
       public internal::HasSubscriptOperatorForVectorAbstraction<Dune::DynamicVector<K>,
                                                                 typename Dune::FieldTraits<K>::field_type>
 {
-  static inline Dune::DynamicVector<K> create(const size_t sz)
-  {
-    return Dune::DynamicVector<K>(sz);
-  }
+  static const constexpr bool is_contiguous = true;
+  static const constexpr bool static_size = internal::VectorAbstractionBase<Dune::DynamicVector<K>, K>::static_size;
 
-  static inline Dune::DynamicVector<K> create(const size_t sz, const K& val)
+  template <size_t SIZE = static_size>
+  static inline Dune::DynamicVector<K> create(const size_t sz, const K& val = K(0))
   {
     return Dune::DynamicVector<K>(sz, val);
   }
@@ -204,19 +256,17 @@ struct VectorAbstraction<Dune::FieldVector<K, SIZE>>
 {
   static const constexpr bool has_static_size = true;
   static const constexpr size_t static_size = SIZE;
+  static const constexpr bool is_contiguous = true;
 
-  static inline Dune::FieldVector<K, SIZE> create(const size_t sz)
-  {
-    if (sz != SIZE)
-      DUNE_THROW(Exceptions::shapes_do_not_match, "requested size: " << sz << "\n   actual size: " << int(SIZE));
-    return Dune::FieldVector<K, SIZE>();
-  }
+  template <size_t SZ = SIZE, class Field = K>
+  using VectorTypeTemplate = Dune::FieldVector<Field, SZ>;
 
-  static inline Dune::FieldVector<K, SIZE> create(const size_t sz, const K& val)
+  template <size_t SZ = SIZE>
+  static inline VectorTypeTemplate<SZ> create(const size_t sz, const K& val = K(0))
   {
-    if (sz != SIZE)
-      DUNE_THROW(Exceptions::shapes_do_not_match, "requested size: " << sz << "\n   actual size: " << int(SIZE));
-    return Dune::FieldVector<K, SIZE>(val);
+    if (sz != SZ)
+      DUNE_THROW(Exceptions::shapes_do_not_match, "requested size: " << sz << "\n   actual size: " << int(SZ));
+    return VectorTypeTemplate<SZ>(val);
   }
 };
 
@@ -226,12 +276,12 @@ struct VectorAbstraction<Dune::DenseVector<V>> : public VectorAbstraction<typena
 };
 
 
-template <class VectorType>
-typename std::enable_if<is_vector<VectorType>::value, VectorType>::type
-create(const size_t sz,
-       const typename VectorAbstraction<VectorType>::S& val = typename VectorAbstraction<VectorType>::S(0))
+template <class VectorType, size_t SIZE = VectorAbstraction<VectorType>::static_size>
+typename std::enable_if<is_vector<VectorType>::value,
+                        typename VectorAbstraction<VectorType>::template VectorTypeTemplate<SIZE>>::type
+create(const size_t sz, const typename VectorAbstraction<VectorType>::ScalarType& val = 0)
 {
-  return VectorAbstraction<VectorType>::create(sz, val);
+  return VectorAbstraction<VectorType>::template create<SIZE>(sz, val);
 }
 
 
@@ -248,6 +298,42 @@ template <class VectorType>
 typename std::enable_if<is_vector<VectorType>::value, VectorType>::type zeros_like(const VectorType& source)
 {
   return zeros_like<VectorType, VectorType>(source);
+}
+
+
+template <class VectorType>
+typename std::enable_if<is_vector<VectorType>::value, typename VectorAbstraction<VectorType>::ScalarType*>::type
+data(VectorType& source)
+{
+  return VectorAbstraction<VectorType>::data(source);
+}
+
+
+template <class VectorType>
+typename std::enable_if<is_vector<VectorType>::value, const typename VectorAbstraction<VectorType>::ScalarType*>::type
+data(const VectorType& source)
+{
+  return VectorAbstraction<VectorType>::data(source);
+}
+
+
+template <class V, StorageLayout storage_layout = StorageLayout::dense_row_major>
+typename std::enable_if<is_vector<V>::value, std::unique_ptr<typename VectorAbstraction<V>::S[]>>::type
+serialize(const V& vec)
+{
+  typedef typename VectorAbstraction<V>::S S;
+  static_assert(storage_layout == StorageLayout::dense_row_major || storage_layout == StorageLayout::dense_column_major,
+                "You have to select either row_major or column_major as StorageLayout!");
+  using Vec = VectorAbstraction<V>;
+  const size_t size = Vec::size(vec);
+  auto data = std::make_unique<S[]>(size);
+  for (size_t ii = 0; ii < size; ++ii)
+#ifdef DXT_DISABLE_CHECKS
+    data[ii] = numeric_cast<T>(Vec::get_entry(vec, ii));
+#else
+    data[ii] = Vec::get_entry(vec, ii);
+#endif
+  return data;
 }
 
 

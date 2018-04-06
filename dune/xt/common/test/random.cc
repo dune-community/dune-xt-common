@@ -14,6 +14,7 @@
 
 #include <dune/common/dynvector.hh>
 #include <dune/common/densevector.hh>
+#include <dune/common/unused.hh>
 
 #include <dune/xt/common/random.hh>
 #include <dune/xt/common/float_cmp.hh>
@@ -49,6 +50,7 @@ GTEST_TEST(Init, Random)
     // same seed -> same values
     for (auto i : value_range(1000)) {
       EXPECT_EQ(rng_a(), rng_b());
+      DUNE_UNUSED_PARAMETER(i);
     }
   }
   DefaultRNG<std::string> str_rng(2);

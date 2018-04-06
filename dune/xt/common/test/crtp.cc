@@ -21,7 +21,7 @@ struct FailTraits
   using derived_type = TestInterface<FailTraits>;
 };
 
-class TestImp;
+struct TestImp;
 
 struct ImpTraits
 {
@@ -68,11 +68,17 @@ struct TestImp : public TestInterface<ImpTraits>
 GTEST_TEST(crtp, fail)
 {
   TestInterface<FailTraits> test_iface;
-  EXPECT_THROW({ auto& st = test_iface.backend(); }, Dune::XT::Common::Exceptions::CRTP_check_failed);
+  EXPECT_THROW(
+      {
+        auto& st = test_iface.backend();
+        static_cast<void>(st);
+      },
+      Dune::XT::Common::Exceptions::CRTP_check_failed);
 }
 
 GTEST_TEST(crtp, success)
 {
   TestImp test_imp;
   auto& st = test_imp.backend();
+  static_cast<void>(st);
 }

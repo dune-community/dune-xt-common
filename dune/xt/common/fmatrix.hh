@@ -192,6 +192,8 @@ private:
 // performs pivotization if the diagonal entry is below a certain threshold)
 // See dune/xt/la/test/matrixinverter_for_real_matrix_from_3d_pointsource.tpl for an example where the dune-common
 // version fails due to stability issues.
+// TODO: Fixed in dune-common master (see MR !449 in dune-common's gitlab), remove this copy once we depend on a
+// suitable version of dune-common (probably 2.7).
 template <class K, int ROWS, int COLS>
 template <typename Func>
 inline void FieldMatrix<K, ROWS, COLS>::luDecomposition(FieldMatrix<K, ROWS, COLS>& A, Func func) const
@@ -238,6 +240,8 @@ inline void FieldMatrix<K, ROWS, COLS>::luDecomposition(FieldMatrix<K, ROWS, COL
 
 // Direct copy of the invert function in dune/common/densematrix.hh
 // The only (functional) change is the replacement of the luDecomposition of DenseMatrix by our own version.
+// TODO: Fixed in dune-common master (see MR !449 in dune-common's gitlab), remove this copy once we depend on a
+// suitable version of dune-common (probably 2.7).
 template <class K, int ROWS, int COLS>
 inline void FieldMatrix<K, ROWS, COLS>::invert()
 {
@@ -414,6 +418,8 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
   typedef typename Dune::FieldTraits<K>::real_type RealType;
   typedef ScalarType S;
   typedef RealType R;
+  template <size_t rows = N, size_t cols = M, class FieldType = K>
+  using MatrixTypeTemplate = Dune::XT::Common::FieldMatrix<FieldType, rows, cols>;
 
   static const bool is_matrix = true;
 
@@ -423,24 +429,15 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
 
   static const size_t static_cols = M;
 
-  static inline MatrixType create(const size_t rows, const size_t cols)
-  {
-    return MatrixType(rows, cols);
-  }
+  static const constexpr StorageLayout storage_layout = StorageLayout::dense_row_major;
 
-  static inline MatrixType create(const size_t rows, const size_t cols, const ScalarType& val)
+  template <size_t ROWS = static_rows, size_t COLS = static_cols, class SparsityPatternType = FullPattern>
+  static inline MatrixTypeTemplate<ROWS, COLS> create(const size_t rows,
+                                                      const size_t cols,
+                                                      const ScalarType& val = ScalarType(0),
+                                                      const SparsityPatternType& /*pattern*/ = SparsityPatternType())
   {
-    return MatrixType(rows, cols, val);
-  }
-
-  static inline std::unique_ptr<MatrixType> create_dynamic(const size_t rows, const size_t cols)
-  {
-    return std::make_unique<MatrixType>(rows, cols);
-  }
-
-  static inline std::unique_ptr<MatrixType> create_dynamic(const size_t rows, const size_t cols, const ScalarType& val)
-  {
-    return std::make_unique<MatrixType>(rows, cols, val);
+    return MatrixTypeTemplate<ROWS, COLS>(rows, cols, val);
   }
 
   static inline size_t rows(const MatrixType& /*mat*/)
@@ -461,6 +458,22 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
   static inline ScalarType get_entry(const MatrixType& mat, const size_t row, const size_t col)
   {
     return mat[row][col];
+  }
+
+  static inline void add_to_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)
+  {
+    mat[row][col] += val;
+  }
+
+
+  static inline ScalarType* data(MatrixType& mat)
+  {
+    return &(mat[0][0]);
+  }
+
+  static inline const ScalarType* data(const MatrixType& mat)
+  {
+    return &(mat[0][0]);
   }
 };
 
@@ -566,14 +579,14 @@ real(const FieldMatrix<K, ROWS, COLS>& complex_mat)
 
 template <class K, int ROWS, int COLS>
 typename std::enable_if<is_arithmetic<K>::value && !is_complex<K>::value, FieldMatrix<K, ROWS, COLS>>::type
-imag(const Dune::FieldMatrix<K, ROWS, COLS>& real_mat)
+imag(const Dune::FieldMatrix<K, ROWS, COLS>& /*real_mat*/)
 {
   return FieldMatrix<K, ROWS, COLS>(0);
 }
 
 template <class K, int ROWS, int COLS>
 typename std::enable_if<is_arithmetic<K>::value && !is_complex<K>::value, FieldMatrix<K, ROWS, COLS>>::type
-imag(const FieldMatrix<K, ROWS, COLS>& real_mat)
+imag(const FieldMatrix<K, ROWS, COLS>& /*real_mat*/)
 {
   return FieldMatrix<K, ROWS, COLS>(0);
 }

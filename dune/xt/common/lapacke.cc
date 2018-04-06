@@ -102,6 +102,31 @@ int dgeqp3(int matrix_layout, int m, int n, double* a, int lda, int* jpvt, doubl
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dgeqp3(matrix_layout, m, n, a, lda, jpvt, tau);
 #else
+  DUNE_UNUSED_PARAMETER(matrix_layout);
+  DUNE_UNUSED_PARAMETER(m);
+  DUNE_UNUSED_PARAMETER(n);
+  DUNE_UNUSED_PARAMETER(a);
+  DUNE_UNUSED_PARAMETER(lda);
+  DUNE_UNUSED_PARAMETER(jpvt);
+  DUNE_UNUSED_PARAMETER(tau);
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int dorgqr(int matrix_layout, int m, int n, int k, double* a, int lda, const double* tau)
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_dorgqr(matrix_layout, m, n, k, a, lda, tau);
+#else
+  DUNE_UNUSED_PARAMETER(matrix_layout);
+  DUNE_UNUSED_PARAMETER(m);
+  DUNE_UNUSED_PARAMETER(n);
+  DUNE_UNUSED_PARAMETER(k);
+  DUNE_UNUSED_PARAMETER(a);
+  DUNE_UNUSED_PARAMETER(lda);
+  DUNE_UNUSED_PARAMETER(tau);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
@@ -123,6 +148,33 @@ int dormqr(int matrix_layout,
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dormqr(matrix_layout, side, trans, m, n, k, a, lda, tau, c, ldc);
 #else
+  DUNE_UNUSED_PARAMETER(matrix_layout);
+  DUNE_UNUSED_PARAMETER(side);
+  DUNE_UNUSED_PARAMETER(trans);
+  DUNE_UNUSED_PARAMETER(m);
+  DUNE_UNUSED_PARAMETER(n);
+  DUNE_UNUSED_PARAMETER(k);
+  DUNE_UNUSED_PARAMETER(a);
+  DUNE_UNUSED_PARAMETER(lda);
+  DUNE_UNUSED_PARAMETER(tau);
+  DUNE_UNUSED_PARAMETER(c);
+  DUNE_UNUSED_PARAMETER(ldc);
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int dpotrf(int matrix_layout, char uplo, int n, double* a, int lda)
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_dpotrf(matrix_layout, uplo, n, a, lda);
+#else
+  DUNE_UNUSED_PARAMETER(matrix_layout);
+  DUNE_UNUSED_PARAMETER(uplo);
+  DUNE_UNUSED_PARAMETER(n);
+  DUNE_UNUSED_PARAMETER(a);
+  DUNE_UNUSED_PARAMETER(lda);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
@@ -177,9 +229,57 @@ int dpttrs(int matrix_layout, int n, int nrhs, const double* d, const double* e,
 }
 
 
+int zgeqp3(int matrix_layout, int m, int n, std::complex<double>* a, int lda, int* jpvt, std::complex<double>* tau)
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_zgeqp3(matrix_layout, m, n, a, lda, jpvt, tau);
+#else
+  DUNE_UNUSED_PARAMETER(matrix_layout);
+  DUNE_UNUSED_PARAMETER(m);
+  DUNE_UNUSED_PARAMETER(n);
+  DUNE_UNUSED_PARAMETER(a);
+  DUNE_UNUSED_PARAMETER(lda);
+  DUNE_UNUSED_PARAMETER(jpvt);
+  DUNE_UNUSED_PARAMETER(tau);
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int zunmqr(int matrix_layout,
+           char side,
+           char trans,
+           int m,
+           int n,
+           int k,
+           const std::complex<double>* a,
+           int lda,
+           const std::complex<double>* tau,
+           std::complex<double>* c,
+           int ldc)
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_zunmqr(matrix_layout, side, trans, m, n, k, a, lda, tau, c, ldc);
+#else
+  DUNE_UNUSED_PARAMETER(matrix_layout);
+  DUNE_UNUSED_PARAMETER(side);
+  DUNE_UNUSED_PARAMETER(trans);
+  DUNE_UNUSED_PARAMETER(m);
+  DUNE_UNUSED_PARAMETER(n);
+  DUNE_UNUSED_PARAMETER(k);
+  DUNE_UNUSED_PARAMETER(a);
+  DUNE_UNUSED_PARAMETER(lda);
+  DUNE_UNUSED_PARAMETER(tau);
+  DUNE_UNUSED_PARAMETER(c);
+  DUNE_UNUSED_PARAMETER(ldc);
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
 } // namespace Lapacke
-
-
 namespace Blas {
 
 
@@ -317,8 +417,7 @@ void dtrsm(const int layout,
            const double* a,
            const int lda,
            double* b,
-           const int ldb,
-           const bool check)
+           const int ldb)
 {
 #if HAVE_MKL
   cblas_dtrsm(static_cast<CBLAS_LAYOUT>(layout),
@@ -334,14 +433,73 @@ void dtrsm(const int layout,
               b,
               ldb);
 #ifndef NDEBUG
-  if (check)
-    for (int ii = 0; ii < m; ++ii)
-      if (std::isnan(b[ii]) || std::isinf(b[ii]))
-        DUNE_THROW(Dune::MathError, "Triangular solve using cblas_dtrsm failed!");
-#else
-  DUNE_UNUSED_PARAMETER(check);
+  for (int ii = 0; ii < m; ++ii)
+    if (std::isnan(b[ii]) || std::isinf(b[ii]))
+      DUNE_THROW(Dune::MathError, "Triangular solve using cblas_dtrsm failed!");
 #endif
 #else
+  DUNE_UNUSED_PARAMETER(layout);
+  DUNE_UNUSED_PARAMETER(side);
+  DUNE_UNUSED_PARAMETER(uplo);
+  DUNE_UNUSED_PARAMETER(transa);
+  DUNE_UNUSED_PARAMETER(diag);
+  DUNE_UNUSED_PARAMETER(m);
+  DUNE_UNUSED_PARAMETER(n);
+  DUNE_UNUSED_PARAMETER(alpha);
+  DUNE_UNUSED_PARAMETER(a);
+  DUNE_UNUSED_PARAMETER(lda);
+  DUNE_UNUSED_PARAMETER(b);
+  DUNE_UNUSED_PARAMETER(ldb);
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
+#endif
+}
+
+
+void ztrsm(const int layout,
+           const int side,
+           const int uplo,
+           const int transa,
+           const int diag,
+           const int m,
+           const int n,
+           const void* alpha,
+           const void* a,
+           const int lda,
+           void* b,
+           const int ldb)
+{
+#if HAVE_MKL
+  cblas_ztrsm(static_cast<CBLAS_LAYOUT>(layout),
+              static_cast<CBLAS_SIDE>(side),
+              static_cast<CBLAS_UPLO>(uplo),
+              static_cast<CBLAS_TRANSPOSE>(transa),
+              static_cast<CBLAS_DIAG>(diag),
+              m,
+              n,
+              alpha,
+              a,
+              lda,
+              b,
+              ldb);
+#ifndef NDEBUG
+  for (int ii = 0; ii < m; ++ii)
+    if (std::isnan(std::abs(static_cast<std::complex<double>*>(b)[ii]))
+        || std::isinf(std::abs(static_cast<std::complex<double>*>(b)[ii])))
+      DUNE_THROW(Dune::MathError, "Triangular solve using cblas_ztrsm failed!");
+#endif
+#else
+  DUNE_UNUSED_PARAMETER(layout);
+  DUNE_UNUSED_PARAMETER(side);
+  DUNE_UNUSED_PARAMETER(uplo);
+  DUNE_UNUSED_PARAMETER(transa);
+  DUNE_UNUSED_PARAMETER(diag);
+  DUNE_UNUSED_PARAMETER(m);
+  DUNE_UNUSED_PARAMETER(n);
+  DUNE_UNUSED_PARAMETER(alpha);
+  DUNE_UNUSED_PARAMETER(a);
+  DUNE_UNUSED_PARAMETER(lda);
+  DUNE_UNUSED_PARAMETER(b);
+  DUNE_UNUSED_PARAMETER(ldb);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
 #endif
 }
