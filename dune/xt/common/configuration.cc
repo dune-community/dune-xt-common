@@ -12,8 +12,11 @@
 
 #include "config.h"
 
-#include "configuration.hh"
+#include <dune/common/parametertreeparser.hh>
 
+#include <dune/xt/common/filesystem.hh>
+
+#include "configuration.hh"
 
 namespace Dune {
 namespace XT {

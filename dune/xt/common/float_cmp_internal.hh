@@ -38,14 +38,8 @@ namespace Common {
 template <class VecType>
 struct VectorAbstraction;
 
-template <class VecType>
-struct is_vector;
-
 template <class MatType>
 struct MatrixAbstraction;
-
-template <class MatType>
-struct is_matrix;
 
 namespace FloatCmp {
 namespace internal {

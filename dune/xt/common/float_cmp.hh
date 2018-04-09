@@ -19,7 +19,6 @@
 #include <dune/xt/common/math.hh> // <- This include needs to be before the one from dune-common, otherwise
 #include <dune/common/float_cmp.hh> //  std::abs(long unsinged int) is indefined in dune-common!
 
-#include <dune/xt/common/vector.hh>
 #include <dune/xt/common/type_traits.hh>
 
 #include "float_cmp_style.hh"

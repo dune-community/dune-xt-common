@@ -42,6 +42,122 @@
   }                                                                                                                    \
   }
 
+/**
+  * \brief Helper macro to be used before DXTC_has_typedef.
+  * \see   DXTC_has_typedef
+  *
+  *        Taken from
+  *        http://stackoverflow.com/questions/7834226/detecting-typedef-at-compile-time-template-metaprogramming
+  */
+#define DXTC_has_typedef_initialize_once(tpdef)                                                                        \
+  template <typename T_local>                                                                                          \
+  struct DXTC_has_typedef_helper_##tpdef                                                                               \
+  {                                                                                                                    \
+    template <typename TT_local>                                                                                       \
+    struct void_                                                                                                       \
+    {                                                                                                                  \
+      typedef void type;                                                                                               \
+    };                                                                                                                 \
+                                                                                                                       \
+    template <typename TT_local, typename = void>                                                                      \
+    struct helper                                                                                                      \
+    {                                                                                                                  \
+      static const bool value = false;                                                                                 \
+    };                                                                                                                 \
+                                                                                                                       \
+    template <typename TT_local>                                                                                       \
+    struct helper<TT_local, typename void_<typename TT_local::tpdef>::type>                                            \
+    {                                                                                                                  \
+      static const bool value = true;                                                                                  \
+    };                                                                                                                 \
+                                                                                                                       \
+    static const bool value = helper<T_local>::value;                                                                  \
+  }
+
+/**
+  * \brief Macro to statically check a type for a typedef.
+  *
+  *        To check if a type Foo defines a typedef Bar, put this code somewhere, where a generated helper struct
+  *        may be defined (obviously only once for each typedef name!, note the trailing `;`!):
+\code
+DXTC_has_typedef_initialize_once(Bar);
+\endcode
+  *        You can then check for Bar (this will give you a static const bool):
+\code
+DXTC_has_typedef(Bar)< Foo >::value
+\endcode
+  */
+#define DXTC_has_typedef(tpdf) DXTC_has_typedef_helper_##tpdf
+
+/**
+  * \brief Helper macro to be used before DXTC_has_static_member.
+  *
+  *        Taken from http://stackoverflow.com/questions/11927032/sfinae-check-for-static-member-using-decltype
+  */
+#define DXTC_has_static_member_initialize_once(mmbr)                                                                   \
+  template <class T_local>                                                                                             \
+  struct DXTC_has_static_member_helper_##mmbr                                                                          \
+  {                                                                                                                    \
+    template <class TT_local,                                                                                          \
+              class = typename std::enable_if<!std::is_member_pointer<decltype(&TT_local::mmbr)>::value>::type>        \
+    static std::true_type helper(int);                                                                                 \
+                                                                                                                       \
+    template <class>                                                                                                   \
+    static std::false_type helper(...);                                                                                \
+                                                                                                                       \
+    static const bool value = decltype(helper<T_local>(0))::value;                                                     \
+  }
+
+/**
+  * \brief Macro to statically check a class or struct for a static member.
+  *
+  *        To check if a class or struct Foo has a static member bar, put this code somewhere, where a generated helper
+  *        struct may be defined (obviously only once for each member name!, note the trailing `;`!):
+\code
+DXTC_has_static_member_initialize_once(bar);
+\endcode
+  *        You can then check for bar (this will give you a static const bool):
+\code
+DXTC_has_static_member(bar)< Foo >::value
+\endcode
+  */
+#define DXTC_has_static_member(mmbr) DXTC_has_static_member_helper_##mmbr
+
+
+/**
+  * \brief Helper macro to be used before DXTC_has_method.
+  *
+  *        Inspired by https://stackoverflow.com/questions/40329684/sfinae-c-method-check
+  */
+#define DXTC_has_method_initialize_once(mthd_nm)                                                                       \
+  template <class T_local>                                                                                             \
+  struct DXTC_has_method_helper_##mthd_nm                                                                              \
+  {                                                                                                                    \
+    template <class TT_local>                                                                                          \
+    static std::true_type helper(decltype(&TT_local::mthd_nm));                                                        \
+                                                                                                                       \
+    template <class>                                                                                                   \
+    static std::false_type helper(...);                                                                                \
+                                                                                                                       \
+    static const bool value = decltype(helper<T_local>(0))::value;                                                     \
+  }
+
+
+/**
+  * \brief Macro to statically check a class or struct for a method.
+  *
+  *        To check if a class or struct Foo has a method bar, put this code somewhere, where a generated helper
+  *        struct may be defined (obviously only once for each method name!, note the trailing `;`!):
+\code
+DXTC_has_method_initialize_once(bar);
+\endcode
+  *        You can then check for bar (this will give you a static const bool):
+\code
+DXTC_has_method(bar)< Foo >::value
+\endcode
+  */
+#define DXTC_has_method(mthd_nm) DXTC_has_method_helper_##mthd_nm
+
 
 namespace Dune {
 
@@ -66,6 +182,12 @@ class FieldVector;
 
 template <class K, int ROWS, int COLS>
 class FieldMatrix;
+
+template <class VecType>
+struct VectorAbstraction;
+
+template <class MatType>
+struct MatrixAbstraction;
 
 
 inline std::string demangle_typename(const std::string& mangled_name)
@@ -260,6 +382,52 @@ struct is_field_matrix<Dune::XT::Common::FieldMatrix<K, ROWS, COLS>> : std::true
 };
 
 
+namespace internal {
+
+
+template <class M>
+struct is_matrix_helper
+{
+  DXTC_has_static_member_initialize_once(is_matrix);
+  static const bool is_candidate = DXTC_has_static_member(is_matrix)<MatrixAbstraction<M>>::value;
+}; // struct is_matrix_helper
+
+
+template <class V>
+struct is_vector_helper
+{
+  DXTC_has_static_member_initialize_once(is_vector);
+  static const bool is_candidate = DXTC_has_static_member(is_vector)<VectorAbstraction<V>>::value;
+}; // struct is_vector_helper
+
+
+} // namespace internal
+
+
+template <class T, bool candidate = internal::is_matrix_helper<T>::is_candidate>
+struct is_matrix
+{
+  static const bool value = MatrixAbstraction<T>::is_matrix;
+};
+
+template <class T>
+struct is_matrix<T, false> : public std::false_type
+{
+};
+
+
+template <class T, bool candidate = internal::is_vector_helper<T>::is_candidate>
+struct is_vector
+{
+  static const bool value = VectorAbstraction<T>::is_vector;
+};
+
+template <class T>
+struct is_vector<T, false> : public std::false_type
+{
+};
+
+
 template <class T>
 struct field_traits
 {
@@ -381,123 +549,6 @@ enum class Transpose
 } // namespace Dune
 
 
-/**
-  * \brief Helper macro to be used before DXTC_has_typedef.
-  * \see   DXTC_has_typedef
-  *
-  *        Taken from
-  *        http://stackoverflow.com/questions/7834226/detecting-typedef-at-compile-time-template-metaprogramming
-  */
-#define DXTC_has_typedef_initialize_once(tpdef)                                                                        \
-  template <typename T_local>                                                                                          \
-  struct DXTC_has_typedef_helper_##tpdef                                                                               \
-  {                                                                                                                    \
-    template <typename TT_local>                                                                                       \
-    struct void_                                                                                                       \
-    {                                                                                                                  \
-      typedef void type;                                                                                               \
-    };                                                                                                                 \
-                                                                                                                       \
-    template <typename TT_local, typename = void>                                                                      \
-    struct helper                                                                                                      \
-    {                                                                                                                  \
-      static const bool value = false;                                                                                 \
-    };                                                                                                                 \
-                                                                                                                       \
-    template <typename TT_local>                                                                                       \
-    struct helper<TT_local, typename void_<typename TT_local::tpdef>::type>                                            \
-    {                                                                                                                  \
-      static const bool value = true;                                                                                  \
-    };                                                                                                                 \
-                                                                                                                       \
-    static const bool value = helper<T_local>::value;                                                                  \
-  }
-
-/**
-  * \brief Macro to statically check a type for a typedef.
-  *
-  *        To check if a type Foo defines a typedef Bar, put this code somewhere, where a generated helper struct
-  *        may be defined (obviously only once for each typedef name!, note the trailing `;`!):
-\code
-DXTC_has_typedef_initialize_once(Bar);
-\endcode
-  *        You can then check for Bar (this will give you a static const bool):
-\code
-DXTC_has_typedef(Bar)< Foo >::value
-\endcode
-  */
-#define DXTC_has_typedef(tpdf) DXTC_has_typedef_helper_##tpdf
-
-/**
-  * \brief Helper macro to be used before DXTC_has_static_member.
-  *
-  *        Taken from http://stackoverflow.com/questions/11927032/sfinae-check-for-static-member-using-decltype
-  */
-#define DXTC_has_static_member_initialize_once(mmbr)                                                                   \
-  template <class T_local>                                                                                             \
-  struct DXTC_has_static_member_helper_##mmbr                                                                          \
-  {                                                                                                                    \
-    template <class TT_local,                                                                                          \
-              class = typename std::enable_if<!std::is_member_pointer<decltype(&TT_local::mmbr)>::value>::type>        \
-    static std::true_type helper(int);                                                                                 \
-                                                                                                                       \
-    template <class>                                                                                                   \
-    static std::false_type helper(...);                                                                                \
-                                                                                                                       \
-    static const bool value = decltype(helper<T_local>(0))::value;                                                     \
-  }
-
-/**
-  * \brief Macro to statically check a class or struct for a static member.
-  *
-  *        To check if a class or struct Foo has a static member bar, put this code somewhere, where a generated helper
-  *        struct may be defined (obviously only once for each member name!, note the trailing `;`!):
-\code
-DXTC_has_static_member_initialize_once(bar);
-\endcode
-  *        You can then check for bar (this will give you a static const bool):
-\code
-DXTC_has_static_member(bar)< Foo >::value
-\endcode
-  */
-#define DXTC_has_static_member(mmbr) DXTC_has_static_member_helper_##mmbr
-
-
-/**
-  * \brief Helper macro to be used before DXTC_has_method.
-  *
-  *        Inspired by https://stackoverflow.com/questions/40329684/sfinae-c-method-check
-  */
-#define DXTC_has_method_initialize_once(mthd_nm)                                                                       \
-  template <class T_local>                                                                                             \
-  struct DXTC_has_method_helper_##mthd_nm                                                                              \
-  {                                                                                                                    \
-    template <class TT_local>                                                                                          \
-    static std::true_type helper(decltype(&TT_local::mthd_nm));                                                        \
-                                                                                                                       \
-    template <class>                                                                                                   \
-    static std::false_type helper(...);                                                                                \
-                                                                                                                       \
-    static const bool value = decltype(helper<T_local>(0))::value;                                                     \
-  }
-
-
-/**
-  * \brief Macro to statically check a class or struct for a method.
-  *
-  *        To check if a class or struct Foo has a method bar, put this code somewhere, where a generated helper
-  *        struct may be defined (obviously only once for each method name!, note the trailing `;`!):
-\code
-DXTC_has_method_initialize_once(bar);
-\endcode
-  *        You can then check for bar (this will give you a static const bool):
-\code
-DXTC_has_method(bar)< Foo >::value
-\endcode
-  */
-#define DXTC_has_method(mthd_nm) DXTC_has_method_helper_##mthd_nm
-
-
 DUNE_XT_COMMON_TYPENAME(int)
 DUNE_XT_COMMON_TYPENAME(double)
 DUNE_XT_COMMON_TYPENAME(float)
@@ -505,6 +556,5 @@ DUNE_XT_COMMON_TYPENAME(long)
 DUNE_XT_COMMON_TYPENAME(unsigned int)
 DUNE_XT_COMMON_TYPENAME(unsigned long)
 DUNE_XT_COMMON_TYPENAME(char)
-
 
 #endif // DUNE_XT_COMMON_TYPE_TRAITS_HH
