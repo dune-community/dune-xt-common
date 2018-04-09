@@ -21,6 +21,7 @@
 
 #include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/numeric_cast.hh>
+#include <dune/xt/common/type_traits.hh>
 
 namespace Dune {
 namespace XT {
@@ -64,7 +65,7 @@ struct MatrixAbstraction
   template <size_t ROWS = static_rows, size_t COLS = static_cols, class SparsityPatternType = FullPattern>
   static inline /*MatrixType*/ void create(const size_t /*rows*/,
                                            const size_t /*cols*/,
-                                           const ScalarType& /*val*/ = ScalarType(0),
+                                           const ScalarType& /*val*/ = suitable_default<ScalarType>::value(),
                                            const SparsityPatternType& /*pattern*/ = SparsityPatternType())
   {
     static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
@@ -136,7 +137,7 @@ struct MatrixAbstraction<Dune::DynamicMatrix<K>>
   template <size_t ROWS = static_rows, size_t COLS = static_cols, class SparsityPatternType = FullPattern>
   static inline MatrixTypeTemplate<ROWS, COLS> create(const size_t rows,
                                                       const size_t cols,
-                                                      const ScalarType& val = ScalarType(0),
+                                                      const ScalarType& val = suitable_default<ScalarType>::value(),
                                                       const SparsityPatternType& /*pattern*/ = SparsityPatternType())
   {
     return MatrixType(rows, cols, val);
@@ -202,7 +203,7 @@ struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
   template <size_t ROWS = static_rows, size_t COLS = static_cols, class SparsityPatternType = FullPattern>
   static inline MatrixTypeTemplate<ROWS, COLS> create(const size_t rows,
                                                       const size_t cols,
-                                                      const ScalarType& val = ScalarType(0),
+                                                      const ScalarType& val = suitable_default<ScalarType>::value(),
                                                       const SparsityPatternType& /*pattern*/ = SparsityPatternType())
   {
     if (rows != ROWS)
