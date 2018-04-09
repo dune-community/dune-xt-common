@@ -112,15 +112,6 @@ struct MatrixAbstraction
   }
 };
 
-
-//! logically and structurally this belongs in type_utils.hh, but the dependent implementation prohibits that
-template <class MatrixType>
-struct is_matrix
-{
-  static const bool value = MatrixAbstraction<MatrixType>::is_matrix;
-};
-
-
 template <class K>
 struct MatrixAbstraction<Dune::DynamicMatrix<K>>
 {

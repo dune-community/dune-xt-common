@@ -19,8 +19,6 @@
 #include <dune/xt/common/filesystem.hh>
 #include <dune/xt/common/ranges.hh>
 #include <dune/xt/common/string.hh>
-#include <dune/xt/common/vector.hh>
-#include <dune/xt/common/matrix.hh>
 
 namespace Dune {
 namespace XT {

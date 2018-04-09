@@ -22,20 +22,17 @@
 
 #include <dune/common/visibility.hh>
 #include <dune/common/parametertree.hh>
-#include <dune/common/parametertreeparser.hh>
 
-#include <dune/xt/common/exceptions.hh>
-#include <dune/xt/common/color.hh>
-#include <dune/xt/common/logging.hh>
-#include <dune/xt/common/filesystem.hh>
-#include <dune/xt/common/misc.hh>
-#include <dune/xt/common/validation.hh>
-#include <dune/xt/common/type_traits.hh>
 #include <dune/xt/common/algorithm.hh>
+#include <dune/xt/common/color.hh>
+#include <dune/xt/common/exceptions.hh>
+#include <dune/xt/common/type_traits.hh>
+#include <dune/xt/common/validation.hh>
 
 namespace Dune {
 namespace XT {
 namespace Common {
+
 
 struct ConfigurationDefaults
 {

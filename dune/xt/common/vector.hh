@@ -32,19 +32,6 @@ namespace XT {
 namespace Common {
 
 
-// forward
-template <class VecType>
-struct VectorAbstraction;
-
-
-//! logically and structurally this belongs in type_utils.hh, but the dependent implementation prohibits that
-template <class VectorType>
-struct is_vector
-{
-  static const bool value = VectorAbstraction<VectorType>::is_vector;
-};
-
-
 namespace internal {
 
 
