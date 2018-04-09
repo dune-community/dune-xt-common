@@ -518,6 +518,25 @@ struct dependent
 };
 
 
+template <class K, bool is_number = (is_arithmetic<K>::value || is_complex<K>::value)>
+struct suitable_default
+{
+  static K value()
+  {
+    return 0;
+  }
+};
+
+template <class K>
+struct suitable_default<K, false>
+{
+  static K value()
+  {
+    return K();
+  }
+};
+
+
 //! enums for matrix algorithms
 enum class StorageLayout
 {

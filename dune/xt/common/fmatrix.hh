@@ -37,33 +37,12 @@ class FieldMatrix : public Dune::FieldMatrix<K, ROWS, COLS>
   typedef Dune::FieldMatrix<K, ROWS, COLS> BaseType;
   typedef FieldMatrix<K, ROWS, COLS> ThisType;
 
-  template <bool is_number = (is_arithmetic<K>::value || is_complex<K>::value), bool anything = true>
-  struct suitable_default;
-
-  template <bool anything>
-  struct suitable_default<true, anything>
-  {
-    static K value()
-    {
-      return 0;
-    }
-  };
-
-  template <bool anything>
-  struct suitable_default<false, anything>
-  {
-    static K value()
-    {
-      return K();
-    }
-  };
-
 public:
   using typename BaseType::value_type;
   using typename BaseType::size_type;
   using typename BaseType::field_type;
 
-  FieldMatrix(const K& kk = suitable_default<>::value())
+  FieldMatrix(const K& kk = suitable_default<K>::value())
     : BaseType()
   {
     // This is required because BaseType(kk) does not work for std::string
@@ -75,7 +54,7 @@ public:
 
   FieldMatrix(const size_t DXTC_DEBUG_ONLY(rr),
               const size_t DXTC_DEBUG_ONLY(cc),
-              const K& kk = suitable_default<>::value())
+              const K& kk = suitable_default<K>::value())
     : BaseType()
   {
 #ifndef NDEBUG
@@ -300,29 +279,8 @@ class FieldMatrix<K, 1, 1> : public Dune::FieldMatrix<K, 1, 1>
   typedef Dune::FieldMatrix<K, ROWS, COLS> BaseType;
   typedef FieldMatrix<K, ROWS, COLS> ThisType;
 
-  template <bool is_number = (is_arithmetic<K>::value || is_complex<K>::value), bool anything = true>
-  struct suitable_default;
-
-  template <bool anything>
-  struct suitable_default<true, anything>
-  {
-    static K value()
-    {
-      return 0;
-    }
-  };
-
-  template <bool anything>
-  struct suitable_default<false, anything>
-  {
-    static K value()
-    {
-      return K();
-    }
-  };
-
 public:
-  FieldMatrix(const K& kk = suitable_default<>::value())
+  FieldMatrix(const K& kk = suitable_default<K>::value())
     : BaseType()
   {
     (*this)[0][0] = kk;
@@ -355,7 +313,7 @@ public:
 
   FieldMatrix(const size_t DXTC_DEBUG_ONLY(rr),
               const size_t DXTC_DEBUG_ONLY(cc),
-              const K& kk = suitable_default<>::value())
+              const K& kk = suitable_default<K>::value())
     : BaseType()
   {
 #ifndef NDEBUG
@@ -434,7 +392,7 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
   template <size_t ROWS = static_rows, size_t COLS = static_cols, class SparsityPatternType = FullPattern>
   static inline MatrixTypeTemplate<ROWS, COLS> create(const size_t rows,
                                                       const size_t cols,
-                                                      const ScalarType& val = ScalarType(0),
+                                                      const ScalarType& val = suitable_default<ScalarType>::value(),
                                                       const SparsityPatternType& /*pattern*/ = SparsityPatternType())
   {
     return MatrixTypeTemplate<ROWS, COLS>(rows, cols, val);

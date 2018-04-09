@@ -46,29 +46,8 @@ class FieldVector : public Dune::FieldVector<K, SIZE>
   typedef Dune::FieldVector<K, SIZE> BaseType;
   typedef FieldVector<K, SIZE> ThisType;
 
-  template <bool is_number = (is_arithmetic<K>::value || is_complex<K>::value), bool anything = true>
-  struct suitable_default;
-
-  template <bool anything>
-  struct suitable_default<true, anything>
-  {
-    static K value()
-    {
-      return 0;
-    }
-  };
-
-  template <bool anything>
-  struct suitable_default<false, anything>
-  {
-    static K value()
-    {
-      return K();
-    }
-  };
-
 public:
-  FieldVector(const K& kk = suitable_default<>::value())
+  FieldVector(const K& kk = suitable_default<K>::value())
     : BaseType(kk)
   {
   }
@@ -234,7 +213,7 @@ struct VectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>>
   using VectorTypeTemplate = Dune::XT::Common::FieldVector<Field, SZ>;
 
   template <size_t SZ = SIZE>
-  static inline VectorTypeTemplate<SZ> create(const size_t sz, const K& val = K(0))
+  static inline VectorTypeTemplate<SZ> create(const size_t sz, const K& val = suitable_default<K>::value())
   {
     if (sz != SZ)
       DUNE_THROW(Exceptions::wrong_input_given,
