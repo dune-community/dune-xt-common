@@ -71,9 +71,11 @@ if (a.size() != b.size())
 // DUNE_THROW
 
 #define DUNE_THROW_IF(condition, E, m)                                                                                 \
-  if (condition) {                                                                                                     \
-    DUNE_THROW(E, m);                                                                                                  \
-  }
+  do {                                                                                                                 \
+    if (condition) {                                                                                                   \
+      DUNE_THROW(E, m);                                                                                                \
+    }                                                                                                                  \
+  } while (0)
 
 namespace Dune {
 namespace XT {
@@ -129,7 +131,8 @@ class you_have_to_implement_this : public Dune::NotImplemented
 {
 };
 
-class reinterpretation_error : public Dune::Exception
+class DUNE_DEPRECATED_MSG("Use Dune::XT::Functions::Exceptions:;reinterpretation_error (09.04.2018)!")
+    reinterpretation_error : public Dune::Exception
 {
 };
 
