@@ -12,6 +12,7 @@
 
 #include <dune/common/deprecated.hh>
 
+
 /** usage examples
 
  // Deprecate a function
@@ -54,5 +55,20 @@ class DXT_DEPRECATED templ<int> {};
 
 #define DXT_DEPRECATED [[deprecated]]
 #define DXT_DEPRECATED_MSG(text) [[deprecated(#text)]]
+
+
+#ifdef DUNE_DEPRECATED
+#undef DUNE_DEPRECATED
+#endif
+
+#define DUNE_DEPRECATED DXT_DEPRECATED
+
+
+#ifdef DUNE_DEPRECATED_MSG
+#undef DUNE_DEPRECATED_MSG
+#endif
+
+#define DUNE_DEPRECATED_MSG DXT_DEPRECATED_MSG
+
 
 #endif // DUNE_XT_COMMON_DEPRECATED_HH
