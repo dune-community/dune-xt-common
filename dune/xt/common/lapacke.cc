@@ -26,8 +26,9 @@
 #endif
 #endif // HAVE_MKL
 
-#include <dune/common/exceptions.hh>
 #include <dune/common/unused.hh>
+
+#include <dune/xt/common/exceptions.hh>
 
 #include "lapacke.hh"
 
