@@ -24,6 +24,10 @@
 /* Define to the revision of dune-xt-common */
 #define DUNE_XT_COMMON_VERSION_REVISION ${DUNE_XT_COMMON_VERSION_REVISION}
 
+#ifndef HAVE_CBLAS
+#define HAVE_CBLAS ${HAVE_CBLAS}
+#endif
+
 #ifndef HAVE_EIGEN
 #define HAVE_EIGEN ENABLE_EIGEN
 #endif
