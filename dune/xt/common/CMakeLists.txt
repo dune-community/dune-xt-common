@@ -32,8 +32,7 @@ set(lib_dune_xt_common_sources
     string.cc
     test/common.cxx
     timedlogging.cc
-    timings.cc
-   )
+    timings.cc)
 
 dune_library_add_sources(dunextcommon SOURCES ${lib_dune_xt_common_sources})
 
@@ -42,11 +41,9 @@ add_analyze(${lib_dune_xt_common_sources})
 include_directories(SYSTEM ${DUNE_XT_COMMON_TEST_DIR}/gtest)
 dune_library_add_sources(gtest_dune_xt_common SOURCES test/gtest/gtest-all.cxx)
 
-install(DIRECTORY ${DUNE_XT_COMMON_TEST_DIR}/gtest
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/xt/test/
+install(DIRECTORY ${DUNE_XT_COMMON_TEST_DIR}/gtest DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/xt/test/
         FILES_MATCHING PATTERN "*")
-install(FILES ${DUNE_XT_COMMON_TEST_DIR}/main.hxx
-        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/xt/test/)
+install(FILES ${DUNE_XT_COMMON_TEST_DIR}/main.hxx DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/dune/xt/test/)
 
 add_subdirectory(test EXCLUDE_FROM_ALL)
 

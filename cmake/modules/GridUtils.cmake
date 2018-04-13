@@ -11,13 +11,9 @@
 #          with "runtime exception" (http://www.dune-project.org/license.html)
 # ~~~
 
-SET(GRIDTYPE
-    "YASPGRID"
-    CACHE STRING "GRIDTYPE")
+set(GRIDTYPE "YASPGRID" CACHE STRING "GRIDTYPE")
 
-SET(GRIDDIM
-    "2"
-    CACHE STRING "GRIDDIM")
+set(GRIDDIM "2" CACHE STRING "GRIDDIM")
 
 add_definitions("-DGRIDDIM=${GRIDDIM}")
 add_definitions("-DGRIDTYPE=${GRIDTYPE}")

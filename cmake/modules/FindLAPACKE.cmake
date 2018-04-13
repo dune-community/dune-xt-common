@@ -18,7 +18,8 @@ if(BLAS_FOUND)
   list(APPEND LAPACKE_LIBRARIES gfortran)
 endif()
 message("-- checking for lapacke library")
-find_library(LAPACKE_LIBRARY lapacke HINTS "${CMAKE_SOURCE_DIR}/../local/lib/" "${CMAKE_SOURCE_DIR}/../environments/debian-minimal/local/lib/")
+find_library(LAPACKE_LIBRARY lapacke
+             HINTS "${CMAKE_SOURCE_DIR}/../local/lib/" "${CMAKE_SOURCE_DIR}/../environments/debian-minimal/local/lib/")
 if("${LAPACKE_LIBRARY}" MATCHES "LAPACKE_LIBRARY-NOTFOUND")
   message("--   library 'LAPACKE' not found, make sure you have both LAPACK and LAPACKE installed")
 else("${LAPACKE_LIBRARY}" MATCHES "LAPACKE_LIBRARY-NOTFOUND")
@@ -27,7 +28,9 @@ else("${LAPACKE_LIBRARY}" MATCHES "LAPACKE_LIBRARY-NOTFOUND")
 endif("${LAPACKE_LIBRARY}" MATCHES "LAPACKE_LIBRARY-NOTFOUND")
 
 message("-- checking for lapacke.h header")
-find_path(LAPACKE_INCLUDE_DIRS lapacke.h HINTS "${CMAKE_SOURCE_DIR}/../local/include/" "${CMAKE_SOURCE_DIR}/../environments/debian-minimal/local/include/")
+find_path(LAPACKE_INCLUDE_DIRS lapacke.h
+          HINTS "${CMAKE_SOURCE_DIR}/../local/include/"
+                "${CMAKE_SOURCE_DIR}/../environments/debian-minimal/local/include/")
 if("${LAPACKE_INCLUDE_DIRS}" MATCHES "LAPACKE_INCLUDE_DIRS-NOTFOUND")
   message("--   lapacke.h header not found")
 else("${LAPACKE_INCLUDE_DIRS}" MATCHES "LAPACKE_INCLUDE_DIRS-NOTFOUND")
@@ -48,7 +51,5 @@ set(HAVE_LAPACKE ${LAPACKE_FOUND})
 
 # register all LAPACKE related flags
 if(LAPACKE_FOUND)
-  dune_register_package_flags(
-    LIBRARIES "${LAPACKE_LIBRARIES}"
-    INCLUDE_DIRS "${LAPACKE_INCLUDE_DIRS}")
+  dune_register_package_flags(LIBRARIES "${LAPACKE_LIBRARIES}" INCLUDE_DIRS "${LAPACKE_INCLUDE_DIRS}")
 endif()

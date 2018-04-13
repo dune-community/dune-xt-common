@@ -14,9 +14,9 @@
 
 enable_testing()
 
-DEPENDENCYCHECK(${xtcommon})
+dependencycheck(${xtcommon})
 
-BEGIN_TESTCASES(dunextcommon)
+begin_testcases(dunextcommon)
 
-END_TESTCASES()
+end_testcases()
 
