@@ -17,13 +17,20 @@
 
 #if HAVE_MKL
 #include <mkl.h>
-#elif HAVE_LAPACKE
+#else // HAVE_MKL
+#if HAVE_LAPACKE
 #include <lapacke.h>
 #endif
+#if HAVE_CBLAS
+#include <cblas.h>
+#endif
+#endif // HAVE_MKL
 
 #include <dune/common/unused.hh>
 
-#include "exceptions.hh"
+#include <dune/xt/common/exceptions.hh>
+
+#include "lapacke.hh"
 
 namespace Dune {
 namespace XT {
@@ -288,7 +295,7 @@ namespace Blas {
  */
 bool available()
 {
-#if HAVE_MKL
+#if HAVE_MKL || HAVE_CBLAS
   return true;
 #else
   return false;
@@ -298,7 +305,7 @@ bool available()
 
 int row_major()
 {
-#if HAVE_MKL
+#if HAVE_MKL || HAVE_CBLAS
   return CblasRowMajor;
 #else
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
@@ -309,7 +316,7 @@ int row_major()
 
 int col_major()
 {
-#if HAVE_MKL
+#if HAVE_MKL || HAVE_CBLAS
   return CblasColMajor;
 #else
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
@@ -320,7 +327,7 @@ int col_major()
 
 int left()
 {
-#if HAVE_MKL
+#if HAVE_MKL || HAVE_CBLAS
   return CblasLeft;
 #else
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
@@ -331,7 +338,7 @@ int left()
 
 int right()
 {
-#if HAVE_MKL
+#if HAVE_MKL || HAVE_CBLAS
   return CblasRight;
 #else
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
@@ -342,7 +349,7 @@ int right()
 
 int upper()
 {
-#if HAVE_MKL
+#if HAVE_MKL || HAVE_CBLAS
   return CblasUpper;
 #else
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
@@ -353,7 +360,7 @@ int upper()
 
 int lower()
 {
-#if HAVE_MKL
+#if HAVE_MKL || HAVE_CBLAS
   return CblasLower;
 #else
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
@@ -364,7 +371,7 @@ int lower()
 
 int trans()
 {
-#if HAVE_MKL
+#if HAVE_MKL || HAVE_CBLAS
   return CblasTrans;
 #else
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
@@ -375,7 +382,7 @@ int trans()
 
 int no_trans()
 {
-#if HAVE_MKL
+#if HAVE_MKL || HAVE_CBLAS
   return CblasNoTrans;
 #else
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
@@ -386,7 +393,7 @@ int no_trans()
 
 int unit()
 {
-#if HAVE_MKL
+#if HAVE_MKL || HAVE_CBLAS
   return CblasUnit;
 #else
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
@@ -397,7 +404,7 @@ int unit()
 
 int non_unit()
 {
-#if HAVE_MKL
+#if HAVE_MKL || HAVE_CBLAS
   return CblasNonUnit;
 #else
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
@@ -419,7 +426,7 @@ void dtrsm(const int layout,
            double* b,
            const int ldb)
 {
-#if HAVE_MKL
+#if HAVE_MKL || HAVE_CBLAS
   cblas_dtrsm(static_cast<CBLAS_LAYOUT>(layout),
               static_cast<CBLAS_SIDE>(side),
               static_cast<CBLAS_UPLO>(uplo),
@@ -468,7 +475,7 @@ void ztrsm(const int layout,
            void* b,
            const int ldb)
 {
-#if HAVE_MKL
+#if HAVE_MKL || HAVE_CBLAS
   cblas_ztrsm(static_cast<CBLAS_LAYOUT>(layout),
               static_cast<CBLAS_SIDE>(side),
               static_cast<CBLAS_UPLO>(uplo),
