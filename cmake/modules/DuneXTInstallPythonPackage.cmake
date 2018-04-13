@@ -14,14 +14,12 @@ function(dune_xt_execute_process)
   include(CMakeParseArguments)
   cmake_parse_arguments(EXECUTE "" "ERROR_MESSAGE;RESULT_VARIABLE;OUTPUT_VARIABLE" "" ${ARGN})
 
-  execute_process(${EXECUTE_UNPARSED_ARGUMENTS}
-                  RESULT_VARIABLE retcode
-                  OUTPUT_VARIABLE log
-                  ERROR_VARIABLE log)
+  execute_process(${EXECUTE_UNPARSED_ARGUMENTS} RESULT_VARIABLE retcode OUTPUT_VARIABLE log ERROR_VARIABLE log)
 
   if(NOT "${retcode}" STREQUAL "0")
     cmake_parse_arguments(ERR "" "" "COMMAND" ${EXECUTE_UNPARSED_ARGUMENTS})
-    message(FATAL_ERROR "${EXECUTE_ERROR_MESSAGE}\nRun command:${ERR_COMMAND}\nReturn code: ${retcode}\nDetailed log:\n${log}")
+    message(FATAL_ERROR
+              "${EXECUTE_ERROR_MESSAGE}\nRun command:${ERR_COMMAND}\nReturn code: ${retcode}\nDetailed log:\n${log}")
   endif()
 
   if(EXECUTE_RESULT_VARIABLE)
@@ -32,21 +30,17 @@ function(dune_xt_execute_process)
   endif()
 endfunction()
 
-macro(include_dependent_binary_python_dirs)
-    # disable most warnings from dependent modules
-    foreach(_mod ${ALL_DEPENDENCIES} ${PROJECT_NAME})
-      dune_module_path(MODULE ${_mod}
-                     RESULT ${_mod}_binary_dir
-                     BUILD_DIR)
-      set(tdir ${${_mod}_binary_dir})
-      if(IS_DIRECTORY ${tdir})
-        dune_register_package_flags(INCLUDE_DIRS ${tdir})
-      endif()
-    endforeach(_mod DEPENDENCIES)
+macro(include_dependent_binary_python_dirs) # disable most warnings from dependent modules
+  foreach(_mod ${ALL_DEPENDENCIES} ${PROJECT_NAME})
+    dune_module_path(MODULE ${_mod} RESULT ${_mod}_binary_dir BUILD_DIR)
+    set(tdir ${${_mod}_binary_dir})
+    if(IS_DIRECTORY ${tdir})
+      dune_register_package_flags(INCLUDE_DIRS ${tdir})
+    endif()
+  endforeach(_mod DEPENDENCIES)
 endmacro(include_dependent_binary_python_dirs)
 
-function(dune_xt_install_python_package)
-  # Parse Arguments
+function(dune_xt_install_python_package) # Parse Arguments
   set(OPTION NO_PIP NO_EDIT)
   set(SINGLE PATH)
   set(MULTI ADDITIONAL_PIP_PARAMS)
@@ -68,12 +62,11 @@ function(dune_xt_install_python_package)
     file(RELATIVE_PATH rel_fn ${PROJECT_SOURCE_DIR} ${fn})
     get_filename_component(directory ${rel_fn} DIRECTORY)
     file(MAKE_DIRECTORY ${PROJECT_BINARY_DIR}/${directory})
-    execute_process(COMMAND ${CMAKE_COMMAND} "-E" "create_symlink" "${PROJECT_SOURCE_DIR}/${rel_fn}" "${PROJECT_BINARY_DIR}/${rel_fn}")
+    execute_process(COMMAND ${CMAKE_COMMAND} "-E" "create_symlink" "${PROJECT_SOURCE_DIR}/${rel_fn}"
+                            "${PROJECT_BINARY_DIR}/${rel_fn}")
   endforeach()
   set(PYINST_PATH "${CMAKE_CURRENT_BINARY_DIR}/${PYINST_PATH}")
-  dune_register_package_flags(
-    INCLUDE_DIRS ${PYINST_PATH}
-  )
+  dune_register_package_flags(INCLUDE_DIRS ${PYINST_PATH})
 
   #
   # Install the given python package into dune-python's virtualenv
@@ -82,12 +75,10 @@ function(dune_xt_install_python_package)
   # Construct the installation command strings from the given options
   set(WHEEL_ARG "")
   if(IS_DIRECTORY ${DUNE_PYTHON_WHEELHOUSE})
-    set(WHEEL_ARG "--find-links=${DUNE_PYTHON_WHEELHOUSE}")
-    #
-    # The following line is a bummer!
-    # We cannot have editable packages once we start using global installations!
-    # This is related to the nightmare that is https://github.com/pypa/pip/issues/3
-    #
+    set(WHEEL_ARG "--find-links=${DUNE_PYTHON_WHEELHOUSE}") # The following line is a bummer!  We cannot have editable
+                                                            # packages once we start using global installations!  This
+                                                            # is related to the nightmare that is
+                                                            # https://github.com/pypa/pip/issues/3
     set(PYINST_NO_EDIT TRUE)
   endif()
   if(PYINST_NO_PIP)
@@ -106,10 +97,13 @@ function(dune_xt_install_python_package)
   endif()
 
   # install the package into the virtual env
-  dune_xt_execute_process(COMMAND ${DUNE_PYTHON_VIRTUALENV_INTERPRETER} ${VENV_INSTALL_COMMAND}
-                       WORKING_DIRECTORY ${PYINST_PATH}
-                       ERROR_MESSAGE "Fatal error when installing the package at ${PYINST_PATH} into the env."
-                       )
+  dune_xt_execute_process(COMMAND
+                          ${DUNE_PYTHON_VIRTUALENV_INTERPRETER}
+                          ${VENV_INSTALL_COMMAND}
+                          WORKING_DIRECTORY
+                          ${PYINST_PATH}
+                          ERROR_MESSAGE
+                          "Fatal error when installing the package at ${PYINST_PATH} into the env.")
 
   # Construct the interpreter options for global installation
   if(PYINST_NO_PIP)
@@ -122,27 +116,29 @@ function(dune_xt_install_python_package)
     if(DUNE_PYTHON_INSTALL_USER)
       set(USER_STRING --user)
     endif()
-    set(SYSTEM_INSTALL_CMDLINE ${PYTHON_EXECUTABLE} -m pip install ${USER_STRING} ${PYINST_ADDITIONAL_PIP_PARAMS} ${WHEEL_ARG} ${CMAKE_CURRENT_SOURCE_DIR}/${PYINST_PATH})
+    set(SYSTEM_INSTALL_CMDLINE
+        ${PYTHON_EXECUTABLE}
+        -m
+        pip
+        install
+        ${USER_STRING}
+        ${PYINST_ADDITIONAL_PIP_PARAMS}
+        ${WHEEL_ARG}
+        ${CMAKE_CURRENT_SOURCE_DIR}/${PYINST_PATH})
   endif()
 
   #
   # Now define rules for `make pyinstall`.
   #
 
-  dune_module_path(MODULE dune-python
-                   RESULT DUNE_PYTHON_MODULE_DIR
-                   CMAKE_MODULES)
-
+  dune_module_path(MODULE dune-python RESULT DUNE_PYTHON_MODULE_DIR CMAKE_MODULES)
 
   # Add a custom target that globally installs this package if requested
   add_custom_target(${targetname}
-                    COMMAND ${CMAKE_COMMAND}
-                            -DCMAKE_MODULE_PATH=${DUNE_PYTHON_MODULE_DIR}
-                            -DCMDLINE="${SYSTEM_INSTALL_CMDLINE}"
-                            -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE}
-                             -P ${DUNE_PYTHON_MODULE_DIR}/install_python_package.cmake
-                    COMMENT "Installing the python package at ${CMAKE_CURRENT_SOURCE_DIR}/${PYINST_PATH}"
-                    )
+                    COMMAND ${CMAKE_COMMAND} -DCMAKE_MODULE_PATH=${DUNE_PYTHON_MODULE_DIR}
+                            -DCMDLINE="${SYSTEM_INSTALL_CMDLINE}" -DPYTHON_EXECUTABLE=${PYTHON_EXECUTABLE} -P
+                            ${DUNE_PYTHON_MODULE_DIR}/install_python_package.cmake
+                    COMMENT "Installing the python package at ${CMAKE_CURRENT_SOURCE_DIR}/${PYINST_PATH}")
 
   add_dependencies(pyinstall ${targetname})
 
@@ -150,8 +146,8 @@ function(dune_xt_install_python_package)
   # Define rules for `make install` that install a wheel into a central wheelhouse
   #
   # NB: This is necessary, to allow mixing installed and non-installed modules
-  #     with python packages. The wheelhouse will allow to install any missing
-  #     python packages into the virtualenv.
+  # with python packages. The wheelhouse will allow to install any missing
+  # python packages into the virtualenv.
   #
 
   # Construct the wheel installation commandline
@@ -161,22 +157,33 @@ function(dune_xt_install_python_package)
     set(WHEEL_COMMAND -m pip wheel)
   endif()
 
-  set(WHEEL_COMMAND ${PYTHON_EXECUTABLE} ${WHEEL_COMMAND} -w ${DUNE_PYTHON_WHEELHOUSE} ${WHEEL_ARG} ${CMAKE_CURRENT_SOURCE_DIR}/${PYINST_PATH})
+  set(WHEEL_COMMAND
+      ${PYTHON_EXECUTABLE}
+      ${WHEEL_COMMAND}
+      -w
+      ${DUNE_PYTHON_WHEELHOUSE}
+      ${WHEEL_ARG}
+      ${CMAKE_CURRENT_SOURCE_DIR}/${PYINST_PATH})
 
-  install(CODE "message(\"Installing wheel for python package at ${CMAKE_CURRENT_SOURCE_DIR}/${PYINST_PATH}...\")
+  install(
+    CODE
+    "message(\"Installing wheel for python package at ${CMAKE_CURRENT_SOURCE_DIR}/${PYINST_PATH}...\")
                 dune_execute_process(COMMAND ${WHEEL_COMMAND}
                                      ERROR_MESSAGE \"Error installing wheel for python package at ${CMAKE_CURRENT_SOURCE_DIR}/${PYINST_PATH}\"
                                      )"
-          )
+    )
 
   #
   # Set some paths needed for Sphinx documentation.
   #
 
   # Use a custom section to export python path to downstream modules
-  set(DUNE_CUSTOM_PKG_CONFIG_SECTION "${DUNE_CUSTOM_PKG_CONFIG_SECTION}
+  set(
+    DUNE_CUSTOM_PKG_CONFIG_SECTION
+    "${DUNE_CUSTOM_PKG_CONFIG_SECTION}
   set(DUNE_PYTHON_SOURCE_PATHS \"${DUNE_PYTHON_SOURCE_PATHS}:${CMAKE_CURRENT_SOURCE_DIR}/${PYINST_PATH}\")
-  " PARENT_SCOPE)
+  "
+    PARENT_SCOPE)
 
   # and add python path for this module
   set(DUNE_PYTHON_SOURCE_PATHS "${DUNE_PYTHON_SOURCE_PATHS}:${CMAKE_CURRENT_SOURCE_DIR}/${PYINST_PATH}" PARENT_SCOPE)

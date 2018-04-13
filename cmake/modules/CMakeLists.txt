@@ -11,17 +11,18 @@
 #          with "runtime exception" (http://www.dune-project.org/license.html)
 # ~~~
 
-install(FILES   AddALUGridCompileFlags.cmake
-                DuneTBB.cmake
-                DuneUtils.cmake
-                DuneXtCommonMacros.cmake
-                FindClangFormat.cmake
-                FindClangTidy.cmake
-                FindEigen3.cmake
-                FindFASP.cmake
-                FindLIKWID.cmake
-                FindTBB.cmake
-                GridUtils.cmake
-                XtCompilerSupport.cmake
-                XtTooling.cmake
-        DESTINATION ${DUNE_INSTALL_MODULEDIR})
+install(FILES AddALUGridCompileFlags.cmake
+              DuneTBB.cmake
+              DuneUtils.cmake
+              DuneXtCommonMacros.cmake
+              FindClangFormat.cmake
+              FindClangTidy.cmake
+              FindEigen3.cmake
+              FindFASP.cmake
+              FindLIKWID.cmake
+              FindTBB.cmake
+              GridUtils.cmake
+              XtCompilerSupport.cmake
+              XtTooling.cmake
+              DESTINATION
+              ${DUNE_INSTALL_MODULEDIR})

@@ -12,24 +12,28 @@
 # ~~~
 
 message("-- checking for 'qhullstatic_r' library")
-find_library(QHULL_LIBRARY qhullstatic_r HINTS "${CMAKE_SOURCE_DIR}/../local/lib/" "${CMAKE_SOURCE_DIR}/../environments/debian-minimal/local/lib/")
+find_library(QHULL_LIBRARY qhullstatic_r
+             HINTS "${CMAKE_SOURCE_DIR}/../local/lib/" "${CMAKE_SOURCE_DIR}/../environments/debian-minimal/local/lib/")
 if("${QHULL_LIBRARY}" MATCHES "QHULL_LIBRARY-NOTFOUND")
-	message("--   library 'qhullstatic_r' not found")
+  message("--   library 'qhullstatic_r' not found")
 else("${QHULL_LIBRARY}" MATCHES "QHULL_LIBRARY-NOTFOUND")
   message("--   found qhullstatic_r library")
   set(Qhull_LIBRARIES "${QHULL_LIBRARY}")
 endif("${QHULL_LIBRARY}" MATCHES "QHULL_LIBRARY-NOTFOUND")
 
-find_library(QHULLCPP_LIBRARY qhullcpp HINTS "${CMAKE_SOURCE_DIR}/../local/lib/" "${CMAKE_SOURCE_DIR}/../environments/debian-minimal/local/lib/")
+find_library(QHULLCPP_LIBRARY qhullcpp
+             HINTS "${CMAKE_SOURCE_DIR}/../local/lib/" "${CMAKE_SOURCE_DIR}/../environments/debian-minimal/local/lib/")
 if("${QHULLCPP_LIBRARY}" MATCHES "QHULLCPP_LIBRARY-NOTFOUND")
-	message("--   library 'qhullcpp' not found")
+  message("--   library 'qhullcpp' not found")
 else("${QHULLCPP_LIBRARY}" MATCHES "QHULLCPP_LIBRARY-NOTFOUND")
   message("--   found qhullcpp library")
   list(APPEND Qhull_LIBRARIES "${QHULLCPP_LIBRARY}")
 endif("${QHULLCPP_LIBRARY}" MATCHES "QHULLCPP_LIBRARY-NOTFOUND")
 
 message("-- checking for qhullcpp/Qhull.h header")
-find_path(Qhull_INCLUDE_DIRS libqhullcpp/Qhull.h HINTS "${CMAKE_SOURCE_DIR}/../local/include/" "${CMAKE_SOURCE_DIR}/../environments/debian-minimal/local/include/")
+find_path(Qhull_INCLUDE_DIRS libqhullcpp/Qhull.h
+          HINTS "${CMAKE_SOURCE_DIR}/../local/include/"
+                "${CMAKE_SOURCE_DIR}/../environments/debian-minimal/local/include/")
 if("${Qhull_INCLUDE_DIRS}" MATCHES "Qhull_INCLUDE_DIRS-NOTFOUND")
   message("--   qhull header not found")
 else("${Qhull_INCLUDE_DIRS}" MATCHES "Qhull_INCLUDE_DIRS-NOTFOUND")
@@ -50,7 +54,5 @@ set(HAVE_QHULL ${Qhull_FOUND})
 
 # register all Qhull related flags
 if(Qhull_FOUND)
-  dune_register_package_flags(
-    LIBRARIES "${Qhull_LIBRARIES}"
-    INCLUDE_DIRS "${Qhull_INCLUDE_DIRS}")
+  dune_register_package_flags(LIBRARIES "${Qhull_LIBRARIES}" INCLUDE_DIRS "${Qhull_INCLUDE_DIRS}")
 endif()
