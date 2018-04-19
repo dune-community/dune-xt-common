@@ -49,7 +49,8 @@
     }                                                                                                                  \
   }
 // CHECK_CRTP
-#endif
+#endif // NDEBUG
+
 
 #ifdef NDEBUG
 #define CHECK_AND_CALL_CRTP(__interface_method_to_call__) (__interface_method_to_call__)
@@ -60,9 +61,11 @@
 #define CHECK_AND_CALL_CRTP(__interface_method_to_call__) CHECK_CRTP(__interface_method_to_call__)
 #endif
 
+
 namespace Dune {
 namespace XT {
 namespace Common {
+
 
 template <class InterfaceType, class TraitsImp>
 class CRTPInterface
@@ -71,12 +74,13 @@ public:
   using Traits = TraitsImp;
   using derived_type = typename Traits::derived_type;
 
-  static inline derived_type& as_imp(InterfaceType& that)
+  static inline derived_type& DXT_DEPRECATED_MSG("Use that.as_imp() instead (10.04.2018)!") as_imp(InterfaceType& that)
   {
     return static_cast<derived_type&>(that);
   }
 
-  static inline const derived_type& as_imp(const InterfaceType& that)
+  static inline const derived_type& DXT_DEPRECATED_MSG("Use that.as_imp() instead (10.04.2018)!")
+      as_imp(const InterfaceType& that)
   {
     return static_cast<const derived_type&>(that);
   }
@@ -106,12 +110,16 @@ protected:
 template <class I, class T>
 std::recursive_mutex CRTPInterface<I, T>::crtp_mutex_;
 #endif
+
+
 } // namespace Common
 
 
 template <class I, class T>
 using CRTPInterface DXT_DEPRECATED_MSG("CRTPInterface was moved into Dune::XT:Common namespace (2018/3/16)") =
     Common::CRTPInterface<I, T>;
+
+
 } // namespace XT
 } // namespace Dune
 
