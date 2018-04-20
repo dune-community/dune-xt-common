@@ -90,6 +90,11 @@ public:
     return values_[threadManager().thread()].get();
   }
 
+  auto& get_pointer()
+  {
+      return values_[threadManager().thread()];
+  }
+
   template <class BinaryOperation>
   ValueType accumulate(ValueType init, BinaryOperation op) const
   {
