@@ -212,7 +212,6 @@ void set_rh_vec(LinearProgram& lp, double* rh)
   DUNE_UNUSED_PARAMETER(lp);
   DUNE_UNUSED_PARAMETER(rh);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lp_solve, check available() first!");
-  return 1;
 #endif
 }
 
@@ -225,7 +224,6 @@ void set_verbose(LinearProgram& lp, int verbose)
   DUNE_UNUSED_PARAMETER(lp);
   DUNE_UNUSED_PARAMETER(verbose);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lp_solve, check available() first!");
-  return 1;
 #endif
 }
 
