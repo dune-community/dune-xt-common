@@ -92,7 +92,7 @@ public:
 
   auto& get_pointer()
   {
-      return values_[threadManager().thread()];
+    return values_[threadManager().thread()];
   }
 
   template <class BinaryOperation>

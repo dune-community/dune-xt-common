@@ -71,7 +71,7 @@ size_t Dune::XT::Common::ThreadManager::current_threads()
 template <typename Key, typename T, typename MapType>
 std::pair<typename MapType::iterator, bool> tbb_map_emplace(MapType& map_in, Key key, T value)
 {
-#if BOOST_CLANG
+#if defined(BOOST_CLANG) && BOOST_CLANG
   return map_in.insert(typename MapType::value_type(key, value));
 #else
   return map_in.emplace(key, value);
