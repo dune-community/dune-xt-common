@@ -11,9 +11,12 @@
 
 #include "config.h"
 
-#if HAVE_TBB
+#include <atomic>
 #include <thread>
+
+#if HAVE_TBB
 #include <tbb/concurrent_unordered_map.h>
+#include <tbb/task_scheduler_init.h>
 #endif
 
 #include <boost/numeric/conversion/cast.hpp>
@@ -23,10 +26,6 @@
 #include <dune/xt/common/disable_warnings.hh>
 #include <Eigen/Core>
 #include <dune/xt/common/reenable_warnings.hh>
-#endif
-
-#if HAVE_TBB
-#include <tbb/task_scheduler_init.h>
 #endif
 
 #include <dune/common/exceptions.hh>
@@ -83,10 +82,10 @@ size_t Dune::XT::Common::ThreadManager::thread()
 {
   const std::thread::id tbb_id = std::this_thread::get_id();
   static tbb::concurrent_unordered_map<std::thread::id, size_t, ThreadIdHashCompare> thread_ids;
+  static std::atomic<size_t> map_size(0);
   const auto it = thread_ids.find(tbb_id);
-  if (it == thread_ids.end()) {
-    return tbb_map_emplace(thread_ids, tbb_id, thread_ids.size()).first->second;
-  }
+  if (it == thread_ids.end())
+    return tbb_map_emplace(thread_ids, tbb_id, map_size++).first->second;
   return it->second;
 }
 
