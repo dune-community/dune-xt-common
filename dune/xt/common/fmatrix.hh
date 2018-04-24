@@ -359,13 +359,6 @@ public:
     BaseType::operator=(other[0]);
     return *this;
   }
-
-  ThisType operator*(const K& scal) const
-  {
-    ThisType ret(*this);
-    ret *= scal;
-    return ret;
-  }
 }; // class FieldMatrix
 
 
