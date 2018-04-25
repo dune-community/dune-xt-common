@@ -19,6 +19,8 @@ macro(dxt_headercheck_target_name arg)
 endmacro(dxt_headercheck_target_name)
 
 macro(get_headercheck_targets)
+  file(GLOB_RECURSE bindir_header "${CMAKE_BINARY_DIR}/*.hh")
+  list(APPEND dxt_ignore_header ${bindir_header})
   # this is mostly c&p from dune-common, since we need a way to extract all target names to pass to our load balancing
   # script
   if(ENABLE_HEADERCHECK)
