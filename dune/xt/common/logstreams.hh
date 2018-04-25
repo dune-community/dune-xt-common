@@ -38,6 +38,8 @@ enum LogFlags
   LOG_FILE = 32,
   LOG_NEXT = 64
 };
+static constexpr auto LogMax = LOG_INFO | LOG_ERROR | LOG_DEBUG | LOG_CONSOLE | LOG_FILE;
+static constexpr auto LogDefault = LOG_INFO | LOG_ERROR | LOG_CONSOLE;
 
 class CombinedBuffer;
 

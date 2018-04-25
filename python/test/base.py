@@ -26,3 +26,11 @@ def test_empty():
     assert ter.getName() == 'Berti'
     assert pet.getName() == 'Bello'
     assert ter.bark() == 'woof!'
+
+
+def test_logging():
+    import dune.xt.common.logging as lg
+    lg.create(lg.log_max);
+    lg.info('log info test')
+    lg.error('log error test')
+    lg.debug('log debug test')

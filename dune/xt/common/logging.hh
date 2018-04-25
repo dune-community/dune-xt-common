@@ -53,7 +53,7 @@ public:
      *  \param logflags any OR'd combination of flags
      *  \param logfile filename for log, can contain paths, but creation will fail if dir is non-existant
      **/
-  void create(int logflags = (LOG_FILE | LOG_CONSOLE | LOG_ERROR),
+  void create(int logflags = LogDefault,
               const std::string logfile = "dune_xt_common_log",
               const std::string datadir = "data",
               const std::string _logdir = std::string("log"));
