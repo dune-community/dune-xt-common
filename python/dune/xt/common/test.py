@@ -10,6 +10,7 @@
 from pkg_resources import resource_filename, resource_stream
 import pkgutil
 import logging
+import pprint
 
 
 def load_all_submodule(module):
