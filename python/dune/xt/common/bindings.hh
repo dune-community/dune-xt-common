@@ -34,7 +34,7 @@ namespace XT {
 namespace Common {
 namespace bindings {
 
-static void add_initialization(pybind11::module& m, std::string logger_name)
+static inline void add_initialization(pybind11::module& m, std::string logger_name)
 {
   namespace py = pybind11;
   using namespace pybind11::literals;
@@ -79,6 +79,30 @@ static void add_initialization(pybind11::module& m, std::string logger_name)
         "info"_a = true,
         "debug"_a = true,
         "warning"_a = true);
+}
+
+static inline void try_register(pybind11::module& m, const std::function<void(pybind11::module&)>& registrar)
+{
+  try {
+    registrar(m);
+  } catch (std::runtime_error& err) {
+    const std::string what{err.what()};
+    /*  pybind11 error msg format
+     * ("generic_type: type \"" + std::string(rec->name) +
+                          "\" is already registered!")
+     */
+    const auto reg_pos = what.find("already registered");
+    const auto def_pos = what.find("already defined");
+    size_t npos{std::string::npos}, left{0}, right{std::string::npos};
+    if ((def_pos == npos && reg_pos == npos) || what.size() < 2)
+      throw err;
+
+    std::string type{};
+    left = what.find("\"");
+    right = what.rfind("\"");
+    type = what.substr(left + 1, right - left - 1);
+    DXTC_LOG_DEBUG << "try_register: added type " << type << std::endl;
+  }
 }
 
 } // namespace bindings
