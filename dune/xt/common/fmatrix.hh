@@ -129,13 +129,6 @@ public:
     return ret;
   }
 
-  ThisType operator*(const K& scal) const
-  {
-    ThisType ret(*this);
-    ret *= scal;
-    return ret;
-  }
-
   template <class Func>
   void luDecomposition(ThisType& A, Func func) const;
 
