@@ -18,8 +18,9 @@
 #include <dune/pybindxi/stl.h>
 
 #include <python/dune/xt/common/bindings.hh>
-
-#include <dune/pybindxi/pybind11.h>
+#include <dune/xt/common/python.hh>
+#include <dune/xt/common/logging.hh>
+#include <python/dune/xt/common/exceptions.bindings.hh>
 
 
 PYBIND11_MODULE(_logging, m)

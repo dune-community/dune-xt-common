@@ -10,14 +10,25 @@
 
 #include "config.h"
 
+#include <python/dune/xt/common/bindings.hh>
+
 #include <string>
 #include <vector>
 
+#include <python/dune/xt/common/exceptions.bindings.hh>
+#include <python/dune/xt/common/fvector.hh>
+#include <python/dune/xt/common/fmatrix.hh>
+#include <python/dune/xt/common/configuration.hh>
+#include <dune/xt/common/numeric_cast.hh>
+#include <dune/xt/common/string.hh>
+#include <dune/xt/common/timedlogging.hh>
+
 #include <dune/common/parallel/mpihelper.hh>
+
 #include <dune/pybindxi/pybind11.h>
 #include <dune/pybindxi/stl.h>
-
-#include <python/dune/xt/common/bindings.hh>
+#include <dune/xt/common/numeric_cast.hh>
+#include <dune/xt/common/timedlogging.hh>
 
 
 PYBIND11_MODULE(_common, m)
