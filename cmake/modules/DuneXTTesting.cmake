@@ -20,9 +20,8 @@ endmacro(dxt_headercheck_target_name)
 
 macro(get_headercheck_targets)
   file(GLOB_RECURSE bindir_header "${CMAKE_BINARY_DIR}/*.hh")
-  list(APPEND dxt_ignore_header ${bindir_header})
-  # this is mostly c&p from dune-common, since we need a way to extract all target names to pass to our load balancing
-  # script
+  list(APPEND dxt_ignore_header ${bindir_header}) # this is mostly c&p from dune-common, since we need a way to extract
+                                                  # all target names to pass to our load balancing  script
   if(ENABLE_HEADERCHECK)
     get_property(headerlist GLOBAL PROPERTY headercheck_list)
     foreach(header ${headerlist})
@@ -37,8 +36,8 @@ macro(get_headercheck_targets)
   endif(ENABLE_HEADERCHECK)
 endmacro(get_headercheck_targets)
 
-macro(BEGIN_TESTCASES)
-  # https://cmake.org/cmake/help/v3.0/module/FindGTest.html http://purplekarrot.net/blog/cmake-and-test-suites.html
+macro(BEGIN_TESTCASES) # https://cmake.org/cmake/help/v3.0/module/FindGTest.html http://purplekarrot.net/blog/cmake-
+                       # and-test-suites.html
   file(GLOB_RECURSE test_sources "${CMAKE_CURRENT_SOURCE_DIR}/*.cc")
   foreach(source ${test_sources})
     set(ranks "1")
@@ -166,8 +165,7 @@ macro(END_TESTCASES) # this excludes meta-ini variation test cases because  ther
     endif(TARGET test)
   endforeach(test ${dxt_test_binaries})
 
-  add_custom_target(test_binaries DEPENDS ${dxt_test_binaries})
-  # add_dependencies(test test_binaries)
+  add_custom_target(test_binaries DEPENDS ${dxt_test_binaries}) # add_dependencies(test test_binaries)
   add_custom_target(check
                     COMMAND ${CMAKE_CTEST_COMMAND} --timeout ${DXT_TEST_TIMEOUT} -j ${DXT_TEST_PROCS}
                     DEPENDS test_binaries USES_TERMINAL)
