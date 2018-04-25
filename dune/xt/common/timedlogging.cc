@@ -151,7 +151,7 @@ void TimedLogging::update_colors()
   }
 } // ... update_colors(...)
 
-TimedLogging& TimedLogger()
+DUNE_EXPORT TimedLogging& TimedLogger()
 {
   static TimedLogging timed_logger;
   return timed_logger;

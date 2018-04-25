@@ -16,3 +16,13 @@ def test_load_all():
     load_all_submodule(xtc)
 
 
+def test_empty():
+    from dune.xt.empty import Dog, Pet, Terrier
+
+    dog = Dog('Susi')
+    pet = Pet('Bello')
+    ter = Terrier()
+
+    assert ter.getName() == 'Berti'
+    assert pet.getName() == 'Bello'
+    assert ter.bark() == 'woof!'
