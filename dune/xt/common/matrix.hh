@@ -62,11 +62,21 @@ struct MatrixAbstraction
 
   static const constexpr StorageLayout storage_layout = XT::Common::StorageLayout::other;
 
-  template <size_t ROWS = static_rows, size_t COLS = static_cols, class SparsityPatternType = FullPattern>
+  template <class SparsityPatternType = FullPattern>
   static inline /*MatrixType*/ void create(const size_t /*rows*/,
                                            const size_t /*cols*/,
                                            const ScalarType& /*val*/ = suitable_default<ScalarType>::value(),
                                            const SparsityPatternType& /*pattern*/ = SparsityPatternType())
+  {
+    static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
+  }
+
+  template <class SparsityPatternType = FullPattern>
+  static inline /*std::unique_ptr<MatrixType>*/ void
+  make_unique(const size_t /*rows*/,
+              const size_t /*cols*/,
+              const ScalarType& /*val*/ = suitable_default<ScalarType>::value(),
+              const SparsityPatternType& /*pattern*/ = SparsityPatternType())
   {
     static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
   }
@@ -134,14 +144,24 @@ struct MatrixAbstraction<Dune::DynamicMatrix<K>>
 
   static const constexpr StorageLayout storage_layout = StorageLayout::other;
 
-  template <size_t ROWS = static_rows, size_t COLS = static_cols, class SparsityPatternType = FullPattern>
-  static inline MatrixTypeTemplate<ROWS, COLS> create(const size_t rows,
-                                                      const size_t cols,
-                                                      const ScalarType& val = suitable_default<ScalarType>::value(),
-                                                      const SparsityPatternType& /*pattern*/ = SparsityPatternType())
+  template <class SparsityPatternType = FullPattern>
+  static inline MatrixType create(const size_t rows,
+                                  const size_t cols,
+                                  const ScalarType& val = suitable_default<ScalarType>::value(),
+                                  const SparsityPatternType& /*pattern*/ = SparsityPatternType())
   {
     return MatrixType(rows, cols, val);
   }
+
+  template <class SparsityPatternType = FullPattern>
+  static inline std::unique_ptr<MatrixType> make_unique(const size_t rows,
+                                                        const size_t cols,
+                                                        const ScalarType& val = suitable_default<ScalarType>::value(),
+                                                        const SparsityPatternType& /*pattern*/ = SparsityPatternType())
+  {
+    return std::make_unique<MatrixType>(rows, cols, val);
+  }
+
 
   static inline size_t rows(const MatrixType& mat)
   {
@@ -200,17 +220,30 @@ struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
 
   static const constexpr StorageLayout storage_layout = StorageLayout::dense_row_major;
 
-  template <size_t ROWS = static_rows, size_t COLS = static_cols, class SparsityPatternType = FullPattern>
-  static inline MatrixTypeTemplate<ROWS, COLS> create(const size_t rows,
-                                                      const size_t cols,
-                                                      const ScalarType& val = suitable_default<ScalarType>::value(),
-                                                      const SparsityPatternType& /*pattern*/ = SparsityPatternType())
+  template <class SparsityPatternType = FullPattern>
+  static inline MatrixType create(const size_t rows,
+                                  const size_t cols,
+                                  const ScalarType& val = suitable_default<ScalarType>::value(),
+                                  const SparsityPatternType& /*pattern*/ = SparsityPatternType())
   {
-    if (rows != ROWS)
+    if (rows != N)
       DUNE_THROW(Exceptions::shapes_do_not_match, "rows = " << rows << "\nN = " << int(N));
-    if (cols != COLS)
+    if (cols != M)
       DUNE_THROW(Exceptions::shapes_do_not_match, "cols = " << cols << "\nM = " << int(M));
-    return MatrixTypeTemplate<ROWS, COLS>(val);
+    return MatrixType(val);
+  }
+
+  template <class SparsityPatternType = FullPattern>
+  static inline std::unique_ptr<MatrixType> make_unique(const size_t rows,
+                                                        const size_t cols,
+                                                        const ScalarType& val = suitable_default<ScalarType>::value(),
+                                                        const SparsityPatternType& /*pattern*/ = SparsityPatternType())
+  {
+    if (rows != N)
+      DUNE_THROW(Exceptions::shapes_do_not_match, "rows = " << rows << "\nN = " << int(N));
+    if (cols != M)
+      DUNE_THROW(Exceptions::shapes_do_not_match, "cols = " << cols << "\nM = " << int(M));
+    return std::make_unique<MatrixType>(val);
   }
 
   static inline size_t rows(const MatrixType& /*mat*/)
@@ -291,7 +324,8 @@ create(const size_t rows,
        const typename MatrixAbstraction<MatrixType>::S& val = 0,
        const SparsityPatternType& pattern = SparsityPatternType())
 {
-  return MatrixAbstraction<MatrixType>::template create<ROWS, COLS>(rows, cols, val, pattern);
+  return MatrixAbstraction<typename MatrixAbstraction<MatrixType>::template MatrixTypeTemplate<ROWS, COLS>>::create(
+      rows, cols, val, pattern);
 }
 
 
@@ -412,7 +446,7 @@ typename std::enable_if<is_matrix<MatrixType>::value,
                         typename M::template MatrixTypeTemplate<M::static_cols, M::static_rows>>::type
 transposed(const MatrixType& mat)
 {
-  auto ret = M::template create<M::static_cols, M::static_rows>(M::cols(mat), M::rows(mat), 0.);
+  auto ret = create<MatrixType, M::static_cols, M::static_rows>(M::cols(mat), M::rows(mat), 0.);
   for (size_t ii = 0; ii < M::rows(mat); ++ii)
     for (size_t jj = 0; jj < M::cols(mat); ++jj)
       set_matrix_entry(ret, jj, ii, get_matrix_entry(mat, ii, jj));
