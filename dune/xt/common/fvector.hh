@@ -151,6 +151,7 @@ public:
     return ret;
   }
 
+  //! This op is not redundant
   ThisType operator*(const K& scalar) const
   {
     ThisType ret(*this);
