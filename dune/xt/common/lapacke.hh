@@ -59,11 +59,36 @@ int dgeev(int matrix_layout,
 
 
 /**
+ * \brief Wrapper around LAPACKE_dgeev_work
+ * \sa    LAPACKE_dgeev_work
+ */
+int dgeev_work(int matrix_layout,
+               char jobvl,
+               char jobvr,
+               int n,
+               double* a,
+               int lda,
+               double* wr,
+               double* wi,
+               double* vl,
+               int ldvl,
+               double* vr,
+               int ldvr,
+               double* work,
+               int lwork);
+
+
+/**
  * \brief Wrapper around LAPACKE_dgeqp3
  * \sa    LAPACKE_dgeqp3
  */
 int dgeqp3(int matrix_layout, int m, int n, double* a, int lda, int* jpvt, double* tau);
 
+/**
+ * \brief Wrapper around LAPACKE_dgeqp3_work
+ * \sa    LAPACKE_dgeqp3
+ */
+int dgeqp3_work(int matrix_layout, int m, int n, double* a, int lda, int* jpvt, double* tau, double* work, int lwork);
 
 /**
  * \brief Wrapper around LAPACKE_dorgqr
@@ -87,6 +112,24 @@ int dormqr(int matrix_layout,
            const double* tau,
            double* c,
            int ldc);
+
+/**
+ * \brief Wrapper around LAPACKE_dormqr_work
+ * \sa    LAPACKE_dormqr_work
+ */
+int dormqr_work(int matrix_layout,
+                char side,
+                char trans,
+                int m,
+                int n,
+                int k,
+                const double* a,
+                int lda,
+                const double* tau,
+                double* c,
+                int ldc,
+                double* work,
+                int lwork);
 
 
 /**

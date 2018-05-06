@@ -248,12 +248,12 @@ struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
 
   static inline size_t rows(const MatrixType& /*mat*/)
   {
-    return numeric_cast<size_t>(N);
+    return static_cast<size_t>(N);
   }
 
   static inline size_t cols(const MatrixType& /*mat*/)
   {
-    return numeric_cast<size_t>(M);
+    return static_cast<size_t>(M);
   }
 
   static inline void set_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)

@@ -104,6 +104,43 @@ int dgeev(int matrix_layout,
 #endif
 }
 
+int dgeev_work(int matrix_layout,
+               char jobvl,
+               char jobvr,
+               int n,
+               double* a,
+               int lda,
+               double* wr,
+               double* wi,
+               double* vl,
+               int ldvl,
+               double* vr,
+               int ldvr,
+               double* work,
+               int lwork)
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_dgeev_work(matrix_layout, jobvl, jobvr, n, a, lda, wr, wi, vl, ldvl, vr, ldvr, work, lwork);
+#else
+  DUNE_UNUSED_PARAMETER(matrix_layout);
+  DUNE_UNUSED_PARAMETER(jobvl);
+  DUNE_UNUSED_PARAMETER(jobvr);
+  DUNE_UNUSED_PARAMETER(n);
+  DUNE_UNUSED_PARAMETER(a);
+  DUNE_UNUSED_PARAMETER(lda);
+  DUNE_UNUSED_PARAMETER(wr);
+  DUNE_UNUSED_PARAMETER(wi);
+  DUNE_UNUSED_PARAMETER(vl);
+  DUNE_UNUSED_PARAMETER(ldvl);
+  DUNE_UNUSED_PARAMETER(vr);
+  DUNE_UNUSED_PARAMETER(ldvr);
+  DUNE_UNUSED_PARAMETER(work);
+  DUNE_UNUSED_PARAMETER(lwork);
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
 
 int dgeqp3(int matrix_layout, int m, int n, double* a, int lda, int* jpvt, double* tau)
 {
@@ -117,6 +154,26 @@ int dgeqp3(int matrix_layout, int m, int n, double* a, int lda, int* jpvt, doubl
   DUNE_UNUSED_PARAMETER(lda);
   DUNE_UNUSED_PARAMETER(jpvt);
   DUNE_UNUSED_PARAMETER(tau);
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int dgeqp3_work(int matrix_layout, int m, int n, double* a, int lda, int* jpvt, double* tau, double* work, int lwork)
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_dgeqp3_work(matrix_layout, m, n, a, lda, jpvt, tau, work, lwork);
+#else
+  DUNE_UNUSED_PARAMETER(matrix_layout);
+  DUNE_UNUSED_PARAMETER(m);
+  DUNE_UNUSED_PARAMETER(n);
+  DUNE_UNUSED_PARAMETER(a);
+  DUNE_UNUSED_PARAMETER(lda);
+  DUNE_UNUSED_PARAMETER(jpvt);
+  DUNE_UNUSED_PARAMETER(tau);
+  DUNE_UNUSED_PARAMETER(work);
+  DUNE_UNUSED_PARAMETER(lwork);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
@@ -167,6 +224,42 @@ int dormqr(int matrix_layout,
   DUNE_UNUSED_PARAMETER(tau);
   DUNE_UNUSED_PARAMETER(c);
   DUNE_UNUSED_PARAMETER(ldc);
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int dormqr_work(int matrix_layout,
+                char side,
+                char trans,
+                int m,
+                int n,
+                int k,
+                const double* a,
+                int lda,
+                const double* tau,
+                double* c,
+                int ldc,
+                double* work,
+                int lwork)
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_dormqr_work(matrix_layout, side, trans, m, n, k, a, lda, tau, c, ldc, work, lwork);
+#else
+  DUNE_UNUSED_PARAMETER(matrix_layout);
+  DUNE_UNUSED_PARAMETER(side);
+  DUNE_UNUSED_PARAMETER(trans);
+  DUNE_UNUSED_PARAMETER(m);
+  DUNE_UNUSED_PARAMETER(n);
+  DUNE_UNUSED_PARAMETER(k);
+  DUNE_UNUSED_PARAMETER(a);
+  DUNE_UNUSED_PARAMETER(lda);
+  DUNE_UNUSED_PARAMETER(tau);
+  DUNE_UNUSED_PARAMETER(c);
+  DUNE_UNUSED_PARAMETER(ldc);
+  DUNE_UNUSED_PARAMETER(work);
+  DUNE_UNUSED_PARAMETER(lwork);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
