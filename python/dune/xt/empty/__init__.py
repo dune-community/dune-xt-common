@@ -17,4 +17,4 @@ except ImportError:
     pass
 
 import dune.xt
-from dune.xt._common_empty import *
+from dune.xt._empty import *
