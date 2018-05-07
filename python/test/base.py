@@ -34,3 +34,11 @@ def test_logging():
     lg.info('log info test')
     lg.error('log error test')
     lg.debug('log debug test')
+
+
+def test_timings():
+    from dune.xt.common.timings import timings
+    timings.reset()
+    timings.start("foo.bar")
+    timings.stop()
+    timings.output_simple()
