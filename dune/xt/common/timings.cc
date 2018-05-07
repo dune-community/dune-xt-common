@@ -59,7 +59,7 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
-TimingData::TimingData(const std::string _name)
+TimingData::TimingData(std::string _name)
   : timer_(new boost::timer::cpu_timer)
   , name(_name)
 {
@@ -79,7 +79,7 @@ TimingData::DeltaType TimingData::delta() const
   return {{cast(elapsed.wall * scale), cast(elapsed.user * scale), cast(elapsed.system * scale)}};
 }
 
-void Timings::reset(const std::string section_name)
+void Timings::reset(std::string section_name)
 {
   try {
     stop(section_name);
@@ -89,7 +89,7 @@ void Timings::reset(const std::string section_name)
   commited_deltas_[section_name] = {{0, 0, 0}};
 }
 
-void Timings::start(const std::string section_name)
+void Timings::start(std::string section_name)
 {
   std::lock_guard<std::mutex> lock(mutex_);
 
@@ -107,7 +107,7 @@ void Timings::start(const std::string section_name)
   DXTC_LIKWID_BEGIN_SECTION(section_name)
 } // StartTiming
 
-long Timings::stop(const std::string section_name)
+long Timings::stop(std::string section_name)
 {
   DXTC_LIKWID_END_SECTION(section_name)
   if (known_timers_map_.find(section_name) == known_timers_map_.end())
@@ -126,12 +126,12 @@ long Timings::stop(const std::string section_name)
   return dlt[0];
 } // StopTiming
 
-TimingData::TimeType Timings::walltime(const std::string section_name) const
+TimingData::TimeType Timings::walltime(std::string section_name) const
 {
   return delta(section_name)[0];
 }
 
-TimingData::DeltaType Timings::delta(const std::string section_name) const
+TimingData::DeltaType Timings::delta(std::string section_name) const
 {
   DeltaMap::const_iterator section = commited_deltas_.find(section_name);
   if (section == commited_deltas_.end()) {
@@ -160,13 +160,13 @@ void Timings::reset()
   commited_deltas_.clear();
 } // Reset
 
-void Timings::set_outputdir(const std::string dir)
+void Timings::set_outputdir(std::string dir)
 {
   output_dir_ = dir;
   test_create_directory(output_dir_);
 }
 
-void Timings::output_per_rank(const std::string csv_base) const
+void Timings::output_per_rank(std::string csv_base) const
 {
   const auto rank = MPIHelper::getCollectiveCommunication().rank();
   boost::filesystem::path dir(output_dir_);

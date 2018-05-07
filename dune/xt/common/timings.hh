@@ -52,7 +52,7 @@ private:
 public:
   std::string name;
 
-  explicit TimingData(const std::string _name = "blank");
+  explicit TimingData(std::string _name = "blank");
 
   void stop();
 
@@ -81,7 +81,6 @@ class Timings
 
 private:
   Timings();
-  ~Timings();
 
   typedef std::map<std::string, std::pair<std::atomic<bool>, PerThreadValue<TimingData>>> KnownTimersMap;
   //! section name -> seconds
@@ -90,26 +89,28 @@ private:
   const TimingData& get_timing_data(std::string section_name) const;
 
 public:
+  ~Timings();
+
   void stop();
 
   //! set this to begin a named section
-  void start(const std::string section_name);
+  void start(std::string section_name);
 
   //! stop named section's counter
-  long stop(const std::string section_name);
+  long stop(std::string section_name);
 
   //! set elapsed time back to 0 for section_name
-  void reset(const std::string section_name);
+  void reset(std::string section_name);
 
   //! get runtime of section in milliseconds
-  TimingData::TimeType walltime(const std::string section_name) const;
+  TimingData::TimeType walltime(std::string section_name) const;
   //! get the full delta array
-  TimingData::DeltaType delta(const std::string section_name) const;
+  TimingData::DeltaType delta(std::string section_name) const;
 
   /** creates one file local to each MPI-rank (no global averaging)
    *  one single rank-0 file with all combined/averaged measures
    ***/
-  void output_per_rank(const std::string csv_base) const;
+  void output_per_rank(std::string csv_base) const;
   //! outputs walltime only w/o MPI-rank averaging
   void output_simple(std::ostream& out = std::cout) const;
   /** output all recorded measures
@@ -120,7 +121,7 @@ public:
   /// stops and resets all timers and data
   void reset();
 
-  void set_outputdir(const std::string dir);
+  void set_outputdir(std::string dir);
 
 private:
   DeltaMap commited_deltas_;
@@ -130,18 +131,13 @@ private:
   KnownTimersMap known_timers_map_;
   const std::string csv_sep_;
   std::mutex mutex_;
-
-  static Timings& instance()
-  {
-    static Timings pf;
-    return pf;
-  }
 };
 
 //! global profiler object
-inline Timings& timings()
+DUNE_EXPORT inline Timings& timings()
 {
-  return Timings::instance();
+  static Timings pf;
+  return pf;
 }
 
 class ScopedTiming : public boost::noncopyable
