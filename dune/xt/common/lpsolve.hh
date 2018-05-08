@@ -17,14 +17,25 @@
 #include <complex>
 #include <memory>
 
+// forward declaration
+typedef struct _lprec lprec;
+
 namespace Dune {
 namespace XT {
 namespace Common {
 namespace lp_solve {
 
 
-// forward declaration
-struct LinearProgram;
+struct LinearProgram
+{
+  LinearProgram(int rows, int cols);
+  ~LinearProgram();
+
+  lprec* data();
+
+private:
+  lprec* lp_;
+};
 
 
 /**
