@@ -23,6 +23,13 @@
 
 #include "lpsolve.hh"
 
+#if not(HAVE_LPSOLVE)
+struct _lprec
+{
+};
+#endif
+
+
 namespace Dune {
 namespace XT {
 namespace Common {
@@ -30,36 +37,39 @@ namespace lp_solve {
 
 
 #if HAVE_LPSOLVE
-struct LinearProgram
+LinearProgram::LinearProgram(int rows, int cols)
+  : lp_(::make_lp(rows, cols))
 {
-  LinearProgram(int rows, int cols)
-    : lp_(::make_lp(rows, cols))
-  {
-    if (!lp_)
-      DUNE_THROW(Dune::MathError, "Couldn't construct linear program");
-  }
+  if (!lp_)
+    DUNE_THROW(Dune::MathError, "Couldn't construct linear program");
+}
 
-  ~LinearProgram()
-  {
-    ::delete_lp(lp_);
-  }
+LinearProgram::~LinearProgram()
+{
+  ::delete_lp(lp_);
+}
 
-  lprec* data()
-  {
-    return lp_;
-  }
+lprec* LinearProgram::data()
+{
+  return lp_;
+}
 
-private:
-  lprec* lp_;
-};
 #else // HAVE_LPSOLVE
-struct LinearProgram
+LinearProgram::LinearProgram(int /*rows*/, int /*cols*/)
 {
-  LinearProgram(int /*rows*/, int /*cols*/)
-  {
-    DUNE_THROW(Exceptions::dependency_missing, "You are missing lp_solve, check available() first!");
-  }
-};
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lp_solve, check available() first!");
+}
+
+LinearProgram::~LinearProgram()
+{
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lp_solve, check available() first!");
+}
+
+lprec* LinearProgram::data()
+{
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lp_solve, check available() first!");
+  return new lprec();
+}
 #endif // HAVE_LPSOLVE
 
 bool available()

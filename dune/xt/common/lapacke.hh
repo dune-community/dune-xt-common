@@ -281,6 +281,19 @@ void dtrsm(const int layout,
            double* b,
            const int ldb);
 
+/**
+ * \brief Wrapper around cblas_dtrsv
+ * \sa    cblas_dtrsv
+ */
+void dtrsv(const int layout,
+           const int uplo,
+           const int transa,
+           const int diag,
+           const int n,
+           const double* a,
+           const int lda,
+           double* x,
+           const int incx);
 
 /**
  * \brief Wrapper around cblas_ztrsm
@@ -298,6 +311,20 @@ void ztrsm(const int layout,
            const int lda,
            void* b,
            const int ldb);
+
+/**
+ * \brief Wrapper around cblas_ztrsv
+ * \sa    cblas_ztrsv
+ */
+void ztrsv(const int layout,
+           const int uplo,
+           const int transa,
+           const int diag,
+           const int n,
+           const void* a,
+           const int lda,
+           void* x,
+           const int incx);
 
 
 } // namespace Blas

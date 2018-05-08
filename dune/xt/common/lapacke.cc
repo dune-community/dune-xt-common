@@ -556,6 +556,46 @@ void dtrsm(const int layout,
 }
 
 
+void dtrsv(const int layout,
+           const int uplo,
+           const int transa,
+           const int diag,
+           const int n,
+           const double* a,
+           const int lda,
+           double* x,
+           const int incx)
+{
+#if HAVE_MKL || HAVE_CBLAS
+  cblas_dtrsv(static_cast<CBLAS_LAYOUT>(layout),
+              static_cast<CBLAS_UPLO>(uplo),
+              static_cast<CBLAS_TRANSPOSE>(transa),
+              static_cast<CBLAS_DIAG>(diag),
+              n,
+              a,
+              lda,
+              x,
+              incx);
+#ifndef NDEBUG
+  for (int ii = 0; ii < n; ++ii)
+    if (std::isnan(x[ii]) || std::isinf(x[ii]))
+      DUNE_THROW(Dune::MathError, "Triangular solve using cblas_dtrsv failed!");
+#endif
+#else
+  DUNE_UNUSED_PARAMETER(layout);
+  DUNE_UNUSED_PARAMETER(uplo);
+  DUNE_UNUSED_PARAMETER(transa);
+  DUNE_UNUSED_PARAMETER(diag);
+  DUNE_UNUSED_PARAMETER(n);
+  DUNE_UNUSED_PARAMETER(a);
+  DUNE_UNUSED_PARAMETER(lda);
+  DUNE_UNUSED_PARAMETER(x);
+  DUNE_UNUSED_PARAMETER(incx);
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
+#endif
+}
+
+
 void ztrsm(const int layout,
            const int side,
            const int uplo,
@@ -601,6 +641,47 @@ void ztrsm(const int layout,
   DUNE_UNUSED_PARAMETER(lda);
   DUNE_UNUSED_PARAMETER(b);
   DUNE_UNUSED_PARAMETER(ldb);
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
+#endif
+}
+
+
+void ztrsv(const int layout,
+           const int uplo,
+           const int transa,
+           const int diag,
+           const int n,
+           const void* a,
+           const int lda,
+           void* x,
+           const int incx)
+{
+#if HAVE_MKL || HAVE_CBLAS
+  cblas_ztrsv(static_cast<CBLAS_LAYOUT>(layout),
+              static_cast<CBLAS_UPLO>(uplo),
+              static_cast<CBLAS_TRANSPOSE>(transa),
+              static_cast<CBLAS_DIAG>(diag),
+              n,
+              a,
+              lda,
+              x,
+              incx);
+#ifndef NDEBUG
+  for (int ii = 0; ii < n; ++ii)
+    if (std::isnan(std::abs(static_cast<std::complex<double>*>(x)[ii]))
+        || std::isinf(std::abs(static_cast<std::complex<double>*>(x)[ii])))
+      DUNE_THROW(Dune::MathError, "Triangular solve using cblas_ztrsv failed!");
+#endif
+#else
+  DUNE_UNUSED_PARAMETER(layout);
+  DUNE_UNUSED_PARAMETER(uplo);
+  DUNE_UNUSED_PARAMETER(transa);
+  DUNE_UNUSED_PARAMETER(diag);
+  DUNE_UNUSED_PARAMETER(n);
+  DUNE_UNUSED_PARAMETER(a);
+  DUNE_UNUSED_PARAMETER(lda);
+  DUNE_UNUSED_PARAMETER(x);
+  DUNE_UNUSED_PARAMETER(incx);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
 #endif
 }
