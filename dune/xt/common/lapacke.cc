@@ -198,6 +198,26 @@ int dorgqr(int matrix_layout, int m, int n, int k, double* a, int lda, const dou
 }
 
 
+int dorgqr_work(int matrix_layout, int m, int n, int k, double* a, int lda, const double* tau, double* work, int lwork)
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_dorgqr_work(matrix_layout, m, n, k, a, lda, tau, work, lwork);
+#else
+  DUNE_UNUSED_PARAMETER(matrix_layout);
+  DUNE_UNUSED_PARAMETER(m);
+  DUNE_UNUSED_PARAMETER(n);
+  DUNE_UNUSED_PARAMETER(k);
+  DUNE_UNUSED_PARAMETER(a);
+  DUNE_UNUSED_PARAMETER(lda);
+  DUNE_UNUSED_PARAMETER(tau);
+  DUNE_UNUSED_PARAMETER(work);
+  DUNE_UNUSED_PARAMETER(lwork);
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
 int dormqr(int matrix_layout,
            char side,
            char trans,
@@ -341,6 +361,24 @@ int zgeqp3(int matrix_layout, int m, int n, std::complex<double>* a, int lda, in
   DUNE_UNUSED_PARAMETER(a);
   DUNE_UNUSED_PARAMETER(lda);
   DUNE_UNUSED_PARAMETER(jpvt);
+  DUNE_UNUSED_PARAMETER(tau);
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int zungqr(int matrix_layout, int m, int n, int k, std::complex<double>* a, int lda, const std::complex<double>* tau)
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_zungqr(matrix_layout, m, n, k, a, lda, tau);
+#else
+  DUNE_UNUSED_PARAMETER(matrix_layout);
+  DUNE_UNUSED_PARAMETER(m);
+  DUNE_UNUSED_PARAMETER(n);
+  DUNE_UNUSED_PARAMETER(k);
+  DUNE_UNUSED_PARAMETER(a);
+  DUNE_UNUSED_PARAMETER(lda);
   DUNE_UNUSED_PARAMETER(tau);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;

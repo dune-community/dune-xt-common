@@ -90,11 +90,18 @@ int dgeqp3(int matrix_layout, int m, int n, double* a, int lda, int* jpvt, doubl
  */
 int dgeqp3_work(int matrix_layout, int m, int n, double* a, int lda, int* jpvt, double* tau, double* work, int lwork);
 
+
 /**
  * \brief Wrapper around LAPACKE_dorgqr
- * \sa    LAPACKE_dorqqr
+ * \sa    LAPACKE_dorgqr
  */
 int dorgqr(int matrix_layout, int m, int n, int k, double* a, int lda, const double* tau);
+
+/**
+ * \brief Wrapper around LAPACKE_dorgqr_work
+ * \sa    LAPACKE_dorgqr_work
+ */
+int dorgqr_work(int matrix_layout, int m, int n, int k, double* a, int lda, const double* tau, double* work, int lwork);
 
 
 /**
@@ -182,6 +189,13 @@ int zunmqr(int matrix_layout,
            const std::complex<double>* tau,
            std::complex<double>* c,
            int ldc);
+
+
+/**
+ * \brief Wrapper around LAPACKE_zungqr
+ * \sa    LAPACKE_zungqr
+ */
+int zungqr(int matrix_layout, int m, int n, int k, std::complex<double>* a, int lda, const std::complex<double>* tau);
 
 
 } // namespace Lapacke
