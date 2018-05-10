@@ -275,6 +275,19 @@ constexpr size_t factorial(size_t n)
   return n > 0 ? n * factorial(n - 1) : 1;
 }
 
+//! calculates complex conjugate like std::conj, but returns T instead of complex<T>
+template <class T>
+std::enable_if_t<std::is_arithmetic<T>::value, T> conj(T val)
+{
+  return val;
+}
+
+template <class T>
+std::complex<T> conj(std::complex<T> val)
+{
+  return std::conj(val);
+}
+
 //! calculates binomial coefficient for arbitrary n
 inline double binomial_coefficient(const double n, const size_t k)
 {
