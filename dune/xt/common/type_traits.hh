@@ -221,11 +221,13 @@ void real_type_id(T& obj, std::string name = "", size_t maxlevel = 10000)
 template <typename T>
 struct Typename
 {
-  static std::string value()
+  static std::string value(bool fail_wo_typeid = false)
   {
 #if defined(__GNUC__) && defined(__GXX_RTTI)
     return demangle_typename(typeid(T).name());
 #else
+    if (fail_wo_typeid)
+      DUNE_THROW(InvalidStateException, "typeid translation requested to fail with missing rtti");
     return "unknown";
 #endif
   }
