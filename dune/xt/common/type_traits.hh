@@ -23,6 +23,7 @@
 
 #include <dune/common/bigunsignedint.hh>
 #include <dune/common/typetraits.hh>
+#include <dune/common/unused.hh>
 
 
 /** use this to define Typename specializations in the GLOBAL namespace ONLY **/
@@ -224,6 +225,7 @@ struct Typename
   static std::string value(bool fail_wo_typeid = false)
   {
 #if defined(__GNUC__) && defined(__GXX_RTTI)
+    DUNE_UNUSED_PARAMETER(fail_wo_typeid);
     return demangle_typename(typeid(T).name());
 #else
     if (fail_wo_typeid)

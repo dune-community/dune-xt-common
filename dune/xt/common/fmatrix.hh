@@ -614,6 +614,16 @@ Dune::XT::Common::FieldMatrix<K, L_ROWS, R_COLS> operator*(const Dune::FieldMatr
   return left.rightmultiplyany(right);
 }
 
+// we need this explicit overload to fix an ambiguous operator* error due to the automatic conversion from
+// FieldMatrix<K, 1, 1> to K
+template <class K, int L_ROWS>
+Dune::XT::Common::FieldMatrix<K, L_ROWS, 1> operator*(const Dune::XT::Common::FieldMatrix<K, L_ROWS, 1>& left,
+                                                      const Dune::FieldMatrix<K, 1, 1>& right)
+{
+  return left.rightmultiplyany(right);
+}
+
+
 template <class K, int L_ROWS, int L_COLS, int R_COLS>
 void rightmultiply(Dune::FieldMatrix<K, L_ROWS, R_COLS>& ret,
                    const Dune::FieldMatrix<K, L_ROWS, L_COLS>& left,
