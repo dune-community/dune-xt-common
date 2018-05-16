@@ -37,6 +37,11 @@ namespace lp_solve {
 
 
 #if HAVE_LPSOLVE
+LinearProgram::LinearProgram()
+  : lp_(nullptr)
+{
+}
+
 LinearProgram::LinearProgram(int rows, int cols)
   : lp_(::make_lp(rows, cols))
 {
@@ -55,6 +60,11 @@ lprec* LinearProgram::data()
 }
 
 #else // HAVE_LPSOLVE
+LinearProgram::LinearProgram()
+{
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lp_solve, check available() first!");
+}
+
 LinearProgram::LinearProgram(int /*rows*/, int /*cols*/)
 {
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lp_solve, check available() first!");

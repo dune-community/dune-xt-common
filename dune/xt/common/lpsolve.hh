@@ -28,6 +28,7 @@ namespace lp_solve {
 
 struct LinearProgram
 {
+  LinearProgram();
   LinearProgram(int rows, int cols);
   ~LinearProgram();
 
