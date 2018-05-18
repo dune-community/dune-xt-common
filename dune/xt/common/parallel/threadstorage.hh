@@ -12,6 +12,19 @@
 #define DUNE_XT_COMMON_PARALLEL_THREADSTORAGE_HH
 
 #if HAVE_TBB
+// Hack to fix compilation with clang as tbb does not detect C++11 feature correctly for clang. Recent versions of TBB
+// allow to set the macro TBB_USE_GLIBCXX_VERSION to the proper version of libstdc++ to fix this issue, see
+// https://www.threadingbuildingblocks.org/docs/help/reference/appendices/known_issues/linux_os.html. For older versions
+// we need the hack below.
+#include <tbb/tbb_config.h>
+#undef __TBB_CPP11_RVALUE_REF_PRESENT
+#undef __TBB_CPP11_VARIADIC_TEMPLATES_PRESENT
+#undef __TBB_CPP11_DECLTYPE_PRESENT
+#undef __TBB_CPP11_LAMBDAS_PRESENT
+#define __TBB_CPP11_RVALUE_REF_PRESENT 1
+#define __TBB_CPP11_VARIADIC_TEMPLATES_PRESENT 1
+#define __TBB_CPP11_DECLTYPE_PRESENT 1
+#define __TBB_CPP11_LAMBDAS_PRESENT 1
 #include <tbb/enumerable_thread_specific.h>
 #endif
 
