@@ -11,88 +11,188 @@
 #ifndef DUNE_XT_COMMON_PARALLEL_THREADSTORAGE_HH
 #define DUNE_XT_COMMON_PARALLEL_THREADSTORAGE_HH
 
-#include <deque>
+#if HAVE_TBB
+#include <tbb/enumerable_thread_specific.h>
+#endif
+
 #include <algorithm>
-#include <numeric>
-#include <type_traits>
-#include <numeric>
 #include <list>
-#include <functional>
-
-#include <boost/noncopyable.hpp>
-
-#include <dune/xt/common/type_traits.hh>
-#include <dune/xt/common/memory.hh>
-#include <dune/xt/common/parallel/threadmanager.hh>
+#include <numeric>
 
 namespace Dune {
 namespace XT {
 namespace Common {
+namespace internal {
 
-/** Automatic Storage of non-static, N thread-local values
- **/
+
+#if HAVE_TBB
+
 template <class ValueImp>
-class PerThreadValue : public boost::noncopyable
+class EnumerableThreadSpecificWrapper
 {
+  using BackendType = typename tbb::enumerable_thread_specific<ValueImp>;
+
 public:
-  typedef ValueImp ValueType;
-  typedef typename std::conditional<std::is_const<ValueImp>::value, ValueImp, const ValueImp>::type ConstValueType;
+  using ValueType = ValueImp;
+  using ConstValueType = std::conditional_t<std::is_const<ValueType>::value, ValueType, const ValueType>;
+  using iterator = typename BackendType::iterator;
+  using const_iterator = typename BackendType::const_iterator;
+
+  template <class... InitTypes>
+  explicit EnumerableThreadSpecificWrapper(InitTypes&&... ctor_args)
+    : values_(std::forward<InitTypes>(ctor_args)...)
+  {
+  }
+
+  ValueType& local()
+  {
+    return values_.local();
+  }
+
+  // tbb does not provide a const version of local (as elements may be inserted when a new thread accesses values_), so
+  // values_ has to be mutable
+  const ValueType& local() const
+  {
+    return values_.local();
+  }
+
+  typename BackendType::iterator begin()
+  {
+    return values_.begin();
+  }
+
+  typename BackendType::iterator end()
+  {
+    return values_.end();
+  }
+
+  typename BackendType::const_iterator begin() const
+  {
+    return values_.begin();
+  }
+
+  typename BackendType::const_iterator end() const
+  {
+    return values_.end();
+  }
 
 private:
-  typedef PerThreadValue<ValueImp> ThisType;
-  typedef std::deque<std::unique_ptr<ValueType>> ContainerType;
+  mutable BackendType values_;
+}; // class EnumerableThreadSpecificWrapper<ValueImp>
+
+#else // HAVE_TBB
+
+template <class ValueImp>
+class EnumerableThreadSpecificWrapper
+{
+  using BackendType = std::array<ValueImp, 1>;
 
 public:
+  using ValueType = ValueImp;
+  using ConstValueType = std::conditional_t<std::is_const<ValueType>::value, ValueType, const ValueType>;
+  using iterator = typename BackendType::iterator;
+  using const_iterator = typename BackendType::const_iterator;
+
   //! Initialization by copy construction of ValueType
-  explicit PerThreadValue(ConstValueType& value)
-    : values_(threadManager().max_threads())
+  explicit EnumerableThreadSpecificWrapper(ConstValueType& value)
+    : values_{value}
   {
-    std::generate(values_.begin(), values_.end(), [=]() { return Common::make_unique<ValueType>(value); });
   }
 
   //! Initialization by in-place construction ValueType with \param ctor_args
   template <class... InitTypes>
   explicit PerThreadValue(InitTypes&&... ctor_args)
-    : values_(threadManager().max_threads())
+    : values_{ValueType(std::forward<InitTypes>(ctor_args)...)}
   {
-    for (auto&& val : values_)
-      val = Common::make_unique<ValueType>(ctor_args...);
   }
 
-  ThisType& operator=(ConstValueType&& value)
+  ValueType& local()
   {
-    std::generate(values_.begin(), values_.end(), [=]() { return Common::make_unique<ValueType>(value); });
-    return *this;
+    return values_[0];
+  }
+
+  const ValueType& local() const
+  {
+    return values_[0];
+  }
+
+  iterator begin()
+  {
+    return values_.begin();
+  }
+
+  iterator end()
+  {
+    return values_.end();
+  }
+
+  const_iterator begin() const
+  {
+    return values_.begin();
+  }
+
+  const_iterator end() const
+  {
+    return values_.end();
+  }
+
+private:
+  BackendType values_;
+}; // class EnumerableThreadSpecificWrapper<ValueImp>
+
+#endif // HAVE_TBB
+
+
+} // namespace interal
+
+
+/** Automatic Storage of non-static, N thread-local values
+ **/
+template <class ValueImp>
+class PerThreadValue
+{
+  using ContainerType = internal::EnumerableThreadSpecificWrapper<ValueImp>;
+
+public:
+  using ValueType = typename ContainerType::ValueType;
+  using ConstValueType = typename ContainerType::ConstValueType;
+
+  //! Initialization by copy construction of ValueType
+  explicit PerThreadValue(ConstValueType& value)
+    : values_(value)
+  {
+  }
+
+  //! Initialization by in-place construction ValueType with \param ctor_args
+  template <class... InitTypes>
+  explicit PerThreadValue(InitTypes&&... ctor_args)
+    : values_(std::forward<InitTypes>(ctor_args)...)
+  {
   }
 
   operator ValueType() const
   {
-    return this->operator*();
+    return values_.local();
   }
 
   ValueType& operator*()
   {
-    return *values_[threadManager().thread()];
+    return values_.local();
   }
 
   ConstValueType& operator*() const
   {
-    return *values_[threadManager().thread()];
+    return values_.local();
   }
 
   ValueType* operator->()
   {
-    return values_[threadManager().thread()].get();
+    return &values_.local();
   }
 
   ConstValueType* operator->() const
   {
-    return values_[threadManager().thread()].get();
-  }
-
-  auto& get_pointer()
-  {
-    return values_[threadManager().thread()];
+    return &values_.local();
   }
 
   template <class BinaryOperation>
@@ -128,7 +228,8 @@ public:
 
 private:
   ContainerType values_;
-};
+}; // class PerThreadValue<ValueImp>
+
 
 template <class Imp, typename Result, class Reduction = std::plus<Result>>
 class ThreadResultPropagator
@@ -167,6 +268,8 @@ private:
   Imp* imp_;
   std::list<Imp*> copies_;
 };
+
+
 } // namespace Common
 } // namespace XT
 } // namespace Dune

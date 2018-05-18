@@ -39,6 +39,7 @@
 #include <dune/xt/common/filesystem.hh>
 #include <dune/xt/common/logging.hh>
 #include <dune/xt/common/parallel/threadmanager.hh>
+#include <dune/xt/common/parallel/threadstorage.hh>
 
 #include <map>
 #include <string>
@@ -99,10 +100,10 @@ void Timings::start(std::string section_name)
       return;
 
     section->second.first = true; // set active, start with new
-    section->second.second = TimingData(section_name);
+    section->second.second = PerThreadValue<TimingData>(section_name);
   } else {
     // init new section
-    known_timers_map_[section_name] = std::make_pair(true, TimingData(section_name));
+    known_timers_map_[section_name] = std::make_pair(true, PerThreadValue<TimingData>(section_name));
   }
   DXTC_LIKWID_BEGIN_SECTION(section_name)
 } // StartTiming
