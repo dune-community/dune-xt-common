@@ -18,6 +18,7 @@
 #include <algorithm>
 #include <list>
 #include <numeric>
+#include <type_traits>
 
 namespace Dune {
 namespace XT {
@@ -35,7 +36,7 @@ class EnumerableThreadSpecificWrapper
 
 public:
   using ValueType = ValueImp;
-  using ConstValueType = std::conditional_t<std::is_const<ValueType>::value, ValueType, const ValueType>;
+  using ConstValueType = std::add_const_t<ValueType>;
   using iterator = typename BackendType::iterator;
   using const_iterator = typename BackendType::const_iterator;
 
@@ -96,7 +97,7 @@ class EnumerableThreadSpecificWrapper
 
 public:
   using ValueType = ValueImp;
-  using ConstValueType = std::conditional_t<std::is_const<ValueType>::value, ValueType, const ValueType>;
+  using ConstValueType = std::add_const_t<ValueType>;
   using iterator = typename BackendType::iterator;
   using const_iterator = typename BackendType::const_iterator;
 
