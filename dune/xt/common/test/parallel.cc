@@ -80,7 +80,7 @@ TYPED_TEST(ThreadValueTest, All)
     typename PTVType::ValueType value(1);
     PTVType foo(value);
     check_eq(foo, value);
-    foo = typename PTVType::ValueType(1);
+    foo = PTVType(1);
     check_eq(foo, value);
     const auto new_value = *foo;
     const PTVType bar(*foo);

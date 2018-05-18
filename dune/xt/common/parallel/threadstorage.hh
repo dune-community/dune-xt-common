@@ -30,7 +30,8 @@ namespace internal {
 template <class ValueImp>
 class EnumerableThreadSpecificWrapper
 {
-  using BackendType = typename tbb::enumerable_thread_specific<ValueImp>;
+  // enumerable_thread_specific does not compile with ConstValueType as template param
+  using BackendType = typename tbb::enumerable_thread_specific<std::remove_const_t<ValueImp>>;
 
 public:
   using ValueType = ValueImp;
@@ -76,6 +77,12 @@ public:
     return values_.end();
   }
 
+  template <class BinaryOperation>
+  ValueType combine(BinaryOperation op) const
+  {
+    return values_.combine(op);
+  }
+
 private:
   mutable BackendType values_;
 }; // class EnumerableThreadSpecificWrapper<ValueImp>
@@ -85,7 +92,7 @@ private:
 template <class ValueImp>
 class EnumerableThreadSpecificWrapper
 {
-  using BackendType = std::array<ValueImp, 1>;
+  using BackendType = std::array<std::remove_const_t<ValueImp>, 1>;
 
 public:
   using ValueType = ValueImp;
@@ -101,7 +108,7 @@ public:
 
   //! Initialization by in-place construction ValueType with \param ctor_args
   template <class... InitTypes>
-  explicit PerThreadValue(InitTypes&&... ctor_args)
+  explicit EnumerableThreadSpecificWrapper(InitTypes&&... ctor_args)
     : values_{ValueType(std::forward<InitTypes>(ctor_args)...)}
   {
   }
@@ -134,6 +141,12 @@ public:
   const_iterator end() const
   {
     return values_.end();
+  }
+
+  template <class BinaryOperation>
+  ValueType combine(BinaryOperation /*op*/) const
+  {
+    return values_[0];
   }
 
 private:
@@ -198,9 +211,7 @@ public:
   template <class BinaryOperation>
   ValueType accumulate(ValueType init, BinaryOperation op) const
   {
-    typedef const typename ContainerType::value_type ptr;
-    auto l = [&](ConstValueType& a, ptr& b) { return op(a, *b); };
-    return std::accumulate(values_.begin(), values_.end(), init, l);
+    return op(init, values_.combine(op));
   }
 
   ValueType sum() const
