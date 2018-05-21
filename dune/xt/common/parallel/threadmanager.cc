@@ -122,7 +122,7 @@ Dune::XT::Common::ThreadManager::ThreadManager()
 
 size_t Dune::XT::Common::ThreadManager::max_threads()
 {
-  return 1;
+  return max_threads_;
 }
 
 size_t Dune::XT::Common::ThreadManager::current_threads()
