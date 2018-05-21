@@ -256,6 +256,118 @@ private:
 }; // class PerThreadValue<ValueImp>
 
 
+/**
+ * Previous implementation of PerThreadValue. This implementation suffers from the fact that it is not possible (or
+ * at least we did not find a way yet) to set a hard upper limit on the number of threads TBB uses. Setting max_threads
+ * via tbb::task_scheduler_init apparently only sets a soft limit on the number of threads. In addition, even if TBB
+ * uses only N threads at a time, it might be possible that a thread is destroyed and later in the program another
+ * thread with a different id replaces it, which will then get a number greater than or equal to N in our
+ * implementation (see ThreadManager::thread()). This occasionally leads to segfaults.
+ * We keep this implementation around as it is currently used by TimingData (see dune/xt/common/timings.hh) and the
+ * new implementation can't replace it in that context, as the new implementation based on
+ * tbb::enumerable_thread_specific lazily initalizes the values in each thread.
+ * \todo Either fix TimingData and remove this class or fix this class.
+ **/
+template <class ValueImp>
+class UnsafePerThreadValue : public boost::noncopyable
+{
+public:
+  typedef ValueImp ValueType;
+  typedef typename std::conditional<std::is_const<ValueImp>::value, ValueImp, const ValueImp>::type ConstValueType;
+
+private:
+  typedef UnsafePerThreadValue<ValueImp> ThisType;
+  typedef std::deque<std::unique_ptr<ValueType>> ContainerType;
+
+public:
+  //! Initialization by copy construction of ValueType
+  explicit UnsafePerThreadValue(ConstValueType& value)
+    : values_(threadManager().max_threads())
+  {
+    std::generate(values_.begin(), values_.end(), [=]() { return Common::make_unique<ValueType>(value); });
+  }
+
+  //! Initialization by in-place construction ValueType with \param ctor_args
+  template <class... InitTypes>
+  explicit UnsafePerThreadValue(InitTypes&&... ctor_args)
+    : values_(threadManager().max_threads())
+  {
+    for (auto&& val : values_)
+      val = Common::make_unique<ValueType>(ctor_args...);
+  }
+
+  ThisType& operator=(ConstValueType&& value)
+  {
+    std::generate(values_.begin(), values_.end(), [=]() { return Common::make_unique<ValueType>(value); });
+    return *this;
+  }
+
+  operator ValueType() const
+  {
+    return this->operator*();
+  }
+
+  ValueType& operator*()
+  {
+    return *values_[threadManager().thread()];
+  }
+
+  ConstValueType& operator*() const
+  {
+    return *values_[threadManager().thread()];
+  }
+
+  ValueType* operator->()
+  {
+    return values_[threadManager().thread()].get();
+  }
+
+  ConstValueType* operator->() const
+  {
+    return values_[threadManager().thread()].get();
+  }
+
+  auto& get_pointer()
+  {
+    return values_[threadManager().thread()];
+  }
+
+  template <class BinaryOperation>
+  ValueType accumulate(ValueType init, BinaryOperation op) const
+  {
+    typedef const typename ContainerType::value_type ptr;
+    auto l = [&](ConstValueType& a, ptr& b) { return op(a, *b); };
+    return std::accumulate(values_.begin(), values_.end(), init, l);
+  }
+
+  ValueType sum() const
+  {
+    return accumulate(ValueType(0), std::plus<ValueType>());
+  }
+
+  typename ContainerType::iterator begin()
+  {
+    return values_.begin();
+  }
+  typename ContainerType::iterator end()
+  {
+    return values_.end();
+  }
+
+  typename ContainerType::const_iterator begin() const
+  {
+    return values_.begin();
+  }
+  typename ContainerType::const_iterator end() const
+  {
+    return values_.end();
+  }
+
+private:
+  ContainerType values_;
+}; // class UnsafePerThreadValue<...>
+
+
 template <class Imp, typename Result, class Reduction = std::plus<Result>>
 class ThreadResultPropagator
 {

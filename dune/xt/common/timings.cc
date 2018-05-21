@@ -98,12 +98,11 @@ void Timings::start(std::string section_name)
   if (section != known_timers_map_.end()) {
     if (section->second.first) // timer currently running
       return;
-
     section->second.first = true; // set active, start with new
-    section->second.second = PerThreadValue<TimingData>(section_name);
+    section->second.second = TimingData(section_name);
   } else {
     // init new section
-    known_timers_map_[section_name] = std::make_pair(true, PerThreadValue<TimingData>(section_name));
+    known_timers_map_[section_name] = std::make_pair(true, TimingData(section_name));
   }
   DXTC_LIKWID_BEGIN_SECTION(section_name)
 } // StartTiming
