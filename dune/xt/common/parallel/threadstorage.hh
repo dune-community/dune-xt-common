@@ -33,6 +33,12 @@
 #include <numeric>
 #include <type_traits>
 
+// TODO: the following includes can be removed when UnsafePerThreadValue is removed
+#include <deque>
+#include <memory>
+#include <boost/noncopyable.hpp>
+#include <dune/xt/common/parallel/threadmanager.hh>
+
 namespace Dune {
 namespace XT {
 namespace Common {
@@ -284,7 +290,7 @@ public:
   explicit UnsafePerThreadValue(ConstValueType& value)
     : values_(threadManager().max_threads())
   {
-    std::generate(values_.begin(), values_.end(), [=]() { return Common::make_unique<ValueType>(value); });
+    std::generate(values_.begin(), values_.end(), [=]() { return std::make_unique<ValueType>(value); });
   }
 
   //! Initialization by in-place construction ValueType with \param ctor_args
@@ -293,12 +299,12 @@ public:
     : values_(threadManager().max_threads())
   {
     for (auto&& val : values_)
-      val = Common::make_unique<ValueType>(ctor_args...);
+      val = std::make_unique<ValueType>(ctor_args...);
   }
 
   ThisType& operator=(ConstValueType&& value)
   {
-    std::generate(values_.begin(), values_.end(), [=]() { return Common::make_unique<ValueType>(value); });
+    std::generate(values_.begin(), values_.end(), [=]() { return std::make_unique<ValueType>(value); });
     return *this;
   }
 
