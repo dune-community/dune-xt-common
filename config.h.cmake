@@ -187,5 +187,27 @@
 
 /*** End: Silence implicitly False evaluation of undefined macro warnings ****/
 
+#include <boost/config.hpp>
+#if HAVE_TBB && BOOST_CLANG
+  // Hack to fix compilation with clang as tbb does not detect C++11 feature correctly for clang. Recent versions of TBB
+  // allow to set the macro TBB_USE_GLIBCXX_VERSION to the proper version of libstdc++ to fix this issue, see
+  // https://www.threadingbuildingblocks.org/docs/help/reference/appendices/known_issues/linux_os.html. For older versions
+  // we need the hack below.
+  #define TBB_USE_GLIBCXX_VERSION 40902
+  #include "tbb/tbb_stddef.h"
+  #if TBB_INTERFACE_VERSION < 4400
+    #include <tbb/tbb_config.h>
+    #undef __TBB_CPP11_RVALUE_REF_PRESENT
+    #undef __TBB_CPP11_VARIADIC_TEMPLATES_PRESENT
+    #undef __TBB_CPP11_DECLTYPE_PRESENT
+    #undef __TBB_CPP11_LAMBDAS_PRESENT
+    #define __TBB_CPP11_RVALUE_REF_PRESENT 1
+    #define __TBB_CPP11_VARIADIC_TEMPLATES_PRESENT 1
+    #define __TBB_CPP11_DECLTYPE_PRESENT 1
+    #define __TBB_CPP11_LAMBDAS_PRESENT 1
+  #endif // TBB_INTERFACE_VERSION < 4400
+#endif // HAVE_TBB
+
+
 /* end dune-xt-common */
 // NEVER delete/alter above comment, dune's cmake relies on it
