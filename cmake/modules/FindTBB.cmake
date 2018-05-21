@@ -307,6 +307,8 @@ endif()
 # set variable for config.h
 set(HAVE_TBB ${TBB_FOUND})
 
+# provide include_sys_dir
+include(XtCompilerSupport)
 # perform DUNE-specific setup tasks
 if(TBB_FOUND)
   set(TBB_CACHE_ALIGNED_ALLOCATOR_ALIGNMENT 128)
@@ -320,6 +322,9 @@ if(TBB_FOUND)
                               ${TBB_INCLUDE_DIRS}
                               LIBRARIES
                               ${TBB_LIBRARIES})
+  foreach(_idir ${TBB_INCLUDE_DIRS})
+    include_sys_dir(${_idir})
+  endforeach()
 endif()
 
 # function for adding TBB flags to a list of targets

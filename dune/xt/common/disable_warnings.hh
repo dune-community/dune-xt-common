@@ -23,7 +23,6 @@
 #pragma GCC diagnostic ignored "-Wfloat-equal"
 #pragma GCC diagnostic ignored "-Wignored-qualifiers"
 #pragma GCC diagnostic ignored "-Wlogical-not-parentheses"
-#pragma GCC diagnostic ignored "-Wlogical-op"
 #pragma GCC diagnostic ignored "-Wlogical-op-parentheses"
 #pragma GCC diagnostic ignored "-Wmismatched-tags"
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"

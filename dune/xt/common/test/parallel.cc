@@ -11,11 +11,11 @@
 
 #include <dune/xt/common/test/main.hxx>
 
-#include <string>
-#include <memory>
 #include <array>
-#include <initializer_list>
+#include <thread>
+#include <type_traits>
 #include <vector>
+
 #include <dune/xt/common/parallel/threadmanager.hh>
 #include <dune/xt/common/parallel/threadstorage.hh>
 #include <dune/xt/common/parallel/helper.hh>
@@ -80,7 +80,7 @@ TYPED_TEST(ThreadValueTest, All)
     typename PTVType::ValueType value(1);
     PTVType foo(value);
     check_eq(foo, value);
-    foo = typename PTVType::ValueType(1);
+    foo = PTVType(1);
     check_eq(foo, value);
     const auto new_value = *foo;
     const PTVType bar(*foo);
@@ -89,12 +89,22 @@ TYPED_TEST(ThreadValueTest, All)
   {
     typename PTVType::ValueType zero(0);
     PTVType foo(zero);
+    size_t num_threads = Dune::XT::Common::threadManager().max_threads();
+    std::vector<std::thread> threads(num_threads);
+    for (size_t ii = 0; ii < num_threads; ++ii)
+      threads[ii] = std::thread([&foo, &zero]() { EXPECT_EQ(*foo, zero); });
+    for (size_t ii = 0; ii < num_threads; ++ii)
+      threads[ii].join();
     auto sum = foo.accumulate(0, std::plus<typename PTVType::ValueType>());
-    EXPECT_EQ(Dune::XT::Common::threadManager().max_threads() * zero, sum);
+    EXPECT_EQ(num_threads * zero, sum);
     typename PTVType::ValueType one = 1;
     PTVType bar(one);
+    for (size_t ii = 0; ii < num_threads; ++ii)
+      threads[ii] = std::thread([&bar, &one]() { EXPECT_EQ(*bar, one); });
+    for (size_t ii = 0; ii < num_threads; ++ii)
+      threads[ii].join();
     sum = bar.accumulate(0, std::plus<typename PTVType::ValueType>());
-    EXPECT_EQ(Dune::XT::Common::threadManager().max_threads() * one, sum);
+    EXPECT_EQ(num_threads * one, sum);
   }
 }
 

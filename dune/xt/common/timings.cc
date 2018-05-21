@@ -39,6 +39,7 @@
 #include <dune/xt/common/filesystem.hh>
 #include <dune/xt/common/logging.hh>
 #include <dune/xt/common/parallel/threadmanager.hh>
+#include <dune/xt/common/parallel/threadstorage.hh>
 
 #include <map>
 #include <string>
@@ -97,7 +98,6 @@ void Timings::start(std::string section_name)
   if (section != known_timers_map_.end()) {
     if (section->second.first) // timer currently running
       return;
-
     section->second.first = true; // set active, start with new
     section->second.second = TimingData(section_name);
   } else {

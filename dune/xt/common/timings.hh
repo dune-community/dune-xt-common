@@ -82,7 +82,7 @@ class Timings
 private:
   Timings();
 
-  typedef std::map<std::string, std::pair<std::atomic<bool>, PerThreadValue<TimingData>>> KnownTimersMap;
+  typedef std::map<std::string, std::pair<std::atomic<bool>, UnsafePerThreadValue<TimingData>>> KnownTimersMap;
   //! section name -> seconds
   typedef std::map<std::string, TimingData::DeltaType> DeltaMap;
 
