@@ -72,7 +72,7 @@ LinearProgram::LinearProgram(int /*rows*/, int /*cols*/)
 
 LinearProgram::~LinearProgram()
 {
-  DUNE_THROW(Exceptions::dependency_missing, "You are missing lp_solve, check available() first!");
+  (void)lp_;
 }
 
 lprec* LinearProgram::data()
