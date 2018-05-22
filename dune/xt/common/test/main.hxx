@@ -35,6 +35,7 @@
 
 #include <boost/numeric/conversion/cast.hpp>
 
+#include <dune/xt/common/math.hh>
 #include <dune/common/fvector.hh>
 #include <dune/common/fmatrix.hh>
 #include <dune/common/parallel/mpihelper.hh>

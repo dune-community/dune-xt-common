@@ -33,5 +33,10 @@ long unsigned int abs(const long unsigned int& value)
   return value;
 }
 
+unsigned char abs(unsigned char value)
+{
+  return value;
+}
+
 
 } // namespace std

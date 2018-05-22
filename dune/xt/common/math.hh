@@ -39,7 +39,6 @@
 #include <dune/common/promotiontraits.hh>
 
 #include <dune/xt/common/type_traits.hh>
-#include <dune/xt/common/vector.hh>
 
 namespace Dune {
 namespace XT {
@@ -298,41 +297,6 @@ inline double binomial_coefficient(const double n, const size_t k)
 }
 
 
-/** Converts from (x, y, z) to (theta, phi) on the unit sphere s.t.
- * (x, y, z) = (sin(theta) cos(phi), sin(theta) sin(phi), cos(theta))
- * with 0 \leq \theta \leq \pi and 0 \leq \varphi < 2\pi. **/
-template <class DomainFieldType>
-class CoordinateConverter
-{
-  typedef typename boost::geometry::model::point<DomainFieldType, 3, typename boost::geometry::cs::cartesian>
-      BoostCartesianCoordType;
-  typedef typename boost::geometry::model::
-      point<DomainFieldType, 2, typename boost::geometry::cs::spherical<boost::geometry::radian>>
-          BoostSphericalCoordType;
-
-public:
-  typedef FieldVector<DomainFieldType, 3> CartesianCoordType;
-  typedef FieldVector<DomainFieldType, 2> SphericalCoordType;
-
-  static SphericalCoordType to_spherical(const CartesianCoordType& x)
-  {
-    BoostCartesianCoordType x_boost(x[0], x[1], x[2]);
-    BoostSphericalCoordType x_spherical_boost;
-    boost::geometry::transform(x_boost, x_spherical_boost);
-    return SphericalCoordType{boost::geometry::get<1>(x_spherical_boost), boost::geometry::get<0>(x_spherical_boost)};
-  }
-
-  static CartesianCoordType to_cartesian(const SphericalCoordType& x_spherical)
-  {
-    BoostSphericalCoordType x_spherical_boost(x_spherical[1], x_spherical[0]);
-    BoostCartesianCoordType x_boost;
-    boost::geometry::transform(x_spherical_boost, x_boost);
-    return CartesianCoordType{
-        boost::geometry::get<0>(x_boost), boost::geometry::get<1>(x_boost), boost::geometry::get<2>(x_boost)};
-  }
-};
-
-
 template <class T>
 T max(const T& left, const T& right)
 {
@@ -381,6 +345,7 @@ abs(value)
  *                  we want to use in our FloatCmp.
  */
 long unsigned int abs(const long unsigned int& value);
+unsigned char abs(unsigned char value);
 
 
 template <int k>

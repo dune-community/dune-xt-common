@@ -12,19 +12,6 @@
 #define DUNE_XT_COMMON_PARALLEL_THREADSTORAGE_HH
 
 #if HAVE_TBB
-// Hack to fix compilation with clang as tbb does not detect C++11 feature correctly for clang. Recent versions of TBB
-// allow to set the macro TBB_USE_GLIBCXX_VERSION to the proper version of libstdc++ to fix this issue, see
-// https://www.threadingbuildingblocks.org/docs/help/reference/appendices/known_issues/linux_os.html. For older versions
-// we need the hack below.
-#include <tbb/tbb_config.h>
-#undef __TBB_CPP11_RVALUE_REF_PRESENT
-#undef __TBB_CPP11_VARIADIC_TEMPLATES_PRESENT
-#undef __TBB_CPP11_DECLTYPE_PRESENT
-#undef __TBB_CPP11_LAMBDAS_PRESENT
-#define __TBB_CPP11_RVALUE_REF_PRESENT 1
-#define __TBB_CPP11_VARIADIC_TEMPLATES_PRESENT 1
-#define __TBB_CPP11_DECLTYPE_PRESENT 1
-#define __TBB_CPP11_LAMBDAS_PRESENT 1
 #include <tbb/enumerable_thread_specific.h>
 #endif
 
@@ -112,61 +99,61 @@ private:
 template <class ValueImp>
 class EnumerableThreadSpecificWrapper
 {
-  using BackendType = std::array<std::remove_const_t<ValueImp>, 1>;
+  using BackendType = std::unique_ptr<std::remove_const_t<ValueImp>>;
 
 public:
   using ValueType = ValueImp;
   using ConstValueType = std::add_const_t<ValueType>;
-  using iterator = typename BackendType::iterator;
-  using const_iterator = typename BackendType::const_iterator;
+  using iterator = ValueType*;
+  using const_iterator = const ValueType*;
 
   //! Initialization by copy construction of ValueType
   explicit EnumerableThreadSpecificWrapper(ConstValueType& value)
-    : values_{value}
+    : values_(std::make_unique<std::remove_const_t<ValueType>>(value))
   {
   }
 
   //! Initialization by in-place construction ValueType with \param ctor_args
   template <class... InitTypes>
   explicit EnumerableThreadSpecificWrapper(InitTypes&&... ctor_args)
-    : values_{ValueType(std::forward<InitTypes>(ctor_args)...)}
+    : values_(std::make_unique<std::remove_const_t<ValueType>>(std::forward<InitTypes>(ctor_args)...))
   {
   }
 
   ValueType& local()
   {
-    return values_[0];
+    return *values_;
   }
 
   const ValueType& local() const
   {
-    return values_[0];
+    return *values_;
   }
 
   iterator begin()
   {
-    return values_.begin();
+    return values_.get();
   }
 
   iterator end()
   {
-    return values_.end();
+    return values_.get() + 1;
   }
 
   const_iterator begin() const
   {
-    return values_.begin();
+    return values_.get();
   }
 
   const_iterator end() const
   {
-    return values_.end();
+    return values_.get() + 1;
   }
 
   template <class BinaryOperation>
   ValueType combine(BinaryOperation /*op*/) const
   {
-    return values_[0];
+    return *values_;
   }
 
 private:
