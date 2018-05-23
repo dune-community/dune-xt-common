@@ -6,9 +6,10 @@
 # or  GPL-2.0+ (http://opensource.org/licenses/gpl-license) with "runtime exception" (http://www.dune-
 # project.org/license.html)
 
+include(Hints)
+
 message("-- checking for cblas library")
-find_library(CBLAS_LIBRARY cblas
-             HINTS "${CMAKE_SOURCE_DIR}/../local/lib/" "${CMAKE_SOURCE_DIR}/../environments/debian-minimal/local/lib/")
+find_library(CBLAS_LIBRARY cblas HINTS ${lib_hints})
 if("${CBLAS_LIBRARY}" MATCHES "CBLAS_LIBRARY-NOTFOUND")
   message("--   CBLAS library not found, make sure you have CBLAS installed")
 else("${CBLAS_LIBRARY}" MATCHES "CBLAS_LIBRARY-NOTFOUND")
@@ -17,9 +18,7 @@ else("${CBLAS_LIBRARY}" MATCHES "CBLAS_LIBRARY-NOTFOUND")
 endif("${CBLAS_LIBRARY}" MATCHES "CBLAS_LIBRARY-NOTFOUND")
 
 message("-- checking for cblas.h header")
-find_path(CBLAS_INCLUDE_DIRS cblas.h
-          HINTS "${CMAKE_SOURCE_DIR}/../local/include/"
-                "${CMAKE_SOURCE_DIR}/../environments/debian-minimal/local/include/")
+find_path(CBLAS_INCLUDE_DIRS cblas.h HINTS ${include_hints})
 if("${CBLAS_INCLUDE_DIRS}" MATCHES "CBLAS_INCLUDE_DIRS-NOTFOUND")
   message("--   cblas.h header not found")
 else("${CBLAS_INCLUDE_DIRS}" MATCHES "CBLAS_INCLUDE_DIRS-NOTFOUND")

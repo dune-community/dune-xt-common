@@ -11,8 +11,9 @@
 #          with "runtime exception" (http://www.dune-project.org/license.html)
 # ~~~
 
-find_library(MATEXP_LIBRARY matrix_exponential
-             HINTS "${CMAKE_SOURCE_DIR}/../local/lib/" "${CMAKE_SOURCE_DIR}/../environments/debian-minimal/local/lib/")
+include(Hints)
+
+find_library(MATEXP_LIBRARY matrix_exponential HINTS ${lib_hints})
 if("${MATEXP_LIBRARY}" MATCHES "MATEXP_LIBRARY-NOTFOUND")
   message(
     "--   library 'matrix_exponential' not found, make sure you have downloaded and build the external libraries!")
@@ -22,9 +23,7 @@ else("${MATEXP_LIBRARY}" MATCHES "MATEXP_LIBRARY-NOTFOUND")
 endif("${MATEXP_LIBRARY}" MATCHES "MATEXP_LIBRARY-NOTFOUND")
 
 message("-- checking for matrix_exponential.hpp header")
-find_path(MATEXP_INCLUDE_DIRS matrix_exponential/matrix_exponential.hpp
-          HINTS "${CMAKE_SOURCE_DIR}/../local/include/"
-                "${CMAKE_SOURCE_DIR}/../environments/debian-minimal/local/include/")
+find_path(MATEXP_INCLUDE_DIRS matrix_exponential/matrix_exponential.hpp HINTS ${include_hints})
 if("${MATEXP_INCLUDE_DIRS}" MATCHES "MATEXP_INCLUDE_DIRS-NOTFOUND")
   message("--   matrix_exponential.hpp header not found")
 else("${MATEXP_INCLUDE_DIRS}" MATCHES "MATEXP_INCLUDE_DIRS-NOTFOUND")
