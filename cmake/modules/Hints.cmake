@@ -1,8 +1,8 @@
-function(APPEND_TO_EACH inputlist postfix outputlist)
-  foreach(entry inputlist)
-    list(APPEND ${outputlist} ${entry}${postfix})
-  endforeach(entry inputlist)
-endfunction()
+macro(append_to_each INPUTLIST POSTFIX OUTPUTLIST)
+  foreach(ENTRY ${INPUTLIST})
+    list(APPEND ${OUTPUTLIST} ${ENTRY}${POSTFIX})
+  endforeach(ENTRY ${INPUTLIST})
+endmacro()
 
 set(hint_prefixes
     "${CMAKE_SOURCE_DIR}/../local/"
@@ -12,11 +12,11 @@ set(hint_prefixes
     "$ENV{HOME}/Software/")
 
 set(bin_hints "")
-append_to_each(hint_prefixes "bin/" bin_hints)
+append_to_each("${hint_prefixes}" "bin/" bin_hints)
 
-set(lib_hints "")
-append_to_each(hint_prefixes "lib/" lib_hints)
+set(lib_hint "")
+append_to_each("${hint_prefixes}" "lib/" lib_hints)
 
 set(include_hints "")
-append_to_each(hint_prefixes "include/" include_hints)
+append_to_each("${hint_prefixes}" "include/" include_hints)
 

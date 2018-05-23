@@ -22,8 +22,6 @@
 #   and ClangFormat_FOUND accordingly
 # ~~~
 
-#include(Hints)
-
 find_program(ClangFormat_EXECUTABLE NAMES clang-format-3.9 clang-format)
 if(EXISTS ${ClangFormat_EXECUTABLE})
   execute_process(COMMAND ${ClangFormat_EXECUTABLE} -version OUTPUT_VARIABLE clang_out)
