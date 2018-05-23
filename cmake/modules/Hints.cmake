@@ -5,8 +5,9 @@ function(APPEND_TO_EACH inputlist postfix outputlist)
 endfunction()
 
 set(hint_prefixes
-    "${CMAKE_SOURCE_DIR}/../local/mkl/"
-    "${CMAKE_SOURCE_DIR}/../environments/debian-minimal/local/mkl/"
+    "${CMAKE_SOURCE_DIR}/../local/"
+    "${CMAKE_SOURCE_DIR}/../environments/debian-minimal/local/"
+    "${CMAKE_SOURCE_DIR}/../environments/debian-full/local/"
     "$ENV{HOME}/"
     "$ENV{HOME}/Software/")
 set(lib_hints "")
