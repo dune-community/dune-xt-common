@@ -10,6 +10,10 @@ set(hint_prefixes
     "${CMAKE_SOURCE_DIR}/../environments/debian-full/local/"
     "$ENV{HOME}/"
     "$ENV{HOME}/Software/")
+
+set(bin_hints "")
+append_to_each(hint_prefixes "bin/" bin_hints)
+
 set(lib_hints "")
 append_to_each(hint_prefixes "lib/" lib_hints)
 
