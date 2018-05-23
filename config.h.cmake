@@ -32,6 +32,10 @@
 #define HAVE_EIGEN ENABLE_EIGEN
 #endif
 
+#ifndef HAVE_CLP
+#define HAVE_CLP ${HAVE_CLP}
+#endif
+
 #ifndef HAVE_QHULL
 #define HAVE_QHULL ${HAVE_QHULL}
 #endif
@@ -188,7 +192,7 @@
 /*** End: Silence implicitly False evaluation of undefined macro warnings ****/
 
 #include <boost/config.hpp>
-#if HAVE_TBB && BOOST_CLANG
+#if HAVE_TBB && defined(BOOST_CLANG)
   // Hack to fix compilation with clang as tbb does not detect C++11 feature correctly for clang. Recent versions of TBB
   // allow to set the macro TBB_USE_GLIBCXX_VERSION to the proper version of libstdc++ to fix this issue, see
   // https://www.threadingbuildingblocks.org/docs/help/reference/appendices/known_issues/linux_os.html. For older versions
