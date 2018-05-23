@@ -333,10 +333,6 @@ Parameter ParametricInterface::parse_parameter(const Parameter& mu) const
   return Parameter();
 } // ... parse_parameter(...)
 
-Parameter ParametricInterface::parse_and_check(const Parameter& mu) const
-{
-  return parse_parameter(mu);
-}
 
 } // namespace Common
 } // namespace XT

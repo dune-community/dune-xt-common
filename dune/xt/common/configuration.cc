@@ -12,6 +12,8 @@
 
 #include "config.h"
 
+#include <boost/format.hpp>
+
 #include <dune/common/parametertreeparser.hh>
 
 #include <dune/xt/common/filesystem.hh>

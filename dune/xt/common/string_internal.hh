@@ -15,25 +15,19 @@
 #define DUNE_XT_COMMON_STRING_INTERNAL_HH
 
 #include <cstring>
-#include <ctime>
-#include <map>
-#include <cassert>
 #include <algorithm>
-#include <ostream>
 #include <iomanip>
 #include <vector>
 #include <string>
-#include <ctime>
-#include <iostream>
 
 #include <dune/xt/common/disable_warnings.hh>
-#include <boost/algorithm/string.hpp>
+#include <boost/algorithm/string/trim.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/numeric/conversion/cast.hpp>
 #include <dune/xt/common/reenable_warnings.hh>
 
-#include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/debug.hh>
+#include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/ranges.hh>
 #include <dune/xt/common/type_traits.hh>
 #include <dune/xt/common/vector.hh>

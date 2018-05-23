@@ -11,6 +11,8 @@
 
 #include <config.h>
 
+#include <iostream>
+
 #if HAVE_TBB
 #include <tbb/tbb_exception.h>
 #endif
