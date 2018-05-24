@@ -14,12 +14,10 @@
 #ifndef DUNE_XT_COMMON_CONFIGURATION_HH
 #define DUNE_XT_COMMON_CONFIGURATION_HH
 
-#include <set>
-#include <sstream>
-#include <functional>
+#include <iosfwd>
+#include <type_traits>
 
-#include <boost/format.hpp>
-#include <boost/numeric/conversion/cast.hpp>
+#include <boost/lexical_cast/bad_lexical_cast.hpp>
 
 #include <dune/common/visibility.hh>
 #include <dune/common/parametertree.hh>
@@ -27,7 +25,6 @@
 #include <dune/xt/common/algorithm.hh>
 #include <dune/xt/common/color.hh>
 #include <dune/xt/common/exceptions.hh>
-#include <dune/xt/common/type_traits.hh>
 #include <dune/xt/common/validation.hh>
 
 namespace Dune {

@@ -13,9 +13,8 @@
 #define DUNE_XT_COMMON_LPSOLVE_HH
 
 #include <stdio.h>
-
-#include <complex>
 #include <memory>
+#include <string>
 
 // forward declaration
 typedef struct _lprec lprec;

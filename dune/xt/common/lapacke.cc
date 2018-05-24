@@ -11,13 +11,15 @@
 
 #include "config.h"
 
+#include <cmath>
 // without the following lapacke will include <complex.h>, which will break dune/commontypetraits.hh^^
 #include <complex>
 #define lapack_complex_float std::complex<float>
 #define lapack_complex_double std::complex<double>
 
 #if HAVE_MKL
-#include <mkl.h>
+#include <mkl_cblas.h>
+#include <mkl_lapacke.h>
 #else // HAVE_MKL
 #if HAVE_LAPACKE
 #include <lapacke.h>

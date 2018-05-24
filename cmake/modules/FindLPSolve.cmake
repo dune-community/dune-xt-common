@@ -11,10 +11,10 @@
 #          with "runtime exception" (http://www.dune-project.org/license.html)
 # ~~~
 
+include(Hints)
+
 message("-- checking for 'lpsolve' library")
-find_library(LPSOLVE_LIBRARY
-             NAMES lpsolve lpsolve55
-             HINTS "${CMAKE_SOURCE_DIR}/../local/lib/" "${CMAKE_SOURCE_DIR}/../environments/debian-minimal/local/lib/")
+find_library(LPSOLVE_LIBRARY NAMES lpsolve lpsolve55 HINTS ${lib_hints})
 if("${LPSOLVE_LIBRARY}" MATCHES "LPSOLVE_LIBRARY-NOTFOUND")
   message("--   library 'lpsolve' not found")
 else("${LPSOLVE_LIBRARY}" MATCHES "LPSOLVE_LIBRARY-NOTFOUND")
@@ -23,9 +23,7 @@ else("${LPSOLVE_LIBRARY}" MATCHES "LPSOLVE_LIBRARY-NOTFOUND")
 endif("${LPSOLVE_LIBRARY}" MATCHES "LPSOLVE_LIBRARY-NOTFOUND")
 
 message("-- checking for lpsolve/lp_lib.h header")
-find_path(LPSolve_INCLUDE_DIRS lpsolve/lp_lib.h
-          HINTS "${CMAKE_SOURCE_DIR}/../local/include/"
-                "${CMAKE_SOURCE_DIR}/../environments/debian-minimal/local/include/")
+find_path(LPSolve_INCLUDE_DIRS lpsolve/lp_lib.h HINTS ${include_hints})
 if("${LPSolve_INCLUDE_DIRS}" MATCHES "LPSolve_INCLUDE_DIRS-NOTFOUND")
   message("--   lpsolve header not found")
 else("${LPSolve_INCLUDE_DIRS}" MATCHES "LPSolve_INCLUDE_DIRS-NOTFOUND")
