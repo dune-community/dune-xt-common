@@ -54,14 +54,14 @@ public:
   SuspendableStrBuffer(int loglevel, int& logflags);
 
   /** \brief stop accepting input into the buffer
-     * the suspend_priority_ mechanism provides a way to silence streams from 'higher' modules
-     * no-op if already suspended
-     ***/
+   * the suspend_priority_ mechanism provides a way to silence streams from 'higher' modules
+   * no-op if already suspended
+   ***/
   void suspend(PriorityType priority);
 
   /** \brief start accepting input into the buffer again
-     * no-op if not suspended
-     ***/
+   * no-op if not suspended
+   ***/
   void resume(PriorityType priority);
 
   int pubsync();
@@ -191,17 +191,17 @@ public:
   virtual LogStream& flush();
 
   /** \brief forwards suspend to buffer
-     * the suspend_priority_ mechanism provides a way to silence streams from 'higher' modules
-     * no-op if already suspended
-     ***/
+   * the suspend_priority_ mechanism provides a way to silence streams from 'higher' modules
+   * no-op if already suspended
+   ***/
   void suspend(PriorityType priority = default_suspend_priority)
   {
     this->access().suspend(priority);
   }
 
   /** \brief start accepting input into the buffer again
-     * no-op if not suspended
-     ***/
+   * no-op if not suspended
+   ***/
   void resume(PriorityType priority = default_suspend_priority)
   {
     this->access().resume(priority);

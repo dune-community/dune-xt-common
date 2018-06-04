@@ -44,12 +44,12 @@
   }
 
 /**
-  * \brief Helper macro to be used before DXTC_has_typedef.
-  * \see   DXTC_has_typedef
-  *
-  *        Taken from
-  *        http://stackoverflow.com/questions/7834226/detecting-typedef-at-compile-time-template-metaprogramming
-  */
+ * \brief Helper macro to be used before DXTC_has_typedef.
+ * \see   DXTC_has_typedef
+ *
+ *        Taken from
+ *        http://stackoverflow.com/questions/7834226/detecting-typedef-at-compile-time-template-metaprogramming
+ */
 #define DXTC_has_typedef_initialize_once(tpdef)                                                                        \
   template <typename T_local>                                                                                          \
   struct DXTC_has_typedef_helper_##tpdef                                                                               \
@@ -91,10 +91,10 @@ DXTC_has_typedef(Bar)< Foo >::value
 #define DXTC_has_typedef(tpdf) DXTC_has_typedef_helper_##tpdf
 
 /**
-  * \brief Helper macro to be used before DXTC_has_static_member.
-  *
-  *        Taken from http://stackoverflow.com/questions/11927032/sfinae-check-for-static-member-using-decltype
-  */
+ * \brief Helper macro to be used before DXTC_has_static_member.
+ *
+ *        Taken from http://stackoverflow.com/questions/11927032/sfinae-check-for-static-member-using-decltype
+ */
 #define DXTC_has_static_member_initialize_once(mmbr)                                                                   \
   template <class T_local>                                                                                             \
   struct DXTC_has_static_member_helper_##mmbr                                                                          \
@@ -126,10 +126,10 @@ DXTC_has_static_member(bar)< Foo >::value
 
 
 /**
-  * \brief Helper macro to be used before DXTC_has_method.
-  *
-  *        Inspired by https://stackoverflow.com/questions/40329684/sfinae-c-method-check
-  */
+ * \brief Helper macro to be used before DXTC_has_method.
+ *
+ *        Inspired by https://stackoverflow.com/questions/40329684/sfinae-c-method-check
+ */
 #define DXTC_has_method_initialize_once(mthd_nm)                                                                       \
   template <class T_local>                                                                                             \
   struct DXTC_has_method_helper_##mthd_nm                                                                              \

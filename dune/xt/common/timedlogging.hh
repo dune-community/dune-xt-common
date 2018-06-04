@@ -10,9 +10,9 @@
 //   Tobias Leibner  (2014, 2017)
 
 /**
-   *  \file logging.hh
-   *  \brief  logging
-   **/
+ *  \file logging.hh
+ *  \brief  logging
+ **/
 #ifndef DUNE_XT_COMMON_TIMEDLOGGING_HH
 #define DUNE_XT_COMMON_TIMEDLOGGING_HH
 

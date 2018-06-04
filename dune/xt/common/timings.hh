@@ -71,10 +71,10 @@ public:
 class ScopedTiming;
 
 /** \brief simple inline timing class
-   *  - User can set as many (even nested) named sections whose total (=system+user) time will be computed across all
-   *    program instances.\n
-   *  - Provides csv-conform output of process-averaged runtimes.
-   **/
+ *  - User can set as many (even nested) named sections whose total (=system+user) time will be computed across all
+ *    program instances.\n
+ *  - Provides csv-conform output of process-averaged runtimes.
+ **/
 class Timings
 {
   friend Timings& timings();

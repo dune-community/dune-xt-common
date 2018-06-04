@@ -39,9 +39,9 @@ class FieldMatrix : public Dune::FieldMatrix<K, ROWS, COLS>
   typedef FieldMatrix<K, ROWS, COLS> ThisType;
 
 public:
-  using typename BaseType::value_type;
-  using typename BaseType::size_type;
   using typename BaseType::field_type;
+  using typename BaseType::size_type;
+  using typename BaseType::value_type;
 
   FieldMatrix(const K& kk = suitable_default<K>::value())
     : BaseType()
@@ -409,12 +409,12 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
     return std::make_unique<MatrixType>(rows, cols, val);
   }
 
-  static inline size_t rows(const MatrixType& /*mat*/)
+  static constexpr size_t rows(const MatrixType& /*mat*/)
   {
     return N;
   }
 
-  static inline size_t cols(const MatrixType& /*mat*/)
+  static constexpr size_t cols(const MatrixType& /*mat*/)
   {
     return M;
   }
