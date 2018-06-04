@@ -409,12 +409,12 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
     return std::make_unique<MatrixType>(rows, cols, val);
   }
 
-  static inline size_t rows(const MatrixType& /*mat*/)
+  static constexpr size_t rows(const MatrixType& /*mat*/)
   {
     return N;
   }
 
-  static inline size_t cols(const MatrixType& /*mat*/)
+  static constexpr size_t cols(const MatrixType& /*mat*/)
   {
     return M;
   }
