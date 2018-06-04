@@ -162,10 +162,10 @@ namespace Common {
 namespace TupleProduct {
 using boost::is_same;
 using boost::mpl::begin;
-using boost::mpl::end;
-using boost::mpl::next;
-using boost::mpl::if_;
 using boost::mpl::deref;
+using boost::mpl::end;
+using boost::mpl::if_;
+using boost::mpl::next;
 
 struct end_of_recursion_tag
 {

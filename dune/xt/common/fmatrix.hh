@@ -39,9 +39,9 @@ class FieldMatrix : public Dune::FieldMatrix<K, ROWS, COLS>
   typedef FieldMatrix<K, ROWS, COLS> ThisType;
 
 public:
-  using typename BaseType::value_type;
-  using typename BaseType::size_type;
   using typename BaseType::field_type;
+  using typename BaseType::size_type;
+  using typename BaseType::value_type;
 
   FieldMatrix(const K& kk = suitable_default<K>::value())
     : BaseType()

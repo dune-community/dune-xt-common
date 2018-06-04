@@ -10,9 +10,9 @@
 //   Tobias Leibner  (2014)
 
 /**
-   *  \file logging.hh
-   *  \brief  logging
-   **/
+ *  \file logging.hh
+ *  \brief  logging
+ **/
 #ifndef DUNE_XT_COMMON_LOGGING_HH
 #define DUNE_XT_COMMON_LOGGING_HH
 
@@ -38,7 +38,7 @@ class Logging;
 inline Logging& Logger();
 
 /** \brief handles all logging
-  **/
+ **/
 class Logging
 {
 private:
@@ -50,9 +50,9 @@ public:
   ~Logging();
 
   /** \brief setup loglevel, logfilename
-     *  \param logflags any OR'd combination of flags
-     *  \param logfile filename for log, can contain paths, but creation will fail if dir is non-existant
-     **/
+   *  \param logflags any OR'd combination of flags
+   *  \param logfile filename for log, can contain paths, but creation will fail if dir is non-existant
+   **/
   void create(int logflags = LogDefault,
               const std::string logfile = "dune_xt_common_log",
               const std::string datadir = "data",
@@ -64,8 +64,8 @@ public:
   int get_stream_flags(int streamID) const;
 
   /** \name forwarded Log functions
-     * \{
-     */
+   * \{
+   */
   template <class T>
   void log(T c, int streamID)
   {
@@ -73,7 +73,7 @@ public:
   } // Log
 
   /** \}
-     */
+   */
 
   LogStream& get_stream(int streamId);
   LogStream& error()

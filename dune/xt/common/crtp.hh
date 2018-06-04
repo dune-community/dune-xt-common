@@ -30,8 +30,8 @@
 #else
 
 /**
-  * This macro is essentially a thread safe variant of the CHECK_INTERFACE_IMPLEMENTATION macro from dune-common.
-  */
+ * This macro is essentially a thread safe variant of the CHECK_INTERFACE_IMPLEMENTATION macro from dune-common.
+ */
 #define CHECK_CRTP(__interface_method_to_call__)                                                                       \
   {                                                                                                                    \
     std::lock_guard<std::recursive_mutex> crtp_mutex_guard(this->crtp_mutex_);                                         \
@@ -55,8 +55,8 @@
 #define CHECK_AND_CALL_CRTP(__interface_method_to_call__) (__interface_method_to_call__)
 #else
 /**
-  * This macro is essentially a slightly modified copy of the CHECK_AND_CALL_INTERFACE_IMPLEMENTATION macro.
-  */
+ * This macro is essentially a slightly modified copy of the CHECK_AND_CALL_INTERFACE_IMPLEMENTATION macro.
+ */
 #define CHECK_AND_CALL_CRTP(__interface_method_to_call__) CHECK_CRTP(__interface_method_to_call__)
 #endif
 
