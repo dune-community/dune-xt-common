@@ -16,10 +16,8 @@
 #include <type_traits>
 
 #include "exceptions.hh"
-#include "float_cmp.hh"
 #include "parameter.hh"
 #include "numeric_cast.hh"
-#include "string.hh"
 
 namespace Dune {
 namespace XT {
@@ -30,136 +28,6 @@ namespace internal {
 // ========================
 // ===== SimpleDict =======
 // ========================
-template <class ValueType>
-SimpleDict<ValueType>::SimpleDict()
-{
-}
-
-template <class ValueType>
-SimpleDict<ValueType>::SimpleDict(const std::string& key, const ValueType& value)
-  : dict_({std::make_pair(key, value)})
-{
-  update_keys();
-}
-
-template <class ValueType>
-SimpleDict<ValueType>::SimpleDict(const std::vector<std::pair<std::string, ValueType>>& key_value_pairs)
-{
-  for (const auto& key_value_pair : key_value_pairs)
-    dict_.emplace(key_value_pair);
-  update_keys();
-}
-
-template <class ValueType>
-bool SimpleDict<ValueType>::empty() const
-{
-  return dict_.size() == 0;
-}
-
-template <class ValueType>
-const std::vector<std::string>& SimpleDict<ValueType>::keys() const
-{
-  return keys_;
-}
-
-template <class ValueType>
-bool SimpleDict<ValueType>::has_key(const std::string& key) const
-{
-  return dict_.find(key) != dict_.end();
-}
-
-template <class ValueType>
-void SimpleDict<ValueType>::set(const std::string& key, const ValueType& value, const bool overwrite)
-{
-  if (key.empty())
-    DUNE_THROW(Exceptions::parameter_error, "Given key must not be empty!");
-  const bool key_was_present = has_key(key);
-  if (!overwrite && key_was_present)
-    DUNE_THROW(Exceptions::parameter_error,
-               "You are trying to overwrite the key '"
-                   << key
-                   << "' (although a value is already set), and overwrite is false!");
-  dict_[key] = value;
-  if (!key_was_present)
-    update_keys();
-}
-
-template <class ValueType>
-const ValueType& SimpleDict<ValueType>::get(const std::string& key) const
-{
-  const auto result = dict_.find(key);
-  if (result == dict_.end())
-    DUNE_THROW(Exceptions::parameter_error, "Key '" << key << "' does not exist!");
-  return result->second;
-}
-
-template <class ValueType>
-size_t SimpleDict<ValueType>::size() const
-{
-  return dict_.size();
-}
-
-template <class ValueType>
-std::string SimpleDict<ValueType>::report(const std::string& prefix) const
-{
-  if (dict_.empty())
-    return "{}";
-  assert(keys_.size() > 0);
-  const auto whitespaced_prefix = whitespaceify(prefix);
-  std::stringstream ss;
-  ss << "{" << keys_[0] << ": " << dict_.at(keys_[0]);
-  for (size_t ii = 1; ii < keys_.size(); ++ii) {
-    ss << ",\n" << whitespaced_prefix << " " << keys_[ii] << ": " << dict_.at(keys_[ii]);
-  }
-  ss << "}";
-  return ss.str();
-} // ... report(...)
-
-template <class ValueType>
-SimpleDict<ValueType>
-SimpleDict<ValueType>::merge(const SimpleDict& other,
-                             std::function<bool(ValueType, ValueType)> value_comparator,
-                             std::function<std::string(ValueType, ValueType)> error_msg_prefix) const
-{
-  if (this->empty())
-    return other;
-  if (other.empty())
-    return *this;
-  SimpleDict<ValueType> ret = *this;
-  for (const auto& other_element : other.dict_) {
-    const auto& other_key = other_element.first;
-    const auto& other_value = other_element.second;
-    const auto this_key_search_result = dict_.find(other_key);
-    if (this_key_search_result == dict_.end()) {
-      // key of others is not contained in this, just add to ret
-      ret.set(other_key, other_value);
-    } else {
-      // key of other is also present in this
-      const auto& this_value = this_key_search_result->second;
-      DUNE_THROW_IF(!value_comparator(this_value, other_value),
-                    Exceptions::parameter_error,
-                    error_msg_prefix(this_value, other_value) << "\n   this->get(\"" << other_key << "\") = "
-                                                              << this_value
-                                                              << "\n   other.get(\""
-                                                              << other_value
-                                                              << "\")");
-      // and the respective values agree, so no need to do something
-    }
-  }
-  return ret;
-} // ... merge(...)
-
-template <class ValueType>
-void SimpleDict<ValueType>::update_keys()
-{
-  keys_ = std::vector<std::string>(dict_.size());
-  size_t ii = 0;
-  for (const auto& key_value_pair : dict_) {
-    keys_[ii] = key_value_pair.first;
-    ++ii;
-  }
-  std::sort(keys_.begin(), keys_.end());
-}
 
 
 template class SimpleDict<size_t>;
