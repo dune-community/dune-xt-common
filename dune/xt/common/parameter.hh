@@ -12,6 +12,7 @@
 #ifndef DUNE_XT_COMMON_PARAMETER_HH
 #define DUNE_XT_COMMON_PARAMETER_HH
 
+#include <algorithm>
 #include <string>
 #include <map>
 #include <vector>
@@ -48,6 +49,10 @@ public:
 protected:
   std::string report(const std::string& prefix) const;
 
+  SimpleDict merge(const SimpleDict& other,
+                   std::function<bool(ValueType, ValueType)> value_comparator,
+                   std::function<std::string(ValueType, ValueType)> error_msg_prefix) const;
+
   void update_keys();
 
   std::map<std::string, ValueType> dict_;
@@ -78,6 +83,12 @@ public:
   ParameterType(const std::pair<const char*, int>& key_size_pair);
 
   ParameterType(const std::vector<std::pair<std::string, size_t>>& key_size_pairs);
+
+private:
+  ParameterType(BaseType&& source);
+
+public:
+  ParameterType operator+(const ParameterType& other) const;
 
   /**
    * \note In the special case that this and other both have only a single key, and either of the keys is
@@ -122,12 +133,20 @@ public:
 
   Parameter(const std::string& key, const ValueType& value);
 
+private:
+  Parameter(BaseType&& source);
+
+public:
   /// \note this somehow necessary to make clang 3.8 happy (and cannot be defaulted)
   ~Parameter()
   {
   }
 
+  Parameter operator+(const Parameter& other) const;
+
   bool operator<(const Parameter& other) const;
+
+  //  Parameter operator+(const Parameter& other) const;
 
   ParameterType type() const;
 
