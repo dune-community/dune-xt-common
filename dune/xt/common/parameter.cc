@@ -16,6 +16,7 @@
 #include <type_traits>
 
 #include "exceptions.hh"
+#include "float_cmp.hh"
 #include "parameter.hh"
 #include "numeric_cast.hh"
 #include "string.hh"
@@ -77,7 +78,7 @@ void SimpleDict<ValueType>::set(const std::string& key, const ValueType& value, 
     DUNE_THROW(Exceptions::parameter_error,
                "You are trying to overwrite the key '"
                    << key
-                   << "' (although a value is already set) and overwrite is false!");
+                   << "' (although a value is already set), and overwrite is false!");
   dict_[key] = value;
   if (!key_was_present)
     update_keys();
@@ -103,18 +104,50 @@ std::string SimpleDict<ValueType>::report(const std::string& prefix) const
 {
   if (dict_.empty())
     return "{}";
-
   assert(keys_.size() > 0);
   const auto whitespaced_prefix = whitespaceify(prefix);
   std::stringstream ss;
-
   ss << "{" << keys_[0] << ": " << dict_.at(keys_[0]);
   for (size_t ii = 1; ii < keys_.size(); ++ii) {
     ss << ",\n" << whitespaced_prefix << " " << keys_[ii] << ": " << dict_.at(keys_[ii]);
   }
   ss << "}";
   return ss.str();
-}
+} // ... report(...)
+
+template <class ValueType>
+SimpleDict<ValueType>
+SimpleDict<ValueType>::merge(const SimpleDict& other,
+                             std::function<bool(ValueType, ValueType)> value_comparator,
+                             std::function<std::string(ValueType, ValueType)> error_msg_prefix) const
+{
+  if (this->empty())
+    return other;
+  if (other.empty())
+    return *this;
+  SimpleDict<ValueType> ret = *this;
+  for (const auto& other_element : other.dict_) {
+    const auto& other_key = other_element.first;
+    const auto& other_value = other_element.second;
+    const auto this_key_search_result = dict_.find(other_key);
+    if (this_key_search_result == dict_.end()) {
+      // key of others is not contained in this, just add to ret
+      ret.set(other_key, other_value);
+    } else {
+      // key of other is also present in this
+      const auto& this_value = this_key_search_result->second;
+      DUNE_THROW_IF(!value_comparator(this_value, other_value),
+                    Exceptions::parameter_error,
+                    error_msg_prefix(this_value, other_value) << "\n   this->get(\"" << other_key << "\") = "
+                                                              << this_value
+                                                              << "\n   other.get(\""
+                                                              << other_value
+                                                              << "\")");
+      // and the respective values agree, so no need to do something
+    }
+  }
+  return ret;
+} // ... merge(...)
 
 template <class ValueType>
 void SimpleDict<ValueType>::update_keys()
@@ -169,6 +202,20 @@ ParameterType::ParameterType(const std::vector<std::pair<std::string, size_t>>& 
 {
 }
 
+ParameterType::ParameterType(BaseType&& source)
+  : BaseType(std::move(source))
+{
+}
+
+ParameterType ParameterType::operator+(const ParameterType& other) const
+{
+  return this->merge(other,
+                     [](const auto& left, const auto& right) { return left == right; },
+                     [](const auto& /*left*/, const auto& /*right*/) {
+                       return "cannot add parameter types which contain the same key with different sizes:";
+                     });
+} // ... operator+(...)
+
 bool ParameterType::operator==(const ParameterType& other) const
 {
   if (this->size() == 1 && other.size() == 1) {
@@ -194,12 +241,11 @@ bool ParameterType::operator<(const ParameterType& other) const
 {
   if (this->dict_.size() >= other.dict_.size())
     return false;
-  const auto other_end = other.dict_.end();
   for (const auto& this_element : this->dict_) {
     const auto& this_key = this_element.first;
     const auto& this_keys_lenght = this_element.second;
     const auto other_key_search_result = other.dict_.find(this_key);
-    if (other_key_search_result == other_end)
+    if (other_key_search_result == other.dict_.end())
       return false;
     const auto& other_key_lenght = other_key_search_result->second;
     if (other_key_lenght != this_keys_lenght)
@@ -257,6 +303,27 @@ Parameter::Parameter(const std::vector<std::pair<std::string, ValueType>>& key_v
   : BaseType(key_value_pairs)
 {
 }
+
+Parameter::Parameter(BaseType&& source)
+  : BaseType(std::move(source))
+{
+}
+
+Parameter Parameter::operator+(const Parameter& other) const
+{
+  return this->merge(other,
+                     [](const auto& left, const auto& right) {
+                       if (left.size() != right.size())
+                         return false;
+                       return FloatCmp::eq(left, right);
+                     },
+                     [](const auto& left, const auto& right) {
+                       if (left.size() != right.size())
+                         return "cannot add parameters which contain the same key with different sizes:";
+                       else
+                         return "cannot add parameters which contain the same key with different values:";
+                     });
+} // ... operator+(...)
 
 bool Parameter::operator<(const Parameter& other) const
 {
