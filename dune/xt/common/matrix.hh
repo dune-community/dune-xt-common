@@ -316,16 +316,21 @@ set_matrix_entry(MatrixType& matrix, const size_t ii, const size_t jj, const S& 
 template <class MatrixType,
           size_t ROWS = MatrixAbstraction<MatrixType>::static_rows,
           size_t COLS = MatrixAbstraction<MatrixType>::static_cols,
+          class FieldType = typename MatrixAbstraction<MatrixType>::S,
           class SparsityPatternType = FullPattern>
 typename std::enable_if<is_matrix<MatrixType>::value,
-                        typename MatrixAbstraction<MatrixType>::template MatrixTypeTemplate<ROWS, COLS>>::type
-create(const size_t rows,
-       const size_t cols,
-       const typename MatrixAbstraction<MatrixType>::S& val = 0,
-       const SparsityPatternType& pattern = SparsityPatternType())
+                        typename MatrixAbstraction<MatrixType>::template MatrixTypeTemplate<ROWS, COLS, FieldType>>::
+    type
+    create(const size_t rows,
+           const size_t cols,
+           const FieldType& val = 0,
+           const SparsityPatternType& pattern = SparsityPatternType())
 {
-  return MatrixAbstraction<typename MatrixAbstraction<MatrixType>::template MatrixTypeTemplate<ROWS, COLS>>::create(
-      rows, cols, val, pattern);
+  return MatrixAbstraction<
+      typename MatrixAbstraction<MatrixType>::template MatrixTypeTemplate<ROWS, COLS, FieldType>>::create(rows,
+                                                                                                          cols,
+                                                                                                          val,
+                                                                                                          pattern);
 }
 
 
