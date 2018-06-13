@@ -175,7 +175,6 @@ int dgeqp3(int matrix_layout, int m, int n, double* a, int lda, int* jpvt, doubl
 #endif
 }
 
-
 int dgeqp3_work(int matrix_layout, int m, int n, double* a, int lda, int* jpvt, double* tau, double* work, int lwork)
 {
 #if HAVE_MKL || HAVE_LAPACKE
@@ -212,7 +211,6 @@ int dorgqr(int matrix_layout, int m, int n, int k, double* a, int lda, const dou
   return 1;
 #endif
 }
-
 
 int dorgqr_work(int matrix_layout, int m, int n, int k, double* a, int lda, const double* tau, double* work, int lwork)
 {
@@ -265,7 +263,6 @@ int dormqr(int matrix_layout,
 #endif
 }
 
-
 int dormqr_work(int matrix_layout,
                 char side,
                 char trans,
@@ -306,6 +303,21 @@ int dpotrf(int matrix_layout, char uplo, int n, double* a, int lda)
 {
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dpotrf(matrix_layout, uplo, n, a, lda);
+#else
+  DUNE_UNUSED_PARAMETER(matrix_layout);
+  DUNE_UNUSED_PARAMETER(uplo);
+  DUNE_UNUSED_PARAMETER(n);
+  DUNE_UNUSED_PARAMETER(a);
+  DUNE_UNUSED_PARAMETER(lda);
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+int dpotrf_work(int matrix_layout, char uplo, int n, double* a, int lda)
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_dpotrf_work(matrix_layout, uplo, n, a, lda);
 #else
   DUNE_UNUSED_PARAMETER(matrix_layout);
   DUNE_UNUSED_PARAMETER(uplo);

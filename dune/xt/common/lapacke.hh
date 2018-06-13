@@ -68,7 +68,6 @@ int dgeev(int matrix_layout,
           double* vr,
           int ldvr);
 
-
 /**
  * \brief Wrapper around LAPACKE_dgeev_work
  * \sa    LAPACKE_dgeev_work
@@ -155,6 +154,12 @@ int dormqr_work(int matrix_layout,
  * \sa    LAPACKE_dpotrf
  */
 int dpotrf(int matrix_layout, char uplo, int n, double* a, int lda);
+
+/**
+ * \brief Wrapper around LAPACKE_dpotrf_work
+ * \sa    LAPACKE_dpotrf_work
+ */
+int dpotrf_work(int matrix_layout, char uplo, int n, double* a, int lda);
 
 
 /**
