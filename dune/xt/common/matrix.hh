@@ -339,7 +339,8 @@ typename std::enable_if<is_matrix<TargetMatrixType>::value && is_matrix<SourceMa
                         TargetMatrixType>::type
 zeros_like(const SourceMatrixType& source)
 {
-  return create<TargetMatrixType>(get_matrix_rows(source), get_matrix_cols(source), 0);
+  return create<TargetMatrixType>(
+      get_matrix_rows(source), get_matrix_cols(source), typename MatrixAbstraction<TargetMatrixType>::S(0));
 }
 
 
@@ -451,7 +452,7 @@ typename std::enable_if<is_matrix<MatrixType>::value,
                         typename M::template MatrixTypeTemplate<M::static_cols, M::static_rows>>::type
 transposed(const MatrixType& mat)
 {
-  auto ret = create<MatrixType, M::static_cols, M::static_rows>(M::cols(mat), M::rows(mat), 0.);
+  auto ret = create<MatrixType, M::static_cols, M::static_rows>(M::cols(mat), M::rows(mat), typename M::S(0.));
   for (size_t ii = 0; ii < M::rows(mat); ++ii)
     for (size_t jj = 0; jj < M::cols(mat); ++jj)
       set_matrix_entry(ret, jj, ii, get_matrix_entry(mat, ii, jj));
