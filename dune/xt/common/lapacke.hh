@@ -17,6 +17,17 @@
 namespace Dune {
 namespace XT {
 namespace Common {
+namespace Mkl {
+
+
+/**
+ * \brief Wrapper around MKL's vdExp
+ * \sa    vdExp
+ */
+void exp(const int n, const double* a, double* y);
+
+
+} // namespace Mkl
 namespace Lapacke {
 
 
@@ -56,7 +67,6 @@ int dgeev(int matrix_layout,
           int ldvl,
           double* vr,
           int ldvr);
-
 
 /**
  * \brief Wrapper around LAPACKE_dgeev_work
@@ -144,6 +154,12 @@ int dormqr_work(int matrix_layout,
  * \sa    LAPACKE_dpotrf
  */
 int dpotrf(int matrix_layout, char uplo, int n, double* a, int lda);
+
+/**
+ * \brief Wrapper around LAPACKE_dpotrf_work
+ * \sa    LAPACKE_dpotrf_work
+ */
+int dpotrf_work(int matrix_layout, char uplo, int n, double* a, int lda);
 
 
 /**
