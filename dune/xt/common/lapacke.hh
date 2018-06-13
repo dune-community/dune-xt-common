@@ -17,6 +17,17 @@
 namespace Dune {
 namespace XT {
 namespace Common {
+namespace Mkl {
+
+
+/**
+ * \brief Wrapper around MKL's vdExp
+ * \sa    vdExp
+ */
+void exp(const int n, const double* a, double* y);
+
+
+} // namespace Mkl
 namespace Lapacke {
 
 

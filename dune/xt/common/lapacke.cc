@@ -18,8 +18,7 @@
 #define lapack_complex_double std::complex<double>
 
 #if HAVE_MKL
-#include <mkl_cblas.h>
-#include <mkl_lapacke.h>
+#include <mkl.h>
 #else // HAVE_MKL
 #if HAVE_LAPACKE
 #include <lapacke.h>
@@ -38,6 +37,21 @@
 namespace Dune {
 namespace XT {
 namespace Common {
+namespace Mkl {
+
+
+void exp(const int n, const double* a, double* y)
+{
+#if HAVE_MKL
+  vdExp(n, a, y);
+#else
+  for (int ii = 0; ii < n; ++ii)
+    y[ii] = std::exp(a[ii]);
+#endif
+}
+
+
+} // namespace Mkl
 namespace Lapacke {
 
 
