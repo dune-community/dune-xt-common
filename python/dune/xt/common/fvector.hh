@@ -65,6 +65,11 @@ struct FieldVector_type_caster
   PYBIND11_TYPE_CASTER(type, _("List[") + value_conv::name() + _("[") + _<SZ>() + _("]]"));
 }; // struct FieldVector_type_caster
 
+/**
+ * This specialization is needed because we also want to have std::string in FieldVector.
+ * For Dune::XT::Common::FieldMatrix we already have the correct default value, so no string version of value *= K(0.0)
+ * is required
+ **/
 template <class FieldVectorImp>
 struct FieldVector_type_caster<FieldVectorImp, false>
 {
