@@ -78,6 +78,12 @@ struct type_caster<Dune::FieldMatrix<K, N, M>> : public FieldMatrix_type_caster<
 {
 };
 
+/**
+ * Dune::XT::Common::FieldMatrix is already able to handle std::string as we already provide the correct default value
+ * (see type_traits::suitable_default). Thus, we do not need to initalize with value *= K(0.0)
+ *
+ * Attention: If this is not enough you need to specialize for std::string. (see fvector.hh)
+ */
 template <class K, int N, int M>
 struct type_caster<Dune::XT::Common::FieldMatrix<K, N, M>>
     : public FieldMatrix_type_caster<Dune::XT::Common::FieldMatrix<K, N, M>>
