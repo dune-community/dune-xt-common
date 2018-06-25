@@ -5,5 +5,6 @@ pipeline:
     #tags: ${DRONE_BRANCH/\//_}
     commands:
       - cd $${SUPERDIR}
+      - rm -rf dune-xt-common
       - ln -s /drone/src/github.com/dune-community/dune-xt-common
       - $${SUPERDIR}/dune-xt-common/.travis.script.bash
