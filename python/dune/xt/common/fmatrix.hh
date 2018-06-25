@@ -78,10 +78,45 @@ struct type_caster<Dune::FieldMatrix<K, N, M>> : public FieldMatrix_type_caster<
 {
 };
 
+/**
+ * Dune::XT::Common::FieldMatrix is already able to handle std::string as we already provide the correct default value
+ * (see type_traits::suitable_default). Thus, we do not need to initalize with value *= K(0.0)
+ *
+ * Attention: If this is not enough you need to specialize for std::string. (see fvector.hh)
+ */
 template <class K, int N, int M>
 struct type_caster<Dune::XT::Common::FieldMatrix<K, N, M>>
     : public FieldMatrix_type_caster<Dune::XT::Common::FieldMatrix<K, N, M>>
 {
+  using type = Dune::XT::Common::FieldMatrix<K, N, M>;
+  typedef typename type::row_type row_type;
+  static const int ROWS = type::rows;
+  static const int COLS = type::cols;
+  using value_conv = make_caster<K>;
+  using row_conv = make_caster<row_type>;
+
+  bool load(handle src, bool convert)
+  {
+    if (!isinstance<sequence>(src))
+      return false;
+    auto s = reinterpret_borrow<sequence>(src);
+    if (s.size() != ROWS)
+      return false;
+    row_conv conv;
+    size_t ii = 0;
+    for (auto it : s) {
+      if (ii >= ROWS)
+        return false;
+      if (!conv.load(it, convert))
+        return false;
+      value[ii++] = cast_op<row_type>(conv);
+    }
+    return true;
+  } // ... load(...)
+
+  PYBIND11_TYPE_CASTER(type,
+                       _("List[List[") + value_conv::name() + _("[") + _<COLS>() + _("]]") + _("[") + _<ROWS>()
+                           + _("]]"));
 };
 
 
