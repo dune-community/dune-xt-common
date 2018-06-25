@@ -1,0 +1,7 @@
+
+pipeline:
+  build:
+    image: dunecommunity/dune-xt-common-testing_debian_gcc_full:master
+    #tags: ${DRONE_BRANCH/\//_}
+    commands:
+      - /root/src/dune-xt-common/.travis.script.bash
