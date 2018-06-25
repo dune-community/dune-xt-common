@@ -19,8 +19,8 @@ set -x
 WAIT="${SUPERDIR}/scripts/bash/travis_wait_new.bash 45"
 source ${SUPERDIR}/scripts/bash/retry_command.bash
 
-${SRC_DCTRL} ${BLD} --only=${MY_MODULE} configure
-${SRC_DCTRL} ${BLD} --only=${MY_MODULE} bexec ${BUILD_CMD}
+${SRC_DCTRL} ${BLD} configure
+${SRC_DCTRL} ${BLD} bexec ${BUILD_CMD}
 if [ x"${TESTS}" == x ] ; then
     ${WAIT} ${SRC_DCTRL} ${BLD} --only=${MY_MODULE} bexec ${BUILD_CMD} test_binaries
 else
