@@ -6,7 +6,7 @@ pipeline:
     commands:
       - cd $${SUPERDIR}
       - rm -rf dune-xt-common
-      - ln -s /drone/src/github.com/dune-community/dune-xt-common
+      - rsync -a /drone/src/github.com/dune-community/dune-xt-common .
       - file dune-xt-common
       - ls -la $${SUPERDIR}
       - ls -la $${SUPERDIR}/dune-xt-common/
