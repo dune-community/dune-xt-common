@@ -217,6 +217,8 @@ class Parameter : public internal::SimpleDict<std::vector<double>>
 public:
   Parameter(const std::vector<std::pair<std::string, ValueType>>& key_value_pairs = {});
 
+  Parameter(const std::initializer_list<std::pair<std::string, ValueType>>& key_value_pairs);
+
   /**
    * \brief Same as Parameter({"__unspecified__", value});
    */
@@ -232,7 +234,7 @@ private:
   Parameter(BaseType&& source);
 
 public:
-  /// \note this somehow necessary to make clang 3.8 happy (and cannot be defaulted)
+  /// \note this is somehow necessary to make clang 3.8 happy (and cannot be defaulted)
   ~Parameter()
   {
   }
@@ -240,8 +242,6 @@ public:
   Parameter operator+(const Parameter& other) const;
 
   bool operator<(const Parameter& other) const;
-
-  //  Parameter operator+(const Parameter& other) const;
 
   ParameterType type() const;
 

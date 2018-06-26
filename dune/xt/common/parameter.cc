@@ -172,6 +172,11 @@ Parameter::Parameter(const std::vector<std::pair<std::string, ValueType>>& key_v
 {
 }
 
+Parameter::Parameter(const std::initializer_list<std::pair<std::string, ValueType>>& key_value_pairs)
+  : BaseType(key_value_pairs)
+{
+}
+
 Parameter::Parameter(BaseType&& source)
   : BaseType(std::move(source))
 {
