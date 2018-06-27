@@ -28,11 +28,22 @@
 #endif
 #endif // HAVE_MKL
 
-#include <dune/common/unused.hh>
-
 #include <dune/xt/common/exceptions.hh>
+#include <dune/xt/common/unused.hh>
 
 #include "lapacke.hh"
+
+#if HAVE_MKL || HAVE_LAPACKE
+#define DXTC_LAPACKE_ONLY(param) param
+#else
+#define DXTC_LAPACKE_ONLY(param) DXTC_UNUSED(param)
+#endif
+
+#if HAVE_MKL || HAVE_CBLAS
+#define DXTC_CBLAS_ONLY(param) param
+#else
+#define DXTC_CBLAS_ONLY(param) DXTC_UNUSED(param)
+#endif
 
 namespace Dune {
 namespace XT {
@@ -87,162 +98,234 @@ int col_major()
 }
 
 
-int dgeev(int matrix_layout,
-          char jobvl,
-          char jobvr,
-          int n,
-          double* a,
-          int lda,
-          double* wr,
-          double* wi,
-          double* vl,
-          int ldvl,
-          double* vr,
-          int ldvr)
+int dgeev(int DXTC_LAPACKE_ONLY(matrix_layout),
+          char DXTC_LAPACKE_ONLY(jobvl),
+          char DXTC_LAPACKE_ONLY(jobvr),
+          int DXTC_LAPACKE_ONLY(n),
+          double* DXTC_LAPACKE_ONLY(a),
+          int DXTC_LAPACKE_ONLY(lda),
+          double* DXTC_LAPACKE_ONLY(wr),
+          double* DXTC_LAPACKE_ONLY(wi),
+          double* DXTC_LAPACKE_ONLY(vl),
+          int DXTC_LAPACKE_ONLY(ldvl),
+          double* DXTC_LAPACKE_ONLY(vr),
+          int DXTC_LAPACKE_ONLY(ldvr))
 {
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dgeev(matrix_layout, jobvl, jobvr, n, a, lda, wr, wi, vl, ldvl, vr, ldvr);
 #else
-  DUNE_UNUSED_PARAMETER(matrix_layout);
-  DUNE_UNUSED_PARAMETER(jobvl);
-  DUNE_UNUSED_PARAMETER(jobvr);
-  DUNE_UNUSED_PARAMETER(n);
-  DUNE_UNUSED_PARAMETER(a);
-  DUNE_UNUSED_PARAMETER(lda);
-  DUNE_UNUSED_PARAMETER(wr);
-  DUNE_UNUSED_PARAMETER(wi);
-  DUNE_UNUSED_PARAMETER(vl);
-  DUNE_UNUSED_PARAMETER(ldvl);
-  DUNE_UNUSED_PARAMETER(vr);
-  DUNE_UNUSED_PARAMETER(ldvr);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
 }
-
-int dgeev_work(int matrix_layout,
-               char jobvl,
-               char jobvr,
-               int n,
-               double* a,
-               int lda,
-               double* wr,
-               double* wi,
-               double* vl,
-               int ldvl,
-               double* vr,
-               int ldvr,
-               double* work,
-               int lwork)
+int dgeev_work(int DXTC_LAPACKE_ONLY(matrix_layout),
+               char DXTC_LAPACKE_ONLY(jobvl),
+               char DXTC_LAPACKE_ONLY(jobvr),
+               int DXTC_LAPACKE_ONLY(n),
+               double* DXTC_LAPACKE_ONLY(a),
+               int DXTC_LAPACKE_ONLY(lda),
+               double* DXTC_LAPACKE_ONLY(wr),
+               double* DXTC_LAPACKE_ONLY(wi),
+               double* DXTC_LAPACKE_ONLY(vl),
+               int DXTC_LAPACKE_ONLY(ldvl),
+               double* DXTC_LAPACKE_ONLY(vr),
+               int DXTC_LAPACKE_ONLY(ldvr),
+               double* DXTC_LAPACKE_ONLY(work),
+               int DXTC_LAPACKE_ONLY(lwork))
 {
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dgeev_work(matrix_layout, jobvl, jobvr, n, a, lda, wr, wi, vl, ldvl, vr, ldvr, work, lwork);
 #else
-  DUNE_UNUSED_PARAMETER(matrix_layout);
-  DUNE_UNUSED_PARAMETER(jobvl);
-  DUNE_UNUSED_PARAMETER(jobvr);
-  DUNE_UNUSED_PARAMETER(n);
-  DUNE_UNUSED_PARAMETER(a);
-  DUNE_UNUSED_PARAMETER(lda);
-  DUNE_UNUSED_PARAMETER(wr);
-  DUNE_UNUSED_PARAMETER(wi);
-  DUNE_UNUSED_PARAMETER(vl);
-  DUNE_UNUSED_PARAMETER(ldvl);
-  DUNE_UNUSED_PARAMETER(vr);
-  DUNE_UNUSED_PARAMETER(ldvr);
-  DUNE_UNUSED_PARAMETER(work);
-  DUNE_UNUSED_PARAMETER(lwork);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
 }
 
 
-int dgeqp3(int matrix_layout, int m, int n, double* a, int lda, int* jpvt, double* tau)
+int dgeevx(int DXTC_LAPACKE_ONLY(matrix_layout),
+           char DXTC_LAPACKE_ONLY(balanc),
+           char DXTC_LAPACKE_ONLY(jobvl),
+           char DXTC_LAPACKE_ONLY(jobvr),
+           char DXTC_LAPACKE_ONLY(sense),
+           int DXTC_LAPACKE_ONLY(n),
+           double* DXTC_LAPACKE_ONLY(a),
+           int DXTC_LAPACKE_ONLY(lda),
+           double* DXTC_LAPACKE_ONLY(wr),
+           double* DXTC_LAPACKE_ONLY(wi),
+           double* DXTC_LAPACKE_ONLY(vl),
+           int DXTC_LAPACKE_ONLY(ldvl),
+           double* DXTC_LAPACKE_ONLY(vr),
+           int DXTC_LAPACKE_ONLY(ldvr),
+           int* DXTC_LAPACKE_ONLY(ilo),
+           int* DXTC_LAPACKE_ONLY(ihi),
+           double* DXTC_LAPACKE_ONLY(scale),
+           double* DXTC_LAPACKE_ONLY(abnrm),
+           double* DXTC_LAPACKE_ONLY(rconde),
+           double* DXTC_LAPACKE_ONLY(rcondv))
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_dgeevx(matrix_layout,
+                        balanc,
+                        jobvl,
+                        jobvr,
+                        sense,
+                        n,
+                        a,
+                        lda,
+                        wr,
+                        wi,
+                        vl,
+                        ldvl,
+                        vr,
+                        ldvr,
+                        ilo,
+                        ihi,
+                        scale,
+                        abnrm,
+                        rconde,
+                        rcondv);
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+int dgeevx_work(int DXTC_LAPACKE_ONLY(matrix_layout),
+                char DXTC_LAPACKE_ONLY(balanc),
+                char DXTC_LAPACKE_ONLY(jobvl),
+                char DXTC_LAPACKE_ONLY(jobvr),
+                char DXTC_LAPACKE_ONLY(sense),
+                int DXTC_LAPACKE_ONLY(n),
+                double* DXTC_LAPACKE_ONLY(a),
+                int DXTC_LAPACKE_ONLY(lda),
+                double* DXTC_LAPACKE_ONLY(wr),
+                double* DXTC_LAPACKE_ONLY(wi),
+                double* DXTC_LAPACKE_ONLY(vl),
+                int DXTC_LAPACKE_ONLY(ldvl),
+                double* DXTC_LAPACKE_ONLY(vr),
+                int DXTC_LAPACKE_ONLY(ldvr),
+                int* DXTC_LAPACKE_ONLY(ilo),
+                int* DXTC_LAPACKE_ONLY(ihi),
+                double* DXTC_LAPACKE_ONLY(scale),
+                double* DXTC_LAPACKE_ONLY(abnrm),
+                double* DXTC_LAPACKE_ONLY(rconde),
+                double* DXTC_LAPACKE_ONLY(rcondv),
+                double* DXTC_LAPACKE_ONLY(work),
+                int DXTC_LAPACKE_ONLY(lwork),
+                int* DXTC_LAPACKE_ONLY(iwork))
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_dgeevx_work(matrix_layout,
+                             balanc,
+                             jobvl,
+                             jobvr,
+                             sense,
+                             n,
+                             a,
+                             lda,
+                             wr,
+                             wi,
+                             vl,
+                             ldvl,
+                             vr,
+                             ldvr,
+                             ilo,
+                             ihi,
+                             scale,
+                             abnrm,
+                             rconde,
+                             rcondv,
+                             work,
+                             lwork,
+                             iwork);
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int dgeqp3(int DXTC_LAPACKE_ONLY(matrix_layout),
+           int DXTC_LAPACKE_ONLY(m),
+           int DXTC_LAPACKE_ONLY(n),
+           double* DXTC_LAPACKE_ONLY(a),
+           int DXTC_LAPACKE_ONLY(lda),
+           int* DXTC_LAPACKE_ONLY(jpvt),
+           double* DXTC_LAPACKE_ONLY(tau))
 {
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dgeqp3(matrix_layout, m, n, a, lda, jpvt, tau);
 #else
-  DUNE_UNUSED_PARAMETER(matrix_layout);
-  DUNE_UNUSED_PARAMETER(m);
-  DUNE_UNUSED_PARAMETER(n);
-  DUNE_UNUSED_PARAMETER(a);
-  DUNE_UNUSED_PARAMETER(lda);
-  DUNE_UNUSED_PARAMETER(jpvt);
-  DUNE_UNUSED_PARAMETER(tau);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
 }
 
-int dgeqp3_work(int matrix_layout, int m, int n, double* a, int lda, int* jpvt, double* tau, double* work, int lwork)
+int dgeqp3_work(int DXTC_LAPACKE_ONLY(matrix_layout),
+                int DXTC_LAPACKE_ONLY(m),
+                int DXTC_LAPACKE_ONLY(n),
+                double* DXTC_LAPACKE_ONLY(a),
+                int DXTC_LAPACKE_ONLY(lda),
+                int* DXTC_LAPACKE_ONLY(jpvt),
+                double* DXTC_LAPACKE_ONLY(tau),
+                double* DXTC_LAPACKE_ONLY(work),
+                int DXTC_LAPACKE_ONLY(lwork))
 {
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dgeqp3_work(matrix_layout, m, n, a, lda, jpvt, tau, work, lwork);
 #else
-  DUNE_UNUSED_PARAMETER(matrix_layout);
-  DUNE_UNUSED_PARAMETER(m);
-  DUNE_UNUSED_PARAMETER(n);
-  DUNE_UNUSED_PARAMETER(a);
-  DUNE_UNUSED_PARAMETER(lda);
-  DUNE_UNUSED_PARAMETER(jpvt);
-  DUNE_UNUSED_PARAMETER(tau);
-  DUNE_UNUSED_PARAMETER(work);
-  DUNE_UNUSED_PARAMETER(lwork);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
 }
 
 
-int dorgqr(int matrix_layout, int m, int n, int k, double* a, int lda, const double* tau)
+int dorgqr(int DXTC_LAPACKE_ONLY(matrix_layout),
+           int DXTC_LAPACKE_ONLY(m),
+           int DXTC_LAPACKE_ONLY(n),
+           int DXTC_LAPACKE_ONLY(k),
+           double* DXTC_LAPACKE_ONLY(a),
+           int DXTC_LAPACKE_ONLY(lda),
+           double* DXTC_LAPACKE_ONLY(tau))
 {
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dorgqr(matrix_layout, m, n, k, a, lda, tau);
 #else
-  DUNE_UNUSED_PARAMETER(matrix_layout);
-  DUNE_UNUSED_PARAMETER(m);
-  DUNE_UNUSED_PARAMETER(n);
-  DUNE_UNUSED_PARAMETER(k);
-  DUNE_UNUSED_PARAMETER(a);
-  DUNE_UNUSED_PARAMETER(lda);
-  DUNE_UNUSED_PARAMETER(tau);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
 }
 
-int dorgqr_work(int matrix_layout, int m, int n, int k, double* a, int lda, const double* tau, double* work, int lwork)
+int dorgqr_work(int DXTC_LAPACKE_ONLY(matrix_layout),
+                int DXTC_LAPACKE_ONLY(m),
+                int DXTC_LAPACKE_ONLY(n),
+                int DXTC_LAPACKE_ONLY(k),
+                double* DXTC_LAPACKE_ONLY(a),
+                int DXTC_LAPACKE_ONLY(lda),
+                double* DXTC_LAPACKE_ONLY(tau),
+                double* DXTC_LAPACKE_ONLY(work),
+                int DXTC_LAPACKE_ONLY(lwork))
 {
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dorgqr_work(matrix_layout, m, n, k, a, lda, tau, work, lwork);
 #else
-  DUNE_UNUSED_PARAMETER(matrix_layout);
-  DUNE_UNUSED_PARAMETER(m);
-  DUNE_UNUSED_PARAMETER(n);
-  DUNE_UNUSED_PARAMETER(k);
-  DUNE_UNUSED_PARAMETER(a);
-  DUNE_UNUSED_PARAMETER(lda);
-  DUNE_UNUSED_PARAMETER(tau);
-  DUNE_UNUSED_PARAMETER(work);
-  DUNE_UNUSED_PARAMETER(lwork);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
 }
 
 
-int dormqr(int matrix_layout,
-           char side,
-           char trans,
-           int m,
-           int n,
-           int k,
-           const double* a,
-           int lda,
-           const double* tau,
-           double* c,
-           int ldc)
+int dormqr(int DXTC_LAPACKE_ONLY(matrix_layout),
+           char DXTC_LAPACKE_ONLY(side),
+           char DXTC_LAPACKE_ONLY(trans),
+           int DXTC_LAPACKE_ONLY(m),
+           int DXTC_LAPACKE_ONLY(n),
+           int DXTC_LAPACKE_ONLY(k),
+           const double* DXTC_LAPACKE_ONLY(a),
+           int DXTC_LAPACKE_ONLY(lda),
+           const double* DXTC_LAPACKE_ONLY(tau),
+           double* DXTC_LAPACKE_ONLY(c),
+           int DXTC_LAPACKE_ONLY(ldc))
 {
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dormqr(matrix_layout, side, trans, m, n, k, a, lda, tau, c, ldc);
@@ -263,90 +346,74 @@ int dormqr(int matrix_layout,
 #endif
 }
 
-int dormqr_work(int matrix_layout,
-                char side,
-                char trans,
-                int m,
-                int n,
-                int k,
-                const double* a,
-                int lda,
-                const double* tau,
-                double* c,
-                int ldc,
-                double* work,
-                int lwork)
+int dormqr_work(int DXTC_LAPACKE_ONLY(matrix_layout),
+                char DXTC_LAPACKE_ONLY(side),
+                char DXTC_LAPACKE_ONLY(trans),
+                int DXTC_LAPACKE_ONLY(m),
+                int DXTC_LAPACKE_ONLY(n),
+                int DXTC_LAPACKE_ONLY(k),
+                const double* DXTC_LAPACKE_ONLY(a),
+                int DXTC_LAPACKE_ONLY(lda),
+                const double* DXTC_LAPACKE_ONLY(tau),
+                double* DXTC_LAPACKE_ONLY(c),
+                int DXTC_LAPACKE_ONLY(ldc),
+                double* DXTC_LAPACKE_ONLY(work),
+                int DXTC_LAPACKE_ONLY(lwork))
 {
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dormqr_work(matrix_layout, side, trans, m, n, k, a, lda, tau, c, ldc, work, lwork);
 #else
-  DUNE_UNUSED_PARAMETER(matrix_layout);
-  DUNE_UNUSED_PARAMETER(side);
-  DUNE_UNUSED_PARAMETER(trans);
-  DUNE_UNUSED_PARAMETER(m);
-  DUNE_UNUSED_PARAMETER(n);
-  DUNE_UNUSED_PARAMETER(k);
-  DUNE_UNUSED_PARAMETER(a);
-  DUNE_UNUSED_PARAMETER(lda);
-  DUNE_UNUSED_PARAMETER(tau);
-  DUNE_UNUSED_PARAMETER(c);
-  DUNE_UNUSED_PARAMETER(ldc);
-  DUNE_UNUSED_PARAMETER(work);
-  DUNE_UNUSED_PARAMETER(lwork);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
 }
 
 
-int dpotrf(int matrix_layout, char uplo, int n, double* a, int lda)
+int dpotrf(int DXTC_LAPACKE_ONLY(matrix_layout),
+           char DXTC_LAPACKE_ONLY(uplo),
+           int DXTC_LAPACKE_ONLY(n),
+           double* DXTC_LAPACKE_ONLY(a),
+           int DXTC_LAPACKE_ONLY(lda))
 {
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dpotrf(matrix_layout, uplo, n, a, lda);
 #else
-  DUNE_UNUSED_PARAMETER(matrix_layout);
-  DUNE_UNUSED_PARAMETER(uplo);
-  DUNE_UNUSED_PARAMETER(n);
-  DUNE_UNUSED_PARAMETER(a);
-  DUNE_UNUSED_PARAMETER(lda);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
 }
 
-int dpotrf_work(int matrix_layout, char uplo, int n, double* a, int lda)
+int dpotrf_work(int DXTC_LAPACKE_ONLY(matrix_layout),
+                char DXTC_LAPACKE_ONLY(uplo),
+                int DXTC_LAPACKE_ONLY(n),
+                double* DXTC_LAPACKE_ONLY(a),
+                int DXTC_LAPACKE_ONLY(lda))
 {
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dpotrf_work(matrix_layout, uplo, n, a, lda);
 #else
-  DUNE_UNUSED_PARAMETER(matrix_layout);
-  DUNE_UNUSED_PARAMETER(uplo);
-  DUNE_UNUSED_PARAMETER(n);
-  DUNE_UNUSED_PARAMETER(a);
-  DUNE_UNUSED_PARAMETER(lda);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
 }
 
 
-int dptcon(int n, const double* d, const double* e, double anorm, double* rcond)
+int dptcon(int DXTC_LAPACKE_ONLY(n),
+           const double* DXTC_LAPACKE_ONLY(d),
+           const double* DXTC_LAPACKE_ONLY(e),
+           double DXTC_LAPACKE_ONLY(anorm),
+           double* DXTC_LAPACKE_ONLY(rcond))
 {
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dptcon(n, d, e, anorm, rcond);
 #else
-  DUNE_UNUSED_PARAMETER(n);
-  DUNE_UNUSED_PARAMETER(d);
-  DUNE_UNUSED_PARAMETER(e);
-  DUNE_UNUSED_PARAMETER(anorm);
-  DUNE_UNUSED_PARAMETER(rcond);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
 }
 
 
-int dpttrf(int n, double* d, double* e)
+int dpttrf(int DXTC_LAPACKE_ONLY(n), double* DXTC_LAPACKE_ONLY(d), double* DXTC_LAPACKE_ONLY(e))
 {
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dpttrf(n, d, e);
@@ -360,86 +427,72 @@ int dpttrf(int n, double* d, double* e)
 }
 
 
-int dpttrs(int matrix_layout, int n, int nrhs, const double* d, const double* e, double* b, int ldb)
+int dpttrs(int DXTC_LAPACKE_ONLY(matrix_layout),
+           int DXTC_LAPACKE_ONLY(n),
+           int DXTC_LAPACKE_ONLY(nrhs),
+           const double* DXTC_LAPACKE_ONLY(d),
+           const double* DXTC_LAPACKE_ONLY(e),
+           double* DXTC_LAPACKE_ONLY(b),
+           int DXTC_LAPACKE_ONLY(ldb))
 {
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dpttrs(matrix_layout, n, nrhs, d, e, b, ldb);
 #else
-  DUNE_UNUSED_PARAMETER(matrix_layout);
-  DUNE_UNUSED_PARAMETER(n);
-  DUNE_UNUSED_PARAMETER(nrhs);
-  DUNE_UNUSED_PARAMETER(d);
-  DUNE_UNUSED_PARAMETER(e);
-  DUNE_UNUSED_PARAMETER(b);
-  DUNE_UNUSED_PARAMETER(ldb);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
 }
 
 
-int zgeqp3(int matrix_layout, int m, int n, std::complex<double>* a, int lda, int* jpvt, std::complex<double>* tau)
+int zgeqp3(int DXTC_LAPACKE_ONLY(matrix_layout),
+           int DXTC_LAPACKE_ONLY(m),
+           int DXTC_LAPACKE_ONLY(n),
+           std::complex<double>* DXTC_LAPACKE_ONLY(a),
+           int DXTC_LAPACKE_ONLY(lda),
+           int* DXTC_LAPACKE_ONLY(jpvt),
+           std::complex<double>* DXTC_LAPACKE_ONLY(tau))
 {
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_zgeqp3(matrix_layout, m, n, a, lda, jpvt, tau);
 #else
-  DUNE_UNUSED_PARAMETER(matrix_layout);
-  DUNE_UNUSED_PARAMETER(m);
-  DUNE_UNUSED_PARAMETER(n);
-  DUNE_UNUSED_PARAMETER(a);
-  DUNE_UNUSED_PARAMETER(lda);
-  DUNE_UNUSED_PARAMETER(jpvt);
-  DUNE_UNUSED_PARAMETER(tau);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
 }
 
 
-int zungqr(int matrix_layout, int m, int n, int k, std::complex<double>* a, int lda, const std::complex<double>* tau)
+int zungqr(int DXTC_LAPACKE_ONLY(matrix_layout),
+           int DXTC_LAPACKE_ONLY(m),
+           int DXTC_LAPACKE_ONLY(n),
+           int DXTC_LAPACKE_ONLY(k),
+           std::complex<double>* DXTC_LAPACKE_ONLY(a),
+           int DXTC_LAPACKE_ONLY(lda),
+           const std::complex<double>* DXTC_LAPACKE_ONLY(tau))
 {
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_zungqr(matrix_layout, m, n, k, a, lda, tau);
 #else
-  DUNE_UNUSED_PARAMETER(matrix_layout);
-  DUNE_UNUSED_PARAMETER(m);
-  DUNE_UNUSED_PARAMETER(n);
-  DUNE_UNUSED_PARAMETER(k);
-  DUNE_UNUSED_PARAMETER(a);
-  DUNE_UNUSED_PARAMETER(lda);
-  DUNE_UNUSED_PARAMETER(tau);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
 }
 
 
-int zunmqr(int matrix_layout,
-           char side,
-           char trans,
-           int m,
-           int n,
-           int k,
-           const std::complex<double>* a,
-           int lda,
-           const std::complex<double>* tau,
-           std::complex<double>* c,
-           int ldc)
+int zunmqr(int DXTC_LAPACKE_ONLY(matrix_layout),
+           char DXTC_LAPACKE_ONLY(side),
+           char DXTC_LAPACKE_ONLY(trans),
+           int DXTC_LAPACKE_ONLY(m),
+           int DXTC_LAPACKE_ONLY(n),
+           int DXTC_LAPACKE_ONLY(k),
+           const std::complex<double>* DXTC_LAPACKE_ONLY(a),
+           int DXTC_LAPACKE_ONLY(lda),
+           const std::complex<double>* DXTC_LAPACKE_ONLY(tau),
+           std::complex<double>* DXTC_LAPACKE_ONLY(c),
+           int DXTC_LAPACKE_ONLY(ldc))
 {
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_zunmqr(matrix_layout, side, trans, m, n, k, a, lda, tau, c, ldc);
 #else
-  DUNE_UNUSED_PARAMETER(matrix_layout);
-  DUNE_UNUSED_PARAMETER(side);
-  DUNE_UNUSED_PARAMETER(trans);
-  DUNE_UNUSED_PARAMETER(m);
-  DUNE_UNUSED_PARAMETER(n);
-  DUNE_UNUSED_PARAMETER(k);
-  DUNE_UNUSED_PARAMETER(a);
-  DUNE_UNUSED_PARAMETER(lda);
-  DUNE_UNUSED_PARAMETER(tau);
-  DUNE_UNUSED_PARAMETER(c);
-  DUNE_UNUSED_PARAMETER(ldc);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
@@ -573,18 +626,18 @@ int non_unit()
 }
 
 
-void dtrsm(const int layout,
-           const int side,
-           const int uplo,
-           const int transa,
-           const int diag,
-           const int m,
-           const int n,
-           const double alpha,
-           const double* a,
-           const int lda,
-           double* b,
-           const int ldb)
+void dtrsm(const int DXTC_CBLAS_ONLY(layout),
+           const int DXTC_CBLAS_ONLY(side),
+           const int DXTC_CBLAS_ONLY(uplo),
+           const int DXTC_CBLAS_ONLY(transa),
+           const int DXTC_CBLAS_ONLY(diag),
+           const int DXTC_CBLAS_ONLY(m),
+           const int DXTC_CBLAS_ONLY(n),
+           const double DXTC_CBLAS_ONLY(alpha),
+           const double* DXTC_CBLAS_ONLY(a),
+           const int DXTC_CBLAS_ONLY(lda),
+           double* DXTC_CBLAS_ONLY(b),
+           const int DXTC_CBLAS_ONLY(ldb))
 {
 #if HAVE_MKL || HAVE_CBLAS
   cblas_dtrsm(static_cast<CBLAS_LAYOUT>(layout),
@@ -605,32 +658,20 @@ void dtrsm(const int layout,
       DUNE_THROW(Dune::MathError, "Triangular solve using cblas_dtrsm failed!");
 #endif
 #else
-  DUNE_UNUSED_PARAMETER(layout);
-  DUNE_UNUSED_PARAMETER(side);
-  DUNE_UNUSED_PARAMETER(uplo);
-  DUNE_UNUSED_PARAMETER(transa);
-  DUNE_UNUSED_PARAMETER(diag);
-  DUNE_UNUSED_PARAMETER(m);
-  DUNE_UNUSED_PARAMETER(n);
-  DUNE_UNUSED_PARAMETER(alpha);
-  DUNE_UNUSED_PARAMETER(a);
-  DUNE_UNUSED_PARAMETER(lda);
-  DUNE_UNUSED_PARAMETER(b);
-  DUNE_UNUSED_PARAMETER(ldb);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
 #endif
 }
 
 
-void dtrsv(const int layout,
-           const int uplo,
-           const int transa,
-           const int diag,
-           const int n,
-           const double* a,
-           const int lda,
-           double* x,
-           const int incx)
+void dtrsv(const int DXTC_CBLAS_ONLY(layout),
+           const int DXTC_CBLAS_ONLY(uplo),
+           const int DXTC_CBLAS_ONLY(transa),
+           const int DXTC_CBLAS_ONLY(diag),
+           const int DXTC_CBLAS_ONLY(n),
+           const double* DXTC_CBLAS_ONLY(a),
+           const int DXTC_CBLAS_ONLY(lda),
+           double* DXTC_CBLAS_ONLY(x),
+           const int DXTC_CBLAS_ONLY(incx))
 {
 #if HAVE_MKL || HAVE_CBLAS
   cblas_dtrsv(static_cast<CBLAS_LAYOUT>(layout),
@@ -648,32 +689,23 @@ void dtrsv(const int layout,
       DUNE_THROW(Dune::MathError, "Triangular solve using cblas_dtrsv failed!");
 #endif
 #else
-  DUNE_UNUSED_PARAMETER(layout);
-  DUNE_UNUSED_PARAMETER(uplo);
-  DUNE_UNUSED_PARAMETER(transa);
-  DUNE_UNUSED_PARAMETER(diag);
-  DUNE_UNUSED_PARAMETER(n);
-  DUNE_UNUSED_PARAMETER(a);
-  DUNE_UNUSED_PARAMETER(lda);
-  DUNE_UNUSED_PARAMETER(x);
-  DUNE_UNUSED_PARAMETER(incx);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
 #endif
 }
 
 
-void ztrsm(const int layout,
-           const int side,
-           const int uplo,
-           const int transa,
-           const int diag,
-           const int m,
-           const int n,
-           const void* alpha,
-           const void* a,
-           const int lda,
-           void* b,
-           const int ldb)
+void ztrsm(const int DXTC_CBLAS_ONLY(layout),
+           const int DXTC_CBLAS_ONLY(side),
+           const int DXTC_CBLAS_ONLY(uplo),
+           const int DXTC_CBLAS_ONLY(transa),
+           const int DXTC_CBLAS_ONLY(diag),
+           const int DXTC_CBLAS_ONLY(m),
+           const int DXTC_CBLAS_ONLY(n),
+           const void* DXTC_CBLAS_ONLY(alpha),
+           const void* DXTC_CBLAS_ONLY(a),
+           const int DXTC_CBLAS_ONLY(lda),
+           void* DXTC_CBLAS_ONLY(b),
+           const int DXTC_CBLAS_ONLY(ldb))
 {
 #if HAVE_MKL || HAVE_CBLAS
   cblas_ztrsm(static_cast<CBLAS_LAYOUT>(layout),
@@ -695,32 +727,20 @@ void ztrsm(const int layout,
       DUNE_THROW(Dune::MathError, "Triangular solve using cblas_ztrsm failed!");
 #endif
 #else
-  DUNE_UNUSED_PARAMETER(layout);
-  DUNE_UNUSED_PARAMETER(side);
-  DUNE_UNUSED_PARAMETER(uplo);
-  DUNE_UNUSED_PARAMETER(transa);
-  DUNE_UNUSED_PARAMETER(diag);
-  DUNE_UNUSED_PARAMETER(m);
-  DUNE_UNUSED_PARAMETER(n);
-  DUNE_UNUSED_PARAMETER(alpha);
-  DUNE_UNUSED_PARAMETER(a);
-  DUNE_UNUSED_PARAMETER(lda);
-  DUNE_UNUSED_PARAMETER(b);
-  DUNE_UNUSED_PARAMETER(ldb);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
 #endif
 }
 
 
-void ztrsv(const int layout,
-           const int uplo,
-           const int transa,
-           const int diag,
-           const int n,
-           const void* a,
-           const int lda,
-           void* x,
-           const int incx)
+void ztrsv(const int DXTC_CBLAS_ONLY(layout),
+           const int DXTC_CBLAS_ONLY(uplo),
+           const int DXTC_CBLAS_ONLY(transa),
+           const int DXTC_CBLAS_ONLY(diag),
+           const int DXTC_CBLAS_ONLY(n),
+           const void* DXTC_CBLAS_ONLY(a),
+           const int DXTC_CBLAS_ONLY(lda),
+           void* DXTC_CBLAS_ONLY(x),
+           const int DXTC_CBLAS_ONLY(incx))
 {
 #if HAVE_MKL || HAVE_CBLAS
   cblas_ztrsv(static_cast<CBLAS_LAYOUT>(layout),
@@ -739,15 +759,6 @@ void ztrsv(const int layout,
       DUNE_THROW(Dune::MathError, "Triangular solve using cblas_ztrsv failed!");
 #endif
 #else
-  DUNE_UNUSED_PARAMETER(layout);
-  DUNE_UNUSED_PARAMETER(uplo);
-  DUNE_UNUSED_PARAMETER(transa);
-  DUNE_UNUSED_PARAMETER(diag);
-  DUNE_UNUSED_PARAMETER(n);
-  DUNE_UNUSED_PARAMETER(a);
-  DUNE_UNUSED_PARAMETER(lda);
-  DUNE_UNUSED_PARAMETER(x);
-  DUNE_UNUSED_PARAMETER(incx);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
 #endif
 }
