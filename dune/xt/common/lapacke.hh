@@ -89,6 +89,62 @@ int dgeev_work(int matrix_layout,
 
 
 /**
+ * \brief Wrapper around LAPACKE_dgeevx
+ * \sa    LAPACKE_dgeevx
+ */
+int dgeevx(int matrix_layout,
+           char balanc,
+           char jobvl,
+           char jobvr,
+           char sense,
+           int n,
+           double* a,
+           int lda,
+           double* wr,
+           double* wi,
+           double* vl,
+           int ldvl,
+           double* vr,
+           int ldvr,
+           int* ilo,
+           int* ihi,
+           double* scale,
+           double* abnrm,
+           double* rconde,
+           double* rcondv);
+
+/**
+ * \brief Wrapper around LAPACKE_dgeevx_work
+ * When calling this routine with lwork = -1, the optimal size for the working array work is returned in work[0]. The
+ * size of the integer working array iwork is 2*n-2.
+ * \sa    LAPACKE_dgeevx_work
+ */
+int dgeevx_work(int matrix_layout,
+                char balanc,
+                char jobvl,
+                char jobvr,
+                char sense,
+                int n,
+                double* a,
+                int lda,
+                double* wr,
+                double* wi,
+                double* vl,
+                int ldvl,
+                double* vr,
+                int ldvr,
+                int* ilo,
+                int* ihi,
+                double* scale,
+                double* abnrm,
+                double* rconde,
+                double* rcondv,
+                double* work,
+                int lwork,
+                int* iwork);
+
+
+/**
  * \brief Wrapper around LAPACKE_dgeqp3
  * \sa    LAPACKE_dgeqp3
  */
