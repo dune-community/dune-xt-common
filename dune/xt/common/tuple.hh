@@ -17,6 +17,8 @@
 
 #include <dune/common/typetraits.hh>
 
+
+#include <boost/tuple/tuple.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/deref.hpp>
 #include <boost/mpl/begin.hpp>
@@ -342,6 +344,89 @@ struct tuple_element<N, std::tuple<Ts...>>
   using wrapped_type = decltype(internal::deduce_seq(make_index_sequence_t<N>{}, internal::wrapper<Ts>()...));
   using type = typename wrapped_type::type;
 };
+
+/** These classes allow recursively visiting a typelist that may contain templates names
+ *  So if you ever wanted to iterate over "AllDirichletBoundaryInfo, AllNeumannBoundaryInfo, etc"
+ *  and then input another type as tpl arg, sthis is for you.
+ *
+ * **/
+
+//! use this to wrap template classes into the template_tuple
+template <template <class...> class B>
+struct tplwrap
+{
+};
+
+template <class... Ms>
+class template_tuple;
+
+namespace internal {
+template <class W, class>
+struct from_tplwrap
+{
+  using type = W;
+};
+
+template <class... T, template <class...> class B>
+struct from_tplwrap<tplwrap<B>, T...>
+{
+  using type = B<T...>;
+};
+
+
+template <class... Args>
+struct type_help
+{
+  template <class... T>
+  using type = boost::tuple<typename from_tplwrap<Args, T...>::type...>;
+};
+
+template <class... Args>
+struct type_help<boost::tuple<Args...>>
+{
+  template <class...>
+  using type = boost::tuple<Args...>;
+};
+
+template <class... Args>
+struct tail_hlp
+{
+  using type = template_tuple<Args...>;
+};
+
+template <class... Args>
+struct tail_hlp<boost::tuple<Args...>>
+{
+  using type = template_tuple<Args...>;
+};
+
+template <class A>
+struct head_hlp
+{
+  using type = A;
+};
+
+template <class A, class B>
+struct head_hlp<boost::tuples::cons<A, B>>
+{
+  using type = A;
+};
+}
+
+template <class... Ms>
+class template_tuple
+{
+
+public:
+  template <typename... T>
+  using type = typename internal::type_help<Ms...>::template type<T...>;
+  template <typename... T>
+  using tail_type = typename internal::tail_hlp<typename type<T...>::tail_type>::type;
+  template <typename... T>
+  using head_type = typename internal::head_hlp<typename type<T...>::head_type>::type;
+};
+
+using null_template_tuple = template_tuple<boost::tuples::null_type>;
 
 } // namespace Common
 } // namespace XT
