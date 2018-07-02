@@ -286,7 +286,7 @@ int dorgqr(int DXTC_LAPACKE_ONLY(matrix_layout),
            int DXTC_LAPACKE_ONLY(k),
            double* DXTC_LAPACKE_ONLY(a),
            int DXTC_LAPACKE_ONLY(lda),
-           double* DXTC_LAPACKE_ONLY(tau))
+           const double* DXTC_LAPACKE_ONLY(tau))
 {
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dorgqr(matrix_layout, m, n, k, a, lda, tau);
@@ -302,7 +302,7 @@ int dorgqr_work(int DXTC_LAPACKE_ONLY(matrix_layout),
                 int DXTC_LAPACKE_ONLY(k),
                 double* DXTC_LAPACKE_ONLY(a),
                 int DXTC_LAPACKE_ONLY(lda),
-                double* DXTC_LAPACKE_ONLY(tau),
+                const double* DXTC_LAPACKE_ONLY(tau),
                 double* DXTC_LAPACKE_ONLY(work),
                 int DXTC_LAPACKE_ONLY(lwork))
 {
