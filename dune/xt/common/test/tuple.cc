@@ -64,3 +64,39 @@ GTEST_TEST(Product, All)
   base_generator_type::Run();
   base_generator_type::Run(std::cerr);
 }
+
+template <class arg1, class arg2>
+struct tplA
+{
+  using type = arg1;
+};
+
+template <class arg1, class arg2>
+struct tplB
+{
+  using type = arg2;
+};
+
+template <class Tuple>
+void type_call()
+{
+  using TupleElement = typename Tuple::template head_type<int, double>;
+  using Type = typename TupleElement::type;
+  using Tail = typename Tuple::template tail_type<int, double>;
+
+  // do something meaningful with a single type
+  Type(0);
+  type_call<Tail>();
+}
+
+template <>
+void type_call<Dune::XT::Common::null_template_tuple>()
+{
+  // recursion terminator
+}
+
+GTEST_TEST(TemplateTuple, All)
+{
+  using namespace Dune::XT::Common;
+  using tt = template_tuple<tplwrap<tplA>, tplwrap<tplB>>;
+}
