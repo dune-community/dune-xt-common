@@ -330,17 +330,6 @@ int dormqr(int DXTC_LAPACKE_ONLY(matrix_layout),
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dormqr(matrix_layout, side, trans, m, n, k, a, lda, tau, c, ldc);
 #else
-  DUNE_UNUSED_PARAMETER(matrix_layout);
-  DUNE_UNUSED_PARAMETER(side);
-  DUNE_UNUSED_PARAMETER(trans);
-  DUNE_UNUSED_PARAMETER(m);
-  DUNE_UNUSED_PARAMETER(n);
-  DUNE_UNUSED_PARAMETER(k);
-  DUNE_UNUSED_PARAMETER(a);
-  DUNE_UNUSED_PARAMETER(lda);
-  DUNE_UNUSED_PARAMETER(tau);
-  DUNE_UNUSED_PARAMETER(c);
-  DUNE_UNUSED_PARAMETER(ldc);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
@@ -418,9 +407,6 @@ int dpttrf(int DXTC_LAPACKE_ONLY(n), double* DXTC_LAPACKE_ONLY(d), double* DXTC_
 #if HAVE_MKL || HAVE_LAPACKE
   return LAPACKE_dpttrf(n, d, e);
 #else
-  DUNE_UNUSED_PARAMETER(n);
-  DUNE_UNUSED_PARAMETER(d);
-  DUNE_UNUSED_PARAMETER(e);
   DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
   return 1;
 #endif
