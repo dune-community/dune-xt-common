@@ -27,7 +27,10 @@ set(CMAKE_COLOR_MAKEFILE ON)
 
 # guess dune-common build dir
 if(NOT (dune-common_DIR OR dune-common_ROOT OR "${CMAKE_PREFIX_PATH}" MATCHES ".*dune-common.*"))
-  string(REPLACE ${CMAKE_PROJECT_NAME} dune-common dune-common_DIR ${PROJECT_BINARY_DIR})
+  string(REPLACE ${CMAKE_PROJECT_NAME}
+                 dune-common
+                 dune-common_DIR
+                 ${PROJECT_BINARY_DIR})
 endif()
 
 # find dune-common and set the module path
@@ -48,10 +51,14 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 # ----------------------------------------------------------------------------------------------------
 execute_process(COMMAND ${CMAKE_SOURCE_DIR}/getRevision.sh
                 OUTPUT_VARIABLE COMMIT
-                ERROR_VARIABLE shell_error OUTPUT_STRIP_TRAILING_WHITESPACE)
+                ERROR_VARIABLE shell_error
+                OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-dune_enable_all_packages(
-  INCLUDE_DIRS ${dune-xt-common_SOURCE_DIR}/dune MODULE_LIBRARIES dunextcommon gtest_dune_xt_common)
+dune_enable_all_packages(INCLUDE_DIRS
+                         ${dune-xt-common_SOURCE_DIR}/dune
+                         MODULE_LIBRARIES
+                         dunextcommon
+                         gtest_dune_xt_common)
 
 include(DuneXTInstallPythonPackage)
 # this symlinks all files in python/ to the binary dir and install into the virtualenv from there thereby making the

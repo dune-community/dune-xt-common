@@ -49,11 +49,9 @@ check_cxx_source_compiles("
      auto f = [&] (){ return 0; };
      return 0;
    };
-"
-                          HAS_LAMBDA_FUNCTIONS)
+" HAS_LAMBDA_FUNCTIONS)
 
-check_cxx_source_compiles(
-  "
+check_cxx_source_compiles("
     #include <vector>
     #include <iterator>
     int main(void)
@@ -63,19 +61,16 @@ check_cxx_source_compiles(
       std::vector<int>::const_iterator e = std::end(a);
       return 0;
     };
-"
-  HAS_STD_BEGIN_END)
+" HAS_STD_BEGIN_END)
 
 check_cxx_source_compiles("
     int main(void)
     {
       int a __attribute__((unused)) = 0;
     };
-"
-                          HAS_WORKING_UNUSED_ATTRIBUTE)
+" HAS_WORKING_UNUSED_ATTRIBUTE)
 
-check_cxx_source_compiles(
-  "
+check_cxx_source_compiles("
     #include <map>
     int main(void)
     {
@@ -83,6 +78,4 @@ check_cxx_source_compiles(
       a.emplace(2, 2);
       return 0;
     };
-"
-  HAVE_MAP_EMPLACE)
-
+" HAVE_MAP_EMPLACE)
