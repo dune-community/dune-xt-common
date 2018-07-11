@@ -19,4 +19,3 @@ dependencycheck(${xtcommon})
 begin_testcases(dunextcommon)
 
 end_testcases()
-

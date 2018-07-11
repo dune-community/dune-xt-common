@@ -69,9 +69,7 @@ option(TBB_DEBUG "Turn on TBB debugging (modifies compiler flags and links again
 
 # source for our little test program. We have to compile this multiple times, so store it in a variable for DRY and
 # better readability
-set(
-  tbb_compile_source
-  "
+set(tbb_compile_source "
 #include <tbb/tbb.h>
 #include <numeric>
 
@@ -81,8 +79,7 @@ int main()
   tbb::parallel_for(0,10,[&](int i){ x[i] = i; });
   return !(std::accumulate(x,x+10,0) == (9*10)/2);
 }
-"
-  )
+")
 
 # Function to parse a tbbvars.sh file and extract include and library paths. This function relies on the bash shell to
 # source the tbbvars.sh file
@@ -112,7 +109,8 @@ function(parse_tbb_vars_sh)
     find_path(TBB_INCLUDE_DIRS
               NAMES tbb/task_scheduler_init.h
               PATHS ${shell_out}
-              DOC "Path to TBB include directory" NO_DEFAULT_PATH)
+              DOC "Path to TBB include directory"
+              NO_DEFAULT_PATH)
     execute_process(COMMAND ${BASH} -c
                             "unset LIBRARY_PATH ; . ${TBB_VARS_SH} ${tbb_vars_opt} >/dev/null && echo -n $LIBRARY_PATH"
                     RESULT_VARIABLE shell_result
@@ -178,8 +176,12 @@ set(TBB_allocator_FOUND FALSE)
 foreach(component ${TBB_FIND_COMPONENTS})
 
   if(component STREQUAL "cpf")
-    find_tbb_library(
-      VAR TBB_LIBTBB_PREVIEW NAME "tbb_preview${tbb_debug_suffix}" DOC "Path to TBB community preview library")
+    find_tbb_library(VAR
+                     TBB_LIBTBB_PREVIEW
+                     NAME
+                     "tbb_preview${tbb_debug_suffix}"
+                     DOC
+                     "Path to TBB community preview library")
     if(TBB_LIBTBB_PREVIEW)
       list(APPEND TBB_LIBRARIES ${TBB_LIBTBB_PREVIEW})
       list(APPEND TBB_COMPILE_DEFINITIONS TBB_PREVIEW_LOCAL_OBSERVER=1)
@@ -299,8 +301,12 @@ if(TBB_INTEL_COMPILER_INTERNAL_TBB)
   find_package_handle_standard_args(TBB REQUIRED_VARS TBB_COMPILE_OPTIONS TBB_COMPILE_TEST HANDLE_COMPONENTS)
 else()
 
-  find_package_handle_standard_args(
-    TBB REQUIRED_VARS TBB_INCLUDE_DIRS TBB_LIBRARIES TBB_COMPILE_TEST HANDLE_COMPONENTS)
+  find_package_handle_standard_args(TBB
+                                    REQUIRED_VARS
+                                    TBB_INCLUDE_DIRS
+                                    TBB_LIBRARIES
+                                    TBB_COMPILE_TEST
+                                    HANDLE_COMPONENTS)
 
 endif()
 

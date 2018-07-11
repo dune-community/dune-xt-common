@@ -18,8 +18,9 @@ function(dune_xt_execute_process)
 
   if(NOT "${retcode}" STREQUAL "0")
     cmake_parse_arguments(ERR "" "" "COMMAND" ${EXECUTE_UNPARSED_ARGUMENTS})
-    message(FATAL_ERROR
-              "${EXECUTE_ERROR_MESSAGE}\nRun command:${ERR_COMMAND}\nReturn code: ${retcode}\nDetailed log:\n${log}")
+    message(
+      FATAL_ERROR
+        "${EXECUTE_ERROR_MESSAGE}\nRun command:${ERR_COMMAND}\nReturn code: ${retcode}\nDetailed log:\n${log}")
   endif()
 
   if(EXECUTE_RESULT_VARIABLE)
@@ -51,7 +52,10 @@ function(dune_xt_install_python_package) # Parse Arguments
   endif()
 
   # Determine a target name for installing this package
-  string(REPLACE "/" "_" name_suffix ${PYINST_PATH})
+  string(REPLACE "/"
+                 "_"
+                 name_suffix
+                 ${PYINST_PATH})
   set(targetname "pyinstall_${DUNE_MOD_NAME}_${name_suffix}")
   if(TARGET ${targetname})
     return()
@@ -145,9 +149,8 @@ function(dune_xt_install_python_package) # Parse Arguments
   #
   # Define rules for `make install` that install a wheel into a central wheelhouse
   #
-  # NB: This is necessary, to allow mixing installed and non-installed modules
-  # with python packages. The wheelhouse will allow to install any missing
-  # python packages into the virtualenv.
+  # NB: This is necessary, to allow mixing installed and non-installed modules with python packages. The wheelhouse
+  # will allow to install any missing python packages into the virtualenv.
   #
 
   # Construct the wheel installation commandline
@@ -170,20 +173,16 @@ function(dune_xt_install_python_package) # Parse Arguments
     "message(\"Installing wheel for python package at ${CMAKE_CURRENT_SOURCE_DIR}/${PYINST_PATH}...\")
                 dune_execute_process(COMMAND ${WHEEL_COMMAND}
                                      ERROR_MESSAGE \"Error installing wheel for python package at ${CMAKE_CURRENT_SOURCE_DIR}/${PYINST_PATH}\"
-                                     )"
-    )
+                                     )")
 
   #
   # Set some paths needed for Sphinx documentation.
   #
 
   # Use a custom section to export python path to downstream modules
-  set(
-    DUNE_CUSTOM_PKG_CONFIG_SECTION
-    "${DUNE_CUSTOM_PKG_CONFIG_SECTION}
+  set(DUNE_CUSTOM_PKG_CONFIG_SECTION "${DUNE_CUSTOM_PKG_CONFIG_SECTION}
   set(DUNE_PYTHON_SOURCE_PATHS \"${DUNE_PYTHON_SOURCE_PATHS}:${CMAKE_CURRENT_SOURCE_DIR}/${PYINST_PATH}\")
-  "
-    PARENT_SCOPE)
+  " PARENT_SCOPE)
 
   # and add python path for this module
   set(DUNE_PYTHON_SOURCE_PATHS "${DUNE_PYTHON_SOURCE_PATHS}:${CMAKE_CURRENT_SOURCE_DIR}/${PYINST_PATH}" PARENT_SCOPE)

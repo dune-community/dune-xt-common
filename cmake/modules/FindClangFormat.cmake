@@ -28,9 +28,12 @@ if(NOT EXISTS ${ClangFormat_EXECUTABLE})
 endif(NOT EXISTS ${ClangFormat_EXECUTABLE})
 if(EXISTS ${ClangFormat_EXECUTABLE})
   execute_process(COMMAND ${ClangFormat_EXECUTABLE} -version OUTPUT_VARIABLE clang_out)
-  string(REGEX REPLACE ".*clang-format version ([0-9]+\\.[0-9]+).*" "\\1" ClangFormat_VERSION ${clang_out})
+  string(REGEX
+         REPLACE ".*clang-format version ([0-9]+\\.[0-9]+).*"
+                 "\\1"
+                 ClangFormat_VERSION
+                 ${clang_out})
 endif(EXISTS ${ClangFormat_EXECUTABLE})
 
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(ClangFormat REQUIRED_VARS ClangFormat_EXECUTABLE VERSION_VAR ClangFormat_VERSION)
-

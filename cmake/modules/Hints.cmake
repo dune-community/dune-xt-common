@@ -19,4 +19,3 @@ append_to_each("${hint_prefixes}" "lib/" lib_hints)
 
 set(include_hints "")
 append_to_each("${hint_prefixes}" "include/" include_hints)
-

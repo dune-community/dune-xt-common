@@ -59,4 +59,3 @@ function(add_dune_alugrid_compile_flags)
     set_property(${_prefix} ${ADD_ALU_UNPARSED_ARGUMENTS} APPEND PROPERTY COMPILE_DEFINITIONS ENABLE_ALUGRID=1)
   endif(ALUGRID_FOUND)
 endfunction(add_dune_alugrid_compile_flags)
-
