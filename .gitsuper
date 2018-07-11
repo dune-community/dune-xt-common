@@ -78,7 +78,7 @@ commit = 26cc8cb4161a3a51002ab2a81b8c81d2c951ee79
 
 [submodule.dune-xt-common]
 remote = https://github.com/dune-community/dune-xt-common.git
-status = +2424627f0ad5de7e4aaa5e7f48bc2a02414d95a1 .vcsetup (heads/master)
+status = 2424627f0ad5de7e4aaa5e7f48bc2a02414d95a1 .vcsetup (heads/master)
 commit = f4143e9b3f861dc553711e3b322a8d4565ce0614
 
 [submodule.dune-xt-functions]
