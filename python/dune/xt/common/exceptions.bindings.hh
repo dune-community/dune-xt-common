@@ -12,17 +12,11 @@
 #ifndef DUNE_XT_COMMON_EXCEPTIONS_BINDINGS_HH
 #define DUNE_XT_COMMON_EXCEPTIONS_BINDINGS_HH
 
-#include <string>
+#include <dune/xt/common/deprecated.hh>
 
-#include <boost/exception/all.hpp>
-
-#if HAVE_TBB
-#include <tbb/tbb_exception.h>
-#endif
-
-#include <dune/pybindxi/pybind11.h>
-
-#include <dune/xt/common/exceptions.hh>
+namespace pybind11 {
+class module;
+}
 
 namespace Dune {
 namespace XT {
@@ -30,33 +24,9 @@ namespace Common {
 namespace bindings {
 
 
-void addbind_exceptions(pybind11::module& m)
+DXT_DEPRECATED_MSG("you no longer need to call this for your module") void addbind_exceptions(pybind11::module&)
 {
-  namespace py = pybind11;
 
-  static py::exception<std::exception> std_exc(m, "StdError");
-#if HAVE_TBB
-  static py::exception<tbb::tbb_exception> tbb_exc(m, "TbbError");
-#endif
-  static py::exception<boost::exception> boost_exc(m, "BoostError");
-  static py::exception<Dune::Exception> dune_exc(m, "DuneError");
-
-  py::register_exception_translator([](std::exception_ptr p) {
-    try {
-      if (p)
-        std::rethrow_exception(p);
-    } catch (const boost::exception& e) {
-      boost_exc(boost::diagnostic_information_what(e));
-    } catch (const Dune::Exception& e) {
-      dune_exc(e.what());
-#if HAVE_TBB
-    } catch (const tbb::tbb_exception& e) {
-      tbb_exc((std::string(e.name()) + ": " + e.what()).c_str());
-#endif
-    } catch (const std::exception& e) {
-      std_exc(e.what());
-    }
-  });
 } // ... addbind_exceptions(...)
 
 

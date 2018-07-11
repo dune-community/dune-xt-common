@@ -14,11 +14,19 @@
 
 #include <string>
 #include <vector>
+#include <boost/exception/all.hpp>
+
+#if HAVE_TBB
+#include <tbb/tbb_exception.h>
+#endif
+
+#include <dune/pybindxi/pybind11.h>
 
 #include <python/dune/xt/common/exceptions.bindings.hh>
 #include <python/dune/xt/common/fvector.hh>
 #include <python/dune/xt/common/fmatrix.hh>
 #include <python/dune/xt/common/configuration.hh>
+#include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/numeric_cast.hh>
 #include <dune/xt/common/string.hh>
 #include <dune/xt/common/timedlogging.hh>
@@ -30,13 +38,38 @@
 #include <dune/xt/common/numeric_cast.hh>
 #include <dune/xt/common/timedlogging.hh>
 
+void addbind_exceptions(pybind11::module& m)
+{
+  namespace py = pybind11;
+
+#if HAVE_TBB
+  static py::exception<tbb::tbb_exception> tbb_exc(m, "TbbError");
+#endif
+  static py::exception<boost::exception> boost_exc(m, "BoostError");
+  static py::exception<Dune::Exception> dune_exc(m, "DuneError");
+
+  py::register_exception_translator([](std::exception_ptr p) {
+    try {
+      if (p)
+        std::rethrow_exception(p);
+    } catch (const boost::exception& e) {
+      boost_exc(boost::diagnostic_information_what(e));
+    } catch (const Dune::Exception& e) {
+      dune_exc(e.what());
+#if HAVE_TBB
+    } catch (const tbb::tbb_exception& e) {
+      tbb_exc((std::string(e.name()) + ": " + e.what()).c_str());
+#endif
+    }
+  });
+} // ... addbind_exceptions(...)
 
 PYBIND11_MODULE(_common, m)
 {
   namespace py = pybind11;
   using namespace pybind11::literals;
 
-  Dune::XT::Common::bindings::addbind_exceptions(m);
+  addbind_exceptions(m);
 
   Dune::XT::Common::bindings::add_initialization(m, "dune.xt.common");
 
