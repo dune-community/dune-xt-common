@@ -18,7 +18,10 @@ macro(add_analyze)
     message(STATUS "adding analyze target")
     add_custom_target(analyze SOURCES ${ARGN})
     foreach(_file ${ARGN})
-      string(REPLACE "/" "_" fn ${_file})
+      string(REPLACE "/"
+                     "_"
+                     fn
+                     ${_file})
       add_custom_target("analyze_${fn}"
                         ${ANALYZER}
                         -fixit
@@ -41,7 +44,10 @@ macro(add_format glob_dir)
   if(NOT TARGET format)
     add_custom_target(format)
   endif(NOT TARGET format)
-  string(REPLACE "/" "_" fn ${glob_dir})
+  string(REPLACE "/"
+                 "_"
+                 fn
+                 ${glob_dir})
   message(STATUS "adding format target")
   if(ClangFormat_FOUND)
     file(GLOB_RECURSE _files
@@ -62,8 +68,13 @@ macro(add_format glob_dir)
   file(GLOB_RECURSE _exclude_files "${glob_dir}/*builder_definitions.cmake")
   list(REMOVE_ITEM _files "${glob_dir}/config.h.cmake")
   list(REMOVE_ITEM _files "${_exclude_files}")
-  add_custom_target(
-    "format_${fn}_cmake" ${CMAKE_BINARY_DIR}/dune-env cmake-format -i -c ${glob_dir}/.cmake_format.py ${_files})
+  add_custom_target("format_${fn}_cmake"
+                    ${CMAKE_BINARY_DIR}/dune-env
+                    cmake-format
+                    -i
+                    -c
+                    ${glob_dir}/.cmake_format.py
+                    ${_files})
   add_dependencies(format "format_${fn}_cmake")
 endmacro(add_format)
 
@@ -74,7 +85,10 @@ macro(add_tidy glob_dir)
     if(NOT TARGET tidy)
       add_custom_target(tidy)
     endif(NOT TARGET tidy)
-    string(REPLACE "/" "_" fn ${glob_dir})
+    string(REPLACE "/"
+                   "_"
+                   fn
+                   ${glob_dir})
     file(GLOB_RECURSE _files "${glob_dir}/*.cc" "${glob_dir}/*.c")
     add_custom_target("tidy_${fn}" ${ClangTidy_EXECUTABLE} -p=${CMAKE_CURRENT_BINARY_DIR} ${_files})
     add_dependencies(tidy "tidy_${fn}")
@@ -95,7 +109,10 @@ endmacro(add_forced_doxygen_target)
 macro(DEPENDENCYCHECK)
   add_custom_target(dependencycheck SOURCES ${ARGN})
   foreach(HEADER ${ARGN})
-    string(REPLACE "/" "_" fn ${HEADER})
+    string(REPLACE "/"
+                   "_"
+                   fn
+                   ${HEADER})
     set(TEST_NAME "dependencycheck_${fn}")
     to_list_spaces(CMAKE_CXX_FLAGS TEST_NAME_FLAGS)
     set(XARGS ${TEST_NAME_FLAGS} -DHAVE_CONFIG_H -H -c ${HEADER} -w)

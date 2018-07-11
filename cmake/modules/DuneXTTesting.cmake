@@ -11,10 +11,25 @@
 # ~~~
 
 macro(dxt_headercheck_target_name arg)
-  string(REGEX REPLACE ".*/([^/]*)" "\\1" simple ${arg})
-  string(REPLACE ${PROJECT_SOURCE_DIR} "" rel ${arg})
-  string(REGEX REPLACE "(.*)/[^/]*" "\\1" relpath ${rel})
-  string(REGEX REPLACE "/" "_" targname ${rel})
+  string(REGEX
+         REPLACE ".*/([^/]*)"
+                 "\\1"
+                 simple
+                 ${arg})
+  string(REPLACE ${PROJECT_SOURCE_DIR}
+                 ""
+                 rel
+                 ${arg})
+  string(REGEX
+         REPLACE "(.*)/[^/]*"
+                 "\\1"
+                 relpath
+                 ${rel})
+  string(REGEX
+         REPLACE "/"
+                 "_"
+                 targname
+                 ${rel})
   set(targname "headercheck_${targname}")
 endmacro(dxt_headercheck_target_name)
 
@@ -45,7 +60,10 @@ macro(BEGIN_TESTCASES) # https://cmake.org/cmake/help/v3.0/module/FindGTest.html
       list(APPEND ranks ${DUNE_MAX_TEST_CORES})
     endif(source MATCHES "mpi")
     get_filename_component(testbase ${source} NAME_WE)
-    string(REPLACE ".cc" ".mini" minifile ${source})
+    string(REPLACE ".cc"
+                   ".mini"
+                   minifile
+                   ${source})
     if(EXISTS ${minifile})
       dune_add_system_test(SOURCE
                            ${source}
@@ -97,9 +115,18 @@ macro(BEGIN_TESTCASES) # https://cmake.org/cmake/help/v3.0/module/FindGTest.html
       list(APPEND ranks ${DUNE_MAX_TEST_CORES})
     endif(template MATCHES "mpi")
     get_filename_component(testbase ${template} NAME_WE)
-    string(REPLACE ".tpl" ".py" config_fn "${template}")
-    string(REPLACE ".tpl" ".tpl.cc" out_fn "${template}")
-    string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}" "${CMAKE_CURRENT_BINARY_DIR}" out_fn "${out_fn}")
+    string(REPLACE ".tpl"
+                   ".py"
+                   config_fn
+                   "${template}")
+    string(REPLACE ".tpl"
+                   ".tpl.cc"
+                   out_fn
+                   "${template}")
+    string(REPLACE "${CMAKE_CURRENT_SOURCE_DIR}"
+                   "${CMAKE_CURRENT_BINARY_DIR}"
+                   out_fn
+                   "${out_fn}")
     # get the last completed cache for the codegen execution during configure time
     foreach(_mod ${ALL_DEPENDENCIES})
       dune_module_path(MODULE ${_mod} RESULT ${_mod}_binary_dir BUILD_DIR)
@@ -126,9 +153,18 @@ macro(BEGIN_TESTCASES) # https://cmake.org/cmake/help/v3.0/module/FindGTest.html
                        DEPENDS "${config_fn}" "${template}"
                        VERBATIM USES_TERMINAL)
     foreach(gen_source ${generated_sources})
-      string(REPLACE "${out_fn}." "" postfix "${gen_source}")
-      string(REPLACE "${out_fn}" "" postfix "${postfix}")
-      string(REPLACE ".cc" "" postfix "${postfix}")
+      string(REPLACE "${out_fn}."
+                     ""
+                     postfix
+                     "${gen_source}")
+      string(REPLACE "${out_fn}"
+                     ""
+                     postfix
+                     "${postfix}")
+      string(REPLACE ".cc"
+                     ""
+                     postfix
+                     "${postfix}")
       if(NOT "" STREQUAL "${postfix}")
         set(postfix "__${postfix}")
       endif()
@@ -192,7 +228,8 @@ macro(END_TESTCASES) # this excludes meta-ini variation test cases because  ther
                     "${CMAKE_CURRENT_BINARY_DIR}/dxt_all_sorted_testnames.cmake"
                     "${CMAKE_CURRENT_BINARY_DIR}/dxt_headercheck_targets.cmake"
                     "${DXT_BIN_COUNT}"
-                    VERBATIM USES_TERMINAL)
+                    VERBATIM
+                    USES_TERMINAL)
   add_custom_target(copy_builders_if_different
                     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_BINARY_DIR}/builder_definitions.cmake"
                             "${CMAKE_CURRENT_SOURCE_DIR}/builder_definitions.cmake")
@@ -203,7 +240,11 @@ endmacro(END_TESTCASES)
 
 macro(dxt_exclude_from_headercheck)
   exclude_from_headercheck(${ARGV0}) # make this robust to argument being passed with or without ""
-  string(REGEX REPLACE "[\ \n]+([^\ ])" ";\\1" list ${ARGV0})
+  string(REGEX
+         REPLACE "[\ \n]+([^\ ])"
+                 ";\\1"
+                 list
+                 ${ARGV0})
   set(list "${list};${ARGV}")
   foreach(item ${list})
     set(item ${CMAKE_CURRENT_SOURCE_DIR}/${item})
