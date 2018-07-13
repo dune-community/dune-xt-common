@@ -361,13 +361,13 @@ template <class... Ms>
 class template_tuple;
 
 namespace internal {
-template <class W, class>
+template <class B, class...>
 struct from_tplwrap
 {
-  using type = W;
+  using type = B;
 };
 
-template <class... T, template <class...> class B>
+template <template <class...> class B, class... T>
 struct from_tplwrap<tplwrap<B>, T...>
 {
   using type = B<T...>;
