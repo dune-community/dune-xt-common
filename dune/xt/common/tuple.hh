@@ -374,11 +374,11 @@ struct from_tplwrap<tplwrap<B>, T...>
 };
 
 
-template <class... Args>
+template <class... Templates>
 struct type_help
 {
-  template <class... T>
-  using type = boost::tuple<typename from_tplwrap<Args, T...>::type...>;
+  template <class... Parameters>
+  using type = boost::tuple<typename from_tplwrap<Templates, Parameters...>::type...>;
 };
 
 template <class... Args>
@@ -411,15 +411,15 @@ struct head_hlp<boost::tuples::cons<A, B>>
 {
   using type = A;
 };
-}
+} // namespace internal
 
-template <class... Ms>
+template <class... WrapperOrTypes>
 class template_tuple
 {
 
 public:
   template <typename... T>
-  using type = typename internal::type_help<Ms...>::template type<T...>;
+  using type = typename internal::type_help<WrapperOrTypes...>::template type<T...>;
   template <typename... T>
   using tail_type = typename internal::tail_hlp<typename type<T...>::tail_type>::type;
   template <typename... T>
