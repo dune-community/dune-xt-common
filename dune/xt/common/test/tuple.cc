@@ -80,12 +80,14 @@ struct tplB
 template <class Tuple>
 void type_call()
 {
-  using TupleElement = typename Tuple::template head_type<int, double>;
+  using TupleElement = typename Tuple::template head_type<int, int>;
   using Type = typename TupleElement::type;
-  using Tail = typename Tuple::template tail_type<int, double>;
+  static_assert(std::is_same<Type, int>::value, "");
+  using Tail = typename Tuple::template tail_type<int, int>;
 
   // do something meaningful with a single type
-  Type(0);
+  EXPECT_EQ(Type(0), int(0));
+  EXPECT_EQ(Type(0.2), int(0.2));
   type_call<Tail>();
 }
 
@@ -98,5 +100,6 @@ void type_call<Dune::XT::Common::null_template_tuple>()
 GTEST_TEST(TemplateTuple, All)
 {
   using namespace Dune::XT::Common;
-  using tt = template_tuple<tplwrap<tplA>, tplwrap<tplB>>;
+  using tt = template_tuple<tplwrap<tplA>, tplwrap<tplB>, int>;
+  type_call<tt>();
 }
