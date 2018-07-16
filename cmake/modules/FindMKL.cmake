@@ -20,6 +20,7 @@ list(APPEND mkl_hints
             "/opt/intel/mkl/"
             "$ENV{HOME}/intel/mkl"
             "/home/l_tobi01/Software/dune-gdt-super/local/mkl/")
+append_to_each("${mkl_hints}" "lib/intel64" mkl_lib_hints)
 append_to_each("${mkl_hints}" "include/" mkl_include_hints)
 
 find_library(MKL_LP64_LIBRARY mkl_intel_lp64 HINTS ${mkl_lib_hints})
