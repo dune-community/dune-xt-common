@@ -62,6 +62,9 @@ function(dune_xt_install_python_package) # Parse Arguments
   endif()
 
   file(GLOB_RECURSE files ${PROJECT_SOURCE_DIR}/${PYINST_PATH}/ "*")
+  if( PROJECT_SOURCE_DIR EQUAL PROJECT_BINARY_DIR )
+    message( FATAL_ERROR "trying to configure with src==bindir")
+  endif()
   foreach(fn ${files})
     file(RELATIVE_PATH rel_fn ${PROJECT_SOURCE_DIR} ${fn})
     get_filename_component(directory ${rel_fn} DIRECTORY)
