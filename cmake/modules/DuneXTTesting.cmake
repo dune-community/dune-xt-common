@@ -259,7 +259,7 @@ macro(dxt_add_python_tests)
                     "${CMAKE_BINARY_DIR}/dune-env"
                     "py.test"
                     "."
-                    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/python"
+                    WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/python"
                     DEPENDS bindings
                     VERBATIM USES_TERMINAL)
 endmacro(dxt_add_python_tests)
