@@ -1,6 +1,6 @@
 [supermodule]
 remote = https://zivgitlab.uni-muenster.de/falbr_01/parabolic-lrbms-2017-code
-status = +a3f7e3b4c5317dc77a3c9d6578dd58d880ffcdc1 config.opts (heads/master)
+status = +bd0f869e27d6cd01d414d4c672f1711e2b4693db config.opts (heads/master)
 	 8f2c5aba441417bf2c42f22272f538c68a89cc4a dune-alugrid (remotes/origin/releases/2.5)
 	 707acf201d5a754c80f87cc4d71aa36bf29a6e3f dune-common (v2.5.1-9-g707acf20)
 	+1b68586a2d8b3bf13eea60f2249dacc255eadaea dune-gdt (heads/master)
@@ -12,7 +12,7 @@ status = +a3f7e3b4c5317dc77a3c9d6578dd58d880ffcdc1 config.opts (heads/master)
 	 741e4f8e53bdd3e1b6e19d84eb22b6e3dc48526c dune-python (remotes/origin/releases/2.5)
 	 26cc8cb4161a3a51002ab2a81b8c81d2c951ee79 dune-testtools (remotes/origin/p/renemilk/testname_listing_hack_no-skiptest)
 	-87f81bcc161d385bb4d52978b78443f65aa43f02 dune-visibility-demo
-	+b92f0d8d8c1a601882200af07b2ccc73d6df83bd dune-xt-common (heads/codegen_log)
+	+5cc41b0fc3cb77a3ee975c2d04ceafd49e4c999c dune-xt-common (heads/codegen_log)
 	+17b4d7e9e16feada2b5409f7af5ac2d304b27df0 dune-xt-functions (heads/master)
 	+524bc84e9cc86f2f2864ce2823c7a43aaa377875 dune-xt-grid (heads/master)
 	+4bad9ce8823aacf0b9de3295ad17039a02833844 dune-xt-la (heads/master)
@@ -24,7 +24,7 @@ commit = 9f4f9cbe8905a8a167acbe56cdad7766227b9fb3
 [submodule.config.opts]
 remote = https://github.com/dune-community/config.opts.git
 status = 
-commit = a3f7e3b4c5317dc77a3c9d6578dd58d880ffcdc1
+commit = bd0f869e27d6cd01d414d4c672f1711e2b4693db
 
 [submodule.dune-alugrid]
 remote = https://github.com/dune-mirrors/dune-alugrid.git
@@ -79,7 +79,7 @@ commit = 26cc8cb4161a3a51002ab2a81b8c81d2c951ee79
 [submodule.dune-xt-common]
 remote = https://github.com/dune-community/dune-xt-common.git
 status = 2424627f0ad5de7e4aaa5e7f48bc2a02414d95a1 .vcsetup (heads/master)
-commit = b92f0d8d8c1a601882200af07b2ccc73d6df83bd
+commit = 5cc41b0fc3cb77a3ee975c2d04ceafd49e4c999c
 
 [submodule.dune-xt-functions]
 remote = https://github.com/dune-community/dune-xt-functions.git
