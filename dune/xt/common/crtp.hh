@@ -74,13 +74,13 @@ public:
   using Traits = TraitsImp;
   using derived_type = typename Traits::derived_type;
 
-  static inline derived_type& DXT_DEPRECATED_MSG("Use that.as_imp() instead (10.04.2018)!") as_imp(InterfaceType& that)
+  DXT_DEPRECATED_MSG("Use that.as_imp() instead (10.04.2018)!") static inline derived_type& as_imp(InterfaceType& that)
   {
     return static_cast<derived_type&>(that);
   }
 
-  static inline const derived_type& DXT_DEPRECATED_MSG("Use that.as_imp() instead (10.04.2018)!")
-      as_imp(const InterfaceType& that)
+  DXT_DEPRECATED_MSG("Use that.as_imp() instead (10.04.2018)!")
+  static inline const derived_type& as_imp(const InterfaceType& that)
   {
     return static_cast<const derived_type&>(that);
   }
