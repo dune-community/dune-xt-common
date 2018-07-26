@@ -18,7 +18,6 @@
 #include "exceptions.hh"
 #include "parameter.hh"
 #include "numeric_cast.hh"
-#include "string.hh"
 
 namespace Dune {
 namespace XT {
@@ -29,104 +28,6 @@ namespace internal {
 // ========================
 // ===== SimpleDict =======
 // ========================
-template <class ValueType>
-SimpleDict<ValueType>::SimpleDict()
-{
-}
-
-template <class ValueType>
-SimpleDict<ValueType>::SimpleDict(const std::string& key, const ValueType& value)
-  : dict_({std::make_pair(key, value)})
-{
-  update_keys();
-}
-
-template <class ValueType>
-SimpleDict<ValueType>::SimpleDict(const std::vector<std::pair<std::string, ValueType>>& key_value_pairs)
-{
-  for (const auto& key_value_pair : key_value_pairs)
-    dict_.emplace(key_value_pair);
-  update_keys();
-}
-
-template <class ValueType>
-bool SimpleDict<ValueType>::empty() const
-{
-  return dict_.size() == 0;
-}
-
-template <class ValueType>
-const std::vector<std::string>& SimpleDict<ValueType>::keys() const
-{
-  return keys_;
-}
-
-template <class ValueType>
-bool SimpleDict<ValueType>::has_key(const std::string& key) const
-{
-  return dict_.find(key) != dict_.end();
-}
-
-template <class ValueType>
-void SimpleDict<ValueType>::set(const std::string& key, const ValueType& value, const bool overwrite)
-{
-  if (key.empty())
-    DUNE_THROW(Exceptions::parameter_error, "Given key must not be empty!");
-  const bool key_was_present = has_key(key);
-  if (!overwrite && key_was_present)
-    DUNE_THROW(Exceptions::parameter_error,
-               "You are trying to overwrite the key '"
-                   << key
-                   << "' (although a value is already set) and overwrite is false!");
-  dict_[key] = value;
-  if (!key_was_present)
-    update_keys();
-}
-
-template <class ValueType>
-const ValueType& SimpleDict<ValueType>::get(const std::string& key) const
-{
-  const auto result = dict_.find(key);
-  if (result == dict_.end())
-    DUNE_THROW(Exceptions::parameter_error, "Key '" << key << "' does not exist!");
-  return result->second;
-}
-
-template <class ValueType>
-size_t SimpleDict<ValueType>::size() const
-{
-  return dict_.size();
-}
-
-template <class ValueType>
-std::string SimpleDict<ValueType>::report(const std::string& prefix) const
-{
-  if (dict_.empty())
-    return "{}";
-
-  assert(keys_.size() > 0);
-  const auto whitespaced_prefix = whitespaceify(prefix);
-  std::stringstream ss;
-
-  ss << "{" << keys_[0] << ": " << dict_.at(keys_[0]);
-  for (size_t ii = 1; ii < keys_.size(); ++ii) {
-    ss << ",\n" << whitespaced_prefix << " " << keys_[ii] << ": " << dict_.at(keys_[ii]);
-  }
-  ss << "}";
-  return ss.str();
-}
-
-template <class ValueType>
-void SimpleDict<ValueType>::update_keys()
-{
-  keys_ = std::vector<std::string>(dict_.size());
-  size_t ii = 0;
-  for (const auto& key_value_pair : dict_) {
-    keys_[ii] = key_value_pair.first;
-    ++ii;
-  }
-  std::sort(keys_.begin(), keys_.end());
-}
 
 
 template class SimpleDict<size_t>;
@@ -169,6 +70,20 @@ ParameterType::ParameterType(const std::vector<std::pair<std::string, size_t>>& 
 {
 }
 
+ParameterType::ParameterType(BaseType&& source)
+  : BaseType(std::move(source))
+{
+}
+
+ParameterType ParameterType::operator+(const ParameterType& other) const
+{
+  return this->merge(other,
+                     [](const auto& left, const auto& right) { return left == right; },
+                     [](const auto& /*left*/, const auto& /*right*/) {
+                       return "cannot add parameter types which contain the same key with different sizes:";
+                     });
+} // ... operator+(...)
+
 bool ParameterType::operator==(const ParameterType& other) const
 {
   if (this->size() == 1 && other.size() == 1) {
@@ -194,12 +109,11 @@ bool ParameterType::operator<(const ParameterType& other) const
 {
   if (this->dict_.size() >= other.dict_.size())
     return false;
-  const auto other_end = other.dict_.end();
   for (const auto& this_element : this->dict_) {
     const auto& this_key = this_element.first;
     const auto& this_keys_lenght = this_element.second;
     const auto other_key_search_result = other.dict_.find(this_key);
-    if (other_key_search_result == other_end)
+    if (other_key_search_result == other.dict_.end())
       return false;
     const auto& other_key_lenght = other_key_search_result->second;
     if (other_key_lenght != this_keys_lenght)
@@ -257,6 +171,32 @@ Parameter::Parameter(const std::vector<std::pair<std::string, ValueType>>& key_v
   : BaseType(key_value_pairs)
 {
 }
+
+Parameter::Parameter(const std::initializer_list<std::pair<std::string, ValueType>>& key_value_pairs)
+  : BaseType(key_value_pairs)
+{
+}
+
+Parameter::Parameter(BaseType&& source)
+  : BaseType(std::move(source))
+{
+}
+
+Parameter Parameter::operator+(const Parameter& other) const
+{
+  return this->merge(other,
+                     [](const auto& left, const auto& right) {
+                       if (left.size() != right.size())
+                         return false;
+                       return FloatCmp::eq(left, right);
+                     },
+                     [](const auto& left, const auto& right) {
+                       if (left.size() != right.size())
+                         return "cannot add parameters which contain the same key with different sizes:";
+                       else
+                         return "cannot add parameters which contain the same key with different values:";
+                     });
+} // ... operator+(...)
 
 bool Parameter::operator<(const Parameter& other) const
 {

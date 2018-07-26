@@ -240,10 +240,10 @@ DUNE_EXPORT TimedLogging& TimedLogger();
  *
  *        Simply derive from this class
 \code
-class Foo : EnableDebugLoggingForCtors<>
+class Foo : EnableDebugLoggingForCtors<Foo>
 {
 public:
-  Foo() : EnableDebugLoggingForCtors<>("dune.xt.foo", "Foo") {}
+  Foo() : EnableDebugLoggingForCtors<Foo>("dune.xt.foo", "Foo") {}
 };
 \endcode
  *        and provide the prefix (for the logger) as well as the class name. Using your class, i.e. as in
