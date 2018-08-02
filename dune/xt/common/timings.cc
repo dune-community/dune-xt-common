@@ -84,7 +84,7 @@ void Timings::reset(std::string section_name)
 {
   try {
     stop(section_name);
-  } catch (Dune::RangeError) {
+  } catch (Dune::RangeError&) {
     // ok, timer simply wasn't running
   }
   commited_deltas_[section_name] = {{0, 0, 0}};
