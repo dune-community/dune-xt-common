@@ -149,7 +149,7 @@ void Timings::stop()
   for (auto&& section : known_timers_map_) {
     try {
       stop(section.first);
-    } catch (Dune::RangeError) {
+    } catch (Dune::RangeError&) {
     }
   }
 } // GetTiming
