@@ -24,5 +24,4 @@ install(FILES AddALUGridCompileFlags.cmake
               GridUtils.cmake
               XtCompilerSupport.cmake
               XtTooling.cmake
-              DESTINATION
-              ${DUNE_INSTALL_MODULEDIR})
+        DESTINATION ${DUNE_INSTALL_MODULEDIR})
