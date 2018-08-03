@@ -8,7 +8,7 @@
 #
 # DO NOT INCLUDE DuneUtils.cmake in this file
 # ~~~
-
+message(WARNING "This code has migrated to dune-pybindxi and will be removed soon")
 # copy from dune-python with adjusted install path and such
 function(dune_xt_execute_process)
   include(CMakeParseArguments)
