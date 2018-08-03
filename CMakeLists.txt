@@ -68,9 +68,7 @@ dune_xt_install_python_package(PATH python)
 include_dependent_binary_python_dirs()
 # do not change order here
 include(DuneUtils)
-if(dune-pybindxi_FOUND)
-  add_subdirectory(python)
-endif()
+add_subdirectory(python)
 
 include(GridUtils)
 
