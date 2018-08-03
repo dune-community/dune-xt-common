@@ -26,6 +26,7 @@
 #include <python/dune/xt/common/fvector.hh>
 #include <python/dune/xt/common/fmatrix.hh>
 #include <python/dune/xt/common/configuration.hh>
+#include <dune/xt/common/parallel/mpi_comm_wrapper.hh>
 #include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/numeric_cast.hh>
 #include <dune/xt/common/string.hh>
@@ -37,6 +38,33 @@
 #include <dune/pybindxi/stl.h>
 #include <dune/xt/common/numeric_cast.hh>
 #include <dune/xt/common/timedlogging.hh>
+
+
+void addbind_mpistuff(pybind11::module& m)
+{
+  namespace py = pybind11;
+  using pybind11::operator""_a;
+  py::class_<Dune::XT::Common::MPI_Comm_Wrapper> wrap(m, "MPI_Comm_Wrapper", "MPI_Comm_Wrapper");
+  wrap.def(py::init([](Dune::XT::Common::MPI_Comm_Wrapper comm) {
+             return std::make_unique<Dune::XT::Common::MPI_Comm_Wrapper>(comm);
+           }),
+           "comm"_a = Dune::XT::Common::MPI_Comm_Wrapper());
+
+  typedef Dune::CollectiveCommunication<Dune::MPIHelper::MPICommunicator> Comm;
+  py::class_<Comm> cls(m, "CollectiveCommunication", "CollectiveCommunication");
+  cls.def(py::init([](Dune::XT::Common::MPI_Comm_Wrapper comm = Dune::XT::Common::MPI_Comm_Wrapper()) {
+    return std::make_unique<Comm>(comm.get());
+  }));
+
+  cls.def_property_readonly("rank", &Comm::rank);
+  cls.def_property_readonly("size", &Comm::size);
+
+  cls.def("barrier", &Comm::barrier);
+
+  cls.def("min", [](const Comm& self, double x) { return self.min(x); }, "x"_a);
+  cls.def("max", [](const Comm& self, double x) { return self.max(x); }, "x"_a);
+  cls.def("sum", [](const Comm& self, double x) { return self.sum(x); }, "x"_a);
+}
 
 void addbind_exceptions(pybind11::module& m)
 {
@@ -70,6 +98,7 @@ PYBIND11_MODULE(_common, m)
   using namespace pybind11::literals;
 
   addbind_exceptions(m);
+  addbind_mpistuff(m);
 
   Dune::XT::Common::bindings::add_initialization(m, "dune.xt.common");
 

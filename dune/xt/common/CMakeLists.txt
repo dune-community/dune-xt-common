@@ -28,6 +28,7 @@ set(lib_dune_xt_common_sources
     misc.cc
     parallel/helper.cc
     parallel/threadmanager.cc
+    parallel/mpi_comm_wrapper.cc
     parameter.cc
     python.cc
     signals.cc

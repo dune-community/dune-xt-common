@@ -42,3 +42,16 @@ def test_timings():
     timings.start("foo.bar")
     timings.stop()
     timings.output_simple()
+
+def test_mpi_wrapper():
+    try:
+        from mpi4py import MPI
+    except ImportError:
+        pytest.skip('optional mpi4py is missing')
+        return
+
+    comm = MPI.COMM_WORLD
+    from dune.xt.common import MPI_Comm_Wrapper
+    # default with implicit comm world
+    wrap = MPI_Comm_Wrapper()
+    wrap = MPI_Comm_Wrapper(comm)
