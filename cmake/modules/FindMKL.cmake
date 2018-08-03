@@ -48,7 +48,7 @@ else("${MKL_LP64_LIBRARY}" MATCHES "MKL_LP64_LIBRARY-NOTFOUND")
 endif("${MKL_LIBRARY}" MATCHES "MKL_LP64_LIBRARY-NOTFOUND")
 
 message("-- checking for mkl.h header")
-#message(FATAL_ERROR ${mkl_include_hints})
+# message(FATAL_ERROR ${mkl_include_hints})
 find_path(MKL_INCLUDE_DIRS mkl.h HINTS ${mkl_include_hints})
 if("${MKL_INCLUDE_DIRS}" MATCHES "MKL_INCLUDE_DIRS-NOTFOUND")
   message("--   mkl.h header not found")

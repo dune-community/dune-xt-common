@@ -13,7 +13,7 @@ status = 1a3bcab04b011a5d6e44f9983cae6ff89fa695e8 bin (heads/master)
 	 4ea0386ae4f8bcf1557f7f29bb64d1f289a95f21 dune-pybindxi (v2.2.1-14-g4ea0386)
 	 741e4f8e53bdd3e1b6e19d84eb22b6e3dc48526c dune-python (remotes/origin/releases/2.5)
 	 26cc8cb4161a3a51002ab2a81b8c81d2c951ee79 dune-testtools (heads/dune_xt)
-	+f751691183213959dd6b7c6cf8086ba635dc890c dune-xt-common (heads/py_mpi)
+	+eba0fa9bb4fb56ad01a9066c11ba3f5255c890ac dune-xt-common (heads/py_mpi)
 	 17b4d7e9e16feada2b5409f7af5ac2d304b27df0 dune-xt-functions (heads/master)
 	+cd99aab8f1c0033b1c2250f1b45c75fcb02c1131 dune-xt-grid (heads/mpi_factory)
 	 4bad9ce8823aacf0b9de3295ad17039a02833844 dune-xt-la (heads/master)
@@ -90,7 +90,7 @@ commit = 26cc8cb4161a3a51002ab2a81b8c81d2c951ee79
 [submodule.dune-xt-common]
 remote = https://github.com/dune-community/dune-xt-common.git
 status = 2424627f0ad5de7e4aaa5e7f48bc2a02414d95a1 .vcsetup (heads/master)
-commit = f751691183213959dd6b7c6cf8086ba635dc890c
+commit = eba0fa9bb4fb56ad01a9066c11ba3f5255c890ac
 
 [submodule.dune-xt-functions]
 remote = https://github.com/dune-community/dune-xt-functions.git

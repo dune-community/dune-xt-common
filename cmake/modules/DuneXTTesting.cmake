@@ -143,7 +143,8 @@ macro(BEGIN_TESTCASES) # https://cmake.org/cmake/help/v3.0/module/FindGTest.html
                             "${CMAKE_CURRENT_BINARY_DIR}"
                             "${out_fn}"
                             "${last_dep_bindir}"
-                            OUTPUT_VARIABLE codegen_output)
+                            OUTPUT_VARIABLE
+                            codegen_output)
     file(WRITE "codegen.${out_fn}.log" ${codegen_output})
     file(GLOB generated_sources "${out_fn}.*")
     if("" STREQUAL "${generated_sources}")
