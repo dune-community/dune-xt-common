@@ -35,6 +35,7 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
+
 // forward, std::string variant needed in internal::convert_from_string
 
 /**
@@ -51,6 +52,7 @@ tokenize(const std::string& msg,
          const std::string& separators,
          const boost::algorithm::token_compress_mode_type mode = boost::algorithm::token_compress_off);
 
+
 } // namespace Common
 } // namespace XT
 } // namespace Dune
@@ -61,7 +63,9 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
+
 static constexpr const std::size_t default_to_string_precision = 6u;
+
 
 /**
  * \brief Reads an object from a string.
@@ -77,6 +81,7 @@ static inline T from_string(std::string ss, const size_t size = 0, const size_t 
 {
   return internal::convert_from_string<T>(ss, size, cols);
 }
+
 
 /**
  * \brief Converts an object to string.
@@ -131,6 +136,7 @@ std::string whitespaceify(const T& t, const char whitespace = ' ')
   return ret;
 } // ... whitespaceify(...)
 
+
 template <class T>
 inline std::vector<T>
 tokenize(const std::string& msg, const std::string& separators, const boost::algorithm::token_compress_mode_type mode)
@@ -145,6 +151,7 @@ tokenize(const std::string& msg, const std::string& separators, const boost::alg
   return ret;
 } // ... tokenize(...)
 
+
 template <>
 inline std::vector<std::string>
 tokenize(const std::string& msg, const std::string& separators, const boost::algorithm::token_compress_mode_type mode)
@@ -154,11 +161,13 @@ tokenize(const std::string& msg, const std::string& separators, const boost::alg
   return strings;
 }
 
+
 //! returns string with local time in current locale's format
 inline std::string stringFromTime(time_t cur_time = time(NULL))
 {
   return ctime(&cur_time);
 }
+
 
 //! helper struct for lexical cast
 // see http://stackoverflow.com/a/2079728
@@ -178,6 +187,7 @@ struct HexToString
   }
 };
 
+
 static inline char** vector_to_main_args(const std::vector<std::string>& args)
 {
   char** argv = new char*[args.size()];
@@ -187,6 +197,7 @@ static inline char** vector_to_main_args(const std::vector<std::string>& args)
   }
   return argv;
 } // ... vector_to_main_args(...)
+
 
 } // namespace Common
 } // namespace XT
