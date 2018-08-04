@@ -71,10 +71,12 @@ std::string print_vector(const std::vector<double>& vec)
 
 } // namespace internal
 
-void check_eoc_study_for_success(const Common::ConvergenceStudy& study,
-                                 const std::map<std::string, std::vector<double>>& results_map,
-                                 const double& zero_tolerance)
+void check_eoc_study_for_success(const Common::ConvergenceStudy& /*study*/,
+                                 const std::map<std::string, std::vector<double>>& /*results_map*/,
+                                 const double& /*zero_tolerance*/)
 {
+  DUNE_THROW(NotImplemented, "This has to be migrated to match the new ConvergenceStudy!");
+#if 0
   for (const auto& norm : study.used_norms()) {
     const auto expected_results = study.expected_results(norm);
     const auto results_search = results_map.find(norm);
@@ -116,6 +118,7 @@ void check_eoc_study_for_success(const Common::ConvergenceStudy& study,
       }
     }
   }
+#endif // 0
 } // ... check_eoc_study_for_success(...)
 
 void print_collected_eoc_study_results(const std::map<std::string, std::vector<double>>& results, std::ostream& out)
