@@ -230,7 +230,8 @@ void Configuration::read_command_line(int argc, char* argv[])
     boost::format usage("usage: %s parameter.file *[-section.key override-value]");
     DUNE_THROW(Dune::Exception, (usage % argv[0]).str());
   }
-  Dune::ParameterTreeParser::readINITree(argv[1], *this);
+  if (boost::filesystem::exists(argv[1]))
+    Dune::ParameterTreeParser::readINITree(argv[1], *this);
   Dune::ParameterTreeParser::readOptions(argc, argv, *this);
   // datadir and logdir may be given from the command line...
   setup_();
