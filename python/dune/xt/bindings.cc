@@ -44,17 +44,10 @@ void addbind_mpistuff(pybind11::module& m)
 {
   namespace py = pybind11;
   using pybind11::operator""_a;
-  py::class_<Dune::XT::Common::MPI_Comm_Wrapper> wrap(m, "MPI_Comm_Wrapper", "MPI_Comm_Wrapper");
-  wrap.def(py::init([](Dune::XT::Common::MPI_Comm_Wrapper comm) {
-             return std::make_unique<Dune::XT::Common::MPI_Comm_Wrapper>(comm);
-           }),
-           "comm"_a = Dune::XT::Common::MPI_Comm_Wrapper());
-
   typedef Dune::CollectiveCommunication<Dune::MPIHelper::MPICommunicator> Comm;
   py::class_<Comm> cls(m, "CollectiveCommunication", "CollectiveCommunication");
-  cls.def(py::init([](Dune::XT::Common::MPI_Comm_Wrapper comm = Dune::XT::Common::MPI_Comm_Wrapper()) {
-    return std::make_unique<Comm>(comm.get());
-  }));
+  cls.def(py::init([](Dune::XT::Common::MPI_Comm_Wrapper comm) { return std::make_unique<Comm>(comm.get()); }),
+          "comm"_a = Dune::XT::Common::MPI_Comm_Wrapper());
 
   cls.def_property_readonly("rank", &Comm::rank);
   cls.def_property_readonly("size", &Comm::size);
