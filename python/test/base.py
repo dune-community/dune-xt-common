@@ -43,6 +43,7 @@ def test_timings():
     timings.stop()
     timings.output_simple()
 
+
 def test_mpi_wrapper():
     try:
         from mpi4py import MPI
@@ -50,8 +51,11 @@ def test_mpi_wrapper():
         pytest.skip('optional mpi4py is missing')
         return
 
-    comm = MPI.COMM_WORLD
-    from dune.xt.common import MPI_Comm_Wrapper
-    # default with implicit comm world
-    wrap = MPI_Comm_Wrapper()
-    wrap = MPI_Comm_Wrapper(comm)
+    mpi_comm = MPI.COMM_WORLD
+    from dune.xt.common import CollectiveCommunication
+    comm_def = CollectiveCommunication()
+    comm = CollectiveCommunication(mpi_comm)
+    assert type(comm) is type(comm_def)
+    assert comm.size > 0
+    assert comm.rank < comm.size
+    assert comm.sum(1) == comm.size
