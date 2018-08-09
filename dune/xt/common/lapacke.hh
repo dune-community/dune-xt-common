@@ -156,6 +156,23 @@ int dgeqp3(int matrix_layout, int m, int n, double* a, int lda, int* jpvt, doubl
  */
 int dgeqp3_work(int matrix_layout, int m, int n, double* a, int lda, int* jpvt, double* tau, double* work, int lwork);
 
+/**
+ * \brief Wrapper around LAPACKE_dgesvd
+ * \sa    LAPACKE_dgesvd
+ */
+int dgesvd(int matrix_layout,
+           char jobu,
+           char jobvt,
+           int m,
+           int n,
+           double* a,
+           int lda,
+           double* s,
+           double* u,
+           int ldu,
+           double* vt,
+           int ldvt,
+           double* superb);
 
 /**
  * \brief Wrapper around LAPACKE_dorgqr
