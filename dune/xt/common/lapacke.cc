@@ -281,6 +281,27 @@ int dgeqp3_work(int DXTC_LAPACKE_ONLY(matrix_layout),
 #endif
 }
 
+int dgesvd(int DXTC_LAPACKE_ONLY(matrix_layout),
+           char DXTC_LAPACKE_ONLY(jobu),
+           char DXTC_LAPACKE_ONLY(jobvt),
+           int DXTC_LAPACKE_ONLY(m),
+           int DXTC_LAPACKE_ONLY(n),
+           double* DXTC_LAPACKE_ONLY(a),
+           int DXTC_LAPACKE_ONLY(lda),
+           double* DXTC_LAPACKE_ONLY(s),
+           double* DXTC_LAPACKE_ONLY(u),
+           int DXTC_LAPACKE_ONLY(ldu),
+           double* DXTC_LAPACKE_ONLY(vt),
+           int DXTC_LAPACKE_ONLY(ldvt),
+           double* DXTC_LAPACKE_ONLY(superb))
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_dgesvd(matrix_layout, jobu, jobvt, m, n, a, lda, s, u, ldu, vt, ldvt, superb);
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
 
 int dorgqr(int DXTC_LAPACKE_ONLY(matrix_layout),
            int DXTC_LAPACKE_ONLY(m),
