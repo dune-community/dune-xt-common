@@ -53,15 +53,15 @@ endif()
 include(DuneTBB)
 
 if(HAVE_MPI)
-    include(FindMPI4PY)
-    if(MPI4PY_FOUND)
-        # this only works in dependent modules
-        dune_register_package_flags(INCLUDE_DIRS "${MPI4PY_INCLUDE_DIR}")
-        # this only works in dune-xt-common itself
-        include_directories("${MPI4PY_INCLUDE_DIR}")
-    else()
-        message(FATAL_ERROR "MPI enabled builds need mpi4py too")
-    endif()
+  include(FindMPI4PY)
+  if(MPI4PY_FOUND)
+    # this only works in dependent modules
+    dune_register_package_flags(INCLUDE_DIRS "${MPI4PY_INCLUDE_DIR}")
+    # this only works in dune-xt-common itself
+    include_directories("${MPI4PY_INCLUDE_DIR}")
+  else()
+    message(FATAL_ERROR "MPI enabled builds need mpi4py too")
+  endif()
 endif()
 # end library checks  #####################################################################
 
