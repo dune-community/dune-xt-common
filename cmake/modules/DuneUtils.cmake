@@ -50,9 +50,7 @@ else(MKL_FOUND)
   find_package(LAPACKE)
   find_package(CBLAS)
 endif(MKL_FOUND)
-find_package(MatExp)
 find_package(Fekete)
-find_package(LebedevData)
 
 include(DuneXTTesting)
 
