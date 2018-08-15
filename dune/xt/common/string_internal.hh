@@ -114,7 +114,12 @@ struct Helper<bool, anything>
   {                                                                                                                    \
     static inline tn convert_from_string(std::string ss)                                                               \
     {                                                                                                                  \
-      return std::sto##tns(ss);                                                                                        \
+      try {                                                                                                            \
+        return std::sto##tns(ss);                                                                                      \
+      } catch (const std::exception& ee) {                                                                             \
+        DUNE_THROW(Exceptions::conversion_error,                                                                       \
+                   "in stl when converting '" << ss << "' to '" << Typename<tn>::value() << "': " << ee.what());       \
+      }                                                                                                                \
     }                                                                                                                  \
   };
 
