@@ -58,7 +58,8 @@ public:
   }
 
   // C++ to Python
-  static handle cast(Dune::XT::Common::MPI_Comm_Wrapper src, pybind11::return_value_policy policy, handle parent)
+  static handle
+  cast(Dune::XT::Common::MPI_Comm_Wrapper src, pybind11::return_value_policy /*policy*/, handle /*parent*/)
   {
     import_mpi4py();
     return pybind11::handle(PyMPIComm_New(src.get()));
