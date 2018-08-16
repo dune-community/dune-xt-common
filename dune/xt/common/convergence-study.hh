@@ -109,6 +109,9 @@ protected:
   std::vector<std::string> filter(const std::vector<std::string>& vec,
                                   const std::vector<std::string>& only_these) const;
 
+  std::vector<std::pair<std::string, std::string>> filter(const std::vector<std::pair<std::string, std::string>>& vec,
+                                                          const std::vector<std::string>& only_these) const;
+
   std::string lfill(const std::string& id, const size_t len) const;
 
   std::string cfill(const std::string& id, const size_t len) const;

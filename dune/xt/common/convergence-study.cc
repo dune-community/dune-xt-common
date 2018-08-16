@@ -44,6 +44,24 @@ std::vector<std::string> ConvergenceStudy::filter(const std::vector<std::string>
   }
 } // ... filter(...)
 
+std::vector<std::pair<std::string, std::string>>
+ConvergenceStudy::filter(const std::vector<std::pair<std::string, std::string>>& vec,
+                         const std::vector<std::string>& only_these) const
+{
+  if (only_these.empty())
+    return vec;
+  else {
+    std::vector<std::pair<std::string, std::string>> ret;
+    for (const auto& element : vec) {
+      const auto& key = element.first;
+      const auto& value = element.second;
+      if (std::find(only_these.begin(), only_these.end(), key) != only_these.end())
+        ret.emplace_back(std::make_pair(key, value));
+    }
+    return ret;
+  }
+} // ... filter(...)
+
 std::string ConvergenceStudy::lfill(const std::string& id, const size_t len) const
 {
   if (id.size() == len)
