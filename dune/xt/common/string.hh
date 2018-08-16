@@ -20,10 +20,10 @@
 #define DUNE_XT_COMMON_STRING_HH
 
 #include <algorithm>
-#include <vector>
-#include <string>
 #include <ctime>
 #include <iostream>
+#include <string>
+#include <vector>
 
 #include <dune/xt/common/disable_warnings.hh>
 #include <boost/algorithm/string/constants.hpp>
@@ -153,6 +153,12 @@ tokenize(const std::string& msg, const std::string& separators, const boost::alg
   boost::algorithm::split(strings, msg, boost::algorithm::is_any_of(separators), mode);
   return strings;
 }
+
+/**
+  \brief Removes whitespace from front and back of each string in the vector.
+  \param[in]  v Vector of strings to be trimmed
+**/
+void trim(std::vector<std::string>& v);
 
 //! returns string with local time in current locale's format
 inline std::string stringFromTime(time_t cur_time = time(NULL))

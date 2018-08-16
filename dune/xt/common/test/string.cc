@@ -160,6 +160,14 @@ GTEST_TEST(StringTest, Whitespace)
   EXPECT_EQ("---------", whitespaceify("\t\t\t\t\t\t\t\t\t", '-'));
 }
 
+GTEST_TEST(StringTest, Trim)
+{
+  std::vector<std::string> v{"  ---- ", "----  ", "\t----"};
+  trim(v);
+  for (const auto& str : v)
+    EXPECT_EQ(str, "----");
+}
+
 GTEST_TEST(StringTest, Tokenizer)
 {
   const string seps(" \t;");
