@@ -201,7 +201,8 @@ inline void FieldMatrix<K, ROWS, COLS>::luDecomposition(FieldMatrix<K, ROWS, COL
     if (imax != i) {
       for (size_type j = 0; j < ROWS; j++)
         std::swap(A[i][j], A[imax][j]);
-      func.swap(i, imax); // swap the pivot or rhs
+      assert(imax < std::numeric_limits<int>::max() && i < std::numeric_limits<int>::max());
+      func.swap(static_cast<int>(i), static_cast<int>(imax)); // swap the pivot or rhs
     }
 
     // singular ?
@@ -214,7 +215,8 @@ inline void FieldMatrix<K, ROWS, COLS>::luDecomposition(FieldMatrix<K, ROWS, COL
       A[k][i] = factor;
       for (size_type j = i + 1; j < ROWS; j++)
         A[k][j] -= factor * A[i][j];
-      func(factor, k, i);
+      assert(k < std::numeric_limits<int>::max() && i < std::numeric_limits<int>::max());
+      func(factor, static_cast<int>(k), static_cast<int>(i));
     }
   }
 }
@@ -368,6 +370,143 @@ public:
     return ret;
   }
 }; // class FieldMatrix
+
+
+template <class K, size_t num_blocks, size_t block_rows, size_t block_cols = block_rows>
+class BlockedFieldMatrix
+{
+  using ThisType = BlockedFieldMatrix;
+
+public:
+  static constexpr size_t num_rows = num_blocks * block_rows;
+  static constexpr size_t num_cols = num_blocks * block_cols;
+  using MatrixType = Dune::FieldMatrix<K, num_rows, num_cols>;
+  using BlockType = FieldMatrix<K, block_rows, block_cols>;
+
+  BlockedFieldMatrix(const K& val = K(0.))
+    : backend_(BlockType(val))
+  {
+  }
+
+  BlockedFieldMatrix(const MatrixType& other)
+  {
+    *this = other;
+  }
+
+  BlockedFieldMatrix(const BlockType& block)
+    : backend_(block)
+  {
+  }
+
+  ThisType& operator=(const MatrixType& other)
+  {
+    for (size_t jj = 0; jj < num_blocks; ++jj)
+      for (size_t ll = 0; ll < block_rows; ++ll)
+        for (size_t mm = 0; mm < block_cols; ++mm)
+          backend_[jj][ll][mm] = other[jj * block_rows + ll][jj * block_cols + mm];
+    return *this;
+  }
+
+  bool operator==(const ThisType& other) const
+  {
+    for (size_t jj = 0; jj < num_blocks; ++jj)
+      if (block(jj) != other.block(jj))
+        return false;
+    return true;
+  }
+
+  K get_entry(const size_t ii, const size_t jj) const
+  {
+    assert(ii < num_rows && jj < num_cols);
+    if (ii / block_rows != jj / block_cols)
+      return K(0.);
+    return backend_[ii / block_rows][ii % block_rows][jj % block_cols];
+  }
+
+  K& get_entry(const size_t jj, const size_t ll, const size_t mm)
+  {
+    assert(jj < num_blocks && ll < block_rows && mm < block_cols);
+    return backend_[jj][ll][mm];
+  }
+
+  const K& get_entry(const size_t jj, const size_t ll, const size_t mm) const
+  {
+    assert(jj < num_blocks && ll < block_rows && mm < block_cols);
+    return backend_[jj][ll][mm];
+  }
+
+  BlockType& block(const size_t jj)
+  {
+    assert(jj < num_blocks);
+    return backend_[jj];
+  }
+
+  const BlockType& block(const size_t jj) const
+  {
+    assert(jj < num_blocks);
+    return backend_[jj];
+  }
+
+  void mv(const Dune::FieldVector<K, num_cols>& x, Dune::FieldVector<K, num_rows>& ret) const
+  {
+    std::fill(ret.begin(), ret.end(), 0.);
+    for (size_t jj = 0; jj < num_blocks; ++jj) {
+      const auto row_offset = block_rows * jj;
+      const auto col_offset = block_cols * jj;
+      for (size_t ll = 0; ll < block_rows; ++ll)
+        for (size_t mm = 0; mm < block_cols; ++mm)
+          ret[row_offset + ll] += backend_[jj][ll][mm] * x[col_offset + mm];
+    } // jj
+  } // void mv(...)
+
+  void mv(const BlockedFieldVector<K, num_blocks, block_cols>& x,
+          BlockedFieldVector<K, num_blocks, block_rows>& ret) const
+  {
+    for (size_t jj = 0; jj < num_blocks; ++jj)
+      backend_[jj].mv(x.block(jj), ret.block(jj));
+  } // void mv(...)
+
+  void mtv(const Dune::FieldVector<K, num_rows>& x, Dune::FieldVector<K, num_cols>& ret) const
+  {
+    std::fill(ret.begin(), ret.end(), 0.);
+    for (size_t jj = 0; jj < num_blocks; ++jj) {
+      const auto row_offset = block_rows * jj;
+      const auto col_offset = block_cols * jj;
+      for (size_t mm = 0; mm < block_cols; ++mm)
+        for (size_t ll = 0; ll < block_rows; ++ll)
+          ret[col_offset + mm] += backend_[jj][ll][mm] * x[row_offset + ll];
+    } // jj
+  } // void mtv(...)
+
+  void mtv(const BlockedFieldVector<K, num_blocks, block_rows>& x,
+           BlockedFieldVector<K, num_blocks, block_cols>& ret) const
+  {
+    for (size_t jj = 0; jj < num_blocks; ++jj)
+      backend_[jj].mtv(x.block(jj), ret.block(jj));
+  } // void mv(...)
+
+  template <size_t br, size_t bc>
+  ThisType& rightmultiply(const BlockedFieldMatrix<K, num_blocks, br, bc>& other)
+  {
+    assert((this != &other) && "Multiplying a matrix by itself gives wrong results, please copy before!");
+    static_assert(br == bc, "Cannot rightmultiply with non-square matrix");
+    static_assert(br == block_cols, "Size mismatch");
+    for (size_t jj = 0; jj < num_blocks; ++jj)
+      backend_[jj].rightmultiply(other.backend_[jj]);
+    return *this;
+  }
+
+  BlockedFieldMatrix<K, num_blocks, block_cols, block_rows> transpose()
+  {
+    BlockedFieldMatrix<K, num_blocks, block_cols, block_rows> ret;
+    for (size_t jj = 0; jj < num_blocks; ++jj)
+      ret.block(jj) = block(jj).transpose();
+    return ret;
+  }
+
+private:
+  FieldVector<BlockType, num_blocks> backend_;
+};
 
 
 template <class K, int N, int M>
