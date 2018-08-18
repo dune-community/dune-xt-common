@@ -13,10 +13,11 @@
 #ifndef DUNE_XT_COMMON_FVECTOR_HH
 #define DUNE_XT_COMMON_FVECTOR_HH
 
+#include <functional>
 #include <initializer_list>
+#include <numeric>
 #include <type_traits>
 #include <vector>
-#include <functional>
 
 #include <boost/functional/hash.hpp>
 
@@ -116,7 +117,7 @@ public:
     return ret;
   }
 
-  template <int S>
+  template <int S = SIZE>
   operator typename std::enable_if<(S == SIZE) && (SIZE != 1), Dune::FieldMatrix<K, S, 1>>::type() const
   {
     Dune::FieldMatrix<K, SIZE, 1> ret;
@@ -166,6 +167,196 @@ public:
     return ret;
   }
 }; // class FieldVector
+
+
+template <class K, size_t block_num, size_t size_block>
+class BlockedFieldVector
+{
+  using ThisType = BlockedFieldVector;
+
+public:
+  static constexpr size_t num_blocks = block_num;
+  static constexpr size_t block_size = size_block;
+  static constexpr size_t static_size = num_blocks * block_size;
+  using VectorType = Dune::FieldVector<K, static_size>;
+  using BlockType = FieldVector<K, block_size>;
+
+  BlockedFieldVector(const K& val = K(0.))
+    : backend_(BlockType(val))
+  {
+  }
+
+  BlockedFieldVector(const VectorType& other)
+  {
+    *this = other;
+  }
+
+  BlockedFieldVector(const BlockType& block)
+    : backend_(block)
+  {
+  }
+
+  ThisType& operator=(const VectorType& other)
+  {
+    for (size_t jj = 0; jj < num_blocks; ++jj)
+      for (size_t ii = 0; ii < block_size; ++ii)
+        backend_[jj][ii] = other[jj * block_size + ii];
+    return *this;
+  }
+
+  size_t size() const
+  {
+    return static_size;
+  }
+
+  K& operator[](const size_t ii)
+  {
+    assert(ii < static_size);
+    return backend_[ii / block_size][ii % block_size];
+  }
+
+  const K& operator[](const size_t ii) const
+  {
+    assert(ii < static_size);
+    return backend_[ii / block_size][ii % block_size];
+  }
+
+  K& get_entry(const size_t jj, const size_t ii)
+  {
+    assert(jj < num_blocks);
+    assert(ii < block_size);
+    return backend_[jj][ii];
+  }
+
+  const K& get_entry(const size_t jj, const size_t ii) const
+  {
+    assert(jj < num_blocks);
+    assert(ii < block_size);
+    return backend_[jj][ii];
+  }
+
+  BlockType& block(const size_t jj)
+  {
+    assert(jj < num_blocks);
+    return backend_[jj];
+  }
+
+  const BlockType& block(const size_t jj) const
+  {
+    assert(jj < num_blocks);
+    return backend_[jj];
+  }
+
+  K one_norm() const
+  {
+    K ret(0);
+    for (const auto& block_vec : backend_)
+      for (const auto& entry : block_vec)
+        ret += std::abs(entry);
+    return ret;
+  }
+
+  K two_norm() const
+  {
+    return std::sqrt(two_norm2());
+  }
+
+  K two_norm2() const
+  {
+    K ret(0);
+    for (const auto& block_vec : backend_)
+      for (const auto& entry : block_vec)
+        ret += std::pow(entry, 2);
+    return ret;
+  }
+
+  operator VectorType() const
+  {
+    VectorType ret(0.);
+    for (size_t jj = 0; jj < num_blocks; ++jj)
+      for (size_t ii = 0; ii < block_size; ++ii)
+        ret[jj * block_size + ii] = backend_[jj][ii];
+    return ret;
+  }
+
+  K* data()
+  {
+    return &(backend_[0][0]);
+  }
+
+  const K* data() const
+  {
+    return &(backend_[0][0]);
+  }
+
+  K* begin()
+  {
+    return data();
+  }
+
+  const K* begin() const
+  {
+    return data();
+  }
+
+  K* end()
+  {
+    return &(backend_[num_blocks - 1][block_size]);
+  }
+
+  const K* end() const
+  {
+    return &(backend_[num_blocks - 1][block_size]);
+  }
+
+  ThisType& operator*=(const K& val)
+  {
+    for (size_t jj = 0; jj < num_blocks; ++jj)
+      backend_[jj] *= val;
+    return *this;
+  }
+
+  ThisType operator*(const K& val) const
+  {
+    auto ret = *this;
+    ret *= val;
+    return ret;
+  }
+
+  K operator*(const ThisType& other) const
+  {
+    return std::inner_product(begin(), end(), other.begin(), 0.);
+  }
+
+  ThisType& operator+=(const ThisType& other)
+  {
+    backend_ += other.backend_;
+    return *this;
+  }
+
+  ThisType operator+(const ThisType& other) const
+  {
+    auto ret = *this;
+    ret += other;
+    return ret;
+  }
+
+  ThisType& operator-=(const ThisType& other)
+  {
+    backend_ -= other.backend_;
+    return *this;
+  }
+
+  ThisType operator-(const ThisType& other) const
+  {
+    auto ret = *this;
+    ret -= other;
+    return ret;
+  }
+
+private:
+  FieldVector<BlockType, num_blocks> backend_;
+};
 
 
 //! this allows to set the init value of the FieldVector at compile time
@@ -224,6 +415,34 @@ struct VectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>>
                                                                     << sz
                                                                     << " elements!");
     return VectorTypeTemplate<SZ>(val);
+  }
+};
+
+
+//! Specialization of VectorAbstraction for Dune::XT::Common::BlockedFieldVector
+template <class K, size_t num_blocks, size_t block_size>
+struct VectorAbstraction<Dune::XT::Common::BlockedFieldVector<K, num_blocks, block_size>>
+    : public internal::VectorAbstractionBase<Dune::XT::Common::BlockedFieldVector<K, num_blocks, block_size>, K>,
+      public internal::
+          HasSubscriptOperatorForVectorAbstraction<Dune::XT::Common::BlockedFieldVector<K, num_blocks, block_size>,
+                                                   typename Dune::FieldTraits<K>::field_type>
+{
+  using VectorType = Dune::XT::Common::BlockedFieldVector<K, num_blocks, block_size>;
+  static constexpr bool has_static_size = true;
+  static constexpr size_t static_size = VectorType::static_size;
+  static constexpr bool is_contiguous = true;
+
+  template <size_t SZ = static_size>
+  static inline VectorType create(const size_t sz, const K& val = suitable_default<K>::value())
+  {
+    static_assert(SZ == static_size, "Creation of Vector with different size not implemented!");
+    if (sz != SZ)
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "You are trying to construct a FieldVector< ..., " << SZ << " > (of "
+                                                                    << "static size) with "
+                                                                    << sz
+                                                                    << " elements!");
+    return VectorType(val);
   }
 };
 
