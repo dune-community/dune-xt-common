@@ -41,7 +41,6 @@ enable_testing()
 
 find_package(Clp)
 find_package(Qhull)
-find_package(LPSolve)
 find_package(MKL)
 if(MKL_FOUND)
   set(HAVE_LAPACKE 0)
