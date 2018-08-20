@@ -22,7 +22,6 @@ set(lib_dune_xt_common_sources
     localization-study.cc
     logging.cc
     logstreams.cc
-    lpsolve.cc
     math.cc
     memory.cc
     misc.cc
