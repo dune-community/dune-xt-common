@@ -343,14 +343,9 @@ convert_to(const SourceType& source)
 } // ... convert_to(...)
 
 
-} // namespace Common
-} // namespace XT
-} // namespace Dune
-
-
 template <class V, class CharType, class CharTraits>
-typename std::enable_if<Dune::XT::Common::is_vector<V>::value && !Dune::XT::Common::VectorAbstraction<V>::has_ostream,
-                        std::basic_ostream<CharType, CharTraits>&>::type
+std::enable_if_t<Dune::XT::Common::is_vector<V>::value && !Dune::XT::Common::VectorAbstraction<V>::has_ostream,
+                 std::basic_ostream<CharType, CharTraits>&>
 operator<<(std::basic_ostream<CharType, CharTraits>& out, const V& vec)
 {
   using Vector = Dune::XT::Common::VectorAbstraction<V>;
@@ -366,6 +361,11 @@ operator<<(std::basic_ostream<CharType, CharTraits>& out, const V& vec)
   }
   return out;
 } // ... operator<<(...)
+
+
+} // namespace Common
+} // namespace XT
+} // namespace Dune
 
 
 namespace std {

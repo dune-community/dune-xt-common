@@ -15,6 +15,7 @@
 #define DUNE_XT_COMMON_MATRIX_HH
 
 #include <memory>
+#include <ostream>
 
 #include <dune/common/dynmatrix.hh>
 #include <dune/common/fmatrix.hh>
@@ -61,6 +62,8 @@ struct MatrixAbstraction
   static const size_t static_cols = std::numeric_limits<size_t>::max();
 
   static const constexpr StorageLayout storage_layout = XT::Common::StorageLayout::other;
+
+  static const bool has_ostream = false;
 
   template <class SparsityPatternType = FullPattern>
   static inline /*MatrixType*/ void create(const size_t /*rows*/,
@@ -144,6 +147,8 @@ struct MatrixAbstraction<Dune::DynamicMatrix<K>>
 
   static const constexpr StorageLayout storage_layout = StorageLayout::other;
 
+  static const bool has_ostream = true;
+
   template <class SparsityPatternType = FullPattern>
   static inline MatrixType create(const size_t rows,
                                   const size_t cols,
@@ -219,6 +224,8 @@ struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
   static const size_t static_cols = M;
 
   static const constexpr StorageLayout storage_layout = StorageLayout::dense_row_major;
+
+  static const bool has_ostream = true;
 
   template <class SparsityPatternType = FullPattern>
   static inline MatrixType create(const size_t rows,
@@ -458,6 +465,27 @@ transposed(const MatrixType& mat)
       set_matrix_entry(ret, jj, ii, get_matrix_entry(mat, ii, jj));
   return ret;
 }
+
+
+template <class M, class CharType, class CharTraits>
+typename std::enable_if<Dune::XT::Common::is_matrix<M>::value && !Dune::XT::Common::MatrixAbstraction<M>::has_ostream,
+                        std::basic_ostream<CharType, CharTraits>&>::type
+operator<<(std::basic_ostream<CharType, CharTraits>& out, const M& mat)
+{
+  using Matrix = Dune::XT::Common::MatrixAbstraction<M>;
+  out << "[";
+  for (size_t ii = 0; ii < Matrix::rows(mat); ++ii) {
+    for (size_t jj = 0; jj < Matrix::cols(mat); ++jj) {
+      out << Matrix::get_entry(mat, ii, jj);
+      if (jj == Matrix::cols(mat) - 1 && ii < Matrix::rows(mat) - 1)
+        out << ";";
+      else if (jj < Matrix::cols(mat) - 1)
+        out << " ";
+    }
+  }
+  out << "]";
+  return out;
+} // ... operator<<(...)
 
 
 } // namespace Common
