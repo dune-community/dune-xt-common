@@ -196,6 +196,18 @@ public:
   {
   }
 
+  BlockedFieldVector(const std::initializer_list<K>& init_list)
+  {
+    assert(init_list.size() == static_size || init_list.size() == num_blocks);
+    if (init_list.size() == static_size) {
+      *this = VectorType(init_list);
+    } else {
+      size_t jj = 0;
+      for (const auto& block_init : init_list)
+        block(jj++) = block_init;
+    }
+  }
+
   ThisType& operator=(const VectorType& other)
   {
     for (size_t jj = 0; jj < num_blocks; ++jj)

@@ -546,6 +546,13 @@ public:
     return ret;
   }
 
+  ThisType& operator*=(const K& val)
+  {
+    for (size_t jj = 0; jj < num_blocks; ++jj)
+      block(jj) *= val;
+    return *this;
+  }
+
   ThisType& operator+=(const ThisType& other)
   {
     for (size_t jj = 0; jj < num_blocks; ++jj)
@@ -583,6 +590,13 @@ public:
   {
     return (jj < num_blocks && ll < block_rows && mm < block_cols);
   }
+
+  template <class CharType, class CharTraits>
+  friend std::basic_ostream<CharType, CharTraits>& operator<<(std::basic_ostream<CharType, CharTraits>& out,
+                                                              const ThisType& mat)
+  {
+    return output_matrix(out, mat);
+  } // ... operator<<(...)
 
 private:
   FieldVector<BlockType, num_blocks> backend_;
@@ -667,7 +681,7 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
   }
 };
 
-template <class K, size_t num_blocks, int block_rows, int block_cols>
+template <class K, size_t num_blocks, size_t block_rows, size_t block_cols>
 struct MatrixAbstraction<Dune::XT::Common::BlockedFieldMatrix<K, num_blocks, block_rows, block_cols>>
 {
   typedef Dune::XT::Common::BlockedFieldMatrix<K, num_blocks, block_rows, block_cols> MatrixType;
@@ -689,7 +703,7 @@ struct MatrixAbstraction<Dune::XT::Common::BlockedFieldMatrix<K, num_blocks, blo
 
   static const constexpr StorageLayout storage_layout = StorageLayout::other;
 
-  static constexpr bool has_ostream = false;
+  static constexpr bool has_ostream = true;
 
   template <class SparsityPatternType = FullPattern>
   static inline MatrixType create(const size_t rows,

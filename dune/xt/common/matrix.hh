@@ -488,21 +488,6 @@ std::basic_ostream<CharType, CharTraits>& output_matrix(std::basic_ostream<CharT
 }
 
 
-// forward
-template <class K, size_t num_blocks, size_t block_rows, size_t block_cols>
-class BlockedFieldMatrix;
-
-// we need to specialize operator<< for every matrix type, a template for all matrix types leads to ambiguous overloads
-// as gtest defines an universal operator<< template
-template <class K, size_t num_blocks, size_t block_rows, size_t block_cols, class CharType, class CharTraits>
-std::basic_ostream<CharType, CharTraits>&
-operator<<(std::basic_ostream<CharType, CharTraits>& out,
-           const BlockedFieldMatrix<K, num_blocks, block_rows, block_cols>& mat)
-{
-  return output_matrix(out, mat);
-} // ... operator<<(...)
-
-
 } // namespace Common
 } // namespace XT
 
