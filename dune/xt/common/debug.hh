@@ -16,7 +16,8 @@
 #include <boost/assert.hpp>
 #include <boost/format.hpp>
 
-#include "unused.hh"
+#include <dune/xt/common/unused.hh>
+#include <dune/xt/common/exceptions.hh>
 
 
 #define SEGFAULT                                                                                                       \
@@ -57,5 +58,14 @@ inline char* charcopy(const char* s)
 
 //! try to ensure var is not optimized out
 #define DXTC_DEBUG_AUTO(name) volatile auto DXTC_UNUSED(name)
+
+#ifndef NDEBUG
+#define DXT_ASSERT(condition)                                                                                          \
+  DUNE_THROW_IF(!(condition),                                                                                            \
+                Dune::XT::Common::Exceptions::debug_assertion,                                                         \
+                __PRETTY_FUNCTION__ << "\nAssertion failed: \n" << #condition)
+#else
+#define DXT_ASSERT(condition)
+#endif
 
 #endif // DUNE_XT_COMMON_DEBUG_HH
