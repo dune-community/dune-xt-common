@@ -39,7 +39,7 @@ std::array<T, N>& operator+=(std::array<T, N>& arr, const std::array<T, N>& othe
 template <typename T>
 std::vector<T>& operator+=(std::vector<T>& vec, const std::vector<T>& other)
 {
-  assert(vec.size() == other.size());
+  DXT_ASSERT(vec.size() == other.size());
   std::transform(vec.begin(), vec.end(), other.begin(), vec.begin(), std::plus<T>());
   return vec;
 }

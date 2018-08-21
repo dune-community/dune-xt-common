@@ -99,7 +99,7 @@ void LocalizationStudy::run(std::ostream& out)
       if (id_str.size() == (first_column_size - 1))
         id_str = " " + id_str;
     }
-    assert(id_str.size() == first_column_size);
+    DXT_ASSERT(id_str.size() == first_column_size);
     // print first column
     out << " " << id_str << " || " << std::flush;
     // compute indicators

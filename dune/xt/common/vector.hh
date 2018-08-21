@@ -26,6 +26,7 @@
 #include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/numeric_cast.hh>
 #include <dune/xt/common/type_traits.hh>
+#include <dune/xt/common/debug.hh>
 
 namespace Dune {
 namespace XT {
@@ -66,19 +67,19 @@ struct HasSubscriptOperatorForVectorAbstraction
 {
   static inline ScalarType get_entry(const VectorType& vector, const size_t ii)
   {
-    assert(ii < vector.size());
+    DXT_ASSERT(ii < vector.size());
     return vector[ii];
   }
 
   static inline void set_entry(VectorType& vector, const size_t ii, const ScalarType& val)
   {
-    assert(ii < vector.size());
+    DXT_ASSERT(ii < vector.size());
     vector[ii] = val;
   }
 
   static inline void add_to_entry(VectorType& vector, const size_t ii, const ScalarType& val)
   {
-    assert(ii < vector.size());
+    DXT_ASSERT(ii < vector.size());
     vector[ii] += val;
   }
 

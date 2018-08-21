@@ -95,7 +95,7 @@ ConvergenceStudy::run(const bool relative, std::ostream& out, const bool print_t
     const double missing = (19.0 - relative_norm_str.size()) / 2.0;
     for (size_t ii = 0; ii < missing; ++ii)
       relative_norm_str += " ";
-    assert(relative_norm_str.size() <= 19);
+    DXT_ASSERT(relative_norm_str.size() <= 19);
     out << "| " << std::setw(19) << relative_norm_str << " ";
   }
   out << "\n";
