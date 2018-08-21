@@ -31,4 +31,5 @@ def load_all_submodule(module):
 
 def runmodule(filename):
     import pytest
+    import sys
     sys.exit(pytest.main(sys.argv[1:] + [filename]))
