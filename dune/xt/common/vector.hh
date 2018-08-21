@@ -144,13 +144,15 @@ struct VectorAbstraction
     static_assert(AlwaysFalse<VecType>::value, "Do not call me if is_vector is false!");
   }
 
-  static inline ScalarType* data(typename std::remove_const<VectorType>::type& /*vec*/)
+  static inline ScalarType* data(std::remove_const_t<VectorType>& /*vec*/)
   {
     static_assert(AlwaysFalse<VecType>::value, "Do not call me if is_contiguous is false!");
     return nullptr;
   }
 
-  static inline const ScalarType* data(const VectorType& /*vec*/)
+  // using std::enable_if to avoid 'multiple overloads with same signature' for some strange VectorTypes
+  template <bool is_vec = is_vector>
+  static inline const std::enable_if_t<is_vec, ScalarType>* data(std::add_const_t<VectorType>& /*vec*/)
   {
     static_assert(AlwaysFalse<VecType>::value, "Do not call me if is_contiguous is false!");
     return nullptr;
@@ -376,7 +378,7 @@ template <class V, class Alloc, class CharType, class CharTraits>
 std::basic_ostream<CharType, CharTraits>& operator<<(std::basic_ostream<CharType, CharTraits>& out,
                                                      const std::vector<V, Alloc>& vec)
 {
-  ::operator<<(out, vec);
+  Dune::XT::Common::operator<<(out, vec);
   return out;
 } // ... operator<<(...)
 

@@ -113,13 +113,14 @@ struct MatrixAbstraction
     static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
   }
 
-  static inline ScalarType* data(typename std::remove_const<MatrixType>::type& /*mat*/)
+  static inline ScalarType* data(std::remove_const_t<MatrixType>& /*mat*/)
   {
     static_assert(AlwaysFalse<MatType>::value, "Do not call me if storage_layout is not dense!");
     return nullptr;
   }
 
-  static inline const ScalarType* data(const MatrixType& /*mat*/)
+  template <bool is_mat = is_matrix>
+  static inline const std::enable_if_t<is_mat, ScalarType>* data(std::add_const_t<MatrixType>& /*vec*/)
   {
     static_assert(AlwaysFalse<MatType>::value, "Do not call me if storage_layout is not dense!");
     return nullptr;
@@ -468,9 +469,7 @@ transposed(const MatrixType& mat)
 
 
 template <class M, class CharType, class CharTraits>
-typename std::enable_if<Dune::XT::Common::is_matrix<M>::value && !Dune::XT::Common::MatrixAbstraction<M>::has_ostream,
-                        std::basic_ostream<CharType, CharTraits>&>::type
-operator<<(std::basic_ostream<CharType, CharTraits>& out, const M& mat)
+std::basic_ostream<CharType, CharTraits>& output_matrix(std::basic_ostream<CharType, CharTraits>& out, const M& mat)
 {
   using Matrix = Dune::XT::Common::MatrixAbstraction<M>;
   out << "[";
@@ -485,6 +484,21 @@ operator<<(std::basic_ostream<CharType, CharTraits>& out, const M& mat)
   }
   out << "]";
   return out;
+}
+
+
+// forward
+template <class K, size_t num_blocks, size_t block_rows, size_t block_cols>
+class BlockedFieldMatrix;
+
+// we need to specialize operator<< for every matrix type, a template for all matrix types leads to ambiguous overloads
+// as gtest defines an universal operator<< template
+template <class K, size_t num_blocks, size_t block_rows, size_t block_cols, class CharType, class CharTraits>
+std::basic_ostream<CharType, CharTraits>&
+operator<<(std::basic_ostream<CharType, CharTraits>& out,
+           const BlockedFieldMatrix<K, num_blocks, block_rows, block_cols>& mat)
+{
+  return output_matrix(out, mat);
 } // ... operator<<(...)
 
 

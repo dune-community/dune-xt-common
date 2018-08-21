@@ -52,7 +52,7 @@ void install_signal_handler(int signal, handler_type handler)
   sigemptyset(&new_action.sa_mask);
   new_action.sa_flags = 0;
 
-  sigaction(signal, &new_action, NULL);
+  sigaction(signal, &new_action, nullptr);
 } // install_signal_handler
 
 } // namepsace Common
