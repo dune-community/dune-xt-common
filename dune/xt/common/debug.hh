@@ -61,9 +61,10 @@ inline char* charcopy(const char* s)
 
 #ifndef NDEBUG
 #define DXT_ASSERT(condition)                                                                                          \
-  DUNE_THROW_IF(!(condition),                                                                                            \
+  DUNE_THROW_IF(!(condition),                                                                                          \
                 Dune::XT::Common::Exceptions::debug_assertion,                                                         \
-                __PRETTY_FUNCTION__ << "\nAssertion failed: \n" << #condition)
+                __PRETTY_FUNCTION__ << "\nAssertion failed: \n"                                                        \
+                                    << #condition)
 #else
 #define DXT_ASSERT(condition)
 #endif

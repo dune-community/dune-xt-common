@@ -62,7 +62,7 @@ void Logging::create(int logflags, const std::string logfile, const std::string 
   const bool file_logging = ((logflags_ & LOG_FILE) != 0);
   if (file_logging) {
     logfile_.open(filename_);
-    assert(logfile_.is_open());
+    DXT_ASSERT(logfile_.is_open());
   }
 
   for (const auto id : streamIDs_) {
@@ -79,7 +79,7 @@ void Logging::set_prefix(std::string prefix)
 
 void Logging::set_stream_flags(int streamID, int flags)
 {
-  assert(flagmap_.find(streamID) != flagmap_.end());
+  DXT_ASSERT(flagmap_.find(streamID) != flagmap_.end());
   // this might result in logging to diff targtes, so we flush the current targets
   flush();
   flagmap_[streamID] = flags;
@@ -100,7 +100,7 @@ LogStream& Logging::get_stream(int streamId)
   if (it == streammap_.end())
     DUNE_THROW(InvalidStateException, "cannot get unknown logStream, maybe you forgot to call \"Logging::create\"?");
   else {
-    assert(it->second);
+    DXT_ASSERT(it->second);
     return *(it->second);
   }
 }
@@ -108,7 +108,7 @@ LogStream& Logging::get_stream(int streamId)
 void Logging::flush()
 {
   for (auto& pair : streammap_) {
-    assert(pair.second);
+    DXT_ASSERT(pair.second);
     pair.second->flush();
   }
 } // flush

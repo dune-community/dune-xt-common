@@ -375,7 +375,7 @@ public:
   {
     auto cpy = new Imp(*imp_);
     cpy->copies_.push_back(cpy);
-    assert(cpy->copies_.size() > 1);
+    DXT_ASSERT(cpy->copies_.size() > 1);
     return cpy;
   }
 

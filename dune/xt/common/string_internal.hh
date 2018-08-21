@@ -134,8 +134,8 @@ template <class T>
 static inline typename std::enable_if<!is_vector<T>::value && !is_matrix<T>::value && !is_complex<T>::value, T>::type
 convert_from_string(std::string ss, const size_t DXTC_DEBUG_ONLY(rows) = 0, const size_t DXTC_DEBUG_ONLY(cols) = 0)
 {
-  assert(rows == 0);
-  assert(cols == 0);
+  DXT_ASSERT(rows == 0);
+  DXT_ASSERT(cols == 0);
   return Helper<T>::convert_from_string(ss);
 }
 
@@ -167,7 +167,7 @@ convert_from_string(std::string ss, const size_t size, const size_t DXTC_DEBUG_O
 {
   auto vector_str = ss;
   typedef typename VectorAbstraction<VectorType>::S S;
-  assert(cols == 0);
+  DXT_ASSERT(cols == 0);
   // check if this is a vector
   if (vector_str.substr(0, 1) == "[" && vector_str.substr(vector_str.size() - 1, 1) == "]") {
     vector_str = vector_str.substr(1, vector_str.size() - 2);

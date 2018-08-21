@@ -16,6 +16,8 @@
 #include <memory>
 #include <boost/noncopyable.hpp>
 
+#include <dune/xt/common/debug.hh>
+
 namespace Dune {
 namespace XT {
 namespace Common {
@@ -335,7 +337,7 @@ public:
 
   const T& access() const
   {
-    assert(storage_);
+    DXT_ASSERT(storage_);
     return storage_->access();
   }
 
@@ -405,13 +407,13 @@ public:
 
   T& access()
   {
-    assert(storage_);
+    DXT_ASSERT(storage_);
     return storage_->access();
   }
 
   const T& access() const
   {
-    assert(storage_);
+    DXT_ASSERT(storage_);
     return storage_->access();
   }
 
@@ -486,7 +488,7 @@ public:
 
   std::shared_ptr<const T> access() const
   {
-    assert(storage_);
+    DXT_ASSERT(storage_);
     return storage_;
   }
 
