@@ -109,9 +109,10 @@ struct HasSubscriptOperatorForVectorAbstraction
 template <class VecType>
 struct VectorAbstraction
 {
-  typedef VecType VectorType;
-  typedef typename Dune::FieldTraits<VecType>::field_type ScalarType;
-  typedef typename Dune::FieldTraits<VecType>::real_type RealType;
+  using V = std::conditional_t<std::is_same<VecType, void>::value, int, VecType>; // avoid reference to void
+  typedef V VectorType;
+  typedef typename Dune::FieldTraits<V>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<V>::real_type RealType;
   typedef ScalarType S;
   typedef RealType R;
 
@@ -144,13 +145,15 @@ struct VectorAbstraction
     static_assert(AlwaysFalse<VecType>::value, "Do not call me if is_vector is false!");
   }
 
-  static inline ScalarType* data(typename std::remove_const<VectorType>::type& /*vec*/)
+  static inline ScalarType* data(std::remove_const_t<VectorType>& /*vec*/)
   {
     static_assert(AlwaysFalse<VecType>::value, "Do not call me if is_contiguous is false!");
     return nullptr;
   }
 
-  static inline const ScalarType* data(const VectorType& /*vec*/)
+  // using std::enable_if to avoid 'multiple overloads with same signature' for some strange VectorTypes
+  template <bool is_vec = is_vector>
+  static inline const std::enable_if_t<is_vec, ScalarType>* data(std::add_const_t<VectorType>& /*vec*/)
   {
     static_assert(AlwaysFalse<VecType>::value, "Do not call me if is_contiguous is false!");
     return nullptr;
@@ -343,14 +346,9 @@ convert_to(const SourceType& source)
 } // ... convert_to(...)
 
 
-} // namespace Common
-} // namespace XT
-} // namespace Dune
-
-
 template <class V, class CharType, class CharTraits>
-typename std::enable_if<Dune::XT::Common::is_vector<V>::value && !Dune::XT::Common::VectorAbstraction<V>::has_ostream,
-                        std::basic_ostream<CharType, CharTraits>&>::type
+std::enable_if_t<Dune::XT::Common::is_vector<V>::value && !Dune::XT::Common::VectorAbstraction<V>::has_ostream,
+                 std::basic_ostream<CharType, CharTraits>&>
 operator<<(std::basic_ostream<CharType, CharTraits>& out, const V& vec)
 {
   using Vector = Dune::XT::Common::VectorAbstraction<V>;
@@ -368,6 +366,11 @@ operator<<(std::basic_ostream<CharType, CharTraits>& out, const V& vec)
 } // ... operator<<(...)
 
 
+} // namespace Common
+} // namespace XT
+} // namespace Dune
+
+
 namespace std {
 
 
@@ -376,7 +379,7 @@ template <class V, class Alloc, class CharType, class CharTraits>
 std::basic_ostream<CharType, CharTraits>& operator<<(std::basic_ostream<CharType, CharTraits>& out,
                                                      const std::vector<V, Alloc>& vec)
 {
-  ::operator<<(out, vec);
+  Dune::XT::Common::operator<<(out, vec);
   return out;
 } // ... operator<<(...)
 

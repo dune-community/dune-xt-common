@@ -13,15 +13,20 @@
 #include <dune/xt/common/matrix.hh>
 #include <dune/xt/common/fmatrix.hh>
 
-using MatrixTypes = ::testing::Types<std::tuple<Dune::FieldMatrix<int, 1, 1>, Int<1>, Int<1>>,
-                                     std::tuple<Dune::FieldMatrix<int, 2, 3>, Int<2>, Int<3>>,
-                                     std::tuple<Dune::FieldMatrix<int, 3, 1>, Int<3>, Int<1>>,
-                                     std::tuple<Dune::XT::Common::FieldMatrix<int, 1, 1>, Int<1>, Int<1>>,
-                                     std::tuple<Dune::XT::Common::FieldMatrix<int, 2, 3>, Int<2>, Int<3>>,
-                                     std::tuple<Dune::XT::Common::FieldMatrix<int, 3, 1>, Int<3>, Int<1>>,
-                                     std::tuple<Dune::DynamicMatrix<int>, Int<1>, Int<1>>,
-                                     std::tuple<Dune::DynamicMatrix<int>, Int<2>, Int<3>>,
-                                     std::tuple<Dune::DynamicMatrix<int>, Int<3>, Int<1>>>;
+using MatrixTypes =
+    ::testing::Types<std::tuple<Dune::FieldMatrix<int, 1, 1>, Int<1>, Int<1>>,
+                     std::tuple<Dune::FieldMatrix<int, 2, 3>, Int<2>, Int<3>>,
+                     std::tuple<Dune::FieldMatrix<int, 3, 1>, Int<3>, Int<1>>,
+                     std::tuple<Dune::XT::Common::FieldMatrix<int, 1, 1>, Int<1>, Int<1>>,
+                     std::tuple<Dune::XT::Common::FieldMatrix<int, 2, 3>, Int<2>, Int<3>>,
+                     std::tuple<Dune::XT::Common::FieldMatrix<int, 3, 1>, Int<3>, Int<1>>,
+                     std::tuple<Dune::XT::Common::BlockedFieldMatrix<int, 1, 1, 1>, Int<1>, Int<1>, Int<1>>,
+                     std::tuple<Dune::XT::Common::BlockedFieldMatrix<int, 2, 2, 2>, Int<2>, Int<2>, Int<2>>,
+                     std::tuple<Dune::XT::Common::BlockedFieldMatrix<int, 2, 2, 3>, Int<2>, Int<2>, Int<3>>,
+                     std::tuple<Dune::XT::Common::BlockedFieldMatrix<int, 2, 3, 2>, Int<2>, Int<3>, Int<2>>,
+                     std::tuple<Dune::DynamicMatrix<int>, Int<1>, Int<1>>,
+                     std::tuple<Dune::DynamicMatrix<int>, Int<2>, Int<3>>,
+                     std::tuple<Dune::DynamicMatrix<int>, Int<3>, Int<1>>>;
 
 
 template <class Tuple>
@@ -30,15 +35,33 @@ struct SerializeRowwiseTest : public ::testing::Test
   using MatrixType = typename std::tuple_element<0, Tuple>::type;
   using M = Dune::XT::Common::MatrixAbstraction<MatrixType>;
   using ScalarType = typename M::ScalarType;
-  static const constexpr size_t rows = std::tuple_element<1, Tuple>::type::value;
-  static const constexpr size_t cols = std::tuple_element<2, Tuple>::type::value;
+  static constexpr bool is_block_matrix = std::tuple_size<Tuple>::value == 4;
+  static constexpr size_t num_blocks = std::tuple_element<1, Tuple>::type::value; // only for BlockedFieldMatrix
+  static constexpr size_t rows =
+      is_block_matrix ? std::tuple_element<1, Tuple>::type::value * std::tuple_element<2, Tuple>::type::value
+                      : std::tuple_element<1, Tuple>::type::value;
+  static constexpr size_t cols = is_block_matrix
+      ? std::tuple_element<1, Tuple>::type::value * std::tuple_element < is_block_matrix ? 3 : 2,
+                          Tuple > ::type::value : std::tuple_element<2, Tuple>::type::value;
 
   SerializeRowwiseTest()
     : matrix_(M::create(rows, cols))
   {
-    for (size_t ii = 0; ii < rows; ++ii)
-      for (size_t jj = 0; jj < cols; ++jj)
-        M::set_entry(matrix_, ii, jj, static_cast<ScalarType>(100 * ii + jj));
+    if (is_block_matrix) {
+      const size_t block_rows = rows / num_blocks;
+      const size_t block_cols = cols / num_blocks;
+      for (size_t jj = 0; jj < num_blocks; ++jj)
+        for (size_t ll = 0; ll < block_rows; ++ll)
+          for (size_t mm = 0; mm < block_cols; ++mm) {
+            const size_t row = jj * block_rows + ll;
+            const size_t col = jj * block_cols + mm;
+            M::set_entry(matrix_, row, col, static_cast<ScalarType>(100 * row + col));
+          }
+    } else {
+      for (size_t ii = 0; ii < rows; ++ii)
+        for (size_t jj = 0; jj < cols; ++jj)
+          M::set_entry(matrix_, ii, jj, static_cast<ScalarType>(100 * ii + jj));
+    }
   }
 
   template <class T>

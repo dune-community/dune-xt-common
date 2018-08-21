@@ -15,6 +15,7 @@
 #define DUNE_XT_COMMON_MATRIX_HH
 
 #include <memory>
+#include <ostream>
 
 #include <dune/common/dynmatrix.hh>
 #include <dune/common/fmatrix.hh>
@@ -43,11 +44,12 @@ struct FullPattern
 template <class MatType>
 struct MatrixAbstraction
 {
-  typedef MatType MatrixType;
-  typedef MatType ScalarType;
-  typedef MatType RealType;
-  typedef MatType S;
-  typedef MatType R;
+  using M = std::conditional_t<std::is_same<MatType, void>::value, int, MatType>; // avoid reference to void
+  typedef M MatrixType;
+  typedef typename Dune::FieldTraits<M>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<M>::real_type RealType;
+  typedef ScalarType S;
+  typedef RealType R;
 
   template <size_t rows = 0, size_t cols = 0, class FieldType = ScalarType>
   using MatrixTypeTemplate = MatrixType;
@@ -61,6 +63,8 @@ struct MatrixAbstraction
   static const size_t static_cols = std::numeric_limits<size_t>::max();
 
   static const constexpr StorageLayout storage_layout = XT::Common::StorageLayout::other;
+
+  static const bool has_ostream = false;
 
   template <class SparsityPatternType = FullPattern>
   static inline /*MatrixType*/ void create(const size_t /*rows*/,
@@ -110,13 +114,14 @@ struct MatrixAbstraction
     static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
   }
 
-  static inline ScalarType* data(typename std::remove_const<MatrixType>::type& /*mat*/)
+  static inline ScalarType* data(std::remove_const_t<MatrixType>& /*mat*/)
   {
     static_assert(AlwaysFalse<MatType>::value, "Do not call me if storage_layout is not dense!");
     return nullptr;
   }
 
-  static inline const ScalarType* data(const MatrixType& /*mat*/)
+  template <bool is_mat = is_matrix>
+  static inline const std::enable_if_t<is_mat, ScalarType>* data(std::add_const_t<MatrixType>& /*vec*/)
   {
     static_assert(AlwaysFalse<MatType>::value, "Do not call me if storage_layout is not dense!");
     return nullptr;
@@ -143,6 +148,8 @@ struct MatrixAbstraction<Dune::DynamicMatrix<K>>
   static const size_t static_cols = std::numeric_limits<size_t>::max();
 
   static const constexpr StorageLayout storage_layout = StorageLayout::other;
+
+  static const bool has_ostream = true;
 
   template <class SparsityPatternType = FullPattern>
   static inline MatrixType create(const size_t rows,
@@ -219,6 +226,8 @@ struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
   static const size_t static_cols = M;
 
   static const constexpr StorageLayout storage_layout = StorageLayout::dense_row_major;
+
+  static const bool has_ostream = true;
 
   template <class SparsityPatternType = FullPattern>
   static inline MatrixType create(const size_t rows,
@@ -457,6 +466,25 @@ transposed(const MatrixType& mat)
     for (size_t jj = 0; jj < M::cols(mat); ++jj)
       set_matrix_entry(ret, jj, ii, get_matrix_entry(mat, ii, jj));
   return ret;
+}
+
+
+template <class M, class CharType, class CharTraits>
+std::basic_ostream<CharType, CharTraits>& output_matrix(std::basic_ostream<CharType, CharTraits>& out, const M& mat)
+{
+  using Matrix = Dune::XT::Common::MatrixAbstraction<M>;
+  out << "[";
+  for (size_t ii = 0; ii < Matrix::rows(mat); ++ii) {
+    for (size_t jj = 0; jj < Matrix::cols(mat); ++jj) {
+      out << Matrix::get_entry(mat, ii, jj);
+      if (jj == Matrix::cols(mat) - 1 && ii < Matrix::rows(mat) - 1)
+        out << ";";
+      else if (jj < Matrix::cols(mat) - 1)
+        out << " ";
+    }
+  }
+  out << "]";
+  return out;
 }
 
 

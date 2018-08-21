@@ -124,7 +124,7 @@ size_t template_color_chooser(size_t i)
 bool terminal_supports_color()
 {
   const char* const term = getenv("TERM");
-  if (term == NULL)
+  if (term == nullptr)
     return false;
   else {
     const auto term_str = std::string(term);
@@ -157,7 +157,7 @@ std::string highlight_template(std::string str, size_t maxlevel)
       i += dummy.size();
     }
   }
-  str += "\033[38;5;0m";
+  str += "\033[0m";
   return str;
 } // highlight_template
 
@@ -168,11 +168,13 @@ std::string highlight_string(std::string str, size_t colornr)
 
 std::string highlight_search_string(std::string str, std::string substr, size_t colornr)
 {
-  long index = long(str.find(substr, 0));
+  std::string dummy = "\033[38;5;" + std::to_string(colornr % 256) + "m";
+  std::string dummy2 = "\033[0m";
+  str.insert(0, dummy2);
 
-  while (index != long(std::string::npos)) {
-    std::string dummy = "\033[38;5;" + std::to_string(colornr % 256) + "m";
-    std::string dummy2 = "\033[38;5;0m";
+  size_t index = str.find(substr, 0);
+
+  while (index != std::string::npos) {
     str.insert(index, dummy);
     str.insert(index + substr.size() + dummy.size(), dummy2);
     index = str.find(substr, index + dummy.size() + substr.size() + dummy2.size());

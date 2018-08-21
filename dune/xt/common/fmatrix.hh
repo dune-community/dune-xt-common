@@ -388,6 +388,12 @@ public:
   {
   }
 
+  BlockedFieldMatrix(const size_t DXTC_DEBUG_ONLY(rows), const size_t DXTC_DEBUG_ONLY(cols), const K& val = K(0.))
+    : backend_(BlockType(val))
+  {
+    assert(rows == num_rows && cols == num_cols && "Requested shape has to match static shape!");
+  }
+
   BlockedFieldMatrix(const MatrixType& other)
   {
     *this = other;
@@ -418,21 +424,50 @@ public:
   K get_entry(const size_t ii, const size_t jj) const
   {
     assert(ii < num_rows && jj < num_cols);
-    if (ii / block_rows != jj / block_cols)
+    if (!in_pattern(ii, jj))
       return K(0.);
     return backend_[ii / block_rows][ii % block_rows][jj % block_cols];
   }
 
   K& get_entry(const size_t jj, const size_t ll, const size_t mm)
   {
-    assert(jj < num_blocks && ll < block_rows && mm < block_cols);
+    assert(is_valid_entry(jj, ll, mm));
     return backend_[jj][ll][mm];
   }
 
   const K& get_entry(const size_t jj, const size_t ll, const size_t mm) const
   {
-    assert(jj < num_blocks && ll < block_rows && mm < block_cols);
+    assert(is_valid_entry(jj, ll, mm));
     return backend_[jj][ll][mm];
+  }
+
+  void set_entry(const size_t ii, const size_t jj, const K& val)
+  {
+    assert(ii < num_rows && jj < num_cols);
+    if (in_pattern(ii, jj))
+      backend_[ii / block_rows][ii % block_rows][jj % block_cols] = val;
+    else if (XT::Common::FloatCmp::ne(val, K(0)))
+      DUNE_THROW(Dune::MathError, "Tried to modify a value that is not in the pattern!");
+  }
+
+  void set_entry(const size_t jj, const size_t ll, const size_t mm, const K& val)
+  {
+    assert(is_valid_entry(jj, ll, mm));
+    backend_[jj][ll][mm] = val;
+  }
+
+  void add_to_entry(const size_t ii, const size_t jj, const K& val)
+  {
+    assert(ii < num_rows && jj < num_cols);
+    if (!in_pattern(ii, jj) && XT::Common::FloatCmp::ne(val, K(0)))
+      DUNE_THROW(Dune::MathError, "Tried to modify a value that is not in the pattern!");
+    backend_[ii / block_rows][ii % block_rows][jj % block_cols] += val;
+  }
+
+  void add_to_entry(const size_t jj, const size_t ll, const size_t mm, const K& val)
+  {
+    assert(is_valid_entry(jj, ll, mm));
+    backend_[jj][ll][mm] += val;
   }
 
   BlockType& block(const size_t jj)
@@ -504,6 +539,65 @@ public:
     return ret;
   }
 
+  ThisType operator*(const ThisType& other) const
+  {
+    ThisType ret(*this);
+    ret.rightmultiply(other);
+    return ret;
+  }
+
+  ThisType& operator*=(const K& val)
+  {
+    for (size_t jj = 0; jj < num_blocks; ++jj)
+      block(jj) *= val;
+    return *this;
+  }
+
+  ThisType& operator+=(const ThisType& other)
+  {
+    for (size_t jj = 0; jj < num_blocks; ++jj)
+      block(jj) += other.block(jj);
+    return *this;
+  }
+
+  ThisType operator+(const ThisType& other) const
+  {
+    ThisType ret(*this);
+    ret += other;
+    return ret;
+  }
+
+  ThisType& operator-=(const ThisType& other)
+  {
+    for (size_t jj = 0; jj < num_blocks; ++jj)
+      block(jj) -= other.block(jj);
+    return *this;
+  }
+
+  ThisType operator-(const ThisType& other) const
+  {
+    ThisType ret(*this);
+    ret -= other;
+    return ret;
+  }
+
+  static bool in_pattern(const size_t ii, const size_t jj)
+  {
+    return (ii / block_rows == jj / block_cols);
+  }
+
+  static bool is_valid_entry(const size_t jj, const size_t ll, const size_t mm)
+  {
+    return (jj < num_blocks && ll < block_rows && mm < block_cols);
+  }
+
+  template <class CharType, class CharTraits>
+  friend std::basic_ostream<CharType, CharTraits>& operator<<(std::basic_ostream<CharType, CharTraits>& out,
+                                                              const ThisType& mat)
+  {
+    return output_matrix(out, mat);
+  } // ... operator<<(...)
+
 private:
   FieldVector<BlockType, num_blocks> backend_;
 };
@@ -529,6 +623,8 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
   static const size_t static_cols = M;
 
   static const constexpr StorageLayout storage_layout = StorageLayout::dense_row_major;
+
+  static constexpr bool has_ostream = true;
 
   template <class SparsityPatternType = FullPattern>
   static inline MatrixType create(const size_t rows,
@@ -582,6 +678,86 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
   static inline const ScalarType* data(const MatrixType& mat)
   {
     return &(mat[0][0]);
+  }
+};
+
+template <class K, size_t num_blocks, size_t block_rows, size_t block_cols>
+struct MatrixAbstraction<Dune::XT::Common::BlockedFieldMatrix<K, num_blocks, block_rows, block_cols>>
+{
+  typedef Dune::XT::Common::BlockedFieldMatrix<K, num_blocks, block_rows, block_cols> MatrixType;
+  typedef typename Dune::FieldTraits<K>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<K>::real_type RealType;
+  typedef ScalarType S;
+  typedef RealType R;
+
+  static const bool is_matrix = true;
+
+  static const bool has_static_size = true;
+
+  static const size_t static_rows = MatrixType::num_rows;
+
+  static const size_t static_cols = MatrixType::num_cols;
+
+  template <size_t rows = static_rows, size_t cols = static_cols, class FieldType = K>
+  using MatrixTypeTemplate = Dune::XT::Common::BlockedFieldMatrix<FieldType, rows / block_rows, block_rows, block_cols>;
+
+  static const constexpr StorageLayout storage_layout = StorageLayout::other;
+
+  static constexpr bool has_ostream = true;
+
+  template <class SparsityPatternType = FullPattern>
+  static inline MatrixType create(const size_t rows,
+                                  const size_t cols,
+                                  const ScalarType& val = suitable_default<ScalarType>::value(),
+                                  const SparsityPatternType& /*pattern*/ = SparsityPatternType())
+  {
+    return MatrixType(rows, cols, val);
+  }
+
+  template <class SparsityPatternType = FullPattern>
+  static inline std::unique_ptr<MatrixType> make_unique(const size_t rows,
+                                                        const size_t cols,
+                                                        const ScalarType& val = suitable_default<ScalarType>::value(),
+                                                        const SparsityPatternType& /*pattern*/ = SparsityPatternType())
+  {
+    return std::make_unique<MatrixType>(rows, cols, val);
+  }
+
+  static constexpr size_t rows(const MatrixType& /*mat*/)
+  {
+    return static_rows;
+  }
+
+  static constexpr size_t cols(const MatrixType& /*mat*/)
+  {
+    return static_cols;
+  }
+
+  static inline void set_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)
+  {
+    mat.set_entry(row, col, val);
+  }
+
+  static inline ScalarType get_entry(const MatrixType& mat, const size_t row, const size_t col)
+  {
+    return mat.get_entry(row, col);
+  }
+
+  static inline void add_to_entry(MatrixType& mat, const size_t row, const size_t col, const ScalarType& val)
+  {
+    mat.add_to_entry(row, col, val);
+  }
+
+  static inline ScalarType* data(MatrixType& /*mat*/)
+  {
+    DUNE_THROW(InvalidStateException, "Do not call me if storage layout is not dense!");
+    return nullptr;
+  }
+
+  static inline const ScalarType* data(const MatrixType& /*mat*/)
+  {
+    DUNE_THROW(InvalidStateException, "Do not call me if storage_layout is not dense!");
+    return nullptr;
   }
 };
 
