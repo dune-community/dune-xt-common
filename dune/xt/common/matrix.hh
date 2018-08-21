@@ -44,11 +44,12 @@ struct FullPattern
 template <class MatType>
 struct MatrixAbstraction
 {
-  typedef MatType MatrixType;
-  typedef MatType ScalarType;
-  typedef MatType RealType;
-  typedef MatType S;
-  typedef MatType R;
+  using M = std::conditional_t<std::is_same<MatType, void>::value, int, MatType>; // avoid reference to void
+  typedef M MatrixType;
+  typedef typename Dune::FieldTraits<M>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<M>::real_type RealType;
+  typedef ScalarType S;
+  typedef RealType R;
 
   template <size_t rows = 0, size_t cols = 0, class FieldType = ScalarType>
   using MatrixTypeTemplate = MatrixType;

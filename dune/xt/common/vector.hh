@@ -109,9 +109,10 @@ struct HasSubscriptOperatorForVectorAbstraction
 template <class VecType>
 struct VectorAbstraction
 {
-  typedef VecType VectorType;
-  typedef typename Dune::FieldTraits<VecType>::field_type ScalarType;
-  typedef typename Dune::FieldTraits<VecType>::real_type RealType;
+  using V = std::conditional_t<std::is_same<VecType, void>::value, int, VecType>; // avoid reference to void
+  typedef V VectorType;
+  typedef typename Dune::FieldTraits<V>::field_type ScalarType;
+  typedef typename Dune::FieldTraits<V>::real_type RealType;
   typedef ScalarType S;
   typedef RealType R;
 
