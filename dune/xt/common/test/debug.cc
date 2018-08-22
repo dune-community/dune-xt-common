@@ -14,6 +14,13 @@
 
 using namespace Dune::XT::Common;
 
+struct Dummy
+{
+  static std::string name()
+  {
+    return std::string(__CLASS__);
+  }
+};
 
 GTEST_TEST(debug, main)
 {
@@ -23,4 +30,6 @@ GTEST_TEST(debug, main)
   EXPECT_NO_THROW(DXT_ASSERT(false));
 #endif
 
+  EXPECT_THROW(Dummy::name(), Dune::NotImplemented);
+  EXPECT_THROW(__CLASS__, Dune::NotImplemented);
 }
