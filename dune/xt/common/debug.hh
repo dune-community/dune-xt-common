@@ -38,10 +38,15 @@ inline char* charcopy(const char* s)
 } // ... charcopy(...)
 
 
-#define __CLASS__ strtok(charcopy(__PRETTY_FUNCTION__), "<(")
+DXT_DEPRECATED_MSG("22.08.18") inline std::string __depr_class()
+{
+  DUNE_THROW(Dune::NotImplemented, "use the DXT::Typename mechanism instead");
+}
+#define __CLASS__ __depr_class()
 
 
 #ifndef ASSERT_LT
+#warning "due to name clashing with gtest this macro will be removed soon (22.08.18)"
 #define ASSERT_LT(expt, actual)                                                                                        \
   BOOST_ASSERT_MSG(                                                                                                    \
       (expt < actual),                                                                                                 \
@@ -50,6 +55,7 @@ inline char* charcopy(const char* s)
 
 
 #ifndef ASSERT_EQ
+#warning "due to name clashing with gtest this macro will be removed soon (22.08.18)"
 #define ASSERT_EQ(expt, actual)                                                                                        \
   BOOST_ASSERT_MSG(                                                                                                    \
       (expt == actual),                                                                                                \
