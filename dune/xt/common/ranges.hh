@@ -18,6 +18,7 @@
 #include <boost/serialization/static_warning.hpp>
 #include <boost/iterator/iterator_facade.hpp>
 
+#include <dune/xt/common/debug.hh>
 #include <dune/xt/common/math.hh>
 
 namespace Dune {
