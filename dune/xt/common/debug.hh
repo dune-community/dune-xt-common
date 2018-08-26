@@ -44,24 +44,6 @@ DXT_DEPRECATED_MSG("22.08.18") inline std::string __depr_class()
 }
 #define __CLASS__ __depr_class()
 
-
-#ifndef ASSERT_LT
-#warning "due to name clashing with gtest this macro will be removed soon (22.08.18)"
-#define ASSERT_LT(expt, actual)                                                                                        \
-  BOOST_ASSERT_MSG(                                                                                                    \
-      (expt < actual),                                                                                                 \
-      (boost::format("assertion %1% < %2% failed: %3% >= %4%") % #expt % #actual % expt % actual).str().c_str())
-#endif
-
-
-#ifndef ASSERT_EQ
-#warning "due to name clashing with gtest this macro will be removed soon (22.08.18)"
-#define ASSERT_EQ(expt, actual)                                                                                        \
-  BOOST_ASSERT_MSG(                                                                                                    \
-      (expt == actual),                                                                                                \
-      (boost::format("assertion %1% == %2% failed: %3% != %4%") % #expt % #actual % expt % actual).str().c_str())
-#endif
-
 //! try to ensure var is not optimized out
 #define DXTC_DEBUG_AUTO(name) volatile auto DXTC_UNUSED(name)
 
