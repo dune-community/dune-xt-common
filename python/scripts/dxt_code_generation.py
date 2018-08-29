@@ -17,6 +17,7 @@ import os
 import sys
 from runpy import run_path
 from jinja2 import Template
+import logging
 
 from dune.xt.cmake import parse_cache
 
@@ -25,10 +26,12 @@ tpl_fn = sys.argv[2]
 cmake_binary_dir = sys.argv[3]
 out_fn = sys.argv[4]
 backup_bindir = sys.argv[5]
-
+logger = logging.getLogger('Codegen')
+cache_path = os.path.join(cmake_binary_dir, 'CMakeCache.txt')
 try:
-    cache, _ = parse_cache(os.path.join(cmake_binary_dir, 'CMakeCache.txt'))
-except FileNotFoundError:
+    cache, _ = parse_cache(cache_path)
+except FileNotFoundError as fe:
+    logger.critical('using fallback cache instead of {}: {}'.format(cache_path, str(fe)))
     cache, _ = parse_cache(os.path.join(backup_bindir, 'CMakeCache.txt'))
 sys.path.append(os.path.dirname(config_fn))
 config = run_path(config_fn,init_globals=locals(), run_name='__dxt_codegen__')

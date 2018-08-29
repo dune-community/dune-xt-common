@@ -140,19 +140,19 @@ macro(BEGIN_TESTCASES) # https://cmake.org/cmake/help/v3.0/module/FindGTest.html
                             dxt_code_generation.py
                             "${config_fn}"
                             "${template}"
-                            "${CMAKE_CURRENT_BINARY_DIR}"
+                            "${CMAKE_BINARY_DIR}"
                             "${out_fn}"
                             "${last_dep_bindir}"
                             OUTPUT_VARIABLE
                             codegen_output)
-    file(WRITE "codegen.${out_fn}.log" ${codegen_output})
+    file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/codegen.${testbase}.log" ${codegen_output})
     file(GLOB generated_sources "${out_fn}.*")
     if("" STREQUAL "${generated_sources}")
       set(generated_sources ${out_fn})
     endif()
     add_custom_command(OUTPUT "${generated_sources}"
                        COMMAND ${CMAKE_BINARY_DIR}/dune-env dxt_code_generation.py "${config_fn}" "${template}"
-                               "${CMAKE_CURRENT_BINARY_DIR}" "${out_fn}" "${last_dep_bindir}"
+                               "${CMAKE_BINARY_DIR}" "${out_fn}" "${last_dep_bindir}"
                        DEPENDS "${config_fn}" "${template}"
                        VERBATIM USES_TERMINAL)
     foreach(gen_source ${generated_sources})
