@@ -487,6 +487,9 @@ struct multiplication_promotion
   using type = decltype(std::declval<L>() * std::declval<R>());
 };
 
+template <class L, class R>
+using multiplication_promoted_t = typename multiplication_promotion<L, R>::type;
+
 
 /**
  * To be used e.g. with AlwaysFalse:
