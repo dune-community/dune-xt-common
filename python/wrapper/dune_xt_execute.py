@@ -45,4 +45,4 @@ args = get_args()
 xml_out = "--gtest_output=xml:{}_{}.xml".format(os.path.splitext(os.path.basename(args["exec"]))[0],
                                             os.path.splitext(os.path.basename(args["ini"]))[0])
 sys.exit(call(args["exec"], args["ini"],
-              ))
+              xml_out))
