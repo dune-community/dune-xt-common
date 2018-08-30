@@ -96,8 +96,11 @@ for (std::string type : {"target", "norm", "estimate"}) {
 \endcode
    * and to contain data["info"]["time_to_solution"] (in seconds).
    */
-  virtual std::map<std::string, std::map<std::string, double>> compute(const size_t refinement_level,
-                                                                       const std::vector<std::string>& only_these) = 0;
+  virtual std::map<std::string, std::map<std::string, double>>
+  compute(const size_t refinement_level,
+          const std::vector<std::string>& actual_norms,
+          const std::vector<std::pair<std::string, std::string>>& actual_estimates,
+          const std::vector<std::string>& actual_quantities) = 0;
 
   /**
    * \brief The expected rates of convergence, merely to be used to color the EOCs.
