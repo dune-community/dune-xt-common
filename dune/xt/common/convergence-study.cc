@@ -150,10 +150,10 @@ void ConvergenceStudy::run(const std::vector<std::string>& only_these, std::ostr
                 "there has to be at least a single target!\n   self.targets() = " << self.targets());
   const std::vector<std::string> actual_targets =
       filter(self.targets(), only_these).empty() ? self.targets() : filter(self.targets(), only_these);
-  const std::vector<std::string> actual_norms = filter(self.norms(), only_these);
-  //  const std::vector<std::string, std::string> actual_estimates = filter(self.estimates(), only_these);
-  const std::vector<std::string> actual_quantities = filter(self.quantities(), only_these);
-  DUNE_THROW_IF(actual_norms.size() + actual_quantities.size() == 0,
+  const auto actual_norms = filter(self.norms(), only_these);
+  const auto actual_estimates = filter(self.estimates(), only_these);
+  const auto actual_quantities = filter(self.quantities(), only_these);
+  DUNE_THROW_IF(actual_norms.size() /*+ actual_estimates.size()*/ + actual_quantities.size() == 0,
                 Exceptions::you_are_using_this_wrong,
                 "there has to be at least a single norm estimate, or quantity!\n   self.norms() = "
                     << self.norms()
@@ -237,7 +237,7 @@ void ConvergenceStudy::run(const std::vector<std::string>& only_these, std::ostr
     // and print them
     out << " " << cfill(disc_info, disc_info_title.size()) << " " << std::flush;
     // do the actual computation
-    data[level] = compute(level, only_these);
+    data[level] = compute(level, actual_norms, actual_estimates, actual_quantities);
     // and print the results
     // - targets
     for (const auto& id : actual_targets) {
