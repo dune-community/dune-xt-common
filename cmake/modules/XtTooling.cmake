@@ -55,6 +55,8 @@ macro(add_format glob_dir)
                       "${glob_dir}/*.cc"
                       "${glob_dir}/*.cxx"
                       "${glob_dir}/*.hxx"
+                      "${glob_dir}/*.cpp"
+                      "${glob_dir}/*.hpp"
                       "${glob_dir}/*.h"
                       "${glob_dir}/*.c"
                       "${glob_dir}/*.pbh")
