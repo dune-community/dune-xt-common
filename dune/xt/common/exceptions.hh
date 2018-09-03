@@ -137,6 +137,10 @@ class debug_assertion : public Dune::Exception
 {
 };
 
+class bisection_error : public wrong_input_given
+{
+};
+
 class DUNE_DEPRECATED_MSG("Use Dune::XT::Functions::Exceptions:;reinterpretation_error (09.04.2018)!")
     reinterpretation_error : public Dune::Exception
 {
