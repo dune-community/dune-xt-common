@@ -133,6 +133,10 @@ class you_have_to_implement_this : public Dune::NotImplemented
 {
 };
 
+class bisection_error : public wrong_input_given
+{
+};
+
 class DUNE_DEPRECATED_MSG("Use Dune::XT::Functions::Exceptions:;reinterpretation_error (09.04.2018)!")
     reinterpretation_error : public Dune::Exception
 {
