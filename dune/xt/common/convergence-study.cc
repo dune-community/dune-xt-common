@@ -82,24 +82,29 @@ std::string ConvergenceStudy::cfill(const std::string& id, const size_t len) con
   }
 }
 
+double ConvergenceStudy::extract(const std::map<std::string, std::map<std::string, double>>& level_data,
+                                 const std::string& type,
+                                 const std::string& id) const
+{
+  try {
+    const auto& type_data = level_data.at(type);
+    try {
+      return type_data.at(id);
+    } catch (const std::out_of_range&) {
+      DUNE_THROW(Exceptions::requirements_not_met, "data missing for\n   type = " << type << "\n   id = " << id);
+    }
+  } catch (const std::out_of_range&) {
+    DUNE_THROW(Exceptions::requirements_not_met, "data missing for\n   type = " << type);
+  }
+} // ... extract(...)
+
 double ConvergenceStudy::extract(const std::map<size_t, std::map<std::string, std::map<std::string, double>>>& data,
                                  const size_t level,
                                  const std::string& type,
                                  const std::string& id) const
 {
   try {
-    const auto& level_data = data.at(level);
-    try {
-      const auto& type_data = level_data.at(type);
-      try {
-        return type_data.at(id);
-      } catch (const std::out_of_range&) {
-        DUNE_THROW(Exceptions::requirements_not_met,
-                   "data missing for\n   level = " << level << "\n   type = " << type << "\n   id = " << id);
-      }
-    } catch (const std::out_of_range&) {
-      DUNE_THROW(Exceptions::requirements_not_met, "data missing for\n   level = " << level << "\n   type = " << type);
-    }
+    return extract(data.at(level), type, id);
   } catch (const std::out_of_range&) {
     DUNE_THROW(Exceptions::requirements_not_met, "data missing for level " << level << "!");
   }
@@ -210,19 +215,60 @@ void ConvergenceStudy::run(const std::vector<std::string>& only_these, std::ostr
 #endif // 0
   // - quantities
   for (const auto& id : actual_quantities) {
+    std::string first_row = "";
+    std::string second_row = "";
+    std::string third_row = "";
+    auto words = tokenize(id, " ");
     if (id.size() <= column_width) {
-      h1 += "| " + cfill(id, column_width) + " ";
-      d1 += "+" + std::string(column_width + 2, ' ');
-      h2 += "| " + std::string(column_width + 2, ' ');
-    } else if (id.size() <= 2 * column_width) {
-      h1 += "| " + id.substr(0, column_width) + " ";
-      d1 += "+ " + cfill(id.substr(column_width, column_width), column_width) + " ";
-      h2 += "| " + std::string(column_width + 2, ' ');
+      first_row = std::string(column_width, ' ');
+      second_row = lfill(id, column_width);
+      third_row = std::string(column_width, ' ');
     } else {
-      h1 += "| " + id.substr(0, column_width) + " ";
-      d1 += "+ " + cfill(id.substr(column_width, column_width), column_width) + " ";
-      h2 += "| " + cfill(id.substr(2 * column_width), column_width) + " ";
+      // lets see if we can fit all words in these rows somehow nicely
+      int last_row = 0;
+      for (auto word_it = words.begin(); word_it != words.end(); ++word_it) {
+        const auto& word = *word_it;
+        if (word.size() > column_width)
+          break;
+        if (last_row <= 1 && word.size() <= (column_width - first_row.size() - (first_row.empty() ? 0 : 1))) {
+          first_row += (first_row.empty() ? "" : " ") + word;
+          last_row = 1;
+          words.erase(word_it);
+        } else if (last_row <= 2 && word.size() <= (column_width - second_row.size() - (second_row.empty() ? 0 : 1))) {
+          second_row += (second_row.empty() ? "" : " ") + word;
+          last_row = 2;
+          words.erase(word_it);
+        } else if (last_row <= 3 && word.size() <= (column_width - third_row.size() - (third_row.empty() ? 0 : 1))) {
+          third_row += (third_row.empty() ? "" : " ") + word;
+          last_row = 3;
+          words.erase(word_it);
+        }
+      }
+      if (words.empty()) {
+        // this worked, align right
+        first_row = lfill(first_row, column_width);
+        second_row = lfill(second_row, column_width);
+        third_row = lfill(third_row, column_width);
+      } else {
+        // the above did not work/cover all words, now brute force
+        if (id.size() <= column_width) {
+          first_row = lfill(id, column_width);
+          second_row = std::string(column_width, ' ');
+          third_row = std::string(column_width, ' ');
+        } else if (id.size() <= 2 * column_width) {
+          first_row = id.substr(0, column_width);
+          second_row = lfill(id.substr(column_width, column_width), column_width);
+          third_row = std::string(column_width, ' ');
+        } else {
+          first_row = id.substr(0, column_width);
+          second_row = id.substr(column_width, column_width);
+          third_row = lfill(id.substr(2 * column_width), column_width);
+        }
+      }
     }
+    h1 += "| " + first_row + " ";
+    d1 += "+ " + second_row + " ";
+    h2 += "| " + third_row + " ";
     delim += "+" + std::string(column_width + 2, '-');
   }
   // print header
@@ -292,7 +338,7 @@ void ConvergenceStudy::run(const std::vector<std::string>& only_these, std::ostr
       out << "| " << lfill(ss.str(), column_width) << " " << std::flush;
     }
     // end of line
-    out << " (solve took " << extract(data, level, "info", "time_to_solution") << "s)\n";
+    out << "\n";
     if (level < self.num_refinements())
       out << delim;
     out << std::endl;
