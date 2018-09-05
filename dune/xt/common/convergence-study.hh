@@ -120,6 +120,10 @@ protected:
   std::string cfill(const std::string& id, const size_t len) const;
 
   /// \todo improve
+  double extract(const std::map<std::string, std::map<std::string, double>>& level_data,
+                 const std::string& type,
+                 const std::string& id) const;
+
   double extract(const std::map<size_t, std::map<std::string, std::map<std::string, double>>>& data,
                  const size_t level,
                  const std::string& type,
