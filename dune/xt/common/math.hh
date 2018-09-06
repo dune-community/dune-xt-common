@@ -325,6 +325,14 @@ typename PromotionTraits<L, R>::PromotedType min(const L& left, const R& right)
 }
 
 
+// avoid Wfloat-equal warning
+template <class FieldType>
+inline bool is_zero(const FieldType& val)
+{
+  return std::equal_to<FieldType>()(val, FieldType(0));
+}
+
+
 } // namespace Common
 } // namespace XT
 } // namespace Dune
