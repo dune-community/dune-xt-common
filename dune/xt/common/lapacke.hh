@@ -143,7 +143,6 @@ int dgeevx_work(int matrix_layout,
                 int lwork,
                 int* iwork);
 
-
 /**
  * \brief Wrapper around LAPACKE_dgeqp3
  * \sa    LAPACKE_dgeqp3
@@ -240,6 +239,13 @@ int dpotrf_work(int matrix_layout, char uplo, int n, double* a, int lda);
  * \sa    LAPACKE_dptcon
  */
 int dptcon(int n, const double* d, const double* e, double anorm, double* rcond);
+
+
+/**
+ * \brief Wrapper around LAPACKE_dptcon
+ * \sa    LAPACKE_dpocon
+ */
+int dpocon(int matrix_layout, char uplo, int n, const double* a, int lda, double anorm, double* rcond);
 
 
 /**
@@ -365,6 +371,24 @@ int unit();
  * \sa    CblasNonUnit
  */
 int non_unit();
+
+
+/**
+ * \brief Wrapper around cblas_dgemv
+ * \sa    cblas_dgemv
+ */
+void dgemv(const int layout,
+           const int trans,
+           const int m,
+           const int n,
+           const double alpha,
+           const double* a,
+           const int lda,
+           const double* x,
+           const int incx,
+           const double beta,
+           double* y,
+           const int incy);
 
 
 /**

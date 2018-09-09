@@ -425,6 +425,23 @@ int dptcon(int DXTC_LAPACKE_ONLY(n),
 }
 
 
+int dpocon(int DXTC_LAPACKE_ONLY(matrix_layout),
+           char DXTC_LAPACKE_ONLY(uplo),
+           int DXTC_LAPACKE_ONLY(n),
+           const double* DXTC_LAPACKE_ONLY(a),
+           int DXTC_LAPACKE_ONLY(lda),
+           double DXTC_LAPACKE_ONLY(anorm),
+           double* DXTC_LAPACKE_ONLY(rcond))
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_dpocon(matrix_layout, uplo, n, a, lda, anorm, rcond);
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
 int dpttrf(int DXTC_LAPACKE_ONLY(n), double* DXTC_LAPACKE_ONLY(d), double* DXTC_LAPACKE_ONLY(e))
 {
 #if HAVE_MKL || HAVE_LAPACKE
@@ -631,6 +648,38 @@ int non_unit()
 #else
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
   return 1;
+#endif
+}
+
+
+void dgemv(const int DXTC_CBLAS_ONLY(layout),
+           const int DXTC_CBLAS_ONLY(trans),
+           const int DXTC_CBLAS_ONLY(m),
+           const int DXTC_CBLAS_ONLY(n),
+           const double DXTC_CBLAS_ONLY(alpha),
+           const double* DXTC_CBLAS_ONLY(a),
+           const int DXTC_CBLAS_ONLY(lda),
+           const double* DXTC_CBLAS_ONLY(x),
+           const int DXTC_CBLAS_ONLY(incx),
+           const double DXTC_CBLAS_ONLY(beta),
+           double* DXTC_CBLAS_ONLY(y),
+           const int DXTC_CBLAS_ONLY(incy))
+{
+#if HAVE_MKL || HAVE_CBLAS
+  cblas_dgemv(static_cast<CBLAS_LAYOUT>(layout),
+              static_cast<CBLAS_TRANSPOSE>(trans),
+              m,
+              n,
+              alpha,
+              a,
+              lda,
+              x,
+              incx,
+              beta,
+              y,
+              incy);
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
 #endif
 }
 

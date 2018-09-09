@@ -54,7 +54,7 @@ commit = d7b20bbc5f6fdcfc312beb0ea5d16d39ea26904e
 [submodule.dune-grid-glue]
 remote = https://github.com/dune-mirrors/dune-grid-glue.git
 status = 
-commit = e9d9a3336735090648637e044e279866bbea3597
+commit = 9e29a333e8af02382d80b95335a784d5ce1ea2c8
 
 [submodule.dune-istl]
 remote = http://github.com/dune-mirrors/dune-istl.git
@@ -92,7 +92,7 @@ status = 2424627f0ad5de7e4aaa5e7f48bc2a02414d95a1 .vcsetup (remotes/origin/HEAD)
 commit = d9e5de4d5d24e876d464a752eded6c157e02a3c1
 
 [submodule.dune-xt-data]
-remote = https://github.com/dune-community/dune-xt-data
+remote = git@github.com:dune-community/dune-xt-data
 status = 2424627f0ad5de7e4aaa5e7f48bc2a02414d95a1 .vcsetup (heads/master)
 commit = 5585f9689a8d004544e1f5b63994e570fc76f81b
 
