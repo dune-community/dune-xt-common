@@ -28,13 +28,7 @@ GTEST_TEST(find_largest_by_bisection_test, works_for_right_smaller_left)
 
 GTEST_TEST(find_largest_by_bisection_test, breaks_for_broken_condition)
 {
-  try {
-    find_largest_by_bisection(/*left=*/0, /*right=*/1, /*condition=*/[&](const auto& /*x*/) { return false; });
-  } catch (const Exceptions::bisection_error&) {
-    // everything in order
-    return;
-  } catch (...) {
-    EXPECT_TRUE(false) << "we should not get here";
-  }
-  EXPECT_TRUE(false) << "we should not get here";
+  EXPECT_THROW(
+      find_largest_by_bisection(/*left=*/0, /*right=*/1, /*condition=*/[&](const auto& /*x*/) { return false; }),
+      Exceptions::bisection_error);
 }
