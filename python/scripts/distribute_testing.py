@@ -170,7 +170,7 @@ logging.basicConfig(level=logging.DEBUG)
 testname_map = {b: t.strip().split(';') for b,t in zip(binaries, all_testnames)}
 processes = 1 #cpu_count()
 
-totals = do_timings(builddir, testdir, binaries, all_testnames, processes, headerlibs)
+totals = do_timings(builddir, builddir, binaries, all_testnames, processes, headerlibs)
 
 #bins = binpacking.to_constant_volume(totals, MAXTIME)
 bins = binpacking.to_constant_bin_number(totals, bincount)
