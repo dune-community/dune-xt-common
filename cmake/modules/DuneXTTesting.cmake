@@ -222,6 +222,13 @@ macro(END_TESTCASES) # this excludes meta-ini variation test cases because  ther
                  ${CMAKE_CURRENT_BINARY_DIR}/dxt_all_sorted_testnames.cmake)
   configure_file(${dune-xt-common-module-path}/dxt_headercheck_targets.cmake.in
                  ${CMAKE_CURRENT_BINARY_DIR}/dxt_headercheck_targets.cmake)
+  # we use a scatter/gather setup so this still goes thru (with no new/removed tests) on CI where SRC is mounted ro
+  add_custom_target(scatter_pickles_compile
+                    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/compiles_totals.pickle"
+                            "${CMAKE_BINARY_DIR}/compiles_totals.pickle")
+  add_custom_target(scatter_pickles_run
+                    COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/testruns_totals.pickle"
+                            "${CMAKE_BINARY_DIR}/testruns_totals.pickle")
   add_custom_target(rerun_test_distribution
                     ${CMAKE_BINARY_DIR}/dune-env
                     distribute_testing.py
@@ -232,13 +239,23 @@ macro(END_TESTCASES) # this excludes meta-ini variation test cases because  ther
                     "${CMAKE_CURRENT_BINARY_DIR}/dxt_headercheck_targets.cmake"
                     "${DXT_BIN_COUNT}"
                     VERBATIM
-                    USES_TERMINAL)
+                    USES_TERMINAL
+                    DEPENDS scatter_pickles_compile scatter_pickles_run)
   add_custom_target(copy_builders_if_different
                     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_BINARY_DIR}/builder_definitions.cmake"
                             "${CMAKE_CURRENT_SOURCE_DIR}/builder_definitions.cmake")
+  add_custom_target(gather_pickles_compile
+                    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_BINARY_DIR}/compiles_totals.pickle"
+                            "${CMAKE_CURRENT_SOURCE_DIR}/compiles_totals.pickle"
+                    DEPENDS rerun_test_distribution)
+  add_custom_target(gather_pickles_run
+                    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_BINARY_DIR}/testruns_totals.pickle"
+                            "${CMAKE_CURRENT_SOURCE_DIR}/testruns_totals.pickle"
+                    DEPENDS rerun_test_distribution)
+  
   add_custom_target(refresh_test_timings)
   add_dependencies(copy_builders_if_different rerun_test_distribution)
-  add_dependencies(refresh_test_timings copy_builders_if_different)
+  add_dependencies(refresh_test_timings copy_builders_if_different gather_pickles_compile gather_pickles_run)
 endmacro(END_TESTCASES)
 
 macro(dxt_exclude_from_headercheck)
