@@ -252,7 +252,7 @@ macro(END_TESTCASES) # this excludes meta-ini variation test cases because  ther
                     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${CMAKE_BINARY_DIR}/testruns_totals.pickle"
                             "${CMAKE_CURRENT_SOURCE_DIR}/testruns_totals.pickle"
                     DEPENDS rerun_test_distribution)
-  
+
   add_custom_target(refresh_test_timings)
   add_dependencies(copy_builders_if_different rerun_test_distribution)
   add_dependencies(refresh_test_timings copy_builders_if_different gather_pickles_compile gather_pickles_run)
