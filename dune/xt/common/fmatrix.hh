@@ -144,8 +144,8 @@ public:
 
   void invert();
 
-  template <class V>
-  void solve(V& x, const V& b) const;
+  template <class V, class W>
+  void solve(V& x, const W& b) const;
 
 private:
   // copy from dune/common/densematrix.hh, we have to copy it as it is a private member of Dune::DenseMatrix
@@ -365,8 +365,8 @@ inline typename FieldMatrix<K, ROWS, COLS>::field_type FieldMatrix<K, ROWS, COLS
 // TODO: Fixed in dune-common master (see MR !449 in dune-common's gitlab), remove this copy once we depend on a
 // suitable version of dune-common (probably 2.7).
 template <class K, int ROWS, int COLS>
-template <class V>
-inline void FieldMatrix<K, ROWS, COLS>::solve(V& x, const V& b) const
+template <class V, class W>
+inline void FieldMatrix<K, ROWS, COLS>::solve(V& x, const W& b) const
 {
   // never mind those ifs, because they get optimized away
   if (ROWS != COLS)
@@ -757,6 +757,19 @@ public:
   static bool is_valid_entry(const size_t jj, const size_t ll, const size_t mm)
   {
     return (jj < num_blocks && ll < block_rows && mm < block_cols);
+  }
+
+  DynamicMatrix<K> convert_to_dynamic_matrix() const
+  {
+    DynamicMatrix<K> ret(num_rows, num_cols, 0.);
+    for (size_t jj = 0; jj < num_blocks; ++jj) {
+      const size_t row_offset = jj * block_rows;
+      const size_t col_offset = jj * block_cols;
+      for (size_t rr = 0; rr < block_rows; ++rr)
+        for (size_t cc = 0; cc < block_cols; ++cc)
+          ret[row_offset + rr][col_offset + cc] = block(jj)[rr][cc];
+    } // jj
+    return ret;
   }
 
   template <class CharType, class CharTraits>
