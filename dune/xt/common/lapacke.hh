@@ -249,6 +249,12 @@ int dpocon(int matrix_layout, char uplo, int n, const double* a, int lda, double
 
 
 /**
+ * \brief Wrapper around LAPACKE_dtrcon
+ * \sa    LAPACKE_dtrcon
+ */
+int dtrcon(int matrix_layout, char norm, char uplo, char diag, int n, const double* a, int lda, double* rcond);
+
+/**
  * \brief Wrapper around LAPACKE_dpttrf
  * \sa    LAPACKE_dpttrf
  */
@@ -389,7 +395,6 @@ void dgemv(const int layout,
            const double beta,
            double* y,
            const int incy);
-
 
 /**
  * \brief Wrapper around cblas_dtrsm
