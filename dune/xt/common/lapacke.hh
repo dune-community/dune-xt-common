@@ -174,6 +174,12 @@ int dgesvd(int matrix_layout,
            double* superb);
 
 /**
+ * \brief Wrapper around LAPACKE_dlamch
+ * \sa    LAPACKE_dlamch
+ */
+double dlamch(char cmach);
+
+/**
  * \brief Wrapper around LAPACKE_dorgqr
  * \sa    LAPACKE_dorgqr
  */
