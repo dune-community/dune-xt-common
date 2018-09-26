@@ -303,6 +303,16 @@ int dgesvd(int DXTC_LAPACKE_ONLY(matrix_layout),
 #endif
 }
 
+double dlamch(char cmach)
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_dlamch(cmach);
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1.;
+#endif
+}
+
 int dorgqr(int DXTC_LAPACKE_ONLY(matrix_layout),
            int DXTC_LAPACKE_ONLY(m),
            int DXTC_LAPACKE_ONLY(n),
