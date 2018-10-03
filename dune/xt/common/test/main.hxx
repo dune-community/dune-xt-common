@@ -84,18 +84,20 @@ int main(int argc, char** argv)
         "",
         "");
 
-    const ssize_t max_info_level =
+    const ssize_t max_info_level = DXTC_CONFIG.get("timedlogging.max_info",
 #if DUNE_XT_COMMON_TEST_MAIN_ENABLE_TIMED_LOGGING && DUNE_XT_COMMON_TEST_MAIN_ENABLE_INFO_LOGGING
-        std::numeric_limits<ssize_t>::max();
+                                                   std::numeric_limits<ssize_t>::max()
 #else
-      -1;
+                                                 -1
 #endif
-    const ssize_t max_debug_level =
+                                                       );
+    const ssize_t max_debug_level = DXTC_CONFIG.get("timedlogging.max_debug",
 #if DUNE_XT_COMMON_TEST_MAIN_ENABLE_TIMED_LOGGING && DUNE_XT_COMMON_TEST_MAIN_ENABLE_DEBUG_LOGGING
-        std::numeric_limits<ssize_t>::max();
+                                                    std::numeric_limits<ssize_t>::max()
 #else
-      -1;
+                                                  -1
 #endif
+                                                        );
     TimedLogger().create(max_info_level /*info*/, max_debug_level /*debug*/);
 
     const size_t threads = DXTC_CONFIG.has_key("threading.max_count") // <- doing this so complicated to
@@ -111,13 +113,13 @@ int main(int argc, char** argv)
 #if DUNE_XT_COMMON_TEST_MAIN_CATCH_EXCEPTIONS
   } catch (Dune::Exception& e) {
     std::cerr << "\nDune reported error: " << e.what() << std::endl;
-    std::abort();
+    return EXIT_FAILURE;
   } catch (std::exception& e) {
     std::cerr << "\n" << e.what() << std::endl;
-    std::abort();
+    return EXIT_FAILURE;
   } catch (...) {
     std::cerr << "Unknown exception thrown!" << std::endl;
-    std::abort();
+    return EXIT_FAILURE;
   } // try
 #endif // DUNE_XT_COMMON_TEST_MAIN_CATCH_EXCEPTIONS
 } // ... main(...)
