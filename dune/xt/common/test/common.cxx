@@ -89,6 +89,7 @@ void check_eoc_study_for_success(const Common::ConvergenceStudy& study,
       if (!(expected_results[ii] < 0.0 || expected_results[ii] > 0.0)) {
         if (std::abs(actual_results[ii]) > zero_tolerance) {
           EXPECT_TRUE(false) << "Expected result is interpreted as zero and result is not close enough to zero!\n"
+                             << "          norm: " << norm << "\n"
                              << "          zero_tolerance: " << zero_tolerance << "\n"
                              << "          actual_results[" << ii << "]   = " << actual_results[ii] << "\n"
                              << "          expected_results[" << ii << "] = " << expected_results[ii];
