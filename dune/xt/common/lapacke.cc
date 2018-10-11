@@ -303,6 +303,16 @@ int dgesvd(int DXTC_LAPACKE_ONLY(matrix_layout),
 #endif
 }
 
+double dlamch(char cmach)
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_dlamch(cmach);
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1.;
+#endif
+}
+
 int dorgqr(int DXTC_LAPACKE_ONLY(matrix_layout),
            int DXTC_LAPACKE_ONLY(m),
            int DXTC_LAPACKE_ONLY(n),
@@ -441,6 +451,26 @@ int dpocon(int DXTC_LAPACKE_ONLY(matrix_layout),
 #endif
 }
 
+
+int dtrcon(int DXTC_LAPACKE_ONLY(matrix_layout),
+           char DXTC_LAPACKE_ONLY(norm),
+           char DXTC_LAPACKE_ONLY(uplo),
+           char DXTC_LAPACKE_ONLY(diag),
+           int DXTC_LAPACKE_ONLY(n),
+           const double* DXTC_LAPACKE_ONLY(a),
+           int DXTC_LAPACKE_ONLY(lda),
+           double* DXTC_LAPACKE_ONLY(rcond))
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_dtrcon(matrix_layout, norm, uplo, diag, n, a, lda, rcond);
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
+int LAPACKE_dtrcon(int matrix_layout, char norm, char uplo, char diag, int n, const double* a, int lda, double* rcond);
 
 int dpttrf(int DXTC_LAPACKE_ONLY(n), double* DXTC_LAPACKE_ONLY(d), double* DXTC_LAPACKE_ONLY(e))
 {
