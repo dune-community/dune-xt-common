@@ -141,7 +141,7 @@ GTEST_TEST(StringTest, ConvertFrom)
   EXPECT_EQ(false, from_string<bool>("0"));
   EXPECT_EQ(false, from_string<bool>("false"));
   EXPECT_EQ(false, from_string<bool>("False"));
-  EXPECT_THROW(from_string<int>(""), std::invalid_argument);
+  EXPECT_THROW(from_string<int>(""), Exceptions::conversion_error);
   typedef std::complex<double> Complex;
   EXPECT_EQ(Complex(1, -1), from_string<Complex>("+1-1i"));
   EXPECT_EQ(Complex(1, 0), from_string<Complex>("+1"));
