@@ -25,7 +25,7 @@
 #define DUNE_XT_COMMON_VERSION_REVISION ${DUNE_XT_COMMON_VERSION_REVISION}
 
 #ifndef HAVE_CBLAS
-#define HAVE_CBLAS ${HAVE_CBLAS}
+#cmakedefine01 HAVE_CBLAS
 #endif
 
 #ifndef HAVE_EIGEN
@@ -33,40 +33,39 @@
 #endif
 
 #ifndef HAVE_CLP
-#define HAVE_CLP ${HAVE_CLP}
+#cmakedefine01 HAVE_CLP
 #endif
 
 #ifndef HAVE_QHULL
-#define HAVE_QHULL ${HAVE_QHULL}
+#cmakedefine01 HAVE_QHULL
 #endif
 
 #ifndef HAVE_LPSOLVE
-#define HAVE_LPSOLVE ${HAVE_LPSOLVE}
+#cmakedefine01 HAVE_LPSOLVE
 #endif
 
 #ifndef HAVE_LAPACKE
-#define HAVE_LAPACKE ${HAVE_LAPACKE}
+#cmakedefine01 HAVE_LAPACKE
 #endif
 
 #ifndef HAVE_MKL
-#define HAVE_MKL ${HAVE_MKL}
+#cmakedefine01 HAVE_MKL
 #endif
 
 #ifndef HAVE_MATEXP
-#define HAVE_MATEXP ${HAVE_MATEXP}
+#cmakedefine01 HAVE_MATEXP
 #endif
 
 #ifndef HAVE_FEKETE
-#define HAVE_FEKETE ${HAVE_FEKETE}
+#cmakedefine01 HAVE_FEKETE
 #endif
 
 #ifndef HAVE_LEBEDEVDATA
-#define HAVE_LEBEDEVDATA ${HAVE_LEBEDEVDATA}
+#cmakedefine01 HAVE_LEBEDEVDATA
 #endif
 
-/* Define to 1 if threading building blocks were found, else 0 */
 #ifndef HAVE_TBB
-#define HAVE_TBB ${HAVE_TBB}
+#cmakedefine01 HAVE_TBB
 #endif
 
 #ifndef DXT_DISABLE_LARGE_TESTS
@@ -78,11 +77,11 @@
 #endif
 
 #ifndef HAVE_LIKWID
-#define HAVE_LIKWID ${HAVE_LIKWID}
+#cmakedefine01 HAVE_LIKWID
 #endif
 
 #ifndef ENABLE_PERFMON
-#define ENABLE_PERFMON ${ENABLE_PERFMON}
+#cmakedefine01 ENABLE_PERFMON
 #endif
 
 #if ENABLE_PERFMON && HAVE_LIKWID
