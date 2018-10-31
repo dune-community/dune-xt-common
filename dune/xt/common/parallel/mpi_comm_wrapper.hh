@@ -25,7 +25,7 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
-//! this class is needed becaus epybind11 canot directly use the real mpi_comm type
+//! this class is needed because pybind11 cannot directly use the real mpi_comm type
 class MPI_Comm_Wrapper
 {
   using WrappedComm = MPIHelper::MPICommunicator;
