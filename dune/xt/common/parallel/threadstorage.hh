@@ -385,15 +385,17 @@ public:
   {
     Reduction reduce;
     Result result{0};
+    Imp* first_cpy = copies_.front();
     Imp* cpy = nullptr;
     while (copies_.size() > 0) {
       cpy = copies_.back();
       copies_.pop_back();
-      if (cpy != nullptr) {
+      if (cpy != first_cpy) {
         result = reduce(result, cpy->result());
       }
     }
-    cpy->set_result(result);
+    assert(copies_.size() == 0 && first_cpy == cpy);
+    first_cpy->add_to_result(result);
   }
 
 private:
