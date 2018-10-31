@@ -373,7 +373,9 @@ public:
 
   Imp* copy_imp()
   {
-    auto cpy = new Imp(*imp_);
+    auto* cpy = new Imp(*imp_);
+    cpy->imp_ = cpy;
+    cpy->copies_ = copies_;
     cpy->copies_.push_back(cpy);
     DXT_ASSERT(cpy->copies_.size() > 1);
     return cpy;
