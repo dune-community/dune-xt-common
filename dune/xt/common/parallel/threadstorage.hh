@@ -17,6 +17,7 @@
 
 #include <algorithm>
 #include <list>
+#include <mutex>
 #include <numeric>
 #include <type_traits>
 
@@ -361,46 +362,48 @@ private:
 }; // class UnsafePerThreadValue<...>
 
 
+/**
+ * \brief Propagates results from copies in each thread (usually stemming from PerThreadValue) to base functor on
+ *calling finalize.
+ * \param imp_ Pointer to implementation
+ * \param base_ Pointer to initial base functor
+**/
 template <class Imp, typename Result, class Reduction = std::plus<Result>>
 class ThreadResultPropagator
 {
 public:
   ThreadResultPropagator(Imp* imp)
     : imp_(imp)
-    , copies_({imp})
+    , base_(imp)
+  {
+  }
+
+  ThreadResultPropagator(const ThreadResultPropagator& other)
+    : imp_(other.imp_)
+    , base_(other.base_)
+    , mutex_()
   {
   }
 
   Imp* copy_imp()
   {
     auto* cpy = new Imp(*imp_);
+    cpy->base_ = imp_->base_;
     cpy->imp_ = cpy;
-    cpy->copies_ = copies_;
-    cpy->copies_.push_back(cpy);
-    DXT_ASSERT(cpy->copies_.size() > 1);
     return cpy;
   }
 
   void finalize_imp()
   {
+    std::lock_guard<std::mutex> lock_base(base_->mutex_);
     Reduction reduce;
-    Result result{0};
-    Imp* first_cpy = copies_.front();
-    Imp* cpy = nullptr;
-    while (copies_.size() > 0) {
-      cpy = copies_.back();
-      copies_.pop_back();
-      if (cpy != first_cpy) {
-        result = reduce(result, cpy->result());
-      }
-    }
-    assert(copies_.size() == 0 && first_cpy == cpy);
-    first_cpy->add_to_result(result);
+    base_->set_result(reduce(base_->result(), imp_->result()));
   }
 
-private:
+protected:
   Imp* imp_;
-  std::list<Imp*> copies_;
+  Imp* base_;
+  std::mutex mutex_;
 };
 
 
