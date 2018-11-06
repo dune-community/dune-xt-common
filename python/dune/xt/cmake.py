@@ -18,7 +18,7 @@ def parse_cache(filepath):
     import pyparsing as p
     EQ = p.Literal('=').suppress()
     DP = p.Literal(':').suppress()
-    token = p.Word(p.alphanums+'_- .')
+    token = p.Word(p.alphanums+'/_- .')
     line = p.Group(token('key') + DP + token('type') + EQ + p.restOfLine('value'))
     line.ignore(p.pythonStyleComment)
     line.ignore(p.dblSlashComment)
