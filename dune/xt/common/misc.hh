@@ -19,7 +19,6 @@
 #include <assert.h>
 #include <algorithm>
 #include <dune/common/version.hh>
-#include <dune/common/array.hh>
 #include <dune/common/exceptions.hh>
 
 #include <cstddef>
@@ -64,9 +63,9 @@ inline int get_idx(const StlSequence& ct, const typename StlSequence::value_type
  * \example N=4: WraparoundArray[4] == WraparoundArray[0] && WraparoundArray[-1] == WraparoundArray[3]
  **/
 template <class T, size_t N>
-struct WraparoundArray : public Dune::array<T, N>
+struct WraparoundArray : public std::array<T, N>
 {
-  typedef Dune::array<T, N> BaseType;
+  typedef std::array<T, N> BaseType;
   WraparoundArray()
   {
     for (size_t i = 0; i < N; ++i)
@@ -109,7 +108,7 @@ size_t array_length(T (&/*array*/)[N])
   return N;
 }
 
-//! get a non-zero initialised array
+//! get a non-zero initialised std::array
 template <class T, size_t N>
 std::array<T, N> make_array(const T& v)
 {
