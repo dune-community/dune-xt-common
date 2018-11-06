@@ -28,11 +28,7 @@
 #  define DXTC_LIKWID_CLOSE
 #endif
 
-#if DUNE_VERSION_NEWER(DUNE_COMMON, 2, 3)
-#  include <dune/common/parallel/mpihelper.hh>
-#else
-#  include <dune/common/mpihelper.hh>
-#endif
+#include <dune/common/parallel/mpihelper.hh>
 
 #include <dune/xt/common/string.hh>
 #include <dune/xt/common/ranges.hh>
