@@ -70,7 +70,7 @@ macro(add_format glob_dir)
   list(REMOVE_ITEM _files "${glob_dir}/config.h.cmake")
   list(REMOVE_ITEM _files "${_exclude_files}")
   add_custom_target("format_${fn}_cmake"
-                    ${CMAKE_BINARY_DIR}/dune-env
+                    ${CMAKE_BINARY_DIR}/run-in-dune-env
                     cmake-format
                     -i
                     -c
