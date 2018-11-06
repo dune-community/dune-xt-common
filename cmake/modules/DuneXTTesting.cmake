@@ -100,7 +100,7 @@ macro(BEGIN_TESTCASES) # https://cmake.org/cmake/help/v3.0/module/FindGTest.html
                     gtest_dune_xt_common
                     COMMAND
                     ${CMAKE_BINARY_DIR}/run-in-dune-env
-		    CMD_ARGS
+                    CMD_ARGS
                     ${CMAKE_CURRENT_BINARY_DIR}/${target}
                     --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/${target}.xml
                     TIMEOUT
@@ -140,6 +140,7 @@ macro(BEGIN_TESTCASES) # https://cmake.org/cmake/help/v3.0/module/FindGTest.html
 
     dune_execute_process(COMMAND
                          ${CMAKE_BINARY_DIR}/run-in-dune-env
+                         CMD_ARGS
                          dxt_code_generation.py
                          "${config_fn}"
                          "${template}"
@@ -187,6 +188,7 @@ macro(BEGIN_TESTCASES) # https://cmake.org/cmake/help/v3.0/module/FindGTest.html
                     gtest_dune_xt_common
                     COMMAND
                     ${CMAKE_BINARY_DIR}/run-in-dune-env
+                    CMD_ARGS
                     ${CMAKE_CURRENT_BINARY_DIR}/${target}
                     --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/${target}.xml
                     TIMEOUT
@@ -276,15 +278,15 @@ macro(dxt_exclude_from_headercheck)
 endmacro(dxt_exclude_from_headercheck)
 
 macro(dxt_add_python_tests)
-  if (TARGET test_python)
-	  add_dependencies(test_python bindings)
-  else (TARGET test_python)
-  add_custom_target(test_python
-                    "${CMAKE_BINARY_DIR}/run-in-dune-env"
-                    "py.test"
-                    "."
-                    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/python"
-                    DEPENDS bindings
-                    VERBATIM USES_TERMINAL)
+  if(TARGET test_python)
+    add_dependencies(test_python bindings)
+  else(TARGET test_python)
+    add_custom_target(test_python
+                      "${CMAKE_BINARY_DIR}/run-in-dune-env"
+                      "py.test"
+                      "."
+                      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/python"
+                      DEPENDS bindings
+                      VERBATIM USES_TERMINAL)
   endif(TARGET test_python)
 endmacro(dxt_add_python_tests)
