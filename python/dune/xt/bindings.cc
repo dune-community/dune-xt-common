@@ -33,12 +33,13 @@
 #include <dune/xt/common/timedlogging.hh>
 
 #include <dune/common/parallel/mpihelper.hh>
+#include <dune/istl/owneroverlapcopy.hh>
 
 #include <dune/pybindxi/pybind11.h>
 #include <dune/pybindxi/stl.h>
 #include <dune/xt/common/numeric_cast.hh>
 #include <dune/xt/common/timedlogging.hh>
-
+#include <dune/xt/common/parallel/helper.hh>
 
 void addbind_mpistuff(pybind11::module& m)
 {
@@ -57,6 +58,15 @@ void addbind_mpistuff(pybind11::module& m)
   cls.def("min", [](const Comm& self, double x) { return self.min(x); }, "x"_a);
   cls.def("max", [](const Comm& self, double x) { return self.max(x); }, "x"_a);
   cls.def("sum", [](const Comm& self, double x) { return self.sum(x); }, "x"_a);
+
+  using SeqComm = Dune::XT::SequentialCommunication;
+  py::class_<SeqComm> seqcomm(m, "SequentialCommunication", "SequentialCommunication");
+  seqcomm.def(py::init());
+#if HAVE_MPI
+  using ParaComm = Dune::OwnerOverlapCopyCommunication<unsigned long, int>;
+  py::class_<ParaComm> paracomm(m, "OwnerOverlapCopyCommunication", "OwnerOverlapCopyCommunication");
+#endif
+  m.def("abort_all_mpi_processes", &Dune::XT::abort_all_mpi_processes);
 }
 
 void addbind_exceptions(pybind11::module& m)
