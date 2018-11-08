@@ -6,9 +6,9 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Barbara Verfürth (2015)
-//   Felix Schindler  (2013 - 2017)
-//   Rene Milk        (2013 - 2016, 2018)
-//   Tobias Leibner   (2014 - 2015)
+//   Felix Schindler  (2013 - 2018)
+//   René Fritze      (2013 - 2016, 2018)
+//   Tobias Leibner   (2014 - 2015, 2018)
 
 #ifndef DUNE_XT_COMMON_FLOAT_CMP_HH
 #define DUNE_XT_COMMON_FLOAT_CMP_HH

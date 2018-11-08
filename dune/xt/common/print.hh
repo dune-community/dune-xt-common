@@ -6,9 +6,9 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2010, 2012 - 2017)
-//   Rene Milk       (2009 - 2016, 2018)
+//   René Fritze     (2009 - 2016, 2018)
 //   Sven Kaulmann   (2011 - 2012)
-//   Tobias Leibner  (2014)
+//   Tobias Leibner  (2014, 2018)
 
 #ifndef DUNE_XT_COMMON_PRINT_HH
 #define DUNE_XT_COMMON_PRINT_HH

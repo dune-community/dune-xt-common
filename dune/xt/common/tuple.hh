@@ -6,9 +6,9 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2012, 2014 - 2017)
-//   Rene Milk       (2010 - 2013, 2015 - 2016, 2018)
+//   René Fritze     (2010 - 2013, 2015 - 2016, 2018)
 //   Stefan Girke    (2012)
-//   Tobias Leibner  (2014, 2016 - 2017)
+//   Tobias Leibner  (2014, 2016 - 2018)
 
 #ifndef DUNE_XT_COMMON_TUPLE_HH
 #define DUNE_XT_COMMON_TUPLE_HH

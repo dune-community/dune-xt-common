@@ -7,9 +7,9 @@
 // Authors:
 //   Barbara Verfürth (2015)
 //   Felix Schindler  (2012 - 2017)
-//   Rene Milk        (2012 - 2018)
+//   René Fritze      (2012 - 2018)
 //   Sven Kaulmann    (2013)
-//   Tobias Leibner   (2014 - 2017)
+//   Tobias Leibner   (2014 - 2018)
 
 #ifndef DUNE_XT_COMMON_VECTOR_HH
 #define DUNE_XT_COMMON_VECTOR_HH

@@ -6,7 +6,7 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2017)
-//   Rene Milk       (2016, 2018)
+//   René Fritze     (2016, 2018)
 
 template <Style style, class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
 typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool>::type
