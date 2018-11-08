@@ -5,7 +5,8 @@
 //      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
-//   Rene Milk       (2018)
+//   René Fritze    (2018)
+//   Tobias Leibner (2018)
 
 // This one has to come first (includes the config.h)!
 #include <dune/xt/common/test/main.hxx>

@@ -7,9 +7,9 @@
 // Authors:
 //   Andreas Buhr    (2014)
 //   Felix Schindler (2012 - 2018)
-//   Rene Milk       (2010 - 2018)
+//   René Fritze     (2010 - 2018)
 //   Sven Kaulmann   (2013)
-//   Tobias Leibner  (2014, 2017)
+//   Tobias Leibner  (2014, 2017 - 2018)
 
 #ifndef DUNE_XT_COMMON_MATH_HH
 #define DUNE_XT_COMMON_MATH_HH

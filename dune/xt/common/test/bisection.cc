@@ -6,6 +6,7 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2018)
+//   René Fritze     (2018)
 
 #include <dune/xt/common/test/main.hxx> // <- Has to come first, includes the config.h!
 #include <dune/xt/common/bisect.hh>

@@ -6,7 +6,8 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2012, 2014, 2016 - 2017)
-//   Rene Milk       (2010 - 2018)
+//   René Fritze     (2010 - 2018)
+//   Tobias Leibner  (2018)
 
 #ifndef DUNE_XT_COMMON_DEBUG_HH
 #define DUNE_XT_COMMON_DEBUG_HH

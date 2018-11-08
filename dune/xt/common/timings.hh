@@ -6,8 +6,9 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2012, 2014 - 2017)
-//   Rene Milk       (2009 - 2016, 2018)
+//   René Fritze     (2009 - 2016, 2018)
 //   Sven Kaulmann   (2011)
+//   Tobias Leibner  (2018)
 
 #ifndef DUNE_XT_COMMON_PROFILER_HH
 #define DUNE_XT_COMMON_PROFILER_HH
