@@ -78,7 +78,7 @@ macro(make_dependent_modules_sys_included) # disable most warnings from dependen
 endmacro(make_dependent_modules_sys_included)
 
 macro(add_pylicense)
-  file(GLOB configs ${PROJECT_SOURCE_DIR}/.pylicense*.cfg)
+  file(GLOB configs ${PROJECT_SOURCE_DIR}/.pylicense*.py)
   foreach(cfg ${configs})
     string(REGEX
            REPLACE ".*/([^/]*)"
