@@ -164,10 +164,7 @@ void ConvergenceStudy::run(const std::vector<std::string>& only_these, std::ostr
                     << self.norms()
                     //                    << "\n   self.estimates() = "
                     //                    << self.estimates()
-                    << "\n   self.quantities() = "
-                    << self.quantities()
-                    << "\n   only_these = "
-                    << only_these);
+                    << "\n   self.quantities() = " << self.quantities() << "\n   only_these = " << only_these);
   const size_t column_width = 8;
   const size_t eoc_column_width = (actual_targets.size() > 1) ? 8 : 4;
   // build header

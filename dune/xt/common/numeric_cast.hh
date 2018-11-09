@@ -33,10 +33,8 @@ T numeric_cast(S source)
     target = boost::numeric_cast<T>(source);
   } catch (boost::bad_numeric_cast& ee) {
     DUNE_THROW(XT::Common::Exceptions::external_error,
-               "  The following error occured in boost while converting '" << source << "' to '"
-                                                                           << XT::Common::Typename<T>::value()
-                                                                           << "':\n\n   "
-                                                                           << ee.what());
+               "  The following error occured in boost while converting '"
+                   << source << "' to '" << XT::Common::Typename<T>::value() << "':\n\n   " << ee.what());
   }
   return target;
 } // ... numeric_cast(...)
