@@ -20531,8 +20531,9 @@ const bool ImplicitlyConvertible<From, To>::value;
 // true iff T is type ProtocolMessage, proto2::Message, or a subclass
 // of those.
 template <typename T>
-struct IsAProtocolMessage : public bool_constant<ImplicitlyConvertible<const T*, const ::ProtocolMessage*>::value
-                                                 || ImplicitlyConvertible<const T*, const ::proto2::Message*>::value>
+struct IsAProtocolMessage
+  : public bool_constant<ImplicitlyConvertible<const T*, const ::ProtocolMessage*>::value
+                         || ImplicitlyConvertible<const T*, const ::proto2::Message*>::value>
 {};
 
 // When the compiler sees expression IsContainerTest<C>(0), if C is an
@@ -23264,11 +23265,11 @@ private:
 
   private:
     Iterator(const Iterator& other)
-        // The explicit constructor call suppresses a false warning
-        // emitted by gcc when supplied with the -Wextra option.
-        : ParamIteratorInterface<T>(),
-          base_(other.base_),
-          iterator_(other.iterator_)
+      // The explicit constructor call suppresses a false warning
+      // emitted by gcc when supplied with the -Wextra option.
+      : ParamIteratorInterface<T>()
+      , base_(other.base_)
+      , iterator_(other.iterator_)
     {}
 
     const ParamGeneratorInterface<T>* const base_;
@@ -31611,7 +31612,7 @@ template <typename T1,
           typename T9,
           typename T10>
 class CartesianProductGenerator10
-    : public ParamGeneratorInterface<::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>>
+  : public ParamGeneratorInterface<::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>>
 {
 public:
   typedef ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> ParamType;
@@ -38868,10 +38869,11 @@ INSTANTIATE_TYPED_TEST_CASE_P(My, FooTest, MyTypes);
     typedef gtest_TypeParam_ TypeParam;                                                                                \
     virtual void TestBody();                                                                                           \
   };                                                                                                                   \
-  bool gtest_##CaseName##_##TestName##_registered_ GTEST_ATTRIBUTE_UNUSED_ = ::testing::internal::                     \
-      TypeParameterizedTest<CaseName,                                                                                  \
-                            ::testing::internal::TemplateSel<GTEST_TEST_CLASS_NAME_(CaseName, TestName)>,              \
-                            GTEST_TYPE_PARAMS_(CaseName)>::Register("", #CaseName, #TestName, 0);                      \
+  bool gtest_##CaseName##_##TestName##_registered_ GTEST_ATTRIBUTE_UNUSED_ =                                           \
+      ::testing::internal::TypeParameterizedTest<                                                                      \
+          CaseName,                                                                                                    \
+          ::testing::internal::TemplateSel<GTEST_TEST_CLASS_NAME_(CaseName, TestName)>,                                \
+          GTEST_TYPE_PARAMS_(CaseName)>::Register("", #CaseName, #TestName, 0);                                        \
   template <typename gtest_TypeParam_>                                                                                 \
   void GTEST_TEST_CLASS_NAME_(CaseName, TestName)<gtest_TypeParam_>::TestBody()
 
@@ -38935,11 +38937,12 @@ INSTANTIATE_TYPED_TEST_CASE_P(My, FooTest, MyTypes);
 // since some compilers may choke on '>>' when passing a template
 // instance (e.g. Types<int>)
 #define INSTANTIATE_TYPED_TEST_CASE_P(Prefix, CaseName, Types)                                                         \
-  bool gtest_##Prefix##_##CaseName GTEST_ATTRIBUTE_UNUSED_ =                                                           \
-      ::testing::internal::TypeParameterizedTestCase<CaseName,                                                         \
-                                                     GTEST_CASE_NAMESPACE_(CaseName)::gtest_AllTests_,                 \
-                                                     ::testing::internal::TypeList<Types>::type>::                     \
-          Register(#Prefix, #CaseName, GTEST_REGISTERED_TEST_NAMES_(CaseName))
+  bool gtest_##Prefix##_##CaseName GTEST_ATTRIBUTE_UNUSED_ = ::testing::internal::TypeParameterizedTestCase<           \
+      CaseName,                                                                                                        \
+      GTEST_CASE_NAMESPACE_(CaseName)::gtest_AllTests_,                                                                \
+      ::testing::internal::TypeList<Types>::type>::Register(#Prefix,                                                   \
+                                                            #CaseName,                                                 \
+                                                            GTEST_REGISTERED_TEST_NAMES_(CaseName))
 
 #endif // GTEST_HAS_TYPED_TEST_P
 

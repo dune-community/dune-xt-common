@@ -230,7 +230,7 @@ class numeric_limits : public std::numeric_limits<double>
 
 template <class T>
 class numeric_limits<T, typename std::enable_if<std::numeric_limits<T>::is_specialized>::type>
-    : public std::numeric_limits<T>
+  : public std::numeric_limits<T>
 {};
 
 //! forward to std::isnan for general types, overload for complex below

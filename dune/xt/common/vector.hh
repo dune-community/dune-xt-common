@@ -164,9 +164,8 @@ struct VectorAbstraction
 
 template <class T>
 struct VectorAbstraction<std::vector<T>>
-    : public internal::VectorAbstractionBase<std::vector<T>, T>,
-      public internal::HasSubscriptOperatorForVectorAbstraction<std::vector<T>,
-                                                                typename Dune::FieldTraits<T>::field_type>
+  : public internal::VectorAbstractionBase<std::vector<T>, T>
+  , public internal::HasSubscriptOperatorForVectorAbstraction<std::vector<T>, typename Dune::FieldTraits<T>::field_type>
 {
   static const constexpr bool is_contiguous = true;
   static const constexpr bool static_size = std::numeric_limits<size_t>::max();
@@ -190,9 +189,9 @@ struct VectorAbstraction<std::vector<T>>
 
 template <class K, size_t SIZE>
 struct VectorAbstraction<std::array<K, SIZE>>
-    : public internal::VectorAbstractionBase<std::array<K, SIZE>, K>,
-      public internal::HasSubscriptOperatorForVectorAbstraction<std::array<K, SIZE>,
-                                                                typename Dune::FieldTraits<K>::field_type>
+  : public internal::VectorAbstractionBase<std::array<K, SIZE>, K>
+  , public internal::HasSubscriptOperatorForVectorAbstraction<std::array<K, SIZE>,
+                                                              typename Dune::FieldTraits<K>::field_type>
 {
   static const constexpr bool has_static_size = true;
   static const constexpr size_t static_size = SIZE;
@@ -225,9 +224,9 @@ struct VectorAbstraction<std::array<K, SIZE>>
 
 template <class K>
 struct VectorAbstraction<Dune::DynamicVector<K>>
-    : public internal::VectorAbstractionBase<Dune::DynamicVector<K>, K>,
-      public internal::HasSubscriptOperatorForVectorAbstraction<Dune::DynamicVector<K>,
-                                                                typename Dune::FieldTraits<K>::field_type>
+  : public internal::VectorAbstractionBase<Dune::DynamicVector<K>, K>
+  , public internal::HasSubscriptOperatorForVectorAbstraction<Dune::DynamicVector<K>,
+                                                              typename Dune::FieldTraits<K>::field_type>
 {
   static const constexpr bool is_contiguous = true;
   static const constexpr bool static_size = internal::VectorAbstractionBase<Dune::DynamicVector<K>, K>::static_size;
@@ -241,9 +240,9 @@ struct VectorAbstraction<Dune::DynamicVector<K>>
 
 template <class K, int SIZE>
 struct VectorAbstraction<Dune::FieldVector<K, SIZE>>
-    : public internal::VectorAbstractionBase<Dune::FieldVector<K, SIZE>, K>,
-      public internal::HasSubscriptOperatorForVectorAbstraction<Dune::FieldVector<K, SIZE>,
-                                                                typename Dune::FieldTraits<K>::field_type>
+  : public internal::VectorAbstractionBase<Dune::FieldVector<K, SIZE>, K>
+  , public internal::HasSubscriptOperatorForVectorAbstraction<Dune::FieldVector<K, SIZE>,
+                                                              typename Dune::FieldTraits<K>::field_type>
 {
   static const constexpr bool has_static_size = true;
   static const constexpr size_t static_size = SIZE;
@@ -341,7 +340,7 @@ convert_to(const SourceType& source)
             source[ii]
 #ifndef DXT_DISABLE_CHECKS
 #endif
-            );
+        );
   return ret;
 } // ... convert_to(...)
 

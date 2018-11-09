@@ -90,14 +90,14 @@ int main(int argc, char** argv)
 #else
                                                  -1
 #endif
-                                                       );
+    );
     const ssize_t max_debug_level = DXTC_CONFIG.get("timedlogging.max_debug",
 #if DUNE_XT_COMMON_TEST_MAIN_ENABLE_TIMED_LOGGING && DUNE_XT_COMMON_TEST_MAIN_ENABLE_DEBUG_LOGGING
                                                     std::numeric_limits<ssize_t>::max()
 #else
                                                   -1
 #endif
-                                                        );
+    );
     TimedLogger().create(max_info_level /*info*/, max_debug_level /*debug*/);
 
     const size_t threads = DXTC_CONFIG.has_key("threading.max_count") // <- doing this so complicated to

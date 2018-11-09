@@ -166,7 +166,9 @@ private:
   std::mutex mutex_;
 }; // class TimedPrefixedStreamBuffer
 
-class LogStream : StorageProvider<SuspendableStrBuffer>, public std::basic_ostream<char, std::char_traits<char>>
+class LogStream
+  : StorageProvider<SuspendableStrBuffer>
+  , public std::basic_ostream<char, std::char_traits<char>>
 {
   typedef StorageProvider<SuspendableStrBuffer> StorageBaseType;
   typedef std::basic_ostream<char, std::char_traits<char>> BaseType;
@@ -229,8 +231,9 @@ out << "\n" << 3 << "\n\nend" << std::endl;
  *
  * \note This class is intended to be used by TimedLogManager.
  */
-class TimedPrefixedLogStream : StorageProvider<TimedPrefixedStreamBuffer>,
-                               public std::basic_ostream<char, std::char_traits<char>>
+class TimedPrefixedLogStream
+  : StorageProvider<TimedPrefixedStreamBuffer>
+  , public std::basic_ostream<char, std::char_traits<char>>
 {
   typedef StorageProvider<TimedPrefixedStreamBuffer> StorageBaseType;
   typedef std::basic_ostream<char, std::char_traits<char>> OstreamBaseType;

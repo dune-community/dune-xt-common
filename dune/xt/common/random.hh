@@ -126,7 +126,7 @@ public:
 
 template <class T>
 class DefaultRNG<std::complex<T>, false>
-    : public RNG<std::complex<T>, typename UniformDistributionSelector<T>::type, std::default_random_engine>
+  : public RNG<std::complex<T>, typename UniformDistributionSelector<T>::type, std::default_random_engine>
 {
   typedef RNG<std::complex<T>, typename UniformDistributionSelector<T>::type, std::default_random_engine> BaseType;
 

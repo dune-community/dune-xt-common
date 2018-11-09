@@ -363,7 +363,7 @@ private:
  *calling finalize.
  * \param imp_ Pointer to implementation
  * \param base_ Pointer to initial base functor
-**/
+ **/
 template <class Imp, typename Result, class Reduction = std::plus<Result>>
 class ThreadResultPropagator
 {

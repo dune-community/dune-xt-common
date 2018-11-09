@@ -165,10 +165,10 @@ bool cmp_gt(const std::complex<T>& xx, const std::complex<T>& yy)
 }
 
 template <class XType, class YType>
-typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value
-                            && std::is_same<typename VectorAbstraction<XType>::S,
-                                            typename VectorAbstraction<YType>::S>::value,
-                        bool>::type
+typename std::enable_if<
+    is_vector<XType>::value && is_vector<YType>::value
+        && std::is_same<typename VectorAbstraction<XType>::S, typename VectorAbstraction<YType>::S>::value,
+    bool>::type
 cmp_gt(const XType& xx, const YType& yy)
 {
   const auto sz = xx.size();
@@ -181,10 +181,10 @@ cmp_gt(const XType& xx, const YType& yy)
 } // ... cmp_gt(...)
 
 template <class XType, class YType>
-typename std::enable_if<is_matrix<XType>::value && is_matrix<YType>::value
-                            && std::is_same<typename MatrixAbstraction<XType>::S,
-                                            typename MatrixAbstraction<YType>::S>::value,
-                        bool>::type
+typename std::enable_if<
+    is_matrix<XType>::value && is_matrix<YType>::value
+        && std::is_same<typename MatrixAbstraction<XType>::S, typename MatrixAbstraction<YType>::S>::value,
+    bool>::type
 cmp_gt(const XType& xx, const YType& yy)
 {
   const auto rows = MatrixAbstraction<XType>::rows(xx);
@@ -212,10 +212,10 @@ bool cmp_lt(const std::complex<T>& xx, const std::complex<T>& yy)
 }
 
 template <class XType, class YType>
-typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value
-                            && std::is_same<typename VectorAbstraction<XType>::S,
-                                            typename VectorAbstraction<YType>::S>::value,
-                        bool>::type
+typename std::enable_if<
+    is_vector<XType>::value && is_vector<YType>::value
+        && std::is_same<typename VectorAbstraction<XType>::S, typename VectorAbstraction<YType>::S>::value,
+    bool>::type
 cmp_lt(const XType& xx, const YType& yy)
 {
   const auto sz = xx.size();
@@ -228,10 +228,10 @@ cmp_lt(const XType& xx, const YType& yy)
 } // ... cmp_lt(...)
 
 template <class XType, class YType>
-typename std::enable_if<is_matrix<XType>::value && is_matrix<YType>::value
-                            && std::is_same<typename MatrixAbstraction<XType>::S,
-                                            typename MatrixAbstraction<YType>::S>::value,
-                        bool>::type
+typename std::enable_if<
+    is_matrix<XType>::value && is_matrix<YType>::value
+        && std::is_same<typename MatrixAbstraction<XType>::S, typename MatrixAbstraction<YType>::S>::value,
+    bool>::type
 cmp_lt(const XType& xx, const YType& yy)
 {
   const auto rows = MatrixAbstraction<XType>::rows(xx);

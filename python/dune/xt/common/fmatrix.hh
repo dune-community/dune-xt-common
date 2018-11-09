@@ -86,7 +86,7 @@ struct type_caster<Dune::FieldMatrix<K, N, M>> : public FieldMatrix_type_caster<
  */
 template <class K, int N, int M>
 struct type_caster<Dune::XT::Common::FieldMatrix<K, N, M>>
-    : public FieldMatrix_type_caster<Dune::XT::Common::FieldMatrix<K, N, M>>
+  : public FieldMatrix_type_caster<Dune::XT::Common::FieldMatrix<K, N, M>>
 {
   using type = Dune::XT::Common::FieldMatrix<K, N, M>;
   typedef typename type::row_type row_type;
