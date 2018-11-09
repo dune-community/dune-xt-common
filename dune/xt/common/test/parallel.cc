@@ -69,8 +69,7 @@ typedef testing::Types<PerThreadValue<int>, PerThreadValue<const int>> TLSTypes;
 
 template <class T>
 struct ThreadValueTest : public testing::Test
-{
-};
+{};
 
 TYPED_TEST_CASE(ThreadValueTest, TLSTypes);
 TYPED_TEST(ThreadValueTest, All)

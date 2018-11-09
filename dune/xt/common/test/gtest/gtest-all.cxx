@@ -762,8 +762,7 @@ public:
   // TestPropertyKeyIs has NO default constructor.
   explicit TestPropertyKeyIs(const std::string& key)
     : key_(key)
-  {
-  }
+  {}
 
   // Returns true iff the test name of test property matches on key_.
   bool operator()(const TestProperty& test_property) const
@@ -833,12 +832,8 @@ GTEST_API_ FilePath GetCurrentExecutableName();
 class OsStackTraceGetterInterface
 {
 public:
-  OsStackTraceGetterInterface()
-  {
-  }
-  virtual ~OsStackTraceGetterInterface()
-  {
-  }
+  OsStackTraceGetterInterface() {}
+  virtual ~OsStackTraceGetterInterface() {}
 
   // Returns the current OS stack trace as an std::string.  Parameters:
   //
@@ -863,8 +858,7 @@ class OsStackTraceGetter : public OsStackTraceGetterInterface
 public:
   OsStackTraceGetter()
     : caller_frame_(NULL)
-  {
-  }
+  {}
 
   virtual string CurrentStackTrace(int max_depth, int skip_count) GTEST_LOCK_EXCLUDED_(mutex_);
 
@@ -1445,12 +1439,10 @@ class AutoHandle
 public:
   AutoHandle()
     : handle_(INVALID_HANDLE_VALUE)
-  {
-  }
+  {}
   explicit AutoHandle(HANDLE handle)
     : handle_(handle)
-  {
-  }
+  {}
 
   ~AutoHandle()
   {
@@ -1563,17 +1555,13 @@ public:
   class AbstractSocketWriter
   {
   public:
-    virtual ~AbstractSocketWriter()
-    {
-    }
+    virtual ~AbstractSocketWriter() {}
 
     // Sends a string to the socket.
     virtual void Send(const string& message) = 0;
 
     // Closes the socket.
-    virtual void CloseConnection()
-    {
-    }
+    virtual void CloseConnection() {}
 
     // Sends a string and a newline to the socket.
     void SendLn(const string& message)
@@ -1940,8 +1928,7 @@ static bool ShouldRunTestCase(const TestCase* test_case)
 // AssertHelper constructor.
 AssertHelper::AssertHelper(TestPartResult::Type type, const char* file, int line, const char* message)
   : data_(new AssertHelperData(type, file, line, message))
-{
-}
+{}
 
 AssertHelper::~AssertHelper()
 {
@@ -2244,8 +2231,7 @@ SingleFailureChecker::SingleFailureChecker(const TestPartResultArray* results,
   : results_(results)
   , type_(type)
   , substr_(substr)
-{
-}
+{}
 
 // The destructor of SingleFailureChecker verifies that the given
 // TestPartResultArray contains exactly one failure that has the given
@@ -2258,8 +2244,7 @@ SingleFailureChecker::~SingleFailureChecker()
 
 DefaultGlobalTestPartResultReporter::DefaultGlobalTestPartResultReporter(UnitTestImpl* unit_test)
   : unit_test_(unit_test)
-{
-}
+{}
 
 void DefaultGlobalTestPartResultReporter::ReportTestPartResult(const TestPartResult& result)
 {
@@ -2269,8 +2254,7 @@ void DefaultGlobalTestPartResultReporter::ReportTestPartResult(const TestPartRes
 
 DefaultPerThreadTestPartResultReporter::DefaultPerThreadTestPartResultReporter(UnitTestImpl* unit_test)
   : unit_test_(unit_test)
-{
-}
+{}
 
 void DefaultPerThreadTestPartResultReporter::ReportTestPartResult(const TestPartResult& result)
 {
@@ -2569,8 +2553,7 @@ std::string Message::GetString() const
 AssertionResult::AssertionResult(const AssertionResult& other)
   : success_(other.success_)
   , message_(other.message_.get() != NULL ? new ::std::string(*other.message_) : static_cast<::std::string*>(NULL))
-{
-}
+{}
 
 // Returns the assertion's negation. Used with EXPECT/ASSERT_FALSE.
 AssertionResult AssertionResult::operator!() const
@@ -3302,13 +3285,10 @@ std::string AppendUserMessage(const std::string& gtest_msg, const Message& user_
 TestResult::TestResult()
   : death_test_count_(0)
   , elapsed_time_(0)
-{
-}
+{}
 
 // D'tor.
-TestResult::~TestResult()
-{
-}
+TestResult::~TestResult() {}
 
 // Returns the i-th test part result among all the results. i can
 // range from 0 to total_part_count() - 1. If i is not in that range,
@@ -3489,8 +3469,7 @@ int TestResult::test_property_count() const
 // The c'tor saves the values of all Google Test flags.
 Test::Test()
   : gtest_flag_saver_(new internal::GTestFlagSaver)
-{
-}
+{}
 
 // The d'tor restores the values of all Google Test flags.
 Test::~Test()
@@ -3501,16 +3480,12 @@ Test::~Test()
 // Sets up the test fixture.
 //
 // A sub-class may override this.
-void Test::SetUp()
-{
-}
+void Test::SetUp() {}
 
 // Tears down the test fixture.
 //
 // A sub-class may override this.
-void Test::TearDown()
-{
-}
+void Test::TearDown() {}
 
 // Allows user supplied key value pairs to be recorded for later output.
 void Test::RecordProperty(const std::string& key, const std::string& value)
@@ -3640,8 +3615,7 @@ static std::string PrintTestPartResultToString(const TestPartResult& test_part_r
 
 GoogleTestFailureException::GoogleTestFailureException(const TestPartResult& failure)
   : ::std::runtime_error(PrintTestPartResultToString(failure).c_str())
-{
-}
+{}
 
 #endif // GTEST_HAS_EXCEPTIONS
 
@@ -3785,8 +3759,7 @@ TestInfo::TestInfo(const std::string& a_test_case_name,
   , matches_filter_(false)
   , factory_(factory)
   , result_()
-{
-}
+{}
 
 // Destructs a TestInfo object.
 TestInfo::~TestInfo()
@@ -3864,8 +3837,7 @@ public:
   // TestNameIs has NO default constructor.
   explicit TestNameIs(const char* name)
     : name_(name)
-  {
-  }
+  {}
 
   // Returns true iff the test name of test_info matches name_.
   bool operator()(const TestInfo* test_info) const
@@ -4005,8 +3977,7 @@ TestCase::TestCase(const char* a_name,
   , tear_down_tc_(tear_down_tc)
   , should_run_(false)
   , elapsed_time_(0)
-{
-}
+{}
 
 // Destructor of TestCase.
 TestCase::~TestCase()
@@ -4318,36 +4289,26 @@ void PrintFullTestCommentIfPresent(const TestInfo& test_info)
 class PrettyUnitTestResultPrinter : public TestEventListener
 {
 public:
-  PrettyUnitTestResultPrinter()
-  {
-  }
+  PrettyUnitTestResultPrinter() {}
   static void PrintTestName(const char* test_case, const char* test)
   {
     printf("%s.%s", test_case, test);
   }
 
   // The following methods override what's in the TestEventListener class.
-  virtual void OnTestProgramStart(const UnitTest& /*unit_test*/)
-  {
-  }
+  virtual void OnTestProgramStart(const UnitTest& /*unit_test*/) {}
   virtual void OnTestIterationStart(const UnitTest& unit_test, int iteration);
   virtual void OnEnvironmentsSetUpStart(const UnitTest& unit_test);
-  virtual void OnEnvironmentsSetUpEnd(const UnitTest& /*unit_test*/)
-  {
-  }
+  virtual void OnEnvironmentsSetUpEnd(const UnitTest& /*unit_test*/) {}
   virtual void OnTestCaseStart(const TestCase& test_case);
   virtual void OnTestStart(const TestInfo& test_info);
   virtual void OnTestPartResult(const TestPartResult& result);
   virtual void OnTestEnd(const TestInfo& test_info);
   virtual void OnTestCaseEnd(const TestCase& test_case);
   virtual void OnEnvironmentsTearDownStart(const UnitTest& unit_test);
-  virtual void OnEnvironmentsTearDownEnd(const UnitTest& /*unit_test*/)
-  {
-  }
+  virtual void OnEnvironmentsTearDownEnd(const UnitTest& /*unit_test*/) {}
   virtual void OnTestIterationEnd(const UnitTest& unit_test, int iteration);
-  virtual void OnTestProgramEnd(const UnitTest& /*unit_test*/)
-  {
-  }
+  virtual void OnTestProgramEnd(const UnitTest& /*unit_test*/) {}
 
 private:
   static void PrintFailedTests(const UnitTest& unit_test);
@@ -4535,8 +4496,7 @@ class TestEventRepeater : public TestEventListener
 public:
   TestEventRepeater()
     : forwarding_enabled_(true)
-  {
-  }
+  {}
   virtual ~TestEventRepeater();
   void Append(TestEventListener* listener);
   TestEventListener* Release(TestEventListener* listener);
@@ -5134,9 +5094,7 @@ string OsStackTraceGetter::CurrentStackTrace(int /* max_depth */, int /* skip_co
   return "";
 }
 
-void OsStackTraceGetter::UponLeavingGTest() GTEST_LOCK_EXCLUDED_(mutex_)
-{
-}
+void OsStackTraceGetter::UponLeavingGTest() GTEST_LOCK_EXCLUDED_(mutex_) {}
 
 const char* const OsStackTraceGetter::kElidedFramesMarker = "... " GTEST_NAME_ " internal frames ...";
 
@@ -5180,8 +5138,7 @@ TestEventListeners::TestEventListeners()
   : repeater_(new internal::TestEventRepeater())
   , default_result_printer_(NULL)
   , default_xml_generator_(NULL)
-{
-}
+{}
 
 TestEventListeners::~TestEventListeners()
 {
@@ -5821,8 +5778,7 @@ public:
   // Constructor.
   explicit TestCaseNameIs(const std::string& name)
     : name_(name)
-  {
-  }
+  {}
 
   // Returns true iff the name of test_case matches name_.
   bool operator()(const TestCase* test_case) const
@@ -6306,8 +6262,7 @@ std::string GetCurrentOsStackTraceExceptTop(UnitTest* /*unit_test*/, int skip_co
 // suppress unreachable code warnings.
 namespace {
 class ClassUniqueToAlwaysTrue
-{
-};
+{};
 }
 
 bool IsTrue(bool condition)
@@ -6828,8 +6783,7 @@ bool InDeathTestChild()
 // ExitedWithCode constructor.
 ExitedWithCode::ExitedWithCode(int exit_code)
   : exit_code_(exit_code)
-{
-}
+{}
 
 // ExitedWithCode function-call operator.
 bool ExitedWithCode::operator()(int exit_status) const
@@ -6849,8 +6803,7 @@ bool ExitedWithCode::operator()(int exit_status) const
 // KilledBySignal constructor.
 KilledBySignal::KilledBySignal(int signum)
   : signum_(signum)
-{
-}
+{}
 
 // KilledBySignal function-call operator.
 bool KilledBySignal::operator()(int exit_status) const
@@ -7071,8 +7024,7 @@ protected:
     , outcome_(IN_PROGRESS)
     , read_fd_(-1)
     , write_fd_(-1)
-  {
-  }
+  {}
 
   // read_fd_ is expected to be closed and cleared by a derived class.
   ~DeathTestImpl()
@@ -7361,8 +7313,7 @@ public:
     : DeathTestImpl(a_statement, a_regex)
     , file_(file)
     , line_(line)
-  {
-  }
+  {}
 
   // All of these virtual functions are inherited from DeathTest.
   virtual int Wait();
@@ -7535,8 +7486,7 @@ private:
 ForkingDeathTest::ForkingDeathTest(const char* a_statement, const RE* a_regex)
   : DeathTestImpl(a_statement, a_regex)
   , child_pid_(-1)
-{
-}
+{}
 
 // Waits for the child in a death test to exit, returning its exit
 // status, or 0 if no child process exists.  As a side effect, sets the
@@ -7561,8 +7511,7 @@ class NoExecDeathTest : public ForkingDeathTest
 public:
   NoExecDeathTest(const char* a_statement, const RE* a_regex)
     : ForkingDeathTest(a_statement, a_regex)
-  {
-  }
+  {}
   virtual TestRole AssumeRole();
 };
 
@@ -7622,8 +7571,7 @@ public:
     : ForkingDeathTest(a_statement, a_regex)
     , file_(file)
     , line_(line)
-  {
-  }
+  {}
   virtual TestRole AssumeRole();
 
 private:

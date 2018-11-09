@@ -26,8 +26,7 @@ struct Pet
 {
   Pet(const std::string& name)
     : name(name)
-  {
-  }
+  {}
   void setName(const std::string& name_)
   {
     name = name_;
@@ -43,8 +42,7 @@ struct Dog : Pet
 {
   Dog(const std::string& name)
     : Pet(name)
-  {
-  }
+  {}
   std::string bark() const
   {
     return "woof!";
@@ -55,8 +53,7 @@ struct Terrier : Dog
 {
   Terrier()
     : Dog("Berti")
-  {
-  }
+  {}
 };
 
 PYBIND11_MODULE(_empty, m)

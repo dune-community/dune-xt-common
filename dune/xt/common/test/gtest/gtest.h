@@ -859,12 +859,8 @@ template <>
 class tuple<>
 {
 public:
-  tuple()
-  {
-  }
-  tuple(const tuple& /* t */)
-  {
-  }
+  tuple() {}
+  tuple(const tuple& /* t */) {}
   tuple& operator=(const tuple& /* t */)
   {
     return *this;
@@ -880,24 +876,20 @@ public:
 
   tuple()
     : f0_()
-  {
-  }
+  {}
 
   explicit tuple(GTEST_BY_REF_(T0) f0)
     : f0_(f0)
-  {
-  }
+  {}
 
   tuple(const tuple& t)
     : f0_(t.f0_)
-  {
-  }
+  {}
 
   template <GTEST_1_TYPENAMES_(U)>
   tuple(const GTEST_1_TUPLE_(U) & t)
     : f0_(t.f0_)
-  {
-  }
+  {}
 
   tuple& operator=(const tuple& t)
   {
@@ -932,33 +924,28 @@ public:
   tuple()
     : f0_()
     , f1_()
-  {
-  }
+  {}
 
   explicit tuple(GTEST_BY_REF_(T0) f0, GTEST_BY_REF_(T1) f1)
     : f0_(f0)
     , f1_(f1)
-  {
-  }
+  {}
 
   tuple(const tuple& t)
     : f0_(t.f0_)
     , f1_(t.f1_)
-  {
-  }
+  {}
 
   template <GTEST_2_TYPENAMES_(U)>
   tuple(const GTEST_2_TUPLE_(U) & t)
     : f0_(t.f0_)
     , f1_(t.f1_)
-  {
-  }
+  {}
   template <typename U0, typename U1>
   tuple(const ::std::pair<U0, U1>& p)
     : f0_(p.first)
     , f1_(p.second)
-  {
-  }
+  {}
 
   tuple& operator=(const tuple& t)
   {
@@ -1003,30 +990,26 @@ public:
     : f0_()
     , f1_()
     , f2_()
-  {
-  }
+  {}
 
   explicit tuple(GTEST_BY_REF_(T0) f0, GTEST_BY_REF_(T1) f1, GTEST_BY_REF_(T2) f2)
     : f0_(f0)
     , f1_(f1)
     , f2_(f2)
-  {
-  }
+  {}
 
   tuple(const tuple& t)
     : f0_(t.f0_)
     , f1_(t.f1_)
     , f2_(t.f2_)
-  {
-  }
+  {}
 
   template <GTEST_3_TYPENAMES_(U)>
   tuple(const GTEST_3_TUPLE_(U) & t)
     : f0_(t.f0_)
     , f1_(t.f1_)
     , f2_(t.f2_)
-  {
-  }
+  {}
 
   tuple& operator=(const tuple& t)
   {
@@ -1067,24 +1050,21 @@ public:
     , f1_()
     , f2_()
     , f3_()
-  {
-  }
+  {}
 
   explicit tuple(GTEST_BY_REF_(T0) f0, GTEST_BY_REF_(T1) f1, GTEST_BY_REF_(T2) f2, GTEST_BY_REF_(T3) f3)
     : f0_(f0)
     , f1_(f1)
     , f2_(f2)
     , f3_(f3)
-  {
-  }
+  {}
 
   tuple(const tuple& t)
     : f0_(t.f0_)
     , f1_(t.f1_)
     , f2_(t.f2_)
     , f3_(t.f3_)
-  {
-  }
+  {}
 
   template <GTEST_4_TYPENAMES_(U)>
   tuple(const GTEST_4_TUPLE_(U) & t)
@@ -1092,8 +1072,7 @@ public:
     , f1_(t.f1_)
     , f2_(t.f2_)
     , f3_(t.f3_)
-  {
-  }
+  {}
 
   tuple& operator=(const tuple& t)
   {
@@ -1137,8 +1116,7 @@ public:
     , f2_()
     , f3_()
     , f4_()
-  {
-  }
+  {}
 
   explicit tuple(
       GTEST_BY_REF_(T0) f0, GTEST_BY_REF_(T1) f1, GTEST_BY_REF_(T2) f2, GTEST_BY_REF_(T3) f3, GTEST_BY_REF_(T4) f4)
@@ -1147,8 +1125,7 @@ public:
     , f2_(f2)
     , f3_(f3)
     , f4_(f4)
-  {
-  }
+  {}
 
   tuple(const tuple& t)
     : f0_(t.f0_)
@@ -1156,8 +1133,7 @@ public:
     , f2_(t.f2_)
     , f3_(t.f3_)
     , f4_(t.f4_)
-  {
-  }
+  {}
 
   template <GTEST_5_TYPENAMES_(U)>
   tuple(const GTEST_5_TUPLE_(U) & t)
@@ -1166,8 +1142,7 @@ public:
     , f2_(t.f2_)
     , f3_(t.f3_)
     , f4_(t.f4_)
-  {
-  }
+  {}
 
   tuple& operator=(const tuple& t)
   {
@@ -1214,8 +1189,7 @@ public:
     , f3_()
     , f4_()
     , f5_()
-  {
-  }
+  {}
 
   explicit tuple(GTEST_BY_REF_(T0) f0,
                  GTEST_BY_REF_(T1) f1,
@@ -1229,8 +1203,7 @@ public:
     , f3_(f3)
     , f4_(f4)
     , f5_(f5)
-  {
-  }
+  {}
 
   tuple(const tuple& t)
     : f0_(t.f0_)
@@ -1239,8 +1212,7 @@ public:
     , f3_(t.f3_)
     , f4_(t.f4_)
     , f5_(t.f5_)
-  {
-  }
+  {}
 
   template <GTEST_6_TYPENAMES_(U)>
   tuple(const GTEST_6_TUPLE_(U) & t)
@@ -1250,8 +1222,7 @@ public:
     , f3_(t.f3_)
     , f4_(t.f4_)
     , f5_(t.f5_)
-  {
-  }
+  {}
 
   tuple& operator=(const tuple& t)
   {
@@ -1301,8 +1272,7 @@ public:
     , f4_()
     , f5_()
     , f6_()
-  {
-  }
+  {}
 
   explicit tuple(GTEST_BY_REF_(T0) f0,
                  GTEST_BY_REF_(T1) f1,
@@ -1318,8 +1288,7 @@ public:
     , f4_(f4)
     , f5_(f5)
     , f6_(f6)
-  {
-  }
+  {}
 
   tuple(const tuple& t)
     : f0_(t.f0_)
@@ -1329,8 +1298,7 @@ public:
     , f4_(t.f4_)
     , f5_(t.f5_)
     , f6_(t.f6_)
-  {
-  }
+  {}
 
   template <GTEST_7_TYPENAMES_(U)>
   tuple(const GTEST_7_TUPLE_(U) & t)
@@ -1341,8 +1309,7 @@ public:
     , f4_(t.f4_)
     , f5_(t.f5_)
     , f6_(t.f6_)
-  {
-  }
+  {}
 
   tuple& operator=(const tuple& t)
   {
@@ -1395,8 +1362,7 @@ public:
     , f5_()
     , f6_()
     , f7_()
-  {
-  }
+  {}
 
   explicit tuple(GTEST_BY_REF_(T0) f0,
                  GTEST_BY_REF_(T1) f1,
@@ -1414,8 +1380,7 @@ public:
     , f5_(f5)
     , f6_(f6)
     , f7_(f7)
-  {
-  }
+  {}
 
   tuple(const tuple& t)
     : f0_(t.f0_)
@@ -1426,8 +1391,7 @@ public:
     , f5_(t.f5_)
     , f6_(t.f6_)
     , f7_(t.f7_)
-  {
-  }
+  {}
 
   template <GTEST_8_TYPENAMES_(U)>
   tuple(const GTEST_8_TUPLE_(U) & t)
@@ -1439,8 +1403,7 @@ public:
     , f5_(t.f5_)
     , f6_(t.f6_)
     , f7_(t.f7_)
-  {
-  }
+  {}
 
   tuple& operator=(const tuple& t)
   {
@@ -1496,8 +1459,7 @@ public:
     , f6_()
     , f7_()
     , f8_()
-  {
-  }
+  {}
 
   explicit tuple(GTEST_BY_REF_(T0) f0,
                  GTEST_BY_REF_(T1) f1,
@@ -1517,8 +1479,7 @@ public:
     , f6_(f6)
     , f7_(f7)
     , f8_(f8)
-  {
-  }
+  {}
 
   tuple(const tuple& t)
     : f0_(t.f0_)
@@ -1530,8 +1491,7 @@ public:
     , f6_(t.f6_)
     , f7_(t.f7_)
     , f8_(t.f8_)
-  {
-  }
+  {}
 
   template <GTEST_9_TYPENAMES_(U)>
   tuple(const GTEST_9_TUPLE_(U) & t)
@@ -1544,8 +1504,7 @@ public:
     , f6_(t.f6_)
     , f7_(t.f7_)
     , f8_(t.f8_)
-  {
-  }
+  {}
 
   tuple& operator=(const tuple& t)
   {
@@ -1604,8 +1563,7 @@ public:
     , f7_()
     , f8_()
     , f9_()
-  {
-  }
+  {}
 
   explicit tuple(GTEST_BY_REF_(T0) f0,
                  GTEST_BY_REF_(T1) f1,
@@ -1627,8 +1585,7 @@ public:
     , f7_(f7)
     , f8_(f8)
     , f9_(f9)
-  {
-  }
+  {}
 
   tuple(const tuple& t)
     : f0_(t.f0_)
@@ -1641,8 +1598,7 @@ public:
     , f7_(t.f7_)
     , f8_(t.f8_)
     , f9_(t.f9_)
-  {
-  }
+  {}
 
   template <GTEST_10_TYPENAMES_(U)>
   tuple(const GTEST_10_TUPLE_(U) & t)
@@ -1656,8 +1612,7 @@ public:
     , f7_(t.f7_)
     , f8_(t.f8_)
     , f9_(t.f9_)
-  {
-  }
+  {}
 
   tuple& operator=(const tuple& t)
   {
@@ -2413,8 +2368,7 @@ class Secret;
 
 template <bool>
 struct CompileAssert
-{
-};
+{};
 
 #define GTEST_COMPILE_ASSERT_(expr, msg)                                                                               \
   typedef ::testing::internal::CompileAssert<(static_cast<bool>(expr))>                                                \
@@ -2469,8 +2423,7 @@ struct StaticAssertTypeEqHelper;
 
 template <typename T>
 struct StaticAssertTypeEqHelper<T, T>
-{
-};
+{};
 
 #if GTEST_HAS_GLOBAL_STRING
 typedef ::string string;
@@ -2500,8 +2453,7 @@ public:
 
   explicit scoped_ptr(T* p = NULL)
     : ptr_(p)
-  {
-  }
+  {}
   ~scoped_ptr()
   {
     reset();
@@ -2687,9 +2639,7 @@ private:
 #define GTEST_LOG_(severity)                                                                                           \
   ::testing::internal::GTestLog(::testing::internal::GTEST_##severity, __FILE__, __LINE__).GetStream()
 
-inline void LogToStderr()
-{
-}
+inline void LogToStderr() {}
 inline void FlushInfoLog()
 {
   fflush(NULL);
@@ -2906,9 +2856,7 @@ private:
 class ThreadWithParamBase
 {
 public:
-  virtual ~ThreadWithParamBase()
-  {
-  }
+  virtual ~ThreadWithParamBase() {}
   virtual void Run() = 0;
 };
 
@@ -3115,9 +3063,7 @@ typedef GTestMutexLock MutexLock;
 class ThreadLocalValueHolderBase
 {
 public:
-  virtual ~ThreadLocalValueHolderBase()
-  {
-  }
+  virtual ~ThreadLocalValueHolderBase() {}
 };
 
 // Called by pthread to delete thread-local data stored by
@@ -3163,13 +3109,11 @@ public:
   ThreadLocal()
     : key_(CreateKey())
     , default_()
-  {
-  }
+  {}
   explicit ThreadLocal(const T& value)
     : key_(CreateKey())
     , default_(value)
-  {
-  }
+  {}
 
   ~ThreadLocal()
   {
@@ -3205,8 +3149,7 @@ private:
   public:
     explicit ValueHolder(const T& value)
       : value_(value)
-    {
-    }
+    {}
 
     T* pointer()
     {
@@ -3259,18 +3202,10 @@ private:
 class Mutex
 {
 public:
-  Mutex()
-  {
-  }
-  void Lock()
-  {
-  }
-  void Unlock()
-  {
-  }
-  void AssertHeld() const
-  {
-  }
+  Mutex() {}
+  void Lock() {}
+  void Unlock() {}
+  void AssertHeld() const {}
 };
 
 #define GTEST_DECLARE_STATIC_MUTEX_(mutex) extern ::testing::internal::Mutex mutex
@@ -3280,9 +3215,7 @@ public:
 class GTestMutexLock
 {
 public:
-  explicit GTestMutexLock(Mutex*)
-  {
-  } // NOLINT
+  explicit GTestMutexLock(Mutex*) {} // NOLINT
 };
 
 typedef GTestMutexLock MutexLock;
@@ -3293,12 +3226,10 @@ class ThreadLocal
 public:
   ThreadLocal()
     : value_()
-  {
-  }
+  {}
   explicit ThreadLocal(const T& value)
     : value_(value)
-  {
-  }
+  {}
   T* pointer()
   {
     return &value_;
@@ -3366,13 +3297,11 @@ typedef bool_constant<true> true_type;
 
 template <typename T>
 struct is_pointer : public false_type
-{
-};
+{};
 
 template <typename T>
 struct is_pointer<T*> : public true_type
-{
-};
+{};
 
 template <typename Iterator>
 struct IteratorTraits
@@ -4285,12 +4214,10 @@ class GTEST_API_ FilePath
 public:
   FilePath()
     : pathname_("")
-  {
-  }
+  {}
   FilePath(const FilePath& rhs)
     : pathname_(rhs.pathname_)
-  {
-  }
+  {}
 
   explicit FilePath(const std::string& pathname)
     : pathname_(pathname)
@@ -4551,8 +4478,7 @@ struct AssertTypeEq<T, T>
 // (e.g. Types<int>, Type<int, double>, and etc), which C++ doesn't
 // support directly.
 struct None
-{
-};
+{};
 
 // The following family of struct and struct templates are used to
 // represent type lists.  In particular, TypesN<T1, T2, ..., TN>
@@ -4563,8 +4489,7 @@ struct None
 
 // The empty type list.
 struct Types0
-{
-};
+{};
 
 // Type lists of length 1, 2, 3, and so on.
 
@@ -12045,8 +11970,7 @@ struct TemplateSel
 // and etc), which C++ doesn't support directly.
 template <typename T>
 struct NoneT
-{
-};
+{};
 
 // The following family of struct and struct templates are used to
 // represent template lists.  In particular, TemplatesN<T1, T2, ...,
@@ -12057,8 +11981,7 @@ struct NoneT
 
 // The empty template list.
 struct Templates0
-{
-};
+{};
 
 // Template lists of length 1, 2, 3, and so on.
 
@@ -20173,18 +20096,14 @@ GTEST_API_ TypeId GetTestTypeId();
 class TestFactoryBase
 {
 public:
-  virtual ~TestFactoryBase()
-  {
-  }
+  virtual ~TestFactoryBase() {}
 
   // Creates a test instance to run. The instance is both created and destroyed
   // within TestInfoImpl::Run()
   virtual Test* CreateTest() = 0;
 
 protected:
-  TestFactoryBase()
-  {
-  }
+  TestFactoryBase() {}
 
 private:
   GTEST_DISALLOW_COPY_AND_ASSIGN_(TestFactoryBase);
@@ -20256,8 +20175,7 @@ class GTEST_API_ TypedTestCasePState
 public:
   TypedTestCasePState()
     : registered_(false)
-  {
-  }
+  {}
 
   // Adds the given test name to defined_test_names_ and return true
   // if the test case hasn't been registered; otherwise aborts the
@@ -20424,8 +20342,7 @@ struct GTEST_API_ ConstCharPtr
 {
   ConstCharPtr(const char* str)
     : value(str)
-  {
-  }
+  {}
   operator bool() const
   {
     return true;
@@ -20445,8 +20362,7 @@ public:
 
   explicit Random(UInt32 seed)
     : state_(seed)
-  {
-  }
+  {}
 
   void Reseed(UInt32 seed)
   {
@@ -20469,8 +20385,7 @@ struct CompileAssertTypesEqual;
 
 template <typename T>
 struct CompileAssertTypesEqual<T, T>
-{
-};
+{};
 
 // Removes the reference from a type if it is a reference type,
 // otherwise leaves it unchanged.  This is the same as
@@ -20618,8 +20533,7 @@ const bool ImplicitlyConvertible<From, To>::value;
 template <typename T>
 struct IsAProtocolMessage : public bool_constant<ImplicitlyConvertible<const T*, const ::ProtocolMessage*>::value
                                                  || ImplicitlyConvertible<const T*, const ::proto2::Message*>::value>
-{
-};
+{};
 
 // When the compiler sees expression IsContainerTest<C>(0), if C is an
 // STL-style container class, the first overload of IsContainerTest
@@ -20946,9 +20860,7 @@ private:
     : public parent_class                                                                                              \
   {                                                                                                                    \
   public:                                                                                                              \
-    GTEST_TEST_CLASS_NAME_(test_case_name, test_name)()                                                                \
-    {                                                                                                                  \
-    }                                                                                                                  \
+    GTEST_TEST_CLASS_NAME_(test_case_name, test_name)() {}                                                             \
                                                                                                                        \
   private:                                                                                                             \
     virtual void TestBody();                                                                                           \
@@ -21089,9 +21001,7 @@ public:
   // DeathTest object that controls the execution of the current test.
   static bool Create(const char* statement, const RE* regex, const char* file, int line, DeathTest** test);
   DeathTest();
-  virtual ~DeathTest()
-  {
-  }
+  virtual ~DeathTest() {}
 
   // A helper class that aborts a death test when it's deleted.
   class ReturnSentinel
@@ -21099,8 +21009,7 @@ public:
   public:
     explicit ReturnSentinel(DeathTest* test)
       : test_(test)
-    {
-    }
+    {}
     ~ReturnSentinel()
     {
       test_->Abort(TEST_ENCOUNTERED_RETURN_STATEMENT);
@@ -21165,9 +21074,7 @@ private:
 class DeathTestFactory
 {
 public:
-  virtual ~DeathTestFactory()
-  {
-  }
+  virtual ~DeathTestFactory() {}
   virtual bool Create(const char* statement, const RE* regex, const char* file, int line, DeathTest** test) = 0;
 };
 
@@ -21262,8 +21169,7 @@ public:
     , line_(a_line)
     , index_(an_index)
     , write_fd_(a_write_fd)
-  {
-  }
+  {}
 
   ~InternalRunDeathTestFlag()
   {
@@ -22959,13 +22865,11 @@ struct TuplePrefixPrinter<0>
 {
   template <typename Tuple>
   static void PrintPrefixTo(const Tuple&, ::std::ostream*)
-  {
-  }
+  {}
 
   template <typename Tuple>
   static void TersePrintPrefixToStrings(const Tuple&, Strings*)
-  {
-  }
+  {}
 };
 // We have to specialize the entire TuplePrefixPrinter<> class
 // template here, even though the definition of
@@ -23050,9 +22954,7 @@ template <typename T>
 class ParamIteratorInterface
 {
 public:
-  virtual ~ParamIteratorInterface()
-  {
-  }
+  virtual ~ParamIteratorInterface() {}
   // A pointer to the base generator instance.
   // Used only for the purposes of iterator comparison
   // to make sure that two iterators belong to the same generator.
@@ -23090,8 +22992,7 @@ public:
   // ParamIterator assumes ownership of the impl_ pointer.
   ParamIterator(const ParamIterator& other)
     : impl_(other.impl_->Clone())
-  {
-  }
+  {}
   ParamIterator& operator=(const ParamIterator& other)
   {
     if (this != &other)
@@ -23133,8 +23034,7 @@ private:
   friend class ParamGenerator<T>;
   explicit ParamIterator(ParamIteratorInterface<T>* impl)
     : impl_(impl)
-  {
-  }
+  {}
   scoped_ptr<ParamIteratorInterface<T>> impl_;
 };
 
@@ -23146,9 +23046,7 @@ class ParamGeneratorInterface
 public:
   typedef T ParamType;
 
-  virtual ~ParamGeneratorInterface()
-  {
-  }
+  virtual ~ParamGeneratorInterface() {}
 
   // Generator interface definition
   virtual ParamIteratorInterface<T>* Begin() const = 0;
@@ -23168,12 +23066,10 @@ public:
 
   explicit ParamGenerator(ParamGeneratorInterface<T>* impl)
     : impl_(impl)
-  {
-  }
+  {}
   ParamGenerator(const ParamGenerator& other)
     : impl_(other.impl_)
-  {
-  }
+  {}
 
   ParamGenerator& operator=(const ParamGenerator& other)
   {
@@ -23207,11 +23103,8 @@ public:
     , end_(end)
     , step_(step)
     , end_index_(CalculateEndIndex(begin, end, step))
-  {
-  }
-  virtual ~RangeGenerator()
-  {
-  }
+  {}
+  virtual ~RangeGenerator() {}
 
   virtual ParamIteratorInterface<T>* Begin() const
   {
@@ -23231,11 +23124,8 @@ private:
       , value_(value)
       , index_(index)
       , step_(step)
-    {
-    }
-    virtual ~Iterator()
-    {
-    }
+    {}
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<T>* BaseGenerator() const
     {
@@ -23271,8 +23161,7 @@ private:
       , value_(other.value_)
       , index_(other.index_)
       , step_(other.step_)
-    {
-    }
+    {}
 
     // No implementation - assignment is unsupported.
     void operator=(const Iterator& other);
@@ -23314,11 +23203,8 @@ public:
   template <typename ForwardIterator>
   ValuesInIteratorRangeGenerator(ForwardIterator begin, ForwardIterator end)
     : container_(begin, end)
-  {
-  }
-  virtual ~ValuesInIteratorRangeGenerator()
-  {
-  }
+  {}
+  virtual ~ValuesInIteratorRangeGenerator() {}
 
   virtual ParamIteratorInterface<T>* Begin() const
   {
@@ -23338,11 +23224,8 @@ private:
     Iterator(const ParamGeneratorInterface<T>* base, typename ContainerType::const_iterator iterator)
       : base_(base)
       , iterator_(iterator)
-    {
-    }
-    virtual ~Iterator()
-    {
-    }
+    {}
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<T>* BaseGenerator() const
     {
@@ -23386,8 +23269,7 @@ private:
         : ParamIteratorInterface<T>(),
           base_(other.base_),
           iterator_(other.iterator_)
-    {
-    }
+    {}
 
     const ParamGeneratorInterface<T>* const base_;
     typename ContainerType::const_iterator iterator_;
@@ -23416,8 +23298,7 @@ public:
   typedef typename TestClass::ParamType ParamType;
   explicit ParameterizedTestFactory(ParamType parameter)
     : parameter_(parameter)
-  {
-  }
+  {}
   virtual Test* CreateTest()
   {
     TestClass::SetParam(&parameter_);
@@ -23438,9 +23319,7 @@ template <class ParamType>
 class TestMetaFactoryBase
 {
 public:
-  virtual ~TestMetaFactoryBase()
-  {
-  }
+  virtual ~TestMetaFactoryBase() {}
 
   virtual TestFactoryBase* CreateTestFactory(ParamType parameter) = 0;
 };
@@ -23459,9 +23338,7 @@ class TestMetaFactory : public TestMetaFactoryBase<typename TestCase::ParamType>
 public:
   typedef typename TestCase::ParamType ParamType;
 
-  TestMetaFactory()
-  {
-  }
+  TestMetaFactory() {}
 
   virtual TestFactoryBase* CreateTestFactory(ParamType parameter)
   {
@@ -23485,9 +23362,7 @@ private:
 class ParameterizedTestCaseInfoBase
 {
 public:
-  virtual ~ParameterizedTestCaseInfoBase()
-  {
-  }
+  virtual ~ParameterizedTestCaseInfoBase() {}
 
   // Base part of test case name for display purposes.
   virtual const string& GetTestCaseName() const = 0;
@@ -23500,9 +23375,7 @@ public:
   virtual void RegisterTests() = 0;
 
 protected:
-  ParameterizedTestCaseInfoBase()
-  {
-  }
+  ParameterizedTestCaseInfoBase() {}
 
 private:
   GTEST_DISALLOW_COPY_AND_ASSIGN_(ParameterizedTestCaseInfoBase);
@@ -23528,8 +23401,7 @@ public:
 
   explicit ParameterizedTestCaseInfo(const char* name)
     : test_case_name_(name)
-  {
-  }
+  {}
 
   // Test case base name for display purposes.
   virtual const string& GetTestCaseName() const
@@ -23610,8 +23482,7 @@ private:
       : test_case_base_name(a_test_case_base_name)
       , test_base_name(a_test_base_name)
       , test_meta_factory(a_test_meta_factory)
-    {
-    }
+    {}
 
     const string test_case_base_name;
     const string test_base_name;
@@ -23638,9 +23509,7 @@ private:
 class ParameterizedTestCaseRegistry
 {
 public:
-  ParameterizedTestCaseRegistry()
-  {
-  }
+  ParameterizedTestCaseRegistry() {}
   ~ParameterizedTestCaseRegistry()
   {
     for (TestCaseInfoContainer::iterator it = test_case_infos_.begin(); it != test_case_infos_.end(); ++it) {
@@ -23775,8 +23644,7 @@ class ValueArray1
 public:
   explicit ValueArray1(T1 v1)
     : v1_(v1)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -23798,8 +23666,7 @@ public:
   ValueArray2(T1 v1, T2 v2)
     : v1_(v1)
     , v2_(v2)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -23824,8 +23691,7 @@ public:
     : v1_(v1)
     , v2_(v2)
     , v3_(v3)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -23852,8 +23718,7 @@ public:
     , v2_(v2)
     , v3_(v3)
     , v4_(v4)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -23882,8 +23747,7 @@ public:
     , v3_(v3)
     , v4_(v4)
     , v5_(v5)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -23915,8 +23779,7 @@ public:
     , v4_(v4)
     , v5_(v5)
     , v6_(v6)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -23954,8 +23817,7 @@ public:
     , v5_(v5)
     , v6_(v6)
     , v7_(v7)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -23996,8 +23858,7 @@ public:
     , v6_(v6)
     , v7_(v7)
     , v8_(v8)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24049,8 +23910,7 @@ public:
     , v7_(v7)
     , v8_(v8)
     , v9_(v9)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24106,8 +23966,7 @@ public:
     , v8_(v8)
     , v9_(v9)
     , v10_(v10)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24167,8 +24026,7 @@ public:
     , v9_(v9)
     , v10_(v10)
     , v11_(v11)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24232,8 +24090,7 @@ public:
     , v10_(v10)
     , v11_(v11)
     , v12_(v12)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24301,8 +24158,7 @@ public:
     , v11_(v11)
     , v12_(v12)
     , v13_(v13)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24375,8 +24231,7 @@ public:
     , v12_(v12)
     , v13_(v13)
     , v14_(v14)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24466,8 +24321,7 @@ public:
     , v13_(v13)
     , v14_(v14)
     , v15_(v15)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24562,8 +24416,7 @@ public:
     , v14_(v14)
     , v15_(v15)
     , v16_(v16)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24663,8 +24516,7 @@ public:
     , v15_(v15)
     , v16_(v16)
     , v17_(v17)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24769,8 +24621,7 @@ public:
     , v16_(v16)
     , v17_(v17)
     , v18_(v18)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24880,8 +24731,7 @@ public:
     , v17_(v17)
     , v18_(v18)
     , v19_(v19)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24996,8 +24846,7 @@ public:
     , v18_(v18)
     , v19_(v19)
     , v20_(v20)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -25102,8 +24951,7 @@ public:
     , v19_(v19)
     , v20_(v20)
     , v21_(v21)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -25213,8 +25061,7 @@ public:
     , v20_(v20)
     , v21_(v21)
     , v22_(v22)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -25328,8 +25175,7 @@ public:
     , v21_(v21)
     , v22_(v22)
     , v23_(v23)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -25447,8 +25293,7 @@ public:
     , v22_(v22)
     , v23_(v23)
     , v24_(v24)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -25570,8 +25415,7 @@ public:
     , v23_(v23)
     , v24_(v24)
     , v25_(v25)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -25697,8 +25541,7 @@ public:
     , v24_(v24)
     , v25_(v25)
     , v26_(v26)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -25829,8 +25672,7 @@ public:
     , v25_(v25)
     , v26_(v26)
     , v27_(v27)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -25965,8 +25807,7 @@ public:
     , v26_(v26)
     , v27_(v27)
     , v28_(v28)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -26105,8 +25946,7 @@ public:
     , v27_(v27)
     , v28_(v28)
     , v29_(v29)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -26249,8 +26089,7 @@ public:
     , v28_(v28)
     , v29_(v29)
     , v30_(v30)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -26397,8 +26236,7 @@ public:
     , v29_(v29)
     , v30_(v30)
     , v31_(v31)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -26550,8 +26388,7 @@ public:
     , v30_(v30)
     , v31_(v31)
     , v32_(v32)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -26707,8 +26544,7 @@ public:
     , v31_(v31)
     , v32_(v32)
     , v33_(v33)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -26868,8 +26704,7 @@ public:
     , v32_(v32)
     , v33_(v33)
     , v34_(v34)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -27033,8 +26868,7 @@ public:
     , v33_(v33)
     , v34_(v34)
     , v35_(v35)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -27202,8 +27036,7 @@ public:
     , v34_(v34)
     , v35_(v35)
     , v36_(v36)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -27376,8 +27209,7 @@ public:
     , v35_(v35)
     , v36_(v36)
     , v37_(v37)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -27554,8 +27386,7 @@ public:
     , v36_(v36)
     , v37_(v37)
     , v38_(v38)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -27736,8 +27567,7 @@ public:
     , v37_(v37)
     , v38_(v38)
     , v39_(v39)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -27922,8 +27752,7 @@ public:
     , v38_(v38)
     , v39_(v39)
     , v40_(v40)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -28112,8 +27941,7 @@ public:
     , v39_(v39)
     , v40_(v40)
     , v41_(v41)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -28307,8 +28135,7 @@ public:
     , v40_(v40)
     , v41_(v41)
     , v42_(v42)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -28506,8 +28333,7 @@ public:
     , v41_(v41)
     , v42_(v42)
     , v43_(v43)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -28709,8 +28535,7 @@ public:
     , v42_(v42)
     , v43_(v43)
     , v44_(v44)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -28916,8 +28741,7 @@ public:
     , v43_(v43)
     , v44_(v44)
     , v45_(v45)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -29127,8 +28951,7 @@ public:
     , v44_(v44)
     , v45_(v45)
     , v46_(v46)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -29343,8 +29166,7 @@ public:
     , v45_(v45)
     , v46_(v46)
     , v47_(v47)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -29563,8 +29385,7 @@ public:
     , v46_(v46)
     , v47_(v47)
     , v48_(v48)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -29787,8 +29608,7 @@ public:
     , v47_(v47)
     , v48_(v48)
     , v49_(v49)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -30015,8 +29835,7 @@ public:
     , v48_(v48)
     , v49_(v49)
     , v50_(v50)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -30106,11 +29925,8 @@ public:
   CartesianProductGenerator2(const ParamGenerator<T1>& g1, const ParamGenerator<T2>& g2)
     : g1_(g1)
     , g2_(g2)
-  {
-  }
-  virtual ~CartesianProductGenerator2()
-  {
-  }
+  {}
+  virtual ~CartesianProductGenerator2() {}
 
   virtual ParamIteratorInterface<ParamType>* Begin() const
   {
@@ -30140,9 +29956,7 @@ private:
     {
       ComputeCurrentValue();
     }
-    virtual ~Iterator()
-    {
-    }
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const
     {
@@ -30240,11 +30054,8 @@ public:
     : g1_(g1)
     , g2_(g2)
     , g3_(g3)
-  {
-  }
-  virtual ~CartesianProductGenerator3()
-  {
-  }
+  {}
+  virtual ~CartesianProductGenerator3() {}
 
   virtual ParamIteratorInterface<ParamType>* Begin() const
   {
@@ -30279,9 +30090,7 @@ private:
     {
       ComputeCurrentValue();
     }
-    virtual ~Iterator()
-    {
-    }
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const
     {
@@ -30395,11 +30204,8 @@ public:
     , g2_(g2)
     , g3_(g3)
     , g4_(g4)
-  {
-  }
-  virtual ~CartesianProductGenerator4()
-  {
-  }
+  {}
+  virtual ~CartesianProductGenerator4() {}
 
   virtual ParamIteratorInterface<ParamType>* Begin() const
   {
@@ -30439,9 +30245,7 @@ private:
     {
       ComputeCurrentValue();
     }
-    virtual ~Iterator()
-    {
-    }
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const
     {
@@ -30569,11 +30373,8 @@ public:
     , g3_(g3)
     , g4_(g4)
     , g5_(g5)
-  {
-  }
-  virtual ~CartesianProductGenerator5()
-  {
-  }
+  {}
+  virtual ~CartesianProductGenerator5() {}
 
   virtual ParamIteratorInterface<ParamType>* Begin() const
   {
@@ -30618,9 +30419,7 @@ private:
     {
       ComputeCurrentValue();
     }
-    virtual ~Iterator()
-    {
-    }
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const
     {
@@ -30762,11 +30561,8 @@ public:
     , g4_(g4)
     , g5_(g5)
     , g6_(g6)
-  {
-  }
-  virtual ~CartesianProductGenerator6()
-  {
-  }
+  {}
+  virtual ~CartesianProductGenerator6() {}
 
   virtual ParamIteratorInterface<ParamType>* Begin() const
   {
@@ -30829,9 +30625,7 @@ private:
     {
       ComputeCurrentValue();
     }
-    virtual ~Iterator()
-    {
-    }
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const
     {
@@ -30988,11 +30782,8 @@ public:
     , g5_(g5)
     , g6_(g6)
     , g7_(g7)
-  {
-  }
-  virtual ~CartesianProductGenerator7()
-  {
-  }
+  {}
+  virtual ~CartesianProductGenerator7() {}
 
   virtual ParamIteratorInterface<ParamType>* Begin() const
   {
@@ -31075,9 +30866,7 @@ private:
     {
       ComputeCurrentValue();
     }
-    virtual ~Iterator()
-    {
-    }
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const
     {
@@ -31248,11 +31037,8 @@ public:
     , g6_(g6)
     , g7_(g7)
     , g8_(g8)
-  {
-  }
-  virtual ~CartesianProductGenerator8()
-  {
-  }
+  {}
+  virtual ~CartesianProductGenerator8() {}
 
   virtual ParamIteratorInterface<ParamType>* Begin() const
   {
@@ -31344,9 +31130,7 @@ private:
     {
       ComputeCurrentValue();
     }
-    virtual ~Iterator()
-    {
-    }
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const
     {
@@ -31540,11 +31324,8 @@ public:
     , g7_(g7)
     , g8_(g8)
     , g9_(g9)
-  {
-  }
-  virtual ~CartesianProductGenerator9()
-  {
-  }
+  {}
+  virtual ~CartesianProductGenerator9() {}
 
   virtual ParamIteratorInterface<ParamType>* Begin() const
   {
@@ -31645,9 +31426,7 @@ private:
     {
       ComputeCurrentValue();
     }
-    virtual ~Iterator()
-    {
-    }
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const
     {
@@ -31857,11 +31636,8 @@ public:
     , g8_(g8)
     , g9_(g9)
     , g10_(g10)
-  {
-  }
-  virtual ~CartesianProductGenerator10()
-  {
-  }
+  {}
+  virtual ~CartesianProductGenerator10() {}
 
   virtual ParamIteratorInterface<ParamType>* Begin() const
   {
@@ -31971,9 +31747,7 @@ private:
     {
       ComputeCurrentValue();
     }
-    virtual ~Iterator()
-    {
-    }
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const
     {
@@ -32181,8 +31955,7 @@ public:
   CartesianProductHolder2(const Generator1& g1, const Generator2& g2)
     : g1_(g1)
     , g2_(g2)
-  {
-  }
+  {}
   template <typename T1, typename T2>
   operator ParamGenerator<::std::tr1::tuple<T1, T2>>() const
   {
@@ -32206,8 +31979,7 @@ public:
     : g1_(g1)
     , g2_(g2)
     , g3_(g3)
-  {
-  }
+  {}
   template <typename T1, typename T2, typename T3>
   operator ParamGenerator<::std::tr1::tuple<T1, T2, T3>>() const
   {
@@ -32235,8 +32007,7 @@ public:
     , g2_(g2)
     , g3_(g3)
     , g4_(g4)
-  {
-  }
+  {}
   template <typename T1, typename T2, typename T3, typename T4>
   operator ParamGenerator<::std::tr1::tuple<T1, T2, T3, T4>>() const
   {
@@ -32268,8 +32039,7 @@ public:
     , g3_(g3)
     , g4_(g4)
     , g5_(g5)
-  {
-  }
+  {}
   template <typename T1, typename T2, typename T3, typename T4, typename T5>
   operator ParamGenerator<::std::tr1::tuple<T1, T2, T3, T4, T5>>() const
   {
@@ -32308,8 +32078,7 @@ public:
     , g4_(g4)
     , g5_(g5)
     , g6_(g6)
-  {
-  }
+  {}
   template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
   operator ParamGenerator<::std::tr1::tuple<T1, T2, T3, T4, T5, T6>>() const
   {
@@ -32358,8 +32127,7 @@ public:
     , g5_(g5)
     , g6_(g6)
     , g7_(g7)
-  {
-  }
+  {}
   template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7>
   operator ParamGenerator<::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7>>() const
   {
@@ -32413,8 +32181,7 @@ public:
     , g6_(g6)
     , g7_(g7)
     , g8_(g8)
-  {
-  }
+  {}
   template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8>
   operator ParamGenerator<::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8>>() const
   {
@@ -32473,8 +32240,7 @@ public:
     , g7_(g7)
     , g8_(g8)
     , g9_(g9)
-  {
-  }
+  {}
   template <typename T1,
             typename T2,
             typename T3,
@@ -32546,8 +32312,7 @@ public:
     , g8_(g8)
     , g9_(g9)
     , g10_(g10)
-  {
-  }
+  {}
   template <typename T1,
             typename T2,
             typename T3,
@@ -38627,9 +38392,7 @@ Combine(const Generator1& g1,
     : public test_case_name                                                                                            \
   {                                                                                                                    \
   public:                                                                                                              \
-    GTEST_TEST_CLASS_NAME_(test_case_name, test_name)()                                                                \
-    {                                                                                                                  \
-    }                                                                                                                  \
+    GTEST_TEST_CLASS_NAME_(test_case_name, test_name)() {}                                                             \
     virtual void TestBody();                                                                                           \
                                                                                                                        \
   private:                                                                                                             \
@@ -38789,8 +38552,7 @@ public:
     , line_number_(a_line_number)
     , summary_(ExtractSummary(a_message))
     , message_(a_message)
-  {
-  }
+  {}
 
   // Gets the outcome of the test part.
   Type type() const
@@ -38875,9 +38637,7 @@ std::ostream& operator<<(std::ostream& os, const TestPartResult& result);
 class GTEST_API_ TestPartResultArray
 {
 public:
-  TestPartResultArray()
-  {
-  }
+  TestPartResultArray() {}
 
   // Appends the given TestPartResult to the array.
   void Append(const TestPartResult& result);
@@ -38898,9 +38658,7 @@ private:
 class TestPartResultReporterInterface
 {
 public:
-  virtual ~TestPartResultReporterInterface()
-  {
-  }
+  virtual ~TestPartResultReporterInterface() {}
 
   virtual void ReportTestPartResult(const TestPartResult& result) = 0;
 };
@@ -39383,8 +39141,7 @@ public:
   // Used in the EXPECT_TRUE/FALSE(bool_expression).
   explicit AssertionResult(bool success)
     : success_(success)
-  {
-  }
+  {}
 
   // Returns true iff the assertion succeeded.
   operator bool() const
@@ -39498,9 +39255,7 @@ public:
   // test in test case Foo.  Hence a sub-class can define its own
   // SetUpTestCase() method to shadow the one defined in the super
   // class.
-  static void SetUpTestCase()
-  {
-  }
+  static void SetUpTestCase() {}
 
   // Tears down the stuff shared by all tests in this test case.
   //
@@ -39508,9 +39263,7 @@ public:
   // test in test case Foo.  Hence a sub-class can define its own
   // TearDownTestCase() method to shadow the one defined in the super
   // class.
-  static void TearDownTestCase()
-  {
-  }
+  static void TearDownTestCase() {}
 
   // Returns true iff the current test has a fatal failure.
   static bool HasFatalFailure();
@@ -39594,8 +39347,7 @@ private:
   // If you see an error about overriding the following function or
   // about it being private, you have mis-spelled SetUp() as Setup().
   struct Setup_should_be_spelled_SetUp
-  {
-  };
+  {};
   virtual Setup_should_be_spelled_SetUp* Setup()
   {
     return NULL;
@@ -39620,8 +39372,7 @@ public:
   TestProperty(const std::string& a_key, const std::string& a_value)
     : key_(a_key)
     , value_(a_value)
-  {
-  }
+  {}
 
   // Gets the user supplied key.
   const char* key() const
@@ -40172,26 +39923,19 @@ class Environment
 {
 public:
   // The d'tor is virtual as we need to subclass Environment.
-  virtual ~Environment()
-  {
-  }
+  virtual ~Environment() {}
 
   // Override this to define how to set up the environment.
-  virtual void SetUp()
-  {
-  }
+  virtual void SetUp() {}
 
   // Override this to define how to tear down the environment.
-  virtual void TearDown()
-  {
-  }
+  virtual void TearDown() {}
 
 private:
   // If you see an error about overriding the following function or
   // about it being private, you have mis-spelled SetUp() as Setup().
   struct Setup_should_be_spelled_SetUp
-  {
-  };
+  {};
   virtual Setup_should_be_spelled_SetUp* Setup()
   {
     return NULL;
@@ -40203,9 +39947,7 @@ private:
 class TestEventListener
 {
 public:
-  virtual ~TestEventListener()
-  {
-  }
+  virtual ~TestEventListener() {}
 
   // Fired before any test activity starts.
   virtual void OnTestProgramStart(const UnitTest& unit_test) = 0;
@@ -40257,45 +39999,19 @@ public:
 class EmptyTestEventListener : public TestEventListener
 {
 public:
-  virtual void OnTestProgramStart(const UnitTest& /*unit_test*/)
-  {
-  }
-  virtual void OnTestIterationStart(const UnitTest& /*unit_test*/, int /*iteration*/)
-  {
-  }
-  virtual void OnEnvironmentsSetUpStart(const UnitTest& /*unit_test*/)
-  {
-  }
-  virtual void OnEnvironmentsSetUpEnd(const UnitTest& /*unit_test*/)
-  {
-  }
-  virtual void OnTestCaseStart(const TestCase& /*test_case*/)
-  {
-  }
-  virtual void OnTestStart(const TestInfo& /*test_info*/)
-  {
-  }
-  virtual void OnTestPartResult(const TestPartResult& /*test_part_result*/)
-  {
-  }
-  virtual void OnTestEnd(const TestInfo& /*test_info*/)
-  {
-  }
-  virtual void OnTestCaseEnd(const TestCase& /*test_case*/)
-  {
-  }
-  virtual void OnEnvironmentsTearDownStart(const UnitTest& /*unit_test*/)
-  {
-  }
-  virtual void OnEnvironmentsTearDownEnd(const UnitTest& /*unit_test*/)
-  {
-  }
-  virtual void OnTestIterationEnd(const UnitTest& /*unit_test*/, int /*iteration*/)
-  {
-  }
-  virtual void OnTestProgramEnd(const UnitTest& /*unit_test*/)
-  {
-  }
+  virtual void OnTestProgramStart(const UnitTest& /*unit_test*/) {}
+  virtual void OnTestIterationStart(const UnitTest& /*unit_test*/, int /*iteration*/) {}
+  virtual void OnEnvironmentsSetUpStart(const UnitTest& /*unit_test*/) {}
+  virtual void OnEnvironmentsSetUpEnd(const UnitTest& /*unit_test*/) {}
+  virtual void OnTestCaseStart(const TestCase& /*test_case*/) {}
+  virtual void OnTestStart(const TestInfo& /*test_info*/) {}
+  virtual void OnTestPartResult(const TestPartResult& /*test_part_result*/) {}
+  virtual void OnTestEnd(const TestInfo& /*test_info*/) {}
+  virtual void OnTestCaseEnd(const TestCase& /*test_case*/) {}
+  virtual void OnEnvironmentsTearDownStart(const UnitTest& /*unit_test*/) {}
+  virtual void OnEnvironmentsTearDownEnd(const UnitTest& /*unit_test*/) {}
+  virtual void OnTestIterationEnd(const UnitTest& /*unit_test*/, int /*iteration*/) {}
+  virtual void OnTestProgramEnd(const UnitTest& /*unit_test*/) {}
 };
 
 // TestEventListeners lets users add listeners to track events in Google Test.
@@ -41020,8 +40736,7 @@ private:
       , file(srcfile)
       , line(line_num)
       , message(msg)
-    {
-    }
+    {}
 
     TestPartResult::Type const type;
     const char* const file;
@@ -41079,9 +40794,7 @@ class WithParamInterface
 {
 public:
   typedef T ParamType;
-  virtual ~WithParamInterface()
-  {
-  }
+  virtual ~WithParamInterface() {}
 
   // The current parameter value. Is also available in the test fixture's
   // constructor. This member function is non-static, even though it only
@@ -41118,9 +40831,10 @@ const T* WithParamInterface<T>::parameter_ = NULL;
 // WithParamInterface, and can just inherit from ::testing::TestWithParam.
 
 template <typename T>
-class TestWithParam : public Test, public WithParamInterface<T>
-{
-};
+class TestWithParam
+  : public Test
+  , public WithParamInterface<T>
+{};
 
 #endif // GTEST_HAS_PARAM_TEST
 

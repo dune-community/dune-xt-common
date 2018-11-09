@@ -19,8 +19,7 @@ struct Moveable
 {
   Moveable(int i)
     : v(i)
-  {
-  }
+  {}
   int v;
 };
 

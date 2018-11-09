@@ -31,8 +31,7 @@ namespace Common {
 
 // Sparsity pattern placeholder representing a dense matrix pattern.
 struct FullPattern
-{
-};
+{};
 
 /**
  * \brief Traits to uniformly handle matrices.

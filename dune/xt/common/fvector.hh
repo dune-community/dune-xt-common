@@ -51,15 +51,13 @@ class FieldVector : public Dune::FieldVector<K, SIZE>
 public:
   FieldVector(const K& kk = suitable_default<K>::value())
     : BaseType(kk)
-  {
-  }
+  {}
 
   FieldVector(const ThisType& other) = default;
 
   FieldVector(const BaseType& other)
     : BaseType(other)
-  {
-  }
+  {}
 
   /* FieldMatrix< K, 1, 1 > is convertible to K, which in turn is convertible to FieldVector< K, 1 >. Without the
    * following constructor, this leads to an "ambiguous constructor" error (candidates are copy constructor and
@@ -68,8 +66,7 @@ public:
   FieldVector(const typename std::enable_if<SIZE == 1 && std::is_same<K, Type>::value,
                                             typename Dune::FieldMatrix<K, 1, 1>>::type& mat)
     : BaseType(mat[0][0])
-  {
-  }
+  {}
 
   FieldVector(const std::vector<K>& vec)
     : BaseType()
@@ -183,8 +180,7 @@ public:
 
   BlockedFieldVector(const K& val = K(0.))
     : backend_(BlockType(val))
-  {
-  }
+  {}
 
   BlockedFieldVector(const VectorType& other)
   {
@@ -193,8 +189,7 @@ public:
 
   BlockedFieldVector(const BlockType& block)
     : backend_(block)
-  {
-  }
+  {}
 
   BlockedFieldVector(const std::initializer_list<K>& init_list)
   {
@@ -380,8 +375,7 @@ class ValueInitFieldVector : public Dune::XT::Common::FieldVector<K, SIZE>
 public:
   ValueInitFieldVector()
     : BaseType(value)
-  {
-  }
+  {}
 }; // class ValueInitFieldVector
 
 
@@ -545,18 +539,15 @@ struct hstack_decay<Dune::FieldVector<K, SIZE>>
 
 template <class K, int SIZE>
 struct hstack_decay<const Dune::FieldVector<K, SIZE>&> : public hstack_decay<Dune::FieldVector<K, SIZE>>
-{
-};
+{};
 
 template <class K, int SIZE>
 struct hstack_decay<Dune::XT::Common::FieldVector<K, SIZE>> : public hstack_decay<Dune::FieldVector<K, SIZE>>
-{
-};
+{};
 
 template <class K, int SIZE>
 struct hstack_decay<const Dune::XT::Common::FieldVector<K, SIZE>&> : public hstack_decay<Dune::FieldVector<K, SIZE>>
-{
-};
+{};
 
 
 /**
@@ -587,8 +578,7 @@ struct hstack_helper<Dune::FieldVector<K, SIZE>>
 
 template <class K, int SIZE>
 struct hstack_helper<Dune::XT::Common::FieldVector<K, SIZE>> : public hstack_helper<Dune::FieldVector<K, SIZE>>
-{
-};
+{};
 
 template <class KL, class KR, int r>
 struct hstack_helper<KL, Dune::FieldVector<KR, r>>
@@ -598,8 +588,7 @@ struct hstack_helper<KL, Dune::FieldVector<KR, r>>
 
 template <class KL, class KR, int r>
 struct hstack_helper<KL, Dune::XT::Common::FieldVector<KR, r>> : public hstack_helper<KL, Dune::FieldVector<KR, r>>
-{
-};
+{};
 
 template <class KL, int l, class KR>
 struct hstack_helper<Dune::FieldVector<KL, l>, KR>
@@ -609,8 +598,7 @@ struct hstack_helper<Dune::FieldVector<KL, l>, KR>
 
 template <class KL, int l, class KR>
 struct hstack_helper<Dune::XT::Common::FieldVector<KL, l>, KR> : public hstack_helper<Dune::FieldVector<KL, l>, KR>
-{
-};
+{};
 
 template <class KL, int l, class KR, int r>
 struct hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
@@ -621,34 +609,29 @@ struct hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
 template <class KL, int l, class KR, int r>
 struct hstack_helper<Dune::XT::Common::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
     : public hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
-{
-};
+{};
 
 template <class KL, int l, class KR, int r>
 struct hstack_helper<Dune::FieldVector<KL, l>, Dune::XT::Common::FieldVector<KR, r>>
     : public hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
-{
-};
+{};
 
 template <class KL, int l, class KR, int r>
 struct hstack_helper<Dune::XT::Common::FieldVector<KL, l>, Dune::XT::Common::FieldVector<KR, r>>
     : public hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
-{
-};
+{};
 
 // not sure why this is required, would've hoped the decay above would take care of it
 template <class KL, int l, class KR, int r>
 struct hstack_helper<Dune::FieldVector<KL, l>, const Dune::FieldVector<KR, r>&>
     : public hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
-{
-};
+{};
 
 // not sure why this is required, would've hoped the decay above would take care of it
 template <class KL, int l, class KR, int r>
 struct hstack_helper<Dune::FieldVector<KL, l>, const Dune::XT::Common::FieldVector<KR, r>&>
     : public hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
-{
-};
+{};
 
 
 } // namespace internal

@@ -17,8 +17,7 @@ namespace Common {
 
 MPI_Comm_Wrapper::MPI_Comm_Wrapper(WrappedComm comm)
   : comm_(comm)
-{
-}
+{}
 
 MPI_Comm_Wrapper& MPI_Comm_Wrapper::operator=(const WrappedComm comm)
 {

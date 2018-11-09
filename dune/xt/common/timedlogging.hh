@@ -286,8 +286,7 @@ public:
     logger_.debug() << class_id_ << "(this=" << this << ")" << std::endl;
   }
 #else
-  {
-  }
+  {}
 #endif
 
   EnableDebugLoggingForCtors(const ThisType& other)

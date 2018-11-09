@@ -30,8 +30,7 @@ ConfigurationDefaults::ConfigurationDefaults(bool warn_on_default_access_in,
   : warn_on_default_access(warn_on_default_access_in)
   , log_on_exit(log_on_exit_in)
   , logfile(logfile_in)
-{
-}
+{}
 
 Configuration::Configuration()
   : BaseType()
@@ -66,8 +65,7 @@ Configuration::Configuration(const Configuration& other)
   , warn_on_default_access_(other.warn_on_default_access_)
   , log_on_exit_(other.log_on_exit_)
   , logfile_(other.logfile_)
-{
-}
+{}
 
 Configuration::Configuration(const std::initializer_list<std::pair<std::string, std::string>>& key_value_pairs)
   : BaseType()
@@ -84,13 +82,11 @@ Configuration::Configuration(const std::initializer_list<std::pair<std::string, 
 
 Configuration::Configuration(std::istream& in, ConfigurationDefaults defaults)
   : Configuration(initialize(in), defaults)
-{
-}
+{}
 
 Configuration::Configuration(int argc, char** argv, ConfigurationDefaults defaults)
   : Configuration::Configuration(initialize(argc, argv), defaults)
-{
-}
+{}
 
 Configuration::~Configuration()
 {

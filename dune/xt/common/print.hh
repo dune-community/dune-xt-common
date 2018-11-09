@@ -128,8 +128,7 @@ public:
     : ostream(o)
     , prefix(p)
     , first(true)
-  {
-  }
+  {}
 
   PrefixOutputIterator& operator*()
   {

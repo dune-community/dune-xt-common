@@ -31,9 +31,7 @@ template <class ValueType>
 class SimpleDict
 {
 public:
-  SimpleDict()
-  {
-  }
+  SimpleDict() {}
 
   SimpleDict(const std::string& key, const ValueType& value)
     : dict_({std::make_pair(key, value)})
@@ -235,9 +233,7 @@ private:
 
 public:
   /// \note this is somehow necessary to make clang 3.8 happy (and cannot be defaulted)
-  ~Parameter()
-  {
-  }
+  ~Parameter() {}
 
   Parameter operator+(const Parameter& other) const;
 

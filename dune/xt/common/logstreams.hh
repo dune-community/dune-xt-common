@@ -95,8 +95,7 @@ public:
   OstreamBuffer(int loglevel, int& logflags, std::ostream& out)
     : SuspendableStrBuffer(loglevel, logflags)
     , out_(out)
-  {
-  }
+  {}
 
 private:
   std::ostream& out_;
@@ -135,8 +134,7 @@ class EmptyBuffer : public SuspendableStrBuffer
 public:
   EmptyBuffer(int loglevel, int& logflags)
     : SuspendableStrBuffer(loglevel, logflags)
-  {
-  }
+  {}
 
 protected:
   virtual int sync();
@@ -180,8 +178,7 @@ public:
   explicit LogStream(SuspendableStrBuffer*&& buffer)
     : StorageBaseType(std::move(buffer))
     , BaseType(&this->access())
-  {
-  }
+  {}
 
   virtual ~LogStream()
   {

@@ -29,8 +29,7 @@ struct IndexSetPartitioner
   typedef typename GridViewType::template Codim<0>::Entity EntityType;
   explicit IndexSetPartitioner(const IndexSetType& index_set)
     : index_set_(index_set)
-  {
-  }
+  {}
 
   std::size_t partition(const EntityType& e) const
   {

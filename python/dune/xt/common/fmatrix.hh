@@ -76,8 +76,7 @@ struct FieldMatrix_type_caster
 
 template <class K, int N, int M>
 struct type_caster<Dune::FieldMatrix<K, N, M>> : public FieldMatrix_type_caster<Dune::FieldMatrix<K, N, M>>
-{
-};
+{};
 
 /**
  * Dune::XT::Common::FieldMatrix is already able to handle std::string as we already provide the correct default value
