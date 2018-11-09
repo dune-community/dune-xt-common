@@ -5230,16 +5230,16 @@ void TestEventListeners::SuppressEventForwarding()
 // value will never change.
 UnitTest* UnitTest::GetInstance()
 {
-// When compiled with MSVC 7.1 in optimized mode, destroying the
-// UnitTest object upon exiting the program messes up the exit code,
-// causing successful tests to appear failed.  We have to use a
-// different implementation in this case to bypass the compiler bug.
-// This implementation makes the compiler happy, at the cost of
-// leaking the UnitTest object.
+  // When compiled with MSVC 7.1 in optimized mode, destroying the
+  // UnitTest object upon exiting the program messes up the exit code,
+  // causing successful tests to appear failed.  We have to use a
+  // different implementation in this case to bypass the compiler bug.
+  // This implementation makes the compiler happy, at the cost of
+  // leaking the UnitTest object.
 
-// CodeGear C++Builder insists on a public destructor for the
-// default implementation.  Use this implementation to keep good OO
-// design with private destructor.
+  // CodeGear C++Builder insists on a public destructor for the
+  // default implementation.  Use this implementation to keep good OO
+  // design with private destructor.
 
 #if (defined(_MSC_VER) && _MSC_VER == 1310 && !defined(_DEBUG)) || defined(__BORLANDC__)
   static UnitTest* const instance = new UnitTest;
@@ -9192,7 +9192,7 @@ bool ParseInt32(const Message& src_text, const char* str, Int32* value)
       // LONG_MAX or LONG_MIN when the input overflows.)
       result != long_value
       // The parsed value overflows as an Int32.
-      ) {
+  ) {
     Message msg;
     msg << "WARNING: " << src_text << " is expected to be a 32-bit integer, but actually"
         << " has value " << str << ", which overflows.\n";

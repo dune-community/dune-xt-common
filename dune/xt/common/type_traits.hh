@@ -324,7 +324,7 @@ struct is_hashable : std::false_type
 
 template <typename T>
 struct is_hashable<T, typename std::enable_if<!!sizeof(std::declval<std::hash<T>>()(std::declval<T>()))>::type>
-    : std::true_type
+  : std::true_type
 {};
 #endif
 

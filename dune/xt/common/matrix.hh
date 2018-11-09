@@ -326,13 +326,13 @@ template <class MatrixType,
           size_t COLS = MatrixAbstraction<MatrixType>::static_cols,
           class FieldType = typename MatrixAbstraction<MatrixType>::S,
           class SparsityPatternType = FullPattern>
-typename std::enable_if<is_matrix<MatrixType>::value,
-                        typename MatrixAbstraction<MatrixType>::template MatrixTypeTemplate<ROWS, COLS, FieldType>>::
-    type
-    create(const size_t rows,
-           const size_t cols,
-           const FieldType& val = 0,
-           const SparsityPatternType& pattern = SparsityPatternType())
+typename std::enable_if<
+    is_matrix<MatrixType>::value,
+    typename MatrixAbstraction<MatrixType>::template MatrixTypeTemplate<ROWS, COLS, FieldType>>::type
+create(const size_t rows,
+       const size_t cols,
+       const FieldType& val = 0,
+       const SparsityPatternType& pattern = SparsityPatternType())
 {
   return MatrixAbstraction<
       typename MatrixAbstraction<MatrixType>::template MatrixTypeTemplate<ROWS, COLS, FieldType>>::create(rows,
@@ -450,7 +450,7 @@ convert_to(const SourceType& source)
 #ifndef DXT_DISABLE_CHECKS
                                )
 #endif
-                           );
+      );
   return ret;
 } // ... convert_to(...)
 

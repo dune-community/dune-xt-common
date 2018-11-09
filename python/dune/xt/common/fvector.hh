@@ -120,7 +120,7 @@ struct type_caster<Dune::FieldVector<K, SIZE>> : public FieldVector_type_caster<
 
 template <class K, int SIZE>
 struct type_caster<Dune::XT::Common::FieldVector<K, SIZE>>
-    : public FieldVector_type_caster<Dune::XT::Common::FieldVector<K, SIZE>>
+  : public FieldVector_type_caster<Dune::XT::Common::FieldVector<K, SIZE>>
 {};
 
 
