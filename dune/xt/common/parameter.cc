@@ -245,16 +245,14 @@ Parameter ParametricInterface::parse_parameter(const Parameter& mu) const
     // both have only one key, but the keys don't match and neither is '__unspecified__'
     DUNE_THROW(Exceptions::parameter_error,
                "this->parameter_type() = " << this_type << "\n   "
-                                           << "mu.type() = "
-                                           << mus_type);
+                                           << "mu.type() = " << mus_type);
   }
   // one of them has more than one key, so '__unspecified__' does not play a role here
   if (this_type <= mus_type)
     return mu;
   DUNE_THROW(Exceptions::parameter_error,
              "this->parameter_type() = " << this_type << "\n   "
-                                         << "mu.type() = "
-                                         << mus_type);
+                                         << "mu.type() = " << mus_type);
   return Parameter();
 } // ... parse_parameter(...)
 

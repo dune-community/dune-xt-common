@@ -76,8 +76,7 @@ public:
       DUNE_THROW(Exceptions::wrong_input_given,
                  "You are trying to construct a FieldVector< ..., " << SIZE << " > (of "
                                                                     << "static size) from a vector of size "
-                                                                    << vec.size()
-                                                                    << "!");
+                                                                    << vec.size() << "!");
 #endif // NDEBUG
     for (size_t ii = 0; ii < SIZE; ++ii)
       this->operator[](ii) = vec[ii];
@@ -91,8 +90,7 @@ public:
       DUNE_THROW(Exceptions::wrong_input_given,
                  "You are trying to construct a FieldVector< ..., " << SIZE << " > (of "
                                                                     << "static size) from a list of size "
-                                                                    << list.size()
-                                                                    << "!");
+                                                                    << list.size() << "!");
 #endif // NDEBUG
     size_t ii = 0;
     for (auto element : list)
@@ -433,9 +431,7 @@ struct VectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>>
     if (sz != SZ)
       DUNE_THROW(Exceptions::wrong_input_given,
                  "You are trying to construct a FieldVector< ..., " << SZ << " > (of "
-                                                                    << "static size) with "
-                                                                    << sz
-                                                                    << " elements!");
+                                                                    << "static size) with " << sz << " elements!");
     return VectorTypeTemplate<SZ>(val);
   }
 };
@@ -461,9 +457,7 @@ struct VectorAbstraction<Dune::XT::Common::BlockedFieldVector<K, num_blocks, blo
     if (sz != SZ)
       DUNE_THROW(Exceptions::wrong_input_given,
                  "You are trying to construct a FieldVector< ..., " << SZ << " > (of "
-                                                                    << "static size) with "
-                                                                    << sz
-                                                                    << " elements!");
+                                                                    << "static size) with " << sz << " elements!");
     return VectorType(val);
   }
 };

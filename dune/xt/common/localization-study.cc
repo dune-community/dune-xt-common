@@ -104,9 +104,7 @@ void LocalizationStudy::run(std::ostream& out)
     if (indicators.size() != reference_indicators.size())
       DUNE_THROW(Exceptions::requirements_not_met,
                  "Given indicators of type '" << indicator_id << "' are of wrong length (is " << indicators.size()
-                                              << ", should be "
-                                              << reference_indicators.size()
-                                              << ")!");
+                                              << ", should be " << reference_indicators.size() << ")!");
     const auto difference = reference_indicators - indicators;
     // compute L^2 difference
     out << std::setw(18) << std::setprecision(2) << std::scientific << difference.two_norm() << std::flush;

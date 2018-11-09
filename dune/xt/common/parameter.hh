@@ -69,8 +69,7 @@ public:
     if (!overwrite && key_was_present)
       DUNE_THROW(Exceptions::parameter_error,
                  "You are trying to overwrite the key '"
-                     << key
-                     << "' (although a value is already set), and overwrite is false!");
+                     << key << "' (although a value is already set), and overwrite is false!");
     dict_[key] = value;
     if (!key_was_present)
       update_keys();
@@ -126,11 +125,9 @@ protected:
         const auto& this_value = this_key_search_result->second;
         DUNE_THROW_IF(!value_comparator(this_value, other_value),
                       Exceptions::parameter_error,
-                      error_msg_prefix(this_value, other_value) << "\n   this->get(\"" << other_key << "\") = "
-                                                                << this_value
-                                                                << "\n   other.get(\""
-                                                                << other_value
-                                                                << "\")");
+                      error_msg_prefix(this_value, other_value)
+                          << "\n   this->get(\"" << other_key << "\") = " << this_value << "\n   other.get(\""
+                          << other_value << "\")");
         // and the respective values agree, so no need to do something
       }
     }

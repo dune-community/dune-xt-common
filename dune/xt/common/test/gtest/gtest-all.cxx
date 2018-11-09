@@ -557,8 +557,8 @@ inline int GetRandomSeedFromFlag(Int32 random_seed_flag)
 // considered to be 1.
 inline int GetNextRandomSeed(int seed)
 {
-  GTEST_CHECK_(1 <= seed && seed <= kMaxRandomSeed) << "Invalid random seed " << seed << " - must be in [1, "
-                                                    << kMaxRandomSeed << "].";
+  GTEST_CHECK_(1 <= seed && seed <= kMaxRandomSeed)
+      << "Invalid random seed " << seed << " - must be in [1, " << kMaxRandomSeed << "].";
   const int next_seed = seed + 1;
   return (next_seed > kMaxRandomSeed) ? 1 : next_seed;
 }
@@ -722,10 +722,10 @@ template <typename E>
 void ShuffleRange(internal::Random* random, int begin, int end, std::vector<E>* v)
 {
   const int size = static_cast<int>(v->size());
-  GTEST_CHECK_(0 <= begin && begin <= size) << "Invalid shuffle range start " << begin << ": must be in range [0, "
-                                            << size << "].";
-  GTEST_CHECK_(begin <= end && end <= size) << "Invalid shuffle range finish " << end << ": must be in range [" << begin
-                                            << ", " << size << "].";
+  GTEST_CHECK_(0 <= begin && begin <= size)
+      << "Invalid shuffle range start " << begin << ": must be in range [0, " << size << "].";
+  GTEST_CHECK_(begin <= end && end <= size)
+      << "Invalid shuffle range finish " << end << ": must be in range [" << begin << ", " << size << "].";
 
   // Fisher-Yates shuffle, from
   // http://en.wikipedia.org/wiki/Fisher-Yates_shuffle
@@ -1489,8 +1489,8 @@ bool ParseNaturalNumber(const ::std::string& str, Integer* number)
   errno = 0;
 
   char* end;
-// BiggestConvertible is the largest integer type that system-provided
-// string-to-number conversion routines can return.
+  // BiggestConvertible is the largest integer type that system-provided
+  // string-to-number conversion routines can return.
 
 #if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS && !defined(__GNUC__)
 
@@ -1656,9 +1656,8 @@ public:
 
   void OnTestIterationEnd(const UnitTest& unit_test, int /* iteration */)
   {
-    SendLn("event=TestIterationEnd&passed=" + FormatBool(unit_test.Passed()) + "&elapsed_time="
-           + StreamableToString(unit_test.elapsed_time())
-           + "ms");
+    SendLn("event=TestIterationEnd&passed=" + FormatBool(unit_test.Passed())
+           + "&elapsed_time=" + StreamableToString(unit_test.elapsed_time()) + "ms");
   }
 
   void OnTestCaseStart(const TestCase& test_case)
@@ -1668,9 +1667,8 @@ public:
 
   void OnTestCaseEnd(const TestCase& test_case)
   {
-    SendLn("event=TestCaseEnd&passed=" + FormatBool(test_case.Passed()) + "&elapsed_time="
-           + StreamableToString(test_case.elapsed_time())
-           + "ms");
+    SendLn("event=TestCaseEnd&passed=" + FormatBool(test_case.Passed())
+           + "&elapsed_time=" + StreamableToString(test_case.elapsed_time()) + "ms");
   }
 
   void OnTestStart(const TestInfo& test_info)
@@ -1680,9 +1678,8 @@ public:
 
   void OnTestEnd(const TestInfo& test_info)
   {
-    SendLn("event=TestEnd&passed=" + FormatBool((test_info.result())->Passed()) + "&elapsed_time="
-           + StreamableToString((test_info.result())->elapsed_time())
-           + "ms");
+    SendLn("event=TestEnd&passed=" + FormatBool((test_info.result())->Passed())
+           + "&elapsed_time=" + StreamableToString((test_info.result())->elapsed_time()) + "ms");
   }
 
   void OnTestPartResult(const TestPartResult& test_part_result)
@@ -1691,9 +1688,7 @@ public:
     if (file_name == NULL)
       file_name = "";
     SendLn("event=TestPartResult&file=" + UrlEncode(file_name) + "&line="
-           + StreamableToString(test_part_result.line_number())
-           + "&message="
-           + UrlEncode(test_part_result.message()));
+           + StreamableToString(test_part_result.line_number()) + "&message=" + UrlEncode(test_part_result.message()));
   }
 
 private:
@@ -1944,7 +1939,7 @@ void AssertHelper::operator=(const Message& message) const
                                              AppendUserMessage(data_->message, message),
                                              UnitTest::GetInstance()->impl()->CurrentOsStackTraceExceptTop(1)
                                              // Skips the stack frame for this function itself.
-                                             ); // NOLINT
+  ); // NOLINT
 }
 
 // Mutex for linked pointers.
@@ -4109,8 +4104,7 @@ namespace internal {
 static std::string PrintTestPartResultToString(const TestPartResult& test_part_result)
 {
   return (Message() << internal::FormatFileLocation(test_part_result.file_name(), test_part_result.line_number()) << " "
-                    << TestPartResultTypeToString(test_part_result.type())
-                    << test_part_result.message())
+                    << TestPartResultTypeToString(test_part_result.type()) << test_part_result.message())
       .GetString();
 }
 
@@ -6108,8 +6102,9 @@ int UnitTestImpl::FilterTests(ReactionToSharding shard_tests)
 
       const bool is_runnable = (GTEST_FLAG(also_run_disabled_tests) || !is_disabled) && matches_filter;
 
-      const bool is_selected = is_runnable && (shard_tests == IGNORE_SHARDING_PROTOCOL
-                                               || ShouldRunTestOnShard(total_shards, shard_index, num_runnable_tests));
+      const bool is_selected = is_runnable
+                               && (shard_tests == IGNORE_SHARDING_PROTOCOL
+                                   || ShouldRunTestOnShard(total_shards, shard_index, num_runnable_tests));
 
       num_runnable_tests += is_runnable;
       num_selected_tests += is_selected;
@@ -6922,9 +6917,7 @@ void DeathTestAbort(const std::string& message)
   do {                                                                                                                 \
     if (!::testing::internal::IsTrue(expression)) {                                                                    \
       DeathTestAbort(::std::string("CHECK failed: File ") + __FILE__ + ", line "                                       \
-                     + ::testing::internal::StreamableToString(__LINE__)                                               \
-                     + ": "                                                                                            \
-                     + #expression);                                                                                   \
+                     + ::testing::internal::StreamableToString(__LINE__) + ": " + #expression);                        \
     }                                                                                                                  \
   } while (::testing::internal::AlwaysFalse())
 
@@ -6943,10 +6936,7 @@ void DeathTestAbort(const std::string& message)
     } while (gtest_retval == -1 && errno == EINTR);                                                                    \
     if (gtest_retval == -1) {                                                                                          \
       DeathTestAbort(::std::string("CHECK failed: File ") + __FILE__ + ", line "                                       \
-                     + ::testing::internal::StreamableToString(__LINE__)                                               \
-                     + ": "                                                                                            \
-                     + #expression                                                                                     \
-                     + " != -1");                                                                                      \
+                     + ::testing::internal::StreamableToString(__LINE__) + ": " + #expression + " != -1");             \
     }                                                                                                                  \
   } while (::testing::internal::AlwaysFalse())
 
@@ -7673,8 +7663,8 @@ static int ExecDeathTestChildMain(void* child_arg)
   // invoke the test program via a valid path that contains at least
   // one path separator.
   execve(args->argv[0], args->argv, GetEnviron());
-  DeathTestAbort(std::string("execve(") + args->argv[0] + ", ...) in " + original_dir + " failed: "
-                 + GetLastErrnoDescription());
+  DeathTestAbort(std::string("execve(") + args->argv[0] + ", ...) in " + original_dir
+                 + " failed: " + GetLastErrnoDescription());
   return EXIT_FAILURE;
 }
 #endif // !GTEST_OS_QNX
@@ -7862,8 +7852,7 @@ bool DefaultDeathTestFactory::Create(
     if (death_test_index > flag->index()) {
       DeathTest::set_last_death_test_message("Death test count (" + StreamableToString(death_test_index)
                                              + ") somehow exceeded expected maximum ("
-                                             + StreamableToString(flag->index())
-                                             + ")");
+                                             + StreamableToString(flag->index()) + ")");
       return false;
     }
 
@@ -7952,8 +7941,7 @@ int GetStatusFileDescriptor(unsigned int parent_process_id,
                          FALSE, // Request non-inheritable handler.
                          DUPLICATE_SAME_ACCESS)) {
     DeathTestAbort("Unable to duplicate the pipe handle " + StreamableToString(write_handle_as_size_t)
-                   + " from the parent process "
-                   + StreamableToString(parent_process_id));
+                   + " from the parent process " + StreamableToString(parent_process_id));
   }
 
   const HANDLE event_handle = reinterpret_cast<HANDLE>(event_handle_as_size_t);
@@ -7967,8 +7955,7 @@ int GetStatusFileDescriptor(unsigned int parent_process_id,
                          FALSE,
                          DUPLICATE_SAME_ACCESS)) {
     DeathTestAbort("Unable to duplicate the event handle " + StreamableToString(event_handle_as_size_t)
-                   + " from the parent process "
-                   + StreamableToString(parent_process_id));
+                   + " from the parent process " + StreamableToString(parent_process_id));
   }
 
   const int write_fd = ::_open_osfhandle(reinterpret_cast<intptr_t>(dup_write_handle), O_APPEND);
@@ -8008,8 +7995,7 @@ InternalRunDeathTestFlag* ParseInternalRunDeathTestFlag()
   size_t event_handle_as_size_t = 0;
 
   if (fields.size() != 6 || !ParseNaturalNumber(fields[1], &line) || !ParseNaturalNumber(fields[2], &index)
-      || !ParseNaturalNumber(fields[3], &parent_process_id)
-      || !ParseNaturalNumber(fields[4], &write_handle_as_size_t)
+      || !ParseNaturalNumber(fields[3], &parent_process_id) || !ParseNaturalNumber(fields[4], &write_handle_as_size_t)
       || !ParseNaturalNumber(fields[5], &event_handle_as_size_t)) {
     DeathTestAbort("Bad --gtest_internal_run_death_test flag: " + GTEST_FLAG(internal_run_death_test));
   }

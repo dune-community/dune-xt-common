@@ -260,11 +260,9 @@ void Configuration::add_tree_(const Configuration& other, const std::string sub_
     } catch (Exceptions::configuration_error& ee) {
       DUNE_THROW(Exceptions::configuration_error,
                  "There was an error adding other (see below) to this:\n\n"
-                     << ee.what()
-                     << "\n\n"
+                     << ee.what() << "\n\n"
                      << "======================\n"
-                     << other.report_string()
-                     << "\n");
+                     << other.report_string() << "\n");
     }
   }
 } // ... add_tree_(...)

@@ -2198,13 +2198,8 @@ using ::std::tuple_size;
 // abort() in a VC 7.1 application compiled as GUI in debug config
 // pops up a dialog window that cannot be suppressed programmatically.
 #if (GTEST_OS_LINUX || GTEST_OS_CYGWIN || GTEST_OS_SOLARIS || (GTEST_OS_MAC && !GTEST_OS_IOS)                          \
-     || GTEST_OS_IOS_SIMULATOR                                                                                         \
-     || (GTEST_OS_WINDOWS_DESKTOP && _MSC_VER >= 1400)                                                                 \
-     || GTEST_OS_WINDOWS_MINGW                                                                                         \
-     || GTEST_OS_AIX                                                                                                   \
-     || GTEST_OS_HPUX                                                                                                  \
-     || GTEST_OS_OPENBSD                                                                                               \
-     || GTEST_OS_QNX)
+     || GTEST_OS_IOS_SIMULATOR || (GTEST_OS_WINDOWS_DESKTOP && _MSC_VER >= 1400) || GTEST_OS_WINDOWS_MINGW             \
+     || GTEST_OS_AIX || GTEST_OS_HPUX || GTEST_OS_OPENBSD || GTEST_OS_QNX)
 #define GTEST_HAS_DEATH_TEST 1
 #include <vector> // NOLINT
 #endif
@@ -2978,8 +2973,8 @@ public:
   // with high probability.
   void AssertHeld() const
   {
-    GTEST_CHECK_(has_owner_ && pthread_equal(owner_, pthread_self())) << "The current thread is not holding the mutex @"
-                                                                      << this;
+    GTEST_CHECK_(has_owner_ && pthread_equal(owner_, pthread_self()))
+        << "The current thread is not holding the mutex @" << this;
   }
 
   // A static mutex may be used before main() is entered.  It may even
@@ -30292,8 +30287,7 @@ private:
       // so we have to consult AtEnd().
       return (AtEnd() && typed_other->AtEnd())
              || (current1_ == typed_other->current1_ && current2_ == typed_other->current2_
-                 && current3_ == typed_other->current3_
-                 && current4_ == typed_other->current4_);
+                 && current3_ == typed_other->current3_ && current4_ == typed_other->current4_);
     }
 
   private:
@@ -30470,8 +30464,7 @@ private:
       // so we have to consult AtEnd().
       return (AtEnd() && typed_other->AtEnd())
              || (current1_ == typed_other->current1_ && current2_ == typed_other->current2_
-                 && current3_ == typed_other->current3_
-                 && current4_ == typed_other->current4_
+                 && current3_ == typed_other->current3_ && current4_ == typed_other->current4_
                  && current5_ == typed_other->current5_);
     }
 
@@ -30680,10 +30673,8 @@ private:
       // so we have to consult AtEnd().
       return (AtEnd() && typed_other->AtEnd())
              || (current1_ == typed_other->current1_ && current2_ == typed_other->current2_
-                 && current3_ == typed_other->current3_
-                 && current4_ == typed_other->current4_
-                 && current5_ == typed_other->current5_
-                 && current6_ == typed_other->current6_);
+                 && current3_ == typed_other->current3_ && current4_ == typed_other->current4_
+                 && current5_ == typed_other->current5_ && current6_ == typed_other->current6_);
     }
 
   private:
@@ -30925,10 +30916,8 @@ private:
       // so we have to consult AtEnd().
       return (AtEnd() && typed_other->AtEnd())
              || (current1_ == typed_other->current1_ && current2_ == typed_other->current2_
-                 && current3_ == typed_other->current3_
-                 && current4_ == typed_other->current4_
-                 && current5_ == typed_other->current5_
-                 && current6_ == typed_other->current6_
+                 && current3_ == typed_other->current3_ && current4_ == typed_other->current4_
+                 && current5_ == typed_other->current5_ && current6_ == typed_other->current6_
                  && current7_ == typed_other->current7_);
     }
 
@@ -31193,12 +31182,9 @@ private:
       // so we have to consult AtEnd().
       return (AtEnd() && typed_other->AtEnd())
              || (current1_ == typed_other->current1_ && current2_ == typed_other->current2_
-                 && current3_ == typed_other->current3_
-                 && current4_ == typed_other->current4_
-                 && current5_ == typed_other->current5_
-                 && current6_ == typed_other->current6_
-                 && current7_ == typed_other->current7_
-                 && current8_ == typed_other->current8_);
+                 && current3_ == typed_other->current3_ && current4_ == typed_other->current4_
+                 && current5_ == typed_other->current5_ && current6_ == typed_other->current6_
+                 && current7_ == typed_other->current7_ && current8_ == typed_other->current8_);
     }
 
   private:
@@ -31493,12 +31479,9 @@ private:
       // so we have to consult AtEnd().
       return (AtEnd() && typed_other->AtEnd())
              || (current1_ == typed_other->current1_ && current2_ == typed_other->current2_
-                 && current3_ == typed_other->current3_
-                 && current4_ == typed_other->current4_
-                 && current5_ == typed_other->current5_
-                 && current6_ == typed_other->current6_
-                 && current7_ == typed_other->current7_
-                 && current8_ == typed_other->current8_
+                 && current3_ == typed_other->current3_ && current4_ == typed_other->current4_
+                 && current5_ == typed_other->current5_ && current6_ == typed_other->current6_
+                 && current7_ == typed_other->current7_ && current8_ == typed_other->current8_
                  && current9_ == typed_other->current9_);
     }
 
@@ -31818,14 +31801,10 @@ private:
       // so we have to consult AtEnd().
       return (AtEnd() && typed_other->AtEnd())
              || (current1_ == typed_other->current1_ && current2_ == typed_other->current2_
-                 && current3_ == typed_other->current3_
-                 && current4_ == typed_other->current4_
-                 && current5_ == typed_other->current5_
-                 && current6_ == typed_other->current6_
-                 && current7_ == typed_other->current7_
-                 && current8_ == typed_other->current8_
-                 && current9_ == typed_other->current9_
-                 && current10_ == typed_other->current10_);
+                 && current3_ == typed_other->current3_ && current4_ == typed_other->current4_
+                 && current5_ == typed_other->current5_ && current6_ == typed_other->current6_
+                 && current7_ == typed_other->current7_ && current8_ == typed_other->current8_
+                 && current9_ == typed_other->current9_ && current10_ == typed_other->current10_);
     }
 
   private:
