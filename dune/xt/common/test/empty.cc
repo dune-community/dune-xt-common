@@ -15,6 +15,4 @@
 
 #include <dune/xt/common/test/main.hxx>
 
-GTEST_TEST(empty, main)
-{
-}
+GTEST_TEST(empty, main) {}

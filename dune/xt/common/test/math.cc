@@ -33,8 +33,7 @@ struct ClampTest : public testing::Test
   ClampTest()
     : lower(init_bound<T>(-1))
     , upper(init_bound<T>(1))
-  {
-  }
+  {}
 };
 
 TYPED_TEST_CASE(ClampTest, ClampTestTypes);
@@ -47,8 +46,7 @@ TYPED_TEST(ClampTest, All)
 
 template <class T>
 struct EpsilonTest : public testing::Test
-{
-};
+{};
 
 TYPED_TEST_CASE(EpsilonTest, TestTypes);
 TYPED_TEST(EpsilonTest, All)
@@ -58,8 +56,7 @@ TYPED_TEST(EpsilonTest, All)
 
 template <class T>
 struct MinMaxAvgTest : public testing::Test
-{
-};
+{};
 
 template <class MMType, class TypeParam>
 void mmCheck(const MMType& mma)

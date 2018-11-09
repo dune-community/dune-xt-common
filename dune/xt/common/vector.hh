@@ -263,8 +263,7 @@ struct VectorAbstraction<Dune::FieldVector<K, SIZE>>
 
 template <class V>
 struct VectorAbstraction<Dune::DenseVector<V>> : public VectorAbstraction<typename Dune::DenseVector<V>::derived_type>
-{
-};
+{};
 
 
 template <class VectorType, size_t SIZE = VectorAbstraction<VectorType>::static_size>

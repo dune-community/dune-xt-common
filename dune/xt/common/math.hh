@@ -52,8 +52,7 @@ namespace Common {
  **/
 template <class T, bool is_integral = std::is_integral<T>::value>
 struct Epsilon
-{
-};
+{};
 
 template <class T>
 struct Epsilon<T, true>
@@ -140,9 +139,7 @@ protected:
   typedef MinMaxAvg<ElementType> ThisType;
 
 public:
-  MinMaxAvg()
-  {
-  }
+  MinMaxAvg() {}
 
   template <class stl_container_type>
   MinMaxAvg(const stl_container_type& elements)
@@ -229,14 +226,12 @@ int signum(T val)
  **/
 template <class T, typename = void>
 class numeric_limits : public std::numeric_limits<double>
-{
-};
+{};
 
 template <class T>
 class numeric_limits<T, typename std::enable_if<std::numeric_limits<T>::is_specialized>::type>
     : public std::numeric_limits<T>
-{
-};
+{};
 
 //! forward to std::isnan for general types, overload for complex below
 template <class T>

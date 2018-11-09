@@ -173,8 +173,7 @@ struct end_of_recursion_tag
 {
   template <class... Args>
   static void Run(Args&&... /*args*/)
-  {
-  }
+  {}
 };
 
 template <class UTypes, // Forward Sequence, e.g. boost::mpl::vector
@@ -313,9 +312,7 @@ namespace internal {
 template <std::size_t>
 struct Any
 {
-  Any(...)
-  {
-  }
+  Any(...) {}
 };
 
 template <typename T>
@@ -354,8 +351,7 @@ struct tuple_element<N, std::tuple<Ts...>>
 //! use this to wrap template classes into the template_tuple
 template <template <class...> class B>
 struct tplwrap
-{
-};
+{};
 
 template <class... Ms>
 class template_tuple;

@@ -37,14 +37,12 @@ public:
   FixedMapIterator()
     : index_(FixedMapType::N)
     , map_(nullptr)
-  {
-  }
+  {}
 
   explicit FixedMapIterator(FixedMapType* map, std::size_t i)
     : index_(i)
     , map_(map)
-  {
-  }
+  {}
 
 private:
   friend class boost::iterator_core_access;
@@ -80,14 +78,12 @@ public:
   ConstFixedMapIterator()
     : index_(FixedMapType::N)
     , map_(nullptr)
-  {
-  }
+  {}
 
   explicit ConstFixedMapIterator(const FixedMapType* const map, std::size_t i)
     : index_(i)
     , map_(map)
-  {
-  }
+  {}
 
 private:
   friend class boost::iterator_core_access;
@@ -159,9 +155,7 @@ public:
   typedef FixedMapIterator<ThisType> iterator;
   typedef ConstFixedMapIterator<ThisType> const_iterator;
 
-  FixedMap()
-  {
-  }
+  FixedMap() {}
   /** inserts key-value value pairs from  initializer list
    * if list.size() > N only the first N elements are considered
    * if list.size() < N the Map is padded with default constructed elements
@@ -170,13 +164,11 @@ public:
     : map_(boost::assign::list_of<value_type>(*list.begin())
                .range(list.begin() + 1, list.end() - (N > list.size() ? size_t(0) : (list.size() - N)))
                .repeat(N > list.size() ? N - list.size() : size_t(0), std::make_pair(key_type(), T())))
-  {
-  }
+  {}
 
   FixedMap(const MapType& map)
     : map_(map)
-  {
-  }
+  {}
 
   std::size_t get_idx(const key_type& key) const
   {

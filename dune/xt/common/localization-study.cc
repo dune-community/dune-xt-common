@@ -24,12 +24,9 @@ namespace Common {
 
 LocalizationStudy::LocalizationStudy(const std::vector<std::string> only_these_indicators)
   : only_these_indicators_(only_these_indicators)
-{
-}
+{}
 
-LocalizationStudy::~LocalizationStudy()
-{
-}
+LocalizationStudy::~LocalizationStudy() {}
 
 std::vector<std::string> LocalizationStudy::used_indicators() const
 {

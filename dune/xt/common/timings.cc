@@ -244,8 +244,7 @@ Timings::~Timings()
 OutputScopedTiming::OutputScopedTiming(const std::string& section_name, std::ostream& out)
   : ScopedTiming(section_name)
   , out_(out)
-{
-}
+{}
 
 OutputScopedTiming::~OutputScopedTiming()
 {

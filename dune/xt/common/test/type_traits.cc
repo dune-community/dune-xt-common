@@ -20,8 +20,7 @@ using namespace std;
 
 template <class T>
 struct Foo
-{
-};
+{};
 
 GTEST_TEST(TplName, Match)
 {

@@ -24,10 +24,8 @@ namespace Common {
 namespace bindings {
 
 
-DXT_DEPRECATED_MSG("you no longer need to call this for your module") void addbind_exceptions(pybind11::module&)
-{
-
-} // ... addbind_exceptions(...)
+DXT_DEPRECATED_MSG("you no longer need to call this for your module")
+void addbind_exceptions(pybind11::module&) {} // ... addbind_exceptions(...)
 
 
 } // namespace bindings

@@ -62,12 +62,8 @@ class ValidateAny : public ValidatorInterface<T, ValidateAny<T>>
   typedef ValidatorInterface<T, ThisType> BaseType;
 
 public:
-  inline ValidateAny()
-  {
-  }
-  inline ValidateAny(const ThisType&)
-  {
-  }
+  inline ValidateAny() {}
+  inline ValidateAny(const ThisType&) {}
 
   inline bool operator()(const T&) const
   {
@@ -92,8 +88,7 @@ class ValidateInList : public ValidatorInterface<T, ValidateInList<T, ListImp>>
 public:
   explicit ValidateInList(const ListType& valid_list)
     : valid_list_(valid_list)
-  {
-  }
+  {}
 
   inline bool operator()(const T& rhs) const
   {
@@ -115,8 +110,7 @@ class ValidateLess : public ValidatorInterface<T, ValidateLess<T>>
 public:
   ValidateLess(const T& lhs)
     : lhs_(lhs)
-  {
-  }
+  {}
   inline bool operator()(const T& rhs) const
   {
     return FloatCmp::lt(lhs_, rhs, 0., 0.);
@@ -138,8 +132,7 @@ class ValidateGreater : public ValidatorInterface<T, ValidateGreater<T>>
 public:
   ValidateGreater(const T& lhs)
     : lhs_(lhs)
-  {
-  }
+  {}
   inline bool operator()(const T& rhs) const
   {
     return FloatCmp::gt(lhs_, rhs, 0., 0.);
@@ -162,12 +155,10 @@ class ValidateInverse : public ValidatorInterface<T, ValidateInverse<T, Validato
 public:
   ValidateInverse(const Validator validator = Validator())
     : validator_(validator)
-  {
-  }
+  {}
   ValidateInverse(const T arg)
     : validator_(Validator(arg))
-  {
-  }
+  {}
   inline bool operator()(const T& val) const
   {
     return !validator_(val);
@@ -189,8 +180,7 @@ private:
     template <typename... Types>                                                                                       \
     V_NEW_NAME(Types... args)                                                                                          \
       : ValidateInverse<T, V_BASE_NAME<T>>(args...)                                                                    \
-    {                                                                                                                  \
-    }                                                                                                                  \
+    {}                                                                                                                 \
   }
 
 INVERSE_VALIDATE(ValidateNone, ValidateAny);
@@ -205,8 +195,7 @@ public:
   ValidateInterval(const T& min, const T& max)
     : min_(min)
     , max_(max)
-  {
-  }
+  {}
 
   inline bool operator()(const T& rhs) const
   {

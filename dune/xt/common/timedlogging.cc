@@ -47,8 +47,7 @@ TimedLogManager::TimedLogManager(const Timer& timer,
                                                     current_level_ <= max_debug_level ? enabled_out : dev_null))
 #endif
   , warn_(std::make_shared<TimedPrefixedLogStream>(timer_, warning_prefix, enable_warnings ? warn_out : disabled_out))
-{
-}
+{}
 
 TimedLogManager::~TimedLogManager()
 {

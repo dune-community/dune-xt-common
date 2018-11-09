@@ -51,8 +51,7 @@ public:
   template <class... InitTypes>
   explicit EnumerableThreadSpecificWrapper(InitTypes&&... ctor_args)
     : values_(std::forward<InitTypes>(ctor_args)...)
-  {
-  }
+  {}
 
   ValueType& local()
   {
@@ -112,15 +111,13 @@ public:
   //! Initialization by copy construction of ValueType
   explicit EnumerableThreadSpecificWrapper(ConstValueType& value)
     : values_(std::make_unique<std::remove_const_t<ValueType>>(value))
-  {
-  }
+  {}
 
   //! Initialization by in-place construction ValueType with \param ctor_args
   template <class... InitTypes>
   explicit EnumerableThreadSpecificWrapper(InitTypes&&... ctor_args)
     : values_(std::make_unique<std::remove_const_t<ValueType>>(std::forward<InitTypes>(ctor_args)...))
-  {
-  }
+  {}
 
   ValueType& local()
   {
@@ -182,15 +179,13 @@ public:
   //! Initialization by copy construction of ValueType
   explicit PerThreadValue(ConstValueType& value)
     : values_(value)
-  {
-  }
+  {}
 
   //! Initialization by in-place construction ValueType with \param ctor_args
   template <class... InitTypes>
   explicit PerThreadValue(InitTypes&&... ctor_args)
     : values_(std::forward<InitTypes>(ctor_args)...)
-  {
-  }
+  {}
 
   operator ValueType() const
   {
@@ -376,15 +371,13 @@ public:
   ThreadResultPropagator(Imp* imp)
     : imp_(imp)
     , base_(imp)
-  {
-  }
+  {}
 
   ThreadResultPropagator(const ThreadResultPropagator& other)
     : imp_(other.imp_)
     , base_(other.base_)
     , mutex_()
-  {
-  }
+  {}
 
   Imp* copy_imp()
   {
