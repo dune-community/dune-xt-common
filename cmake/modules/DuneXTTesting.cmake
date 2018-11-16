@@ -157,7 +157,7 @@ macro(BEGIN_TESTCASES) # https://cmake.org/cmake/help/v3.0/module/FindGTest.html
     add_custom_command(OUTPUT "${generated_sources}"
                        COMMAND ${CMAKE_BINARY_DIR}/run-in-dune-env dxt_code_generation.py "${config_fn}" "${template}"
                                "${CMAKE_BINARY_DIR}" "${out_fn}" "${last_dep_bindir}"
-                       DEPENDS "${config_fn}" "${template}"
+                       DEPENDS "${config_fn}"
                        VERBATIM USES_TERMINAL)
     foreach(gen_source ${generated_sources})
       string(REPLACE "${out_fn}."
