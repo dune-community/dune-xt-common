@@ -97,6 +97,39 @@ typename std::enable_if<XT::Common::is_matrix<T>::value, T>::type make_type(cons
     return Mat::create(VECSIZE, NUMCOLS, number);
 }
 
+template <class T,
+          bool is_number = (XT::Common::is_arithmetic<T>::value || XT::Common::is_complex<T>::value),
+          bool is_vector = XT::Common::is_vector<T>::value>
+struct suitable_entry
+{
+  static T change_an_entry(const T& input, const int value)
+  {
+    DUNE_UNUSED_PARAMETER(value);
+    return input;
+  }
+};
+
+template <class T>
+struct suitable_entry<T, false, true>
+{
+  static T change_an_entry(const T& input, const int value)
+  {
+    T ret = input;
+    ret[0] = value;
+    return ret;
+  }
+};
+
+template <class T>
+struct suitable_entry<T, false, false>
+{
+  static T change_an_entry(const T& input, const int value)
+  {
+    T ret = input;
+    ret[0][0] = value;
+    return ret;
+  }
+};
 
 template <class T>
 struct FloatCmpTest : public testing::Test
@@ -115,6 +148,7 @@ struct FloatCmpTest : public testing::Test
 
   FloatCmpTest()
     : zero(make_type<T>(make_number<S>(0)))
+    , one_with_one_zero_entry(suitable_entry<T>::change_an_entry(make_type<T>(make_number<S>(1)), 0))
     , one(make_type<T>(make_number<S>(1)))
     , neg_one(make_type<T>(make_number<S>(-1)))
     , epsilon(make_type<T>(make_number<S>(XT::Common::FloatCmp::DEFAULT_EPSILON::value())))
@@ -130,6 +164,7 @@ struct FloatCmpTest : public testing::Test
   }
 
   const T zero;
+  const T one_with_one_zero_entry;
   const T one;
   const T neg_one;
   const T epsilon;
@@ -240,6 +275,7 @@ struct FloatCmpTest : public testing::Test
     TEST_DXTC_EXPECT_FLOAT_GE(one_plus_eps_minus_, one);
     TEST_DXTC_EXPECT_FLOAT_GE(one_plus_eps_plus_, one);
     TEST_DXTC_EXPECT_FLOAT_GE(two, one);
+    TEST_DXTC_EXPECT_FLOAT_GE(one, one_with_one_zero_entry);
   }
 
   void check_le()
@@ -251,6 +287,7 @@ struct FloatCmpTest : public testing::Test
     TEST_DXTC_EXPECT_FLOAT_LE(one, one_plus_eps_minus_);
     TEST_DXTC_EXPECT_FLOAT_LE(one, one_plus_eps_plus_);
     TEST_DXTC_EXPECT_FLOAT_LE(one, two);
+    TEST_DXTC_EXPECT_FLOAT_LE(one_with_one_zero_entry, one);
   }
 
   void negative_numbers()
