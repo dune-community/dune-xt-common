@@ -88,7 +88,7 @@ const std::string alphanums("abcdefghijklmnopqrstuvwxyz"
                             "1234567890");
 const std::string other_printables("!@#$%^&*()"
                                    "`~-_=+[{]{\\|;:'\",<.>/? ");
-}
+} // namespace
 
 //! RNG that represents strings of given length
 class RandomStrings : public RNG<std::string, std::uniform_int_distribution<int>, std::mt19937>

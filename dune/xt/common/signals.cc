@@ -56,6 +56,6 @@ void install_signal_handler(int signal, handler_type handler)
   sigaction(signal, &new_action, nullptr);
 } // install_signal_handler
 
-} // namepsace Common
+} // namespace Common
 } // namespace XT
-} // namepsace Dune
+} // namespace Dune

@@ -30,7 +30,7 @@ struct EpsilonType<std::complex<T>>
   //! The epsilon type corresponding to value type std::complex<T>
   typedef std::complex<T> Type;
 };
-}
+} // namespace FloatCmp
 namespace XT {
 namespace Common {
 

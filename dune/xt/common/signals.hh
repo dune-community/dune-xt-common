@@ -31,8 +31,8 @@ typedef void handler_type(int);
 //! calling this from your main() will install handler as callback when signal is received
 void install_signal_handler(int signal = SIGINT, handler_type handler = handle_interrupt);
 
-} // namepsace Common
+} // namespace Common
 } // namespace XT
-} // namepsace Dune
+} // namespace Dune
 
 #endif // DUNE_XT_COMMON_SIGNALS

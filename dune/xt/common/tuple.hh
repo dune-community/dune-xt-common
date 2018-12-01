@@ -330,7 +330,7 @@ struct get_nth_helper
 
 template <std::size_t... Is, typename... Ts>
 auto deduce_seq(index_sequence<Is...>, wrapper<Ts>... pp) -> decltype(get_nth_helper<Is...>::deduce(pp...));
-}
+} // namespace internal
 
 template <std::size_t N, class Tuple>
 struct tuple_element;
