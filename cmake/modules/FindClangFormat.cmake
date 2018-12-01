@@ -21,7 +21,7 @@
 #   and ClangFormat_FOUND accordingly
 # ~~~
 
-find_program(ClangFormat_EXECUTABLE NAMES clang-format-3.9)
+find_program(ClangFormat_EXECUTABLE NAMES clang-format-6 clang-format-6.0 )
 if(NOT EXISTS ${ClangFormat_EXECUTABLE})
   find_program(ClangFormat_EXECUTABLE NAMES clang-format)
 endif(NOT EXISTS ${ClangFormat_EXECUTABLE})
