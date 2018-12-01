@@ -10,7 +10,7 @@
 //   Tobias Leibner  (2016)
 
 #ifndef DUNE_XT_COMMON_TEST_MAIN_CATCH_EXCEPTIONS
-#define DUNE_XT_COMMON_TEST_MAIN_CATCH_EXCEPTIONS 0
+#  define DUNE_XT_COMMON_TEST_MAIN_CATCH_EXCEPTIONS 0
 #endif
 
 #include "config.h"

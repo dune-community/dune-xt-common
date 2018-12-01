@@ -18,14 +18,14 @@
 #define lapack_complex_double std::complex<double>
 
 #if HAVE_MKL
-#include <mkl.h>
+#  include <mkl.h>
 #else // HAVE_MKL
-#if HAVE_LAPACKE
-#include <lapacke.h>
-#endif
-#if HAVE_CBLAS
-#include <cblas.h>
-#endif
+#  if HAVE_LAPACKE
+#    include <lapacke.h>
+#  endif
+#  if HAVE_CBLAS
+#    include <cblas.h>
+#  endif
 #endif // HAVE_MKL
 
 #include <dune/common/unused.hh>
@@ -36,15 +36,15 @@
 #include "lapacke.hh"
 
 #if HAVE_MKL || HAVE_LAPACKE
-#define DXTC_LAPACKE_ONLY(param) param
+#  define DXTC_LAPACKE_ONLY(param) param
 #else
-#define DXTC_LAPACKE_ONLY(param) DXTC_UNUSED(param)
+#  define DXTC_LAPACKE_ONLY(param) DXTC_UNUSED(param)
 #endif
 
 #if HAVE_MKL || HAVE_CBLAS
-#define DXTC_CBLAS_ONLY(param) param
+#  define DXTC_CBLAS_ONLY(param) param
 #else
-#define DXTC_CBLAS_ONLY(param) DXTC_UNUSED(param)
+#  define DXTC_CBLAS_ONLY(param) DXTC_UNUSED(param)
 #endif
 
 namespace Dune {
@@ -740,11 +740,11 @@ void dtrsm(const int DXTC_CBLAS_ONLY(layout),
               lda,
               b,
               ldb);
-#ifndef NDEBUG
+#  ifndef NDEBUG
   for (int ii = 0; ii < m; ++ii)
     if (std::isnan(b[ii]) || std::isinf(b[ii]))
       DUNE_THROW(Dune::MathError, "Triangular solve using cblas_dtrsm failed!");
-#endif
+#  endif
 #else
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
 #endif
@@ -771,11 +771,11 @@ void dtrsv(const int DXTC_CBLAS_ONLY(layout),
               lda,
               x,
               incx);
-#ifndef NDEBUG
+#  ifndef NDEBUG
   for (int ii = 0; ii < n; ++ii)
     if (std::isnan(x[ii]) || std::isinf(x[ii]))
       DUNE_THROW(Dune::MathError, "Triangular solve using cblas_dtrsv failed!");
-#endif
+#  endif
 #else
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
 #endif
@@ -808,12 +808,12 @@ void ztrsm(const int DXTC_CBLAS_ONLY(layout),
               lda,
               b,
               ldb);
-#ifndef NDEBUG
+#  ifndef NDEBUG
   for (int ii = 0; ii < m; ++ii)
     if (std::isnan(std::abs(static_cast<std::complex<double>*>(b)[ii]))
         || std::isinf(std::abs(static_cast<std::complex<double>*>(b)[ii])))
       DUNE_THROW(Dune::MathError, "Triangular solve using cblas_ztrsm failed!");
-#endif
+#  endif
 #else
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
 #endif
@@ -840,12 +840,12 @@ void ztrsv(const int DXTC_CBLAS_ONLY(layout),
               lda,
               x,
               incx);
-#ifndef NDEBUG
+#  ifndef NDEBUG
   for (int ii = 0; ii < n; ++ii)
     if (std::isnan(std::abs(static_cast<std::complex<double>*>(x)[ii]))
         || std::isinf(std::abs(static_cast<std::complex<double>*>(x)[ii])))
       DUNE_THROW(Dune::MathError, "Triangular solve using cblas_ztrsv failed!");
-#endif
+#  endif
 #else
   DUNE_THROW(Exceptions::dependency_missing, "You are missing CBLAS or the intel mkl, check available() first!");
 #endif

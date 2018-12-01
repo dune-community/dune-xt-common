@@ -15,17 +15,17 @@
 #include <thread>
 
 #if HAVE_TBB
-#include <tbb/concurrent_unordered_map.h>
-#include <tbb/task_scheduler_init.h>
+#  include <tbb/concurrent_unordered_map.h>
+#  include <tbb/task_scheduler_init.h>
 #endif
 
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/config.hpp>
 
 #if HAVE_EIGEN
-#include <dune/xt/common/disable_warnings.hh>
-#include <Eigen/Core>
-#include <dune/xt/common/reenable_warnings.hh>
+#  include <dune/xt/common/disable_warnings.hh>
+#  include <Eigen/Core>
+#  include <dune/xt/common/reenable_warnings.hh>
 #endif
 
 #include <dune/common/exceptions.hh>
@@ -71,11 +71,11 @@ size_t Dune::XT::Common::ThreadManager::current_threads()
 template <typename Key, typename T, typename MapType>
 std::pair<typename MapType::iterator, bool> tbb_map_emplace(MapType& map_in, Key key, T value)
 {
-#if defined(BOOST_CLANG) && BOOST_CLANG
+#  if defined(BOOST_CLANG) && BOOST_CLANG
   return map_in.insert(typename MapType::value_type(key, value));
-#else
+#  else
   return map_in.emplace(key, value);
-#endif
+#  endif
 }
 
 size_t Dune::XT::Common::ThreadManager::thread()
@@ -92,30 +92,30 @@ size_t Dune::XT::Common::ThreadManager::thread()
 //! both std::hw_concur and intel's default_thread_count fail for mic
 size_t Dune::XT::Common::ThreadManager::default_max_threads()
 {
-#ifndef __MIC__
+#  ifndef __MIC__
   return std::thread::hardware_concurrency();
-#else
+#  else
   return DS_MAX_MIC_THREADS;
-#endif
+#  endif
 }
 
 void Dune::XT::Common::ThreadManager::set_max_threads(const size_t count)
 {
   DXTC_CONFIG.set("threading.max_count", count, true);
   max_threads_ = count;
-#if HAVE_EIGEN
+#  if HAVE_EIGEN
   Eigen::setNbThreads(boost::numeric_cast<int>(count));
-#endif
+#  endif
 }
 
 Dune::XT::Common::ThreadManager::ThreadManager()
   : max_threads_(default_max_threads())
 {
-#if HAVE_EIGEN
+#  if HAVE_EIGEN
   // must be called before tbb threads are created via tbb::task_scheduler_init object ctor
   Eigen::initParallel();
   Eigen::setNbThreads(1);
-#endif
+#  endif
 }
 
 #else // if HAVE_TBB

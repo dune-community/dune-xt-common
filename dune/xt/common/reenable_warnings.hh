@@ -9,5 +9,5 @@
 //   René Fritze     (2011 - 2012, 2015 - 2016, 2018)
 
 #ifdef __GNUC__
-#pragma GCC diagnostic pop
+#  pragma GCC diagnostic pop
 #endif

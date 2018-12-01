@@ -13,7 +13,7 @@
 #define DUNE_XT_COMMON_TYPE_TRAITS_HH
 
 #ifdef __GNUC__
-#include <cxxabi.h>
+#  include <cxxabi.h>
 #endif
 
 #include <complex>

@@ -17,7 +17,7 @@
 #include <boost/exception/all.hpp>
 
 #if HAVE_TBB
-#include <tbb/tbb_exception.h>
+#  include <tbb/tbb_exception.h>
 #endif
 
 #include <dune/pybindxi/pybind11.h>

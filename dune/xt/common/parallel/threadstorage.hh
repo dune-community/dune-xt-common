@@ -13,7 +13,7 @@
 #define DUNE_XT_COMMON_PARALLEL_THREADSTORAGE_HH
 
 #if HAVE_TBB
-#include <tbb/enumerable_thread_specific.h>
+#  include <tbb/enumerable_thread_specific.h>
 #endif
 
 #include <algorithm>
