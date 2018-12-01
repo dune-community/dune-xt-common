@@ -268,7 +268,7 @@ public:
 namespace {
 int dev_null_logflag;
 EmptyLogStream dev_null(dev_null_logflag);
-}
+} // namespace
 
 } // namespace Common
 } // namespace XT

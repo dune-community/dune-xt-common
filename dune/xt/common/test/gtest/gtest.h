@@ -2112,8 +2112,8 @@ using ::std::make_tuple;
 using ::std::tuple;
 using ::std::tuple_element;
 using ::std::tuple_size;
-}
-}
+} // namespace tr1
+} // namespace std
 
 #elif GTEST_OS_SYMBIAN
 

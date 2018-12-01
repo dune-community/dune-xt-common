@@ -257,6 +257,6 @@ inline ostream& operator<<(ostream& out, const Dune::XT::Common::FixedMap<key_im
   map.print(out);
   return out;
 }
-}
+} // namespace std
 
 #endif // DUNE_XT_COMMON_FIXED_MAP_HH

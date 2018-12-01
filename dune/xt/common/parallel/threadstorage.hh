@@ -162,7 +162,7 @@ private:
 #endif // HAVE_TBB
 
 
-} // namespace interal
+} // namespace internal
 
 
 /** Automatic Storage of non-static, N thread-local values

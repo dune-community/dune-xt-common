@@ -6258,7 +6258,7 @@ std::string GetCurrentOsStackTraceExceptTop(UnitTest* /*unit_test*/, int skip_co
 namespace {
 class ClassUniqueToAlwaysTrue
 {};
-}
+} // namespace
 
 bool IsTrue(bool condition)
 {
