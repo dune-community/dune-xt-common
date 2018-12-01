@@ -14,7 +14,7 @@
 #define DUNE_XT_COMMON_PROFILER_HH
 
 #ifndef DUNE_XT_COMMON_DO_PROFILE
-#define DUNE_XT_COMMON_DO_PROFILE 0
+#  define DUNE_XT_COMMON_DO_PROFILE 0
 #endif
 
 #include <string>
@@ -176,9 +176,9 @@ protected:
 #define DXTC_TIMINGS Dune::XT::Common::timings()
 
 #if DUNE_XT_COMMON_DO_TIMING
-#define DUNE_XT_COMMON_TIMING_SCOPE(section_name) Dune::XT::Common::ScopedTiming DXTC_UNUSED(timer)(section_name)
+#  define DUNE_XT_COMMON_TIMING_SCOPE(section_name) Dune::XT::Common::ScopedTiming DXTC_UNUSED(timer)(section_name)
 #else
-#define DUNE_XT_COMMON_TIMING_SCOPE(section_name)
+#  define DUNE_XT_COMMON_TIMING_SCOPE(section_name)
 #endif
 
 #endif // DUNE_XT_COMMON_PROFILER_HH

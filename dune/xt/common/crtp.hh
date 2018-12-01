@@ -20,46 +20,46 @@
 #include "exceptions.hh"
 
 #ifdef CHECK_CRTP
-#undef CHECK_CRTP
+#  undef CHECK_CRTP
 #endif
 #ifdef CHECK_AND_CALL_CRTP
-#undef CHECK_AND_CALL_CRTP
+#  undef CHECK_AND_CALL_CRTP
 #endif
 
 #ifdef NDEBUG
-#define CHECK_CRTP(dummy)
+#  define CHECK_CRTP(dummy)
 #else
 
 /**
  * This macro is essentially a thread safe variant of the CHECK_INTERFACE_IMPLEMENTATION macro from dune-common.
  */
-#define CHECK_CRTP(__interface_method_to_call__)                                                                       \
-  {                                                                                                                    \
-    std::lock_guard<std::recursive_mutex> crtp_mutex_guard(this->crtp_mutex_);                                         \
-    static std::atomic<bool> call(false);                                                                              \
-    if (call)                                                                                                          \
-      DUNE_THROW(Dune::XT::Common::Exceptions::CRTP_check_failed,                                                      \
-                 "The derived class does not implement the required method!");                                         \
-    call = true;                                                                                                       \
-    try {                                                                                                              \
-      (__interface_method_to_call__);                                                                                  \
-      call = false;                                                                                                    \
-    } catch (...) {                                                                                                    \
-      call = false;                                                                                                    \
-      throw;                                                                                                           \
-    }                                                                                                                  \
-  }
+#  define CHECK_CRTP(__interface_method_to_call__)                                                                     \
+    {                                                                                                                  \
+      std::lock_guard<std::recursive_mutex> crtp_mutex_guard(this->crtp_mutex_);                                       \
+      static std::atomic<bool> call(false);                                                                            \
+      if (call)                                                                                                        \
+        DUNE_THROW(Dune::XT::Common::Exceptions::CRTP_check_failed,                                                    \
+                   "The derived class does not implement the required method!");                                       \
+      call = true;                                                                                                     \
+      try {                                                                                                            \
+        (__interface_method_to_call__);                                                                                \
+        call = false;                                                                                                  \
+      } catch (...) {                                                                                                  \
+        call = false;                                                                                                  \
+        throw;                                                                                                         \
+      }                                                                                                                \
+    }
 // CHECK_CRTP
 #endif // NDEBUG
 
 
 #ifdef NDEBUG
-#define CHECK_AND_CALL_CRTP(__interface_method_to_call__) (__interface_method_to_call__)
+#  define CHECK_AND_CALL_CRTP(__interface_method_to_call__) (__interface_method_to_call__)
 #else
 /**
  * This macro is essentially a slightly modified copy of the CHECK_AND_CALL_INTERFACE_IMPLEMENTATION macro.
  */
-#define CHECK_AND_CALL_CRTP(__interface_method_to_call__) CHECK_CRTP(__interface_method_to_call__)
+#  define CHECK_AND_CALL_CRTP(__interface_method_to_call__) CHECK_CRTP(__interface_method_to_call__)
 #endif
 
 

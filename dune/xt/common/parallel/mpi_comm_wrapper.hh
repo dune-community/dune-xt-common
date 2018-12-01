@@ -14,11 +14,11 @@
 #include <dune/common/parallel/mpihelper.hh>
 
 #if HAVE_MPI
-#include <mpi.h>
-#include <mpi4py/mpi4py.h>
+#  include <mpi.h>
+#  include <mpi4py/mpi4py.h>
 // while not strictly HAVE_MPI, only then are they needed
-#include <dune/pybindxi/pybind11.h>
-#include <dune/pybindxi/stl.h>
+#  include <dune/pybindxi/pybind11.h>
+#  include <dune/pybindxi/stl.h>
 #endif
 
 namespace Dune {

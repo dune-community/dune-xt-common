@@ -12,11 +12,11 @@
 #define DUNE_XT_COMMON_COMPILER_HH
 
 #if defined(__GNUC__)
-#if defined(__GNUC_PATCHLEVEL__)
-#define DXTC_GNUC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
-#else
-#define DXTC_GNUC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100)
-#endif
+#  if defined(__GNUC_PATCHLEVEL__)
+#    define DXTC_GNUC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
+#  else
+#    define DXTC_GNUC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100)
+#  endif
 #endif
 
 #endif // DUNE_XT_COMMON_COMPILER_HH

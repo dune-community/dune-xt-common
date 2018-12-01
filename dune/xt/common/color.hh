@@ -19,7 +19,7 @@
 #include <string>
 
 #ifdef __GNUC__
-#include <cxxabi.h>
+#  include <cxxabi.h>
 #endif
 #include <string>
 

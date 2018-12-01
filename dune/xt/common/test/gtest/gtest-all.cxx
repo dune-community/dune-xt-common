@@ -109,7 +109,7 @@
 // (e.g. frameworks built on top of Google Test).
 
 #ifndef GTEST_INCLUDE_GTEST_GTEST_SPI_H_
-#define GTEST_INCLUDE_GTEST_GTEST_SPI_H_
+#  define GTEST_INCLUDE_GTEST_GTEST_SPI_H_
 
 
 namespace testing {
@@ -211,45 +211,45 @@ private:
 // helper macro, due to some peculiarity in how the preprocessor
 // works.  The AcceptsMacroThatExpandsToUnprotectedComma test in
 // gtest_unittest.cc will fail to compile if we do that.
-#define EXPECT_FATAL_FAILURE(statement, substr)                                                                        \
-  do {                                                                                                                 \
-    class GTestExpectFatalFailureHelper                                                                                \
-    {                                                                                                                  \
-    public:                                                                                                            \
-      static void Execute()                                                                                            \
+#  define EXPECT_FATAL_FAILURE(statement, substr)                                                                      \
+    do {                                                                                                               \
+      class GTestExpectFatalFailureHelper                                                                              \
       {                                                                                                                \
-        statement;                                                                                                     \
+      public:                                                                                                          \
+        static void Execute()                                                                                          \
+        {                                                                                                              \
+          statement;                                                                                                   \
+        }                                                                                                              \
+      };                                                                                                               \
+      ::testing::TestPartResultArray gtest_failures;                                                                   \
+      ::testing::internal::SingleFailureChecker gtest_checker(                                                         \
+          &gtest_failures, ::testing::TestPartResult::kFatalFailure, (substr));                                        \
+      {                                                                                                                \
+        ::testing::ScopedFakeTestPartResultReporter gtest_reporter(                                                    \
+            ::testing::ScopedFakeTestPartResultReporter::INTERCEPT_ONLY_CURRENT_THREAD, &gtest_failures);              \
+        GTestExpectFatalFailureHelper::Execute();                                                                      \
       }                                                                                                                \
-    };                                                                                                                 \
-    ::testing::TestPartResultArray gtest_failures;                                                                     \
-    ::testing::internal::SingleFailureChecker gtest_checker(                                                           \
-        &gtest_failures, ::testing::TestPartResult::kFatalFailure, (substr));                                          \
-    {                                                                                                                  \
-      ::testing::ScopedFakeTestPartResultReporter gtest_reporter(                                                      \
-          ::testing::ScopedFakeTestPartResultReporter::INTERCEPT_ONLY_CURRENT_THREAD, &gtest_failures);                \
-      GTestExpectFatalFailureHelper::Execute();                                                                        \
-    }                                                                                                                  \
-  } while (::testing::internal::AlwaysFalse())
+    } while (::testing::internal::AlwaysFalse())
 
-#define EXPECT_FATAL_FAILURE_ON_ALL_THREADS(statement, substr)                                                         \
-  do {                                                                                                                 \
-    class GTestExpectFatalFailureHelper                                                                                \
-    {                                                                                                                  \
-    public:                                                                                                            \
-      static void Execute()                                                                                            \
+#  define EXPECT_FATAL_FAILURE_ON_ALL_THREADS(statement, substr)                                                       \
+    do {                                                                                                               \
+      class GTestExpectFatalFailureHelper                                                                              \
       {                                                                                                                \
-        statement;                                                                                                     \
+      public:                                                                                                          \
+        static void Execute()                                                                                          \
+        {                                                                                                              \
+          statement;                                                                                                   \
+        }                                                                                                              \
+      };                                                                                                               \
+      ::testing::TestPartResultArray gtest_failures;                                                                   \
+      ::testing::internal::SingleFailureChecker gtest_checker(                                                         \
+          &gtest_failures, ::testing::TestPartResult::kFatalFailure, (substr));                                        \
+      {                                                                                                                \
+        ::testing::ScopedFakeTestPartResultReporter gtest_reporter(                                                    \
+            ::testing::ScopedFakeTestPartResultReporter::INTERCEPT_ALL_THREADS, &gtest_failures);                      \
+        GTestExpectFatalFailureHelper::Execute();                                                                      \
       }                                                                                                                \
-    };                                                                                                                 \
-    ::testing::TestPartResultArray gtest_failures;                                                                     \
-    ::testing::internal::SingleFailureChecker gtest_checker(                                                           \
-        &gtest_failures, ::testing::TestPartResult::kFatalFailure, (substr));                                          \
-    {                                                                                                                  \
-      ::testing::ScopedFakeTestPartResultReporter gtest_reporter(                                                      \
-          ::testing::ScopedFakeTestPartResultReporter::INTERCEPT_ALL_THREADS, &gtest_failures);                        \
-      GTestExpectFatalFailureHelper::Execute();                                                                        \
-    }                                                                                                                  \
-  } while (::testing::internal::AlwaysFalse())
+    } while (::testing::internal::AlwaysFalse())
 
 // A macro for testing Google Test assertions or code that's expected to
 // generate Google Test non-fatal failures.  It asserts that the given
@@ -283,33 +283,33 @@ private:
 // instead of
 //   GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement)
 // to avoid an MSVC warning on unreachable code.
-#define EXPECT_NONFATAL_FAILURE(statement, substr)                                                                     \
-  do {                                                                                                                 \
-    ::testing::TestPartResultArray gtest_failures;                                                                     \
-    ::testing::internal::SingleFailureChecker gtest_checker(                                                           \
-        &gtest_failures, ::testing::TestPartResult::kNonFatalFailure, (substr));                                       \
-    {                                                                                                                  \
-      ::testing::ScopedFakeTestPartResultReporter gtest_reporter(                                                      \
-          ::testing::ScopedFakeTestPartResultReporter::INTERCEPT_ONLY_CURRENT_THREAD, &gtest_failures);                \
-      if (::testing::internal::AlwaysTrue()) {                                                                         \
-        statement;                                                                                                     \
+#  define EXPECT_NONFATAL_FAILURE(statement, substr)                                                                   \
+    do {                                                                                                               \
+      ::testing::TestPartResultArray gtest_failures;                                                                   \
+      ::testing::internal::SingleFailureChecker gtest_checker(                                                         \
+          &gtest_failures, ::testing::TestPartResult::kNonFatalFailure, (substr));                                     \
+      {                                                                                                                \
+        ::testing::ScopedFakeTestPartResultReporter gtest_reporter(                                                    \
+            ::testing::ScopedFakeTestPartResultReporter::INTERCEPT_ONLY_CURRENT_THREAD, &gtest_failures);              \
+        if (::testing::internal::AlwaysTrue()) {                                                                       \
+          statement;                                                                                                   \
+        }                                                                                                              \
       }                                                                                                                \
-    }                                                                                                                  \
-  } while (::testing::internal::AlwaysFalse())
+    } while (::testing::internal::AlwaysFalse())
 
-#define EXPECT_NONFATAL_FAILURE_ON_ALL_THREADS(statement, substr)                                                      \
-  do {                                                                                                                 \
-    ::testing::TestPartResultArray gtest_failures;                                                                     \
-    ::testing::internal::SingleFailureChecker gtest_checker(                                                           \
-        &gtest_failures, ::testing::TestPartResult::kNonFatalFailure, (substr));                                       \
-    {                                                                                                                  \
-      ::testing::ScopedFakeTestPartResultReporter gtest_reporter(                                                      \
-          ::testing::ScopedFakeTestPartResultReporter::INTERCEPT_ALL_THREADS, &gtest_failures);                        \
-      if (::testing::internal::AlwaysTrue()) {                                                                         \
-        statement;                                                                                                     \
+#  define EXPECT_NONFATAL_FAILURE_ON_ALL_THREADS(statement, substr)                                                    \
+    do {                                                                                                               \
+      ::testing::TestPartResultArray gtest_failures;                                                                   \
+      ::testing::internal::SingleFailureChecker gtest_checker(                                                         \
+          &gtest_failures, ::testing::TestPartResult::kNonFatalFailure, (substr));                                     \
+      {                                                                                                                \
+        ::testing::ScopedFakeTestPartResultReporter gtest_reporter(                                                    \
+            ::testing::ScopedFakeTestPartResultReporter::INTERCEPT_ALL_THREADS, &gtest_failures);                      \
+        if (::testing::internal::AlwaysTrue()) {                                                                       \
+          statement;                                                                                                   \
+        }                                                                                                              \
       }                                                                                                                \
-    }                                                                                                                  \
-  } while (::testing::internal::AlwaysFalse())
+    } while (::testing::internal::AlwaysFalse())
 
 #endif // GTEST_INCLUDE_GTEST_GTEST_SPI_H_
 
@@ -333,76 +333,76 @@ private:
 
 // TODO(kenton@google.com): Use autoconf to detect availability of
 // gettimeofday().
-#define GTEST_HAS_GETTIMEOFDAY_ 1
+#  define GTEST_HAS_GETTIMEOFDAY_ 1
 
-#include <fcntl.h> // NOLINT
-#include <limits.h> // NOLINT
-#include <sched.h> // NOLINT
+#  include <fcntl.h> // NOLINT
+#  include <limits.h> // NOLINT
+#  include <sched.h> // NOLINT
 // Declares vsnprintf().  This header is not available on Windows.
-#include <strings.h> // NOLINT
-#include <sys/mman.h> // NOLINT
-#include <sys/time.h> // NOLINT
-#include <unistd.h> // NOLINT
-#include <string>
+#  include <strings.h> // NOLINT
+#  include <sys/mman.h> // NOLINT
+#  include <sys/time.h> // NOLINT
+#  include <unistd.h> // NOLINT
+#  include <string>
 
 #elif GTEST_OS_SYMBIAN
-#define GTEST_HAS_GETTIMEOFDAY_ 1
-#include <sys/time.h> // NOLINT
+#  define GTEST_HAS_GETTIMEOFDAY_ 1
+#  include <sys/time.h> // NOLINT
 
 #elif GTEST_OS_ZOS
-#define GTEST_HAS_GETTIMEOFDAY_ 1
-#include <sys/time.h> // NOLINT
+#  define GTEST_HAS_GETTIMEOFDAY_ 1
+#  include <sys/time.h> // NOLINT
 
 // On z/OS we additionally need strings.h for strcasecmp.
-#include <strings.h> // NOLINT
+#  include <strings.h> // NOLINT
 
 #elif GTEST_OS_WINDOWS_MOBILE // We are on Windows CE.
 
-#include <windows.h> // NOLINT
+#  include <windows.h> // NOLINT
 
 #elif GTEST_OS_WINDOWS // We are on Windows proper.
 
-#include <io.h> // NOLINT
-#include <sys/timeb.h> // NOLINT
-#include <sys/types.h> // NOLINT
-#include <sys/stat.h> // NOLINT
+#  include <io.h> // NOLINT
+#  include <sys/timeb.h> // NOLINT
+#  include <sys/types.h> // NOLINT
+#  include <sys/stat.h> // NOLINT
 
-#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS_MINGW
+#  if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS_MINGW
 // MinGW has gettimeofday() but not _ftime64().
 // TODO(kenton@google.com): Use autoconf to detect availability of
 //   gettimeofday().
 // TODO(kenton@google.com): There are other ways to get the time on
 //   Windows, like GetTickCount() or GetSystemTimeAsFileTime().  MinGW
 //   supports these.  consider using them instead.
-#define GTEST_HAS_GETTIMEOFDAY_ 1
-#include <sys/time.h> // NOLINT
-#endif // GTEST_OS_WINDOWS_MINGW
+#    define GTEST_HAS_GETTIMEOFDAY_ 1
+#    include <sys/time.h> // NOLINT
+#  endif // GTEST_OS_WINDOWS_MINGW
 
 // cpplint thinks that the header is already included, so we want to
 // silence it.
-#include <windows.h> // NOLINT
+#  include <windows.h> // NOLINT
 
 #else
 
 // Assume other platforms have gettimeofday().
 // TODO(kenton@google.com): Use autoconf to detect availability of
 //   gettimeofday().
-#define GTEST_HAS_GETTIMEOFDAY_ 1
+#  define GTEST_HAS_GETTIMEOFDAY_ 1
 
 // cpplint thinks that the header is already included, so we want to
 // silence it.
-#include <sys/time.h> // NOLINT
-#include <unistd.h> // NOLINT
+#  include <sys/time.h> // NOLINT
+#  include <unistd.h> // NOLINT
 
 #endif // GTEST_OS_LINUX
 
 #if GTEST_HAS_EXCEPTIONS
-#include <stdexcept>
+#  include <stdexcept>
 #endif
 
 #if GTEST_CAN_STREAM_RESULTS_
-#include <arpa/inet.h> // NOLINT
-#include <netdb.h> // NOLINT
+#  include <arpa/inet.h> // NOLINT
+#  include <netdb.h> // NOLINT
 #endif
 
 // Indicates that this translation unit is part of Google Test's
@@ -448,36 +448,36 @@ private:
 // DO NOT #INCLUDE IT IN A USER PROGRAM.
 
 #ifndef GTEST_SRC_GTEST_INTERNAL_INL_H_
-#define GTEST_SRC_GTEST_INTERNAL_INL_H_
+#  define GTEST_SRC_GTEST_INTERNAL_INL_H_
 
 // GTEST_IMPLEMENTATION_ is defined to 1 iff the current translation unit is
 // part of Google Test's implementation; otherwise it's undefined.
-#if !GTEST_IMPLEMENTATION_
+#  if !GTEST_IMPLEMENTATION_
 // A user is trying to include this from his code - just say no.
-#error "gtest-internal-inl.h is part of Google Test's internal implementation."
-#error "It must not be included except by Google Test itself."
-#endif // GTEST_IMPLEMENTATION_
+#    error "gtest-internal-inl.h is part of Google Test's internal implementation."
+#    error "It must not be included except by Google Test itself."
+#  endif // GTEST_IMPLEMENTATION_
 
-#ifndef _WIN32_WCE
-#include <errno.h>
-#endif // !_WIN32_WCE
-#include <stddef.h>
-#include <stdlib.h> // For strtoll/_strtoul64/malloc/free.
-#include <string.h> // For memmove.
+#  ifndef _WIN32_WCE
+#    include <errno.h>
+#  endif // !_WIN32_WCE
+#  include <stddef.h>
+#  include <stdlib.h> // For strtoll/_strtoul64/malloc/free.
+#  include <string.h> // For memmove.
 
-#include <algorithm>
-#include <string>
-#include <vector>
+#  include <algorithm>
+#  include <string>
+#  include <vector>
 
 
-#if GTEST_CAN_STREAM_RESULTS_
-#include <arpa/inet.h> // NOLINT
-#include <netdb.h> // NOLINT
-#endif
+#  if GTEST_CAN_STREAM_RESULTS_
+#    include <arpa/inet.h> // NOLINT
+#    include <netdb.h> // NOLINT
+#  endif
 
-#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
-#include <windows.h> // NOLINT
-#endif // GTEST_OS_WINDOWS
+#  if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
+#    include <windows.h> // NOLINT
+#  endif // GTEST_OS_WINDOWS
 
 
 namespace testing {
@@ -810,14 +810,14 @@ public:
   // name and the test name.
   static bool FilterMatchesTest(const std::string& test_case_name, const std::string& test_name);
 
-#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
+#  if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
   // Function for supporting the gtest_catch_exception flag.
 
   // Returns EXCEPTION_EXECUTE_HANDLER if Google Test should handle the
   // given SEH exception, or EXCEPTION_CONTINUE_SEARCH otherwise.
   // This function is useful as an __except condition.
   static int GTestShouldProcessSEH(DWORD exception_code);
-#endif // GTEST_OS_WINDOWS
+#  endif // GTEST_OS_WINDOWS
 
   // Returns true if "name" matches the ':' separated list of glob-style
   // filters in "filter".
@@ -1104,14 +1104,14 @@ public:
     GetTestCase(test_info->test_case_name(), test_info->type_param(), set_up_tc, tear_down_tc)->AddTestInfo(test_info);
   }
 
-#if GTEST_HAS_PARAM_TEST
+#  if GTEST_HAS_PARAM_TEST
   // Returns ParameterizedTestCaseRegistry object used to keep track of
   // value-parameterized tests and instantiate and register them.
   internal::ParameterizedTestCaseRegistry& parameterized_test_registry()
   {
     return parameterized_test_registry_;
   }
-#endif // GTEST_HAS_PARAM_TEST
+#  endif // GTEST_HAS_PARAM_TEST
 
   // Sets the TestCase object for the test that's currently running.
   void set_current_test_case(TestCase* a_current_test_case)
@@ -1206,7 +1206,7 @@ public:
     return gtest_trace_stack_.get();
   }
 
-#if GTEST_HAS_DEATH_TEST
+#  if GTEST_HAS_DEATH_TEST
   void InitDeathTestSubprocessControlInfo()
   {
     internal_run_death_test_flag_.reset(ParseInternalRunDeathTestFlag());
@@ -1229,17 +1229,17 @@ public:
   void SuppressTestEventsIfInSubprocess();
 
   friend class ReplaceDeathTestFactory;
-#endif // GTEST_HAS_DEATH_TEST
+#  endif // GTEST_HAS_DEATH_TEST
 
   // Initializes the event listener performing XML output as specified by
   // UnitTestOptions. Must not be called before InitGoogleTest.
   void ConfigureXmlOutput();
 
-#if GTEST_CAN_STREAM_RESULTS_
+#  if GTEST_CAN_STREAM_RESULTS_
   // Initializes the event listener for streaming test results to a socket.
   // Must not be called before InitGoogleTest.
   void ConfigureStreamingOutput();
-#endif
+#  endif
 
   // Performs initialization dependent upon flag values obtained in
   // ParseGoogleTestFlagsOnly.  Is called from InitGoogleTest after the call to
@@ -1318,14 +1318,14 @@ private:
   // shuffled order.
   std::vector<int> test_case_indices_;
 
-#if GTEST_HAS_PARAM_TEST
+#  if GTEST_HAS_PARAM_TEST
   // ParameterizedTestRegistry object used to register value-parameterized
   // tests.
   internal::ParameterizedTestCaseRegistry parameterized_test_registry_;
 
   // Indicates whether RegisterParameterizedTests() has been called already.
   bool parameterized_tests_registered_;
-#endif // GTEST_HAS_PARAM_TEST
+#  endif // GTEST_HAS_PARAM_TEST
 
   // Index of the last death test case registered.  Initially -1.
   int last_death_test_case_;
@@ -1378,12 +1378,12 @@ private:
   // How long the test took to run, in milliseconds.
   TimeInMillis elapsed_time_;
 
-#if GTEST_HAS_DEATH_TEST
+#  if GTEST_HAS_DEATH_TEST
   // The decomposed components of the gtest_internal_run_death_test flag,
   // parsed when RUN_ALL_TESTS is called.
   internal::scoped_ptr<InternalRunDeathTestFlag> internal_run_death_test_flag_;
   internal::scoped_ptr<internal::DeathTestFactory> death_test_factory_;
-#endif // GTEST_HAS_DEATH_TEST
+#  endif // GTEST_HAS_DEATH_TEST
 
   // A per-thread stack of traces created by the SCOPED_TRACE() macro.
   internal::ThreadLocal<std::vector<TraceInfo>> gtest_trace_stack_;
@@ -1402,7 +1402,7 @@ inline UnitTestImpl* GetUnitTestImpl()
   return UnitTest::GetInstance()->impl();
 }
 
-#if defined(GTEST_USES_SIMPLE_RE) && GTEST_USES_SIMPLE_RE
+#  if defined(GTEST_USES_SIMPLE_RE) && GTEST_USES_SIMPLE_RE
 
 // Internal helper functions for implementing the simple regular
 // expression matcher.
@@ -1419,20 +1419,20 @@ GTEST_API_ bool MatchRegexAtHead(const char* regex, const char* str);
 GTEST_API_ bool MatchRepetitionAndRegexAtHead(bool escaped, char ch, char repeat, const char* regex, const char* str);
 GTEST_API_ bool MatchRegexAnywhere(const char* regex, const char* str);
 
-#endif // GTEST_USES_SIMPLE_RE
+#  endif // GTEST_USES_SIMPLE_RE
 
 // Parses the command line for Google Test flags, without initializing
 // other parts of Google Test.
 GTEST_API_ void ParseGoogleTestFlagsOnly(int* argc, char** argv);
 GTEST_API_ void ParseGoogleTestFlagsOnly(int* argc, wchar_t** argv);
 
-#if GTEST_HAS_DEATH_TEST
+#  if GTEST_HAS_DEATH_TEST
 
 // Returns the message describing the last system error, regardless of the
 // platform.
 GTEST_API_ std::string GetLastErrnoDescription();
 
-#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
+#    if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 // Provides leak-safe Windows kernel handle ownership.
 class AutoHandle
 {
@@ -1471,7 +1471,7 @@ private:
 
   GTEST_DISALLOW_COPY_AND_ASSIGN_(AutoHandle);
 };
-#endif // GTEST_OS_WINDOWS
+#    endif // GTEST_OS_WINDOWS
 
 // Attempts to parse a string into a positive integer pointed to by the
 // number parameter.  Returns true if that is possible.
@@ -1492,18 +1492,18 @@ bool ParseNaturalNumber(const ::std::string& str, Integer* number)
   // BiggestConvertible is the largest integer type that system-provided
   // string-to-number conversion routines can return.
 
-#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS && !defined(__GNUC__)
+#    if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS && !defined(__GNUC__)
 
   // MSVC and C++ Builder define __int64 instead of the standard long long.
   typedef unsigned __int64 BiggestConvertible;
   const BiggestConvertible parsed = _strtoui64(str.c_str(), &end, 10);
 
-#else
+#    else
 
   typedef unsigned long long BiggestConvertible; // NOLINT
   const BiggestConvertible parsed = strtoull(str.c_str(), &end, 10);
 
-#endif // GTEST_OS_WINDOWS && !defined(__GNUC__)
+#    endif // GTEST_OS_WINDOWS && !defined(__GNUC__)
 
   const bool parse_success = *end == '\0' && errno == 0;
 
@@ -1518,7 +1518,7 @@ bool ParseNaturalNumber(const ::std::string& str, Integer* number)
   }
   return false;
 }
-#endif // GTEST_HAS_DEATH_TEST
+#  endif // GTEST_HAS_DEATH_TEST
 
 // TestResult contains some private methods that should be hidden from
 // Google Test user but are required for testing. This class allow our tests
@@ -1545,7 +1545,7 @@ public:
   }
 };
 
-#if GTEST_CAN_STREAM_RESULTS_
+#  if GTEST_CAN_STREAM_RESULTS_
 
 // Streams test results to the given port on the given host machine.
 class StreamingListener : public EmptyTestEventListener
@@ -1715,7 +1715,7 @@ private:
   GTEST_DISALLOW_COPY_AND_ASSIGN_(StreamingListener);
 }; // class StreamingListener
 
-#endif // GTEST_CAN_STREAM_RESULTS_
+#  endif // GTEST_CAN_STREAM_RESULTS_
 
 } // namespace internal
 } // namespace testing
@@ -1724,7 +1724,7 @@ private:
 #undef GTEST_IMPLEMENTATION_
 
 #if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
-#define vsnprintf _vsnprintf
+#  define vsnprintf _vsnprintf
 #endif // GTEST_OS_WINDOWS
 
 namespace testing {
@@ -2390,21 +2390,21 @@ TimeInMillis GetTimeInMillis()
 #elif defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS && !GTEST_HAS_GETTIMEOFDAY_
   __timeb64 now;
 
-#ifdef _MSC_VER
+#  ifdef _MSC_VER
 
 // MSVC 8 deprecates _ftime64(), so we want to suppress warning 4996
 // (deprecated function) there.
 // TODO(kenton@google.com): Use GetTickCount()?  Or use
 //   SystemTimeToFileTime()
-#pragma warning(push) // Saves the current warning state.
-#pragma warning(disable : 4996) // Temporarily disables warning 4996.
+#    pragma warning(push) // Saves the current warning state.
+#    pragma warning(disable : 4996) // Temporarily disables warning 4996.
   _ftime64(&now);
-#pragma warning(pop) // Restores the warning state.
-#else
+#    pragma warning(pop) // Restores the warning state.
+#  else
 
   _ftime64(&now);
 
-#endif // _MSC_VER
+#  endif // _MSC_VER
 
   return static_cast<TimeInMillis>(now.time) * 1000 + now.millitm;
 #elif GTEST_HAS_GETTIMEOFDAY_
@@ -2412,7 +2412,7 @@ TimeInMillis GetTimeInMillis()
   gettimeofday(&now, NULL);
   return static_cast<TimeInMillis>(now.tv_sec) * 1000 + now.tv_usec / 1000;
 #else
-#error "Don't know how to get the current time on your system."
+#  error "Don't know how to get the current time on your system."
 #endif
 }
 
@@ -2923,12 +2923,12 @@ namespace {
 // Helper function for IsHRESULT{SuccessFailure} predicates
 AssertionResult HRESULTFailureHelper(const char* expr, const char* expected, long hr)
 { // NOLINT
-#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS_MOBILE
+#  if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS_MOBILE
 
   // Windows CE doesn't support FormatMessage.
   const char error_text[] = "";
 
-#else
+#  else
 
   // Looks up the human-readable system message for the HRESULT code
   // and since we're not passing any params to FormatMessage, we don't
@@ -2949,7 +2949,7 @@ AssertionResult HRESULTFailureHelper(const char* expr, const char* expected, lon
     error_text[message_length - 1] = '\0';
   }
 
-#endif // GTEST_OS_WINDOWS_MOBILE
+#  endif // GTEST_OS_WINDOWS_MOBILE
 
   const std::string error_hex("0x" + String::FormatHexInt(hr));
   return ::testing::AssertionFailure() << "Expected: " << expr << " " << expected << ".\n"
@@ -4826,11 +4826,11 @@ std::string FormatEpochTimeInMillisAsIso8601(TimeInMillis ms)
   // Using non-reentrant version as localtime_r is not portable.
   time_t seconds = static_cast<time_t>(ms / 1000);
 #ifdef _MSC_VER
-#pragma warning(push) // Saves the current warning state.
-#pragma warning(disable : 4996) // Temporarily disables warning 4996
+#  pragma warning(push) // Saves the current warning state.
+#  pragma warning(disable : 4996) // Temporarily disables warning 4996
   // (function or variable may be unsafe).
   const struct tm* const time_struct = localtime(&seconds); // NOLINT
-#pragma warning(pop) // Restores the warning state again.
+#  pragma warning(pop) // Restores the warning state again.
 #else
   const struct tm* const time_struct = localtime(&seconds); // NOLINT
 #endif
@@ -5499,19 +5499,19 @@ int UnitTest::Run()
   // process. In either case the user does not want to see pop-up dialogs
   // about crashes - they are expected.
   if (impl()->catch_exceptions() || in_death_test_child_process) {
-#if !GTEST_OS_WINDOWS_MOBILE
+#  if !GTEST_OS_WINDOWS_MOBILE
     // SetErrorMode doesn't exist on CE.
     SetErrorMode(SEM_FAILCRITICALERRORS | SEM_NOALIGNMENTFAULTEXCEPT | SEM_NOGPFAULTERRORBOX | SEM_NOOPENFILEERRORBOX);
-#endif // !GTEST_OS_WINDOWS_MOBILE
+#  endif // !GTEST_OS_WINDOWS_MOBILE
 
-#if (defined(_MSC_VER) || GTEST_OS_WINDOWS_MINGW) && !GTEST_OS_WINDOWS_MOBILE
+#  if (defined(_MSC_VER) || GTEST_OS_WINDOWS_MINGW) && !GTEST_OS_WINDOWS_MOBILE
     // Death test children can be terminated with _abort().  On Windows,
     // _abort() can show a dialog with a warning message.  This forces the
     // abort message to go to stderr instead.
     _set_error_mode(_OUT_TO_STDERR);
-#endif
+#  endif
 
-#if _MSC_VER >= 1400 && !GTEST_OS_WINDOWS_MOBILE
+#  if _MSC_VER >= 1400 && !GTEST_OS_WINDOWS_MOBILE
     // In the debug version, Visual Studio pops up a separate dialog
     // offering a choice to debug the aborted program. We need to suppress
     // this dialog or it will pop up for every EXPECT/ASSERT_DEATH statement
@@ -5526,7 +5526,7 @@ int UnitTest::Run()
     if (!GTEST_FLAG(break_on_failure))
       _set_abort_behavior(0x0, // Clear the following flags:
                           _WRITE_ABORT_MSG | _CALL_REPORTFAULT); // pop-up window, core dump.
-#endif
+#  endif
   }
 #endif // GTEST_HAS_SEH
 
@@ -5607,13 +5607,13 @@ UnitTestImpl::UnitTestImpl(UnitTest* parent)
   : parent_(parent)
   ,
 #ifdef _MSC_VER
-#pragma warning(push) // Saves the current warning state.
-#pragma warning(disable : 4355) // Temporarily disables warning 4355
+#  pragma warning(push) // Saves the current warning state.
+#  pragma warning(disable : 4355) // Temporarily disables warning 4355
   // (using this in initializer).
   default_global_test_part_result_reporter_(this)
   , default_per_thread_test_part_result_reporter_(this)
   ,
-#pragma warning(pop) // Restores the warning state again.
+#  pragma warning(pop) // Restores the warning state again.
 #else
   default_global_test_part_result_reporter_(this)
   , default_per_thread_test_part_result_reporter_(this)
@@ -6670,30 +6670,30 @@ void InitGoogleTest(int* argc, wchar_t** argv)
 
 #if GTEST_HAS_DEATH_TEST
 
-#if defined(GTEST_OS_MAC) && GTEST_OS_MAC
-#include <crt_externs.h>
-#endif // GTEST_OS_MAC
+#  if defined(GTEST_OS_MAC) && GTEST_OS_MAC
+#    include <crt_externs.h>
+#  endif // GTEST_OS_MAC
 
-#include <errno.h>
-#include <fcntl.h>
-#include <limits.h>
+#  include <errno.h>
+#  include <fcntl.h>
+#  include <limits.h>
 
-#if GTEST_OS_LINUX
-#include <signal.h>
-#endif // GTEST_OS_LINUX
+#  if GTEST_OS_LINUX
+#    include <signal.h>
+#  endif // GTEST_OS_LINUX
 
-#include <stdarg.h>
+#  include <stdarg.h>
 
-#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
-#include <windows.h>
-#else
-#include <sys/mman.h>
-#include <sys/wait.h>
-#endif // GTEST_OS_WINDOWS
+#  if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
+#    include <windows.h>
+#  else
+#    include <sys/mman.h>
+#    include <sys/wait.h>
+#  endif // GTEST_OS_WINDOWS
 
-#if defined(GTEST_OS_QNX) && GTEST_OS_QNX
-#include <spawn.h>
-#endif // GTEST_OS_QNX
+#  if defined(GTEST_OS_QNX) && GTEST_OS_QNX
+#    include <spawn.h>
+#  endif // GTEST_OS_QNX
 
 #endif // GTEST_HAS_DEATH_TEST
 
@@ -6758,19 +6758,19 @@ static bool g_in_fast_death_test_child = false;
 // implementation of death tests.  User code MUST NOT use it.
 bool InDeathTestChild()
 {
-#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
+#  if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 
   // On Windows, death tests are thread-safe regardless of the value of the
   // death_test_style flag.
   return !GTEST_FLAG(internal_run_death_test).empty();
 
-#else
+#  else
 
   if (GTEST_FLAG(death_test_style) == "threadsafe")
     return !GTEST_FLAG(internal_run_death_test).empty();
   else
     return g_in_fast_death_test_child;
-#endif
+#  endif
 }
 
 } // namespace internal
@@ -6783,18 +6783,18 @@ ExitedWithCode::ExitedWithCode(int exit_code)
 // ExitedWithCode function-call operator.
 bool ExitedWithCode::operator()(int exit_status) const
 {
-#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
+#  if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 
   return exit_status == exit_code_;
 
-#else
+#  else
 
   return WIFEXITED(exit_status) && WEXITSTATUS(exit_status) == exit_code_;
 
-#endif // GTEST_OS_WINDOWS
+#  endif // GTEST_OS_WINDOWS
 }
 
-#if (!defined(GTEST_OS_WINDOWS) || !GTEST_OS_WINDOWS)
+#  if (!defined(GTEST_OS_WINDOWS) || !GTEST_OS_WINDOWS)
 // KilledBySignal constructor.
 KilledBySignal::KilledBySignal(int signum)
   : signum_(signum)
@@ -6805,7 +6805,7 @@ bool KilledBySignal::operator()(int exit_status) const
 {
   return WIFSIGNALED(exit_status) && WTERMSIG(exit_status) == signum_;
 }
-#endif // !GTEST_OS_WINDOWS
+#  endif // !GTEST_OS_WINDOWS
 
 namespace internal {
 
@@ -6817,23 +6817,23 @@ static std::string ExitSummary(int exit_code)
 {
   Message m;
 
-#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
+#  if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 
   m << "Exited with exit status " << exit_code;
 
-#else
+#  else
 
   if (WIFEXITED(exit_code)) {
     m << "Exited with exit status " << WEXITSTATUS(exit_code);
   } else if (WIFSIGNALED(exit_code)) {
     m << "Terminated by signal " << WTERMSIG(exit_code);
   }
-#ifdef WCOREDUMP
+#    ifdef WCOREDUMP
   if (WCOREDUMP(exit_code)) {
     m << " (core dumped)";
   }
-#endif
-#endif // GTEST_OS_WINDOWS
+#    endif
+#  endif // GTEST_OS_WINDOWS
 
   return m.GetString();
 }
@@ -6845,7 +6845,7 @@ bool ExitedUnsuccessfully(int exit_status)
   return !ExitedWithCode(0)(exit_status);
 }
 
-#if (!defined(GTEST_OS_WINDOWS) || !GTEST_OS_WINDOWS)
+#  if (!defined(GTEST_OS_WINDOWS) || !GTEST_OS_WINDOWS)
 // Generates a textual failure message when a death test finds more than
 // one thread running, or cannot determine the number of threads, prior
 // to executing the given statement.  It is the responsibility of the
@@ -6861,7 +6861,7 @@ static std::string DeathTestThreadWarning(size_t thread_count)
     msg << "detected " << thread_count << " threads.";
   return msg.GetString();
 }
-#endif // !GTEST_OS_WINDOWS
+#  endif // !GTEST_OS_WINDOWS
 
 // Flag characters for reporting a death test that did not die.
 static const char kDeathTestLived = 'L';
@@ -6913,13 +6913,13 @@ void DeathTestAbort(const std::string& message)
 
 // A replacement for CHECK that calls DeathTestAbort if the assertion
 // fails.
-#define GTEST_DEATH_TEST_CHECK_(expression)                                                                            \
-  do {                                                                                                                 \
-    if (!::testing::internal::IsTrue(expression)) {                                                                    \
-      DeathTestAbort(::std::string("CHECK failed: File ") + __FILE__ + ", line "                                       \
-                     + ::testing::internal::StreamableToString(__LINE__) + ": " + #expression);                        \
-    }                                                                                                                  \
-  } while (::testing::internal::AlwaysFalse())
+#  define GTEST_DEATH_TEST_CHECK_(expression)                                                                          \
+    do {                                                                                                               \
+      if (!::testing::internal::IsTrue(expression)) {                                                                  \
+        DeathTestAbort(::std::string("CHECK failed: File ") + __FILE__ + ", line "                                     \
+                       + ::testing::internal::StreamableToString(__LINE__) + ": " + #expression);                      \
+      }                                                                                                                \
+    } while (::testing::internal::AlwaysFalse())
 
 // This macro is similar to GTEST_DEATH_TEST_CHECK_, but it is meant for
 // evaluating any system call that fulfills two conditions: it must return
@@ -6928,17 +6928,17 @@ void DeathTestAbort(const std::string& message)
 // evaluates the expression as long as it evaluates to -1 and sets
 // errno to EINTR.  If the expression evaluates to -1 but errno is
 // something other than EINTR, DeathTestAbort is called.
-#define GTEST_DEATH_TEST_CHECK_SYSCALL_(expression)                                                                    \
-  do {                                                                                                                 \
-    int gtest_retval;                                                                                                  \
+#  define GTEST_DEATH_TEST_CHECK_SYSCALL_(expression)                                                                  \
     do {                                                                                                               \
-      gtest_retval = (expression);                                                                                     \
-    } while (gtest_retval == -1 && errno == EINTR);                                                                    \
-    if (gtest_retval == -1) {                                                                                          \
-      DeathTestAbort(::std::string("CHECK failed: File ") + __FILE__ + ", line "                                       \
-                     + ::testing::internal::StreamableToString(__LINE__) + ": " + #expression + " != -1");             \
-    }                                                                                                                  \
-  } while (::testing::internal::AlwaysFalse())
+      int gtest_retval;                                                                                                \
+      do {                                                                                                             \
+        gtest_retval = (expression);                                                                                   \
+      } while (gtest_retval == -1 && errno == EINTR);                                                                  \
+      if (gtest_retval == -1) {                                                                                        \
+        DeathTestAbort(::std::string("CHECK failed: File ") + __FILE__ + ", line "                                     \
+                       + ::testing::internal::StreamableToString(__LINE__) + ": " + #expression + " != -1");           \
+      }                                                                                                                \
+    } while (::testing::internal::AlwaysFalse())
 
 // Returns the message describing the last system error in errno.
 std::string GetLastErrnoDescription()
@@ -7267,7 +7267,7 @@ bool DeathTestImpl::Passed(bool status_ok)
   return success;
 }
 
-#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
+#  if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 // WindowsDeathTest implements death tests on Windows. Due to the
 // specifics of starting new processes on Windows, death tests there are
 // always threadsafe, and Google Test considers the
@@ -7448,7 +7448,7 @@ DeathTest::TestRole WindowsDeathTest::AssumeRole()
   set_spawned(true);
   return OVERSEE_TEST;
 }
-#else // We are not on Windows.
+#  else // We are not on Windows.
 
 // ForkingDeathTest provides implementations for most of the abstract
 // methods of the DeathTest interface.  Only the AssumeRole method is
@@ -7620,7 +7620,7 @@ struct ExecDeathTestArgs
   int close_fd; // File descriptor to close; the read end of a pipe
 };
 
-#if defined(GTEST_OS_MAC) && GTEST_OS_MAC
+#    if defined(GTEST_OS_MAC) && GTEST_OS_MAC
 inline char** GetEnviron()
 {
   // When Google Test is built as a framework on MacOS X, the environ variable
@@ -7628,7 +7628,7 @@ inline char** GetEnviron()
   // _NSGetEnviron() instead.
   return *_NSGetEnviron();
 }
-#else
+#    else
 // Some POSIX platforms expect you to declare environ. extern "C" makes
 // it reside in the global namespace.
 extern "C" char** environ;
@@ -7636,9 +7636,9 @@ inline char** GetEnviron()
 {
   return environ;
 }
-#endif // GTEST_OS_MAC
+#    endif // GTEST_OS_MAC
 
-#if (!defined(GTEST_OS_QNX) || !GTEST_OS_QNX)
+#    if (!defined(GTEST_OS_QNX) || !GTEST_OS_QNX)
 // The main function for a threadsafe-style death test child process.
 // This function is called in a clone()-ed process and thus must avoid
 // any potentially unsafe operations like malloc or libc functions.
@@ -7667,7 +7667,7 @@ static int ExecDeathTestChildMain(void* child_arg)
                  + " failed: " + GetLastErrnoDescription());
   return EXIT_FAILURE;
 }
-#endif // !GTEST_OS_QNX
+#    endif // !GTEST_OS_QNX
 
 // Two utility routines that together determine the direction the stack
 // grows.
@@ -7705,7 +7705,7 @@ static pid_t ExecDeathTestSpawnChild(char* const* argv, int close_fd)
   ExecDeathTestArgs args = {argv, close_fd};
   pid_t child_pid = -1;
 
-#if defined(GTEST_OS_QNX) && GTEST_OS_QNX
+#    if defined(GTEST_OS_QNX) && GTEST_OS_QNX
   // Obtains the current directory and sets it to be closed in the child
   // process.
   const int cwd_fd = open(".", O_RDONLY);
@@ -7732,8 +7732,8 @@ static pid_t ExecDeathTestSpawnChild(char* const* argv, int close_fd)
   GTEST_DEATH_TEST_CHECK_(fchdir(cwd_fd) != -1);
   GTEST_DEATH_TEST_CHECK_SYSCALL_(close(cwd_fd));
 
-#else // GTEST_OS_QNX
-#if GTEST_OS_LINUX
+#    else // GTEST_OS_QNX
+#      if GTEST_OS_LINUX
   // When a SIGPROF signal is received while fork() or clone() are executing,
   // the process may hang. To avoid this, we ignore SIGPROF here and re-enable
   // it after the call to fork()/clone() is complete.
@@ -7743,9 +7743,9 @@ static pid_t ExecDeathTestSpawnChild(char* const* argv, int close_fd)
   sigemptyset(&ignore_sigprof_action.sa_mask);
   ignore_sigprof_action.sa_handler = SIG_IGN;
   GTEST_DEATH_TEST_CHECK_SYSCALL_(sigaction(SIGPROF, &ignore_sigprof_action, &saved_sigprof_action));
-#endif // GTEST_OS_LINUX
+#      endif // GTEST_OS_LINUX
 
-#if GTEST_HAS_CLONE
+#      if GTEST_HAS_CLONE
   const bool use_fork = GTEST_FLAG(death_test_use_fork);
 
   if (!use_fork) {
@@ -7770,18 +7770,18 @@ static pid_t ExecDeathTestSpawnChild(char* const* argv, int close_fd)
 
     GTEST_DEATH_TEST_CHECK_(munmap(stack, stack_size) != -1);
   }
-#else
+#      else
   const bool use_fork = true;
-#endif // GTEST_HAS_CLONE
+#      endif // GTEST_HAS_CLONE
 
   if (use_fork && (child_pid = fork()) == 0) {
     ExecDeathTestChildMain(&args);
     _exit(0);
   }
-#endif // GTEST_OS_QNX
-#if GTEST_OS_LINUX
+#    endif // GTEST_OS_QNX
+#    if GTEST_OS_LINUX
   GTEST_DEATH_TEST_CHECK_SYSCALL_(sigaction(SIGPROF, &saved_sigprof_action, NULL));
-#endif // GTEST_OS_LINUX
+#    endif // GTEST_OS_LINUX
 
   GTEST_DEATH_TEST_CHECK_(child_pid != -1);
   return child_pid;
@@ -7834,7 +7834,7 @@ DeathTest::TestRole ExecDeathTest::AssumeRole()
   return OVERSEE_TEST;
 }
 
-#endif // !GTEST_OS_WINDOWS
+#  endif // !GTEST_OS_WINDOWS
 
 // Creates a concrete DeathTest-derived class that depends on the
 // --gtest_death_test_style flag, and sets the pointer pointed to
@@ -7862,13 +7862,13 @@ bool DefaultDeathTestFactory::Create(
     }
   }
 
-#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
+#  if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 
   if (GTEST_FLAG(death_test_style) == "threadsafe" || GTEST_FLAG(death_test_style) == "fast") {
     *test = new WindowsDeathTest(statement, regex, file, line);
   }
 
-#else
+#  else
 
   if (GTEST_FLAG(death_test_style) == "threadsafe") {
     *test = new ExecDeathTest(statement, regex, file, line);
@@ -7876,7 +7876,7 @@ bool DefaultDeathTestFactory::Create(
     *test = new NoExecDeathTest(statement, regex);
   }
 
-#endif // GTEST_OS_WINDOWS
+#  endif // GTEST_OS_WINDOWS
 
   else { // NOLINT - this is more readable than unbalanced brackets inside #if.
     DeathTest::set_last_death_test_message("Unknown death test style \"" + GTEST_FLAG(death_test_style)
@@ -7907,7 +7907,7 @@ static void SplitString(const ::std::string& str, char delimiter, ::std::vector<
   dest->swap(parsed);
 }
 
-#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
+#  if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 // Recreates the pipe and event handles from the provided parameters,
 // signals the event, and returns a file descriptor wrapped around the pipe
 // handle. This function is called in the child process only.
@@ -7970,7 +7970,7 @@ int GetStatusFileDescriptor(unsigned int parent_process_id,
 
   return write_fd;
 }
-#endif // GTEST_OS_WINDOWS
+#  endif // GTEST_OS_WINDOWS
 
 // Returns a newly created InternalRunDeathTestFlag object with fields
 // initialized from the GTEST_FLAG(internal_run_death_test) flag if
@@ -7988,7 +7988,7 @@ InternalRunDeathTestFlag* ParseInternalRunDeathTestFlag()
   SplitString(GTEST_FLAG(internal_run_death_test).c_str(), '|', &fields);
   int write_fd = -1;
 
-#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
+#  if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
 
   unsigned int parent_process_id = 0;
   size_t write_handle_as_size_t = 0;
@@ -8000,14 +8000,14 @@ InternalRunDeathTestFlag* ParseInternalRunDeathTestFlag()
     DeathTestAbort("Bad --gtest_internal_run_death_test flag: " + GTEST_FLAG(internal_run_death_test));
   }
   write_fd = GetStatusFileDescriptor(parent_process_id, write_handle_as_size_t, event_handle_as_size_t);
-#else
+#  else
 
   if (fields.size() != 4 || !ParseNaturalNumber(fields[1], &line) || !ParseNaturalNumber(fields[2], &index)
       || !ParseNaturalNumber(fields[3], &write_fd)) {
     DeathTestAbort("Bad --gtest_internal_run_death_test flag: " + GTEST_FLAG(internal_run_death_test));
   }
 
-#endif // GTEST_OS_WINDOWS
+#  endif // GTEST_OS_WINDOWS
 
   return new InternalRunDeathTestFlag(fields[0], line, index, write_fd);
 }
@@ -8052,26 +8052,26 @@ InternalRunDeathTestFlag* ParseInternalRunDeathTestFlag()
 #include <stdlib.h>
 
 #if defined(GTEST_OS_WINDOWS_MOBILE) && GTEST_OS_WINDOWS_MOBILE
-#include <windows.h>
+#  include <windows.h>
 #elif defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
-#include <direct.h>
-#include <io.h>
+#  include <direct.h>
+#  include <io.h>
 #elif defined(GTEST_OS_SYMBIAN) && GTEST_OS_SYMBIAN
 // Symbian OpenC has PATH_MAX in sys/syslimits.h
-#include <sys/syslimits.h>
+#  include <sys/syslimits.h>
 #else
-#include <limits.h>
-#include <climits> // Some Linux distributions define PATH_MAX here.
+#  include <limits.h>
+#  include <climits> // Some Linux distributions define PATH_MAX here.
 #endif // GTEST_OS_WINDOWS_MOBILE
 
 #if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
-#define GTEST_PATH_MAX_ _MAX_PATH
+#  define GTEST_PATH_MAX_ _MAX_PATH
 #elif defined(PATH_MAX)
-#define GTEST_PATH_MAX_ PATH_MAX
+#  define GTEST_PATH_MAX_ PATH_MAX
 #elif defined(_XOPEN_PATH_MAX)
-#define GTEST_PATH_MAX_ _XOPEN_PATH_MAX
+#  define GTEST_PATH_MAX_ _XOPEN_PATH_MAX
 #else
-#define GTEST_PATH_MAX_ _POSIX_PATH_MAX
+#  define GTEST_PATH_MAX_ _POSIX_PATH_MAX
 #endif // GTEST_OS_WINDOWS
 
 
@@ -8087,16 +8087,16 @@ const char kPathSeparator = '\\';
 const char kAlternatePathSeparator = '/';
 const char kPathSeparatorString[] = "\\";
 const char kAlternatePathSeparatorString[] = "/";
-#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS_MOBILE
+#  if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS_MOBILE
 // Windows CE doesn't have a current directory. You should not use
 // the current directory in tests on Windows CE, but this at least
 // provides a reasonable fallback.
 const char kCurrentDirectoryString[] = "\\";
 // Windows CE doesn't define INVALID_FILE_ATTRIBUTES
 const DWORD kInvalidFileAttributes = 0xffffffff;
-#else
+#  else
 const char kCurrentDirectoryString[] = ".\\";
-#endif // GTEST_OS_WINDOWS_MOBILE
+#  endif // GTEST_OS_WINDOWS_MOBILE
 #else
 const char kPathSeparator = '/';
 const char kPathSeparatorString[] = "/";
@@ -8433,23 +8433,23 @@ void FilePath::Normalize()
 #include <string.h>
 
 #if defined(GTEST_OS_WINDOWS_MOBILE) && GTEST_OS_WINDOWS_MOBILE
-#include <windows.h> // For TerminateProcess()
+#  include <windows.h> // For TerminateProcess()
 #elif defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
-#include <io.h>
-#include <sys/stat.h>
+#  include <io.h>
+#  include <sys/stat.h>
 #else
-#include <unistd.h>
+#  include <unistd.h>
 #endif // GTEST_OS_WINDOWS_MOBILE
 
 #if defined(GTEST_OS_MAC) && GTEST_OS_MAC
-#include <mach/mach_init.h>
-#include <mach/task.h>
-#include <mach/vm_map.h>
+#  include <mach/mach_init.h>
+#  include <mach/task.h>
+#  include <mach/vm_map.h>
 #endif // GTEST_OS_MAC
 
 #if defined(GTEST_OS_QNX) && GTEST_OS_QNX
-#include <devctl.h>
-#include <sys/procfs.h>
+#  include <devctl.h>
+#  include <sys/procfs.h>
 #endif // GTEST_OS_QNX
 
 
@@ -8923,8 +8923,8 @@ GTestLog::~GTestLog()
 // Disable Microsoft deprecation warnings for POSIX functions called from
 // this class (creat, dup, dup2, and close)
 #ifdef _MSC_VER
-#pragma warning(push)
-#pragma warning(disable : 4996)
+#  pragma warning(push)
+#  pragma warning(disable : 4996)
 #endif // _MSC_VER
 
 #if GTEST_HAS_STREAM_REDIRECTION
@@ -8938,7 +8938,7 @@ public:
     : fd_(fd)
     , uncaptured_fd_(dup(fd))
   {
-#if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
+#  if defined(GTEST_OS_WINDOWS) && GTEST_OS_WINDOWS
     char temp_dir_path[MAX_PATH + 1] = {'\0'}; // NOLINT
     char temp_file_path[MAX_PATH + 1] = {'\0'}; // NOLINT
 
@@ -8951,12 +8951,12 @@ public:
     const int captured_fd = creat(temp_file_path, _S_IREAD | _S_IWRITE);
     GTEST_CHECK_(captured_fd != -1) << "Unable to open temporary file " << temp_file_path;
     filename_ = temp_file_path;
-#else
+#  else
 // There's no guarantee that a test has write access to the current
 // directory, so we create the temporary file in the /tmp directory
 // instead. We use /tmp on most systems, and /sdcard on Android.
 // That's because Android doesn't have /tmp.
-#if defined(GTEST_OS_LINUX_ANDROID) && GTEST_OS_LINUX_ANDROID
+#    if defined(GTEST_OS_LINUX_ANDROID) && GTEST_OS_LINUX_ANDROID
     // Note: Android applications are expected to call the framework's
     // Context.getExternalStorageDirectory() method through JNI to get
     // the location of the world-writable SD Card directory. However,
@@ -8972,12 +8972,12 @@ public:
     // other OEM-customized locations. Never rely on these, and always
     // use /sdcard.
     char name_template[] = "/sdcard/gtest_captured_stream.XXXXXX";
-#else
+#    else
     char name_template[] = "/tmp/captured_stream.XXXXXX";
-#endif // GTEST_OS_LINUX_ANDROID
+#    endif // GTEST_OS_LINUX_ANDROID
     const int captured_fd = mkstemp(name_template);
     filename_ = name_template;
-#endif // GTEST_OS_WINDOWS
+#  endif // GTEST_OS_WINDOWS
     fflush(NULL);
     dup2(captured_fd, fd_);
     close(captured_fd);
@@ -9050,9 +9050,9 @@ std::string CapturedStream::ReadEntireFile(FILE* file)
   return content;
 }
 
-#ifdef _MSC_VER
-#pragma warning(pop)
-#endif // _MSC_VER
+#  ifdef _MSC_VER
+#    pragma warning(pop)
+#  endif // _MSC_VER
 
 static CapturedStream* g_captured_stderr = NULL;
 static CapturedStream* g_captured_stdout = NULL;

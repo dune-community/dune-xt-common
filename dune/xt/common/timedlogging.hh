@@ -32,11 +32,11 @@
 #include <dune/xt/common/color.hh>
 
 #ifndef DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG
-#ifndef NDEBUG
-#define DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG 1
-#else
-#define DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG 0
-#endif
+#  ifndef NDEBUG
+#    define DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG 1
+#  else
+#    define DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG 0
+#  endif
 #endif
 
 namespace Dune {

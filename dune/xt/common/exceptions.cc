@@ -14,7 +14,7 @@
 #include <iostream>
 
 #if HAVE_TBB
-#include <tbb/tbb_exception.h>
+#  include <tbb/tbb_exception.h>
 #endif
 
 #include <dune/xt/common/timings.hh>

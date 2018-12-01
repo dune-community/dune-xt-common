@@ -49,13 +49,13 @@ DXT_DEPRECATED_MSG("22.08.18") inline std::string __depr_class()
 #define DXTC_DEBUG_AUTO(name) volatile auto DXTC_UNUSED(name)
 
 #ifndef NDEBUG
-#define DXT_ASSERT(condition)                                                                                          \
-  DUNE_THROW_IF(!(condition),                                                                                          \
-                Dune::XT::Common::Exceptions::debug_assertion,                                                         \
-                __PRETTY_FUNCTION__ << "\nAssertion failed: \n"                                                        \
-                                    << #condition)
+#  define DXT_ASSERT(condition)                                                                                        \
+    DUNE_THROW_IF(!(condition),                                                                                        \
+                  Dune::XT::Common::Exceptions::debug_assertion,                                                       \
+                  __PRETTY_FUNCTION__ << "\nAssertion failed: \n"                                                      \
+                                      << #condition)
 #else
-#define DXT_ASSERT(condition)
+#  define DXT_ASSERT(condition)
 #endif
 
 #endif // DUNE_XT_COMMON_DEBUG_HH

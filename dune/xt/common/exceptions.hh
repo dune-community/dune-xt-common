@@ -19,7 +19,7 @@
 #include <dune/xt/common/deprecated.hh>
 
 #ifdef DUNE_THROW
-#undef DUNE_THROW
+#  undef DUNE_THROW
 #endif
 
 #if HAVE_TBB
