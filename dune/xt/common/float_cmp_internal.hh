@@ -199,15 +199,15 @@ cmp_gt(const XType& xx, const YType& yy)
 } // ... cmp_gt(...)
 
 template <Dune::FloatCmp::CmpStyle style, class T>
-typename std::enable_if<is_arithmetic<T>::value, bool>::type cmp_ge(const T& xx, const T& yy, const T& eps)
+typename std::enable_if<is_arithmetic<T>::value, bool>::type dune_cmp_ge(const T& xx, const T& yy, const T& eps)
 {
   return std::greater<T>()(xx, yy) || Dune::FloatCmp::eq<T, style>(xx, yy, eps);
 }
 
 template <Dune::FloatCmp::CmpStyle style, class T>
-bool cmp_ge(const std::complex<T>& xx, const std::complex<T>& yy, const T& eps)
+bool dune_cmp_ge(const std::complex<T>& xx, const std::complex<T>& yy, const T& eps)
 {
-  return cmp_ge<style>(real(xx), real(yy), eps) && cmp_ge<style>(imag(xx), imag(yy), eps);
+  return dune_cmp_ge<style>(real(xx), real(yy), eps) && dune_cmp_ge<style>(imag(xx), imag(yy), eps);
 }
 
 template <Dune::FloatCmp::CmpStyle style, class XType, class YType, class EpsType>
@@ -215,23 +215,23 @@ typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value
                             && std::is_same<typename VectorAbstraction<XType>::S, EpsType>::value
                             && std::is_same<typename VectorAbstraction<YType>::S, EpsType>::value,
                         bool>::type
-cmp_ge(const XType& xx, const YType& yy, const EpsType& eps)
+dune_cmp_ge(const XType& xx, const YType& yy, const EpsType& eps)
 {
   const auto sz = xx.size();
   if (yy.size() != sz)
     return false;
   for (size_t ii = 0; ii < sz; ++ii)
-    if (!(cmp_ge<style>(xx[ii], yy[ii], eps)))
+    if (!(dune_cmp_ge<style>(xx[ii], yy[ii], eps)))
       return false;
   return true;
-} // ... cmp_ge(...)
+} // ... dune_cmp_ge(...)
 
 template <Dune::FloatCmp::CmpStyle style, class XType, class YType, class EpsType>
 typename std::enable_if<is_matrix<XType>::value && is_matrix<YType>::value
                             && std::is_same<typename MatrixAbstraction<XType>::S, EpsType>::value
                             && std::is_same<typename MatrixAbstraction<YType>::S, EpsType>::value,
                         bool>::type
-cmp_ge(const XType& xx, const YType& yy, const EpsType& eps)
+dune_cmp_ge(const XType& xx, const YType& yy, const EpsType& eps)
 {
   const auto rows = MatrixAbstraction<XType>::rows(xx);
   const auto cols = MatrixAbstraction<XType>::cols(xx);
@@ -239,22 +239,22 @@ cmp_ge(const XType& xx, const YType& yy, const EpsType& eps)
     return false;
   for (size_t ii = 0; ii < rows; ++ii)
     for (size_t jj = 0; jj < cols; ++jj)
-      if (!cmp_ge<style>(
+      if (!dune_cmp_ge<style>(
               MatrixAbstraction<XType>::get_entry(xx, ii, jj), MatrixAbstraction<YType>::get_entry(yy, ii, jj), eps))
         return false;
   return true;
-} // ... cmp_ge(...)
+} // ... dune_cmp_ge(...)
 
 template <Dune::FloatCmp::CmpStyle style, class T>
-typename std::enable_if<is_arithmetic<T>::value, bool>::type cmp_le(const T& xx, const T& yy, const T& eps)
+typename std::enable_if<is_arithmetic<T>::value, bool>::type dune_cmp_le(const T& xx, const T& yy, const T& eps)
 {
   return std::less<T>()(xx, yy) || Dune::FloatCmp::eq<T, style>(xx, yy, eps);
 }
 
 template <Dune::FloatCmp::CmpStyle style, class T>
-bool cmp_le(const std::complex<T>& xx, const std::complex<T>& yy, const T& eps)
+bool dune_cmp_le(const std::complex<T>& xx, const std::complex<T>& yy, const T& eps)
 {
-  return cmp_le<style>(real(xx), real(yy), eps) && cmp_le<style>(imag(xx), imag(yy), eps);
+  return dune_cmp_le<style>(real(xx), real(yy), eps) && dune_cmp_le<style>(imag(xx), imag(yy), eps);
 }
 
 template <Dune::FloatCmp::CmpStyle style, class XType, class YType, class EpsType>
@@ -262,23 +262,23 @@ typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value
                             && std::is_same<typename VectorAbstraction<XType>::S, EpsType>::value
                             && std::is_same<typename VectorAbstraction<YType>::S, EpsType>::value,
                         bool>::type
-cmp_le(const XType& xx, const YType& yy, const EpsType& eps)
+dune_cmp_le(const XType& xx, const YType& yy, const EpsType& eps)
 {
   const auto sz = xx.size();
   if (yy.size() != sz)
     return false;
   for (size_t ii = 0; ii < sz; ++ii)
-    if (!(cmp_le<style>(xx[ii], yy[ii], eps)))
+    if (!(dune_cmp_le<style>(xx[ii], yy[ii], eps)))
       return false;
   return true;
-} // ... cmp_le(...)
+} // ... dune_cmp_le(...)
 
 template <Dune::FloatCmp::CmpStyle style, class XType, class YType, class EpsType>
 typename std::enable_if<is_matrix<XType>::value && is_matrix<YType>::value
                             && std::is_same<typename MatrixAbstraction<XType>::S, EpsType>::value
                             && std::is_same<typename MatrixAbstraction<YType>::S, EpsType>::value,
                         bool>::type
-cmp_le(const XType& xx, const YType& yy, const EpsType& eps)
+dune_cmp_le(const XType& xx, const YType& yy, const EpsType& eps)
 {
   const auto rows = MatrixAbstraction<XType>::rows(xx);
   const auto cols = MatrixAbstraction<XType>::cols(xx);
@@ -286,8 +286,111 @@ cmp_le(const XType& xx, const YType& yy, const EpsType& eps)
     return false;
   for (size_t ii = 0; ii < rows; ++ii)
     for (size_t jj = 0; jj < cols; ++jj)
-      if (!cmp_le<style>(
+      if (!dune_cmp_le<style>(
               MatrixAbstraction<XType>::get_entry(xx, ii, jj), MatrixAbstraction<YType>::get_entry(yy, ii, jj), eps))
+        return false;
+  return true;
+} // ... dune_cmp_le(...)
+
+
+template <class T>
+typename std::enable_if<is_arithmetic<T>::value, bool>::type
+cmp_ge(const T& xx, const T& yy, const T& rtol, const T& atol)
+{
+  return std::greater<T>()(xx, yy) || float_cmp_eq<T>(xx, yy, rtol, atol);
+}
+
+
+template <class T>
+bool cmp_ge(const std::complex<T>& xx, const std::complex<T>& yy, const T& rtol, const T& atol)
+{
+  return cmp_ge(real(xx), real(yy), rtol, atol) && cmp_ge(imag(xx), imag(yy), rtol, atol);
+}
+
+template <class XType, class YType, class TolType>
+typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value
+                            && std::is_same<typename VectorAbstraction<XType>::S, TolType>::value
+                            && std::is_same<typename VectorAbstraction<YType>::S, TolType>::value,
+                        bool>::type
+cmp_ge(const XType& xx, const YType& yy, const TolType& rtol, const TolType& atol)
+{
+  const auto sz = xx.size();
+  if (yy.size() != sz)
+    return false;
+  for (size_t ii = 0; ii < sz; ++ii)
+    if (!(cmp_ge(xx[ii], yy[ii], rtol, atol)))
+      return false;
+  return true;
+} // ... cmp_ge(...)
+
+template <class XType, class YType, class TolType>
+typename std::enable_if<is_matrix<XType>::value && is_matrix<YType>::value
+                            && std::is_same<typename MatrixAbstraction<XType>::S, TolType>::value
+                            && std::is_same<typename MatrixAbstraction<YType>::S, TolType>::value,
+                        bool>::type
+cmp_ge(const XType& xx, const YType& yy, const TolType& rtol, const TolType& atol)
+{
+  const auto rows = MatrixAbstraction<XType>::rows(xx);
+  const auto cols = MatrixAbstraction<XType>::cols(xx);
+  if (MatrixAbstraction<YType>::rows(yy) != rows || MatrixAbstraction<YType>::cols(yy) != cols)
+    return false;
+  for (size_t ii = 0; ii < rows; ++ii)
+    for (size_t jj = 0; jj < cols; ++jj)
+      if (!cmp_ge(MatrixAbstraction<XType>::get_entry(xx, ii, jj),
+                  MatrixAbstraction<YType>::get_entry(yy, ii, jj),
+                  rtol,
+                  atol))
+        return false;
+  return true;
+} // ... cmp_ge(...)
+
+template <class T>
+typename std::enable_if<is_arithmetic<T>::value, bool>::type
+cmp_le(const T& xx, const T& yy, const T& rtol, const T& atol)
+{
+  return std::less<T>()(xx, yy) || float_cmp_eq<T>(xx, yy, rtol, atol);
+}
+
+
+template <class T>
+bool cmp_le(const std::complex<T>& xx, const std::complex<T>& yy, const T& rtol, const T& atol)
+{
+  return cmp_le(real(xx), real(yy), rtol, atol) && cmp_le(imag(xx), imag(yy), rtol, atol);
+}
+
+template <class XType, class YType, class TolType>
+typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value
+                            && std::is_same<typename VectorAbstraction<XType>::S, TolType>::value
+                            && std::is_same<typename VectorAbstraction<YType>::S, TolType>::value,
+                        bool>::type
+cmp_le(const XType& xx, const YType& yy, const TolType& rtol, const TolType& atol)
+{
+  const auto sz = xx.size();
+  if (yy.size() != sz)
+    return false;
+  for (size_t ii = 0; ii < sz; ++ii)
+    if (!(cmp_le(xx[ii], yy[ii], rtol, atol)))
+      return false;
+  return true;
+} // ... cmp_le(...)
+
+template <class XType, class YType, class TolType>
+typename std::enable_if<is_matrix<XType>::value && is_matrix<YType>::value
+                            && std::is_same<typename MatrixAbstraction<XType>::S, TolType>::value
+                            && std::is_same<typename MatrixAbstraction<YType>::S, TolType>::value,
+                        bool>::type
+cmp_le(const XType& xx, const YType& yy, const TolType& rtol, const TolType& atol)
+{
+  const auto rows = MatrixAbstraction<XType>::rows(xx);
+  const auto cols = MatrixAbstraction<XType>::cols(xx);
+  if (MatrixAbstraction<YType>::rows(yy) != rows || MatrixAbstraction<YType>::cols(yy) != cols)
+    return false;
+  for (size_t ii = 0; ii < rows; ++ii)
+    for (size_t jj = 0; jj < cols; ++jj)
+      if (!cmp_le(MatrixAbstraction<XType>::get_entry(xx, ii, jj),
+                  MatrixAbstraction<YType>::get_entry(yy, ii, jj),
+                  rtol,
+                  atol))
         return false;
   return true;
 } // ... cmp_le(...)
@@ -364,12 +467,12 @@ struct Call
 
   static bool ge(const FirstType& first, const SecondType& second, const ToleranceType& rtol, const ToleranceType& /**/)
   {
-    return cmp_ge<internal::ConvertStyle<style>::value>(first, second, rtol);
+    return dune_cmp_ge<internal::ConvertStyle<style>::value>(first, second, rtol);
   }
 
   static bool le(const FirstType& first, const SecondType& second, const ToleranceType& rtol, const ToleranceType& /**/)
   {
-    return cmp_le<internal::ConvertStyle<style>::value>(first, second, rtol);
+    return dune_cmp_le<internal::ConvertStyle<style>::value>(first, second, rtol);
   }
 };
 
@@ -396,14 +499,14 @@ struct Call<FirstType, SecondType, ToleranceType, Style::numpy>
     return !float_cmp_eq(first, second, rtol, atol) && cmp_lt(first, second);
   }
 
-  static bool ge(const FirstType& first, const SecondType& second, const ToleranceType& rtol, const ToleranceType& /**/)
+  static bool ge(const FirstType& first, const SecondType& second, const ToleranceType& rtol, const ToleranceType& atol)
   {
-    return cmp_ge(first, second, rtol);
+    return cmp_ge(first, second, rtol, atol);
   }
 
-  static bool le(const FirstType& first, const SecondType& second, const ToleranceType& rtol, const ToleranceType& /**/)
+  static bool le(const FirstType& first, const SecondType& second, const ToleranceType& rtol, const ToleranceType& atol)
   {
-    return cmp_le(first, second, rtol);
+    return cmp_le(first, second, rtol, atol);
   }
 };
 
