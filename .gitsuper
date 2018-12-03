@@ -13,7 +13,7 @@ status = 1a3bcab04b011a5d6e44f9983cae6ff89fa695e8 bin (heads/master)
 	 741e4f8e53bdd3e1b6e19d84eb22b6e3dc48526c dune-python (remotes/origin/releases/2.5)
 	 26cc8cb4161a3a51002ab2a81b8c81d2c951ee79 dune-testtools (remotes/origin/dune_xt)
 	 8fe883e99c58c9f0c2f92457d546a0ac9f5a9bf9 dune-uggrid (v2.5.2-1-g8fe883e9)
-	+92c57fa717f1bb48bdf08de085bf4cb6beee21cb dune-xt-common (heads/dailywork_tleibner)
+	+a84e7347ba8c2d61fdc162d27349fca3d6df239a dune-xt-common (heads/dailywork_tleibner)
 	+d3a5f3e20fe36d74c4bcce82a7655af4006cedbc dune-xt-data (heads/master)
 	+aea4ef43bb0177466be2ec3cb56e3f4f5ced2c25 dune-xt-functions (heads/master)
 	+8a51b63c953466077824b3ed1177f09b2e555257 dune-xt-grid (heads/master)
@@ -89,7 +89,7 @@ commit = 8fe883e99c58c9f0c2f92457d546a0ac9f5a9bf9
 [submodule.dune-xt-common]
 remote = git@github.com:dune-community/dune-xt-common.git
 status = c0b1735fab0ecbd4bb4f1eaa27cb65fe813e98f0 .vcsetup (heads/master)
-commit = 92c57fa717f1bb48bdf08de085bf4cb6beee21cb
+commit = a84e7347ba8c2d61fdc162d27349fca3d6df239a
 
 [submodule.dune-xt-data]
 remote = git@github.com:dune-community/dune-xt-data
