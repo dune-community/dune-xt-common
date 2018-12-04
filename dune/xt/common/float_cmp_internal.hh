@@ -45,6 +45,11 @@ namespace FloatCmp {
 namespace internal {
 
 /**
+ * Note: The organization of this file is not optimal. Currently we require a non dune_ based method for the numpy
+ * compare style and a dune_ based method elsewhere. Furthermore, we have 4 specializations for each compare function.
+ */
+
+/**
  * Taken from http://docs.pymor.org/en/latest/_modules/pymor/tools/floatcmp.html#float_cmp,
  *            https://github.com/numpy/numpy/blob/v1.9.1/numpy/core/numeric.py#L2238
  */
@@ -194,6 +199,52 @@ cmp_gt(const XType& xx, const YType& yy)
   for (size_t ii = 0; ii < rows; ++ii)
     for (size_t jj = 0; jj < cols; ++jj)
       if (!cmp_gt(MatrixAbstraction<XType>::get_entry(xx, ii, jj), MatrixAbstraction<YType>::get_entry(yy, ii, jj)))
+        return false;
+  return true;
+} // ... cmp_gt(...)
+
+template <class T>
+typename std::enable_if<is_arithmetic<T>::value, bool>::type cmp_lt(const T& xx, const T& yy)
+{
+  return std::less<T>()(xx, yy);
+}
+
+template <class T>
+typename std::enable_if<is_complex<T>::value, bool>::type cmp_lt(const T& xx, const T& yy)
+{
+  return cmp_lt(real(xx), real(yy)) && cmp_lt(imag(xx), imag(yy));
+}
+
+template <class XType, class YType>
+typename std::enable_if<
+    is_vector<XType>::value && is_vector<YType>::value
+        && std::is_same<typename VectorAbstraction<XType>::S, typename VectorAbstraction<YType>::S>::value,
+    bool>::type
+cmp_lt(const XType& xx, const YType& yy)
+{
+  const auto sz = xx.size();
+  if (yy.size() != sz)
+    return false;
+  for (size_t ii = 0; ii < sz; ++ii)
+    if (!(cmp_lt(xx[ii], yy[ii])))
+      return false;
+  return true;
+} // ... cmp_lt(...)
+
+template <class XType, class YType>
+typename std::enable_if<
+    is_matrix<XType>::value && is_matrix<YType>::value
+        && std::is_same<typename MatrixAbstraction<XType>::S, typename MatrixAbstraction<YType>::S>::value,
+    bool>::type
+cmp_lt(const XType& xx, const YType& yy)
+{
+  const auto rows = MatrixAbstraction<XType>::rows(xx);
+  const auto cols = MatrixAbstraction<XType>::cols(xx);
+  if (MatrixAbstraction<YType>::rows(yy) != rows || MatrixAbstraction<YType>::cols(yy) != cols)
+    return false;
+  for (size_t ii = 0; ii < rows; ++ii)
+    for (size_t jj = 0; jj < cols; ++jj)
+      if (!cmp_lt(MatrixAbstraction<XType>::get_entry(xx, ii, jj), MatrixAbstraction<YType>::get_entry(yy, ii, jj)))
         return false;
   return true;
 } // ... cmp_gt(...)
@@ -395,52 +446,6 @@ cmp_le(const XType& xx, const YType& yy, const TolType& rtol, const TolType& ato
   return true;
 } // ... cmp_le(...)
 
-template <class T>
-typename std::enable_if<is_arithmetic<T>::value, bool>::type cmp_lt(const T& xx, const T& yy)
-{
-  return std::less<T>()(xx, yy);
-}
-
-template <class T>
-bool cmp_lt(const std::complex<T>& xx, const std::complex<T>& yy)
-{
-  using namespace std;
-  return cmp_lt(real(xx), real(yy)) && cmp_lt(imag(xx), imag(yy));
-}
-
-template <class XType, class YType>
-typename std::enable_if<
-    is_vector<XType>::value && is_vector<YType>::value
-        && std::is_same<typename VectorAbstraction<XType>::S, typename VectorAbstraction<YType>::S>::value,
-    bool>::type
-cmp_lt(const XType& xx, const YType& yy)
-{
-  const auto sz = xx.size();
-  if (yy.size() != sz)
-    return false;
-  for (size_t ii = 0; ii < sz; ++ii)
-    if (!(cmp_lt(xx[ii], yy[ii])))
-      return false;
-  return true;
-} // ... cmp_lt(...)
-
-template <class XType, class YType>
-typename std::enable_if<
-    is_matrix<XType>::value && is_matrix<YType>::value
-        && std::is_same<typename MatrixAbstraction<XType>::S, typename MatrixAbstraction<YType>::S>::value,
-    bool>::type
-cmp_lt(const XType& xx, const YType& yy)
-{
-  const auto rows = MatrixAbstraction<XType>::rows(xx);
-  const auto cols = MatrixAbstraction<XType>::cols(xx);
-  if (MatrixAbstraction<YType>::rows(yy) != rows || MatrixAbstraction<YType>::cols(yy) != cols)
-    return false;
-  for (size_t ii = 0; ii < rows; ++ii)
-    for (size_t jj = 0; jj < cols; ++jj)
-      if (!cmp_lt(MatrixAbstraction<XType>::get_entry(xx, ii, jj), MatrixAbstraction<YType>::get_entry(yy, ii, jj)))
-        return false;
-  return true;
-} // ... cmp_gt(...)
 
 template <class FirstType, class SecondType, class ToleranceType, Style style>
 struct Call
@@ -457,11 +462,17 @@ struct Call
 
   static bool gt(const FirstType& first, const SecondType& second, const ToleranceType& rtol, const ToleranceType& /**/)
   {
+    /**
+     * todo: we need to check why dune_float_cmp_eq is required here. Normally cmp_gt should suffice.
+     */
     return !dune_float_cmp_eq<internal::ConvertStyle<style>::value>(first, second, rtol) && cmp_gt(first, second);
   }
 
   static bool lt(const FirstType& first, const SecondType& second, const ToleranceType& rtol, const ToleranceType& /**/)
   {
+    /**
+     * todo: we need to check why dune_float_cmp_eq is required here. Normally cmp_lt should suffice.
+     */
     return !dune_float_cmp_eq<internal::ConvertStyle<style>::value>(first, second, rtol) && cmp_lt(first, second);
   }
 
@@ -491,11 +502,17 @@ struct Call<FirstType, SecondType, ToleranceType, Style::numpy>
 
   static bool gt(const FirstType& first, const SecondType& second, const ToleranceType& rtol, const ToleranceType& atol)
   {
+    /**
+     * todo: we need to check why float_cmp_eq is required here. Normally cmp_gt should suffice.
+     */
     return !float_cmp_eq(first, second, rtol, atol) && cmp_gt(first, second);
   }
 
   static bool lt(const FirstType& first, const SecondType& second, const ToleranceType& rtol, const ToleranceType& atol)
   {
+    /**
+     * todo: we need to check why float_cmp_eq is required here. Normally cmp_lt should suffice.
+     */
     return !float_cmp_eq(first, second, rtol, atol) && cmp_lt(first, second);
   }
 
