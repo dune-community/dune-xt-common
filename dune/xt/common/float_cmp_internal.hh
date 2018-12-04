@@ -205,9 +205,9 @@ typename std::enable_if<is_arithmetic<T>::value, bool>::type dune_cmp_ge(const T
 }
 
 template <Dune::FloatCmp::CmpStyle style, class T>
-bool dune_cmp_ge(const std::complex<T>& xx, const std::complex<T>& yy, const T& eps)
+typename std::enable_if<is_complex<T>::value, bool>::type dune_cmp_ge(const T& xx, const T& yy, const T& eps)
 {
-  return dune_cmp_ge<style>(real(xx), real(yy), eps) && dune_cmp_ge<style>(imag(xx), imag(yy), eps);
+  return dune_cmp_ge<style>(real(xx), real(yy), real(eps)) && dune_cmp_ge<style>(imag(xx), imag(yy), imag(eps));
 }
 
 template <Dune::FloatCmp::CmpStyle style, class XType, class YType, class EpsType>
@@ -252,9 +252,9 @@ typename std::enable_if<is_arithmetic<T>::value, bool>::type dune_cmp_le(const T
 }
 
 template <Dune::FloatCmp::CmpStyle style, class T>
-bool dune_cmp_le(const std::complex<T>& xx, const std::complex<T>& yy, const T& eps)
+typename std::enable_if<is_complex<T>::value, bool>::type dune_cmp_le(const T& xx, const T& yy, const T& eps)
 {
-  return dune_cmp_le<style>(real(xx), real(yy), eps) && dune_cmp_le<style>(imag(xx), imag(yy), eps);
+  return dune_cmp_le<style>(real(xx), real(yy), real(eps)) && dune_cmp_le<style>(imag(xx), imag(yy), imag(eps));
 }
 
 template <Dune::FloatCmp::CmpStyle style, class XType, class YType, class EpsType>
@@ -302,7 +302,7 @@ cmp_ge(const T& xx, const T& yy, const T& rtol, const T& atol)
 
 
 template <class T>
-bool cmp_ge(const std::complex<T>& xx, const std::complex<T>& yy, const T& rtol, const T& atol)
+typename std::enable_if<is_complex<T>::value, bool>::type cmp_ge(const T& xx, const T& yy, const T& rtol, const T& atol)
 {
   return cmp_ge(real(xx), real(yy), rtol, atol) && cmp_ge(imag(xx), imag(yy), rtol, atol);
 }
@@ -353,7 +353,7 @@ cmp_le(const T& xx, const T& yy, const T& rtol, const T& atol)
 
 
 template <class T>
-bool cmp_le(const std::complex<T>& xx, const std::complex<T>& yy, const T& rtol, const T& atol)
+typename std::enable_if<is_complex<T>::value, bool>::type cmp_le(const T& xx, const T& yy, const T& rtol, const T& atol)
 {
   return cmp_le(real(xx), real(yy), rtol, atol) && cmp_le(imag(xx), imag(yy), rtol, atol);
 }
