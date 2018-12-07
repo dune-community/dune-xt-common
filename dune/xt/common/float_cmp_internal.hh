@@ -355,7 +355,7 @@ cmp_ge(const T& xx, const T& yy, const T& rtol, const T& atol)
 template <class T>
 typename std::enable_if<is_complex<T>::value, bool>::type cmp_ge(const T& xx, const T& yy, const T& rtol, const T& atol)
 {
-  return cmp_ge(real(xx), real(yy), rtol, atol) && cmp_ge(imag(xx), imag(yy), rtol, atol);
+  return cmp_ge(real(xx), real(yy), real(rtol), real(atol)) && cmp_ge(imag(xx), imag(yy), imag(rtol), imag(atol));
 }
 
 template <class XType, class YType, class TolType>
@@ -406,7 +406,7 @@ cmp_le(const T& xx, const T& yy, const T& rtol, const T& atol)
 template <class T>
 typename std::enable_if<is_complex<T>::value, bool>::type cmp_le(const T& xx, const T& yy, const T& rtol, const T& atol)
 {
-  return cmp_le(real(xx), real(yy), rtol, atol) && cmp_le(imag(xx), imag(yy), rtol, atol);
+  return cmp_le(real(xx), real(yy), real(rtol), real(atol)) && cmp_le(imag(xx), imag(yy), imag(rtol), imag(atol));
 }
 
 template <class XType, class YType, class TolType>
