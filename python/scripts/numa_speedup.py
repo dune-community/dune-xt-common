@@ -11,7 +11,6 @@
 #   Felix Schindler (2017)
 #   René Fritze     (2017 - 2018)
 # ~~~
-
 """Run a speedup series benchmark of a given executable on a node with libnuma
 
 Usage: numa_speedup.py MIN_CORE MAX_CORE ARG_FMT...
@@ -38,7 +37,7 @@ def coremap():
         raise RuntimeError("Numa not available")
     if not numa.available():
         raise RuntimeError("Numa not available")
-    node_to_core = {int(i): deque([int(k) for k in numa.node_to_cpus(i)]) for i in range(numa.get_max_node()+1)}
+    node_to_core = {int(i): deque([int(k) for k in numa.node_to_cpus(i)]) for i in range(numa.get_max_node() + 1)}
     total_core = max(itertools.chain(*node_to_core.values())) + 1
     return node_to_core, total_core
 
