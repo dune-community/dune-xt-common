@@ -331,66 +331,6 @@ inline bool is_zero(const FieldType& val)
 } // namespace Common
 } // namespace XT
 } // namespace Dune
-namespace std {
-
-
-/**
- * \note \attention This is not supposed to be here! But Dune::FloatCmp uses
-\code
-std::abs(value)
-\code
- *                  somewhere, as opposed to
-\code
-using std::abs;
-abs(value)
-\code
- *                  which would allow ADL to find the correct abs. So we have to povide std::abs for all types which
- *                  we want to use in our FloatCmp.
- */
-long unsigned int abs(const long unsigned int& value);
-unsigned char abs(unsigned char value);
-
-
-template <int k>
-Dune::bigunsignedint<k> abs(const Dune::bigunsignedint<k>& value)
-{
-  return value;
-}
-
-template <int k>
-inline Dune::bigunsignedint<k> pow(Dune::bigunsignedint<k> /*value*/, std::uintmax_t /*n*/)
-{
-  DUNE_THROW(Dune::NotImplemented, "pow not implemented for bigunisgnedint");
-  return Dune::bigunsignedint<k>();
-}
-
-template <int k>
-inline Dune::bigunsignedint<k> sqrt(Dune::bigunsignedint<k> value)
-{
-  DUNE_THROW(Dune::NotImplemented, "sqrt not implemented for bigunisgnedint");
-  return Dune::bigunsignedint<k>(std::sqrt(value.todouble()));
-}
-
-template <int k>
-inline Dune::bigunsignedint<k> conj(Dune::bigunsignedint<k> value)
-{
-  return value;
-}
-
-template <int k>
-inline bool isnan(Dune::bigunsignedint<k> /*value*/)
-{
-  return false;
-}
-
-template <int k>
-inline bool isinf(Dune::bigunsignedint<k> /*value*/)
-{
-  return false;
-}
-
-
-} // namespace std
 
 
 template <class T>
