@@ -17,6 +17,7 @@ set(lib_dune_xt_common_sources
     convergence-study.cc
     exceptions.cc
     filesystem.cc
+    fix-ambiguous-std-math-overloads.cc
     lapacke.cc
     localization-study.cc
     logging.cc

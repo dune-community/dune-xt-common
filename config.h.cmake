@@ -211,6 +211,8 @@
   #endif // TBB_INTERFACE_VERSION < 4400
 #endif // HAVE_TBB
 
+// This is an unfortunate hack, see the header for an explanation.
+#include <dune/xt/common/fix-ambiguous-std-math-overloads.hh>
 
 /* end dune-xt-common */
 // NEVER delete/alter above comment, dune's cmake relies on it
