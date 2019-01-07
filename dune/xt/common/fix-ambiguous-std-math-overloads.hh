@@ -19,17 +19,9 @@
 #include <stdexcept>
 #include <cstdint>
 
-namespace Dune {
+#include <dune/common/bigunsignedint.hh>
 
-
-// forwards, include are below
-template <int k>
-class bigunsignedint;
-
-class NotImplemented;
-
-
-} // namespace Dune
+#include <dune/xt/common/exceptions.hh>
 
 
 namespace std {
@@ -51,9 +43,7 @@ Dune::bigunsignedint<k> abs(const Dune::bigunsignedint<k>& value)
 template <int k>
 inline Dune::bigunsignedint<k> pow(Dune::bigunsignedint<k> /*value*/, std::uintmax_t /*n*/)
 {
-  // do not pull in any DUNE header for DUNE_THROW
-  throw std::runtime_error(
-      "[dune/xt/common/fix-ambiguous-std-math-overloads.hh]: pow not implemented for bigunisgnedint!");
+  DUNE_THROW(Dune::NotImplemented, "pow is not available for Dune::bigunisgnedint!");
   return Dune::bigunsignedint<k>();
 }
 
@@ -61,9 +51,7 @@ inline Dune::bigunsignedint<k> pow(Dune::bigunsignedint<k> /*value*/, std::uintm
 template <int k>
 inline Dune::bigunsignedint<k> sqrt(Dune::bigunsignedint<k> value)
 {
-  // do not pull in any DUNE header for DUNE_THROW
-  throw std::runtime_error(
-      "[dune/xt/common/fix-ambiguous-std-math-overloads.hh]: sqrt not implemented for bigunisgnedint!");
+  DUNE_THROW(Dune::NotImplemented, "sqrt is not available for Dune::bigunisgnedint!");
   return Dune::bigunsignedint<k>(std::sqrt(value.todouble()));
 }
 
@@ -91,7 +79,5 @@ inline bool isinf(Dune::bigunsignedint<k> /*value*/)
 
 } // namespace std
 
-
-#include <dune/common/bigunsignedint.hh>
 
 #endif // DUNE_XT_COMMON_FIX_AMBIGUOUS_STD_MATH_OVERLOADS_HH
