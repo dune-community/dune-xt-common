@@ -15,7 +15,7 @@
 include(CheckCXXSourceCompiles)
 include(DuneXtCommonMacros)
 include(CTest)
-include(DuneXTInstallPythonPackage)
+include(DunePybindxiInstallPythonPackage)
 
 function(TO_LIST_SPACES _LIST_NAME OUTPUT_VAR)
   set(NEW_LIST_SPACE)
