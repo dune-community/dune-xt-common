@@ -13,13 +13,13 @@
 # Help
 
 If you are experiencing problems or would like to get help, open up a new
-[issue](https://github.com/dune-community/dune-xt-common/issues/new) and tag it accordingly or ask for help on the
-[mailinglist](https://listserv.uni-muenster.de/mailman/listinfo/dune-xt-dev).
-Please note that dune-xt-common is not one of the core DUNE modules.
-Thus, you will not get any support from the official channels (such as the DUNE mailinglist, the DUNE bugtracker,
+[issue](https://github.com/dune-community/dune-xt-common/issues/new) and tag it accordingly
+or ask for help on the [mailinglist](https://listserv.uni-muenster.de/mailman/listinfo/dune-xt-dev).
+Please note that dune-xt-common is not one of the core DUNE modules. Thus, you will not get
+any support from the official channels (such as the DUNE mailinglist, the DUNE bugtracker,
 etc...).
-When submitting bugs, please read these [general
-guidelines](http://users.dune-project.org/projects/main-wiki/wiki/Guides_bug_reporting) beforehand.
+When submitting bugs, please read these
+[general guidelines](https://www.dune-project.org/doc/guides/bug_reporting/) beforehand.
 
 
 # Contributing
@@ -40,7 +40,8 @@ Join the [mailinglist](https://listserv.uni-muenster.de/mailman/listinfo/dune-xt
 # Coding style
 
 Every project has its own style, so here it is: we use clang-format to handle all formatting and provide a
-corresponding `.clang-format` style specification file (see below for details).
+corresponding `.clang-format` style specification file (some of which we explain below). It is convenient
+to integrate `clang-format` with your favorite IDE.
 This means that everything related to whitespace, brackets, comments, braces, macros, etc. is determined by
 clang-format, no flexibilty here (apart from one exception, see below).
 _I repeat: no flexibility at all regarding these._
@@ -49,8 +50,7 @@ rejected.
 In particular, these are:
 
 * We use `CamelCase` for class and struct names, enum names, typedefs, and the like. We use `stl_standard` for class
-methods, members and variables. Does not seem to be consistent, but we never claimed we would be and it is highly
-readable. The only exception are typedefs and helper structs which arise in a context similar to the stl, where we use
+methods, members and variables. Does not seem to be consistent, but we find it highly readable. The only exception are typedefs and helper structs which arise in a context similar to the stl, where we use
 lowercase `typedef ... type;` and `struct is_vector {`.
 * Class members end with a trailing underscore. Static class members may drop the trailing underscore (in particular
 dimensions, such as `static const size_t dim = 2;`).
@@ -154,7 +154,7 @@ corresponding header, e.g. `dune/xt/common/test/foo_bar.cc` contains tests for `
 
 # clang-format
 
-You need to have clang-format in version 3.8 installed (use `clang-format --version` to check).
+You need to have clang-format in the correct version installed (use `clang-format --version` to check).
 To apply clang-format to all files in this project, call `make format` in your build directory.
 _Note that clang-format changes the files inplace, so save your work in your editor beforehand!_
 
@@ -165,7 +165,7 @@ executble by setting:
 git config hooks.clangformat my-custom-clang-format-version
 ```
 
-If you do not have clang-format in version 3.8 available or forgot to apply it, the code you publish will fail the
+If you do not have clang-format in the correct version available or forgot to apply it, the code you publish will fail the
 corresponding travis check.
 Upon failure you are provided with more information on the github pull request page on how to proceed.
 In particular you are provided with the required changes which you may download and incorporate into your code.
