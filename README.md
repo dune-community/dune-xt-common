@@ -15,7 +15,17 @@
 dune-xt-common is an eXTensions module for DUNE (http://www.dune-project.org),
 which is often used together with [dune-xt-grid](https://github.com/dune-community/dune-xt-grid),
 [dune-xt-functions](https://github.com/dune-community/dune-xt-functions) and
-[dune-xt-la](https://github.com/dune-community/dune-xt-la).
+[dune-xt-la](https://github.com/dune-community/dune-xt-la) in the context of
+the discretization module [dune-gdt](https://github.com/dune-community/dune-gdt).
+
+There is a paper describing some of the concepts behind these extensions. While
+already dated, most ideas still apply:
+
+```
+T. Leibner and R. Milk and F. Schindler: "Extending DUNE: The dune-xt modules"
+Archive of Numerical Software, 5:193-216, 2017
+https://www.doi.org/10.11588/ans.2017.1.27720
+```
 
 New users may best try out this module by using the git supermodule
 [dune-xt-super](https://github.com/dune-community/dune-xt-super), experienced
