@@ -389,7 +389,6 @@ public:
 
   void finalize_imp()
   {
-    std::lock_guard<std::mutex> lock_base(base_->mutex_);
     Reduction reduce;
     base_->set_result(reduce(base_->result(), imp_->result()));
   }
