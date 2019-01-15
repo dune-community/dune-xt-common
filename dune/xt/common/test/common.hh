@@ -22,9 +22,11 @@
 #include <dune/common/hybridutilities.hh>
 #include <dune/common/tupleutility.hh>
 
+#include <dune/xt/common/configuration.hh>
 #include <dune/xt/common/convergence-study.hh>
 #include <dune/xt/common/compiler.hh>
 #include <dune/xt/common/vector.hh>
+
 
 template <template <class> class Test>
 struct TestRunner
@@ -48,11 +50,13 @@ struct TestRunner
   }
 }; // struct TestRunner
 
+
 template <int i>
 struct Int
 {
   static const int value = i;
 };
+
 
 typedef std::tuple<double,
                    float
@@ -65,29 +69,40 @@ typedef std::tuple<double,
                    char>
     BasicTypes;
 
+
 //! where sleep only counts toward wall time, this wastes actual cpu time
 void busywait(const size_t ms);
+
 
 namespace Dune {
 namespace XT {
 namespace Test {
 namespace internal {
 
+
 std::pair<size_t, ssize_t> convert_to_scientific(const double number, const size_t precision = 2);
 
-std::string print_vector(const std::vector<double>& vec);
+
+// std::string print_vector(const std::vector<double>& vec);
+
 
 } // namespace internal
 
-void check_eoc_study_for_success(const Common::ConvergenceStudy& study,
-                                 const std::map<std::string, std::vector<double>>& errors_map,
-                                 const double& zero_tolerance = 1e-15);
+
+/// \sa ConvergenceStudy
+void check_eoc_study_for_success(
+    const Common::Configuration& expected_results,
+    const std::map<std::string, std::map<std::string, std::map<size_t, double>>>& actual_results,
+    const double& zero_tolerance = 1e-15);
+
 
 void print_collected_eoc_study_results(const std::map<std::string, std::vector<double>>& results,
                                        std::ostream& out = std::cout);
 
+
 // returns unsigned int on purpose, see GridProvider
 unsigned int grid_elements();
+
 
 template <typename T>
 static typename std::enable_if<Common::is_vector<T>::value, T>::type
@@ -96,12 +111,15 @@ init_bound(typename Common::VectorAbstraction<T>::S val)
   const auto size = Common::VectorAbstraction<T>::has_static_size ? Common::VectorAbstraction<T>::static_size : 3u;
   return Common::VectorAbstraction<T>::create(size, val);
 }
+
 template <typename T>
 static typename std::enable_if<!Common::is_vector<T>::value, T>::type
 init_bound(typename Common::VectorAbstraction<T>::S val)
 {
   return T(val);
 }
+
+
 } // namespace Test
 } // namespace XT
 } // namespace Dune
