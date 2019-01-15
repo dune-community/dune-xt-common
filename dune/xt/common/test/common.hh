@@ -76,6 +76,20 @@ void busywait(const size_t ms);
 
 namespace Dune {
 namespace XT {
+namespace Common {
+namespace Test {
+
+
+/**
+ * \sa DXTC_TEST_CONFIG_GET
+ * \sa DXTC_TEST_CONFIG_SET
+ * \sa DXTC_TEST_CONFIG_SUB
+ */
+std::string get_unique_test_name();
+
+
+} // namespace Test
+} // namespace Common
 namespace Test {
 namespace internal {
 
@@ -192,5 +206,38 @@ ostream& operator<<(ostream& out, const map<F, S>& results)
 
 
 } // namespace std
+
+
+/**
+ * \brief Can be used to access the configuration assosicated with the currently running test
+ * \sa get_unique_test_name
+ */
+template <typename T>
+static auto DXTC_TEST_CONFIG_GET(const std::string& key, T def) -> decltype(DXTC_CONFIG.get(key, def))
+{
+  return DXTC_CONFIG.get(Dune::XT::Common::Test::get_unique_test_name() + "." + key, def);
+}
+
+/**
+ * \brief Can be used to access the configuration assosicated with the currently running test
+ * \sa get_unique_test_name
+ */
+template <typename T>
+static void DXTC_TEST_CONFIG_SET(const std::string& key, T val)
+{
+  return DXTC_CONFIG.set(Dune::XT::Common::Test::get_unique_test_name() + "." + key, val, /*overwrite=*/true);
+}
+
+/**
+ * \brief Can be used to access the configuration assosicated with the currently running test
+ * \sa get_unique_test_name
+ */
+static Dune::XT::Common::Configuration DXTC_TEST_CONFIG_SUB(const std::string& sub_key)
+{
+  const auto key = Dune::XT::Common::Test::get_unique_test_name() + "." + sub_key;
+  EXPECT_TRUE(DXTC_CONFIG.has_sub(key));
+  return DXTC_CONFIG.sub(key);
+}
+
 
 #endif // DUNE_XT_COMMON_TEST_MAIN_COMMON_HH
