@@ -20,7 +20,10 @@
 #include <list>
 #include <mutex>
 #include <numeric>
+#include <system_error>
 #include <type_traits>
+
+#include <dune/xt/common/exceptions.hh>
 
 // TODO: the following includes can be removed when UnsafePerThreadValue is removed
 #include <deque>
@@ -389,10 +392,14 @@ public:
 
   void finalize_imp()
   {
-    std::lock_guard<std::mutex> lock_base(base_->mutex_);
-    Reduction reduce;
-    base_->set_result(reduce(base_->result(), imp_->result()));
-  }
+    try {
+      std::lock_guard<std::mutex> lock_base(base_->mutex_);
+      Reduction reduce;
+      base_->set_result(reduce(base_->result(), imp_->result()));
+    } catch (std::system_error& ee) {
+      DUNE_THROW(Exceptions::external_error, "Could not acquire lock! The original system_error was: " << ee.what());
+    }
+  } // ... finalize_imp(...)
 
 protected:
   Imp* imp_;
