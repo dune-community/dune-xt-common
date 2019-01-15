@@ -3,13 +3,12 @@
 #   https://github.com/dune-community/dune-xt-common
 # Copyright 2009-2018 dune-xt-common developers and contributors. All rights reserved.
 # License: Dual licensed as BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
-# Authors:
-#   Felix Schindler (2016 - 2017)
-#   Rene Milk       (2016 - 2018)
-#   Tobias Leibner  (2016)
-#
 #      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
 #          with "runtime exception" (http://www.dune-project.org/license.html)
+# Authors:
+#   Felix Schindler (2016 - 2017)
+#   René Fritze     (2016 - 2018)
+#   Tobias Leibner  (2016, 2018)
 # ~~~
 
 macro(add_analyze)
@@ -35,7 +34,7 @@ macro(add_analyze)
   endif(EXISTS ${ANALYZER})
 endmacro(add_analyze)
 
-find_package(ClangFormat 3.9 EXACT)
+find_package(ClangFormat 6 EXACT)
 macro(add_format glob_dir)
   if(${ARGC} GREATER 1)
     message(WARNING "'add_format' API has changed. Please provide a single "
@@ -71,7 +70,7 @@ macro(add_format glob_dir)
   list(REMOVE_ITEM _files "${glob_dir}/config.h.cmake")
   list(REMOVE_ITEM _files "${_exclude_files}")
   add_custom_target("format_${fn}_cmake"
-                    ${CMAKE_BINARY_DIR}/dune-env
+                    ${CMAKE_BINARY_DIR}/run-in-dune-env
                     cmake-format
                     -i
                     -c

@@ -6,7 +6,7 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2012, 2014, 2016 - 2017)
-//   Rene Milk       (2010, 2012 - 2013, 2015 - 2016, 2018)
+//   René Fritze     (2010, 2012 - 2013, 2015 - 2016, 2018)
 
 #ifndef DUNE_XT_COMMON_SIGNALS
 #define DUNE_XT_COMMON_SIGNALS
@@ -31,8 +31,8 @@ typedef void handler_type(int);
 //! calling this from your main() will install handler as callback when signal is received
 void install_signal_handler(int signal = SIGINT, handler_type handler = handle_interrupt);
 
-} // namepsace Common
+} // namespace Common
 } // namespace XT
-} // namepsace Dune
+} // namespace Dune
 
 #endif // DUNE_XT_COMMON_SIGNALS

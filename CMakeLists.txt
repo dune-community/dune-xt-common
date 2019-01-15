@@ -3,14 +3,13 @@
 #   https://github.com/dune-community/dune-xt-common
 # Copyright 2009-2018 dune-xt-common developers and contributors. All rights reserved.
 # License: Dual licensed as BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
-# Authors:
-#   Felix Schindler (2012 - 2017)
-#   Rene Milk       (2010 - 2018)
-#   Sven Kaulmann   (2013)
-#   Tobias Leibner  (2016)
-#
 #      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
 #          with "runtime exception" (http://www.dune-project.org/license.html)
+# Authors:
+#   Felix Schindler (2012 - 2017)
+#   René Fritze     (2010 - 2018)
+#   Sven Kaulmann   (2013)
+#   Tobias Leibner  (2016)
 # ~~~
 
 project("dune-xt-common" CXX)
@@ -35,7 +34,11 @@ endif()
 
 # find dune-common and set the module path
 find_package(dune-common REQUIRED)
-list(APPEND CMAKE_MODULE_PATH ${dune-common_MODULE_PATH} "${PROJECT_SOURCE_DIR}/cmake/modules")
+find_package(dune-pybindxi REQUIRED)
+list(APPEND CMAKE_MODULE_PATH
+            ${dune-common_MODULE_PATH}
+            ${dune-pybindxi_MODULE_PATH}
+            ${PROJECT_SOURCE_DIR}/cmake/modules)
 
 # include the dune macros
 include(DuneMacros)
@@ -60,11 +63,10 @@ dune_enable_all_packages(INCLUDE_DIRS
                          dunextcommon
                          gtest_dune_xt_common)
 
-include(DuneXTInstallPythonPackage)
+include(DunePybindxiInstallPythonPackage)
 # this symlinks all files in python/ to the binary dir and install into the virtualenv from there thereby making the
 # compiled extensions directly usable from the venv
-configure_file(python/setup.py.in ${CMAKE_CURRENT_BINARY_DIR}/python/setup.py)
-dune_xt_install_python_package(PATH python)
+dune_pybindxi_install_python_package(PATH python)
 include_dependent_binary_python_dirs()
 # do not change order here
 include(DuneUtils)

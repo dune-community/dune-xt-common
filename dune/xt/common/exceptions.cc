@@ -6,15 +6,15 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2017)
-//   Rene Milk       (2017 - 2018)
-//   Tobias Leibner  (2017)
+//   René Fritze     (2017 - 2018)
+//   Tobias Leibner  (2017 - 2018)
 
 #include <config.h>
 
 #include <iostream>
 
 #if HAVE_TBB
-#include <tbb/tbb_exception.h>
+#  include <tbb/tbb_exception.h>
 #endif
 
 #include <dune/xt/common/timings.hh>

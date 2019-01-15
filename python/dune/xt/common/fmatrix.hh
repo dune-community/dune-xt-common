@@ -6,7 +6,8 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2016 - 2017)
-//   Rene Milk       (2018)
+//   René Fritze     (2018)
+//   TiKeil          (2018)
 
 #ifndef DUNE_XT_COMMON_FMATRIX_PBH
 #define DUNE_XT_COMMON_FMATRIX_PBH
@@ -75,8 +76,7 @@ struct FieldMatrix_type_caster
 
 template <class K, int N, int M>
 struct type_caster<Dune::FieldMatrix<K, N, M>> : public FieldMatrix_type_caster<Dune::FieldMatrix<K, N, M>>
-{
-};
+{};
 
 /**
  * Dune::XT::Common::FieldMatrix is already able to handle std::string as we already provide the correct default value
@@ -86,7 +86,7 @@ struct type_caster<Dune::FieldMatrix<K, N, M>> : public FieldMatrix_type_caster<
  */
 template <class K, int N, int M>
 struct type_caster<Dune::XT::Common::FieldMatrix<K, N, M>>
-    : public FieldMatrix_type_caster<Dune::XT::Common::FieldMatrix<K, N, M>>
+  : public FieldMatrix_type_caster<Dune::XT::Common::FieldMatrix<K, N, M>>
 {
   using type = Dune::XT::Common::FieldMatrix<K, N, M>;
   typedef typename type::row_type row_type;

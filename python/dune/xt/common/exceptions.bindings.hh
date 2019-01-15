@@ -6,7 +6,7 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2017)
-//   Rene Milk       (2018)
+//   René Fritze     (2018)
 //   Tobias Leibner  (2017)
 
 #ifndef DUNE_XT_COMMON_EXCEPTIONS_BINDINGS_HH
@@ -24,10 +24,8 @@ namespace Common {
 namespace bindings {
 
 
-DXT_DEPRECATED_MSG("you no longer need to call this for your module") void addbind_exceptions(pybind11::module&)
-{
-
-} // ... addbind_exceptions(...)
+DXT_DEPRECATED_MSG("you no longer need to call this for your module")
+void addbind_exceptions(pybind11::module&) {} // ... addbind_exceptions(...)
 
 
 } // namespace bindings

@@ -6,21 +6,21 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2016 - 2017)
-//   Rene Milk       (2015 - 2016, 2018)
+//   René Fritze     (2015 - 2016, 2018)
 
 #ifndef DXTC_UNUSED_HH
 #define DXTC_UNUSED_HH
 
 #ifdef HAS_WORKING_UNUSED_ATTRIBUTE
-#define DXTC_UNUSED(identifier) identifier __attribute__((unused))
+#  define DXTC_UNUSED(identifier) identifier __attribute__((unused))
 #else
-#define DXTC_UNUSED(identifier) /*identifier*/
+#  define DXTC_UNUSED(identifier) /*identifier*/
 #endif
 
 #ifndef NDEBUG
-#define DXTC_DEBUG_ONLY(param) param
+#  define DXTC_DEBUG_ONLY(param) param
 #else
-#define DXTC_DEBUG_ONLY(param) DXTC_UNUSED(param)
+#  define DXTC_DEBUG_ONLY(param) DXTC_UNUSED(param)
 #endif
 
 #endif // DXTC_UNUSED_HH

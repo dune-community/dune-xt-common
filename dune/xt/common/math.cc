@@ -6,7 +6,8 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2013 - 2014, 2016 - 2017)
-//   Rene Milk       (2013, 2015 - 2016, 2018)
+//   René Fritze     (2013, 2015 - 2016, 2018)
+//   Tobias Leibner  (2018)
 
 #include "config.h"
 
@@ -24,19 +25,3 @@ const std::string Epsilon<std::string, false>::value = "_";
 } // namespace Common
 } // namespace XT
 } // namespace Dune
-
-namespace std {
-
-
-long unsigned int abs(const long unsigned int& value)
-{
-  return value;
-}
-
-unsigned char abs(unsigned char value)
-{
-  return value;
-}
-
-
-} // namespace std

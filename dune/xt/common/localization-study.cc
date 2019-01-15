@@ -6,7 +6,7 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2014, 2016 - 2017)
-//   Rene Milk       (2015 - 2016, 2018)
+//   René Fritze     (2015 - 2016, 2018)
 
 #include "config.h"
 
@@ -24,12 +24,9 @@ namespace Common {
 
 LocalizationStudy::LocalizationStudy(const std::vector<std::string> only_these_indicators)
   : only_these_indicators_(only_these_indicators)
-{
-}
+{}
 
-LocalizationStudy::~LocalizationStudy()
-{
-}
+LocalizationStudy::~LocalizationStudy() {}
 
 std::vector<std::string> LocalizationStudy::used_indicators() const
 {
@@ -107,9 +104,7 @@ void LocalizationStudy::run(std::ostream& out)
     if (indicators.size() != reference_indicators.size())
       DUNE_THROW(Exceptions::requirements_not_met,
                  "Given indicators of type '" << indicator_id << "' are of wrong length (is " << indicators.size()
-                                              << ", should be "
-                                              << reference_indicators.size()
-                                              << ")!");
+                                              << ", should be " << reference_indicators.size() << ")!");
     const auto difference = reference_indicators - indicators;
     // compute L^2 difference
     out << std::setw(18) << std::setprecision(2) << std::scientific << difference.two_norm() << std::flush;

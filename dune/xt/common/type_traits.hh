@@ -6,14 +6,14 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2014 - 2018)
-//   Rene Milk       (2012 - 2018)
-//   Tobias Leibner  (2016)
+//   René Fritze     (2012 - 2018)
+//   Tobias Leibner  (2016, 2018)
 
 #ifndef DUNE_XT_COMMON_TYPE_TRAITS_HH
 #define DUNE_XT_COMMON_TYPE_TRAITS_HH
 
 #ifdef __GNUC__
-#include <cxxabi.h>
+#  include <cxxabi.h>
 #endif
 
 #include <complex>
@@ -315,75 +315,62 @@ struct underlying_type
 #if __GNUC__ == 4 && (__GNUC_MINOR__ < 8)
 template <typename>
 struct is_hashable : std::false_type
-{
-};
+{};
 #else
 //! implementation from https://gcc.gnu.org/ml/libstdc++/2013-03/msg00027.html
 template <typename, typename = void>
 struct is_hashable : std::false_type
-{
-};
+{};
 
 template <typename T>
 struct is_hashable<T, typename std::enable_if<!!sizeof(std::declval<std::hash<T>>()(std::declval<T>()))>::type>
-    : std::true_type
-{
-};
+  : std::true_type
+{};
 #endif
 
 
 template <class T>
 struct is_complex : public std::false_type
-{
-};
+{};
 
 template <class T>
 struct is_complex<std::complex<T>> : public std::true_type
-{
-};
+{};
 
 
 template <class T>
 struct is_arithmetic : public std::is_arithmetic<T>
-{
-};
+{};
 
 template <int k>
 struct is_arithmetic<Dune::bigunsignedint<k>> : public std::true_type
-{
-};
+{};
 
 
 template <class T>
 struct is_field_vector : std::false_type
-{
-};
+{};
 
 template <class K, int SIZE>
 struct is_field_vector<Dune::FieldVector<K, SIZE>> : std::true_type
-{
-};
+{};
 
 template <class K, int SIZE>
 struct is_field_vector<Dune::XT::Common::FieldVector<K, SIZE>> : std::true_type
-{
-};
+{};
 
 
 template <class T>
 struct is_field_matrix : std::false_type
-{
-};
+{};
 
 template <class K, int ROWS, int COLS>
 struct is_field_matrix<Dune::FieldMatrix<K, ROWS, COLS>> : std::true_type
-{
-};
+{};
 
 template <class K, int ROWS, int COLS>
 struct is_field_matrix<Dune::XT::Common::FieldMatrix<K, ROWS, COLS>> : std::true_type
-{
-};
+{};
 
 
 namespace internal {
@@ -416,8 +403,7 @@ struct is_matrix
 
 template <class T>
 struct is_matrix<T, false> : public std::false_type
-{
-};
+{};
 
 
 template <class T, bool candidate = internal::is_vector_helper<T>::is_candidate>
@@ -428,8 +414,7 @@ struct is_vector
 
 template <class T>
 struct is_vector<T, false> : public std::false_type
-{
-};
+{};
 
 
 template <class T>
@@ -443,18 +428,15 @@ struct field_traits
 
 template <class T>
 struct field_traits<const T> : public field_traits<T>
-{
-};
+{};
 
 template <class T>
 struct field_traits<T&> : public field_traits<T>
-{
-};
+{};
 
 template <class T>
 struct field_traits<const T&> : public field_traits<T>
-{
-};
+{};
 
 template <class T>
 struct field_traits<std::complex<T>>

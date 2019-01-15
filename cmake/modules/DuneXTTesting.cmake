@@ -3,11 +3,13 @@
 #   https://github.com/dune-community/dune-xt-common
 # Copyright 2009-2018 dune-xt-common developers and contributors. All rights reserved.
 # License: Dual licensed as BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
+#      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
+#          with "runtime exception" (http://www.dune-project.org/license.html)
 # Authors:
 #   Felix Schindler (2012 - 2017)
-#   Rene Milk       (2010 - 2018)
+#   René Fritze     (2010 - 2018)
 #   Sven Kaulmann   (2013)
-#   Tobias Leibner  (2015 - 2017)
+#   Tobias Leibner  (2015 - 2018)
 # ~~~
 
 macro(dxt_headercheck_target_name arg)
@@ -97,7 +99,8 @@ macro(BEGIN_TESTCASES) # https://cmake.org/cmake/help/v3.0/module/FindGTest.html
                     ${GRID_LIBS}
                     gtest_dune_xt_common
                     COMMAND
-                    ${CMAKE_BINARY_DIR}/dune-env
+                    ${CMAKE_BINARY_DIR}/run-in-dune-env
+                    CMD_ARGS
                     ${CMAKE_CURRENT_BINARY_DIR}/${target}
                     --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/${target}.xml
                     TIMEOUT
@@ -135,23 +138,23 @@ macro(BEGIN_TESTCASES) # https://cmake.org/cmake/help/v3.0/module/FindGTest.html
       endif()
     endforeach(_mod DEPENDENCIES)
 
-    dune_xt_execute_process(COMMAND
-                            ${CMAKE_BINARY_DIR}/dune-env
-                            dxt_code_generation.py
-                            "${config_fn}"
-                            "${template}"
-                            "${CMAKE_BINARY_DIR}"
-                            "${out_fn}"
-                            "${last_dep_bindir}"
-                            OUTPUT_VARIABLE
-                            codegen_output)
+    dune_execute_process(COMMAND
+                         ${CMAKE_BINARY_DIR}/run-in-dune-env
+                         dxt_code_generation.py
+                         "${config_fn}"
+                         "${template}"
+                         "${CMAKE_BINARY_DIR}"
+                         "${out_fn}"
+                         "${last_dep_bindir}"
+                         OUTPUT_VARIABLE
+                         codegen_output)
     file(WRITE "${CMAKE_CURRENT_BINARY_DIR}/codegen.${testbase}.log" ${codegen_output})
     file(GLOB generated_sources "${out_fn}.*")
     if("" STREQUAL "${generated_sources}")
       set(generated_sources ${out_fn})
     endif()
     add_custom_command(OUTPUT "${generated_sources}"
-                       COMMAND ${CMAKE_BINARY_DIR}/dune-env dxt_code_generation.py "${config_fn}" "${template}"
+                       COMMAND ${CMAKE_BINARY_DIR}/run-in-dune-env dxt_code_generation.py "${config_fn}" "${template}"
                                "${CMAKE_BINARY_DIR}" "${out_fn}" "${last_dep_bindir}"
                        DEPENDS "${config_fn}" "${template}"
                        VERBATIM USES_TERMINAL)
@@ -183,7 +186,8 @@ macro(BEGIN_TESTCASES) # https://cmake.org/cmake/help/v3.0/module/FindGTest.html
                     ${GRID_LIBS}
                     gtest_dune_xt_common
                     COMMAND
-                    ${CMAKE_BINARY_DIR}/dune-env
+                    ${CMAKE_BINARY_DIR}/run-in-dune-env
+                    CMD_ARGS
                     ${CMAKE_CURRENT_BINARY_DIR}/${target}
                     --gtest_output=xml:${CMAKE_CURRENT_BINARY_DIR}/${target}.xml
                     TIMEOUT
@@ -230,7 +234,7 @@ macro(END_TESTCASES) # this excludes meta-ini variation test cases because  ther
                     COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_SOURCE_DIR}/testruns_totals.pickle"
                             "${CMAKE_BINARY_DIR}/testruns_totals.pickle")
   add_custom_target(rerun_test_distribution
-                    ${CMAKE_BINARY_DIR}/dune-env
+                    ${CMAKE_BINARY_DIR}/run-in-dune-env
                     distribute_testing.py
                     "${CMAKE_BINARY_DIR}"
                     "${CMAKE_CURRENT_SOURCE_DIR}"
@@ -273,11 +277,15 @@ macro(dxt_exclude_from_headercheck)
 endmacro(dxt_exclude_from_headercheck)
 
 macro(dxt_add_python_tests)
-  add_custom_target(test_python
-                    "${CMAKE_BINARY_DIR}/dune-env"
-                    "py.test"
-                    "."
-                    WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/python"
-                    DEPENDS bindings
-                    VERBATIM USES_TERMINAL)
+  if(TARGET test_python)
+    add_dependencies(test_python bindings)
+  else(TARGET test_python)
+    add_custom_target(test_python
+                      "${CMAKE_BINARY_DIR}/run-in-dune-env"
+                      "py.test"
+                      "."
+                      WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/python"
+                      DEPENDS bindings
+                      VERBATIM USES_TERMINAL)
+  endif(TARGET test_python)
 endmacro(dxt_add_python_tests)

@@ -6,7 +6,7 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2012, 2014, 2016 - 2017)
-//   Rene Milk       (2012 - 2013, 2015 - 2018)
+//   René Fritze     (2012 - 2013, 2015 - 2018)
 //   Tobias Leibner  (2014, 2016)
 
 #include <dune/xt/common/test/main.hxx>
@@ -20,8 +20,7 @@ using namespace std;
 
 template <class T>
 struct Foo
-{
-};
+{};
 
 GTEST_TEST(TplName, Match)
 {

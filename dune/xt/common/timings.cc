@@ -6,9 +6,9 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2013 - 2017)
-//   Rene Milk       (2012 - 2016, 2018)
+//   René Fritze     (2012 - 2016, 2018)
 //   Sven Kaulmann   (2013)
-//   Tobias Leibner  (2014)
+//   Tobias Leibner  (2014, 2018)
 
 #include "config.h"
 #include "timings.hh"
@@ -16,23 +16,19 @@
 #include <dune/common/version.hh>
 
 #if HAVE_LIKWID && ENABLE_PERFMON
-#include <likwid.h>
-#define DXTC_LIKWID_BEGIN_SECTION(name) LIKWID_MARKER_START(name.c_str());
-#define DXTC_LIKWID_END_SECTION(name) LIKWID_MARKER_STOP(name.c_str());
-#define DXTC_LIKWID_INIT LIKWID_MARKER_INIT
-#define DXTC_LIKWID_CLOSE LIKWID_MARKER_CLOSE
+#  include <likwid.h>
+#  define DXTC_LIKWID_BEGIN_SECTION(name) LIKWID_MARKER_START(name.c_str());
+#  define DXTC_LIKWID_END_SECTION(name) LIKWID_MARKER_STOP(name.c_str());
+#  define DXTC_LIKWID_INIT LIKWID_MARKER_INIT
+#  define DXTC_LIKWID_CLOSE LIKWID_MARKER_CLOSE
 #else
-#define DXTC_LIKWID_BEGIN_SECTION(name)
-#define DXTC_LIKWID_END_SECTION(name)
-#define DXTC_LIKWID_INIT
-#define DXTC_LIKWID_CLOSE
+#  define DXTC_LIKWID_BEGIN_SECTION(name)
+#  define DXTC_LIKWID_END_SECTION(name)
+#  define DXTC_LIKWID_INIT
+#  define DXTC_LIKWID_CLOSE
 #endif
 
-#if DUNE_VERSION_NEWER(DUNE_COMMON, 2, 3)
 #include <dune/common/parallel/mpihelper.hh>
-#else
-#include <dune/common/mpihelper.hh>
-#endif
 
 #include <dune/xt/common/string.hh>
 #include <dune/xt/common/ranges.hh>
@@ -244,8 +240,7 @@ Timings::~Timings()
 OutputScopedTiming::OutputScopedTiming(const std::string& section_name, std::ostream& out)
   : ScopedTiming(section_name)
   , out_(out)
-{
-}
+{}
 
 OutputScopedTiming::~OutputScopedTiming()
 {

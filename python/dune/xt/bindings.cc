@@ -6,7 +6,7 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2016 - 2017)
-//   Rene Milk       (2018)
+//   René Fritze     (2018)
 
 #include "config.h"
 
@@ -17,7 +17,7 @@
 #include <boost/exception/all.hpp>
 
 #if HAVE_TBB
-#include <tbb/tbb_exception.h>
+#  include <tbb/tbb_exception.h>
 #endif
 
 #include <dune/pybindxi/pybind11.h>

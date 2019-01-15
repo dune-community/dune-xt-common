@@ -5,8 +5,8 @@
 //      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
-//   Felix Schindler (2013 - 2017)
-//   Rene Milk       (2013 - 2018)
+//   Felix Schindler (2013 - 2018)
+//   René Fritze     (2013 - 2018)
 //   Tobias Leibner  (2014, 2016 - 2018)
 
 /* begin dune-xt-common */
@@ -211,6 +211,8 @@
   #endif // TBB_INTERFACE_VERSION < 4400
 #endif // HAVE_TBB
 
+// This is an unfortunate hack, see the header for an explanation.
+#include <dune/xt/common/fix-ambiguous-std-math-overloads.hh>
 
 /* end dune-xt-common */
 // NEVER delete/alter above comment, dune's cmake relies on it

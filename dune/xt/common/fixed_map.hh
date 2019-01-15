@@ -6,7 +6,7 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2009, 2012 - 2014, 2016 - 2017)
-//   Rene Milk       (2009 - 2018)
+//   René Fritze     (2009 - 2018)
 //   Sven Kaulmann   (2011 - 2012)
 //   Tobias Leibner  (2014, 2016)
 
@@ -27,9 +27,9 @@ namespace Common {
 
 //! custom iterator for \ref FixedMap
 template <class FixedMapType>
-class FixedMapIterator : public boost::iterator_facade<FixedMapIterator<FixedMapType>,
-                                                       typename FixedMapType::value_type,
-                                                       boost::forward_traversal_tag>
+class FixedMapIterator
+  : public boost::
+        iterator_facade<FixedMapIterator<FixedMapType>, typename FixedMapType::value_type, boost::forward_traversal_tag>
 {
   typedef FixedMapIterator<FixedMapType> ThisType;
 
@@ -37,14 +37,12 @@ public:
   FixedMapIterator()
     : index_(FixedMapType::N)
     , map_(nullptr)
-  {
-  }
+  {}
 
   explicit FixedMapIterator(FixedMapType* map, std::size_t i)
     : index_(i)
     , map_(map)
-  {
-  }
+  {}
 
 private:
   friend class boost::iterator_core_access;
@@ -70,9 +68,10 @@ private:
 
 //! custom const iterator for \ref FixedMap
 template <class FixedMapType>
-class ConstFixedMapIterator : public boost::iterator_facade<ConstFixedMapIterator<FixedMapType>,
-                                                            const typename FixedMapType::value_type,
-                                                            boost::forward_traversal_tag>
+class ConstFixedMapIterator
+  : public boost::iterator_facade<ConstFixedMapIterator<FixedMapType>,
+                                  const typename FixedMapType::value_type,
+                                  boost::forward_traversal_tag>
 {
   typedef ConstFixedMapIterator<FixedMapType> ThisType;
 
@@ -80,14 +79,12 @@ public:
   ConstFixedMapIterator()
     : index_(FixedMapType::N)
     , map_(nullptr)
-  {
-  }
+  {}
 
   explicit ConstFixedMapIterator(const FixedMapType* const map, std::size_t i)
     : index_(i)
     , map_(map)
-  {
-  }
+  {}
 
 private:
   friend class boost::iterator_core_access;
@@ -159,9 +156,7 @@ public:
   typedef FixedMapIterator<ThisType> iterator;
   typedef ConstFixedMapIterator<ThisType> const_iterator;
 
-  FixedMap()
-  {
-  }
+  FixedMap() {}
   /** inserts key-value value pairs from  initializer list
    * if list.size() > N only the first N elements are considered
    * if list.size() < N the Map is padded with default constructed elements
@@ -170,13 +165,11 @@ public:
     : map_(boost::assign::list_of<value_type>(*list.begin())
                .range(list.begin() + 1, list.end() - (N > list.size() ? size_t(0) : (list.size() - N)))
                .repeat(N > list.size() ? N - list.size() : size_t(0), std::make_pair(key_type(), T())))
-  {
-  }
+  {}
 
   FixedMap(const MapType& map)
     : map_(map)
-  {
-  }
+  {}
 
   std::size_t get_idx(const key_type& key) const
   {
@@ -264,6 +257,6 @@ inline ostream& operator<<(ostream& out, const Dune::XT::Common::FixedMap<key_im
   map.print(out);
   return out;
 }
-}
+} // namespace std
 
 #endif // DUNE_XT_COMMON_FIXED_MAP_HH

@@ -6,7 +6,7 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2014, 2016 - 2018)
-//   Rene Milk       (2015 - 2016, 2018)
+//   René Fritze     (2015 - 2016, 2018)
 //   TiKeil          (2018)
 //   Tobias Leibner  (2014, 2018)
 
@@ -62,10 +62,7 @@ public:
     if (rr != ROWS || cc != COLS)
       DUNE_THROW(Exceptions::wrong_input_given,
                  "You are trying to construct a FieldMatrix< ..., " << ROWS << ", " << COLS << " > (of "
-                                                                    << "static size) with "
-                                                                    << rr
-                                                                    << " rows and "
-                                                                    << cc
+                                                                    << "static size) with " << rr << " rows and " << cc
                                                                     << " columns!");
 #endif // NDEBUG
     // This is required because BaseType(kk) does not work for std::string
@@ -81,23 +78,19 @@ public:
   {
 #ifndef NDEBUG
     if (list_of_rows.size() != ROWS)
-      DUNE_THROW(
-          Exceptions::wrong_input_given,
-          "You are trying to construct a FieldMatrix< ..., " << ROWS << ", " << COLS << " > (of "
-                                                             << "static size) from a list modeling a matrix with "
-                                                             << list_of_rows.size()
-                                                             << " rows!");
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "You are trying to construct a FieldMatrix< ..., "
+                     << ROWS << ", " << COLS << " > (of "
+                     << "static size) from a list modeling a matrix with " << list_of_rows.size() << " rows!");
 #endif // NDEBUG
     size_t rr = 0;
     for (auto row : list_of_rows) {
 #ifndef NDEBUG
       if (row.size() != COLS)
-        DUNE_THROW(
-            Exceptions::wrong_input_given,
-            "You are trying to construct a FieldMatrix< ..., " << ROWS << ", " << COLS << " > (of "
-                                                               << "static size) from a list with a row of length "
-                                                               << row.size()
-                                                               << "!");
+        DUNE_THROW(Exceptions::wrong_input_given,
+                   "You are trying to construct a FieldMatrix< ..., "
+                       << ROWS << ", " << COLS << " > (of "
+                       << "static size) from a list with a row of length " << row.size() << "!");
 #endif // NDEBUG
       size_t cc = 0;
       for (auto entry : row)
@@ -110,8 +103,7 @@ public:
 
   FieldMatrix(const BaseType& other)
     : BaseType(other)
-  {
-  }
+  {}
 
   Dune::XT::Common::FieldMatrix<K, COLS, ROWS> transpose() const
   {
@@ -166,8 +158,7 @@ private:
 
     template <typename T>
     void operator()(const T&, int, int)
-    {
-    }
+    {}
 
     std::vector<size_type>& pivot_;
   }; // struct ElimPivot
@@ -177,8 +168,7 @@ private:
   {
     Elim(V& rhs)
       : rhs_(&rhs)
-    {
-    }
+    {}
 
     void swap(int i, int j)
     {
@@ -206,9 +196,7 @@ private:
       sign_ *= -1;
     }
 
-    void operator()(const field_type&, int, int)
-    {
-    }
+    void operator()(const field_type&, int, int) {}
 
     field_type& sign_;
   };
@@ -401,24 +389,18 @@ inline void FieldMatrix<K, ROWS, COLS>::solve(V& x, const W& b) const
 #endif
 
     x[0] = (b[0] * (*this)[1][1] * (*this)[2][2] - b[0] * (*this)[2][1] * (*this)[1][2]
-            - b[1] * (*this)[0][1] * (*this)[2][2]
-            + b[1] * (*this)[2][1] * (*this)[0][2]
-            + b[2] * (*this)[0][1] * (*this)[1][2]
-            - b[2] * (*this)[1][1] * (*this)[0][2])
+            - b[1] * (*this)[0][1] * (*this)[2][2] + b[1] * (*this)[2][1] * (*this)[0][2]
+            + b[2] * (*this)[0][1] * (*this)[1][2] - b[2] * (*this)[1][1] * (*this)[0][2])
            / d;
 
     x[1] = ((*this)[0][0] * b[1] * (*this)[2][2] - (*this)[0][0] * b[2] * (*this)[1][2]
-            - (*this)[1][0] * b[0] * (*this)[2][2]
-            + (*this)[1][0] * b[2] * (*this)[0][2]
-            + (*this)[2][0] * b[0] * (*this)[1][2]
-            - (*this)[2][0] * b[1] * (*this)[0][2])
+            - (*this)[1][0] * b[0] * (*this)[2][2] + (*this)[1][0] * b[2] * (*this)[0][2]
+            + (*this)[2][0] * b[0] * (*this)[1][2] - (*this)[2][0] * b[1] * (*this)[0][2])
            / d;
 
     x[2] = ((*this)[0][0] * (*this)[1][1] * b[2] - (*this)[0][0] * (*this)[2][1] * b[1]
-            - (*this)[1][0] * (*this)[0][1] * b[2]
-            + (*this)[1][0] * (*this)[2][1] * b[0]
-            + (*this)[2][0] * (*this)[0][1] * b[1]
-            - (*this)[2][0] * (*this)[1][1] * b[0])
+            - (*this)[1][0] * (*this)[0][1] * b[2] + (*this)[1][0] * (*this)[2][1] * b[0]
+            + (*this)[2][0] * (*this)[0][1] * b[1] - (*this)[2][0] * (*this)[1][1] * b[0])
            / d;
 
   } else {
@@ -465,18 +447,14 @@ public:
     if (list_of_rows.size() != ROWS)
       DUNE_THROW(Exceptions::wrong_input_given,
                  "You are trying to construct a FieldMatrix< ..., 1, 1 > (of "
-                     << "static size) from a list modeling a matrix with "
-                     << list_of_rows.size()
-                     << " rows!");
+                     << "static size) from a list modeling a matrix with " << list_of_rows.size() << " rows!");
 #endif // NDEBUG
     for (auto row : list_of_rows) {
 #ifndef NDEBUG
       if (row.size() != COLS)
         DUNE_THROW(Exceptions::wrong_input_given,
                    "You are trying to construct a FieldMatrix< ..., 1, 1 > (of "
-                       << "static size) from a list with a row of length "
-                       << row.size()
-                       << "!");
+                       << "static size) from a list with a row of length " << row.size() << "!");
 #endif // NDEBUG
       for (auto entry : row)
         (*this)[0][0] = entry;
@@ -492,10 +470,7 @@ public:
     if (rr != ROWS || cc != COLS)
       DUNE_THROW(Exceptions::wrong_input_given,
                  "You are trying to construct a FieldMatrix< ..., " << ROWS << ", " << COLS << " > (of "
-                                                                    << "static size) with "
-                                                                    << rr
-                                                                    << " rows and "
-                                                                    << cc
+                                                                    << "static size) with " << rr << " rows and " << cc
                                                                     << " columns!");
 #endif // NDEBUG
     (*this)[0][0] = kk;
@@ -503,8 +478,7 @@ public:
 
   FieldMatrix(const BaseType& other)
     : BaseType(other)
-  {
-  }
+  {}
 
   FieldMatrix(const Dune::XT::Common::FieldVector<K, 1>& other)
     : BaseType()
@@ -553,8 +527,7 @@ public:
 
   BlockedFieldMatrix(const K& val = K(0.))
     : backend_(BlockType(val))
-  {
-  }
+  {}
 
   BlockedFieldMatrix(const size_t DXTC_DEBUG_ONLY(rows), const size_t DXTC_DEBUG_ONLY(cols), const K& val = K(0.))
     : backend_(BlockType(val))
@@ -569,8 +542,7 @@ public:
 
   BlockedFieldMatrix(const BlockType& block)
     : backend_(block)
-  {
-  }
+  {}
 
   ThisType& operator=(const MatrixType& other)
   {
@@ -1135,10 +1107,10 @@ void rightmultiply(Dune::FieldMatrix<K, L_ROWS, R_COLS>& ret,
 }
 
 template <class L, int L_ROWS, int L_COLS, class R, int R_COLS>
-typename std::enable_if<!std::is_same<L, R>::value,
-                        Dune::XT::Common::FieldMatrix<typename PromotionTraits<L, R>::PromotedType, L_ROWS, R_COLS>>::
-    type
-    operator*(const Dune::FieldMatrix<L, L_ROWS, L_COLS>& left, const Dune::FieldMatrix<R, L_COLS, R_COLS>& right)
+typename std::enable_if<
+    !std::is_same<L, R>::value,
+    Dune::XT::Common::FieldMatrix<typename PromotionTraits<L, R>::PromotedType, L_ROWS, R_COLS>>::type
+operator*(const Dune::FieldMatrix<L, L_ROWS, L_COLS>& left, const Dune::FieldMatrix<R, L_COLS, R_COLS>& right)
 {
   using Promoted = Dune::XT::Common::FieldMatrix<typename PromotionTraits<L, R>::PromotedType, L_ROWS, R_COLS>;
   using Dune::XT::Common::convert_to;

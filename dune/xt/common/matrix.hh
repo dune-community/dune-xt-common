@@ -7,7 +7,7 @@
 // Authors:
 //   Andreas Buhr    (2014)
 //   Felix Schindler (2012 - 2017)
-//   Rene Milk       (2010 - 2016, 2018)
+//   René Fritze     (2010 - 2016, 2018)
 //   Sven Kaulmann   (2010 - 2011)
 //   Tobias Leibner  (2014, 2017 - 2018)
 
@@ -31,8 +31,7 @@ namespace Common {
 
 // Sparsity pattern placeholder representing a dense matrix pattern.
 struct FullPattern
-{
-};
+{};
 
 /**
  * \brief Traits to uniformly handle matrices.
@@ -327,13 +326,13 @@ template <class MatrixType,
           size_t COLS = MatrixAbstraction<MatrixType>::static_cols,
           class FieldType = typename MatrixAbstraction<MatrixType>::S,
           class SparsityPatternType = FullPattern>
-typename std::enable_if<is_matrix<MatrixType>::value,
-                        typename MatrixAbstraction<MatrixType>::template MatrixTypeTemplate<ROWS, COLS, FieldType>>::
-    type
-    create(const size_t rows,
-           const size_t cols,
-           const FieldType& val = 0,
-           const SparsityPatternType& pattern = SparsityPatternType())
+typename std::enable_if<
+    is_matrix<MatrixType>::value,
+    typename MatrixAbstraction<MatrixType>::template MatrixTypeTemplate<ROWS, COLS, FieldType>>::type
+create(const size_t rows,
+       const size_t cols,
+       const FieldType& val = 0,
+       const SparsityPatternType& pattern = SparsityPatternType())
 {
   return MatrixAbstraction<
       typename MatrixAbstraction<MatrixType>::template MatrixTypeTemplate<ROWS, COLS, FieldType>>::create(rows,
@@ -451,7 +450,7 @@ convert_to(const SourceType& source)
 #ifndef DXT_DISABLE_CHECKS
                                )
 #endif
-                           );
+      );
   return ret;
 } // ... convert_to(...)
 

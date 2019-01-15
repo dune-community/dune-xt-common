@@ -5,11 +5,8 @@
 //      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
-//   Andreas Buhr    (2014)
-//   Felix Schindler (2012 - 2018)
-//   Rene Milk       (2010 - 2018)
-//   Sven Kaulmann   (2013)
-//   Tobias Leibner  (2014, 2017)
+//   René Fritze    (2018)
+//   Tobias Leibner (2018)
 
 #ifndef DUNE_XT_COMMON_COORDINATES_HH
 #define DUNE_XT_COMMON_COORDINATES_HH

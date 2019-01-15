@@ -6,7 +6,7 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2012 - 2017)
-//   Rene Milk       (2012 - 2013, 2015 - 2016, 2018)
+//   René Fritze     (2012 - 2013, 2015 - 2016, 2018)
 //   Stefan Girke    (2012)
 //   Tobias Leibner  (2014)
 
@@ -19,7 +19,7 @@
 #include <string>
 
 #ifdef __GNUC__
-#include <cxxabi.h>
+#  include <cxxabi.h>
 #endif
 #include <string>
 

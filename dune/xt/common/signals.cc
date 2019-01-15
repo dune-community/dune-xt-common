@@ -6,7 +6,8 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2014, 2016 - 2017)
-//   Rene Milk       (2013, 2015 - 2016, 2018)
+//   René Fritze     (2013, 2015 - 2016, 2018)
+//   Tobias Leibner  (2018)
 
 #include "config.h"
 
@@ -55,6 +56,6 @@ void install_signal_handler(int signal, handler_type handler)
   sigaction(signal, &new_action, nullptr);
 } // install_signal_handler
 
-} // namepsace Common
+} // namespace Common
 } // namespace XT
-} // namepsace Dune
+} // namespace Dune

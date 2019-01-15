@@ -6,7 +6,7 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2014, 2016 - 2017)
-//   Rene Milk       (2014 - 2016, 2018)
+//   René Fritze     (2014 - 2016, 2018)
 //   Tobias Leibner  (2014)
 
 #ifndef DUNE_XT_COMMON_PARALLEL_HELPER_HH
@@ -23,8 +23,7 @@ namespace XT {
 
 //! marker for sequential in MPI-enabled solver stuffs
 struct SequentialCommunication : public Dune::Amg::SequentialInformation
-{
-};
+{};
 
 template <class GridCommImp>
 struct UseParallelCommunication

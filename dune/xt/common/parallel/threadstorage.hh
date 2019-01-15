@@ -6,13 +6,14 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2014, 2016 - 2018)
-//   Rene Milk       (2013 - 2016, 2018)
+//   René Fritze     (2013 - 2016, 2018)
+//   Tobias Leibner  (2018)
 
 #ifndef DUNE_XT_COMMON_PARALLEL_THREADSTORAGE_HH
 #define DUNE_XT_COMMON_PARALLEL_THREADSTORAGE_HH
 
 #if HAVE_TBB
-#include <tbb/enumerable_thread_specific.h>
+#  include <tbb/enumerable_thread_specific.h>
 #endif
 
 #include <algorithm>
@@ -50,8 +51,7 @@ public:
   template <class... InitTypes>
   explicit EnumerableThreadSpecificWrapper(InitTypes&&... ctor_args)
     : values_(std::forward<InitTypes>(ctor_args)...)
-  {
-  }
+  {}
 
   ValueType& local()
   {
@@ -111,15 +111,13 @@ public:
   //! Initialization by copy construction of ValueType
   explicit EnumerableThreadSpecificWrapper(ConstValueType& value)
     : values_(std::make_unique<std::remove_const_t<ValueType>>(value))
-  {
-  }
+  {}
 
   //! Initialization by in-place construction ValueType with \param ctor_args
   template <class... InitTypes>
   explicit EnumerableThreadSpecificWrapper(InitTypes&&... ctor_args)
     : values_(std::make_unique<std::remove_const_t<ValueType>>(std::forward<InitTypes>(ctor_args)...))
-  {
-  }
+  {}
 
   ValueType& local()
   {
@@ -164,7 +162,7 @@ private:
 #endif // HAVE_TBB
 
 
-} // namespace interal
+} // namespace internal
 
 
 /** Automatic Storage of non-static, N thread-local values
@@ -181,15 +179,13 @@ public:
   //! Initialization by copy construction of ValueType
   explicit PerThreadValue(ConstValueType& value)
     : values_(value)
-  {
-  }
+  {}
 
   //! Initialization by in-place construction ValueType with \param ctor_args
   template <class... InitTypes>
   explicit PerThreadValue(InitTypes&&... ctor_args)
     : values_(std::forward<InitTypes>(ctor_args)...)
-  {
-  }
+  {}
 
   operator ValueType() const
   {
@@ -367,7 +363,7 @@ private:
  *calling finalize.
  * \param imp_ Pointer to implementation
  * \param base_ Pointer to initial base functor
-**/
+ **/
 template <class Imp, typename Result, class Reduction = std::plus<Result>>
 class ThreadResultPropagator
 {
@@ -375,15 +371,13 @@ public:
   ThreadResultPropagator(Imp* imp)
     : imp_(imp)
     , base_(imp)
-  {
-  }
+  {}
 
   ThreadResultPropagator(const ThreadResultPropagator& other)
     : imp_(other.imp_)
     , base_(other.base_)
     , mutex_()
-  {
-  }
+  {}
 
   Imp* copy_imp()
   {

@@ -3,26 +3,27 @@
 #   https://github.com/dune-community/dune-xt-common
 # Copyright 2009-2018 dune-xt-common developers and contributors. All rights reserved.
 # License: Dual licensed as BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
-# Authors:
-#   Felix Schindler (2014 - 2017)
-#   Rene Milk       (2011, 2013, 2015 - 2016, 2018)
-#
 #      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
 #          with "runtime exception" (http://www.dune-project.org/license.html)
+# Authors:
+#   Felix Schindler (2014 - 2017)
+#   René Fritze     (2011, 2013, 2015 - 2016, 2018)
 # ~~~
 
-Rene Milk <rene.milk@wwu.de> Rene Milk <rene.milk@uni-muenster.de>
-Rene Milk <rene.milk@wwu.de> Rene Milk <koshi@springlobby.info>
-Rene Milk <rene.milk@wwu.de> Rene Milk <r_milk01@DUNE-PROJECT.(none)>
-Rene Milk <rene.milk@wwu.de> Rene Milk <r_milk01@DUNE-PROJECT.uni-muenster.de>
-Rene Milk <rene.milk@wwu.de> Rene Milk <r_milk01@stinson.(none)>
-Rene Milk <rene.milk@wwu.de> Rene Milk <r_milk01@LOCKHEED.uni-muenster.de>
-Rene Milk <rene.milk@wwu.de> Rene Milk <kosh@cpt-awesome.(none)>
-Rene Milk <rene.milk@wwu.de> Rene Milk <kosh@koshmob.(none)>
-Rene Milk <rene.milk@wwu.de> Rene Milk <r_milk01@JAX.uni-muenster.de>
-Rene Milk <rene.milk@wwu.de> Rene Milk <r_milk01@SCORPION.uni-muenster.de>
-Rene Milk <rene.milk@wwu.de> Rene Milk <r_milk01@BARNEY.uni-muenster.de>
-Rene Milk <rene.milk@wwu.de> Rene Milk <renemilk@users.noreply.github.com>
+René Fritze <rene.fritze@wwu.de> Rene Milk <rene.milk@wwu.de>
+René Fritze <rene.fritze@wwu.de> René Milk <rene.milk@wwu.de>
+René Fritze <rene.fritze@wwu.de> Rene Milk <rene.milk@uni-muenster.de>
+René Fritze <rene.fritze@wwu.de> Rene Milk <koshi@springlobby.info>
+René Fritze <rene.fritze@wwu.de> Rene Milk <r_milk01@DUNE-PROJECT.(none)>
+René Fritze <rene.fritze@wwu.de> Rene Milk <r_milk01@DUNE-PROJECT.uni-muenster.de>
+René Fritze <rene.fritze@wwu.de> Rene Milk <r_milk01@stinson.(none)>
+René Fritze <rene.fritze@wwu.de> Rene Milk <r_milk01@LOCKHEED.uni-muenster.de>
+René Fritze <rene.fritze@wwu.de> Rene Milk <kosh@cpt-awesome.(none)>
+René Fritze <rene.fritze@wwu.de> Rene Milk <kosh@koshmob.(none)>
+René Fritze <rene.fritze@wwu.de> Rene Milk <r_milk01@JAX.uni-muenster.de>
+René Fritze <rene.fritze@wwu.de> Rene Milk <r_milk01@SCORPION.uni-muenster.de>
+René Fritze <rene.fritze@wwu.de> Rene Milk <r_milk01@BARNEY.uni-muenster.de>
+René Fritze <rene.fritze@wwu.de> Rene Milk <renemilk@users.noreply.github.com>
 Felix Schindler <felix.schindler@wwu.de> Felix Albrecht <felix@almob.(none)>
 Felix Schindler <felix.schindler@wwu.de> Felix Albrecht <felix@server.(none)>
 Felix Schindler <felix.schindler@wwu.de> Felix Tobias Albrecht <f_albr01@SCORPION.uni-muenster.de>
@@ -44,8 +45,8 @@ Tobias Leibner <tobias.leibner@uni-muenster.de> Tobias Leibner <tobias.leibner@g
 Barbara Verfürth <b_verf01@uni-muenster.de> b_verf01 <b_verf01@uni-muenster.de>
 
 # geratene duneadm zuordnung
-Rene Milk <rene.milk@wwu.de> Mario Ohlberger <duneadm@DUNE-PROJECT.(none)>
-Rene Milk <rene.milk@wwu.de> Mario Ohlberger <duneadm@SCORPION.uni-muenster.de>
+René Fritze <rene.fritze@wwu.de> Mario Ohlberger <duneadm@DUNE-PROJECT.(none)>
+René Fritze <rene.fritze@wwu.de> Mario Ohlberger <duneadm@SCORPION.uni-muenster.de>
 Felix Schindler <felix.schindler@wwu.de> Mario Ohlberger <duneadm@JAX.uni-muenster.de>
 Felix Schindler <felix.schindler@wwu.de> Mario Ohlberger <duneadm@BARNEY.(none)>
-Rene Milk <rene.milk@wwu.de> Mario Ohlberger <duneadm@zivsmp001.cvos.cluster>
+René Fritze <rene.fritze@wwu.de> Mario Ohlberger <duneadm@zivsmp001.cvos.cluster>

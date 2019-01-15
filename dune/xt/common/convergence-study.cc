@@ -5,8 +5,8 @@
 //      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
-//   Felix Schindler (2014 - 2017)
-//   Rene Milk       (2015 - 2016, 2018)
+//   Felix Schindler (2014 - 2018)
+//   René Fritze     (2015 - 2016, 2018)
 
 #include "config.h"
 
@@ -164,10 +164,7 @@ void ConvergenceStudy::run(const std::vector<std::string>& only_these, std::ostr
                     << self.norms()
                     //                    << "\n   self.estimates() = "
                     //                    << self.estimates()
-                    << "\n   self.quantities() = "
-                    << self.quantities()
-                    << "\n   only_these = "
-                    << only_these);
+                    << "\n   self.quantities() = " << self.quantities() << "\n   only_these = " << only_these);
   const size_t column_width = 8;
   const size_t eoc_column_width = (actual_targets.size() > 1) ? 8 : 4;
   // build header

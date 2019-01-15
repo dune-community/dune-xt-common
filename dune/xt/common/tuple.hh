@@ -6,9 +6,9 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2012, 2014 - 2017)
-//   Rene Milk       (2010 - 2013, 2015 - 2016, 2018)
+//   René Fritze     (2010 - 2013, 2015 - 2016, 2018)
 //   Stefan Girke    (2012)
-//   Tobias Leibner  (2014, 2016 - 2017)
+//   Tobias Leibner  (2014, 2016 - 2018)
 
 #ifndef DUNE_XT_COMMON_TUPLE_HH
 #define DUNE_XT_COMMON_TUPLE_HH
@@ -173,8 +173,7 @@ struct end_of_recursion_tag
 {
   template <class... Args>
   static void Run(Args&&... /*args*/)
-  {
-  }
+  {}
 };
 
 template <class UTypes, // Forward Sequence, e.g. boost::mpl::vector
@@ -313,9 +312,7 @@ namespace internal {
 template <std::size_t>
 struct Any
 {
-  Any(...)
-  {
-  }
+  Any(...) {}
 };
 
 template <typename T>
@@ -333,7 +330,7 @@ struct get_nth_helper
 
 template <std::size_t... Is, typename... Ts>
 auto deduce_seq(index_sequence<Is...>, wrapper<Ts>... pp) -> decltype(get_nth_helper<Is...>::deduce(pp...));
-}
+} // namespace internal
 
 template <std::size_t N, class Tuple>
 struct tuple_element;
@@ -354,8 +351,7 @@ struct tuple_element<N, std::tuple<Ts...>>
 //! use this to wrap template classes into the template_tuple
 template <template <class...> class B>
 struct tplwrap
-{
-};
+{};
 
 template <class... Ms>
 class template_tuple;

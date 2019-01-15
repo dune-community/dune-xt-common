@@ -6,7 +6,7 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2012, 2014 - 2017)
-//   Rene Milk       (2012 - 2016, 2018)
+//   René Fritze     (2012 - 2016, 2018)
 //   Tobias Leibner  (2014, 2016)
 
 #include <dune/xt/common/test/main.hxx>
@@ -33,8 +33,7 @@ struct ClampTest : public testing::Test
   ClampTest()
     : lower(init_bound<T>(-1))
     , upper(init_bound<T>(1))
-  {
-  }
+  {}
 };
 
 TYPED_TEST_CASE(ClampTest, ClampTestTypes);
@@ -47,8 +46,7 @@ TYPED_TEST(ClampTest, All)
 
 template <class T>
 struct EpsilonTest : public testing::Test
-{
-};
+{};
 
 TYPED_TEST_CASE(EpsilonTest, TestTypes);
 TYPED_TEST(EpsilonTest, All)
@@ -58,8 +56,7 @@ TYPED_TEST(EpsilonTest, All)
 
 template <class T>
 struct MinMaxAvgTest : public testing::Test
-{
-};
+{};
 
 template <class MMType, class TypeParam>
 void mmCheck(const MMType& mma)

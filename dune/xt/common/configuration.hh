@@ -6,10 +6,10 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2012 - 2017)
-//   Rene Milk       (2012 - 2018)
+//   René Fritze     (2012 - 2018)
 //   Sven Kaulmann   (2013)
 //   TiKeil          (2018)
-//   Tobias Leibner  (2014, 2016)
+//   Tobias Leibner  (2014, 2016, 2018)
 
 #ifndef DUNE_XT_COMMON_CONFIGURATION_HH
 #define DUNE_XT_COMMON_CONFIGURATION_HH
@@ -151,8 +151,7 @@ some_function_which_expects_a_config({{"type", "custom"}, {"tolerance", "1e-10"}
     if (!has_key(key))
       DUNE_THROW(Exceptions::configuration_error,
                  "This Configuration (see below) does not contain the key '"
-                     << key
-                     << "' and there was no default value provided!\n======================\n"
+                     << key << "' and there was no default value provided!\n======================\n"
                      << report_string());
     return get_valid_value(key, T(), validator, size, cols);
   } // ... get(...)
@@ -167,8 +166,7 @@ some_function_which_expects_a_config({{"type", "custom"}, {"tolerance", "1e-10"}
     if (!has_key(key))
       DUNE_THROW(Exceptions::configuration_error,
                  "This Configuration (see below) does not contain the key '"
-                     << key
-                     << "' and there was no default value provided!\n======================\n"
+                     << key << "' and there was no default value provided!\n======================\n"
                      << report_string());
     return get_valid_value(key, T(), validator, 0, 0);
   } // ... get(...)
@@ -286,22 +284,14 @@ private:
       val = from_string<T>(valstring, size, cols);
     } catch (boost::bad_lexical_cast& e) {
       DUNE_THROW(Exceptions::external_error,
-                 "Error in boost while converting the string '" << valstring << "' to type '" << Typename<T>::value()
-                                                                << "':\n"
-                                                                << e.what()
-                                                                << "\non accessing key "
-                                                                << key
-                                                                << " with default "
-                                                                << to_string(def));
+                 "Error in boost while converting the string '"
+                     << valstring << "' to type '" << Typename<T>::value() << "':\n"
+                     << e.what() << "\non accessing key " << key << " with default " << to_string(def));
     } catch (std::exception& e) {
       DUNE_THROW(Exceptions::external_error,
-                 "Error in the stl while converting the string '" << valstring << "' to type '" << Typename<T>::value()
-                                                                  << "':\n"
-                                                                  << e.what()
-                                                                  << "\non accessing key "
-                                                                  << key
-                                                                  << " with default "
-                                                                  << to_string(def));
+                 "Error in the stl while converting the string '"
+                     << valstring << "' to type '" << Typename<T>::value() << "':\n"
+                     << e.what() << "\non accessing key " << key << " with default " << to_string(def));
     }
     if (validator(val))
       return val;

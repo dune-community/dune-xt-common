@@ -6,8 +6,8 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2017 - 2018)
-//   Rene Milk       (2017 - 2018)
-//   Tobias Leibner  (2017)
+//   René Fritze     (2017 - 2018)
+//   Tobias Leibner  (2017 - 2018)
 
 #ifndef DUNE_XT_COMMON_PARAMETER_HH
 #define DUNE_XT_COMMON_PARAMETER_HH
@@ -31,9 +31,7 @@ template <class ValueType>
 class SimpleDict
 {
 public:
-  SimpleDict()
-  {
-  }
+  SimpleDict() {}
 
   SimpleDict(const std::string& key, const ValueType& value)
     : dict_({std::make_pair(key, value)})
@@ -71,8 +69,7 @@ public:
     if (!overwrite && key_was_present)
       DUNE_THROW(Exceptions::parameter_error,
                  "You are trying to overwrite the key '"
-                     << key
-                     << "' (although a value is already set), and overwrite is false!");
+                     << key << "' (although a value is already set), and overwrite is false!");
     dict_[key] = value;
     if (!key_was_present)
       update_keys();
@@ -128,11 +125,9 @@ protected:
         const auto& this_value = this_key_search_result->second;
         DUNE_THROW_IF(!value_comparator(this_value, other_value),
                       Exceptions::parameter_error,
-                      error_msg_prefix(this_value, other_value) << "\n   this->get(\"" << other_key << "\") = "
-                                                                << this_value
-                                                                << "\n   other.get(\""
-                                                                << other_value
-                                                                << "\")");
+                      error_msg_prefix(this_value, other_value)
+                          << "\n   this->get(\"" << other_key << "\") = " << this_value << "\n   other.get(\""
+                          << other_value << "\")");
         // and the respective values agree, so no need to do something
       }
     }
@@ -235,9 +230,7 @@ private:
 
 public:
   /// \note this is somehow necessary to make clang 3.8 happy (and cannot be defaulted)
-  ~Parameter()
-  {
-  }
+  ~Parameter() {}
 
   Parameter operator+(const Parameter& other) const;
 

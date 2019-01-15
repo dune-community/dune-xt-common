@@ -6,7 +6,7 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2012, 2014, 2016 - 2017)
-//   Rene Milk       (2010 - 2016, 2018)
+//   René Fritze     (2010 - 2016, 2018)
 //   Sven Kaulmann   (2011)
 
 #ifndef DUNE_XT_COMMON_FILESYSTEM_HH

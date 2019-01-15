@@ -6,7 +6,7 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2016 - 2017)
-//   Rene Milk       (2014 - 2016, 2018)
+//   René Fritze     (2014 - 2016, 2018)
 
 #ifndef DUNE_XT_COMMON_PARALLEL_PARTITIONER_HH
 #define DUNE_XT_COMMON_PARALLEL_PARTITIONER_HH
@@ -29,8 +29,7 @@ struct IndexSetPartitioner
   typedef typename GridViewType::template Codim<0>::Entity EntityType;
   explicit IndexSetPartitioner(const IndexSetType& index_set)
     : index_set_(index_set)
-  {
-  }
+  {}
 
   std::size_t partition(const EntityType& e) const
   {

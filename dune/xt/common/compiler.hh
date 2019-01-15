@@ -6,17 +6,17 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2016 - 2017)
-//   Rene Milk       (2015 - 2016, 2018)
+//   René Fritze     (2015 - 2016, 2018)
 
 #ifndef DUNE_XT_COMMON_COMPILER_HH
 #define DUNE_XT_COMMON_COMPILER_HH
 
 #if defined(__GNUC__)
-#if defined(__GNUC_PATCHLEVEL__)
-#define DXTC_GNUC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
-#else
-#define DXTC_GNUC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100)
-#endif
+#  if defined(__GNUC_PATCHLEVEL__)
+#    define DXTC_GNUC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
+#  else
+#    define DXTC_GNUC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100)
+#  endif
 #endif
 
 #endif // DUNE_XT_COMMON_COMPILER_HH

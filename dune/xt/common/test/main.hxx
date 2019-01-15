@@ -5,23 +5,23 @@
 //      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
-//   Felix Schindler (2014 - 2017)
-//   Rene Milk       (2014 - 2016, 2018)
-//   Tobias Leibner  (2015 - 2017)
+//   Felix Schindler (2014 - 2018)
+//   René Fritze     (2014 - 2016, 2018)
+//   Tobias Leibner  (2015 - 2018)
 
 #include "config.h"
 
 #ifndef DUNE_XT_COMMON_TEST_MAIN_CATCH_EXCEPTIONS
-#define DUNE_XT_COMMON_TEST_MAIN_CATCH_EXCEPTIONS 0
+#  define DUNE_XT_COMMON_TEST_MAIN_CATCH_EXCEPTIONS 0
 #endif
 #ifndef DUNE_XT_COMMON_TEST_MAIN_ENABLE_DEBUG_LOGGING
-#define DUNE_XT_COMMON_TEST_MAIN_ENABLE_DEBUG_LOGGING 0
+#  define DUNE_XT_COMMON_TEST_MAIN_ENABLE_DEBUG_LOGGING 0
 #endif
 #ifndef DUNE_XT_COMMON_TEST_MAIN_ENABLE_INFO_LOGGING
-#define DUNE_XT_COMMON_TEST_MAIN_ENABLE_INFO_LOGGING 0
+#  define DUNE_XT_COMMON_TEST_MAIN_ENABLE_INFO_LOGGING 0
 #endif
 #ifndef DUNE_XT_COMMON_TEST_MAIN_ENABLE_TIMED_LOGGING
-#define DUNE_XT_COMMON_TEST_MAIN_ENABLE_TIMED_LOGGING 0
+#  define DUNE_XT_COMMON_TEST_MAIN_ENABLE_TIMED_LOGGING 0
 #endif
 
 #define GTEST_DONT_DEFINE_TEST 1
@@ -52,7 +52,7 @@
 
 
 #if HAVE_TBB
-#include <tbb/task_scheduler_init.h>
+#  include <tbb/task_scheduler_init.h>
 #endif
 
 #include "common.hh"
@@ -90,14 +90,14 @@ int main(int argc, char** argv)
 #else
                                                  -1
 #endif
-                                                       );
+    );
     const ssize_t max_debug_level = DXTC_CONFIG.get("timedlogging.max_debug",
 #if DUNE_XT_COMMON_TEST_MAIN_ENABLE_TIMED_LOGGING && DUNE_XT_COMMON_TEST_MAIN_ENABLE_DEBUG_LOGGING
                                                     std::numeric_limits<ssize_t>::max()
 #else
                                                   -1
 #endif
-                                                        );
+    );
     TimedLogger().create(max_info_level /*info*/, max_debug_level /*debug*/);
 
     const size_t threads = DXTC_CONFIG.has_key("threading.max_count") // <- doing this so complicated to

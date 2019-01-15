@@ -52,9 +52,9 @@
 #define GTEST_INCLUDE_GTEST_GTEST_H_
 
 #if defined(__clang__)
-#pragma clang system_header
+#  pragma clang system_header
 #elif defined(__GNUC__)
-#pragma GCC system_header
+#  pragma GCC system_header
 #endif
 
 
@@ -99,7 +99,7 @@
 // Google Test.  They are subject to change without notice.
 
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_INTERNAL_H_
-#define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_INTERNAL_H_
+#  define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_INTERNAL_H_
 
 // Copyright 2005, Google Inc.
 // All rights reserved.
@@ -140,8 +140,8 @@
 // files are expected to #include this.  Therefore, it cannot #include
 // any other Google Test header.
 
-#ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PORT_H_
-#define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PORT_H_
+#  ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PORT_H_
+#    define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PORT_H_
 
 // The user can define the following macros in the build script to
 // control Google Test's behavior.  If the user doesn't define a macro
@@ -296,198 +296,198 @@
 //   Int32FromGTestEnv()  - parses an Int32 environment variable.
 //   StringFromGTestEnv() - parses a string environment variable.
 
-#include <ctype.h> // for isspace, etc
-#include <stddef.h> // for ptrdiff_t
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#ifndef _WIN32_WCE
-#include <sys/types.h>
-#include <sys/stat.h>
-#endif // !_WIN32_WCE
+#    include <ctype.h> // for isspace, etc
+#    include <stddef.h> // for ptrdiff_t
+#    include <stdlib.h>
+#    include <stdio.h>
+#    include <string.h>
+#    ifndef _WIN32_WCE
+#      include <sys/types.h>
+#      include <sys/stat.h>
+#    endif // !_WIN32_WCE
 
-#if defined __APPLE__
-#include <AvailabilityMacros.h>
-#include <TargetConditionals.h>
-#endif
+#    if defined __APPLE__
+#      include <AvailabilityMacros.h>
+#      include <TargetConditionals.h>
+#    endif
 
-#include <iostream> // NOLINT
-#include <sstream> // NOLINT
-#include <string> // NOLINT
+#    include <iostream> // NOLINT
+#    include <sstream> // NOLINT
+#    include <string> // NOLINT
 
-#define GTEST_DEV_EMAIL_ "googletestframework@@googlegroups.com"
-#define GTEST_FLAG_PREFIX_ "gtest_"
-#define GTEST_FLAG_PREFIX_DASH_ "gtest-"
-#define GTEST_FLAG_PREFIX_UPPER_ "GTEST_"
-#define GTEST_NAME_ "Google Test"
-#define GTEST_PROJECT_URL_ "http://code.google.com/p/googletest/"
+#    define GTEST_DEV_EMAIL_ "googletestframework@@googlegroups.com"
+#    define GTEST_FLAG_PREFIX_ "gtest_"
+#    define GTEST_FLAG_PREFIX_DASH_ "gtest-"
+#    define GTEST_FLAG_PREFIX_UPPER_ "GTEST_"
+#    define GTEST_NAME_ "Google Test"
+#    define GTEST_PROJECT_URL_ "http://code.google.com/p/googletest/"
 
 // Determines the version of gcc that is used to compile this.
-#ifdef __GNUC__
+#    ifdef __GNUC__
 // 40302 means version 4.3.2.
-#define GTEST_GCC_VER_ (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
-#endif // __GNUC__
+#      define GTEST_GCC_VER_ (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
+#    endif // __GNUC__
 
 // Determines the platform on which Google Test is compiled.
-#ifdef __CYGWIN__
-#define GTEST_OS_CYGWIN 1
-#elif defined __SYMBIAN32__
-#define GTEST_OS_SYMBIAN 1
-#elif defined _WIN32
-#define GTEST_OS_WINDOWS 1
-#ifdef _WIN32_WCE
-#define GTEST_OS_WINDOWS_MOBILE 1
-#elif defined(__MINGW__) || defined(__MINGW32__)
-#define GTEST_OS_WINDOWS_MINGW 1
-#else
-#define GTEST_OS_WINDOWS_DESKTOP 1
-#endif // _WIN32_WCE
-#elif defined __APPLE__
-#define GTEST_OS_MAC 1
-#if TARGET_OS_IPHONE
-#define GTEST_OS_IOS 1
-#if TARGET_IPHONE_SIMULATOR
-#define GTEST_OS_IOS_SIMULATOR 1
-#endif
-#endif
-#elif defined __linux__
-#define GTEST_OS_LINUX 1
-#if defined __ANDROID__
-#define GTEST_OS_LINUX_ANDROID 1
-#endif
-#elif defined __MVS__
-#define GTEST_OS_ZOS 1
-#elif defined(__sun) && defined(__SVR4)
-#define GTEST_OS_SOLARIS 1
-#elif defined(_AIX)
-#define GTEST_OS_AIX 1
-#elif defined(__hpux)
-#define GTEST_OS_HPUX 1
-#elif defined __native_client__
-#define GTEST_OS_NACL 1
-#elif defined __OpenBSD__
-#define GTEST_OS_OPENBSD 1
-#elif defined __QNX__
-#define GTEST_OS_QNX 1
-#endif // __CYGWIN__
+#    ifdef __CYGWIN__
+#      define GTEST_OS_CYGWIN 1
+#    elif defined __SYMBIAN32__
+#      define GTEST_OS_SYMBIAN 1
+#    elif defined _WIN32
+#      define GTEST_OS_WINDOWS 1
+#      ifdef _WIN32_WCE
+#        define GTEST_OS_WINDOWS_MOBILE 1
+#      elif defined(__MINGW__) || defined(__MINGW32__)
+#        define GTEST_OS_WINDOWS_MINGW 1
+#      else
+#        define GTEST_OS_WINDOWS_DESKTOP 1
+#      endif // _WIN32_WCE
+#    elif defined __APPLE__
+#      define GTEST_OS_MAC 1
+#      if TARGET_OS_IPHONE
+#        define GTEST_OS_IOS 1
+#        if TARGET_IPHONE_SIMULATOR
+#          define GTEST_OS_IOS_SIMULATOR 1
+#        endif
+#      endif
+#    elif defined __linux__
+#      define GTEST_OS_LINUX 1
+#      if defined __ANDROID__
+#        define GTEST_OS_LINUX_ANDROID 1
+#      endif
+#    elif defined __MVS__
+#      define GTEST_OS_ZOS 1
+#    elif defined(__sun) && defined(__SVR4)
+#      define GTEST_OS_SOLARIS 1
+#    elif defined(_AIX)
+#      define GTEST_OS_AIX 1
+#    elif defined(__hpux)
+#      define GTEST_OS_HPUX 1
+#    elif defined __native_client__
+#      define GTEST_OS_NACL 1
+#    elif defined __OpenBSD__
+#      define GTEST_OS_OPENBSD 1
+#    elif defined __QNX__
+#      define GTEST_OS_QNX 1
+#    endif // __CYGWIN__
 
-#ifndef GTEST_LANG_CXX11
+#    ifndef GTEST_LANG_CXX11
 // gcc and clang define __GXX_EXPERIMENTAL_CXX0X__ when
 // -std={c,gnu}++{0x,11} is passed.  The C++11 standard specifies a
 // value for __cplusplus, and recent versions of clang, gcc, and
 // probably other compilers set that too in C++11 mode.
-#if __GXX_EXPERIMENTAL_CXX0X__ || __cplusplus >= 201103L
+#      if __GXX_EXPERIMENTAL_CXX0X__ || __cplusplus >= 201103L
 // Compiling in at least C++11 mode.
-#define GTEST_LANG_CXX11 1
-#else
-#define GTEST_LANG_CXX11 0
-#endif
-#endif
+#        define GTEST_LANG_CXX11 1
+#      else
+#        define GTEST_LANG_CXX11 0
+#      endif
+#    endif
 
 // Brings in definitions for functions used in the testing::internal::posix
 // namespace (read, write, close, chdir, isatty, stat). We do not currently
 // use them on Windows Mobile.
-#if !GTEST_OS_WINDOWS
+#    if !GTEST_OS_WINDOWS
 // This assumes that non-Windows OSes provide unistd.h. For OSes where this
 // is not the case, we need to include headers that provide the functions
 // mentioned above.
-#include <unistd.h>
-#include <strings.h>
-#elif !GTEST_OS_WINDOWS_MOBILE
-#include <direct.h>
-#include <io.h>
-#endif
+#      include <unistd.h>
+#      include <strings.h>
+#    elif !GTEST_OS_WINDOWS_MOBILE
+#      include <direct.h>
+#      include <io.h>
+#    endif
 
-#if GTEST_OS_LINUX_ANDROID
+#    if GTEST_OS_LINUX_ANDROID
 // Used to define __ANDROID_API__ matching the target NDK API level.
-#include <android/api-level.h> // NOLINT
-#endif
+#      include <android/api-level.h> // NOLINT
+#    endif
 
 // Defines this to true iff Google Test can use POSIX regular expressions.
-#ifndef GTEST_HAS_POSIX_RE
-#if GTEST_OS_LINUX_ANDROID
+#    ifndef GTEST_HAS_POSIX_RE
+#      if GTEST_OS_LINUX_ANDROID
 // On Android, <regex.h> is only available starting with Gingerbread.
-#define GTEST_HAS_POSIX_RE (__ANDROID_API__ >= 9)
-#else
-#define GTEST_HAS_POSIX_RE (!GTEST_OS_WINDOWS)
-#endif
-#endif
+#        define GTEST_HAS_POSIX_RE (__ANDROID_API__ >= 9)
+#      else
+#        define GTEST_HAS_POSIX_RE (!GTEST_OS_WINDOWS)
+#      endif
+#    endif
 
-#if GTEST_HAS_POSIX_RE
+#    if GTEST_HAS_POSIX_RE
 
 // On some platforms, <regex.h> needs someone to define size_t, and
 // won't compile otherwise.  We can #include it here as we already
 // included <stdlib.h>, which is guaranteed to define size_t through
 // <stddef.h>.
-#include <regex.h> // NOLINT
+#      include <regex.h> // NOLINT
 
-#define GTEST_USES_POSIX_RE 1
+#      define GTEST_USES_POSIX_RE 1
 
-#elif GTEST_OS_WINDOWS
+#    elif GTEST_OS_WINDOWS
 
 // <regex.h> is not available on Windows.  Use our own simple regex
 // implementation instead.
-#define GTEST_USES_SIMPLE_RE 1
+#      define GTEST_USES_SIMPLE_RE 1
 
-#else
+#    else
 
 // <regex.h> may not be available on this platform.  Use our own
 // simple regex implementation instead.
-#define GTEST_USES_SIMPLE_RE 1
+#      define GTEST_USES_SIMPLE_RE 1
 
-#endif // GTEST_HAS_POSIX_RE
+#    endif // GTEST_HAS_POSIX_RE
 
-#ifndef GTEST_HAS_EXCEPTIONS
+#    ifndef GTEST_HAS_EXCEPTIONS
 // The user didn't tell us whether exceptions are enabled, so we need
 // to figure it out.
-#if defined(_MSC_VER) || defined(__BORLANDC__)
+#      if defined(_MSC_VER) || defined(__BORLANDC__)
 // MSVC's and C++Builder's implementations of the STL use the _HAS_EXCEPTIONS
 // macro to enable exceptions, so we'll do the same.
 // Assumes that exceptions are enabled by default.
-#ifndef _HAS_EXCEPTIONS
-#define _HAS_EXCEPTIONS 1
-#endif // _HAS_EXCEPTIONS
-#define GTEST_HAS_EXCEPTIONS _HAS_EXCEPTIONS
-#elif defined(__GNUC__) && __EXCEPTIONS
+#        ifndef _HAS_EXCEPTIONS
+#          define _HAS_EXCEPTIONS 1
+#        endif // _HAS_EXCEPTIONS
+#        define GTEST_HAS_EXCEPTIONS _HAS_EXCEPTIONS
+#      elif defined(__GNUC__) && __EXCEPTIONS
 // gcc defines __EXCEPTIONS to 1 iff exceptions are enabled.
-#define GTEST_HAS_EXCEPTIONS 1
-#elif defined(__SUNPRO_CC)
+#        define GTEST_HAS_EXCEPTIONS 1
+#      elif defined(__SUNPRO_CC)
 // Sun Pro CC supports exceptions.  However, there is no compile-time way of
 // detecting whether they are enabled or not.  Therefore, we assume that
 // they are enabled unless the user tells us otherwise.
-#define GTEST_HAS_EXCEPTIONS 1
-#elif defined(__IBMCPP__) && __EXCEPTIONS
+#        define GTEST_HAS_EXCEPTIONS 1
+#      elif defined(__IBMCPP__) && __EXCEPTIONS
 // xlC defines __EXCEPTIONS to 1 iff exceptions are enabled.
-#define GTEST_HAS_EXCEPTIONS 1
-#elif defined(__HP_aCC)
+#        define GTEST_HAS_EXCEPTIONS 1
+#      elif defined(__HP_aCC)
 // Exception handling is in effect by default in HP aCC compiler. It has to
 // be turned of by +noeh compiler option if desired.
-#define GTEST_HAS_EXCEPTIONS 1
-#else
+#        define GTEST_HAS_EXCEPTIONS 1
+#      else
 // For other compilers, we assume exceptions are disabled to be
 // conservative.
-#define GTEST_HAS_EXCEPTIONS 0
-#endif // defined(_MSC_VER) || defined(__BORLANDC__)
-#endif // GTEST_HAS_EXCEPTIONS
+#        define GTEST_HAS_EXCEPTIONS 0
+#      endif // defined(_MSC_VER) || defined(__BORLANDC__)
+#    endif // GTEST_HAS_EXCEPTIONS
 
-#if !defined(GTEST_HAS_STD_STRING)
+#    if !defined(GTEST_HAS_STD_STRING)
 // Even though we don't use this macro any longer, we keep it in case
 // some clients still depend on it.
-#define GTEST_HAS_STD_STRING 1
-#elif !GTEST_HAS_STD_STRING
+#      define GTEST_HAS_STD_STRING 1
+#    elif !GTEST_HAS_STD_STRING
 // The user told us that ::std::string isn't available.
-#error "Google Test cannot be used where ::std::string isn't available."
-#endif // !defined(GTEST_HAS_STD_STRING)
+#      error "Google Test cannot be used where ::std::string isn't available."
+#    endif // !defined(GTEST_HAS_STD_STRING)
 
-#ifndef GTEST_HAS_GLOBAL_STRING
+#    ifndef GTEST_HAS_GLOBAL_STRING
 // The user didn't tell us whether ::string is available, so we need
 // to figure it out.
 
-#define GTEST_HAS_GLOBAL_STRING 0
+#      define GTEST_HAS_GLOBAL_STRING 0
 
-#endif // GTEST_HAS_GLOBAL_STRING
+#    endif // GTEST_HAS_GLOBAL_STRING
 
-#ifndef GTEST_HAS_STD_WSTRING
+#    ifndef GTEST_HAS_STD_WSTRING
 // The user didn't tell us whether ::std::wstring is available, so we need
 // to figure it out.
 // TODO(wan@google.com): uses autoconf to detect whether ::std::wstring
@@ -496,113 +496,113 @@
 // Cygwin 1.7 and below doesn't support ::std::wstring.
 // Solaris' libc++ doesn't support it either.  Android has
 // no support for it at least as recent as Froyo (2.2).
-#define GTEST_HAS_STD_WSTRING (!(GTEST_OS_LINUX_ANDROID || GTEST_OS_CYGWIN || GTEST_OS_SOLARIS))
+#      define GTEST_HAS_STD_WSTRING (!(GTEST_OS_LINUX_ANDROID || GTEST_OS_CYGWIN || GTEST_OS_SOLARIS))
 
-#endif // GTEST_HAS_STD_WSTRING
+#    endif // GTEST_HAS_STD_WSTRING
 
-#ifndef GTEST_HAS_GLOBAL_WSTRING
+#    ifndef GTEST_HAS_GLOBAL_WSTRING
 // The user didn't tell us whether ::wstring is available, so we need
 // to figure it out.
-#define GTEST_HAS_GLOBAL_WSTRING (GTEST_HAS_STD_WSTRING && GTEST_HAS_GLOBAL_STRING)
-#endif // GTEST_HAS_GLOBAL_WSTRING
+#      define GTEST_HAS_GLOBAL_WSTRING (GTEST_HAS_STD_WSTRING && GTEST_HAS_GLOBAL_STRING)
+#    endif // GTEST_HAS_GLOBAL_WSTRING
 
 // Determines whether RTTI is available.
-#ifndef GTEST_HAS_RTTI
+#    ifndef GTEST_HAS_RTTI
 // The user didn't tell us whether RTTI is enabled, so we need to
 // figure it out.
 
-#ifdef _MSC_VER
+#      ifdef _MSC_VER
 
-#ifdef _CPPRTTI // MSVC defines this macro iff RTTI is enabled.
-#define GTEST_HAS_RTTI 1
-#else
-#define GTEST_HAS_RTTI 0
-#endif
+#        ifdef _CPPRTTI // MSVC defines this macro iff RTTI is enabled.
+#          define GTEST_HAS_RTTI 1
+#        else
+#          define GTEST_HAS_RTTI 0
+#        endif
 
 // Starting with version 4.3.2, gcc defines __GXX_RTTI iff RTTI is enabled.
-#elif defined(__GNUC__) && (GTEST_GCC_VER_ >= 40302)
+#      elif defined(__GNUC__) && (GTEST_GCC_VER_ >= 40302)
 
-#ifdef __GXX_RTTI
+#        ifdef __GXX_RTTI
 // When building against STLport with the Android NDK and with
 // -frtti -fno-exceptions, the build fails at link time with undefined
 // references to __cxa_bad_typeid. Note sure if STL or toolchain bug,
 // so disable RTTI when detected.
-#if GTEST_OS_LINUX_ANDROID && defined(_STLPORT_MAJOR) && !defined(__EXCEPTIONS)
-#define GTEST_HAS_RTTI 0
-#else
-#define GTEST_HAS_RTTI 1
-#endif // GTEST_OS_LINUX_ANDROID && __STLPORT_MAJOR && !__EXCEPTIONS
-#else
-#define GTEST_HAS_RTTI 0
-#endif // __GXX_RTTI
+#          if GTEST_OS_LINUX_ANDROID && defined(_STLPORT_MAJOR) && !defined(__EXCEPTIONS)
+#            define GTEST_HAS_RTTI 0
+#          else
+#            define GTEST_HAS_RTTI 1
+#          endif // GTEST_OS_LINUX_ANDROID && __STLPORT_MAJOR && !__EXCEPTIONS
+#        else
+#          define GTEST_HAS_RTTI 0
+#        endif // __GXX_RTTI
 
 // Clang defines __GXX_RTTI starting with version 3.0, but its manual recommends
 // using has_feature instead. has_feature(cxx_rtti) is supported since 2.7, the
 // first version with C++ support.
-#elif defined(__clang__)
+#      elif defined(__clang__)
 
-#define GTEST_HAS_RTTI __has_feature(cxx_rtti)
+#        define GTEST_HAS_RTTI __has_feature(cxx_rtti)
 
 // Starting with version 9.0 IBM Visual Age defines __RTTI_ALL__ to 1 if
 // both the typeid and dynamic_cast features are present.
-#elif defined(__IBMCPP__) && (__IBMCPP__ >= 900)
+#      elif defined(__IBMCPP__) && (__IBMCPP__ >= 900)
 
-#ifdef __RTTI_ALL__
-#define GTEST_HAS_RTTI 1
-#else
-#define GTEST_HAS_RTTI 0
-#endif
+#        ifdef __RTTI_ALL__
+#          define GTEST_HAS_RTTI 1
+#        else
+#          define GTEST_HAS_RTTI 0
+#        endif
 
-#else
+#      else
 
 // For all other compilers, we assume RTTI is enabled.
-#define GTEST_HAS_RTTI 1
+#        define GTEST_HAS_RTTI 1
 
-#endif // _MSC_VER
+#      endif // _MSC_VER
 
-#endif // GTEST_HAS_RTTI
+#    endif // GTEST_HAS_RTTI
 
 // It's this header's responsibility to #include <typeinfo> when RTTI
 // is enabled.
-#if GTEST_HAS_RTTI
-#include <typeinfo>
-#endif
+#    if GTEST_HAS_RTTI
+#      include <typeinfo>
+#    endif
 
 // Determines whether Google Test can use the pthreads library.
-#ifndef GTEST_HAS_PTHREAD
+#    ifndef GTEST_HAS_PTHREAD
 // The user didn't tell us explicitly, so we assume pthreads support is
 // available on Linux and Mac.
 //
 // To disable threading support in Google Test, add -DGTEST_HAS_PTHREAD=0
 // to your compiler flags.
-#define GTEST_HAS_PTHREAD (GTEST_OS_LINUX || GTEST_OS_MAC || GTEST_OS_HPUX || GTEST_OS_QNX)
-#endif // GTEST_HAS_PTHREAD
+#      define GTEST_HAS_PTHREAD (GTEST_OS_LINUX || GTEST_OS_MAC || GTEST_OS_HPUX || GTEST_OS_QNX)
+#    endif // GTEST_HAS_PTHREAD
 
-#if GTEST_HAS_PTHREAD
+#    if GTEST_HAS_PTHREAD
 // gtest-port.h guarantees to #include <pthread.h> when GTEST_HAS_PTHREAD is
 // true.
-#include <pthread.h> // NOLINT
+#      include <pthread.h> // NOLINT
 
 // For timespec and nanosleep, used below.
-#include <time.h> // NOLINT
-#endif
+#      include <time.h> // NOLINT
+#    endif
 
 // Determines whether Google Test can use tr1/tuple.  You can define
 // this macro to 0 to prevent Google Test from using tuple (any
 // feature depending on tuple with be disabled in this mode).
-#ifndef GTEST_HAS_TR1_TUPLE
-#if GTEST_OS_LINUX_ANDROID && defined(_STLPORT_MAJOR)
+#    ifndef GTEST_HAS_TR1_TUPLE
+#      if GTEST_OS_LINUX_ANDROID && defined(_STLPORT_MAJOR)
 // STLport, provided with the Android NDK, has neither <tr1/tuple> or <tuple>.
-#define GTEST_HAS_TR1_TUPLE 0
-#else
+#        define GTEST_HAS_TR1_TUPLE 0
+#      else
 // The user didn't tell us not to do it, so we assume it's OK.
-#define GTEST_HAS_TR1_TUPLE 1
-#endif
-#endif // GTEST_HAS_TR1_TUPLE
+#        define GTEST_HAS_TR1_TUPLE 1
+#      endif
+#    endif // GTEST_HAS_TR1_TUPLE
 
 // Determines whether Google Test's own tr1 tuple implementation
 // should be used.
-#ifndef GTEST_USE_OWN_TR1_TUPLE
+#    ifndef GTEST_USE_OWN_TR1_TUPLE
 // The user didn't tell us, so we need to figure it out.
 
 // We use our own TR1 tuple if we aren't sure the user has an
@@ -615,33 +615,33 @@
 // user has.  QNX's QCC compiler is a modified GCC but it doesn't
 // support TR1 tuple.  libc++ only provides std::tuple, in C++11 mode,
 // and it can be used with some compilers that define __GNUC__.
-#if (defined(__GNUC__) && !defined(__CUDACC__) && (GTEST_GCC_VER_ >= 40000) && !GTEST_OS_QNX                           \
-     && !defined(_LIBCPP_VERSION))                                                                                     \
-    || _MSC_VER >= 1600
-#define GTEST_ENV_HAS_TR1_TUPLE_ 1
-#endif
+#      if (defined(__GNUC__) && !defined(__CUDACC__) && (GTEST_GCC_VER_ >= 40000) && !GTEST_OS_QNX                     \
+           && !defined(_LIBCPP_VERSION))                                                                               \
+          || _MSC_VER >= 1600
+#        define GTEST_ENV_HAS_TR1_TUPLE_ 1
+#      endif
 
 // C++11 specifies that <tuple> provides std::tuple. Use that if gtest is used
 // in C++11 mode and libstdc++ isn't very old (binaries targeting OS X 10.6
 // can build with clang but need to use gcc4.2's libstdc++).
-#if GTEST_LANG_CXX11 && (!defined(__GLIBCXX__) || __GLIBCXX__ > 20110325)
-#define GTEST_ENV_HAS_STD_TUPLE_ 1
-#endif
+#      if GTEST_LANG_CXX11 && (!defined(__GLIBCXX__) || __GLIBCXX__ > 20110325)
+#        define GTEST_ENV_HAS_STD_TUPLE_ 1
+#      endif
 
-#if GTEST_ENV_HAS_TR1_TUPLE_ || GTEST_ENV_HAS_STD_TUPLE_
-#define GTEST_USE_OWN_TR1_TUPLE 0
-#else
-#define GTEST_USE_OWN_TR1_TUPLE 1
-#endif
+#      if GTEST_ENV_HAS_TR1_TUPLE_ || GTEST_ENV_HAS_STD_TUPLE_
+#        define GTEST_USE_OWN_TR1_TUPLE 0
+#      else
+#        define GTEST_USE_OWN_TR1_TUPLE 1
+#      endif
 
-#endif // GTEST_USE_OWN_TR1_TUPLE
+#    endif // GTEST_USE_OWN_TR1_TUPLE
 
 // To avoid conditional compilation everywhere, we make it
 // gtest-port.h's responsibility to #include the header implementing
 // tr1/tuple.
-#if GTEST_HAS_TR1_TUPLE
+#    if GTEST_HAS_TR1_TUPLE
 
-#if GTEST_USE_OWN_TR1_TUPLE
+#      if GTEST_USE_OWN_TR1_TUPLE
 // This file was GENERATED by command:
 //     pump.py gtest-tuple.h.pump
 // DO NOT EDIT BY HAND!!!
@@ -679,57 +679,59 @@
 
 // Implements a subset of TR1 tuple needed by Google Test and Google Mock.
 
-#ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_TUPLE_H_
-#define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_TUPLE_H_
+#        ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_TUPLE_H_
+#          define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_TUPLE_H_
 
-#include <utility> // For ::std::pair.
+#          include <utility> // For ::std::pair.
 
 // The compiler used in Symbian has a bug that prevents us from declaring the
 // tuple template as a friend (it complains that tuple is redefined).  This
 // hack bypasses the bug by declaring the members that should otherwise be
 // private as public.
 // Sun Studio versions < 12 also have the above bug.
-#if defined(__SYMBIAN32__) || (defined(__SUNPRO_CC) && __SUNPRO_CC < 0x590)
-#define GTEST_DECLARE_TUPLE_AS_FRIEND_ public:
-#else
-#define GTEST_DECLARE_TUPLE_AS_FRIEND_                                                                                 \
-  template <GTEST_10_TYPENAMES_(U)>                                                                                    \
-  friend class tuple;                                                                                                  \
+#          if defined(__SYMBIAN32__) || (defined(__SUNPRO_CC) && __SUNPRO_CC < 0x590)
+#            define GTEST_DECLARE_TUPLE_AS_FRIEND_ public:
+#          else
+#            define GTEST_DECLARE_TUPLE_AS_FRIEND_                                                                     \
+              template <GTEST_10_TYPENAMES_(U)>                                                                        \
+              friend class tuple;                                                                                      \
                                                                                                                        \
-private:
-#endif
+            private:
+#          endif
 
 // GTEST_n_TUPLE_(T) is the type of an n-tuple.
-#define GTEST_0_TUPLE_(T) tuple<>
-#define GTEST_1_TUPLE_(T) tuple<T##0, void, void, void, void, void, void, void, void, void>
-#define GTEST_2_TUPLE_(T) tuple<T##0, T##1, void, void, void, void, void, void, void, void>
-#define GTEST_3_TUPLE_(T) tuple<T##0, T##1, T##2, void, void, void, void, void, void, void>
-#define GTEST_4_TUPLE_(T) tuple<T##0, T##1, T##2, T##3, void, void, void, void, void, void>
-#define GTEST_5_TUPLE_(T) tuple<T##0, T##1, T##2, T##3, T##4, void, void, void, void, void>
-#define GTEST_6_TUPLE_(T) tuple<T##0, T##1, T##2, T##3, T##4, T##5, void, void, void, void>
-#define GTEST_7_TUPLE_(T) tuple<T##0, T##1, T##2, T##3, T##4, T##5, T##6, void, void, void>
-#define GTEST_8_TUPLE_(T) tuple<T##0, T##1, T##2, T##3, T##4, T##5, T##6, T##7, void, void>
-#define GTEST_9_TUPLE_(T) tuple<T##0, T##1, T##2, T##3, T##4, T##5, T##6, T##7, T##8, void>
-#define GTEST_10_TUPLE_(T) tuple<T##0, T##1, T##2, T##3, T##4, T##5, T##6, T##7, T##8, T##9>
+#          define GTEST_0_TUPLE_(T) tuple<>
+#          define GTEST_1_TUPLE_(T) tuple<T##0, void, void, void, void, void, void, void, void, void>
+#          define GTEST_2_TUPLE_(T) tuple<T##0, T##1, void, void, void, void, void, void, void, void>
+#          define GTEST_3_TUPLE_(T) tuple<T##0, T##1, T##2, void, void, void, void, void, void, void>
+#          define GTEST_4_TUPLE_(T) tuple<T##0, T##1, T##2, T##3, void, void, void, void, void, void>
+#          define GTEST_5_TUPLE_(T) tuple<T##0, T##1, T##2, T##3, T##4, void, void, void, void, void>
+#          define GTEST_6_TUPLE_(T) tuple<T##0, T##1, T##2, T##3, T##4, T##5, void, void, void, void>
+#          define GTEST_7_TUPLE_(T) tuple<T##0, T##1, T##2, T##3, T##4, T##5, T##6, void, void, void>
+#          define GTEST_8_TUPLE_(T) tuple<T##0, T##1, T##2, T##3, T##4, T##5, T##6, T##7, void, void>
+#          define GTEST_9_TUPLE_(T) tuple<T##0, T##1, T##2, T##3, T##4, T##5, T##6, T##7, T##8, void>
+#          define GTEST_10_TUPLE_(T) tuple<T##0, T##1, T##2, T##3, T##4, T##5, T##6, T##7, T##8, T##9>
 
 // GTEST_n_TYPENAMES_(T) declares a list of n typenames.
-#define GTEST_0_TYPENAMES_(T)
-#define GTEST_1_TYPENAMES_(T) typename T##0
-#define GTEST_2_TYPENAMES_(T) typename T##0, typename T##1
-#define GTEST_3_TYPENAMES_(T) typename T##0, typename T##1, typename T##2
-#define GTEST_4_TYPENAMES_(T) typename T##0, typename T##1, typename T##2, typename T##3
-#define GTEST_5_TYPENAMES_(T) typename T##0, typename T##1, typename T##2, typename T##3, typename T##4
-#define GTEST_6_TYPENAMES_(T) typename T##0, typename T##1, typename T##2, typename T##3, typename T##4, typename T##5
-#define GTEST_7_TYPENAMES_(T)                                                                                          \
-  typename T##0, typename T##1, typename T##2, typename T##3, typename T##4, typename T##5, typename T##6
-#define GTEST_8_TYPENAMES_(T)                                                                                          \
-  typename T##0, typename T##1, typename T##2, typename T##3, typename T##4, typename T##5, typename T##6, typename T##7
-#define GTEST_9_TYPENAMES_(T)                                                                                          \
-  typename T##0, typename T##1, typename T##2, typename T##3, typename T##4, typename T##5, typename T##6,             \
-      typename T##7, typename T##8
-#define GTEST_10_TYPENAMES_(T)                                                                                         \
-  typename T##0, typename T##1, typename T##2, typename T##3, typename T##4, typename T##5, typename T##6,             \
-      typename T##7, typename T##8, typename T##9
+#          define GTEST_0_TYPENAMES_(T)
+#          define GTEST_1_TYPENAMES_(T) typename T##0
+#          define GTEST_2_TYPENAMES_(T) typename T##0, typename T##1
+#          define GTEST_3_TYPENAMES_(T) typename T##0, typename T##1, typename T##2
+#          define GTEST_4_TYPENAMES_(T) typename T##0, typename T##1, typename T##2, typename T##3
+#          define GTEST_5_TYPENAMES_(T) typename T##0, typename T##1, typename T##2, typename T##3, typename T##4
+#          define GTEST_6_TYPENAMES_(T)                                                                                \
+            typename T##0, typename T##1, typename T##2, typename T##3, typename T##4, typename T##5
+#          define GTEST_7_TYPENAMES_(T)                                                                                \
+            typename T##0, typename T##1, typename T##2, typename T##3, typename T##4, typename T##5, typename T##6
+#          define GTEST_8_TYPENAMES_(T)                                                                                \
+            typename T##0, typename T##1, typename T##2, typename T##3, typename T##4, typename T##5, typename T##6,   \
+                typename T##7
+#          define GTEST_9_TYPENAMES_(T)                                                                                \
+            typename T##0, typename T##1, typename T##2, typename T##3, typename T##4, typename T##5, typename T##6,   \
+                typename T##7, typename T##8
+#          define GTEST_10_TYPENAMES_(T)                                                                               \
+            typename T##0, typename T##1, typename T##2, typename T##3, typename T##4, typename T##5, typename T##6,   \
+                typename T##7, typename T##8, typename T##9
 
 // In theory, defining stuff in the ::std namespace is undefined
 // behavior.  We can do this as we are playing the role of a standard
@@ -766,7 +768,7 @@ struct ByRef<T&>
 }; // NOLINT
 
 // A handy wrapper for ByRef.
-#define GTEST_BY_REF_(T) typename ::std::tr1::gtest_internal::ByRef<T>::type
+#          define GTEST_BY_REF_(T) typename ::std::tr1::gtest_internal::ByRef<T>::type
 
 // AddRef<T>::type is T if T is a reference; otherwise it's T&.  This
 // is the same as tr1::add_reference<T>::type.
@@ -782,7 +784,7 @@ struct AddRef<T&>
 }; // NOLINT
 
 // A handy wrapper for AddRef.
-#define GTEST_ADD_REF_(T) typename ::std::tr1::gtest_internal::AddRef<T>::type
+#          define GTEST_ADD_REF_(T) typename ::std::tr1::gtest_internal::AddRef<T>::type
 
 // A helper for implementing get<k>().
 template <int k>
@@ -859,12 +861,8 @@ template <>
 class tuple<>
 {
 public:
-  tuple()
-  {
-  }
-  tuple(const tuple& /* t */)
-  {
-  }
+  tuple() {}
+  tuple(const tuple& /* t */) {}
   tuple& operator=(const tuple& /* t */)
   {
     return *this;
@@ -880,24 +878,20 @@ public:
 
   tuple()
     : f0_()
-  {
-  }
+  {}
 
   explicit tuple(GTEST_BY_REF_(T0) f0)
     : f0_(f0)
-  {
-  }
+  {}
 
   tuple(const tuple& t)
     : f0_(t.f0_)
-  {
-  }
+  {}
 
   template <GTEST_1_TYPENAMES_(U)>
   tuple(const GTEST_1_TUPLE_(U) & t)
     : f0_(t.f0_)
-  {
-  }
+  {}
 
   tuple& operator=(const tuple& t)
   {
@@ -932,33 +926,28 @@ public:
   tuple()
     : f0_()
     , f1_()
-  {
-  }
+  {}
 
   explicit tuple(GTEST_BY_REF_(T0) f0, GTEST_BY_REF_(T1) f1)
     : f0_(f0)
     , f1_(f1)
-  {
-  }
+  {}
 
   tuple(const tuple& t)
     : f0_(t.f0_)
     , f1_(t.f1_)
-  {
-  }
+  {}
 
   template <GTEST_2_TYPENAMES_(U)>
   tuple(const GTEST_2_TUPLE_(U) & t)
     : f0_(t.f0_)
     , f1_(t.f1_)
-  {
-  }
+  {}
   template <typename U0, typename U1>
   tuple(const ::std::pair<U0, U1>& p)
     : f0_(p.first)
     , f1_(p.second)
-  {
-  }
+  {}
 
   tuple& operator=(const tuple& t)
   {
@@ -1003,30 +992,26 @@ public:
     : f0_()
     , f1_()
     , f2_()
-  {
-  }
+  {}
 
   explicit tuple(GTEST_BY_REF_(T0) f0, GTEST_BY_REF_(T1) f1, GTEST_BY_REF_(T2) f2)
     : f0_(f0)
     , f1_(f1)
     , f2_(f2)
-  {
-  }
+  {}
 
   tuple(const tuple& t)
     : f0_(t.f0_)
     , f1_(t.f1_)
     , f2_(t.f2_)
-  {
-  }
+  {}
 
   template <GTEST_3_TYPENAMES_(U)>
   tuple(const GTEST_3_TUPLE_(U) & t)
     : f0_(t.f0_)
     , f1_(t.f1_)
     , f2_(t.f2_)
-  {
-  }
+  {}
 
   tuple& operator=(const tuple& t)
   {
@@ -1067,24 +1052,21 @@ public:
     , f1_()
     , f2_()
     , f3_()
-  {
-  }
+  {}
 
   explicit tuple(GTEST_BY_REF_(T0) f0, GTEST_BY_REF_(T1) f1, GTEST_BY_REF_(T2) f2, GTEST_BY_REF_(T3) f3)
     : f0_(f0)
     , f1_(f1)
     , f2_(f2)
     , f3_(f3)
-  {
-  }
+  {}
 
   tuple(const tuple& t)
     : f0_(t.f0_)
     , f1_(t.f1_)
     , f2_(t.f2_)
     , f3_(t.f3_)
-  {
-  }
+  {}
 
   template <GTEST_4_TYPENAMES_(U)>
   tuple(const GTEST_4_TUPLE_(U) & t)
@@ -1092,8 +1074,7 @@ public:
     , f1_(t.f1_)
     , f2_(t.f2_)
     , f3_(t.f3_)
-  {
-  }
+  {}
 
   tuple& operator=(const tuple& t)
   {
@@ -1137,8 +1118,7 @@ public:
     , f2_()
     , f3_()
     , f4_()
-  {
-  }
+  {}
 
   explicit tuple(
       GTEST_BY_REF_(T0) f0, GTEST_BY_REF_(T1) f1, GTEST_BY_REF_(T2) f2, GTEST_BY_REF_(T3) f3, GTEST_BY_REF_(T4) f4)
@@ -1147,8 +1127,7 @@ public:
     , f2_(f2)
     , f3_(f3)
     , f4_(f4)
-  {
-  }
+  {}
 
   tuple(const tuple& t)
     : f0_(t.f0_)
@@ -1156,8 +1135,7 @@ public:
     , f2_(t.f2_)
     , f3_(t.f3_)
     , f4_(t.f4_)
-  {
-  }
+  {}
 
   template <GTEST_5_TYPENAMES_(U)>
   tuple(const GTEST_5_TUPLE_(U) & t)
@@ -1166,8 +1144,7 @@ public:
     , f2_(t.f2_)
     , f3_(t.f3_)
     , f4_(t.f4_)
-  {
-  }
+  {}
 
   tuple& operator=(const tuple& t)
   {
@@ -1214,8 +1191,7 @@ public:
     , f3_()
     , f4_()
     , f5_()
-  {
-  }
+  {}
 
   explicit tuple(GTEST_BY_REF_(T0) f0,
                  GTEST_BY_REF_(T1) f1,
@@ -1229,8 +1205,7 @@ public:
     , f3_(f3)
     , f4_(f4)
     , f5_(f5)
-  {
-  }
+  {}
 
   tuple(const tuple& t)
     : f0_(t.f0_)
@@ -1239,8 +1214,7 @@ public:
     , f3_(t.f3_)
     , f4_(t.f4_)
     , f5_(t.f5_)
-  {
-  }
+  {}
 
   template <GTEST_6_TYPENAMES_(U)>
   tuple(const GTEST_6_TUPLE_(U) & t)
@@ -1250,8 +1224,7 @@ public:
     , f3_(t.f3_)
     , f4_(t.f4_)
     , f5_(t.f5_)
-  {
-  }
+  {}
 
   tuple& operator=(const tuple& t)
   {
@@ -1301,8 +1274,7 @@ public:
     , f4_()
     , f5_()
     , f6_()
-  {
-  }
+  {}
 
   explicit tuple(GTEST_BY_REF_(T0) f0,
                  GTEST_BY_REF_(T1) f1,
@@ -1318,8 +1290,7 @@ public:
     , f4_(f4)
     , f5_(f5)
     , f6_(f6)
-  {
-  }
+  {}
 
   tuple(const tuple& t)
     : f0_(t.f0_)
@@ -1329,8 +1300,7 @@ public:
     , f4_(t.f4_)
     , f5_(t.f5_)
     , f6_(t.f6_)
-  {
-  }
+  {}
 
   template <GTEST_7_TYPENAMES_(U)>
   tuple(const GTEST_7_TUPLE_(U) & t)
@@ -1341,8 +1311,7 @@ public:
     , f4_(t.f4_)
     , f5_(t.f5_)
     , f6_(t.f6_)
-  {
-  }
+  {}
 
   tuple& operator=(const tuple& t)
   {
@@ -1395,8 +1364,7 @@ public:
     , f5_()
     , f6_()
     , f7_()
-  {
-  }
+  {}
 
   explicit tuple(GTEST_BY_REF_(T0) f0,
                  GTEST_BY_REF_(T1) f1,
@@ -1414,8 +1382,7 @@ public:
     , f5_(f5)
     , f6_(f6)
     , f7_(f7)
-  {
-  }
+  {}
 
   tuple(const tuple& t)
     : f0_(t.f0_)
@@ -1426,8 +1393,7 @@ public:
     , f5_(t.f5_)
     , f6_(t.f6_)
     , f7_(t.f7_)
-  {
-  }
+  {}
 
   template <GTEST_8_TYPENAMES_(U)>
   tuple(const GTEST_8_TUPLE_(U) & t)
@@ -1439,8 +1405,7 @@ public:
     , f5_(t.f5_)
     , f6_(t.f6_)
     , f7_(t.f7_)
-  {
-  }
+  {}
 
   tuple& operator=(const tuple& t)
   {
@@ -1496,8 +1461,7 @@ public:
     , f6_()
     , f7_()
     , f8_()
-  {
-  }
+  {}
 
   explicit tuple(GTEST_BY_REF_(T0) f0,
                  GTEST_BY_REF_(T1) f1,
@@ -1517,8 +1481,7 @@ public:
     , f6_(f6)
     , f7_(f7)
     , f8_(f8)
-  {
-  }
+  {}
 
   tuple(const tuple& t)
     : f0_(t.f0_)
@@ -1530,8 +1493,7 @@ public:
     , f6_(t.f6_)
     , f7_(t.f7_)
     , f8_(t.f8_)
-  {
-  }
+  {}
 
   template <GTEST_9_TYPENAMES_(U)>
   tuple(const GTEST_9_TUPLE_(U) & t)
@@ -1544,8 +1506,7 @@ public:
     , f6_(t.f6_)
     , f7_(t.f7_)
     , f8_(t.f8_)
-  {
-  }
+  {}
 
   tuple& operator=(const tuple& t)
   {
@@ -1604,8 +1565,7 @@ public:
     , f7_()
     , f8_()
     , f9_()
-  {
-  }
+  {}
 
   explicit tuple(GTEST_BY_REF_(T0) f0,
                  GTEST_BY_REF_(T1) f1,
@@ -1627,8 +1587,7 @@ public:
     , f7_(f7)
     , f8_(f8)
     , f9_(f9)
-  {
-  }
+  {}
 
   tuple(const tuple& t)
     : f0_(t.f0_)
@@ -1641,8 +1600,7 @@ public:
     , f7_(t.f7_)
     , f8_(t.f8_)
     , f9_(t.f9_)
-  {
-  }
+  {}
 
   template <GTEST_10_TYPENAMES_(U)>
   tuple(const GTEST_10_TUPLE_(U) & t)
@@ -1656,8 +1614,7 @@ public:
     , f7_(t.f7_)
     , f8_(t.f8_)
     , f9_(t.f9_)
-  {
-  }
+  {}
 
   tuple& operator=(const tuple& t)
   {
@@ -1867,7 +1824,7 @@ struct tuple_element
   typedef typename gtest_internal::TupleElement < k<(tuple_size<Tuple>::value), k, Tuple>::type type;
 };
 
-#define GTEST_TUPLE_ELEMENT_(k, Tuple) typename tuple_element<k, Tuple>::type
+#          define GTEST_TUPLE_ELEMENT_(k, Tuple) typename tuple_element<k, Tuple>::type
 
 // 6.1.3.4 Element access.
 
@@ -2114,38 +2071,38 @@ inline bool operator!=(const GTEST_10_TUPLE_(T) & t, const GTEST_10_TUPLE_(U) & 
 } // namespace tr1
 } // namespace std
 
-#undef GTEST_0_TUPLE_
-#undef GTEST_1_TUPLE_
-#undef GTEST_2_TUPLE_
-#undef GTEST_3_TUPLE_
-#undef GTEST_4_TUPLE_
-#undef GTEST_5_TUPLE_
-#undef GTEST_6_TUPLE_
-#undef GTEST_7_TUPLE_
-#undef GTEST_8_TUPLE_
-#undef GTEST_9_TUPLE_
-#undef GTEST_10_TUPLE_
+#          undef GTEST_0_TUPLE_
+#          undef GTEST_1_TUPLE_
+#          undef GTEST_2_TUPLE_
+#          undef GTEST_3_TUPLE_
+#          undef GTEST_4_TUPLE_
+#          undef GTEST_5_TUPLE_
+#          undef GTEST_6_TUPLE_
+#          undef GTEST_7_TUPLE_
+#          undef GTEST_8_TUPLE_
+#          undef GTEST_9_TUPLE_
+#          undef GTEST_10_TUPLE_
 
-#undef GTEST_0_TYPENAMES_
-#undef GTEST_1_TYPENAMES_
-#undef GTEST_2_TYPENAMES_
-#undef GTEST_3_TYPENAMES_
-#undef GTEST_4_TYPENAMES_
-#undef GTEST_5_TYPENAMES_
-#undef GTEST_6_TYPENAMES_
-#undef GTEST_7_TYPENAMES_
-#undef GTEST_8_TYPENAMES_
-#undef GTEST_9_TYPENAMES_
-#undef GTEST_10_TYPENAMES_
+#          undef GTEST_0_TYPENAMES_
+#          undef GTEST_1_TYPENAMES_
+#          undef GTEST_2_TYPENAMES_
+#          undef GTEST_3_TYPENAMES_
+#          undef GTEST_4_TYPENAMES_
+#          undef GTEST_5_TYPENAMES_
+#          undef GTEST_6_TYPENAMES_
+#          undef GTEST_7_TYPENAMES_
+#          undef GTEST_8_TYPENAMES_
+#          undef GTEST_9_TYPENAMES_
+#          undef GTEST_10_TYPENAMES_
 
-#undef GTEST_DECLARE_TUPLE_AS_FRIEND_
-#undef GTEST_BY_REF_
-#undef GTEST_ADD_REF_
-#undef GTEST_TUPLE_ELEMENT_
+#          undef GTEST_DECLARE_TUPLE_AS_FRIEND_
+#          undef GTEST_BY_REF_
+#          undef GTEST_ADD_REF_
+#          undef GTEST_TUPLE_ELEMENT_
 
-#endif // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_TUPLE_H_
-#elif GTEST_ENV_HAS_STD_TUPLE_
-#include <tuple>
+#        endif // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_TUPLE_H_
+#      elif GTEST_ENV_HAS_STD_TUPLE_
+#        include <tuple>
 // C++11 puts its tuple into the ::std namespace rather than
 // ::std::tr1.  gtest expects tuple to live in ::std::tr1, so put it there.
 // This causes undefined behavior, but supported compilers react in
@@ -2157,132 +2114,127 @@ using ::std::make_tuple;
 using ::std::tuple;
 using ::std::tuple_element;
 using ::std::tuple_size;
-}
-}
+} // namespace tr1
+} // namespace std
 
-#elif GTEST_OS_SYMBIAN
+#      elif GTEST_OS_SYMBIAN
 
 // On Symbian, BOOST_HAS_TR1_TUPLE causes Boost's TR1 tuple library to
 // use STLport's tuple implementation, which unfortunately doesn't
 // work as the copy of STLport distributed with Symbian is incomplete.
 // By making sure BOOST_HAS_TR1_TUPLE is undefined, we force Boost to
 // use its own tuple implementation.
-#ifdef BOOST_HAS_TR1_TUPLE
-#undef BOOST_HAS_TR1_TUPLE
-#endif // BOOST_HAS_TR1_TUPLE
+#        ifdef BOOST_HAS_TR1_TUPLE
+#          undef BOOST_HAS_TR1_TUPLE
+#        endif // BOOST_HAS_TR1_TUPLE
 
 // This prevents <boost/tr1/detail/config.hpp>, which defines
 // BOOST_HAS_TR1_TUPLE, from being #included by Boost's <tuple>.
-#define BOOST_TR1_DETAIL_CONFIG_HPP_INCLUDED
-#include <tuple>
+#        define BOOST_TR1_DETAIL_CONFIG_HPP_INCLUDED
+#        include <tuple>
 
-#elif defined(__GNUC__) && (GTEST_GCC_VER_ >= 40000)
+#      elif defined(__GNUC__) && (GTEST_GCC_VER_ >= 40000)
 // GCC 4.0+ implements tr1/tuple in the <tr1/tuple> header.  This does
 // not conform to the TR1 spec, which requires the header to be <tuple>.
 
-#if !GTEST_HAS_RTTI && GTEST_GCC_VER_ < 40302
+#        if !GTEST_HAS_RTTI && GTEST_GCC_VER_ < 40302
 // Until version 4.3.2, gcc has a bug that causes <tr1/functional>,
 // which is #included by <tr1/tuple>, to not compile when RTTI is
 // disabled.  _TR1_FUNCTIONAL is the header guard for
 // <tr1/functional>.  Hence the following #define is a hack to prevent
 // <tr1/functional> from being included.
-#define _TR1_FUNCTIONAL 1
-#include <tr1/tuple>
-#undef _TR1_FUNCTIONAL // Allows the user to #include
+#          define _TR1_FUNCTIONAL 1
+#          include <tr1/tuple>
+#          undef _TR1_FUNCTIONAL // Allows the user to #include
 // <tr1/functional> if he chooses to.
-#else
-#include <tr1/tuple> // NOLINT
-#endif // !GTEST_HAS_RTTI && GTEST_GCC_VER_ < 40302
+#        else
+#          include <tr1/tuple> // NOLINT
+#        endif // !GTEST_HAS_RTTI && GTEST_GCC_VER_ < 40302
 
-#else
+#      else
 // If the compiler is not GCC 4.0+, we assume the user is using a
 // spec-conforming TR1 implementation.
-#include <tuple> // NOLINT
-#endif // GTEST_USE_OWN_TR1_TUPLE
+#        include <tuple> // NOLINT
+#      endif // GTEST_USE_OWN_TR1_TUPLE
 
-#endif // GTEST_HAS_TR1_TUPLE
+#    endif // GTEST_HAS_TR1_TUPLE
 
 // Determines whether clone(2) is supported.
 // Usually it will only be available on Linux, excluding
 // Linux on the Itanium architecture.
 // Also see http://linux.die.net/man/2/clone.
-#ifndef GTEST_HAS_CLONE
+#    ifndef GTEST_HAS_CLONE
 // The user didn't tell us, so we need to figure it out.
 
-#if GTEST_OS_LINUX && !defined(__ia64__)
-#if GTEST_OS_LINUX_ANDROID
+#      if GTEST_OS_LINUX && !defined(__ia64__)
+#        if GTEST_OS_LINUX_ANDROID
 // On Android, clone() is only available on ARM starting with Gingerbread.
-#if defined(__arm__) && __ANDROID_API__ >= 9
-#define GTEST_HAS_CLONE 1
-#else
-#define GTEST_HAS_CLONE 0
-#endif
-#else
-#define GTEST_HAS_CLONE 1
-#endif
-#else
-#define GTEST_HAS_CLONE 0
-#endif // GTEST_OS_LINUX && !defined(__ia64__)
+#          if defined(__arm__) && __ANDROID_API__ >= 9
+#            define GTEST_HAS_CLONE 1
+#          else
+#            define GTEST_HAS_CLONE 0
+#          endif
+#        else
+#          define GTEST_HAS_CLONE 1
+#        endif
+#      else
+#        define GTEST_HAS_CLONE 0
+#      endif // GTEST_OS_LINUX && !defined(__ia64__)
 
-#endif // GTEST_HAS_CLONE
+#    endif // GTEST_HAS_CLONE
 
 // Determines whether to support stream redirection. This is used to test
 // output correctness and to implement death tests.
-#ifndef GTEST_HAS_STREAM_REDIRECTION
+#    ifndef GTEST_HAS_STREAM_REDIRECTION
 // By default, we assume that stream redirection is supported on all
 // platforms except known mobile ones.
-#if GTEST_OS_WINDOWS_MOBILE || GTEST_OS_SYMBIAN
-#define GTEST_HAS_STREAM_REDIRECTION 0
-#else
-#define GTEST_HAS_STREAM_REDIRECTION 1
-#endif // !GTEST_OS_WINDOWS_MOBILE && !GTEST_OS_SYMBIAN
-#endif // GTEST_HAS_STREAM_REDIRECTION
+#      if GTEST_OS_WINDOWS_MOBILE || GTEST_OS_SYMBIAN
+#        define GTEST_HAS_STREAM_REDIRECTION 0
+#      else
+#        define GTEST_HAS_STREAM_REDIRECTION 1
+#      endif // !GTEST_OS_WINDOWS_MOBILE && !GTEST_OS_SYMBIAN
+#    endif // GTEST_HAS_STREAM_REDIRECTION
 
 // Determines whether to support death tests.
 // Google Test does not support death tests for VC 7.1 and earlier as
 // abort() in a VC 7.1 application compiled as GUI in debug config
 // pops up a dialog window that cannot be suppressed programmatically.
-#if (GTEST_OS_LINUX || GTEST_OS_CYGWIN || GTEST_OS_SOLARIS || (GTEST_OS_MAC && !GTEST_OS_IOS)                          \
-     || GTEST_OS_IOS_SIMULATOR                                                                                         \
-     || (GTEST_OS_WINDOWS_DESKTOP && _MSC_VER >= 1400)                                                                 \
-     || GTEST_OS_WINDOWS_MINGW                                                                                         \
-     || GTEST_OS_AIX                                                                                                   \
-     || GTEST_OS_HPUX                                                                                                  \
-     || GTEST_OS_OPENBSD                                                                                               \
-     || GTEST_OS_QNX)
-#define GTEST_HAS_DEATH_TEST 1
-#include <vector> // NOLINT
-#endif
+#    if (GTEST_OS_LINUX || GTEST_OS_CYGWIN || GTEST_OS_SOLARIS || (GTEST_OS_MAC && !GTEST_OS_IOS)                      \
+         || GTEST_OS_IOS_SIMULATOR || (GTEST_OS_WINDOWS_DESKTOP && _MSC_VER >= 1400) || GTEST_OS_WINDOWS_MINGW         \
+         || GTEST_OS_AIX || GTEST_OS_HPUX || GTEST_OS_OPENBSD || GTEST_OS_QNX)
+#      define GTEST_HAS_DEATH_TEST 1
+#      include <vector> // NOLINT
+#    endif
 
 // We don't support MSVC 7.1 with exceptions disabled now.  Therefore
 // all the compilers we care about are adequate for supporting
 // value-parameterized tests.
-#define GTEST_HAS_PARAM_TEST 1
+#    define GTEST_HAS_PARAM_TEST 1
 
 // Determines whether to support type-driven tests.
 
 // Typed tests need <typeinfo> and variadic macros, which GCC, VC++ 8.0,
 // Sun Pro CC, IBM Visual Age, and HP aCC support.
-#if defined(__GNUC__) || (_MSC_VER >= 1400) || defined(__SUNPRO_CC) || defined(__IBMCPP__) || defined(__HP_aCC)
-#define GTEST_HAS_TYPED_TEST 1
-#define GTEST_HAS_TYPED_TEST_P 1
-#endif
+#    if defined(__GNUC__) || (_MSC_VER >= 1400) || defined(__SUNPRO_CC) || defined(__IBMCPP__) || defined(__HP_aCC)
+#      define GTEST_HAS_TYPED_TEST 1
+#      define GTEST_HAS_TYPED_TEST_P 1
+#    endif
 
 // Determines whether to support Combine(). This only makes sense when
 // value-parameterized tests are enabled.  The implementation doesn't
 // work on Sun Studio since it doesn't understand templated conversion
 // operators.
-#if GTEST_HAS_PARAM_TEST && GTEST_HAS_TR1_TUPLE && !defined(__SUNPRO_CC)
-#define GTEST_HAS_COMBINE 1
-#endif
+#    if GTEST_HAS_PARAM_TEST && GTEST_HAS_TR1_TUPLE && !defined(__SUNPRO_CC)
+#      define GTEST_HAS_COMBINE 1
+#    endif
 
 // Determines whether the system compiler uses UTF-16 for encoding wide strings.
-#define GTEST_WIDE_STRING_USES_UTF16_ (GTEST_OS_WINDOWS || GTEST_OS_CYGWIN || GTEST_OS_SYMBIAN || GTEST_OS_AIX)
+#    define GTEST_WIDE_STRING_USES_UTF16_ (GTEST_OS_WINDOWS || GTEST_OS_CYGWIN || GTEST_OS_SYMBIAN || GTEST_OS_AIX)
 
 // Determines whether test results can be streamed to a socket.
-#if GTEST_OS_LINUX
-#define GTEST_CAN_STREAM_RESULTS_ 1
-#endif
+#    if GTEST_OS_LINUX
+#      define GTEST_CAN_STREAM_RESULTS_ 1
+#    endif
 
 // Defines some utility macros.
 
@@ -2294,14 +2246,14 @@ using ::std::tuple_size;
 //     ASSERT_*(condition) << "Some message";
 //
 // The "switch (0) case 0:" idiom is used to suppress this.
-#ifdef __INTEL_COMPILER
-#define GTEST_AMBIGUOUS_ELSE_BLOCKER_
-#else
-#define GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                  \
-  switch (0)                                                                                                           \
-  case 0:                                                                                                              \
-  default: // NOLINT
-#endif
+#    ifdef __INTEL_COMPILER
+#      define GTEST_AMBIGUOUS_ELSE_BLOCKER_
+#    else
+#      define GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                            \
+        switch (0)                                                                                                     \
+        case 0:                                                                                                        \
+        default: // NOLINT
+#    endif
 
 // Use this annotation at the end of a struct/class definition to
 // prevent the compiler from optimizing away instances that are never
@@ -2314,76 +2266,76 @@ using ::std::tuple_size;
 //
 // Also use it after a variable or parameter declaration to tell the
 // compiler the variable/parameter does not have to be used.
-#if defined(__GNUC__) && !defined(COMPILER_ICC)
-#define GTEST_ATTRIBUTE_UNUSED_ __attribute__((unused))
-#else
-#define GTEST_ATTRIBUTE_UNUSED_
-#endif
+#    if defined(__GNUC__) && !defined(COMPILER_ICC)
+#      define GTEST_ATTRIBUTE_UNUSED_ __attribute__((unused))
+#    else
+#      define GTEST_ATTRIBUTE_UNUSED_
+#    endif
 
 // A macro to disallow operator=
 // This should be used in the private: declarations for a class.
-#define GTEST_DISALLOW_ASSIGN_(type) void operator=(type const&)
+#    define GTEST_DISALLOW_ASSIGN_(type) void operator=(type const&)
 
 // A macro to disallow copy constructor and operator=
 // This should be used in the private: declarations for a class.
-#define GTEST_DISALLOW_COPY_AND_ASSIGN_(type)                                                                          \
-  type(type const&);                                                                                                   \
-  GTEST_DISALLOW_ASSIGN_(type)
+#    define GTEST_DISALLOW_COPY_AND_ASSIGN_(type)                                                                      \
+      type(type const&);                                                                                               \
+      GTEST_DISALLOW_ASSIGN_(type)
 
 // Tell the compiler to warn about unused return values for functions declared
 // with this macro.  The macro should be used on function declarations
 // following the argument list:
 //
 //   Sprocket* AllocateSprocket() GTEST_MUST_USE_RESULT_;
-#if defined(__GNUC__) && (GTEST_GCC_VER_ >= 30400) && !defined(COMPILER_ICC)
-#define GTEST_MUST_USE_RESULT_ __attribute__((warn_unused_result))
-#else
-#define GTEST_MUST_USE_RESULT_
-#endif // __GNUC__ && (GTEST_GCC_VER_ >= 30400) && !COMPILER_ICC
+#    if defined(__GNUC__) && (GTEST_GCC_VER_ >= 30400) && !defined(COMPILER_ICC)
+#      define GTEST_MUST_USE_RESULT_ __attribute__((warn_unused_result))
+#    else
+#      define GTEST_MUST_USE_RESULT_
+#    endif // __GNUC__ && (GTEST_GCC_VER_ >= 30400) && !COMPILER_ICC
 
 // Determine whether the compiler supports Microsoft's Structured Exception
 // Handling.  This is supported by several Windows compilers but generally
 // does not exist on any other system.
-#ifndef GTEST_HAS_SEH
+#    ifndef GTEST_HAS_SEH
 // The user didn't tell us, so we need to figure it out.
 
-#if defined(_MSC_VER) || defined(__BORLANDC__)
+#      if defined(_MSC_VER) || defined(__BORLANDC__)
 // These two compilers are known to support SEH.
-#define GTEST_HAS_SEH 1
-#else
+#        define GTEST_HAS_SEH 1
+#      else
 // Assume no SEH.
-#define GTEST_HAS_SEH 0
-#endif
+#        define GTEST_HAS_SEH 0
+#      endif
 
-#endif // GTEST_HAS_SEH
+#    endif // GTEST_HAS_SEH
 
-#ifdef _MSC_VER
+#    ifdef _MSC_VER
 
-#if GTEST_LINKED_AS_SHARED_LIBRARY
-#define GTEST_API_ __declspec(dllimport)
-#elif GTEST_CREATE_SHARED_LIBRARY
-#define GTEST_API_ __declspec(dllexport)
-#endif
+#      if GTEST_LINKED_AS_SHARED_LIBRARY
+#        define GTEST_API_ __declspec(dllimport)
+#      elif GTEST_CREATE_SHARED_LIBRARY
+#        define GTEST_API_ __declspec(dllexport)
+#      endif
 
-#endif // _MSC_VER
+#    endif // _MSC_VER
 
-#ifndef GTEST_API_
-#define GTEST_API_
-#endif
+#    ifndef GTEST_API_
+#      define GTEST_API_
+#    endif
 
-#ifdef __GNUC__
+#    ifdef __GNUC__
 // Ask the compiler to never inline a given function.
-#define GTEST_NO_INLINE_ __attribute__((noinline))
-#else
-#define GTEST_NO_INLINE_
-#endif
+#      define GTEST_NO_INLINE_ __attribute__((noinline))
+#    else
+#      define GTEST_NO_INLINE_
+#    endif
 
 // _LIBCPP_VERSION is defined by the libc++ library from the LLVM project.
-#if defined(__GLIBCXX__) || defined(_LIBCPP_VERSION)
-#define GTEST_HAS_CXXABI_H_ 1
-#else
-#define GTEST_HAS_CXXABI_H_ 0
-#endif
+#    if defined(__GLIBCXX__) || defined(_LIBCPP_VERSION)
+#      define GTEST_HAS_CXXABI_H_ 1
+#    else
+#      define GTEST_HAS_CXXABI_H_ 0
+#    endif
 
 namespace testing {
 
@@ -2413,12 +2365,11 @@ class Secret;
 
 template <bool>
 struct CompileAssert
-{
-};
+{};
 
-#define GTEST_COMPILE_ASSERT_(expr, msg)                                                                               \
-  typedef ::testing::internal::CompileAssert<(static_cast<bool>(expr))>                                                \
-      msg[static_cast<bool>(expr) ? 1 : -1] GTEST_ATTRIBUTE_UNUSED_
+#    define GTEST_COMPILE_ASSERT_(expr, msg)                                                                           \
+      typedef ::testing::internal::CompileAssert<(static_cast<bool>(expr))>                                            \
+          msg[static_cast<bool>(expr) ? 1 : -1] GTEST_ATTRIBUTE_UNUSED_
 
 // Implementation details of GTEST_COMPILE_ASSERT_:
 //
@@ -2469,20 +2420,19 @@ struct StaticAssertTypeEqHelper;
 
 template <typename T>
 struct StaticAssertTypeEqHelper<T, T>
-{
-};
+{};
 
-#if GTEST_HAS_GLOBAL_STRING
+#    if GTEST_HAS_GLOBAL_STRING
 typedef ::string string;
-#else
+#    else
 typedef ::std::string string;
-#endif // GTEST_HAS_GLOBAL_STRING
+#    endif // GTEST_HAS_GLOBAL_STRING
 
-#if GTEST_HAS_GLOBAL_WSTRING
+#    if GTEST_HAS_GLOBAL_WSTRING
 typedef ::wstring wstring;
-#elif GTEST_HAS_STD_WSTRING
+#    elif GTEST_HAS_STD_WSTRING
 typedef ::std::wstring wstring;
-#endif // GTEST_HAS_GLOBAL_WSTRING
+#    endif // GTEST_HAS_GLOBAL_WSTRING
 
 // A helper for suppressing warnings on constant condition.  It just
 // returns 'condition'.
@@ -2500,8 +2450,7 @@ public:
 
   explicit scoped_ptr(T* p = NULL)
     : ptr_(p)
-  {
-  }
+  {}
   ~scoped_ptr()
   {
     reset();
@@ -2563,14 +2512,14 @@ public:
     Init(regex.c_str());
   } // NOLINT
 
-#if GTEST_HAS_GLOBAL_STRING
+#    if GTEST_HAS_GLOBAL_STRING
 
   RE(const ::string& regex)
   {
     Init(regex.c_str());
   } // NOLINT
 
-#endif // GTEST_HAS_GLOBAL_STRING
+#    endif // GTEST_HAS_GLOBAL_STRING
 
   RE(const char* regex)
   {
@@ -2600,7 +2549,7 @@ public:
     return PartialMatch(str.c_str(), re);
   }
 
-#if GTEST_HAS_GLOBAL_STRING
+#    if GTEST_HAS_GLOBAL_STRING
 
   static bool FullMatch(const ::string& str, const RE& re)
   {
@@ -2611,7 +2560,7 @@ public:
     return PartialMatch(str.c_str(), re);
   }
 
-#endif // GTEST_HAS_GLOBAL_STRING
+#    endif // GTEST_HAS_GLOBAL_STRING
 
   static bool FullMatch(const char* str, const RE& re);
   static bool PartialMatch(const char* str, const RE& re);
@@ -2625,16 +2574,16 @@ private:
   const char* pattern_;
   bool is_valid_;
 
-#if GTEST_USES_POSIX_RE
+#    if GTEST_USES_POSIX_RE
 
   regex_t full_regex_; // For FullMatch().
   regex_t partial_regex_; // For PartialMatch().
 
-#else // GTEST_USES_SIMPLE_RE
+#    else // GTEST_USES_SIMPLE_RE
 
   const char* full_pattern_; // For FullMatch();
 
-#endif
+#    endif
 
   GTEST_DISALLOW_ASSIGN_(RE);
 };
@@ -2684,12 +2633,10 @@ private:
   GTEST_DISALLOW_COPY_AND_ASSIGN_(GTestLog);
 };
 
-#define GTEST_LOG_(severity)                                                                                           \
-  ::testing::internal::GTestLog(::testing::internal::GTEST_##severity, __FILE__, __LINE__).GetStream()
+#    define GTEST_LOG_(severity)                                                                                       \
+      ::testing::internal::GTestLog(::testing::internal::GTEST_##severity, __FILE__, __LINE__).GetStream()
 
-inline void LogToStderr()
-{
-}
+inline void LogToStderr() {}
 inline void FlushInfoLog()
 {
   fflush(NULL);
@@ -2709,21 +2656,21 @@ inline void FlushInfoLog()
 //    condition itself, plus additional message streamed into it, if any,
 //    and then it aborts the program. It aborts the program irrespective of
 //    whether it is built in the debug mode or not.
-#define GTEST_CHECK_(condition)                                                                                        \
-  GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                        \
-  if (::testing::internal::IsTrue(condition))                                                                          \
-    ;                                                                                                                  \
-  else                                                                                                                 \
-    GTEST_LOG_(FATAL) << "Condition " #condition " failed. "
+#    define GTEST_CHECK_(condition)                                                                                    \
+      GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                    \
+      if (::testing::internal::IsTrue(condition))                                                                      \
+        ;                                                                                                              \
+      else                                                                                                             \
+        GTEST_LOG_(FATAL) << "Condition " #condition " failed. "
 
 // An all-mode assert to verify that the given POSIX-style function
 // call returns 0 (indicating success).  Known limitation: this
 // doesn't expand to a balanced 'if' statement, so enclose the macro
 // in {} if you need to use it as the only statement in an 'if'
 // branch.
-#define GTEST_CHECK_POSIX_SUCCESS_(posix_call)                                                                         \
-  if (const int gtest_error = (posix_call))                                                                            \
-  GTEST_LOG_(FATAL) << #posix_call << "failed with error " << gtest_error
+#    define GTEST_CHECK_POSIX_SUCCESS_(posix_call)                                                                     \
+      if (const int gtest_error = (posix_call))                                                                        \
+      GTEST_LOG_(FATAL) << #posix_call << "failed with error " << gtest_error
 
 // INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
 //
@@ -2784,10 +2731,10 @@ inline To DownCast_(From* f)
     ::testing::internal::ImplicitCast_<From*>(to);
   }
 
-#if GTEST_HAS_RTTI
+#    if GTEST_HAS_RTTI
   // RTTI: debug mode only!
   GTEST_CHECK_(f == NULL || dynamic_cast<To>(f) != NULL);
-#endif
+#    endif
   return static_cast<To>(f);
 }
 
@@ -2799,15 +2746,15 @@ inline To DownCast_(From* f)
 template <class Derived, class Base>
 Derived* CheckedDowncastToActualType(Base* base)
 {
-#if GTEST_HAS_RTTI
+#    if GTEST_HAS_RTTI
   GTEST_CHECK_(typeid(*base) == typeid(Derived));
   return dynamic_cast<Derived*>(base); // NOLINT
-#else
+#    else
   return static_cast<Derived*>(base); // Poor man's downcast.
-#endif
+#    endif
 }
 
-#if GTEST_HAS_STREAM_REDIRECTION
+#    if GTEST_HAS_STREAM_REDIRECTION
 
 // Defines the stderr capturer:
 //   CaptureStdout     - starts capturing stdout.
@@ -2820,10 +2767,10 @@ GTEST_API_ std::string GetCapturedStdout();
 GTEST_API_ void CaptureStderr();
 GTEST_API_ std::string GetCapturedStderr();
 
-#endif // GTEST_HAS_STREAM_REDIRECTION
+#    endif // GTEST_HAS_STREAM_REDIRECTION
 
 
-#if GTEST_HAS_DEATH_TEST
+#    if GTEST_HAS_DEATH_TEST
 
 const ::std::vector<testing::internal::string>& GetInjectableArgvs();
 void SetInjectableArgvs(const ::std::vector<testing::internal::string>* new_argvs);
@@ -2831,11 +2778,11 @@ void SetInjectableArgvs(const ::std::vector<testing::internal::string>* new_argv
 // A copy of all command line arguments.  Set by InitGoogleTest().
 extern ::std::vector<testing::internal::string> g_argvs;
 
-#endif // GTEST_HAS_DEATH_TEST
+#    endif // GTEST_HAS_DEATH_TEST
 
 // Defines synchronization primitives.
 
-#if GTEST_HAS_PTHREAD
+#    if GTEST_HAS_PTHREAD
 
 // Sleeps for (roughly) n milli-seconds.  This function is only for
 // testing Google Test's own constructs.  Don't use it in user tests,
@@ -2906,9 +2853,7 @@ private:
 class ThreadWithParamBase
 {
 public:
-  virtual ~ThreadWithParamBase()
-  {
-  }
+  virtual ~ThreadWithParamBase() {}
   virtual void Run() = 0;
 };
 
@@ -3030,8 +2975,8 @@ public:
   // with high probability.
   void AssertHeld() const
   {
-    GTEST_CHECK_(has_owner_ && pthread_equal(owner_, pthread_self())) << "The current thread is not holding the mutex @"
-                                                                      << this;
+    GTEST_CHECK_(has_owner_ && pthread_equal(owner_, pthread_self()))
+        << "The current thread is not holding the mutex @" << this;
   }
 
   // A static mutex may be used before main() is entered.  It may even
@@ -3052,7 +2997,7 @@ public:
 };
 
 // Forward-declares a static mutex.
-#define GTEST_DECLARE_STATIC_MUTEX_(mutex) extern ::testing::internal::MutexBase mutex
+#      define GTEST_DECLARE_STATIC_MUTEX_(mutex) extern ::testing::internal::MutexBase mutex
 
 // Defines and statically (i.e. at link time) initializes a static mutex.
 // The initialization list here does not explicitly initialize each field,
@@ -3060,7 +3005,8 @@ public:
 // particular, the owner_ field (a pthread_t) is not explicitly initialized.
 // This allows initialization to work whether pthread_t is a scalar or struct.
 // The flag -Wmissing-field-initializers must not be specified for this to work.
-#define GTEST_DEFINE_STATIC_MUTEX_(mutex) ::testing::internal::MutexBase mutex = {PTHREAD_MUTEX_INITIALIZER, false}
+#      define GTEST_DEFINE_STATIC_MUTEX_(mutex)                                                                        \
+        ::testing::internal::MutexBase mutex = {PTHREAD_MUTEX_INITIALIZER, false}
 
 // The Mutex class can only be used for mutexes created at runtime. It
 // shares its API with MutexBase otherwise.
@@ -3115,9 +3061,7 @@ typedef GTestMutexLock MutexLock;
 class ThreadLocalValueHolderBase
 {
 public:
-  virtual ~ThreadLocalValueHolderBase()
-  {
-  }
+  virtual ~ThreadLocalValueHolderBase() {}
 };
 
 // Called by pthread to delete thread-local data stored by
@@ -3163,13 +3107,11 @@ public:
   ThreadLocal()
     : key_(CreateKey())
     , default_()
-  {
-  }
+  {}
   explicit ThreadLocal(const T& value)
     : key_(CreateKey())
     , default_(value)
-  {
-  }
+  {}
 
   ~ThreadLocal()
   {
@@ -3205,8 +3147,7 @@ private:
   public:
     explicit ValueHolder(const T& value)
       : value_(value)
-    {
-    }
+    {}
 
     T* pointer()
     {
@@ -3247,9 +3188,9 @@ private:
   GTEST_DISALLOW_COPY_AND_ASSIGN_(ThreadLocal);
 };
 
-#define GTEST_IS_THREADSAFE 1
+#      define GTEST_IS_THREADSAFE 1
 
-#else // GTEST_HAS_PTHREAD
+#    else // GTEST_HAS_PTHREAD
 
 // A dummy implementation of synchronization primitives (mutex, lock,
 // and thread-local variable).  Necessary for compiling Google Test where
@@ -3259,30 +3200,20 @@ private:
 class Mutex
 {
 public:
-  Mutex()
-  {
-  }
-  void Lock()
-  {
-  }
-  void Unlock()
-  {
-  }
-  void AssertHeld() const
-  {
-  }
+  Mutex() {}
+  void Lock() {}
+  void Unlock() {}
+  void AssertHeld() const {}
 };
 
-#define GTEST_DECLARE_STATIC_MUTEX_(mutex) extern ::testing::internal::Mutex mutex
+#      define GTEST_DECLARE_STATIC_MUTEX_(mutex) extern ::testing::internal::Mutex mutex
 
-#define GTEST_DEFINE_STATIC_MUTEX_(mutex) ::testing::internal::Mutex mutex
+#      define GTEST_DEFINE_STATIC_MUTEX_(mutex) ::testing::internal::Mutex mutex
 
 class GTestMutexLock
 {
 public:
-  explicit GTestMutexLock(Mutex*)
-  {
-  } // NOLINT
+  explicit GTestMutexLock(Mutex*) {} // NOLINT
 };
 
 typedef GTestMutexLock MutexLock;
@@ -3293,12 +3224,10 @@ class ThreadLocal
 public:
   ThreadLocal()
     : value_()
-  {
-  }
+  {}
   explicit ThreadLocal(const T& value)
     : value_(value)
-  {
-  }
+  {}
   T* pointer()
   {
     return &value_;
@@ -3322,9 +3251,9 @@ private:
 
 // The above synchronization primitives have dummy implementations.
 // Therefore Google Test is not thread-safe.
-#define GTEST_IS_THREADSAFE 0
+#      define GTEST_IS_THREADSAFE 0
 
-#endif // GTEST_HAS_PTHREAD
+#    endif // GTEST_HAS_PTHREAD
 
 // Returns the number of threads running in the process, or 0 to indicate that
 // we cannot detect it.
@@ -3336,21 +3265,21 @@ GTEST_API_ size_t GetThreadCount();
 // for objects passed through ellipsis (...), failing for uncopyable
 // objects.  We define this to ensure that only POD is passed through
 // ellipsis on these systems.
-#if defined(__SYMBIAN32__) || defined(__IBMCPP__) || defined(__SUNPRO_CC)
+#    if defined(__SYMBIAN32__) || defined(__IBMCPP__) || defined(__SUNPRO_CC)
 // We lose support for NULL detection where the compiler doesn't like
 // passing non-POD classes through ellipsis (...).
-#define GTEST_ELLIPSIS_NEEDS_POD_ 1
-#else
-#define GTEST_CAN_COMPARE_NULL 1
-#endif
+#      define GTEST_ELLIPSIS_NEEDS_POD_ 1
+#    else
+#      define GTEST_CAN_COMPARE_NULL 1
+#    endif
 
 // The Nokia Symbian and IBM XL C/C++ compilers cannot decide between
 // const T& and const T* in a function template.  These compilers
 // _can_ decide between class template specializations for T and T*,
 // so a tr1::type_traits-like is_pointer works.
-#if defined(__SYMBIAN32__) || defined(__IBMCPP__)
-#define GTEST_NEEDS_IS_POINTER_ 1
-#endif
+#    if defined(__SYMBIAN32__) || defined(__IBMCPP__)
+#      define GTEST_NEEDS_IS_POINTER_ 1
+#    endif
 
 template <bool bool_value>
 struct bool_constant
@@ -3366,13 +3295,11 @@ typedef bool_constant<true> true_type;
 
 template <typename T>
 struct is_pointer : public false_type
-{
-};
+{};
 
 template <typename T>
 struct is_pointer<T*> : public true_type
-{
-};
+{};
 
 template <typename Iterator>
 struct IteratorTraits
@@ -3392,16 +3319,16 @@ struct IteratorTraits<const T*>
   typedef T value_type;
 };
 
-#if GTEST_OS_WINDOWS
-#define GTEST_PATH_SEP_ "\\"
-#define GTEST_HAS_ALT_PATH_SEP_ 1
+#    if GTEST_OS_WINDOWS
+#      define GTEST_PATH_SEP_ "\\"
+#      define GTEST_HAS_ALT_PATH_SEP_ 1
 // The biggest signed integer type the compiler supports.
 typedef __int64 BiggestInt;
-#else
-#define GTEST_PATH_SEP_ "/"
-#define GTEST_HAS_ALT_PATH_SEP_ 0
+#    else
+#      define GTEST_PATH_SEP_ "/"
+#      define GTEST_HAS_ALT_PATH_SEP_ 0
 typedef long long BiggestInt; // NOLINT
-#endif // GTEST_OS_WINDOWS
+#    endif // GTEST_OS_WINDOWS
 
 // Utilities for char.
 
@@ -3463,11 +3390,11 @@ namespace posix {
 
 // Functions with a different name on Windows.
 
-#if GTEST_OS_WINDOWS
+#    if GTEST_OS_WINDOWS
 
 typedef struct _stat StatStruct;
 
-#ifdef __BORLANDC__
+#      ifdef __BORLANDC__
 inline int IsATTY(int fd)
 {
   return isatty(fd);
@@ -3480,18 +3407,18 @@ inline char* StrDup(const char* src)
 {
   return strdup(src);
 }
-#else // !__BORLANDC__
-#if GTEST_OS_WINDOWS_MOBILE
+#      else // !__BORLANDC__
+#        if GTEST_OS_WINDOWS_MOBILE
 inline int IsATTY(int /* fd */)
 {
   return 0;
 }
-#else
+#        else
 inline int IsATTY(int fd)
 {
   return _isatty(fd);
 }
-#endif // GTEST_OS_WINDOWS_MOBILE
+#        endif // GTEST_OS_WINDOWS_MOBILE
 inline int StrCaseCmp(const char* s1, const char* s2)
 {
   return _stricmp(s1, s2);
@@ -3500,16 +3427,16 @@ inline char* StrDup(const char* src)
 {
   return _strdup(src);
 }
-#endif // __BORLANDC__
+#      endif // __BORLANDC__
 
-#if GTEST_OS_WINDOWS_MOBILE
+#      if GTEST_OS_WINDOWS_MOBILE
 inline int FileNo(FILE* file)
 {
   return reinterpret_cast<int>(_fileno(file));
 }
 // Stat(), RmDir(), and IsDir() are not needed on Windows CE at this
 // time and thus not defined there.
-#else
+#      else
 inline int FileNo(FILE* file)
 {
   return _fileno(file);
@@ -3526,9 +3453,9 @@ inline bool IsDir(const StatStruct& st)
 {
   return (_S_IFDIR & st.st_mode) != 0;
 }
-#endif // GTEST_OS_WINDOWS_MOBILE
+#      endif // GTEST_OS_WINDOWS_MOBILE
 
-#else
+#    else
 
 typedef struct stat StatStruct;
 
@@ -3561,15 +3488,15 @@ inline bool IsDir(const StatStruct& st)
   return S_ISDIR(st.st_mode);
 }
 
-#endif // GTEST_OS_WINDOWS
+#    endif // GTEST_OS_WINDOWS
 
 // Functions deprecated by MSVC 8.0.
 
-#ifdef _MSC_VER
+#    ifdef _MSC_VER
 // Temporarily disable warning 4996 (deprecated function).
-#pragma warning(push)
-#pragma warning(disable : 4996)
-#endif
+#      pragma warning(push)
+#      pragma warning(disable : 4996)
+#    endif
 
 inline const char* StrNCpy(char* dest, const char* src, size_t n)
 {
@@ -3580,17 +3507,17 @@ inline const char* StrNCpy(char* dest, const char* src, size_t n)
 // StrError() aren't needed on Windows CE at this time and thus not
 // defined there.
 
-#if !GTEST_OS_WINDOWS_MOBILE
+#    if !GTEST_OS_WINDOWS_MOBILE
 inline int ChDir(const char* dir)
 {
   return chdir(dir);
 }
-#endif
+#    endif
 inline FILE* FOpen(const char* path, const char* mode)
 {
   return fopen(path, mode);
 }
-#if !GTEST_OS_WINDOWS_MOBILE
+#    if !GTEST_OS_WINDOWS_MOBILE
 inline FILE* FReopen(const char* path, const char* mode, FILE* stream)
 {
   return freopen(path, mode, stream);
@@ -3599,12 +3526,12 @@ inline FILE* FDOpen(int fd, const char* mode)
 {
   return fdopen(fd, mode);
 }
-#endif
+#    endif
 inline int FClose(FILE* fp)
 {
   return fclose(fp);
 }
-#if !GTEST_OS_WINDOWS_MOBILE
+#    if !GTEST_OS_WINDOWS_MOBILE
 inline int Read(int fd, void* buf, unsigned int count)
 {
   return static_cast<int>(read(fd, buf, count));
@@ -3621,37 +3548,37 @@ inline const char* StrError(int errnum)
 {
   return strerror(errnum);
 }
-#endif
+#    endif
 inline const char* GetEnv(const char* name)
 {
-#if GTEST_OS_WINDOWS_MOBILE
+#    if GTEST_OS_WINDOWS_MOBILE
   // We are on Windows CE, which has no environment variables.
   return NULL;
-#elif defined(__BORLANDC__) || defined(__SunOS_5_8) || defined(__SunOS_5_9)
+#    elif defined(__BORLANDC__) || defined(__SunOS_5_8) || defined(__SunOS_5_9)
   // Environment variables which we programmatically clear will be set to the
   // empty string rather than unset (NULL).  Handle that case.
   const char* const env = getenv(name);
   return (env != NULL && env[0] != '\0') ? env : NULL;
-#else
+#    else
   return getenv(name);
-#endif
+#    endif
 }
 
-#ifdef _MSC_VER
-#pragma warning(pop) // Restores the warning state.
-#endif
+#    ifdef _MSC_VER
+#      pragma warning(pop) // Restores the warning state.
+#    endif
 
-#if GTEST_OS_WINDOWS_MOBILE
+#    if GTEST_OS_WINDOWS_MOBILE
 // Windows CE has no C library. The abort() function is used in
 // several places in Google Test. This implementation provides a reasonable
 // imitation of standard behaviour.
 void Abort();
-#else
+#    else
 inline void Abort()
 {
   abort();
 }
-#endif // GTEST_OS_WINDOWS_MOBILE
+#    endif // GTEST_OS_WINDOWS_MOBILE
 
 } // namespace posix
 
@@ -3660,16 +3587,16 @@ inline void Abort()
 // MSVC-based platforms.  We map the GTEST_SNPRINTF_ macro to the appropriate
 // function in order to achieve that.  We use macro definition here because
 // snprintf is a variadic function.
-#if _MSC_VER >= 1400 && !GTEST_OS_WINDOWS_MOBILE
+#    if _MSC_VER >= 1400 && !GTEST_OS_WINDOWS_MOBILE
 // MSVC 2005 and above support variadic macros.
-#define GTEST_SNPRINTF_(buffer, size, format, ...) _snprintf_s(buffer, size, size, format, __VA_ARGS__)
-#elif defined(_MSC_VER)
+#      define GTEST_SNPRINTF_(buffer, size, format, ...) _snprintf_s(buffer, size, size, format, __VA_ARGS__)
+#    elif defined(_MSC_VER)
 // Windows CE does not define _snprintf_s and MSVC prior to 2005 doesn't
 // complain about _snprintf.
-#define GTEST_SNPRINTF_ _snprintf
-#else
-#define GTEST_SNPRINTF_ snprintf
-#endif
+#      define GTEST_SNPRINTF_ _snprintf
+#    else
+#      define GTEST_SNPRINTF_ snprintf
+#    endif
 
 // The maximum number a BiggestInt can represent.  This definition
 // works no matter BiggestInt is represented in one's complement or
@@ -3725,13 +3652,13 @@ template <>
 class TypeWithSize<8>
 {
 public:
-#if GTEST_OS_WINDOWS
+#    if GTEST_OS_WINDOWS
   typedef __int64 Int;
   typedef unsigned __int64 UInt;
-#else
+#    else
   typedef long long Int; // NOLINT
   typedef unsigned long long UInt; // NOLINT
-#endif // GTEST_OS_WINDOWS
+#    endif // GTEST_OS_WINDOWS
 };
 
 // Integer types of known sizes.
@@ -3744,22 +3671,22 @@ typedef TypeWithSize<8>::Int TimeInMillis; // Represents time in milliseconds.
 // Utilities for command line flags and environment variables.
 
 // Macro for referencing flags.
-#define GTEST_FLAG(name) FLAGS_gtest_##name
+#    define GTEST_FLAG(name) FLAGS_gtest_##name
 
 // Macros for declaring flags.
-#define GTEST_DECLARE_bool_(name) GTEST_API_ extern bool GTEST_FLAG(name)
-#define GTEST_DECLARE_int32_(name) GTEST_API_ extern ::testing::internal::Int32 GTEST_FLAG(name)
-#define GTEST_DECLARE_string_(name) GTEST_API_ extern ::std::string GTEST_FLAG(name)
+#    define GTEST_DECLARE_bool_(name) GTEST_API_ extern bool GTEST_FLAG(name)
+#    define GTEST_DECLARE_int32_(name) GTEST_API_ extern ::testing::internal::Int32 GTEST_FLAG(name)
+#    define GTEST_DECLARE_string_(name) GTEST_API_ extern ::std::string GTEST_FLAG(name)
 
 // Macros for defining flags.
-#define GTEST_DEFINE_bool_(name, default_val, doc) GTEST_API_ bool GTEST_FLAG(name) = (default_val)
-#define GTEST_DEFINE_int32_(name, default_val, doc)                                                                    \
-  GTEST_API_::testing::internal::Int32 GTEST_FLAG(name) = (default_val)
-#define GTEST_DEFINE_string_(name, default_val, doc) GTEST_API_::std::string GTEST_FLAG(name) = (default_val)
+#    define GTEST_DEFINE_bool_(name, default_val, doc) GTEST_API_ bool GTEST_FLAG(name) = (default_val)
+#    define GTEST_DEFINE_int32_(name, default_val, doc)                                                                \
+      GTEST_API_::testing::internal::Int32 GTEST_FLAG(name) = (default_val)
+#    define GTEST_DEFINE_string_(name, default_val, doc) GTEST_API_::std::string GTEST_FLAG(name) = (default_val)
 
 // Thread annotations
-#define GTEST_EXCLUSIVE_LOCK_REQUIRED_(locks)
-#define GTEST_LOCK_EXCLUDED_(locks)
+#    define GTEST_EXCLUSIVE_LOCK_REQUIRED_(locks)
+#    define GTEST_LOCK_EXCLUDED_(locks)
 
 // Parses 'str' for a 32-bit signed integer.  If successful, writes the result
 // to *value and returns true; otherwise leaves *value unchanged and returns
@@ -3778,25 +3705,25 @@ const char* StringFromGTestEnv(const char* flag, const char* default_val);
 } // namespace internal
 } // namespace testing
 
-#endif // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PORT_H_
+#  endif // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PORT_H_
 
-#if GTEST_OS_LINUX
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <unistd.h>
-#endif // GTEST_OS_LINUX
+#  if GTEST_OS_LINUX
+#    include <stdlib.h>
+#    include <sys/types.h>
+#    include <sys/wait.h>
+#    include <unistd.h>
+#  endif // GTEST_OS_LINUX
 
-#if GTEST_HAS_EXCEPTIONS
-#include <stdexcept>
-#endif
+#  if GTEST_HAS_EXCEPTIONS
+#    include <stdexcept>
+#  endif
 
-#include <ctype.h>
-#include <float.h>
-#include <string.h>
-#include <iomanip>
-#include <limits>
-#include <set>
+#  include <ctype.h>
+#  include <float.h>
+#  include <string.h>
+#  include <iomanip>
+#  include <limits>
+#  include <set>
 
 // Copyright 2005, Google Inc.
 // All rights reserved.
@@ -3843,10 +3770,10 @@ const char* StringFromGTestEnv(const char* flag, const char* default_val);
 // to CHANGE WITHOUT NOTICE.  Therefore DO NOT DEPEND ON IT in a user
 // program!
 
-#ifndef GTEST_INCLUDE_GTEST_GTEST_MESSAGE_H_
-#define GTEST_INCLUDE_GTEST_GTEST_MESSAGE_H_
+#  ifndef GTEST_INCLUDE_GTEST_GTEST_MESSAGE_H_
+#    define GTEST_INCLUDE_GTEST_GTEST_MESSAGE_H_
 
-#include <limits>
+#    include <limits>
 
 
 // Ensures that there is at least one operator<< in the global namespace.
@@ -3906,7 +3833,7 @@ public:
     *ss_ << str;
   }
 
-#if GTEST_OS_SYMBIAN
+#    if GTEST_OS_SYMBIAN
   // Streams a value (either a pointer or not) to this object.
   template <typename T>
   inline Message& operator<<(const T& value)
@@ -3914,7 +3841,7 @@ public:
     StreamHelper(typename internal::is_pointer<T>::type(), value);
     return *this;
   }
-#else
+#    else
   // Streams a non-pointer value to this object.
   template <typename T>
   inline Message& operator<<(const T& val)
@@ -3961,7 +3888,7 @@ public:
     }
     return *this;
   }
-#endif // GTEST_OS_SYMBIAN
+#    endif // GTEST_OS_SYMBIAN
 
   // Since the basic IO manipulators are overloaded for both narrow
   // and wide streams, we have to provide this specialized definition
@@ -3986,17 +3913,17 @@ public:
   Message& operator<<(const wchar_t* wide_c_str);
   Message& operator<<(wchar_t* wide_c_str);
 
-#if GTEST_HAS_STD_WSTRING
+#    if GTEST_HAS_STD_WSTRING
   // Converts the given wide string to a narrow string using the UTF-8
   // encoding, and streams the result to this Message object.
   Message& operator<<(const ::std::wstring& wstr);
-#endif // GTEST_HAS_STD_WSTRING
+#    endif // GTEST_HAS_STD_WSTRING
 
-#if GTEST_HAS_GLOBAL_WSTRING
+#    if GTEST_HAS_GLOBAL_WSTRING
   // Converts the given wide string to a narrow string using the UTF-8
   // encoding, and streams the result to this Message object.
   Message& operator<<(const ::wstring& wstr);
-#endif // GTEST_HAS_GLOBAL_WSTRING
+#    endif // GTEST_HAS_GLOBAL_WSTRING
 
   // Gets the text streamed to this object so far as an std::string.
   // Each '\0' character in the buffer is replaced with "\\0".
@@ -4005,7 +3932,7 @@ public:
   std::string GetString() const;
 
 private:
-#if GTEST_OS_SYMBIAN
+#    if GTEST_OS_SYMBIAN
   // These are needed as the Nokia Symbian Compiler cannot decide between
   // const T& and const T* in a function template. The Nokia compiler _can_
   // decide between class template specializations for T and T*, so a
@@ -4027,7 +3954,7 @@ private:
     using ::operator<<;
     *ss_ << value;
   }
-#endif // GTEST_OS_SYMBIAN
+#    endif // GTEST_OS_SYMBIAN
 
   // We'll hold the text streamed to this object here.
   const internal::scoped_ptr<::std::stringstream> ss_;
@@ -4058,7 +3985,7 @@ std::string StreamableToString(const T& streamable)
 } // namespace internal
 } // namespace testing
 
-#endif // GTEST_INCLUDE_GTEST_GTEST_MESSAGE_H_
+#  endif // GTEST_INCLUDE_GTEST_GTEST_MESSAGE_H_
 // Copyright 2005, Google Inc.
 // All rights reserved.
 //
@@ -4099,16 +4026,16 @@ std::string StreamableToString(const T& streamable)
 // This header file is #included by <gtest/internal/gtest-internal.h>.
 // It should not be #included by other files.
 
-#ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_STRING_H_
-#define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_STRING_H_
+#  ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_STRING_H_
+#    define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_STRING_H_
 
-#ifdef __BORLANDC__
+#    ifdef __BORLANDC__
 // string.h is not guaranteed to provide strcpy on C++ Builder.
-#include <mem.h>
-#endif
+#      include <mem.h>
+#    endif
 
-#include <string.h>
-#include <string>
+#    include <string.h>
+#    include <string>
 
 
 namespace testing {
@@ -4129,7 +4056,7 @@ public:
   // memory using malloc().
   static const char* CloneCString(const char* c_str);
 
-#if GTEST_OS_WINDOWS_MOBILE
+#    if GTEST_OS_WINDOWS_MOBILE
   // Windows CE does not have the 'ANSI' versions of Win32 APIs. To be
   // able to pass strings to Win32 APIs on CE we need to convert them
   // to 'Unicode', UTF-16.
@@ -4153,7 +4080,7 @@ public:
   // match the behaviour of the ANSI versions of Win32 calls and the
   // C runtime.
   static const char* Utf16ToAnsi(LPCWSTR utf16_str);
-#endif
+#    endif
 
   // Compares two C strings.  Returns true iff they have the same content.
   //
@@ -4222,7 +4149,7 @@ GTEST_API_ std::string StringStreamToString(::std::stringstream* stream);
 } // namespace internal
 } // namespace testing
 
-#endif // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_STRING_H_
+#  endif // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_STRING_H_
 // Copyright 2008, Google Inc.
 // All rights reserved.
 //
@@ -4262,8 +4189,8 @@ GTEST_API_ std::string StringStreamToString(::std::stringstream* stream);
 // This file is #included in <gtest/internal/gtest-internal.h>.
 // Do not include this header file separately!
 
-#ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_FILEPATH_H_
-#define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_FILEPATH_H_
+#  ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_FILEPATH_H_
+#    define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_FILEPATH_H_
 
 
 namespace testing {
@@ -4285,12 +4212,10 @@ class GTEST_API_ FilePath
 public:
   FilePath()
     : pathname_("")
-  {
-  }
+  {}
   FilePath(const FilePath& rhs)
     : pathname_(rhs.pathname_)
-  {
-  }
+  {}
 
   explicit FilePath(const std::string& pathname)
     : pathname_(pathname)
@@ -4441,7 +4366,7 @@ private:
 } // namespace internal
 } // namespace testing
 
-#endif // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_FILEPATH_H_
+#  endif // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_FILEPATH_H_
 // This file was GENERATED by command:
 //     pump.py gtest-type-util.h.pump
 // DO NOT EDIT BY HAND!!!
@@ -4485,17 +4410,17 @@ private:
 // Please contact googletestframework@googlegroups.com if you need
 // more.
 
-#ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_TYPE_UTIL_H_
-#define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_TYPE_UTIL_H_
+#  ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_TYPE_UTIL_H_
+#    define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_TYPE_UTIL_H_
 
 
 // #ifdef __GNUC__ is too general here.  It is possible to use gcc without using
 // libstdc++ (which is where cxxabi.h comes from).
-#if GTEST_HAS_CXXABI_H_
-#include <cxxabi.h>
-#elif defined(__HP_aCC)
-#include <acxx_demangle.h>
-#endif // GTEST_HASH_CXXABI_H_
+#    if GTEST_HAS_CXXABI_H_
+#      include <cxxabi.h>
+#    elif defined(__HP_aCC)
+#      include <acxx_demangle.h>
+#    endif // GTEST_HASH_CXXABI_H_
 
 namespace testing {
 namespace internal {
@@ -4506,32 +4431,32 @@ namespace internal {
 template <typename T>
 std::string GetTypeName()
 {
-#if GTEST_HAS_RTTI
+#    if GTEST_HAS_RTTI
 
   const char* const name = typeid(T).name();
-#if GTEST_HAS_CXXABI_H_ || defined(__HP_aCC)
+#      if GTEST_HAS_CXXABI_H_ || defined(__HP_aCC)
   int status = 0;
 // gcc's implementation of typeid(T).name() mangles the type name,
 // so we have to demangle it.
-#if GTEST_HAS_CXXABI_H_
+#        if GTEST_HAS_CXXABI_H_
   using abi::__cxa_demangle;
-#endif // GTEST_HAS_CXXABI_H_
+#        endif // GTEST_HAS_CXXABI_H_
   char* const readable_name = __cxa_demangle(name, 0, 0, &status);
   const std::string name_str(status == 0 ? readable_name : name);
   free(readable_name);
   return name_str;
-#else
+#      else
   return name;
-#endif // GTEST_HAS_CXXABI_H_ || __HP_aCC
+#      endif // GTEST_HAS_CXXABI_H_ || __HP_aCC
 
-#else
+#    else
 
   return "<type>";
 
-#endif // GTEST_HAS_RTTI
+#    endif // GTEST_HAS_RTTI
 }
 
-#if GTEST_HAS_TYPED_TEST || GTEST_HAS_TYPED_TEST_P
+#    if GTEST_HAS_TYPED_TEST || GTEST_HAS_TYPED_TEST_P
 
 // AssertyTypeEq<T1, T2>::type is defined iff T1 and T2 are the same
 // type.  This can be used as a compile-time assertion to ensure that
@@ -4551,8 +4476,7 @@ struct AssertTypeEq<T, T>
 // (e.g. Types<int>, Type<int, double>, and etc), which C++ doesn't
 // support directly.
 struct None
-{
-};
+{};
 
 // The following family of struct and struct templates are used to
 // represent type lists.  In particular, TypesN<T1, T2, ..., TN>
@@ -4563,8 +4487,7 @@ struct None
 
 // The empty type list.
 struct Types0
-{
-};
+{};
 
 // Type lists of length 1, 2, 3, and so on.
 
@@ -12015,9 +11938,9 @@ struct Types<T1,
 
 namespace internal {
 
-#define GTEST_TEMPLATE_                                                                                                \
-  template <typename T>                                                                                                \
-  class
+#      define GTEST_TEMPLATE_                                                                                          \
+        template <typename T>                                                                                          \
+        class
 
 // The template "selector" struct TemplateSel<Tmpl> is used to
 // represent Tmpl, which must be a class template with one type
@@ -12037,7 +11960,7 @@ struct TemplateSel
   };
 };
 
-#define GTEST_BIND_(TmplSel, T) TmplSel::template Bind<T>::type
+#      define GTEST_BIND_(TmplSel, T) TmplSel::template Bind<T>::type
 
 // A unique struct template used as the default value for the
 // arguments of class template Templates.  This allows us to simulate
@@ -12045,8 +11968,7 @@ struct TemplateSel
 // and etc), which C++ doesn't support directly.
 template <typename T>
 struct NoneT
-{
-};
+{};
 
 // The following family of struct and struct templates are used to
 // represent template lists.  In particular, TemplatesN<T1, T2, ...,
@@ -12057,8 +11979,7 @@ struct NoneT
 
 // The empty template list.
 struct Templates0
-{
-};
+{};
 
 // Template lists of length 1, 2, 3, and so on.
 
@@ -19765,12 +19686,12 @@ struct TypeList<Types<T1,
                          T50>::type type;
 };
 
-#endif // GTEST_HAS_TYPED_TEST || GTEST_HAS_TYPED_TEST_P
+#    endif // GTEST_HAS_TYPED_TEST || GTEST_HAS_TYPED_TEST_P
 
 } // namespace internal
 } // namespace testing
 
-#endif // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_TYPE_UTIL_H_
+#  endif // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_TYPE_UTIL_H_
 
 // Due to C++ preprocessor weirdness, we need double indirection to
 // concatenate two tokens when one of them is __LINE__.  Writing
@@ -19780,8 +19701,8 @@ struct TypeList<Types<T1,
 // will result in the token foo__LINE__, instead of foo followed by
 // the current line number.  For more details, see
 // http://www.parashift.com/c++-faq-lite/misc-technical-issues.html#faq-39.6
-#define GTEST_CONCAT_TOKEN_(foo, bar) GTEST_CONCAT_TOKEN_IMPL_(foo, bar)
-#define GTEST_CONCAT_TOKEN_IMPL_(foo, bar) foo##bar
+#  define GTEST_CONCAT_TOKEN_(foo, bar) GTEST_CONCAT_TOKEN_IMPL_(foo, bar)
+#  define GTEST_CONCAT_TOKEN_IMPL_(foo, bar) foo##bar
 
 class ProtocolMessage;
 namespace proto2 {
@@ -19836,18 +19757,18 @@ char (&IsNullLiteralHelper(...))[2]; // NOLINT
 // A compile-time bool constant that is true if and only if x is a
 // null pointer literal (i.e. NULL or any 0-valued compile-time
 // integral constant).
-#ifdef GTEST_ELLIPSIS_NEEDS_POD_
+#  ifdef GTEST_ELLIPSIS_NEEDS_POD_
 // We lose support for NULL detection where the compiler doesn't like
 // passing non-POD classes through ellipsis (...).
-#define GTEST_IS_NULL_LITERAL_(x) false
-#else
-#define GTEST_IS_NULL_LITERAL_(x) (sizeof(::testing::internal::IsNullLiteralHelper(x)) == 1)
-#endif // GTEST_ELLIPSIS_NEEDS_POD_
+#    define GTEST_IS_NULL_LITERAL_(x) false
+#  else
+#    define GTEST_IS_NULL_LITERAL_(x) (sizeof(::testing::internal::IsNullLiteralHelper(x)) == 1)
+#  endif // GTEST_ELLIPSIS_NEEDS_POD_
 
 // Appends the user-supplied message to the Google-Test-generated message.
 GTEST_API_ std::string AppendUserMessage(const std::string& gtest_msg, const Message& user_msg);
 
-#if GTEST_HAS_EXCEPTIONS
+#  if GTEST_HAS_EXCEPTIONS
 
 // This exception is thrown by (and only by) a failed Google Test
 // assertion when GTEST_FLAG(throw_on_failure) is true (if exceptions
@@ -19861,7 +19782,7 @@ public:
   explicit GoogleTestFailureException(const TestPartResult& failure);
 };
 
-#endif // GTEST_HAS_EXCEPTIONS
+#  endif // GTEST_HAS_EXCEPTIONS
 
 // A helper class for creating scoped traces in user programs.
 class GTEST_API_ ScopedTrace
@@ -20173,18 +20094,14 @@ GTEST_API_ TypeId GetTestTypeId();
 class TestFactoryBase
 {
 public:
-  virtual ~TestFactoryBase()
-  {
-  }
+  virtual ~TestFactoryBase() {}
 
   // Creates a test instance to run. The instance is both created and destroyed
   // within TestInfoImpl::Run()
   virtual Test* CreateTest() = 0;
 
 protected:
-  TestFactoryBase()
-  {
-  }
+  TestFactoryBase() {}
 
 private:
   GTEST_DISALLOW_COPY_AND_ASSIGN_(TestFactoryBase);
@@ -20202,7 +20119,7 @@ public:
   }
 };
 
-#if GTEST_OS_WINDOWS
+#  if GTEST_OS_WINDOWS
 
 // Predicate-formatters for implementing the HRESULT checking macros
 // {ASSERT|EXPECT}_HRESULT_{SUCCEEDED|FAILED}
@@ -20211,7 +20128,7 @@ public:
 GTEST_API_ AssertionResult IsHRESULTSuccess(const char* expr, long hr); // NOLINT
 GTEST_API_ AssertionResult IsHRESULTFailure(const char* expr, long hr); // NOLINT
 
-#endif // GTEST_OS_WINDOWS
+#  endif // GTEST_OS_WINDOWS
 
 // Types of SetUpTestCase() and TearDownTestCase() functions.
 typedef void (*SetUpTestCaseFunc)();
@@ -20248,7 +20165,7 @@ GTEST_API_ TestInfo* MakeAndRegisterTestInfo(const char* test_case_name,
 // and returns false.  None of pstr, *pstr, and prefix can be NULL.
 GTEST_API_ bool SkipPrefix(const char* prefix, const char** pstr);
 
-#if GTEST_HAS_TYPED_TEST || GTEST_HAS_TYPED_TEST_P
+#  if GTEST_HAS_TYPED_TEST || GTEST_HAS_TYPED_TEST_P
 
 // State of the definition of a type-parameterized test case.
 class GTEST_API_ TypedTestCasePState
@@ -20256,8 +20173,7 @@ class GTEST_API_ TypedTestCasePState
 public:
   TypedTestCasePState()
     : registered_(false)
-  {
-  }
+  {}
 
   // Adds the given test name to defined_test_names_ and return true
   // if the test case hasn't been registered; otherwise aborts the
@@ -20391,7 +20307,7 @@ public:
   }
 };
 
-#endif // GTEST_HAS_TYPED_TEST || GTEST_HAS_TYPED_TEST_P
+#  endif // GTEST_HAS_TYPED_TEST || GTEST_HAS_TYPED_TEST_P
 
 // Returns the current OS stack trace as an std::string.
 //
@@ -20424,8 +20340,7 @@ struct GTEST_API_ ConstCharPtr
 {
   ConstCharPtr(const char* str)
     : value(str)
-  {
-  }
+  {}
   operator bool() const
   {
     return true;
@@ -20445,8 +20360,7 @@ public:
 
   explicit Random(UInt32 seed)
     : state_(seed)
-  {
-  }
+  {}
 
   void Reseed(UInt32 seed)
   {
@@ -20469,8 +20383,7 @@ struct CompileAssertTypesEqual;
 
 template <typename T>
 struct CompileAssertTypesEqual<T, T>
-{
-};
+{};
 
 // Removes the reference from a type if it is a reference type,
 // otherwise leaves it unchanged.  This is the same as
@@ -20488,7 +20401,7 @@ struct RemoveReference<T&>
 
 // A handy wrapper around RemoveReference that works when the argument
 // T depends on template parameters.
-#define GTEST_REMOVE_REFERENCE_(T) typename ::testing::internal::RemoveReference<T>::type
+#  define GTEST_REMOVE_REFERENCE_(T) typename ::testing::internal::RemoveReference<T>::type
 
 // Removes const from a type if it is a const type, otherwise leaves
 // it unchanged.  This is the same as tr1::remove_const, which is not
@@ -20513,7 +20426,7 @@ struct RemoveConst<const T[N]>
   typedef typename RemoveConst<T>::type type[N];
 };
 
-#if defined(_MSC_VER) && _MSC_VER < 1400
+#  if defined(_MSC_VER) && _MSC_VER < 1400
 // This is the only specialization that allows VC++ 7.1 to remove const in
 // 'const int[3] and 'const int[3][4]'.  However, it causes trouble with GCC
 // and thus needs to be conditionally compiled.
@@ -20522,14 +20435,14 @@ struct RemoveConst<T[N]>
 {
   typedef typename RemoveConst<T>::type type[N];
 };
-#endif
+#  endif
 
 // A handy wrapper around RemoveConst that works when the argument
 // T depends on template parameters.
-#define GTEST_REMOVE_CONST_(T) typename ::testing::internal::RemoveConst<T>::type
+#  define GTEST_REMOVE_CONST_(T) typename ::testing::internal::RemoveConst<T>::type
 
 // Turns const U&, U&, const U, and U all into U.
-#define GTEST_REMOVE_REFERENCE_AND_CONST_(T) GTEST_REMOVE_CONST_(GTEST_REMOVE_REFERENCE_(T))
+#  define GTEST_REMOVE_REFERENCE_AND_CONST_(T) GTEST_REMOVE_CONST_(GTEST_REMOVE_REFERENCE_(T))
 
 // Adds reference to a type if it is not a reference type,
 // otherwise leaves it unchanged.  This is the same as
@@ -20547,7 +20460,7 @@ struct AddReference<T&>
 
 // A handy wrapper around AddReference that works when the argument T
 // depends on template parameters.
-#define GTEST_ADD_REFERENCE_(T) typename ::testing::internal::AddReference<T>::type
+#  define GTEST_ADD_REFERENCE_(T) typename ::testing::internal::AddReference<T>::type
 
 // Adds a reference to const on top of T as necessary.  For example,
 // it transforms
@@ -20558,7 +20471,7 @@ struct AddReference<T&>
 //   const char&  ==> const char&
 //
 // The argument T must depend on some template parameters.
-#define GTEST_REFERENCE_TO_CONST_(T) GTEST_ADD_REFERENCE_(const GTEST_REMOVE_REFERENCE_(T))
+#  define GTEST_REFERENCE_TO_CONST_(T) GTEST_ADD_REFERENCE_(const GTEST_REMOVE_REFERENCE_(T))
 
 // ImplicitlyConvertible<From, To>::value is a compile-time bool
 // constant that's true iff type From can be implicitly converted to
@@ -20594,20 +20507,20 @@ public:
 // MSVC warns about implicitly converting from double to int for
 // possible loss of data, so we need to temporarily disable the
 // warning.
-#ifdef _MSC_VER
-#pragma warning(push) // Saves the current warning state.
-#pragma warning(disable : 4244) // Temporarily disables warning 4244.
+#  ifdef _MSC_VER
+#    pragma warning(push) // Saves the current warning state.
+#    pragma warning(disable : 4244) // Temporarily disables warning 4244.
 
   static const bool value = sizeof(Helper(ImplicitlyConvertible::MakeFrom())) == 1;
-#pragma warning(pop) // Restores the warning state.
-#elif defined(__BORLANDC__)
+#    pragma warning(pop) // Restores the warning state.
+#  elif defined(__BORLANDC__)
   // C++Builder cannot use member overload resolution during template
   // instantiation.  The simplest workaround is to use its C++0x type traits
   // functions (C++Builder 2009 and above only).
   static const bool value = __is_convertible(From, To);
-#else
+#  else
   static const bool value = sizeof(Helper(ImplicitlyConvertible::MakeFrom())) == 1;
-#endif // _MSV_VER
+#  endif // _MSV_VER
 };
 template <typename From, typename To>
 const bool ImplicitlyConvertible<From, To>::value;
@@ -20616,10 +20529,10 @@ const bool ImplicitlyConvertible<From, To>::value;
 // true iff T is type ProtocolMessage, proto2::Message, or a subclass
 // of those.
 template <typename T>
-struct IsAProtocolMessage : public bool_constant<ImplicitlyConvertible<const T*, const ::ProtocolMessage*>::value
-                                                 || ImplicitlyConvertible<const T*, const ::proto2::Message*>::value>
-{
-};
+struct IsAProtocolMessage
+  : public bool_constant<ImplicitlyConvertible<const T*, const ::ProtocolMessage*>::value
+                         || ImplicitlyConvertible<const T*, const ::proto2::Message*>::value>
+{};
 
 // When the compiler sees expression IsContainerTest<C>(0), if C is an
 // STL-style container class, the first overload of IsContainerTest
@@ -20841,132 +20754,130 @@ private:
 } // namespace internal
 } // namespace testing
 
-#define GTEST_MESSAGE_AT_(file, line, message, result_type)                                                            \
-  ::testing::internal::AssertHelper(result_type, file, line, message) = ::testing::Message()
+#  define GTEST_MESSAGE_AT_(file, line, message, result_type)                                                          \
+    ::testing::internal::AssertHelper(result_type, file, line, message) = ::testing::Message()
 
-#define GTEST_MESSAGE_(message, result_type) GTEST_MESSAGE_AT_(__FILE__, __LINE__, message, result_type)
+#  define GTEST_MESSAGE_(message, result_type) GTEST_MESSAGE_AT_(__FILE__, __LINE__, message, result_type)
 
-#define GTEST_FATAL_FAILURE_(message) return GTEST_MESSAGE_(message, ::testing::TestPartResult::kFatalFailure)
+#  define GTEST_FATAL_FAILURE_(message) return GTEST_MESSAGE_(message, ::testing::TestPartResult::kFatalFailure)
 
-#define GTEST_NONFATAL_FAILURE_(message) GTEST_MESSAGE_(message, ::testing::TestPartResult::kNonFatalFailure)
+#  define GTEST_NONFATAL_FAILURE_(message) GTEST_MESSAGE_(message, ::testing::TestPartResult::kNonFatalFailure)
 
-#define GTEST_SUCCESS_(message) GTEST_MESSAGE_(message, ::testing::TestPartResult::kSuccess)
+#  define GTEST_SUCCESS_(message) GTEST_MESSAGE_(message, ::testing::TestPartResult::kSuccess)
 
 // Suppresses MSVC warnings 4072 (unreachable code) for the code following
 // statement if it returns or throws (or doesn't return or throw in some
 // situations).
-#define GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement)                                                      \
-  if (::testing::internal::AlwaysTrue()) {                                                                             \
-    statement;                                                                                                         \
-  }
+#  define GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement)                                                    \
+    if (::testing::internal::AlwaysTrue()) {                                                                           \
+      statement;                                                                                                       \
+    }
 
-#define GTEST_TEST_THROW_(statement, expected_exception, fail)                                                         \
-  GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                        \
-  if (::testing::internal::ConstCharPtr gtest_msg = "") {                                                              \
-    bool gtest_caught_expected = false;                                                                                \
-    try {                                                                                                              \
-      GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement);                                                       \
-    } catch (expected_exception const&) {                                                                              \
-      gtest_caught_expected = true;                                                                                    \
-    } catch (...) {                                                                                                    \
-      gtest_msg.value = "Expected: " #statement " throws an exception of type " #expected_exception                    \
-                        ".\n  Actual: it throws a different type.";                                                    \
-      goto GTEST_CONCAT_TOKEN_(gtest_label_testthrow_, __LINE__);                                                      \
-    }                                                                                                                  \
-    if (!gtest_caught_expected) {                                                                                      \
-      gtest_msg.value = "Expected: " #statement " throws an exception of type " #expected_exception                    \
-                        ".\n  Actual: it throws nothing.";                                                             \
-      goto GTEST_CONCAT_TOKEN_(gtest_label_testthrow_, __LINE__);                                                      \
-    }                                                                                                                  \
-  } else                                                                                                               \
-    GTEST_CONCAT_TOKEN_(gtest_label_testthrow_, __LINE__)                                                              \
-      : fail(gtest_msg.value)
+#  define GTEST_TEST_THROW_(statement, expected_exception, fail)                                                       \
+    GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                      \
+    if (::testing::internal::ConstCharPtr gtest_msg = "") {                                                            \
+      bool gtest_caught_expected = false;                                                                              \
+      try {                                                                                                            \
+        GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement);                                                     \
+      } catch (expected_exception const&) {                                                                            \
+        gtest_caught_expected = true;                                                                                  \
+      } catch (...) {                                                                                                  \
+        gtest_msg.value = "Expected: " #statement " throws an exception of type " #expected_exception                  \
+                          ".\n  Actual: it throws a different type.";                                                  \
+        goto GTEST_CONCAT_TOKEN_(gtest_label_testthrow_, __LINE__);                                                    \
+      }                                                                                                                \
+      if (!gtest_caught_expected) {                                                                                    \
+        gtest_msg.value = "Expected: " #statement " throws an exception of type " #expected_exception                  \
+                          ".\n  Actual: it throws nothing.";                                                           \
+        goto GTEST_CONCAT_TOKEN_(gtest_label_testthrow_, __LINE__);                                                    \
+      }                                                                                                                \
+    } else                                                                                                             \
+      GTEST_CONCAT_TOKEN_(gtest_label_testthrow_, __LINE__)                                                            \
+        : fail(gtest_msg.value)
 
-#define GTEST_TEST_NO_THROW_(statement, fail)                                                                          \
-  GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                        \
-  if (::testing::internal::AlwaysTrue()) {                                                                             \
-    try {                                                                                                              \
-      GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement);                                                       \
-    } catch (...) {                                                                                                    \
-      goto GTEST_CONCAT_TOKEN_(gtest_label_testnothrow_, __LINE__);                                                    \
-    }                                                                                                                  \
-  } else                                                                                                               \
-    GTEST_CONCAT_TOKEN_(gtest_label_testnothrow_, __LINE__)                                                            \
-      : fail("Expected: " #statement " doesn't throw an exception.\n"                                                  \
-             "  Actual: it throws.")
+#  define GTEST_TEST_NO_THROW_(statement, fail)                                                                        \
+    GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                      \
+    if (::testing::internal::AlwaysTrue()) {                                                                           \
+      try {                                                                                                            \
+        GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement);                                                     \
+      } catch (...) {                                                                                                  \
+        goto GTEST_CONCAT_TOKEN_(gtest_label_testnothrow_, __LINE__);                                                  \
+      }                                                                                                                \
+    } else                                                                                                             \
+      GTEST_CONCAT_TOKEN_(gtest_label_testnothrow_, __LINE__)                                                          \
+        : fail("Expected: " #statement " doesn't throw an exception.\n"                                                \
+               "  Actual: it throws.")
 
-#define GTEST_TEST_ANY_THROW_(statement, fail)                                                                         \
-  GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                        \
-  if (::testing::internal::AlwaysTrue()) {                                                                             \
-    bool gtest_caught_any = false;                                                                                     \
-    try {                                                                                                              \
-      GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement);                                                       \
-    } catch (...) {                                                                                                    \
-      gtest_caught_any = true;                                                                                         \
-    }                                                                                                                  \
-    if (!gtest_caught_any) {                                                                                           \
-      goto GTEST_CONCAT_TOKEN_(gtest_label_testanythrow_, __LINE__);                                                   \
-    }                                                                                                                  \
-  } else                                                                                                               \
-    GTEST_CONCAT_TOKEN_(gtest_label_testanythrow_, __LINE__)                                                           \
-      : fail("Expected: " #statement " throws an exception.\n"                                                         \
-             "  Actual: it doesn't.")
+#  define GTEST_TEST_ANY_THROW_(statement, fail)                                                                       \
+    GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                      \
+    if (::testing::internal::AlwaysTrue()) {                                                                           \
+      bool gtest_caught_any = false;                                                                                   \
+      try {                                                                                                            \
+        GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement);                                                     \
+      } catch (...) {                                                                                                  \
+        gtest_caught_any = true;                                                                                       \
+      }                                                                                                                \
+      if (!gtest_caught_any) {                                                                                         \
+        goto GTEST_CONCAT_TOKEN_(gtest_label_testanythrow_, __LINE__);                                                 \
+      }                                                                                                                \
+    } else                                                                                                             \
+      GTEST_CONCAT_TOKEN_(gtest_label_testanythrow_, __LINE__)                                                         \
+        : fail("Expected: " #statement " throws an exception.\n"                                                       \
+               "  Actual: it doesn't.")
 
 
 // Implements Boolean test assertions such as EXPECT_TRUE. expression can be
 // either a boolean expression or an AssertionResult. text is a textual
 // represenation of expression as it was passed into the EXPECT_TRUE.
-#define GTEST_TEST_BOOLEAN_(expression, text, actual, expected, fail)                                                  \
-  GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                        \
-  if (const ::testing::AssertionResult gtest_ar_ = ::testing::AssertionResult(expression))                             \
-    ;                                                                                                                  \
-  else                                                                                                                 \
-    fail(::testing::internal::GetBoolAssertionFailureMessage(gtest_ar_, text, #actual, #expected).c_str())
+#  define GTEST_TEST_BOOLEAN_(expression, text, actual, expected, fail)                                                \
+    GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                      \
+    if (const ::testing::AssertionResult gtest_ar_ = ::testing::AssertionResult(expression))                           \
+      ;                                                                                                                \
+    else                                                                                                               \
+      fail(::testing::internal::GetBoolAssertionFailureMessage(gtest_ar_, text, #actual, #expected).c_str())
 
-#define GTEST_TEST_NO_FATAL_FAILURE_(statement, fail)                                                                  \
-  GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                        \
-  if (::testing::internal::AlwaysTrue()) {                                                                             \
-    ::testing::internal::HasNewFatalFailureHelper gtest_fatal_failure_checker;                                         \
-    GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement);                                                         \
-    if (gtest_fatal_failure_checker.has_new_fatal_failure()) {                                                         \
-      goto GTEST_CONCAT_TOKEN_(gtest_label_testnofatal_, __LINE__);                                                    \
-    }                                                                                                                  \
-  } else                                                                                                               \
-    GTEST_CONCAT_TOKEN_(gtest_label_testnofatal_, __LINE__)                                                            \
-      : fail("Expected: " #statement " doesn't generate new fatal "                                                    \
-             "failures in the current thread.\n"                                                                       \
-             "  Actual: it does.")
+#  define GTEST_TEST_NO_FATAL_FAILURE_(statement, fail)                                                                \
+    GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                      \
+    if (::testing::internal::AlwaysTrue()) {                                                                           \
+      ::testing::internal::HasNewFatalFailureHelper gtest_fatal_failure_checker;                                       \
+      GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement);                                                       \
+      if (gtest_fatal_failure_checker.has_new_fatal_failure()) {                                                       \
+        goto GTEST_CONCAT_TOKEN_(gtest_label_testnofatal_, __LINE__);                                                  \
+      }                                                                                                                \
+    } else                                                                                                             \
+      GTEST_CONCAT_TOKEN_(gtest_label_testnofatal_, __LINE__)                                                          \
+        : fail("Expected: " #statement " doesn't generate new fatal "                                                  \
+               "failures in the current thread.\n"                                                                     \
+               "  Actual: it does.")
 
 // Expands to the name of the class that implements the given test.
-#define GTEST_TEST_CLASS_NAME_(test_case_name, test_name) test_case_name##_##test_name##_Test
+#  define GTEST_TEST_CLASS_NAME_(test_case_name, test_name) test_case_name##_##test_name##_Test
 
 // Helper macro for defining tests.
-#define GTEST_TEST_(test_case_name, test_name, parent_class, parent_id)                                                \
-  class GTEST_TEST_CLASS_NAME_(test_case_name, test_name)                                                              \
-    : public parent_class                                                                                              \
-  {                                                                                                                    \
-  public:                                                                                                              \
-    GTEST_TEST_CLASS_NAME_(test_case_name, test_name)()                                                                \
+#  define GTEST_TEST_(test_case_name, test_name, parent_class, parent_id)                                              \
+    class GTEST_TEST_CLASS_NAME_(test_case_name, test_name)                                                            \
+      : public parent_class                                                                                            \
     {                                                                                                                  \
-    }                                                                                                                  \
+    public:                                                                                                            \
+      GTEST_TEST_CLASS_NAME_(test_case_name, test_name)() {}                                                           \
                                                                                                                        \
-  private:                                                                                                             \
-    virtual void TestBody();                                                                                           \
-    static ::testing::TestInfo* const test_info_ GTEST_ATTRIBUTE_UNUSED_;                                              \
-    GTEST_DISALLOW_COPY_AND_ASSIGN_(GTEST_TEST_CLASS_NAME_(test_case_name, test_name));                                \
-  };                                                                                                                   \
+    private:                                                                                                           \
+      virtual void TestBody();                                                                                         \
+      static ::testing::TestInfo* const test_info_ GTEST_ATTRIBUTE_UNUSED_;                                            \
+      GTEST_DISALLOW_COPY_AND_ASSIGN_(GTEST_TEST_CLASS_NAME_(test_case_name, test_name));                              \
+    };                                                                                                                 \
                                                                                                                        \
-  ::testing::TestInfo* const GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::test_info_ =                           \
-      ::testing::internal::MakeAndRegisterTestInfo(                                                                    \
-          #test_case_name,                                                                                             \
-          #test_name,                                                                                                  \
-          NULL,                                                                                                        \
-          NULL,                                                                                                        \
-          (parent_id),                                                                                                 \
-          parent_class::SetUpTestCase,                                                                                 \
-          parent_class::TearDownTestCase,                                                                              \
-          new ::testing::internal::TestFactoryImpl<GTEST_TEST_CLASS_NAME_(test_case_name, test_name)>);                \
-  void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
+    ::testing::TestInfo* const GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::test_info_ =                         \
+        ::testing::internal::MakeAndRegisterTestInfo(                                                                  \
+            #test_case_name,                                                                                           \
+            #test_name,                                                                                                \
+            NULL,                                                                                                      \
+            NULL,                                                                                                      \
+            (parent_id),                                                                                               \
+            parent_class::SetUpTestCase,                                                                               \
+            parent_class::TearDownTestCase,                                                                            \
+            new ::testing::internal::TestFactoryImpl<GTEST_TEST_CLASS_NAME_(test_case_name, test_name)>);              \
+    void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
 
 #endif // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_INTERNAL_H_
 // Copyright 2005, Google Inc.
@@ -21007,7 +20918,7 @@ private:
 // directly.
 
 #ifndef GTEST_INCLUDE_GTEST_GTEST_DEATH_TEST_H_
-#define GTEST_INCLUDE_GTEST_GTEST_DEATH_TEST_H_
+#  define GTEST_INCLUDE_GTEST_GTEST_DEATH_TEST_H_
 
 // Copyright 2005, Google Inc.
 // All rights reserved.
@@ -21045,11 +20956,11 @@ private:
 // This header file defines internal utilities needed for implementing
 // death tests.  They are subject to change without notice.
 
-#ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_DEATH_TEST_INTERNAL_H_
-#define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_DEATH_TEST_INTERNAL_H_
+#  ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_DEATH_TEST_INTERNAL_H_
+#    define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_DEATH_TEST_INTERNAL_H_
 
 
-#include <stdio.h>
+#    include <stdio.h>
 
 namespace testing {
 namespace internal {
@@ -21061,7 +20972,7 @@ const char kDeathTestStyleFlag[] = "death_test_style";
 const char kDeathTestUseFork[] = "death_test_use_fork";
 const char kInternalRunDeathTestFlag[] = "internal_run_death_test";
 
-#if GTEST_HAS_DEATH_TEST
+#    if GTEST_HAS_DEATH_TEST
 
 // DeathTest is a class that hides much of the complexity of the
 // GTEST_DEATH_TEST_ macro.  It is abstract; its static Create method
@@ -21089,9 +21000,7 @@ public:
   // DeathTest object that controls the execution of the current test.
   static bool Create(const char* statement, const RE* regex, const char* file, int line, DeathTest** test);
   DeathTest();
-  virtual ~DeathTest()
-  {
-  }
+  virtual ~DeathTest() {}
 
   // A helper class that aborts a death test when it's deleted.
   class ReturnSentinel
@@ -21099,8 +21008,7 @@ public:
   public:
     explicit ReturnSentinel(DeathTest* test)
       : test_(test)
-    {
-    }
+    {}
     ~ReturnSentinel()
     {
       test_->Abort(TEST_ENCOUNTERED_RETURN_STATEMENT);
@@ -21165,9 +21073,7 @@ private:
 class DeathTestFactory
 {
 public:
-  virtual ~DeathTestFactory()
-  {
-  }
+  virtual ~DeathTestFactory() {}
   virtual bool Create(const char* statement, const RE* regex, const char* file, int line, DeathTest** test) = 0;
 };
 
@@ -21184,59 +21090,59 @@ GTEST_API_ bool ExitedUnsuccessfully(int exit_status);
 
 // Traps C++ exceptions escaping statement and reports them as test
 // failures. Note that trapping SEH exceptions is not implemented here.
-#if GTEST_HAS_EXCEPTIONS
-#define GTEST_EXECUTE_DEATH_TEST_STATEMENT_(statement, death_test)                                                     \
-  try {                                                                                                                \
-    GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement);                                                         \
-  } catch (const ::std::exception& gtest_exception) {                                                                  \
-    fprintf(stderr,                                                                                                    \
-            "\n%s: Caught std::exception-derived exception escaping the "                                              \
-            "death test statement. Exception message: %s\n",                                                           \
-            ::testing::internal::FormatFileLocation(__FILE__, __LINE__).c_str(),                                       \
-            gtest_exception.what());                                                                                   \
-    fflush(stderr);                                                                                                    \
-    death_test->Abort(::testing::internal::DeathTest::TEST_THREW_EXCEPTION);                                           \
-  } catch (...) {                                                                                                      \
-    death_test->Abort(::testing::internal::DeathTest::TEST_THREW_EXCEPTION);                                           \
-  }
+#      if GTEST_HAS_EXCEPTIONS
+#        define GTEST_EXECUTE_DEATH_TEST_STATEMENT_(statement, death_test)                                             \
+          try {                                                                                                        \
+            GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement);                                                 \
+          } catch (const ::std::exception& gtest_exception) {                                                          \
+            fprintf(stderr,                                                                                            \
+                    "\n%s: Caught std::exception-derived exception escaping the "                                      \
+                    "death test statement. Exception message: %s\n",                                                   \
+                    ::testing::internal::FormatFileLocation(__FILE__, __LINE__).c_str(),                               \
+                    gtest_exception.what());                                                                           \
+            fflush(stderr);                                                                                            \
+            death_test->Abort(::testing::internal::DeathTest::TEST_THREW_EXCEPTION);                                   \
+          } catch (...) {                                                                                              \
+            death_test->Abort(::testing::internal::DeathTest::TEST_THREW_EXCEPTION);                                   \
+          }
 
-#else
-#define GTEST_EXECUTE_DEATH_TEST_STATEMENT_(statement, death_test)                                                     \
-  GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement)
+#      else
+#        define GTEST_EXECUTE_DEATH_TEST_STATEMENT_(statement, death_test)                                             \
+          GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement)
 
-#endif
+#      endif
 
 // This macro is for implementing ASSERT_DEATH*, EXPECT_DEATH*,
 // ASSERT_EXIT*, and EXPECT_EXIT*.
-#define GTEST_DEATH_TEST_(statement, predicate, regex, fail)                                                           \
-  GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                        \
-  if (::testing::internal::AlwaysTrue()) {                                                                             \
-    const ::testing::internal::RE& gtest_regex = (regex);                                                              \
-    ::testing::internal::DeathTest* gtest_dt;                                                                          \
-    if (!::testing::internal::DeathTest::Create(#statement, &gtest_regex, __FILE__, __LINE__, &gtest_dt)) {            \
-      goto GTEST_CONCAT_TOKEN_(gtest_label_, __LINE__);                                                                \
-    }                                                                                                                  \
-    if (gtest_dt != NULL) {                                                                                            \
-      ::testing::internal::scoped_ptr<::testing::internal::DeathTest> gtest_dt_ptr(gtest_dt);                          \
-      switch (gtest_dt->AssumeRole()) {                                                                                \
-        case ::testing::internal::DeathTest::OVERSEE_TEST:                                                             \
-          if (!gtest_dt->Passed(predicate(gtest_dt->Wait()))) {                                                        \
+#      define GTEST_DEATH_TEST_(statement, predicate, regex, fail)                                                     \
+        GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                  \
+        if (::testing::internal::AlwaysTrue()) {                                                                       \
+          const ::testing::internal::RE& gtest_regex = (regex);                                                        \
+          ::testing::internal::DeathTest* gtest_dt;                                                                    \
+          if (!::testing::internal::DeathTest::Create(#statement, &gtest_regex, __FILE__, __LINE__, &gtest_dt)) {      \
             goto GTEST_CONCAT_TOKEN_(gtest_label_, __LINE__);                                                          \
           }                                                                                                            \
-          break;                                                                                                       \
-        case ::testing::internal::DeathTest::EXECUTE_TEST: {                                                           \
-          ::testing::internal::DeathTest::ReturnSentinel gtest_sentinel(gtest_dt);                                     \
-          GTEST_EXECUTE_DEATH_TEST_STATEMENT_(statement, gtest_dt);                                                    \
-          gtest_dt->Abort(::testing::internal::DeathTest::TEST_DID_NOT_DIE);                                           \
-          break;                                                                                                       \
-        }                                                                                                              \
-        default:                                                                                                       \
-          break;                                                                                                       \
-      }                                                                                                                \
-    }                                                                                                                  \
-  } else                                                                                                               \
-    GTEST_CONCAT_TOKEN_(gtest_label_, __LINE__)                                                                        \
-      : fail(::testing::internal::DeathTest::LastMessage())
+          if (gtest_dt != NULL) {                                                                                      \
+            ::testing::internal::scoped_ptr<::testing::internal::DeathTest> gtest_dt_ptr(gtest_dt);                    \
+            switch (gtest_dt->AssumeRole()) {                                                                          \
+              case ::testing::internal::DeathTest::OVERSEE_TEST:                                                       \
+                if (!gtest_dt->Passed(predicate(gtest_dt->Wait()))) {                                                  \
+                  goto GTEST_CONCAT_TOKEN_(gtest_label_, __LINE__);                                                    \
+                }                                                                                                      \
+                break;                                                                                                 \
+              case ::testing::internal::DeathTest::EXECUTE_TEST: {                                                     \
+                ::testing::internal::DeathTest::ReturnSentinel gtest_sentinel(gtest_dt);                               \
+                GTEST_EXECUTE_DEATH_TEST_STATEMENT_(statement, gtest_dt);                                              \
+                gtest_dt->Abort(::testing::internal::DeathTest::TEST_DID_NOT_DIE);                                     \
+                break;                                                                                                 \
+              }                                                                                                        \
+              default:                                                                                                 \
+                break;                                                                                                 \
+            }                                                                                                          \
+          }                                                                                                            \
+        } else                                                                                                         \
+          GTEST_CONCAT_TOKEN_(gtest_label_, __LINE__)                                                                  \
+            : fail(::testing::internal::DeathTest::LastMessage())
 // The symbol "fail" here expands to something into which a message
 // can be streamed.
 
@@ -21244,12 +21150,12 @@ GTEST_API_ bool ExitedUnsuccessfully(int exit_status);
 // NDEBUG mode. In this case we need the statements to be executed, the regex is
 // ignored, and the macro must accept a streamed message even though the message
 // is never printed.
-#define GTEST_EXECUTE_STATEMENT_(statement, regex)                                                                     \
-  GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                        \
-  if (::testing::internal::AlwaysTrue()) {                                                                             \
-    GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement);                                                         \
-  } else                                                                                                               \
-    ::testing::Message()
+#      define GTEST_EXECUTE_STATEMENT_(statement, regex)                                                               \
+        GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                  \
+        if (::testing::internal::AlwaysTrue()) {                                                                       \
+          GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement);                                                   \
+        } else                                                                                                         \
+          ::testing::Message()
 
 // A class representing the parsed contents of the
 // --gtest_internal_run_death_test flag, as it existed when
@@ -21262,8 +21168,7 @@ public:
     , line_(a_line)
     , index_(an_index)
     , write_fd_(a_write_fd)
-  {
-  }
+  {}
 
   ~InternalRunDeathTestFlag()
   {
@@ -21302,7 +21207,7 @@ private:
 // the flag is specified; otherwise returns NULL.
 InternalRunDeathTestFlag* ParseInternalRunDeathTestFlag();
 
-#else // GTEST_HAS_DEATH_TEST
+#    else // GTEST_HAS_DEATH_TEST
 
 // This macro is used for implementing macros such as
 // EXPECT_DEATH_IF_SUPPORTED and ASSERT_DEATH_IF_SUPPORTED on systems where
@@ -21336,24 +21241,24 @@ InternalRunDeathTestFlag* ParseInternalRunDeathTestFlag();
 //  statement unconditionally returns or throws. The Message constructor at
 //  the end allows the syntax of streaming additional messages into the
 //  macro, for compilational compatibility with EXPECT_DEATH/ASSERT_DEATH.
-#define GTEST_UNSUPPORTED_DEATH_TEST_(statement, regex, terminator)                                                    \
-  GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                        \
-  if (::testing::internal::AlwaysTrue()) {                                                                             \
-    GTEST_LOG_(WARNING) << "Death tests are not supported on this platform.\n"                                         \
-                        << "Statement '" #statement "' cannot be verified.";                                           \
-  } else if (::testing::internal::AlwaysFalse()) {                                                                     \
-    ::testing::internal::RE::PartialMatch(".*", (regex));                                                              \
-    GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement);                                                         \
-    terminator;                                                                                                        \
-  } else                                                                                                               \
-    ::testing::Message()
+#      define GTEST_UNSUPPORTED_DEATH_TEST_(statement, regex, terminator)                                              \
+        GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                  \
+        if (::testing::internal::AlwaysTrue()) {                                                                       \
+          GTEST_LOG_(WARNING) << "Death tests are not supported on this platform.\n"                                   \
+                              << "Statement '" #statement "' cannot be verified.";                                     \
+        } else if (::testing::internal::AlwaysFalse()) {                                                               \
+          ::testing::internal::RE::PartialMatch(".*", (regex));                                                        \
+          GTEST_SUPPRESS_UNREACHABLE_CODE_WARNING_BELOW_(statement);                                                   \
+          terminator;                                                                                                  \
+        } else                                                                                                         \
+          ::testing::Message()
 
-#endif // GTEST_HAS_DEATH_TEST
+#    endif // GTEST_HAS_DEATH_TEST
 
 } // namespace internal
 } // namespace testing
 
-#endif // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_DEATH_TEST_INTERNAL_H_
+#  endif // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_DEATH_TEST_INTERNAL_H_
 
 namespace testing {
 
@@ -21364,7 +21269,7 @@ namespace testing {
 // after forking.
 GTEST_DECLARE_string_(death_test_style);
 
-#if GTEST_HAS_DEATH_TEST
+#  if GTEST_HAS_DEATH_TEST
 
 namespace internal {
 
@@ -21480,20 +21385,22 @@ GTEST_API_ bool InDeathTestChild();
 // Asserts that a given statement causes the program to exit, with an
 // integer exit status that satisfies predicate, and emitting error output
 // that matches regex.
-#define ASSERT_EXIT(statement, predicate, regex) GTEST_DEATH_TEST_(statement, predicate, regex, GTEST_FATAL_FAILURE_)
+#    define ASSERT_EXIT(statement, predicate, regex)                                                                   \
+      GTEST_DEATH_TEST_(statement, predicate, regex, GTEST_FATAL_FAILURE_)
 
 // Like ASSERT_EXIT, but continues on to successive tests in the
 // test case, if any:
-#define EXPECT_EXIT(statement, predicate, regex) GTEST_DEATH_TEST_(statement, predicate, regex, GTEST_NONFATAL_FAILURE_)
+#    define EXPECT_EXIT(statement, predicate, regex)                                                                   \
+      GTEST_DEATH_TEST_(statement, predicate, regex, GTEST_NONFATAL_FAILURE_)
 
 // Asserts that a given statement causes the program to exit, either by
 // explicitly exiting with a nonzero exit code or being killed by a
 // signal, and emitting error output that matches regex.
-#define ASSERT_DEATH(statement, regex) ASSERT_EXIT(statement, ::testing::internal::ExitedUnsuccessfully, regex)
+#    define ASSERT_DEATH(statement, regex) ASSERT_EXIT(statement, ::testing::internal::ExitedUnsuccessfully, regex)
 
 // Like ASSERT_DEATH, but continues on to successive tests in the
 // test case, if any:
-#define EXPECT_DEATH(statement, regex) EXPECT_EXIT(statement, ::testing::internal::ExitedUnsuccessfully, regex)
+#    define EXPECT_DEATH(statement, regex) EXPECT_EXIT(statement, ::testing::internal::ExitedUnsuccessfully, regex)
 
 // Two predicate classes that can be used in {ASSERT,EXPECT}_EXIT*:
 
@@ -21511,7 +21418,7 @@ private:
   const int exit_code_;
 };
 
-#if !GTEST_OS_WINDOWS
+#    if !GTEST_OS_WINDOWS
 // Tests that an exit code describes an exit due to termination by a
 // given signal.
 class GTEST_API_ KilledBySignal
@@ -21523,7 +21430,7 @@ public:
 private:
   const int signum_;
 };
-#endif // !GTEST_OS_WINDOWS
+#    endif // !GTEST_OS_WINDOWS
 
 // EXPECT_DEBUG_DEATH asserts that the given statements die in debug mode.
 // The death testing framework causes this to have interesting semantics,
@@ -21568,33 +21475,33 @@ private:
 //   EXPECT_EQ(12, DieInDebugOr12(&sideeffect));
 // }, "death");
 //
-#ifdef NDEBUG
+#    ifdef NDEBUG
 
-#define EXPECT_DEBUG_DEATH(statement, regex) GTEST_EXECUTE_STATEMENT_(statement, regex)
+#      define EXPECT_DEBUG_DEATH(statement, regex) GTEST_EXECUTE_STATEMENT_(statement, regex)
 
-#define ASSERT_DEBUG_DEATH(statement, regex) GTEST_EXECUTE_STATEMENT_(statement, regex)
+#      define ASSERT_DEBUG_DEATH(statement, regex) GTEST_EXECUTE_STATEMENT_(statement, regex)
 
-#else
+#    else
 
-#define EXPECT_DEBUG_DEATH(statement, regex) EXPECT_DEATH(statement, regex)
+#      define EXPECT_DEBUG_DEATH(statement, regex) EXPECT_DEATH(statement, regex)
 
-#define ASSERT_DEBUG_DEATH(statement, regex) ASSERT_DEATH(statement, regex)
+#      define ASSERT_DEBUG_DEATH(statement, regex) ASSERT_DEATH(statement, regex)
 
-#endif // NDEBUG for EXPECT_DEBUG_DEATH
-#endif // GTEST_HAS_DEATH_TEST
+#    endif // NDEBUG for EXPECT_DEBUG_DEATH
+#  endif // GTEST_HAS_DEATH_TEST
 
 // EXPECT_DEATH_IF_SUPPORTED(statement, regex) and
 // ASSERT_DEATH_IF_SUPPORTED(statement, regex) expand to real death tests if
 // death tests are supported; otherwise they just issue a warning.  This is
 // useful when you are combining death test assertions with normal test
 // assertions in one test.
-#if GTEST_HAS_DEATH_TEST
-#define EXPECT_DEATH_IF_SUPPORTED(statement, regex) EXPECT_DEATH(statement, regex)
-#define ASSERT_DEATH_IF_SUPPORTED(statement, regex) ASSERT_DEATH(statement, regex)
-#else
-#define EXPECT_DEATH_IF_SUPPORTED(statement, regex) GTEST_UNSUPPORTED_DEATH_TEST_(statement, regex, )
-#define ASSERT_DEATH_IF_SUPPORTED(statement, regex) GTEST_UNSUPPORTED_DEATH_TEST_(statement, regex, return )
-#endif
+#  if GTEST_HAS_DEATH_TEST
+#    define EXPECT_DEATH_IF_SUPPORTED(statement, regex) EXPECT_DEATH(statement, regex)
+#    define ASSERT_DEATH_IF_SUPPORTED(statement, regex) ASSERT_DEATH(statement, regex)
+#  else
+#    define EXPECT_DEATH_IF_SUPPORTED(statement, regex) GTEST_UNSUPPORTED_DEATH_TEST_(statement, regex, )
+#    define ASSERT_DEATH_IF_SUPPORTED(statement, regex) GTEST_UNSUPPORTED_DEATH_TEST_(statement, regex, return )
+#  endif
 
 } // namespace testing
 
@@ -21640,7 +21547,7 @@ private:
 // This file is generated by a SCRIPT.  DO NOT EDIT BY HAND!
 //
 #ifndef GTEST_INCLUDE_GTEST_GTEST_PARAM_TEST_H_
-#define GTEST_INCLUDE_GTEST_GTEST_PARAM_TEST_H_
+#  define GTEST_INCLUDE_GTEST_GTEST_PARAM_TEST_H_
 
 
 // Value-parameterized tests allow you to test your code with different
@@ -21648,7 +21555,7 @@ private:
 //
 // Here is how you use value-parameterized tests:
 
-#if 0
+#  if 0
 
 // To write value-parameterized tests, first you should define a fixture
 // class. It is usually derived from testing::TestWithParam<T> (see below for
@@ -21778,12 +21685,12 @@ TEST_P(DerivedTest, DoesBlah) {
   EXPECT_TRUE(foo.Blah(GetParam()));
 }
 
-#endif // 0
+#  endif // 0
 
 
-#if !GTEST_OS_SYMBIAN
-#include <utility>
-#endif
+#  if !GTEST_OS_SYMBIAN
+#    include <utility>
+#  endif
 
 // scripts/fuse_gtest.py depends on gtest's own header being #included
 // *unconditionally*.  Therefore these #includes cannot be moved
@@ -21821,12 +21728,12 @@ TEST_P(DerivedTest, DoesBlah) {
 
 // Type and function utilities for implementing parameterized tests.
 
-#ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_H_
-#define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_H_
+#  ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_H_
+#    define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_H_
 
-#include <iterator>
-#include <utility>
-#include <vector>
+#    include <iterator>
+#    include <utility>
+#    include <vector>
 
 // scripts/fuse_gtest.py depends on gtest's own header being #included
 // *unconditionally*.  Therefore these #includes cannot be moved
@@ -21898,11 +21805,11 @@ TEST_P(DerivedTest, DoesBlah) {
 // TODO(wan@google.com): rename this to safe_linked_ptr to avoid
 // confusion with normal linked_ptr.
 
-#ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_LINKED_PTR_H_
-#define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_LINKED_PTR_H_
+#    ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_LINKED_PTR_H_
+#      define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_LINKED_PTR_H_
 
-#include <stdlib.h>
-#include <assert.h>
+#      include <stdlib.h>
+#      include <assert.h>
 
 
 namespace testing {
@@ -22108,7 +22015,7 @@ linked_ptr<T> make_linked_ptr(T* ptr)
 } // namespace internal
 } // namespace testing
 
-#endif // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_LINKED_PTR_H_
+#    endif // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_LINKED_PTR_H_
 // Copyright 2007, Google Inc.
 // All rights reserved.
 //
@@ -22203,14 +22110,14 @@ linked_ptr<T> make_linked_ptr(T* ptr)
 // being defined as many user-defined container types don't have
 // value_type.
 
-#ifndef GTEST_INCLUDE_GTEST_GTEST_PRINTERS_H_
-#define GTEST_INCLUDE_GTEST_GTEST_PRINTERS_H_
+#    ifndef GTEST_INCLUDE_GTEST_GTEST_PRINTERS_H_
+#      define GTEST_INCLUDE_GTEST_GTEST_PRINTERS_H_
 
-#include <ostream> // NOLINT
-#include <sstream>
-#include <string>
-#include <utility>
-#include <vector>
+#      include <ostream> // NOLINT
+#      include <sstream>
+#      include <string>
+#      include <utility>
+#      include <vector>
 
 namespace testing {
 
@@ -22548,14 +22455,14 @@ inline void PrintTo(unsigned char* s, ::std::ostream* os)
 // type.  When wchar_t is a typedef, defining an overload for const
 // wchar_t* would cause unsigned short* be printed as a wide string,
 // possibly causing invalid memory accesses.
-#if !defined(_MSC_VER) || defined(_NATIVE_WCHAR_T_DEFINED)
+#      if !defined(_MSC_VER) || defined(_NATIVE_WCHAR_T_DEFINED)
 // Overloads for wide C strings
 GTEST_API_ void PrintTo(const wchar_t* s, ::std::ostream* os);
 inline void PrintTo(wchar_t* s, ::std::ostream* os)
 {
   PrintTo(ImplicitCast_<const wchar_t*>(s), os);
 }
-#endif
+#      endif
 
 // Overload for C arrays.  Multi-dimensional arrays are printed
 // properly.
@@ -22573,13 +22480,13 @@ void PrintRawArrayTo(const T a[], size_t count, ::std::ostream* os)
 }
 
 // Overloads for ::string and ::std::string.
-#if GTEST_HAS_GLOBAL_STRING
+#      if GTEST_HAS_GLOBAL_STRING
 GTEST_API_ void PrintStringTo(const ::string& s, ::std::ostream* os);
 inline void PrintTo(const ::string& s, ::std::ostream* os)
 {
   PrintStringTo(s, os);
 }
-#endif // GTEST_HAS_GLOBAL_STRING
+#      endif // GTEST_HAS_GLOBAL_STRING
 
 GTEST_API_ void PrintStringTo(const ::std::string& s, ::std::ostream* os);
 inline void PrintTo(const ::std::string& s, ::std::ostream* os)
@@ -22588,23 +22495,23 @@ inline void PrintTo(const ::std::string& s, ::std::ostream* os)
 }
 
 // Overloads for ::wstring and ::std::wstring.
-#if GTEST_HAS_GLOBAL_WSTRING
+#      if GTEST_HAS_GLOBAL_WSTRING
 GTEST_API_ void PrintWideStringTo(const ::wstring& s, ::std::ostream* os);
 inline void PrintTo(const ::wstring& s, ::std::ostream* os)
 {
   PrintWideStringTo(s, os);
 }
-#endif // GTEST_HAS_GLOBAL_WSTRING
+#      endif // GTEST_HAS_GLOBAL_WSTRING
 
-#if GTEST_HAS_STD_WSTRING
+#      if GTEST_HAS_STD_WSTRING
 GTEST_API_ void PrintWideStringTo(const ::std::wstring& s, ::std::ostream* os);
 inline void PrintTo(const ::std::wstring& s, ::std::ostream* os)
 {
   PrintWideStringTo(s, os);
 }
-#endif // GTEST_HAS_STD_WSTRING
+#      endif // GTEST_HAS_STD_WSTRING
 
-#if GTEST_HAS_TR1_TUPLE
+#      if GTEST_HAS_TR1_TUPLE
 // Overload for ::std::tr1::tuple.  Needed for printing function arguments,
 // which are packed as tuples.
 
@@ -22699,7 +22606,7 @@ void PrintTo(const ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>& t
 {
   PrintTupleTo(t, os);
 }
-#endif // GTEST_HAS_TR1_TUPLE
+#      endif // GTEST_HAS_TR1_TUPLE
 
 // Overload for std::pair.
 template <typename T1, typename T2>
@@ -22722,10 +22629,10 @@ class UniversalPrinter
 public:
 // MSVC warns about adding const to a function type, so we want to
 // disable the warning.
-#ifdef _MSC_VER
-#pragma warning(push) // Saves the current warning state.
-#pragma warning(disable : 4180) // Temporarily disables warning 4180.
-#endif // _MSC_VER
+#      ifdef _MSC_VER
+#        pragma warning(push) // Saves the current warning state.
+#        pragma warning(disable : 4180) // Temporarily disables warning 4180.
+#      endif // _MSC_VER
 
   // Note: we deliberately don't call this PrintTo(), as that name
   // conflicts with ::testing::internal::PrintTo in the body of the
@@ -22743,9 +22650,9 @@ public:
     PrintTo(value, os);
   }
 
-#ifdef _MSC_VER
-#pragma warning(pop) // Restores the warning state.
-#endif // _MSC_VER
+#      ifdef _MSC_VER
+#        pragma warning(pop) // Restores the warning state.
+#      endif // _MSC_VER
 };
 
 // UniversalPrintArray(begin, len, os) prints an array of 'len'
@@ -22799,10 +22706,10 @@ class UniversalPrinter<T&>
 public:
 // MSVC warns about adding const to a function type, so we want to
 // disable the warning.
-#ifdef _MSC_VER
-#pragma warning(push) // Saves the current warning state.
-#pragma warning(disable : 4180) // Temporarily disables warning 4180.
-#endif // _MSC_VER
+#      ifdef _MSC_VER
+#        pragma warning(push) // Saves the current warning state.
+#        pragma warning(disable : 4180) // Temporarily disables warning 4180.
+#      endif // _MSC_VER
 
   static void Print(const T& value, ::std::ostream* os)
   {
@@ -22814,9 +22721,9 @@ public:
     UniversalPrint(value, os);
   }
 
-#ifdef _MSC_VER
-#pragma warning(pop) // Restores the warning state.
-#endif // _MSC_VER
+#      ifdef _MSC_VER
+#        pragma warning(pop) // Restores the warning state.
+#      endif // _MSC_VER
 };
 
 // Prints a value tersely: for a reference type, the referenced value
@@ -22873,7 +22780,7 @@ public:
   }
 };
 
-#if GTEST_HAS_STD_WSTRING
+#      if GTEST_HAS_STD_WSTRING
 template <>
 class UniversalTersePrinter<const wchar_t*>
 {
@@ -22887,7 +22794,7 @@ public:
     }
   }
 };
-#endif
+#      endif
 
 template <>
 class UniversalTersePrinter<wchar_t*>
@@ -22918,7 +22825,7 @@ void UniversalPrint(const T& value, ::std::ostream* os)
   UniversalPrinter<T1>::Print(value, os);
 }
 
-#if GTEST_HAS_TR1_TUPLE
+#      if GTEST_HAS_TR1_TUPLE
 typedef ::std::vector<string> Strings;
 
 // This helper template allows PrintTo() for tuples and
@@ -22959,13 +22866,11 @@ struct TuplePrefixPrinter<0>
 {
   template <typename Tuple>
   static void PrintPrefixTo(const Tuple&, ::std::ostream*)
-  {
-  }
+  {}
 
   template <typename Tuple>
   static void TersePrintPrefixToStrings(const Tuple&, Strings*)
-  {
-  }
+  {}
 };
 // We have to specialize the entire TuplePrefixPrinter<> class
 // template here, even though the definition of
@@ -23010,7 +22915,7 @@ Strings UniversalTersePrintTupleFieldsToStrings(const Tuple& value)
   TuplePrefixPrinter<::std::tr1::tuple_size<Tuple>::value>::TersePrintPrefixToStrings(value, &result);
   return result;
 }
-#endif // GTEST_HAS_TR1_TUPLE
+#      endif // GTEST_HAS_TR1_TUPLE
 
 } // namespace internal
 
@@ -23024,9 +22929,9 @@ template <typename T>
 
 } // namespace testing
 
-#endif // GTEST_INCLUDE_GTEST_GTEST_PRINTERS_H_
+#    endif // GTEST_INCLUDE_GTEST_GTEST_PRINTERS_H_
 
-#if GTEST_HAS_PARAM_TEST
+#    if GTEST_HAS_PARAM_TEST
 
 namespace testing {
 namespace internal {
@@ -23050,9 +22955,7 @@ template <typename T>
 class ParamIteratorInterface
 {
 public:
-  virtual ~ParamIteratorInterface()
-  {
-  }
+  virtual ~ParamIteratorInterface() {}
   // A pointer to the base generator instance.
   // Used only for the purposes of iterator comparison
   // to make sure that two iterators belong to the same generator.
@@ -23090,8 +22993,7 @@ public:
   // ParamIterator assumes ownership of the impl_ pointer.
   ParamIterator(const ParamIterator& other)
     : impl_(other.impl_->Clone())
-  {
-  }
+  {}
   ParamIterator& operator=(const ParamIterator& other)
   {
     if (this != &other)
@@ -23133,8 +23035,7 @@ private:
   friend class ParamGenerator<T>;
   explicit ParamIterator(ParamIteratorInterface<T>* impl)
     : impl_(impl)
-  {
-  }
+  {}
   scoped_ptr<ParamIteratorInterface<T>> impl_;
 };
 
@@ -23146,9 +23047,7 @@ class ParamGeneratorInterface
 public:
   typedef T ParamType;
 
-  virtual ~ParamGeneratorInterface()
-  {
-  }
+  virtual ~ParamGeneratorInterface() {}
 
   // Generator interface definition
   virtual ParamIteratorInterface<T>* Begin() const = 0;
@@ -23168,12 +23067,10 @@ public:
 
   explicit ParamGenerator(ParamGeneratorInterface<T>* impl)
     : impl_(impl)
-  {
-  }
+  {}
   ParamGenerator(const ParamGenerator& other)
     : impl_(other.impl_)
-  {
-  }
+  {}
 
   ParamGenerator& operator=(const ParamGenerator& other)
   {
@@ -23207,11 +23104,8 @@ public:
     , end_(end)
     , step_(step)
     , end_index_(CalculateEndIndex(begin, end, step))
-  {
-  }
-  virtual ~RangeGenerator()
-  {
-  }
+  {}
+  virtual ~RangeGenerator() {}
 
   virtual ParamIteratorInterface<T>* Begin() const
   {
@@ -23231,11 +23125,8 @@ private:
       , value_(value)
       , index_(index)
       , step_(step)
-    {
-    }
-    virtual ~Iterator()
-    {
-    }
+    {}
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<T>* BaseGenerator() const
     {
@@ -23271,8 +23162,7 @@ private:
       , value_(other.value_)
       , index_(other.index_)
       , step_(other.step_)
-    {
-    }
+    {}
 
     // No implementation - assignment is unsupported.
     void operator=(const Iterator& other);
@@ -23314,11 +23204,8 @@ public:
   template <typename ForwardIterator>
   ValuesInIteratorRangeGenerator(ForwardIterator begin, ForwardIterator end)
     : container_(begin, end)
-  {
-  }
-  virtual ~ValuesInIteratorRangeGenerator()
-  {
-  }
+  {}
+  virtual ~ValuesInIteratorRangeGenerator() {}
 
   virtual ParamIteratorInterface<T>* Begin() const
   {
@@ -23338,11 +23225,8 @@ private:
     Iterator(const ParamGeneratorInterface<T>* base, typename ContainerType::const_iterator iterator)
       : base_(base)
       , iterator_(iterator)
-    {
-    }
-    virtual ~Iterator()
-    {
-    }
+    {}
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<T>* BaseGenerator() const
     {
@@ -23381,13 +23265,12 @@ private:
 
   private:
     Iterator(const Iterator& other)
-        // The explicit constructor call suppresses a false warning
-        // emitted by gcc when supplied with the -Wextra option.
-        : ParamIteratorInterface<T>(),
-          base_(other.base_),
-          iterator_(other.iterator_)
-    {
-    }
+      // The explicit constructor call suppresses a false warning
+      // emitted by gcc when supplied with the -Wextra option.
+      : ParamIteratorInterface<T>()
+      , base_(other.base_)
+      , iterator_(other.iterator_)
+    {}
 
     const ParamGeneratorInterface<T>* const base_;
     typename ContainerType::const_iterator iterator_;
@@ -23416,8 +23299,7 @@ public:
   typedef typename TestClass::ParamType ParamType;
   explicit ParameterizedTestFactory(ParamType parameter)
     : parameter_(parameter)
-  {
-  }
+  {}
   virtual Test* CreateTest()
   {
     TestClass::SetParam(&parameter_);
@@ -23438,9 +23320,7 @@ template <class ParamType>
 class TestMetaFactoryBase
 {
 public:
-  virtual ~TestMetaFactoryBase()
-  {
-  }
+  virtual ~TestMetaFactoryBase() {}
 
   virtual TestFactoryBase* CreateTestFactory(ParamType parameter) = 0;
 };
@@ -23459,9 +23339,7 @@ class TestMetaFactory : public TestMetaFactoryBase<typename TestCase::ParamType>
 public:
   typedef typename TestCase::ParamType ParamType;
 
-  TestMetaFactory()
-  {
-  }
+  TestMetaFactory() {}
 
   virtual TestFactoryBase* CreateTestFactory(ParamType parameter)
   {
@@ -23485,9 +23363,7 @@ private:
 class ParameterizedTestCaseInfoBase
 {
 public:
-  virtual ~ParameterizedTestCaseInfoBase()
-  {
-  }
+  virtual ~ParameterizedTestCaseInfoBase() {}
 
   // Base part of test case name for display purposes.
   virtual const string& GetTestCaseName() const = 0;
@@ -23500,9 +23376,7 @@ public:
   virtual void RegisterTests() = 0;
 
 protected:
-  ParameterizedTestCaseInfoBase()
-  {
-  }
+  ParameterizedTestCaseInfoBase() {}
 
 private:
   GTEST_DISALLOW_COPY_AND_ASSIGN_(ParameterizedTestCaseInfoBase);
@@ -23528,8 +23402,7 @@ public:
 
   explicit ParameterizedTestCaseInfo(const char* name)
     : test_case_name_(name)
-  {
-  }
+  {}
 
   // Test case base name for display purposes.
   virtual const string& GetTestCaseName() const
@@ -23610,8 +23483,7 @@ private:
       : test_case_base_name(a_test_case_base_name)
       , test_base_name(a_test_base_name)
       , test_meta_factory(a_test_meta_factory)
-    {
-    }
+    {}
 
     const string test_case_base_name;
     const string test_base_name;
@@ -23638,9 +23510,7 @@ private:
 class ParameterizedTestCaseRegistry
 {
 public:
-  ParameterizedTestCaseRegistry()
-  {
-  }
+  ParameterizedTestCaseRegistry() {}
   ~ParameterizedTestCaseRegistry()
   {
     for (TestCaseInfoContainer::iterator it = test_case_infos_.begin(); it != test_case_infos_.end(); ++it) {
@@ -23695,9 +23565,9 @@ private:
 } // namespace internal
 } // namespace testing
 
-#endif //  GTEST_HAS_PARAM_TEST
+#    endif //  GTEST_HAS_PARAM_TEST
 
-#endif // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_H_
+#  endif // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_H_
 // This file was GENERATED by command:
 //     pump.py gtest-param-util-generated.h.pump
 // DO NOT EDIT BY HAND!!!
@@ -23743,14 +23613,14 @@ private:
 // by the maximum arity of the implementation of tr1::tuple which is
 // currently set at 10.
 
-#ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_GENERATED_H_
-#define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_GENERATED_H_
+#  ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_GENERATED_H_
+#    define GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_GENERATED_H_
 
 // scripts/fuse_gtest.py depends on gtest's own header being #included
 // *unconditionally*.  Therefore these #includes cannot be moved
 // inside #if GTEST_HAS_PARAM_TEST.
 
-#if GTEST_HAS_PARAM_TEST
+#    if GTEST_HAS_PARAM_TEST
 
 namespace testing {
 
@@ -23775,8 +23645,7 @@ class ValueArray1
 public:
   explicit ValueArray1(T1 v1)
     : v1_(v1)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -23798,8 +23667,7 @@ public:
   ValueArray2(T1 v1, T2 v2)
     : v1_(v1)
     , v2_(v2)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -23824,8 +23692,7 @@ public:
     : v1_(v1)
     , v2_(v2)
     , v3_(v3)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -23852,8 +23719,7 @@ public:
     , v2_(v2)
     , v3_(v3)
     , v4_(v4)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -23882,8 +23748,7 @@ public:
     , v3_(v3)
     , v4_(v4)
     , v5_(v5)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -23915,8 +23780,7 @@ public:
     , v4_(v4)
     , v5_(v5)
     , v6_(v6)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -23954,8 +23818,7 @@ public:
     , v5_(v5)
     , v6_(v6)
     , v7_(v7)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -23996,8 +23859,7 @@ public:
     , v6_(v6)
     , v7_(v7)
     , v8_(v8)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24049,8 +23911,7 @@ public:
     , v7_(v7)
     , v8_(v8)
     , v9_(v9)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24106,8 +23967,7 @@ public:
     , v8_(v8)
     , v9_(v9)
     , v10_(v10)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24167,8 +24027,7 @@ public:
     , v9_(v9)
     , v10_(v10)
     , v11_(v11)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24232,8 +24091,7 @@ public:
     , v10_(v10)
     , v11_(v11)
     , v12_(v12)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24301,8 +24159,7 @@ public:
     , v11_(v11)
     , v12_(v12)
     , v13_(v13)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24375,8 +24232,7 @@ public:
     , v12_(v12)
     , v13_(v13)
     , v14_(v14)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24466,8 +24322,7 @@ public:
     , v13_(v13)
     , v14_(v14)
     , v15_(v15)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24562,8 +24417,7 @@ public:
     , v14_(v14)
     , v15_(v15)
     , v16_(v16)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24663,8 +24517,7 @@ public:
     , v15_(v15)
     , v16_(v16)
     , v17_(v17)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24769,8 +24622,7 @@ public:
     , v16_(v16)
     , v17_(v17)
     , v18_(v18)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24880,8 +24732,7 @@ public:
     , v17_(v17)
     , v18_(v18)
     , v19_(v19)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -24996,8 +24847,7 @@ public:
     , v18_(v18)
     , v19_(v19)
     , v20_(v20)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -25102,8 +24952,7 @@ public:
     , v19_(v19)
     , v20_(v20)
     , v21_(v21)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -25213,8 +25062,7 @@ public:
     , v20_(v20)
     , v21_(v21)
     , v22_(v22)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -25328,8 +25176,7 @@ public:
     , v21_(v21)
     , v22_(v22)
     , v23_(v23)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -25447,8 +25294,7 @@ public:
     , v22_(v22)
     , v23_(v23)
     , v24_(v24)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -25570,8 +25416,7 @@ public:
     , v23_(v23)
     , v24_(v24)
     , v25_(v25)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -25697,8 +25542,7 @@ public:
     , v24_(v24)
     , v25_(v25)
     , v26_(v26)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -25829,8 +25673,7 @@ public:
     , v25_(v25)
     , v26_(v26)
     , v27_(v27)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -25965,8 +25808,7 @@ public:
     , v26_(v26)
     , v27_(v27)
     , v28_(v28)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -26105,8 +25947,7 @@ public:
     , v27_(v27)
     , v28_(v28)
     , v29_(v29)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -26249,8 +26090,7 @@ public:
     , v28_(v28)
     , v29_(v29)
     , v30_(v30)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -26397,8 +26237,7 @@ public:
     , v29_(v29)
     , v30_(v30)
     , v31_(v31)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -26550,8 +26389,7 @@ public:
     , v30_(v30)
     , v31_(v31)
     , v32_(v32)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -26707,8 +26545,7 @@ public:
     , v31_(v31)
     , v32_(v32)
     , v33_(v33)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -26868,8 +26705,7 @@ public:
     , v32_(v32)
     , v33_(v33)
     , v34_(v34)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -27033,8 +26869,7 @@ public:
     , v33_(v33)
     , v34_(v34)
     , v35_(v35)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -27202,8 +27037,7 @@ public:
     , v34_(v34)
     , v35_(v35)
     , v36_(v36)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -27376,8 +27210,7 @@ public:
     , v35_(v35)
     , v36_(v36)
     , v37_(v37)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -27554,8 +27387,7 @@ public:
     , v36_(v36)
     , v37_(v37)
     , v38_(v38)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -27736,8 +27568,7 @@ public:
     , v37_(v37)
     , v38_(v38)
     , v39_(v39)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -27922,8 +27753,7 @@ public:
     , v38_(v38)
     , v39_(v39)
     , v40_(v40)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -28112,8 +27942,7 @@ public:
     , v39_(v39)
     , v40_(v40)
     , v41_(v41)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -28307,8 +28136,7 @@ public:
     , v40_(v40)
     , v41_(v41)
     , v42_(v42)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -28506,8 +28334,7 @@ public:
     , v41_(v41)
     , v42_(v42)
     , v43_(v43)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -28709,8 +28536,7 @@ public:
     , v42_(v42)
     , v43_(v43)
     , v44_(v44)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -28916,8 +28742,7 @@ public:
     , v43_(v43)
     , v44_(v44)
     , v45_(v45)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -29127,8 +28952,7 @@ public:
     , v44_(v44)
     , v45_(v45)
     , v46_(v46)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -29343,8 +29167,7 @@ public:
     , v45_(v45)
     , v46_(v46)
     , v47_(v47)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -29563,8 +29386,7 @@ public:
     , v46_(v46)
     , v47_(v47)
     , v48_(v48)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -29787,8 +29609,7 @@ public:
     , v47_(v47)
     , v48_(v48)
     , v49_(v49)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -30015,8 +29836,7 @@ public:
     , v48_(v48)
     , v49_(v49)
     , v50_(v50)
-  {
-  }
+  {}
 
   template <typename T>
   operator ParamGenerator<T>() const
@@ -30091,7 +29911,7 @@ private:
   const T50 v50_;
 };
 
-#if GTEST_HAS_COMBINE
+#      if GTEST_HAS_COMBINE
 // INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
 //
 // Generates values from the Cartesian product of values produced
@@ -30106,11 +29926,8 @@ public:
   CartesianProductGenerator2(const ParamGenerator<T1>& g1, const ParamGenerator<T2>& g2)
     : g1_(g1)
     , g2_(g2)
-  {
-  }
-  virtual ~CartesianProductGenerator2()
-  {
-  }
+  {}
+  virtual ~CartesianProductGenerator2() {}
 
   virtual ParamIteratorInterface<ParamType>* Begin() const
   {
@@ -30140,9 +29957,7 @@ private:
     {
       ComputeCurrentValue();
     }
-    virtual ~Iterator()
-    {
-    }
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const
     {
@@ -30240,11 +30055,8 @@ public:
     : g1_(g1)
     , g2_(g2)
     , g3_(g3)
-  {
-  }
-  virtual ~CartesianProductGenerator3()
-  {
-  }
+  {}
+  virtual ~CartesianProductGenerator3() {}
 
   virtual ParamIteratorInterface<ParamType>* Begin() const
   {
@@ -30279,9 +30091,7 @@ private:
     {
       ComputeCurrentValue();
     }
-    virtual ~Iterator()
-    {
-    }
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const
     {
@@ -30395,11 +30205,8 @@ public:
     , g2_(g2)
     , g3_(g3)
     , g4_(g4)
-  {
-  }
-  virtual ~CartesianProductGenerator4()
-  {
-  }
+  {}
+  virtual ~CartesianProductGenerator4() {}
 
   virtual ParamIteratorInterface<ParamType>* Begin() const
   {
@@ -30439,9 +30246,7 @@ private:
     {
       ComputeCurrentValue();
     }
-    virtual ~Iterator()
-    {
-    }
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const
     {
@@ -30487,8 +30292,7 @@ private:
       // so we have to consult AtEnd().
       return (AtEnd() && typed_other->AtEnd())
              || (current1_ == typed_other->current1_ && current2_ == typed_other->current2_
-                 && current3_ == typed_other->current3_
-                 && current4_ == typed_other->current4_);
+                 && current3_ == typed_other->current3_ && current4_ == typed_other->current4_);
     }
 
   private:
@@ -30569,11 +30373,8 @@ public:
     , g3_(g3)
     , g4_(g4)
     , g5_(g5)
-  {
-  }
-  virtual ~CartesianProductGenerator5()
-  {
-  }
+  {}
+  virtual ~CartesianProductGenerator5() {}
 
   virtual ParamIteratorInterface<ParamType>* Begin() const
   {
@@ -30618,9 +30419,7 @@ private:
     {
       ComputeCurrentValue();
     }
-    virtual ~Iterator()
-    {
-    }
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const
     {
@@ -30670,8 +30469,7 @@ private:
       // so we have to consult AtEnd().
       return (AtEnd() && typed_other->AtEnd())
              || (current1_ == typed_other->current1_ && current2_ == typed_other->current2_
-                 && current3_ == typed_other->current3_
-                 && current4_ == typed_other->current4_
+                 && current3_ == typed_other->current3_ && current4_ == typed_other->current4_
                  && current5_ == typed_other->current5_);
     }
 
@@ -30762,11 +30560,8 @@ public:
     , g4_(g4)
     , g5_(g5)
     , g6_(g6)
-  {
-  }
-  virtual ~CartesianProductGenerator6()
-  {
-  }
+  {}
+  virtual ~CartesianProductGenerator6() {}
 
   virtual ParamIteratorInterface<ParamType>* Begin() const
   {
@@ -30829,9 +30624,7 @@ private:
     {
       ComputeCurrentValue();
     }
-    virtual ~Iterator()
-    {
-    }
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const
     {
@@ -30885,10 +30678,8 @@ private:
       // so we have to consult AtEnd().
       return (AtEnd() && typed_other->AtEnd())
              || (current1_ == typed_other->current1_ && current2_ == typed_other->current2_
-                 && current3_ == typed_other->current3_
-                 && current4_ == typed_other->current4_
-                 && current5_ == typed_other->current5_
-                 && current6_ == typed_other->current6_);
+                 && current3_ == typed_other->current3_ && current4_ == typed_other->current4_
+                 && current5_ == typed_other->current5_ && current6_ == typed_other->current6_);
     }
 
   private:
@@ -30988,11 +30779,8 @@ public:
     , g5_(g5)
     , g6_(g6)
     , g7_(g7)
-  {
-  }
-  virtual ~CartesianProductGenerator7()
-  {
-  }
+  {}
+  virtual ~CartesianProductGenerator7() {}
 
   virtual ParamIteratorInterface<ParamType>* Begin() const
   {
@@ -31075,9 +30863,7 @@ private:
     {
       ComputeCurrentValue();
     }
-    virtual ~Iterator()
-    {
-    }
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const
     {
@@ -31135,10 +30921,8 @@ private:
       // so we have to consult AtEnd().
       return (AtEnd() && typed_other->AtEnd())
              || (current1_ == typed_other->current1_ && current2_ == typed_other->current2_
-                 && current3_ == typed_other->current3_
-                 && current4_ == typed_other->current4_
-                 && current5_ == typed_other->current5_
-                 && current6_ == typed_other->current6_
+                 && current3_ == typed_other->current3_ && current4_ == typed_other->current4_
+                 && current5_ == typed_other->current5_ && current6_ == typed_other->current6_
                  && current7_ == typed_other->current7_);
     }
 
@@ -31248,11 +31032,8 @@ public:
     , g6_(g6)
     , g7_(g7)
     , g8_(g8)
-  {
-  }
-  virtual ~CartesianProductGenerator8()
-  {
-  }
+  {}
+  virtual ~CartesianProductGenerator8() {}
 
   virtual ParamIteratorInterface<ParamType>* Begin() const
   {
@@ -31344,9 +31125,7 @@ private:
     {
       ComputeCurrentValue();
     }
-    virtual ~Iterator()
-    {
-    }
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const
     {
@@ -31408,12 +31187,9 @@ private:
       // so we have to consult AtEnd().
       return (AtEnd() && typed_other->AtEnd())
              || (current1_ == typed_other->current1_ && current2_ == typed_other->current2_
-                 && current3_ == typed_other->current3_
-                 && current4_ == typed_other->current4_
-                 && current5_ == typed_other->current5_
-                 && current6_ == typed_other->current6_
-                 && current7_ == typed_other->current7_
-                 && current8_ == typed_other->current8_);
+                 && current3_ == typed_other->current3_ && current4_ == typed_other->current4_
+                 && current5_ == typed_other->current5_ && current6_ == typed_other->current6_
+                 && current7_ == typed_other->current7_ && current8_ == typed_other->current8_);
     }
 
   private:
@@ -31540,11 +31316,8 @@ public:
     , g7_(g7)
     , g8_(g8)
     , g9_(g9)
-  {
-  }
-  virtual ~CartesianProductGenerator9()
-  {
-  }
+  {}
+  virtual ~CartesianProductGenerator9() {}
 
   virtual ParamIteratorInterface<ParamType>* Begin() const
   {
@@ -31645,9 +31418,7 @@ private:
     {
       ComputeCurrentValue();
     }
-    virtual ~Iterator()
-    {
-    }
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const
     {
@@ -31713,12 +31484,9 @@ private:
       // so we have to consult AtEnd().
       return (AtEnd() && typed_other->AtEnd())
              || (current1_ == typed_other->current1_ && current2_ == typed_other->current2_
-                 && current3_ == typed_other->current3_
-                 && current4_ == typed_other->current4_
-                 && current5_ == typed_other->current5_
-                 && current6_ == typed_other->current6_
-                 && current7_ == typed_other->current7_
-                 && current8_ == typed_other->current8_
+                 && current3_ == typed_other->current3_ && current4_ == typed_other->current4_
+                 && current5_ == typed_other->current5_ && current6_ == typed_other->current6_
+                 && current7_ == typed_other->current7_ && current8_ == typed_other->current8_
                  && current9_ == typed_other->current9_);
     }
 
@@ -31832,7 +31600,7 @@ template <typename T1,
           typename T9,
           typename T10>
 class CartesianProductGenerator10
-    : public ParamGeneratorInterface<::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>>
+  : public ParamGeneratorInterface<::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>>
 {
 public:
   typedef ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> ParamType;
@@ -31857,11 +31625,8 @@ public:
     , g8_(g8)
     , g9_(g9)
     , g10_(g10)
-  {
-  }
-  virtual ~CartesianProductGenerator10()
-  {
-  }
+  {}
+  virtual ~CartesianProductGenerator10() {}
 
   virtual ParamIteratorInterface<ParamType>* Begin() const
   {
@@ -31971,9 +31736,7 @@ private:
     {
       ComputeCurrentValue();
     }
-    virtual ~Iterator()
-    {
-    }
+    virtual ~Iterator() {}
 
     virtual const ParamGeneratorInterface<ParamType>* BaseGenerator() const
     {
@@ -32043,14 +31806,10 @@ private:
       // so we have to consult AtEnd().
       return (AtEnd() && typed_other->AtEnd())
              || (current1_ == typed_other->current1_ && current2_ == typed_other->current2_
-                 && current3_ == typed_other->current3_
-                 && current4_ == typed_other->current4_
-                 && current5_ == typed_other->current5_
-                 && current6_ == typed_other->current6_
-                 && current7_ == typed_other->current7_
-                 && current8_ == typed_other->current8_
-                 && current9_ == typed_other->current9_
-                 && current10_ == typed_other->current10_);
+                 && current3_ == typed_other->current3_ && current4_ == typed_other->current4_
+                 && current5_ == typed_other->current5_ && current6_ == typed_other->current6_
+                 && current7_ == typed_other->current7_ && current8_ == typed_other->current8_
+                 && current9_ == typed_other->current9_ && current10_ == typed_other->current10_);
     }
 
   private:
@@ -32181,8 +31940,7 @@ public:
   CartesianProductHolder2(const Generator1& g1, const Generator2& g2)
     : g1_(g1)
     , g2_(g2)
-  {
-  }
+  {}
   template <typename T1, typename T2>
   operator ParamGenerator<::std::tr1::tuple<T1, T2>>() const
   {
@@ -32206,8 +31964,7 @@ public:
     : g1_(g1)
     , g2_(g2)
     , g3_(g3)
-  {
-  }
+  {}
   template <typename T1, typename T2, typename T3>
   operator ParamGenerator<::std::tr1::tuple<T1, T2, T3>>() const
   {
@@ -32235,8 +31992,7 @@ public:
     , g2_(g2)
     , g3_(g3)
     , g4_(g4)
-  {
-  }
+  {}
   template <typename T1, typename T2, typename T3, typename T4>
   operator ParamGenerator<::std::tr1::tuple<T1, T2, T3, T4>>() const
   {
@@ -32268,8 +32024,7 @@ public:
     , g3_(g3)
     , g4_(g4)
     , g5_(g5)
-  {
-  }
+  {}
   template <typename T1, typename T2, typename T3, typename T4, typename T5>
   operator ParamGenerator<::std::tr1::tuple<T1, T2, T3, T4, T5>>() const
   {
@@ -32308,8 +32063,7 @@ public:
     , g4_(g4)
     , g5_(g5)
     , g6_(g6)
-  {
-  }
+  {}
   template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
   operator ParamGenerator<::std::tr1::tuple<T1, T2, T3, T4, T5, T6>>() const
   {
@@ -32358,8 +32112,7 @@ public:
     , g5_(g5)
     , g6_(g6)
     , g7_(g7)
-  {
-  }
+  {}
   template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7>
   operator ParamGenerator<::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7>>() const
   {
@@ -32413,8 +32166,7 @@ public:
     , g6_(g6)
     , g7_(g7)
     , g8_(g8)
-  {
-  }
+  {}
   template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6, typename T7, typename T8>
   operator ParamGenerator<::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8>>() const
   {
@@ -32473,8 +32225,7 @@ public:
     , g7_(g7)
     , g8_(g8)
     , g9_(g9)
-  {
-  }
+  {}
   template <typename T1,
             typename T2,
             typename T3,
@@ -32546,8 +32297,7 @@ public:
     , g8_(g8)
     , g9_(g9)
     , g10_(g10)
-  {
-  }
+  {}
   template <typename T1,
             typename T2,
             typename T3,
@@ -32590,16 +32340,16 @@ private:
   const Generator10 g10_;
 }; // class CartesianProductHolder10
 
-#endif // GTEST_HAS_COMBINE
+#      endif // GTEST_HAS_COMBINE
 
 } // namespace internal
 } // namespace testing
 
-#endif //  GTEST_HAS_PARAM_TEST
+#    endif //  GTEST_HAS_PARAM_TEST
 
-#endif // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_GENERATED_H_
+#  endif // GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_GENERATED_H_
 
-#if GTEST_HAS_PARAM_TEST
+#  if GTEST_HAS_PARAM_TEST
 
 namespace testing {
 
@@ -38387,7 +38137,7 @@ inline internal::ParamGenerator<bool> Bool()
   return Values(false, true);
 }
 
-#if GTEST_HAS_COMBINE
+#    if GTEST_HAS_COMBINE
 // Combine() allows the user to combine two or more sequences to produce
 // values of a Cartesian product of those sequences' elements.
 //
@@ -38619,52 +38369,51 @@ Combine(const Generator1& g1,
                                             Generator9,
                                             Generator10>(g1, g2, g3, g4, g5, g6, g7, g8, g9, g10);
 }
-#endif // GTEST_HAS_COMBINE
+#    endif // GTEST_HAS_COMBINE
 
 
-#define TEST_P(test_case_name, test_name)                                                                              \
-  class GTEST_TEST_CLASS_NAME_(test_case_name, test_name)                                                              \
-    : public test_case_name                                                                                            \
-  {                                                                                                                    \
-  public:                                                                                                              \
-    GTEST_TEST_CLASS_NAME_(test_case_name, test_name)()                                                                \
-    {                                                                                                                  \
-    }                                                                                                                  \
-    virtual void TestBody();                                                                                           \
+#    define TEST_P(test_case_name, test_name)                                                                          \
+      class GTEST_TEST_CLASS_NAME_(test_case_name, test_name)                                                          \
+        : public test_case_name                                                                                        \
+      {                                                                                                                \
+      public:                                                                                                          \
+        GTEST_TEST_CLASS_NAME_(test_case_name, test_name)() {}                                                         \
+        virtual void TestBody();                                                                                       \
                                                                                                                        \
-  private:                                                                                                             \
-    static int AddToRegistry()                                                                                         \
-    {                                                                                                                  \
-      ::testing::UnitTest::GetInstance()                                                                               \
-          ->parameterized_test_registry()                                                                              \
-          .GetTestCasePatternHolder<test_case_name>(#test_case_name, __FILE__, __LINE__)                               \
-          ->AddTestPattern(                                                                                            \
-              #test_case_name,                                                                                         \
-              #test_name,                                                                                              \
-              new ::testing::internal::TestMetaFactory<GTEST_TEST_CLASS_NAME_(test_case_name, test_name)>());          \
-      return 0;                                                                                                        \
-    }                                                                                                                  \
-    static int gtest_registering_dummy_;                                                                               \
-    GTEST_DISALLOW_COPY_AND_ASSIGN_(GTEST_TEST_CLASS_NAME_(test_case_name, test_name));                                \
-  };                                                                                                                   \
-  int GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::gtest_registering_dummy_ =                                    \
-      GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::AddToRegistry();                                              \
-  void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
+      private:                                                                                                         \
+        static int AddToRegistry()                                                                                     \
+        {                                                                                                              \
+          ::testing::UnitTest::GetInstance()                                                                           \
+              ->parameterized_test_registry()                                                                          \
+              .GetTestCasePatternHolder<test_case_name>(#test_case_name, __FILE__, __LINE__)                           \
+              ->AddTestPattern(                                                                                        \
+                  #test_case_name,                                                                                     \
+                  #test_name,                                                                                          \
+                  new ::testing::internal::TestMetaFactory<GTEST_TEST_CLASS_NAME_(test_case_name, test_name)>());      \
+          return 0;                                                                                                    \
+        }                                                                                                              \
+        static int gtest_registering_dummy_;                                                                           \
+        GTEST_DISALLOW_COPY_AND_ASSIGN_(GTEST_TEST_CLASS_NAME_(test_case_name, test_name));                            \
+      };                                                                                                               \
+      int GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::gtest_registering_dummy_ =                                \
+          GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::AddToRegistry();                                          \
+      void GTEST_TEST_CLASS_NAME_(test_case_name, test_name)::TestBody()
 
-#define INSTANTIATE_TEST_CASE_P(prefix, test_case_name, generator)                                                     \
-  ::testing::internal::ParamGenerator<test_case_name::ParamType> gtest_##prefix##test_case_name##_EvalGenerator_()     \
-  {                                                                                                                    \
-    return generator;                                                                                                  \
-  }                                                                                                                    \
-  int gtest_##prefix##test_case_name##_dummy_ =                                                                        \
-      ::testing::UnitTest::GetInstance()                                                                               \
-          ->parameterized_test_registry()                                                                              \
-          .GetTestCasePatternHolder<test_case_name>(#test_case_name, __FILE__, __LINE__)                               \
-          ->AddTestCaseInstantiation(#prefix, &gtest_##prefix##test_case_name##_EvalGenerator_, __FILE__, __LINE__)
+#    define INSTANTIATE_TEST_CASE_P(prefix, test_case_name, generator)                                                 \
+      ::testing::internal::ParamGenerator<test_case_name::ParamType> gtest_##prefix##test_case_name##_EvalGenerator_() \
+      {                                                                                                                \
+        return generator;                                                                                              \
+      }                                                                                                                \
+      int gtest_##prefix##test_case_name##_dummy_ =                                                                    \
+          ::testing::UnitTest::GetInstance()                                                                           \
+              ->parameterized_test_registry()                                                                          \
+              .GetTestCasePatternHolder<test_case_name>(#test_case_name, __FILE__, __LINE__)                           \
+              ->AddTestCaseInstantiation(                                                                              \
+                  #prefix, &gtest_##prefix##test_case_name##_EvalGenerator_, __FILE__, __LINE__)
 
 } // namespace testing
 
-#endif // GTEST_HAS_PARAM_TEST
+#  endif // GTEST_HAS_PARAM_TEST
 
 #endif // GTEST_INCLUDE_GTEST_GTEST_PARAM_TEST_H_
 // Copyright 2006, Google Inc.
@@ -38701,7 +38450,7 @@ Combine(const Generator1& g1,
 // Google C++ Testing Framework definitions useful in production code.
 
 #ifndef GTEST_INCLUDE_GTEST_GTEST_PROD_H_
-#define GTEST_INCLUDE_GTEST_GTEST_PROD_H_
+#  define GTEST_INCLUDE_GTEST_GTEST_PROD_H_
 
 // When you need to test the private or protected members of a class,
 // use the FRIEND_TEST macro to declare your tests as friends of the
@@ -38721,7 +38470,7 @@ Combine(const Generator1& g1,
 //   // Can call MyClass::MyMethod() here.
 // }
 
-#define FRIEND_TEST(test_case_name, test_name) friend class test_case_name##_##test_name##_Test
+#  define FRIEND_TEST(test_case_name, test_name) friend class test_case_name##_##test_name##_Test
 
 #endif // GTEST_INCLUDE_GTEST_GTEST_PROD_H_
 // Copyright 2008, Google Inc.
@@ -38757,10 +38506,10 @@ Combine(const Generator1& g1,
 //
 
 #ifndef GTEST_INCLUDE_GTEST_GTEST_TEST_PART_H_
-#define GTEST_INCLUDE_GTEST_GTEST_TEST_PART_H_
+#  define GTEST_INCLUDE_GTEST_GTEST_TEST_PART_H_
 
-#include <iosfwd>
-#include <vector>
+#  include <iosfwd>
+#  include <vector>
 
 namespace testing {
 
@@ -38789,8 +38538,7 @@ public:
     , line_number_(a_line_number)
     , summary_(ExtractSummary(a_message))
     , message_(a_message)
-  {
-  }
+  {}
 
   // Gets the outcome of the test part.
   Type type() const
@@ -38875,9 +38623,7 @@ std::ostream& operator<<(std::ostream& os, const TestPartResult& result);
 class GTEST_API_ TestPartResultArray
 {
 public:
-  TestPartResultArray()
-  {
-  }
+  TestPartResultArray() {}
 
   // Appends the given TestPartResult to the array.
   void Append(const TestPartResult& result);
@@ -38898,9 +38644,7 @@ private:
 class TestPartResultReporterInterface
 {
 public:
-  virtual ~TestPartResultReporterInterface()
-  {
-  }
+  virtual ~TestPartResultReporterInterface() {}
 
   virtual void ReportTestPartResult(const TestPartResult& result) = 0;
 };
@@ -38968,7 +38712,7 @@ private:
 // Author: wan@google.com (Zhanyong Wan)
 
 #ifndef GTEST_INCLUDE_GTEST_GTEST_TYPED_TEST_H_
-#define GTEST_INCLUDE_GTEST_GTEST_TYPED_TEST_H_
+#  define GTEST_INCLUDE_GTEST_GTEST_TYPED_TEST_H_
 
 // This header implements typed tests and type-parameterized tests.
 
@@ -38976,7 +38720,7 @@ private:
 // list.  You must know which types you want to test with when writing
 // typed tests. Here's how you do it:
 
-#if 0
+#  if 0
 
 // First, define a fixture class template.  It should be parameterized
 // by a type.  Remember to derive it from testing::Test.
@@ -39020,7 +38764,7 @@ TYPED_TEST(FooTest, DoesBlah) {
 
 TYPED_TEST(FooTest, HasPropertyA) { ... }
 
-#endif // 0
+#  endif // 0
 
 // Type-parameterized tests are abstract test patterns parameterized
 // by a type.  Compared with typed tests, type-parameterized tests
@@ -39036,7 +38780,7 @@ TYPED_TEST(FooTest, HasPropertyA) { ... }
 // that it conforms to the requirements, without having to write
 // similar tests repeatedly.  Here's an example:
 
-#if 0
+#  if 0
 
 // First, define a fixture class template.  It should be parameterized
 // by a type.  Remember to derive it from testing::Test.
@@ -39082,108 +38826,111 @@ INSTANTIATE_TYPED_TEST_CASE_P(My, FooTest, MyTypes);
 // directly without Types<...>:
 //   INSTANTIATE_TYPED_TEST_CASE_P(My, FooTest, int);
 
-#endif // 0
+#  endif // 0
 
 
 // Implements typed tests.
 
-#if GTEST_HAS_TYPED_TEST
+#  if GTEST_HAS_TYPED_TEST
 
 // INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
 //
 // Expands to the name of the typedef for the type parameters of the
 // given test case.
-#define GTEST_TYPE_PARAMS_(TestCaseName) gtest_type_params_##TestCaseName##_
+#    define GTEST_TYPE_PARAMS_(TestCaseName) gtest_type_params_##TestCaseName##_
 
 // The 'Types' template argument below must have spaces around it
 // since some compilers may choke on '>>' when passing a template
 // instance (e.g. Types<int>)
-#define TYPED_TEST_CASE(CaseName, Types) typedef ::testing::internal::TypeList<Types>::type GTEST_TYPE_PARAMS_(CaseName)
+#    define TYPED_TEST_CASE(CaseName, Types)                                                                           \
+      typedef ::testing::internal::TypeList<Types>::type GTEST_TYPE_PARAMS_(CaseName)
 
-#define TYPED_TEST(CaseName, TestName)                                                                                 \
-  template <typename gtest_TypeParam_>                                                                                 \
-  class GTEST_TEST_CLASS_NAME_(CaseName, TestName)                                                                     \
-    : public CaseName<gtest_TypeParam_>                                                                                \
-  {                                                                                                                    \
-  private:                                                                                                             \
-    typedef CaseName<gtest_TypeParam_> TestFixture;                                                                    \
-    typedef gtest_TypeParam_ TypeParam;                                                                                \
-    virtual void TestBody();                                                                                           \
-  };                                                                                                                   \
-  bool gtest_##CaseName##_##TestName##_registered_ GTEST_ATTRIBUTE_UNUSED_ = ::testing::internal::                     \
-      TypeParameterizedTest<CaseName,                                                                                  \
-                            ::testing::internal::TemplateSel<GTEST_TEST_CLASS_NAME_(CaseName, TestName)>,              \
-                            GTEST_TYPE_PARAMS_(CaseName)>::Register("", #CaseName, #TestName, 0);                      \
-  template <typename gtest_TypeParam_>                                                                                 \
-  void GTEST_TEST_CLASS_NAME_(CaseName, TestName)<gtest_TypeParam_>::TestBody()
+#    define TYPED_TEST(CaseName, TestName)                                                                             \
+      template <typename gtest_TypeParam_>                                                                             \
+      class GTEST_TEST_CLASS_NAME_(CaseName, TestName)                                                                 \
+        : public CaseName<gtest_TypeParam_>                                                                            \
+      {                                                                                                                \
+      private:                                                                                                         \
+        typedef CaseName<gtest_TypeParam_> TestFixture;                                                                \
+        typedef gtest_TypeParam_ TypeParam;                                                                            \
+        virtual void TestBody();                                                                                       \
+      };                                                                                                               \
+      bool gtest_##CaseName##_##TestName##_registered_ GTEST_ATTRIBUTE_UNUSED_ =                                       \
+          ::testing::internal::TypeParameterizedTest<                                                                  \
+              CaseName,                                                                                                \
+              ::testing::internal::TemplateSel<GTEST_TEST_CLASS_NAME_(CaseName, TestName)>,                            \
+              GTEST_TYPE_PARAMS_(CaseName)>::Register("", #CaseName, #TestName, 0);                                    \
+      template <typename gtest_TypeParam_>                                                                             \
+      void GTEST_TEST_CLASS_NAME_(CaseName, TestName)<gtest_TypeParam_>::TestBody()
 
-#endif // GTEST_HAS_TYPED_TEST
+#  endif // GTEST_HAS_TYPED_TEST
 
 // Implements type-parameterized tests.
 
-#if GTEST_HAS_TYPED_TEST_P
+#  if GTEST_HAS_TYPED_TEST_P
 
 // INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
 //
 // Expands to the namespace name that the type-parameterized tests for
 // the given type-parameterized test case are defined in.  The exact
 // name of the namespace is subject to change without notice.
-#define GTEST_CASE_NAMESPACE_(TestCaseName) gtest_case_##TestCaseName##_
+#    define GTEST_CASE_NAMESPACE_(TestCaseName) gtest_case_##TestCaseName##_
 
 // INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
 //
 // Expands to the name of the variable used to remember the names of
 // the defined tests in the given test case.
-#define GTEST_TYPED_TEST_CASE_P_STATE_(TestCaseName) gtest_typed_test_case_p_state_##TestCaseName##_
+#    define GTEST_TYPED_TEST_CASE_P_STATE_(TestCaseName) gtest_typed_test_case_p_state_##TestCaseName##_
 
 // INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE DIRECTLY.
 //
 // Expands to the name of the variable used to remember the names of
 // the registered tests in the given test case.
-#define GTEST_REGISTERED_TEST_NAMES_(TestCaseName) gtest_registered_test_names_##TestCaseName##_
+#    define GTEST_REGISTERED_TEST_NAMES_(TestCaseName) gtest_registered_test_names_##TestCaseName##_
 
 // The variables defined in the type-parameterized test macros are
 // static as typically these macros are used in a .h file that can be
 // #included in multiple translation units linked together.
-#define TYPED_TEST_CASE_P(CaseName)                                                                                    \
-  static ::testing::internal::TypedTestCasePState GTEST_TYPED_TEST_CASE_P_STATE_(CaseName)
+#    define TYPED_TEST_CASE_P(CaseName)                                                                                \
+      static ::testing::internal::TypedTestCasePState GTEST_TYPED_TEST_CASE_P_STATE_(CaseName)
 
-#define TYPED_TEST_P(CaseName, TestName)                                                                               \
-  namespace GTEST_CASE_NAMESPACE_(CaseName)                                                                            \
-  {                                                                                                                    \
-    template <typename gtest_TypeParam_>                                                                               \
-    class TestName : public CaseName<gtest_TypeParam_>                                                                 \
-    {                                                                                                                  \
-    private:                                                                                                           \
-      typedef CaseName<gtest_TypeParam_> TestFixture;                                                                  \
-      typedef gtest_TypeParam_ TypeParam;                                                                              \
-      virtual void TestBody();                                                                                         \
-    };                                                                                                                 \
-    static bool gtest_##TestName##_defined_ GTEST_ATTRIBUTE_UNUSED_ =                                                  \
-        GTEST_TYPED_TEST_CASE_P_STATE_(CaseName).AddTestName(__FILE__, __LINE__, #CaseName, #TestName);                \
-  }                                                                                                                    \
-  template <typename gtest_TypeParam_>                                                                                 \
-  void GTEST_CASE_NAMESPACE_(CaseName)::TestName<gtest_TypeParam_>::TestBody()
+#    define TYPED_TEST_P(CaseName, TestName)                                                                           \
+      namespace GTEST_CASE_NAMESPACE_(CaseName)                                                                        \
+      {                                                                                                                \
+        template <typename gtest_TypeParam_>                                                                           \
+        class TestName : public CaseName<gtest_TypeParam_>                                                             \
+        {                                                                                                              \
+        private:                                                                                                       \
+          typedef CaseName<gtest_TypeParam_> TestFixture;                                                              \
+          typedef gtest_TypeParam_ TypeParam;                                                                          \
+          virtual void TestBody();                                                                                     \
+        };                                                                                                             \
+        static bool gtest_##TestName##_defined_ GTEST_ATTRIBUTE_UNUSED_ =                                              \
+            GTEST_TYPED_TEST_CASE_P_STATE_(CaseName).AddTestName(__FILE__, __LINE__, #CaseName, #TestName);            \
+      }                                                                                                                \
+      template <typename gtest_TypeParam_>                                                                             \
+      void GTEST_CASE_NAMESPACE_(CaseName)::TestName<gtest_TypeParam_>::TestBody()
 
-#define REGISTER_TYPED_TEST_CASE_P(CaseName, ...)                                                                      \
-  namespace GTEST_CASE_NAMESPACE_(CaseName)                                                                            \
-  {                                                                                                                    \
-    typedef ::testing::internal::Templates<__VA_ARGS__>::type gtest_AllTests_;                                         \
-  }                                                                                                                    \
-  static const char* const GTEST_REGISTERED_TEST_NAMES_(CaseName) =                                                    \
-      GTEST_TYPED_TEST_CASE_P_STATE_(CaseName).VerifyRegisteredTestNames(__FILE__, __LINE__, #__VA_ARGS__)
+#    define REGISTER_TYPED_TEST_CASE_P(CaseName, ...)                                                                  \
+      namespace GTEST_CASE_NAMESPACE_(CaseName)                                                                        \
+      {                                                                                                                \
+        typedef ::testing::internal::Templates<__VA_ARGS__>::type gtest_AllTests_;                                     \
+      }                                                                                                                \
+      static const char* const GTEST_REGISTERED_TEST_NAMES_(CaseName) =                                                \
+          GTEST_TYPED_TEST_CASE_P_STATE_(CaseName).VerifyRegisteredTestNames(__FILE__, __LINE__, #__VA_ARGS__)
 
 // The 'Types' template argument below must have spaces around it
 // since some compilers may choke on '>>' when passing a template
 // instance (e.g. Types<int>)
-#define INSTANTIATE_TYPED_TEST_CASE_P(Prefix, CaseName, Types)                                                         \
-  bool gtest_##Prefix##_##CaseName GTEST_ATTRIBUTE_UNUSED_ =                                                           \
-      ::testing::internal::TypeParameterizedTestCase<CaseName,                                                         \
-                                                     GTEST_CASE_NAMESPACE_(CaseName)::gtest_AllTests_,                 \
-                                                     ::testing::internal::TypeList<Types>::type>::                     \
-          Register(#Prefix, #CaseName, GTEST_REGISTERED_TEST_NAMES_(CaseName))
+#    define INSTANTIATE_TYPED_TEST_CASE_P(Prefix, CaseName, Types)                                                     \
+      bool gtest_##Prefix##_##CaseName GTEST_ATTRIBUTE_UNUSED_ = ::testing::internal::TypeParameterizedTestCase<       \
+          CaseName,                                                                                                    \
+          GTEST_CASE_NAMESPACE_(CaseName)::gtest_AllTests_,                                                            \
+          ::testing::internal::TypeList<Types>::type>::Register(#Prefix,                                               \
+                                                                #CaseName,                                             \
+                                                                GTEST_REGISTERED_TEST_NAMES_(CaseName))
 
-#endif // GTEST_HAS_TYPED_TEST_P
+#  endif // GTEST_HAS_TYPED_TEST_P
 
 #endif // GTEST_INCLUDE_GTEST_GTEST_TYPED_TEST_H_
 
@@ -39383,8 +39130,7 @@ public:
   // Used in the EXPECT_TRUE/FALSE(bool_expression).
   explicit AssertionResult(bool success)
     : success_(success)
-  {
-  }
+  {}
 
   // Returns true iff the assertion succeeded.
   operator bool() const
@@ -39498,9 +39244,7 @@ public:
   // test in test case Foo.  Hence a sub-class can define its own
   // SetUpTestCase() method to shadow the one defined in the super
   // class.
-  static void SetUpTestCase()
-  {
-  }
+  static void SetUpTestCase() {}
 
   // Tears down the stuff shared by all tests in this test case.
   //
@@ -39508,9 +39252,7 @@ public:
   // test in test case Foo.  Hence a sub-class can define its own
   // TearDownTestCase() method to shadow the one defined in the super
   // class.
-  static void TearDownTestCase()
-  {
-  }
+  static void TearDownTestCase() {}
 
   // Returns true iff the current test has a fatal failure.
   static bool HasFatalFailure();
@@ -39594,8 +39336,7 @@ private:
   // If you see an error about overriding the following function or
   // about it being private, you have mis-spelled SetUp() as Setup().
   struct Setup_should_be_spelled_SetUp
-  {
-  };
+  {};
   virtual Setup_should_be_spelled_SetUp* Setup()
   {
     return NULL;
@@ -39620,8 +39361,7 @@ public:
   TestProperty(const std::string& a_key, const std::string& a_value)
     : key_(a_key)
     , value_(a_value)
-  {
-  }
+  {}
 
   // Gets the user supplied key.
   const char* key() const
@@ -40172,26 +39912,19 @@ class Environment
 {
 public:
   // The d'tor is virtual as we need to subclass Environment.
-  virtual ~Environment()
-  {
-  }
+  virtual ~Environment() {}
 
   // Override this to define how to set up the environment.
-  virtual void SetUp()
-  {
-  }
+  virtual void SetUp() {}
 
   // Override this to define how to tear down the environment.
-  virtual void TearDown()
-  {
-  }
+  virtual void TearDown() {}
 
 private:
   // If you see an error about overriding the following function or
   // about it being private, you have mis-spelled SetUp() as Setup().
   struct Setup_should_be_spelled_SetUp
-  {
-  };
+  {};
   virtual Setup_should_be_spelled_SetUp* Setup()
   {
     return NULL;
@@ -40203,9 +39936,7 @@ private:
 class TestEventListener
 {
 public:
-  virtual ~TestEventListener()
-  {
-  }
+  virtual ~TestEventListener() {}
 
   // Fired before any test activity starts.
   virtual void OnTestProgramStart(const UnitTest& unit_test) = 0;
@@ -40257,45 +39988,19 @@ public:
 class EmptyTestEventListener : public TestEventListener
 {
 public:
-  virtual void OnTestProgramStart(const UnitTest& /*unit_test*/)
-  {
-  }
-  virtual void OnTestIterationStart(const UnitTest& /*unit_test*/, int /*iteration*/)
-  {
-  }
-  virtual void OnEnvironmentsSetUpStart(const UnitTest& /*unit_test*/)
-  {
-  }
-  virtual void OnEnvironmentsSetUpEnd(const UnitTest& /*unit_test*/)
-  {
-  }
-  virtual void OnTestCaseStart(const TestCase& /*test_case*/)
-  {
-  }
-  virtual void OnTestStart(const TestInfo& /*test_info*/)
-  {
-  }
-  virtual void OnTestPartResult(const TestPartResult& /*test_part_result*/)
-  {
-  }
-  virtual void OnTestEnd(const TestInfo& /*test_info*/)
-  {
-  }
-  virtual void OnTestCaseEnd(const TestCase& /*test_case*/)
-  {
-  }
-  virtual void OnEnvironmentsTearDownStart(const UnitTest& /*unit_test*/)
-  {
-  }
-  virtual void OnEnvironmentsTearDownEnd(const UnitTest& /*unit_test*/)
-  {
-  }
-  virtual void OnTestIterationEnd(const UnitTest& /*unit_test*/, int /*iteration*/)
-  {
-  }
-  virtual void OnTestProgramEnd(const UnitTest& /*unit_test*/)
-  {
-  }
+  virtual void OnTestProgramStart(const UnitTest& /*unit_test*/) {}
+  virtual void OnTestIterationStart(const UnitTest& /*unit_test*/, int /*iteration*/) {}
+  virtual void OnEnvironmentsSetUpStart(const UnitTest& /*unit_test*/) {}
+  virtual void OnEnvironmentsSetUpEnd(const UnitTest& /*unit_test*/) {}
+  virtual void OnTestCaseStart(const TestCase& /*test_case*/) {}
+  virtual void OnTestStart(const TestInfo& /*test_info*/) {}
+  virtual void OnTestPartResult(const TestPartResult& /*test_part_result*/) {}
+  virtual void OnTestEnd(const TestInfo& /*test_info*/) {}
+  virtual void OnTestCaseEnd(const TestCase& /*test_case*/) {}
+  virtual void OnEnvironmentsTearDownStart(const UnitTest& /*unit_test*/) {}
+  virtual void OnEnvironmentsTearDownEnd(const UnitTest& /*unit_test*/) {}
+  virtual void OnTestIterationEnd(const UnitTest& /*unit_test*/, int /*iteration*/) {}
+  virtual void OnTestProgramEnd(const UnitTest& /*unit_test*/) {}
 };
 
 // TestEventListeners lets users add listeners to track events in Google Test.
@@ -40720,8 +40425,8 @@ AssertionResult
 CmpHelperEQ(const char* expected_expression, const char* actual_expression, const T1& expected, const T2& actual)
 {
 #ifdef _MSC_VER
-#pragma warning(push) // Saves the current warning state.
-#pragma warning(disable : 4389) // Temporarily disables warning on
+#  pragma warning(push) // Saves the current warning state.
+#  pragma warning(disable : 4389) // Temporarily disables warning on
 // signed/unsigned mismatch.
 #endif
 
@@ -40730,7 +40435,7 @@ CmpHelperEQ(const char* expected_expression, const char* actual_expression, cons
   }
 
 #ifdef _MSC_VER
-#pragma warning(pop) // Restores the warning state.
+#  pragma warning(pop) // Restores the warning state.
 #endif
 
   return EqFailure(expected_expression,
@@ -41020,8 +40725,7 @@ private:
       , file(srcfile)
       , line(line_num)
       , message(msg)
-    {
-    }
+    {}
 
     TestPartResult::Type const type;
     const char* const file;
@@ -41079,9 +40783,7 @@ class WithParamInterface
 {
 public:
   typedef T ParamType;
-  virtual ~WithParamInterface()
-  {
-  }
+  virtual ~WithParamInterface() {}
 
   // The current parameter value. Is also available in the test fixture's
   // constructor. This member function is non-static, even though it only
@@ -41118,9 +40820,10 @@ const T* WithParamInterface<T>::parameter_ = NULL;
 // WithParamInterface, and can just inherit from ::testing::TestWithParam.
 
 template <typename T>
-class TestWithParam : public Test, public WithParamInterface<T>
-{
-};
+class TestWithParam
+  : public Test
+  , public WithParamInterface<T>
+{};
 
 #endif // GTEST_HAS_PARAM_TEST
 
@@ -41156,7 +40859,7 @@ class TestWithParam : public Test, public WithParamInterface<T>
 // Define this macro to 1 to omit the definition of FAIL(), which is a
 // generic name and clashes with some other libraries.
 #if !GTEST_DONT_DEFINE_FAIL
-#define FAIL() GTEST_FAIL()
+#  define FAIL() GTEST_FAIL()
 #endif
 
 // Generates a success with a generic message.
@@ -41165,7 +40868,7 @@ class TestWithParam : public Test, public WithParamInterface<T>
 // Define this macro to 1 to omit the definition of SUCCEED(), which
 // is a generic name and clashes with some other libraries.
 #if !GTEST_DONT_DEFINE_SUCCEED
-#define SUCCEED() GTEST_SUCCEED()
+#  define SUCCEED() GTEST_SUCCEED()
 #endif
 
 // Macros for testing exceptions.
@@ -41231,12 +40934,12 @@ class TestWithParam : public Test, public WithParamInterface<T>
 // Implements a family of generic predicate assertion macros.
 
 #ifndef GTEST_INCLUDE_GTEST_GTEST_PRED_IMPL_H_
-#define GTEST_INCLUDE_GTEST_GTEST_PRED_IMPL_H_
+#  define GTEST_INCLUDE_GTEST_GTEST_PRED_IMPL_H_
 
 // Makes sure this header is not included before gtest.h.
-#ifndef GTEST_INCLUDE_GTEST_GTEST_H_
-#error Do not include gtest_pred_impl.h directly.  Include gtest.h instead.
-#endif // GTEST_INCLUDE_GTEST_GTEST_H_
+#  ifndef GTEST_INCLUDE_GTEST_GTEST_H_
+#    error Do not include gtest_pred_impl.h directly.  Include gtest.h instead.
+#  endif // GTEST_INCLUDE_GTEST_GTEST_H_
 
 // This header implements a family of generic predicate assertion
 // macros:
@@ -41270,12 +40973,12 @@ class TestWithParam : public Test, public WithParamInterface<T>
 // GTEST_ASSERT_ is the basic statement to which all of the assertions
 // in this file reduce.  Don't use this in your code.
 
-#define GTEST_ASSERT_(expression, on_failure)                                                                          \
-  GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                        \
-  if (const ::testing::AssertionResult gtest_ar = (expression))                                                        \
-    ;                                                                                                                  \
-  else                                                                                                                 \
-    on_failure(gtest_ar.failure_message())
+#  define GTEST_ASSERT_(expression, on_failure)                                                                        \
+    GTEST_AMBIGUOUS_ELSE_BLOCKER_                                                                                      \
+    if (const ::testing::AssertionResult gtest_ar = (expression))                                                      \
+      ;                                                                                                                \
+    else                                                                                                               \
+      on_failure(gtest_ar.failure_message())
 
 
 // Helper function for implementing {EXPECT|ASSERT}_PRED1.  Don't use
@@ -41293,17 +40996,18 @@ AssertionResult AssertPred1Helper(const char* pred_text, const char* e1, Pred pr
 
 // Internal macro for implementing {EXPECT|ASSERT}_PRED_FORMAT1.
 // Don't use this in your code.
-#define GTEST_PRED_FORMAT1_(pred_format, v1, on_failure) GTEST_ASSERT_(pred_format(#v1, v1), on_failure)
+#  define GTEST_PRED_FORMAT1_(pred_format, v1, on_failure) GTEST_ASSERT_(pred_format(#  v1, v1), on_failure)
 
 // Internal macro for implementing {EXPECT|ASSERT}_PRED1.  Don't use
 // this in your code.
-#define GTEST_PRED1_(pred, v1, on_failure) GTEST_ASSERT_(::testing::AssertPred1Helper(#pred, #v1, pred, v1), on_failure)
+#  define GTEST_PRED1_(pred, v1, on_failure)                                                                           \
+    GTEST_ASSERT_(::testing::AssertPred1Helper(#pred, #v1, pred, v1), on_failure)
 
 // Unary predicate assertion macros.
-#define EXPECT_PRED_FORMAT1(pred_format, v1) GTEST_PRED_FORMAT1_(pred_format, v1, GTEST_NONFATAL_FAILURE_)
-#define EXPECT_PRED1(pred, v1) GTEST_PRED1_(pred, v1, GTEST_NONFATAL_FAILURE_)
-#define ASSERT_PRED_FORMAT1(pred_format, v1) GTEST_PRED_FORMAT1_(pred_format, v1, GTEST_FATAL_FAILURE_)
-#define ASSERT_PRED1(pred, v1) GTEST_PRED1_(pred, v1, GTEST_FATAL_FAILURE_)
+#  define EXPECT_PRED_FORMAT1(pred_format, v1) GTEST_PRED_FORMAT1_(pred_format, v1, GTEST_NONFATAL_FAILURE_)
+#  define EXPECT_PRED1(pred, v1) GTEST_PRED1_(pred, v1, GTEST_NONFATAL_FAILURE_)
+#  define ASSERT_PRED_FORMAT1(pred_format, v1) GTEST_PRED_FORMAT1_(pred_format, v1, GTEST_FATAL_FAILURE_)
+#  define ASSERT_PRED1(pred, v1) GTEST_PRED1_(pred, v1, GTEST_FATAL_FAILURE_)
 
 
 // Helper function for implementing {EXPECT|ASSERT}_PRED2.  Don't use
@@ -41323,18 +41027,18 @@ AssertPred2Helper(const char* pred_text, const char* e1, const char* e2, Pred pr
 
 // Internal macro for implementing {EXPECT|ASSERT}_PRED_FORMAT2.
 // Don't use this in your code.
-#define GTEST_PRED_FORMAT2_(pred_format, v1, v2, on_failure) GTEST_ASSERT_(pred_format(#v1, #v2, v1, v2), on_failure)
+#  define GTEST_PRED_FORMAT2_(pred_format, v1, v2, on_failure) GTEST_ASSERT_(pred_format(#  v1, #  v2, v1, v2), on_failure)
 
 // Internal macro for implementing {EXPECT|ASSERT}_PRED2.  Don't use
 // this in your code.
-#define GTEST_PRED2_(pred, v1, v2, on_failure)                                                                         \
-  GTEST_ASSERT_(::testing::AssertPred2Helper(#pred, #v1, #v2, pred, v1, v2), on_failure)
+#  define GTEST_PRED2_(pred, v1, v2, on_failure)                                                                       \
+    GTEST_ASSERT_(::testing::AssertPred2Helper(#pred, #v1, #v2, pred, v1, v2), on_failure)
 
 // Binary predicate assertion macros.
-#define EXPECT_PRED_FORMAT2(pred_format, v1, v2) GTEST_PRED_FORMAT2_(pred_format, v1, v2, GTEST_NONFATAL_FAILURE_)
-#define EXPECT_PRED2(pred, v1, v2) GTEST_PRED2_(pred, v1, v2, GTEST_NONFATAL_FAILURE_)
-#define ASSERT_PRED_FORMAT2(pred_format, v1, v2) GTEST_PRED_FORMAT2_(pred_format, v1, v2, GTEST_FATAL_FAILURE_)
-#define ASSERT_PRED2(pred, v1, v2) GTEST_PRED2_(pred, v1, v2, GTEST_FATAL_FAILURE_)
+#  define EXPECT_PRED_FORMAT2(pred_format, v1, v2) GTEST_PRED_FORMAT2_(pred_format, v1, v2, GTEST_NONFATAL_FAILURE_)
+#  define EXPECT_PRED2(pred, v1, v2) GTEST_PRED2_(pred, v1, v2, GTEST_NONFATAL_FAILURE_)
+#  define ASSERT_PRED_FORMAT2(pred_format, v1, v2) GTEST_PRED_FORMAT2_(pred_format, v1, v2, GTEST_FATAL_FAILURE_)
+#  define ASSERT_PRED2(pred, v1, v2) GTEST_PRED2_(pred, v1, v2, GTEST_FATAL_FAILURE_)
 
 
 // Helper function for implementing {EXPECT|ASSERT}_PRED3.  Don't use
@@ -41361,20 +41065,21 @@ AssertionResult AssertPred3Helper(const char* pred_text,
 
 // Internal macro for implementing {EXPECT|ASSERT}_PRED_FORMAT3.
 // Don't use this in your code.
-#define GTEST_PRED_FORMAT3_(pred_format, v1, v2, v3, on_failure)                                                       \
-  GTEST_ASSERT_(pred_format(#v1, #v2, #v3, v1, v2, v3), on_failure)
+#  define GTEST_PRED_FORMAT3_(pred_format, v1, v2, v3, on_failure)                                                     \
+    GTEST_ASSERT_(pred_format(#v1, #v2, #v3, v1, v2, v3), on_failure)
 
 // Internal macro for implementing {EXPECT|ASSERT}_PRED3.  Don't use
 // this in your code.
-#define GTEST_PRED3_(pred, v1, v2, v3, on_failure)                                                                     \
-  GTEST_ASSERT_(::testing::AssertPred3Helper(#pred, #v1, #v2, #v3, pred, v1, v2, v3), on_failure)
+#  define GTEST_PRED3_(pred, v1, v2, v3, on_failure)                                                                   \
+    GTEST_ASSERT_(::testing::AssertPred3Helper(#pred, #v1, #v2, #v3, pred, v1, v2, v3), on_failure)
 
 // Ternary predicate assertion macros.
-#define EXPECT_PRED_FORMAT3(pred_format, v1, v2, v3)                                                                   \
-  GTEST_PRED_FORMAT3_(pred_format, v1, v2, v3, GTEST_NONFATAL_FAILURE_)
-#define EXPECT_PRED3(pred, v1, v2, v3) GTEST_PRED3_(pred, v1, v2, v3, GTEST_NONFATAL_FAILURE_)
-#define ASSERT_PRED_FORMAT3(pred_format, v1, v2, v3) GTEST_PRED_FORMAT3_(pred_format, v1, v2, v3, GTEST_FATAL_FAILURE_)
-#define ASSERT_PRED3(pred, v1, v2, v3) GTEST_PRED3_(pred, v1, v2, v3, GTEST_FATAL_FAILURE_)
+#  define EXPECT_PRED_FORMAT3(pred_format, v1, v2, v3)                                                                 \
+    GTEST_PRED_FORMAT3_(pred_format, v1, v2, v3, GTEST_NONFATAL_FAILURE_)
+#  define EXPECT_PRED3(pred, v1, v2, v3) GTEST_PRED3_(pred, v1, v2, v3, GTEST_NONFATAL_FAILURE_)
+#  define ASSERT_PRED_FORMAT3(pred_format, v1, v2, v3)                                                                 \
+    GTEST_PRED_FORMAT3_(pred_format, v1, v2, v3, GTEST_FATAL_FAILURE_)
+#  define ASSERT_PRED3(pred, v1, v2, v3) GTEST_PRED3_(pred, v1, v2, v3, GTEST_FATAL_FAILURE_)
 
 
 // Helper function for implementing {EXPECT|ASSERT}_PRED4.  Don't use
@@ -41405,21 +41110,21 @@ AssertionResult AssertPred4Helper(const char* pred_text,
 
 // Internal macro for implementing {EXPECT|ASSERT}_PRED_FORMAT4.
 // Don't use this in your code.
-#define GTEST_PRED_FORMAT4_(pred_format, v1, v2, v3, v4, on_failure)                                                   \
-  GTEST_ASSERT_(pred_format(#v1, #v2, #v3, #v4, v1, v2, v3, v4), on_failure)
+#  define GTEST_PRED_FORMAT4_(pred_format, v1, v2, v3, v4, on_failure)                                                 \
+    GTEST_ASSERT_(pred_format(#v1, #v2, #v3, #v4, v1, v2, v3, v4), on_failure)
 
 // Internal macro for implementing {EXPECT|ASSERT}_PRED4.  Don't use
 // this in your code.
-#define GTEST_PRED4_(pred, v1, v2, v3, v4, on_failure)                                                                 \
-  GTEST_ASSERT_(::testing::AssertPred4Helper(#pred, #v1, #v2, #v3, #v4, pred, v1, v2, v3, v4), on_failure)
+#  define GTEST_PRED4_(pred, v1, v2, v3, v4, on_failure)                                                               \
+    GTEST_ASSERT_(::testing::AssertPred4Helper(#pred, #v1, #v2, #v3, #v4, pred, v1, v2, v3, v4), on_failure)
 
 // 4-ary predicate assertion macros.
-#define EXPECT_PRED_FORMAT4(pred_format, v1, v2, v3, v4)                                                               \
-  GTEST_PRED_FORMAT4_(pred_format, v1, v2, v3, v4, GTEST_NONFATAL_FAILURE_)
-#define EXPECT_PRED4(pred, v1, v2, v3, v4) GTEST_PRED4_(pred, v1, v2, v3, v4, GTEST_NONFATAL_FAILURE_)
-#define ASSERT_PRED_FORMAT4(pred_format, v1, v2, v3, v4)                                                               \
-  GTEST_PRED_FORMAT4_(pred_format, v1, v2, v3, v4, GTEST_FATAL_FAILURE_)
-#define ASSERT_PRED4(pred, v1, v2, v3, v4) GTEST_PRED4_(pred, v1, v2, v3, v4, GTEST_FATAL_FAILURE_)
+#  define EXPECT_PRED_FORMAT4(pred_format, v1, v2, v3, v4)                                                             \
+    GTEST_PRED_FORMAT4_(pred_format, v1, v2, v3, v4, GTEST_NONFATAL_FAILURE_)
+#  define EXPECT_PRED4(pred, v1, v2, v3, v4) GTEST_PRED4_(pred, v1, v2, v3, v4, GTEST_NONFATAL_FAILURE_)
+#  define ASSERT_PRED_FORMAT4(pred_format, v1, v2, v3, v4)                                                             \
+    GTEST_PRED_FORMAT4_(pred_format, v1, v2, v3, v4, GTEST_FATAL_FAILURE_)
+#  define ASSERT_PRED4(pred, v1, v2, v3, v4) GTEST_PRED4_(pred, v1, v2, v3, v4, GTEST_FATAL_FAILURE_)
 
 
 // Helper function for implementing {EXPECT|ASSERT}_PRED5.  Don't use
@@ -41453,21 +41158,21 @@ AssertionResult AssertPred5Helper(const char* pred_text,
 
 // Internal macro for implementing {EXPECT|ASSERT}_PRED_FORMAT5.
 // Don't use this in your code.
-#define GTEST_PRED_FORMAT5_(pred_format, v1, v2, v3, v4, v5, on_failure)                                               \
-  GTEST_ASSERT_(pred_format(#v1, #v2, #v3, #v4, #v5, v1, v2, v3, v4, v5), on_failure)
+#  define GTEST_PRED_FORMAT5_(pred_format, v1, v2, v3, v4, v5, on_failure)                                             \
+    GTEST_ASSERT_(pred_format(#v1, #v2, #v3, #v4, #v5, v1, v2, v3, v4, v5), on_failure)
 
 // Internal macro for implementing {EXPECT|ASSERT}_PRED5.  Don't use
 // this in your code.
-#define GTEST_PRED5_(pred, v1, v2, v3, v4, v5, on_failure)                                                             \
-  GTEST_ASSERT_(::testing::AssertPred5Helper(#pred, #v1, #v2, #v3, #v4, #v5, pred, v1, v2, v3, v4, v5), on_failure)
+#  define GTEST_PRED5_(pred, v1, v2, v3, v4, v5, on_failure)                                                           \
+    GTEST_ASSERT_(::testing::AssertPred5Helper(#pred, #v1, #v2, #v3, #v4, #v5, pred, v1, v2, v3, v4, v5), on_failure)
 
 // 5-ary predicate assertion macros.
-#define EXPECT_PRED_FORMAT5(pred_format, v1, v2, v3, v4, v5)                                                           \
-  GTEST_PRED_FORMAT5_(pred_format, v1, v2, v3, v4, v5, GTEST_NONFATAL_FAILURE_)
-#define EXPECT_PRED5(pred, v1, v2, v3, v4, v5) GTEST_PRED5_(pred, v1, v2, v3, v4, v5, GTEST_NONFATAL_FAILURE_)
-#define ASSERT_PRED_FORMAT5(pred_format, v1, v2, v3, v4, v5)                                                           \
-  GTEST_PRED_FORMAT5_(pred_format, v1, v2, v3, v4, v5, GTEST_FATAL_FAILURE_)
-#define ASSERT_PRED5(pred, v1, v2, v3, v4, v5) GTEST_PRED5_(pred, v1, v2, v3, v4, v5, GTEST_FATAL_FAILURE_)
+#  define EXPECT_PRED_FORMAT5(pred_format, v1, v2, v3, v4, v5)                                                         \
+    GTEST_PRED_FORMAT5_(pred_format, v1, v2, v3, v4, v5, GTEST_NONFATAL_FAILURE_)
+#  define EXPECT_PRED5(pred, v1, v2, v3, v4, v5) GTEST_PRED5_(pred, v1, v2, v3, v4, v5, GTEST_NONFATAL_FAILURE_)
+#  define ASSERT_PRED_FORMAT5(pred_format, v1, v2, v3, v4, v5)                                                         \
+    GTEST_PRED_FORMAT5_(pred_format, v1, v2, v3, v4, v5, GTEST_FATAL_FAILURE_)
+#  define ASSERT_PRED5(pred, v1, v2, v3, v4, v5) GTEST_PRED5_(pred, v1, v2, v3, v4, v5, GTEST_FATAL_FAILURE_)
 
 
 #endif // GTEST_INCLUDE_GTEST_GTEST_PRED_IMPL_H_
@@ -41538,27 +41243,27 @@ AssertionResult AssertPred5Helper(const char* pred_text,
 // ASSERT_XY(), which clashes with some users' own code.
 
 #if !GTEST_DONT_DEFINE_ASSERT_EQ
-#define ASSERT_EQ(val1, val2) GTEST_ASSERT_EQ(val1, val2)
+#  define ASSERT_EQ(val1, val2) GTEST_ASSERT_EQ(val1, val2)
 #endif
 
 #if !GTEST_DONT_DEFINE_ASSERT_NE
-#define ASSERT_NE(val1, val2) GTEST_ASSERT_NE(val1, val2)
+#  define ASSERT_NE(val1, val2) GTEST_ASSERT_NE(val1, val2)
 #endif
 
 #if !GTEST_DONT_DEFINE_ASSERT_LE
-#define ASSERT_LE(val1, val2) GTEST_ASSERT_LE(val1, val2)
+#  define ASSERT_LE(val1, val2) GTEST_ASSERT_LE(val1, val2)
 #endif
 
 #if !GTEST_DONT_DEFINE_ASSERT_LT
-#define ASSERT_LT(val1, val2) GTEST_ASSERT_LT(val1, val2)
+#  define ASSERT_LT(val1, val2) GTEST_ASSERT_LT(val1, val2)
 #endif
 
 #if !GTEST_DONT_DEFINE_ASSERT_GE
-#define ASSERT_GE(val1, val2) GTEST_ASSERT_GE(val1, val2)
+#  define ASSERT_GE(val1, val2) GTEST_ASSERT_GE(val1, val2)
 #endif
 
 #if !GTEST_DONT_DEFINE_ASSERT_GT
-#define ASSERT_GT(val1, val2) GTEST_ASSERT_GT(val1, val2)
+#  define ASSERT_GT(val1, val2) GTEST_ASSERT_GT(val1, val2)
 #endif
 
 // C-string Comparisons.  All tests treat NULL and any non-NULL string
@@ -41643,13 +41348,13 @@ GTEST_API_ AssertionResult DoubleLE(const char* expr1, const char* expr2, double
 // expected result and the actual result with both a human-readable
 // string representation of the error, if available, as well as the
 // hex result code.
-#define EXPECT_HRESULT_SUCCEEDED(expr) EXPECT_PRED_FORMAT1(::testing::internal::IsHRESULTSuccess, (expr))
+#  define EXPECT_HRESULT_SUCCEEDED(expr) EXPECT_PRED_FORMAT1(::testing::internal::IsHRESULTSuccess, (expr))
 
-#define ASSERT_HRESULT_SUCCEEDED(expr) ASSERT_PRED_FORMAT1(::testing::internal::IsHRESULTSuccess, (expr))
+#  define ASSERT_HRESULT_SUCCEEDED(expr) ASSERT_PRED_FORMAT1(::testing::internal::IsHRESULTSuccess, (expr))
 
-#define EXPECT_HRESULT_FAILED(expr) EXPECT_PRED_FORMAT1(::testing::internal::IsHRESULTFailure, (expr))
+#  define EXPECT_HRESULT_FAILED(expr) EXPECT_PRED_FORMAT1(::testing::internal::IsHRESULTFailure, (expr))
 
-#define ASSERT_HRESULT_FAILED(expr) ASSERT_PRED_FORMAT1(::testing::internal::IsHRESULTFailure, (expr))
+#  define ASSERT_HRESULT_FAILED(expr) ASSERT_PRED_FORMAT1(::testing::internal::IsHRESULTFailure, (expr))
 
 #endif // GTEST_OS_WINDOWS
 
@@ -41749,7 +41454,7 @@ bool StaticAssertTypeEq()
 // Define this macro to 1 to omit the definition of TEST(), which
 // is a generic name and clashes with some other libraries.
 #if !GTEST_DONT_DEFINE_TEST
-#define TEST(test_case_name, test_name) GTEST_TEST(test_case_name, test_name)
+#  define TEST(test_case_name, test_name) GTEST_TEST(test_case_name, test_name)
 #endif
 
 // Defines a test that uses a test fixture.

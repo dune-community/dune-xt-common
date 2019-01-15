@@ -5,13 +5,12 @@
 #   https://github.com/dune-community/dune-xt-common
 # Copyright 2009-2018 dune-xt-common developers and contributors. All rights reserved.
 # License: Dual licensed as BSD 2-Clause License (http://opensource.org/licenses/BSD-2-Clause)
-# Authors:
-#   Felix Schindler (2016 - 2017)
-#   Rene Milk       (2016, 2018)
-#   Tobias Leibner  (2015)
-#
 #      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
 #          with "runtime exception" (http://www.dune-project.org/license.html)
+# Authors:
+#   Felix Schindler (2016 - 2017)
+#   René Fritze     (2016, 2018)
+#   Tobias Leibner  (2015)
 #
 # This is a modified version of dune_execute.py from dune-testtools.
 # It adds the --gtest_output option to the call.

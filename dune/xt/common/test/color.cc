@@ -6,9 +6,9 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2012, 2014 - 2017)
-//   Rene Milk       (2012 - 2016, 2018)
+//   René Fritze     (2012 - 2016, 2018)
 //   Stefan Girke    (2012)
-//   Tobias Leibner  (2014, 2016)
+//   Tobias Leibner  (2014, 2016, 2018)
 
 #include <dune/xt/common/test/main.hxx>
 #include <dune/xt/common/color.hh>

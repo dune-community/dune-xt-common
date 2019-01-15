@@ -7,9 +7,9 @@
 // Authors:
 //   Andreas Buhr    (2014)
 //   Felix Schindler (2012 - 2018)
-//   Rene Milk       (2010 - 2018)
+//   René Fritze     (2010 - 2018)
 //   Sven Kaulmann   (2013)
-//   Tobias Leibner  (2014, 2017)
+//   Tobias Leibner  (2014, 2017 - 2018)
 
 #ifndef DUNE_XT_COMMON_MATH_HH
 #define DUNE_XT_COMMON_MATH_HH
@@ -52,8 +52,7 @@ namespace Common {
  **/
 template <class T, bool is_integral = std::is_integral<T>::value>
 struct Epsilon
-{
-};
+{};
 
 template <class T>
 struct Epsilon<T, true>
@@ -140,9 +139,7 @@ protected:
   typedef MinMaxAvg<ElementType> ThisType;
 
 public:
-  MinMaxAvg()
-  {
-  }
+  MinMaxAvg() {}
 
   template <class stl_container_type>
   MinMaxAvg(const stl_container_type& elements)
@@ -229,14 +226,12 @@ int signum(T val)
  **/
 template <class T, typename = void>
 class numeric_limits : public std::numeric_limits<double>
-{
-};
+{};
 
 template <class T>
 class numeric_limits<T, typename std::enable_if<std::numeric_limits<T>::is_specialized>::type>
-    : public std::numeric_limits<T>
-{
-};
+  : public std::numeric_limits<T>
+{};
 
 //! forward to std::isnan for general types, overload for complex below
 template <class T>
@@ -336,66 +331,6 @@ inline bool is_zero(const FieldType& val)
 } // namespace Common
 } // namespace XT
 } // namespace Dune
-namespace std {
-
-
-/**
- * \note \attention This is not supposed to be here! But Dune::FloatCmp uses
-\code
-std::abs(value)
-\code
- *                  somewhere, as opposed to
-\code
-using std::abs;
-abs(value)
-\code
- *                  which would allow ADL to find the correct abs. So we have to povide std::abs for all types which
- *                  we want to use in our FloatCmp.
- */
-long unsigned int abs(const long unsigned int& value);
-unsigned char abs(unsigned char value);
-
-
-template <int k>
-Dune::bigunsignedint<k> abs(const Dune::bigunsignedint<k>& value)
-{
-  return value;
-}
-
-template <int k>
-inline Dune::bigunsignedint<k> pow(Dune::bigunsignedint<k> /*value*/, std::uintmax_t /*n*/)
-{
-  DUNE_THROW(Dune::NotImplemented, "pow not implemented for bigunisgnedint");
-  return Dune::bigunsignedint<k>();
-}
-
-template <int k>
-inline Dune::bigunsignedint<k> sqrt(Dune::bigunsignedint<k> value)
-{
-  DUNE_THROW(Dune::NotImplemented, "sqrt not implemented for bigunisgnedint");
-  return Dune::bigunsignedint<k>(std::sqrt(value.todouble()));
-}
-
-template <int k>
-inline Dune::bigunsignedint<k> conj(Dune::bigunsignedint<k> value)
-{
-  return value;
-}
-
-template <int k>
-inline bool isnan(Dune::bigunsignedint<k> /*value*/)
-{
-  return false;
-}
-
-template <int k>
-inline bool isinf(Dune::bigunsignedint<k> /*value*/)
-{
-  return false;
-}
-
-
-} // namespace std
 
 
 template <class T>

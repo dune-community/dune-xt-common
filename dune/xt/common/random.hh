@@ -6,7 +6,7 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2014 - 2017)
-//   Rene Milk       (2012 - 2018)
+//   René Fritze     (2012 - 2018)
 //   Tobias Leibner  (2014)
 
 #ifndef DUNE_XT_COMMON_RANDOM_HH
@@ -27,8 +27,7 @@ namespace Common {
 //! Helper class to abstract away selecting an integer or real valued distribution
 template <typename T, bool = std::is_integral<T>::value>
 struct UniformDistributionSelector
-{
-};
+{};
 
 template <typename T>
 struct UniformDistributionSelector<T, true>
@@ -57,8 +56,7 @@ struct RNG
   RNG(EngineType g, DistributionType d)
     : generator(g)
     , distribution(d)
-  {
-  }
+  {}
 
   inline T operator()()
   {
@@ -76,8 +74,7 @@ struct RNG<std::complex<T>, DistributionImp, EngineImp>
   RNG(EngineType g, DistributionType d)
     : generator(g)
     , distribution(d)
-  {
-  }
+  {}
 
   inline std::complex<T> operator()()
   {
@@ -91,7 +88,7 @@ const std::string alphanums("abcdefghijklmnopqrstuvwxyz"
                             "1234567890");
 const std::string other_printables("!@#$%^&*()"
                                    "`~-_=+[{]{\\|;:'\",<.>/? ");
-}
+} // namespace
 
 //! RNG that represents strings of given length
 class RandomStrings : public RNG<std::string, std::uniform_int_distribution<int>, std::mt19937>
@@ -103,8 +100,7 @@ public:
   explicit RandomStrings(size_t l, std::random_device::result_type seed = std::random_device()())
     : BaseType(std::mt19937(seed), std::uniform_int_distribution<int>(0, numeric_cast<int>(alphanums.size() - 1)))
     , length(l)
-  {
-  }
+  {}
 
   inline std::string operator()()
   {
@@ -125,13 +121,12 @@ public:
                       T max = std::numeric_limits<T>::max(),
                       std::random_device::result_type seed = std::random_device()())
     : BaseType(std::default_random_engine(seed), typename UniformDistributionSelector<T>::type(min, max))
-  {
-  }
+  {}
 };
 
 template <class T>
 class DefaultRNG<std::complex<T>, false>
-    : public RNG<std::complex<T>, typename UniformDistributionSelector<T>::type, std::default_random_engine>
+  : public RNG<std::complex<T>, typename UniformDistributionSelector<T>::type, std::default_random_engine>
 {
   typedef RNG<std::complex<T>, typename UniformDistributionSelector<T>::type, std::default_random_engine> BaseType;
 
@@ -140,8 +135,7 @@ public:
              T max = std::numeric_limits<T>::max(),
              std::random_device::result_type seed = std::random_device()())
     : BaseType(std::default_random_engine(seed), typename UniformDistributionSelector<T>::type(min, max))
-  {
-  }
+  {}
 };
 
 template <class VectorType>
@@ -189,8 +183,7 @@ class DefaultRNG<std::string> : public RandomStrings
 public:
   DefaultRNG(size_t ilength = 12, std::random_device::result_type seed = std::random_device()())
     : RandomStrings(ilength, seed)
-  {
-  }
+  {}
 };
 
 } // namespace Common

@@ -6,7 +6,7 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2014, 2016 - 2017)
-//   Rene Milk       (2013 - 2016, 2018)
+//   René Fritze     (2013 - 2016, 2018)
 //   Sven Kaulmann   (2014)
 //   Tobias Leibner  (2016)
 
@@ -25,8 +25,7 @@ SuspendableStrBuffer::SuspendableStrBuffer(int loglevel, int& logflags)
   , suspended_logflags_(logflags)
   , is_suspended_(false)
   , suspend_priority_(default_suspend_priority)
-{
-}
+{}
 
 void SuspendableStrBuffer::suspend(PriorityType priority)
 {
@@ -81,8 +80,7 @@ TimedPrefixedStreamBuffer::TimedPrefixedStreamBuffer(const Timer& timer, const s
   , prefix_(prefix)
   , out_(out)
   , prefix_needed_(true)
-{
-}
+{}
 
 int TimedPrefixedStreamBuffer::sync()
 {
@@ -140,8 +138,7 @@ LogStream& LogStream::flush()
 TimedPrefixedLogStream::TimedPrefixedLogStream(const Timer& timer, const std::string prefix, std::ostream& outstream)
   : StorageBaseType(new TimedPrefixedStreamBuffer(timer, prefix, outstream))
   , OstreamBaseType(&this->access())
-{
-}
+{}
 
 TimedPrefixedLogStream::~TimedPrefixedLogStream()
 {
@@ -201,18 +198,15 @@ int CombinedBuffer::sync()
 DualLogStream::DualLogStream(int loglevel, int& logflags, std::ostream& out, std::ofstream& file)
   : LogStream(new CombinedBuffer(
         loglevel, logflags, {new OstreamBuffer(loglevel, logflags, out), new OstreamBuffer(loglevel, logflags, file)}))
-{
-}
+{}
 
 OstreamLogStream::OstreamLogStream(int loglevel, int& logflags, std::ostream& out)
   : LogStream(new OstreamBuffer(loglevel, logflags, out))
-{
-}
+{}
 
 EmptyLogStream::EmptyLogStream(int& logflags)
   : LogStream(new EmptyBuffer(int(LOG_NONE), logflags))
-{
-}
+{}
 
 } // namespace Common
 } // namespace XT

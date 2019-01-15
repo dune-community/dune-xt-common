@@ -6,7 +6,7 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2014 - 2017)
-//   Rene Milk       (2012 - 2018)
+//   René Fritze     (2012 - 2018)
 //   Tobias Leibner  (2014, 2016)
 
 // This one has to come first (includes the config.h)!
@@ -206,12 +206,9 @@ struct ConfigTest : public testing::Test
     , key_gen(8)
     , values(boost::assign::list_of<T>().repeat_fun(values.size() - 1, rng))
     , keys(boost::assign::list_of<std::string>().repeat_fun(values.size() - 1, key_gen))
-  {
-  }
+  {}
 
-  virtual ~ConfigTest()
-  {
-  }
+  virtual ~ConfigTest() {}
 
   void get()
   {

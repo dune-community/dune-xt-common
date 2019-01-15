@@ -6,7 +6,8 @@
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
 //   Felix Schindler (2016 - 2017)
-//   Rene Milk       (2018)
+//   René Fritze     (2018)
+//   TiKeil          (2018)
 
 #ifndef DUNE_XT_COMMON_FVECTOR_PBH
 #define DUNE_XT_COMMON_FVECTOR_PBH
@@ -115,14 +116,12 @@ struct FieldVector_type_caster<FieldVectorImp, false>
 
 template <class K, int SIZE>
 struct type_caster<Dune::FieldVector<K, SIZE>> : public FieldVector_type_caster<Dune::FieldVector<K, SIZE>>
-{
-};
+{};
 
 template <class K, int SIZE>
 struct type_caster<Dune::XT::Common::FieldVector<K, SIZE>>
-    : public FieldVector_type_caster<Dune::XT::Common::FieldVector<K, SIZE>>
-{
-};
+  : public FieldVector_type_caster<Dune::XT::Common::FieldVector<K, SIZE>>
+{};
 
 
 NAMESPACE_END(detail)
