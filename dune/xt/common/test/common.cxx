@@ -11,6 +11,7 @@
 
 #include "config.h"
 
+#include <algorithm>
 #include <cmath>
 #include <sys/time.h>
 #include <vector>
@@ -47,7 +48,12 @@ std::string get_unique_test_name()
 {
   const ::testing::TestInfo* const test_info = ::testing::UnitTest::GetInstance()->current_test_info();
   DUNE_THROW_IF(!test_info, Exceptions::you_are_using_this_wrong, "You may only use this in the context of gtest!");
-  static std::map<std::string, std::string> replacements{};
+  static std::map<std::string, std::string> replacements{
+      {"Dune::ALUGrid<2, 2, (Dune::ALUGridElementType)0, (Dune::ALUGridRefinementType)0, Dune::ALUGridMPIComm>",
+       "ALU_2D_SIMPLEX_CONFORMING"},
+      {"Dune::ALUGrid<2, 2, (Dune::ALUGridElementType)0, (Dune::ALUGridRefinementType)1, Dune::ALUGridMPIComm>",
+       "ALU_2D_SIMPLEX_NONCONFORMING"},
+      {"Dune::UGGrid<2>", "UG_2D"}};
   auto replace_if = [&](const auto& id) {
     if (replacements.count(std::string(id)) > 0)
       return replacements.at(std::string(id));
@@ -61,16 +67,17 @@ std::string get_unique_test_name()
   }
   const auto* name = test_info->name();
   if (name) {
-    result += "." + replace_if(name);
+    result += result.empty() ? "" : "." + replace_if(name);
   }
   const auto* type_param = test_info->type_param();
   if (type_param) {
-    result += "." + replace_if(type_param);
+    result += result.empty() ? "" : "." + replace_if(type_param);
   }
   const auto* value_param = test_info->value_param();
   if (value_param) {
-    result += "." + replace_if(value_param);
+    result += result.empty() ? "" : "." + replace_if(value_param);
   }
+  std::replace(result.begin(), result.end(), '/', '.');
   return result;
 }
 
