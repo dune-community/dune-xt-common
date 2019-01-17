@@ -13,6 +13,7 @@
 #define DUNE_XT_COMMON_PARALLEL_HELPER_HH
 
 #include <type_traits>
+#include <cassert>
 
 #include <dune/common/parallel/collectivecommunication.hh>
 

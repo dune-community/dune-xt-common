@@ -392,14 +392,9 @@ public:
 
   void finalize_imp()
   {
-    try {
-      std::lock_guard<std::mutex> lock_base(base_->mutex_);
-      Reduction reduce;
-      base_->set_result(reduce(base_->result(), imp_->result()));
-    } catch (std::system_error& ee) {
-      DUNE_THROW(Exceptions::external_error, "Could not acquire lock! The original system_error was: " << ee.what());
-    }
-  } // ... finalize_imp(...)
+    Reduction reduce;
+    base_->set_result(reduce(base_->result(), imp_->result()));
+  }
 
 protected:
   Imp* imp_;
