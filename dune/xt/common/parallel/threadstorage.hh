@@ -20,7 +20,10 @@
 #include <list>
 #include <mutex>
 #include <numeric>
+#include <system_error>
 #include <type_traits>
+
+#include <dune/xt/common/exceptions.hh>
 
 // TODO: the following includes can be removed when UnsafePerThreadValue is removed
 #include <deque>

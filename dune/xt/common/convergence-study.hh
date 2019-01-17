@@ -138,7 +138,16 @@ protected:
                  const std::string& target_id) const;
 
 public:
-  void run(const std::vector<std::string>& only_these = {}, std::ostream& out = std::cout);
+  /**
+   * \brief Runs the study and displays a table with all targets, norms, estimates and quantities given by the study
+   *        (if only_these is empty) or only those which are contained in only_these (else).
+   *
+   * \return data with data[foo][bar][level] where 0 <= level <= num_refinements(), "foo" is one of
+   *         {"target", "norm", "estimate", "quantity"} and bar is one of targets(), norms(), estimates() or
+   *         quantities() (intersected with only_these), respectively.
+   **/
+  std::map<std::string, std::map<std::string, std::map<size_t, double>>>
+  run(const std::vector<std::string>& only_these = {}, std::ostream& out = std::cout);
 }; // class ConvergenceStudy
 
 

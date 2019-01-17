@@ -77,7 +77,10 @@ const T Epsilon<T, true>::value = T(1);
 template <class T>
 const T Epsilon<T, false>::value = std::numeric_limits<T>::epsilon();
 
+
 namespace internal {
+
+
 /**
  *  Helper struct to compute absolute values of signed and unsigned values,
  *  std::abs is only defined for signed types.
@@ -91,6 +94,7 @@ struct AbsoluteValue
     return abs(val);
   }
 };
+
 template <class T>
 struct AbsoluteValue<T, true>
 {
@@ -112,7 +116,9 @@ struct Absretval<T, true>
   typedef typename underlying_type<T>::type type;
 };
 
+
 } // namespace internal
+
 
 //! drop-in replacement for std::abs, that works for more types
 template <class T>
@@ -122,12 +128,14 @@ typename internal::Absretval<T>::type abs(const T& val)
   return internal::AbsoluteValue<R>::result(static_cast<R>(val));
 }
 
+
 //! very simple, underrun-safe for unsigned types, difference method
 template <class T>
 T absolute_difference(T a, T b)
 {
   return (a > b) ? a - b : b - a;
 }
+
 
 //! a vector wrapper for continiously updating min,max,avg of some element type vector
 template <class ElementType>
@@ -191,12 +199,14 @@ protected:
   boost::accumulators::accumulator_set<ElementType, StatsType> acc_;
 };
 
+
 //! \return var bounded in [min, max]
 template <typename T>
 typename std::enable_if<!is_vector<T>::value, T>::type clamp(const T var, const T min, const T max)
 {
   return (var < min) ? min : (var > max) ? max : var;
 }
+
 
 template <typename T>
 typename std::enable_if<is_vector<T>::value, T>::type clamp(const T var, const T min, const T max)
@@ -210,6 +220,7 @@ typename std::enable_if<is_vector<T>::value, T>::type clamp(const T var, const T
   return result;
 }
 
+
 /**
  * \returns: -1 iff val < 0
  *            0 iff val == 0
@@ -220,6 +231,7 @@ int signum(T val)
 {
   return (T(0) < val) - (val < T(0));
 }
+
 
 /** enable us to use DXTC::numeric_limits for all types, even when no specialization is avaliable.
  * If there is one, it's used. Otherwise we default to numerical_limtis of double
@@ -232,6 +244,7 @@ template <class T>
 class numeric_limits<T, typename std::enable_if<std::numeric_limits<T>::is_specialized>::type>
   : public std::numeric_limits<T>
 {};
+
 
 //! forward to std::isnan for general types, overload for complex below
 template <class T>
@@ -248,6 +261,7 @@ bool isnan(std::complex<T> val)
   return isnan(std::real(val)) || isnan(std::imag(val));
 }
 
+
 //! forward to std::isinf for general types, overload for complex below
 template <class T>
 bool isinf(T val)
@@ -263,11 +277,13 @@ bool isinf(std::complex<T> val)
   return isinf(std::real(val)) || isinf(std::imag(val));
 }
 
+
 //! calculates factorial of n
 constexpr size_t factorial(size_t n)
 {
   return n > 0 ? n * factorial(n - 1) : 1;
 }
+
 
 //! calculates complex conjugate like std::conj, but returns T instead of complex<T>
 template <class T>
@@ -281,6 +297,7 @@ std::complex<T> conj(std::complex<T> val)
 {
   return std::conj(val);
 }
+
 
 //! calculates binomial coefficient for arbitrary n
 inline double binomial_coefficient(const double n, const size_t k)
@@ -339,4 +356,6 @@ inline std::ostream& operator<<(std::ostream& s, const Dune::XT::Common::MinMaxA
   d.output(s);
   return s;
 }
+
+
 #endif // DUNE_XT_COMMON_MATH_HH

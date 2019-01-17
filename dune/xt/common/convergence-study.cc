@@ -146,7 +146,8 @@ void ConvergenceStudy::print_eoc(std::ostream& out,
   }
 } // ... print_eoc(...)
 
-void ConvergenceStudy::run(const std::vector<std::string>& only_these, std::ostream& out)
+std::map<std::string, std::map<std::string, std::map<size_t, double>>>
+ConvergenceStudy::run(const std::vector<std::string>& only_these, std::ostream& out)
 {
   auto& self = *this;
   // check what we want to compute and print
@@ -340,6 +341,13 @@ void ConvergenceStudy::run(const std::vector<std::string>& only_these, std::ostr
       out << delim;
     out << std::endl;
   }
+  // convert data
+  std::map<std::string, std::map<std::string, std::map<size_t, double>>> return_data;
+  for (const auto& level : data)
+    for (const auto& category : level.second)
+      for (const auto& type : category.second)
+        return_data[category.first][type.first][level.first] = type.second;
+  return return_data;
 } // ... run(...)
 
 

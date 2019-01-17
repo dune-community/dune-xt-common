@@ -16,6 +16,7 @@
 #include <dune/common/exceptions.hh>
 #include <dune/common/parallel/mpihelper.hh>
 
+#include <dune/xt/common/color.hh>
 #include <dune/xt/common/deprecated.hh>
 
 #ifdef DUNE_THROW
@@ -25,6 +26,7 @@
 #if HAVE_TBB
 
 namespace tbb {
+
 class tbb_exception;
 }
 
@@ -49,9 +51,9 @@ if (a.size() != b.size())
  */
 #define DUNE_THROW(E, m)                                                                                               \
   do {                                                                                                                 \
-    const std::string th__red = "\033[31m";                                                                            \
-    const std::string th__brown = "\033[33m";                                                                          \
-    const std::string th__clear = "\033[0m";                                                                           \
+    const std::string th__red = Dune::XT::Common::terminal_supports_color() ? "\033[31m" : "";                         \
+    const std::string th__brown = Dune::XT::Common::terminal_supports_color() ? "\033[33m" : "";                       \
+    const std::string th__clear = Dune::XT::Common::terminal_supports_color() ? "\033[0m" : "";                        \
     E th__ex;                                                                                                          \
     std::ostringstream th__msg;                                                                                        \
     th__msg << m;                                                                                                      \
@@ -72,12 +74,14 @@ if (a.size() != b.size())
   } while (0)
 // DUNE_THROW
 
+
 #define DUNE_THROW_IF(condition, E, m)                                                                                 \
   do {                                                                                                                 \
     if (condition) {                                                                                                   \
       DUNE_THROW(E, m);                                                                                                \
     }                                                                                                                  \
   } while (0)
+
 
 namespace Dune {
 namespace XT {
@@ -146,7 +150,9 @@ class dependency_missing : public Dune::Exception
 
 
 int handle_exception(const Dune::Exception& exp);
+
 int handle_exception(const std::exception& exp);
+
 #if HAVE_TBB
 int handle_exception(const tbb::tbb_exception& exp);
 #endif
