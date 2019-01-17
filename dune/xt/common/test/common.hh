@@ -120,16 +120,14 @@ unsigned int grid_elements();
 
 
 template <typename T>
-static typename std::enable_if<Common::is_vector<T>::value, T>::type
-init_bound(typename Common::VectorAbstraction<T>::S val)
+typename std::enable_if<Common::is_vector<T>::value, T>::type init_bound(typename Common::VectorAbstraction<T>::S val)
 {
   const auto size = Common::VectorAbstraction<T>::has_static_size ? Common::VectorAbstraction<T>::static_size : 3u;
   return Common::VectorAbstraction<T>::create(size, val);
 }
 
 template <typename T>
-static typename std::enable_if<!Common::is_vector<T>::value, T>::type
-init_bound(typename Common::VectorAbstraction<T>::S val)
+typename std::enable_if<!Common::is_vector<T>::value, T>::type init_bound(typename Common::VectorAbstraction<T>::S val)
 {
   return T(val);
 }
@@ -214,7 +212,7 @@ ostream& operator<<(ostream& out, const map<F, S>& results)
  * \sa get_unique_test_name
  */
 template <typename T>
-static auto DXTC_TEST_CONFIG_GET(const std::string& key, T def) -> decltype(DXTC_CONFIG.get(key, def))
+auto DXTC_TEST_CONFIG_GET(const std::string& key, T def) -> decltype(DXTC_CONFIG.get(key, def))
 {
   return DXTC_CONFIG.get(Dune::XT::Common::Test::get_unique_test_name() + "." + key, def);
 }
@@ -224,7 +222,7 @@ static auto DXTC_TEST_CONFIG_GET(const std::string& key, T def) -> decltype(DXTC
  * \sa get_unique_test_name
  */
 template <typename T>
-static void DXTC_TEST_CONFIG_SET(const std::string& key, T val)
+void DXTC_TEST_CONFIG_SET(const std::string& key, T val)
 {
   return DXTC_CONFIG.set(Dune::XT::Common::Test::get_unique_test_name() + "." + key, val, /*overwrite=*/true);
 }
@@ -233,7 +231,7 @@ static void DXTC_TEST_CONFIG_SET(const std::string& key, T val)
  * \brief Can be used to access the configuration assosicated with the currently running test
  * \sa get_unique_test_name
  */
-static Dune::XT::Common::Configuration DXTC_TEST_CONFIG_SUB(const std::string& sub_key)
+Dune::XT::Common::Configuration DXTC_TEST_CONFIG_SUB(const std::string& sub_key)
 {
   const auto key = Dune::XT::Common::Test::get_unique_test_name() + "." + sub_key;
   EXPECT_TRUE(DXTC_CONFIG.has_sub(key));
