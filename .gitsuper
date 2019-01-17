@@ -13,7 +13,7 @@ status = 1a3bcab04b011a5d6e44f9983cae6ff89fa695e8 bin (heads/master)
 	 6d2a4680493a2483d53f9dd05a19dd6b5f436572 dune-pybindxi (v2.2.1-30-g6d2a468)
 	 58bd932e2311a288e0163d041f836b50f19111cb dune-testtools (remotes/origin/testname_listing_hack2.6)
 	 07f9700459c616186737a9a34277f2edee76f475 dune-uggrid (v2.6.0-1-g07f97004)
-	+adbe48dc1fdca1ec6b43b0fe974636ced4c90905 dune-xt-common (heads/dailywork-ftschindler-2)
+	+44dbb1b47883eea077dfd6fdbc920b7c278551cd dune-xt-common (heads/dailywork-ftschindler-2)
 	 0307552d17c4d383d218b8e1a2d1064a2768ddd7 dune-xt-data (heads/master)
 	 a78d5c61c829457c2b7f6a51ea7f9dbd7ad44b10 dune-xt-functions (heads/master)
 	+b9a83ae22caa02389a2430cd61085c47d4153b33 dune-xt-grid (heads/master)
@@ -89,7 +89,7 @@ commit = 07f9700459c616186737a9a34277f2edee76f475
 [submodule.dune-xt-common]
 remote = git@github.com:dune-community/dune-xt-common.git
 status = c0b1735fab0ecbd4bb4f1eaa27cb65fe813e98f0 .vcsetup (heads/master)
-commit = adbe48dc1fdca1ec6b43b0fe974636ced4c90905
+commit = 44dbb1b47883eea077dfd6fdbc920b7c278551cd
 
 [submodule.dune-xt-data]
 remote = git@github.com:dune-community/dune-xt-data

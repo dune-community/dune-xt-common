@@ -231,12 +231,7 @@ void DXTC_TEST_CONFIG_SET(const std::string& key, T val)
  * \brief Can be used to access the configuration assosicated with the currently running test
  * \sa get_unique_test_name
  */
-Dune::XT::Common::Configuration DXTC_TEST_CONFIG_SUB(const std::string& sub_key)
-{
-  const auto key = Dune::XT::Common::Test::get_unique_test_name() + "." + sub_key;
-  EXPECT_TRUE(DXTC_CONFIG.has_sub(key));
-  return DXTC_CONFIG.sub(key);
-}
+Dune::XT::Common::Configuration DXTC_TEST_CONFIG_SUB(const std::string& sub_key);
 
 
 #endif // DUNE_XT_COMMON_TEST_MAIN_COMMON_HH
