@@ -25,6 +25,7 @@
 #include <dune/xt/common/configuration.hh>
 #include <dune/xt/common/convergence-study.hh>
 #include <dune/xt/common/compiler.hh>
+#include <dune/xt/common/deprecated.hh>
 #include <dune/xt/common/test/gtest/gtest.h>
 #include <dune/xt/common/vector.hh>
 
@@ -98,9 +99,6 @@ namespace internal {
 std::pair<size_t, ssize_t> convert_to_scientific(const double number, const size_t precision = 2);
 
 
-// std::string print_vector(const std::vector<double>& vec);
-
-
 } // namespace internal
 
 
@@ -111,6 +109,7 @@ void check_eoc_study_for_success(
     const double& zero_tolerance = 1e-15);
 
 
+DXT_DEPRECATED_MSG("Does not make any sense with the new ConvergenceStudy (25.01.2019)!")
 void print_collected_eoc_study_results(const std::map<std::string, std::vector<double>>& results,
                                        std::ostream& out = std::cout);
 
