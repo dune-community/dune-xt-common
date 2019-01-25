@@ -141,25 +141,54 @@ void check_eoc_study_for_success(
       result.push_back(Common::to_string(ele.first));
     return result;
   };
+  auto clean_up = [](const auto& str) {
+    std::string cleaned(str);
+    std::replace(cleaned.begin(), cleaned.end(), '/', '_');
+    std::replace(cleaned.begin(), cleaned.end(), ' ', '_');
+    return cleaned;
+  };
+  auto get_matching_key = [&clean_up](const auto& map, const auto& str) {
+    size_t matches = 0;
+    std::string matching_key;
+    for (const auto& entry : map) {
+      if (clean_up(entry.first) == str) {
+        matching_key = entry.first;
+        ++matches;
+      }
+    }
+    EXPECT_EQ(1, matches) << "There were multiple keys in the actual results which (after clean up) matched a key in "
+                             "the expected results, this must not be!";
+    return matching_key;
+  };
   EXPECT_GT(expected_results.getSubKeys().size(), 0)
       << "you have to provide at least one category!"
-      << "\nThe actual results for instance contain the categories '" << get_keys(actual_results) << "'.";
+      << "\nThe actual results for instance contain the categories '" << get_keys(actual_results) << "'."
+      << "\n\n"
+      << "get_unique_test_name() = " << Common::Test::get_unique_test_name();
   for (const auto& category : expected_results.getSubKeys()) {
-    EXPECT_GT(actual_results.count(category), 0) << "missing data for category " << category << "!";
+    EXPECT_GT(actual_results.count(category), 0) << "missing data for category " << category << "!"
+                                                 << "\n\n"
+                                                 << "get_unique_test_name() = " << Common::Test::get_unique_test_name();
     const auto expected_category_data = expected_results.sub(category);
-    const auto& actual_category_data = actual_results.at(category);
+    const auto& actual_category_data = actual_results.at(get_matching_key(actual_results, category));
     EXPECT_GT(expected_category_data.getValueKeys().size(), 0)
         << "you have to provide at least one type for category " << category
         << "!\nThe actual_results for instance contain the types '" << get_keys(actual_category_data)
-        << "' for this category.";
+        << "' for this category."
+        << "\n\n"
+        << "get_unique_test_name() = " << Common::Test::get_unique_test_name();
     for (const auto& type : expected_category_data.getValueKeys()) {
-      EXPECT_GT(actual_category_data.count(type), 0)
-          << "missing data for category " << category << " and type " << type << "!";
+      EXPECT_GT(actual_category_data.count(get_matching_key(actual_category_data, type)), 0)
+          << "missing data for category " << category << " and type " << type << "!"
+          << "\n\n"
+          << "get_unique_test_name() = " << Common::Test::get_unique_test_name();
       const auto expected_values = expected_category_data.template get<std::vector<double>>(type);
-      const auto& actual_type_data = actual_category_data.at(type);
+      const auto& actual_type_data = actual_category_data.at(get_matching_key(actual_category_data, type));
       for (size_t level = 0; level < expected_values.size(); ++level) {
         EXPECT_GT(actual_type_data.count(level), 0)
-            << "missing data for category " << category << ", type " << type << " and level " << level << "!";
+            << "missing data for category " << category << ", type " << type << " and level " << level << "!"
+            << "\n\n"
+            << "get_unique_test_name() = " << Common::Test::get_unique_test_name();
         const auto& actual_value = actual_type_data.at(level);
         const auto& expected_value = expected_values[level];
         if (!(expected_value < 0.0 || expected_value > 0.0)) {
@@ -171,7 +200,8 @@ void check_eoc_study_for_success(
                 << "          type:     " << type << "\n"
                 << "          zero_tolerance: " << zero_tolerance << "\n"
                 << "          actual_value   = " << actual_value << "\n"
-                << "          expected_value = " << expected_value;
+                << "          expected_value = " << expected_value << "\n\n"
+                << "get_unique_test_name() = " << Common::Test::get_unique_test_name();
           }
         } else {
           const auto actual_result = internal::convert_to_scientific(actual_value, 2);
@@ -184,7 +214,8 @@ void check_eoc_study_for_success(
               << "          category: " << category << "\n"
               << "          type:     " << type << "\n"
               << "          actual_value   = " << actual_value << "\n"
-              << "          expected_value = " << expected_value;
+              << "          expected_value = " << expected_value << "\n\n"
+              << "get_unique_test_name() = " << Common::Test::get_unique_test_name();
           if (actual_exponent != expected_exponent)
             return;
           const auto actual_coefficient = actual_result.first;
@@ -195,7 +226,8 @@ void check_eoc_study_for_success(
               << "          category: " << category << "\n"
               << "          type:     " << type << "\n"
               << "          actual_value   = " << actual_value << "\n"
-              << "          expected_value = " << expected_value;
+              << "          expected_value = " << expected_value << "\n\n"
+              << "get_unique_test_name() = " << Common::Test::get_unique_test_name();
         }
       }
     }

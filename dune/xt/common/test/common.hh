@@ -102,7 +102,15 @@ std::pair<size_t, ssize_t> convert_to_scientific(const double number, const size
 } // namespace internal
 
 
-/// \sa ConvergenceStudy
+/**
+ * \brief check_eoc_study_for_success
+ *
+ * \note All keys in actual results are postprocessed to replace '/' and ' ' by '_', so the keys in the expected results
+ *       need to be altered accordingly. Otherwise dune-testtool cannot hande the resulting .mini files with the
+ *       expected results.
+ *
+ * \sa ConvergenceStudy
+ */
 void check_eoc_study_for_success(
     const Common::Configuration& expected_results,
     const std::map<std::string, std::map<std::string, std::map<size_t, double>>>& actual_results,
