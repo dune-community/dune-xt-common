@@ -56,12 +56,27 @@ std::string get_unique_test_name()
 {
   const ::testing::TestInfo* const test_info = ::testing::UnitTest::GetInstance()->current_test_info();
   DUNE_THROW_IF(!test_info, Exceptions::you_are_using_this_wrong, "You may only use this in the context of gtest!");
+  // For grids, put the names used in <dune/xt/grid/grids.hh> here.
   static std::map<std::string, std::string> replacements{
       {"Dune::ALUGrid<2, 2, (Dune::ALUGridElementType)0, (Dune::ALUGridRefinementType)0, Dune::ALUGridMPIComm>",
        "ALU_2D_SIMPLEX_CONFORMING"},
       {"Dune::ALUGrid<2, 2, (Dune::ALUGridElementType)0, (Dune::ALUGridRefinementType)1, Dune::ALUGridMPIComm>",
        "ALU_2D_SIMPLEX_NONCONFORMING"},
-      {"Dune::UGGrid<2>", "UG_2D"}};
+      {"Dune::ALUGrid<2, 2, (Dune::ALUGridElementType)1, (Dune::ALUGridRefinementType)1, Dune::ALUGridMPIComm>",
+       "ALU_2D_CUBE"},
+      {"Dune::ALUGrid<3, 3, (Dune::ALUGridElementType)0, (Dune::ALUGridRefinementType)0, Dune::ALUGridMPIComm>",
+       "ALU_3D_SIMPLEX_CONFORMING"},
+      {"Dune::ALUGrid<3, 3, (Dune::ALUGridElementType)0, (Dune::ALUGridRefinementType)1, Dune::ALUGridMPIComm>",
+       "ALU_3D_SIMPLEX_NONCONFORMING"},
+      {"Dune::ALUGrid<3, 3, (Dune::ALUGridElementType)1, (Dune::ALUGridRefinementType)1, Dune::ALUGridMPIComm>",
+       "ALU_3D_CUBE"},
+      {"Dune::OneDGrid", "ONED_1D"},
+      {"Dune::UGGrid<2>", "UG_2D"},
+      {"Dune::UGGrid<3>", "UG_3D"},
+      {"Dune::YaspGrid<1, Dune::EquidistantOffsetCoordinates<double, 1> >", "YASP_1D_EQUIDISTANT_OFFSET"},
+      {"Dune::YaspGrid<2, Dune::EquidistantOffsetCoordinates<double, 2> >", "YASP_2D_EQUIDISTANT_OFFSET"},
+      {"Dune::YaspGrid<3, Dune::EquidistantOffsetCoordinates<double, 3> >", "YASP_3D_EQUIDISTANT_OFFSET"},
+      {"Dune::YaspGrid<4, Dune::EquidistantOffsetCoordinates<double, 4> >", "YASP_4D_EQUIDISTANT_OFFSET"}};
   auto replace_if = [&](const auto& id) {
     if (replacements.count(std::string(id)) > 0)
       return replacements.at(std::string(id));
