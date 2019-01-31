@@ -403,6 +403,18 @@ protected:
 };
 
 
+template <typename T>
+struct merge_container
+{
+  T operator()(const T& a, const T& b)
+  {
+    T result = a;
+    result.insert(b.begin(), b.end());
+    return result;
+  }
+}; // struct merge_container
+
+
 } // namespace Common
 } // namespace XT
 } // namespace Dune
