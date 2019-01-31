@@ -145,6 +145,9 @@ class DXT_DEPRECATED_MSG("moved into dune-xt-functions Dune::XT::Functions::Exce
 class dependency_missing : public Dune::Exception
 {};
 
+class this_should_not_happen : public Dune::InvalidStateException
+{};
+
 
 } // namespace Exceptions
 
