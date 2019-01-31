@@ -265,6 +265,10 @@ template <class T>
 class ConstStorageProvider
 {
 public:
+  explicit ConstStorageProvider()
+    : storage_(nullptr)
+  {}
+
   explicit ConstStorageProvider(const T& tt)
     : storage_(new internal::ConstAccessByReference<T>(tt))
   {}
@@ -318,9 +322,14 @@ public:
 
   ConstStorageProvider<T>& operator=(ConstStorageProvider<T>&& source) = default;
 
+  bool valid() const
+  {
+    return !(storage_ == nullptr);
+  }
+
   const T& access() const
   {
-    DXT_ASSERT(storage_);
+    DXT_ASSERT(valid());
     return storage_->access();
   }
 
@@ -350,6 +359,10 @@ template <class T>
 class StorageProvider
 {
 public:
+  explicit StorageProvider()
+    : storage_()
+  {}
+
   explicit StorageProvider(T& tt)
     : storage_(new internal::AccessByReference<T>(tt))
   {}
@@ -384,15 +397,20 @@ public:
 
   StorageProvider<T>& operator=(StorageProvider<T>&& source) = default;
 
+  bool valid() const
+  {
+    return !(storage_ == nullptr);
+  }
+
   T& access()
   {
-    DXT_ASSERT(storage_);
+    DXT_ASSERT(valid());
     return storage_->access();
   }
 
   const T& access() const
   {
-    DXT_ASSERT(storage_);
+    DXT_ASSERT(valid());
     return storage_->access();
   }
 
