@@ -84,6 +84,8 @@ some_function_which_expects_a_config({{"type", "custom"}, {"tolerance", "1e-10"}
 
   explicit Configuration(std::istream& in, ConfigurationDefaults defaults = ConfigurationDefaults());
 
+  Configuration(const std::string& in, ConfigurationDefaults defaults = ConfigurationDefaults());
+
   //! read ParameterTree from given arguments and call Configuration(const ParameterTree& tree)
   Configuration(int argc, char** argv, ConfigurationDefaults defaults = ConfigurationDefaults());
 
