@@ -84,6 +84,10 @@ Configuration::Configuration(std::istream& in, ConfigurationDefaults defaults)
   : Configuration(initialize(in), defaults)
 {}
 
+Configuration::Configuration(const std::string& in, ConfigurationDefaults defaults)
+  : Configuration(initialize(in), defaults)
+{}
+
 Configuration::Configuration(int argc, char** argv, ConfigurationDefaults defaults)
   : Configuration::Configuration(initialize(argc, argv), defaults)
 {}

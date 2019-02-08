@@ -132,6 +132,26 @@ DUNE_XT_COMMON_STRING_GENERATE_HELPER(long double, ld)
 
 #undef DUNE_XT_COMMON_STRING_GENERATE_HELPER
 
+// variant for unsigned int as there is no stoui
+template <bool anything>
+struct Helper<unsigned int, anything>
+{
+  static inline unsigned int convert_from_string(std::string ss)
+  {
+    try {
+      return XT::Common::numeric_cast<unsigned int>(std::stoul(ss));
+    } catch (const std::exception& ee) {
+      DUNE_THROW(Exceptions::conversion_error,
+                 "in stl when converting '" << ss << "' to '" << Typename<unsigned long>::value()
+                                            << "': " << ee.what());
+    } catch (const XT::Common::Exceptions::external_error& ee) {
+      DUNE_THROW(Exceptions::conversion_error,
+                 "in XT::Common::numeric_cast when converting '" << ss << "' to '" << Typename<unsigned int>::value()
+                                                                 << "': " << ee.what());
+    }
+  }
+};
+
 // variant for everything that is not a matrix or a vector or complex value
 template <class T>
 static inline typename std::enable_if<!is_vector<T>::value && !is_matrix<T>::value && !is_complex<T>::value, T>::type
