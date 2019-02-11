@@ -33,7 +33,7 @@ except FileNotFoundError as fe:
     logger.critical('using fallback cache instead of {}: {}'.format(cache_path, str(fe)))
     cache, _ = parse_cache(os.path.join(backup_bindir, 'CMakeCache.txt'))
 sys.path.append(os.path.dirname(config_fn))
-config = run_path(config_fn,init_globals=locals(), run_name='__dxt_codegen__')
+config = run_path(config_fn, init_globals=locals(), run_name='__dxt_codegen__')
 
 dir_base = os.path.dirname(out_fn)
 if not os.path.isdir(dir_base):
@@ -41,10 +41,10 @@ if not os.path.isdir(dir_base):
 template = Template(open(tpl_fn).read())
 
 try:
-  for postfix, cfg in config['multi_out'].items():
-    fn = '{}.{}'.format(out_fn, postfix)
-    with open(fn, 'w') as out:
-        out.write(template.render(config=cfg, cache=cache))
+    for postfix, cfg in config['multi_out'].items():
+        fn = '{}.{}'.format(out_fn, postfix)
+        with open(fn, 'w') as out:
+            out.write(template.render(config=cfg, cache=cache))
 except KeyError:
     with open(out_fn, 'w') as out:
         out.write(template.render(config=config, cache=cache))

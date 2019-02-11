@@ -26,9 +26,10 @@ from multiprocessing import Pool, cpu_count
 from collections import OrderedDict
 from statistics import mean, stdev
 
-MAXTIME = 23*60
+MAXTIME = 23 * 60
 pickle_file = 'totals.pickle'
 PROTOCOL = 0
+
 
 @contextmanager
 def elapsed_timer():
@@ -37,7 +38,7 @@ def elapsed_timer():
     elapser = lambda: clock() - start
     yield lambda: elapser()
     end = clock()
-    elapser = lambda: end-start
+    elapser = lambda: end - start
 
 
 def _dump(obj, fn):
@@ -58,7 +59,9 @@ def _load(fn):
 def _compile(binary):
     with elapsed_timer() as timer:
         try:
-            _ = subprocess.check_output(['cmake', '--build', '.', '--', '-j1', binary], universal_newlines=True, stderr=subprocess.STDOUT)
+            _ = subprocess.check_output(['cmake', '--build', '.', '--', '-j1', binary],
+                                        universal_newlines=True,
+                                        stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as cpe:
             if 'Timeout' not in cpe.output:
                 raise cpe
@@ -72,7 +75,8 @@ def _run_tests(tpl):
     for test in teststrings.split(';'):
         with elapsed_timer() as timer:
             try:
-                _ = subprocess.check_output(['ctest', '-j1', '-N', '-R', test], universal_newlines=True,
+                _ = subprocess.check_output(['ctest', '-j1', '-N', '-R', test],
+                                            universal_newlines=True,
                                             stderr=subprocess.STDOUT)
             except subprocess.CalledProcessError as cpe:
                 if 'Timeout' not in cpe.output:
@@ -88,9 +92,9 @@ def _redo(processes, keys, *args):
     try:
         with Pool(processes=processes) as pool:
             result = pool.map(*args)
-        return {k: v for k,v in zip(keys, result)}
+        return {k: v for k, v in zip(keys, result)}
     except subprocess.CalledProcessError as cpe:
-        logging.error('*'*79)
+        logging.error('*' * 79)
         try:
             logging.error(cpe.stdout)
             logging.error(cpe.stderr)
@@ -99,13 +103,14 @@ def _redo(processes, keys, *args):
         logging.error('*' * 79)
         raise cpe
 
+
 def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
     os.chdir(builddir)
     testlimit = -1
 
     binaries = binaries[:testlimit]
     headerlibs = headerlibs[:testlimit]
-    targets = binaries+headerlibs
+    targets = binaries + headerlibs
     compiles_fn = os.path.join(pickledir, 'compiles_' + pickle_file)
     try:
         compiles = _load(compiles_fn) or {}
@@ -142,7 +147,7 @@ def do_timings(builddir, pickledir, binaries, testnames, processes, headerlibs):
 
     totals = {n: compiles[n] for n in binaries}
 
-    testname_map = {b: t.strip().split(';') for b,t in zip(binaries, testnames)}
+    testname_map = {b: t.strip().split(';') for b, t in zip(binaries, testnames)}
     for binary, testnames in testname_map.items():
         totals[binary] += testruns[';'.join(testnames)]
 
@@ -166,17 +171,20 @@ try:
 except:
     bincount = 13
 logging.basicConfig(level=logging.DEBUG)
-testname_map = {b: t.strip().split(';') for b,t in zip(binaries, all_testnames)}
-processes = 1 #cpu_count()
+testname_map = {b: t.strip().split(';') for b, t in zip(binaries, all_testnames)}
+processes = 1     #cpu_count()
 
 totals = do_timings(builddir, builddir, binaries, all_testnames, processes, headerlibs)
 
 #bins = binpacking.to_constant_volume(totals, MAXTIME)
 bins = binpacking.to_constant_bin_number(totals, bincount)
 vols = [sum(bi.values()) for bi in bins]
-norm = 100/MAXTIME
+norm = 100 / MAXTIME
 print('Generated {} bins.\nRelative volumes:\n\t\tMin {:.2f}%\n\t\tMax {:.2f}%\n\t\tAvg {:.2f}%\n'.format(
-    len(bins), min(vols)*norm, max(vols)*norm, mean(vols)*norm, stdev(vols)))
+    len(bins),
+    min(vols) * norm,
+    max(vols) * norm,
+    mean(vols) * norm, stdev(vols)))
 
 set_tpl = '''set_tests_properties({} PROPERTIES LABELS "builder_{}")\n'''
 with open(cmake_outfile, 'wt') as out:
