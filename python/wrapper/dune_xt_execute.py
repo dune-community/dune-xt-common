@@ -24,6 +24,7 @@ import sys
 from dune.testtools.wrapper.argumentparser import get_args
 from dune.testtools.parser import parse_ini_file
 
+
 def call(executable, inifile=None, *additional_args):
     # If we have an inifile, parse it and look for special keys that modify the execution
     command = ["./" + executable]
@@ -39,9 +40,10 @@ def call(executable, inifile=None, *additional_args):
     # since this script itself is always called in the dune virtualenv
     return subprocess.call(command, env=os.environ)
 
+
 # Parse the given arguments
 args = get_args()
-xml_out = "--gtest_output=xml:{}_{}.xml".format(os.path.splitext(os.path.basename(args["exec"]))[0],
-                                            os.path.splitext(os.path.basename(args["ini"]))[0])
-sys.exit(call(args["exec"], args["ini"],
-              xml_out))
+xml_out = "--gtest_output=xml:{}_{}.xml".format(
+    os.path.splitext(os.path.basename(args["exec"]))[0],
+    os.path.splitext(os.path.basename(args["ini"]))[0])
+sys.exit(call(args["exec"], args["ini"], xml_out))

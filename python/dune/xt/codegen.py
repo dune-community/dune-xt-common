@@ -10,6 +10,7 @@
 #   René Fritze     (2017 - 2018)
 # ~~~
 
+
 def typeid_to_typedef_name(typeid, replacement='_'):
     """returns a sanitized typeid
     """
