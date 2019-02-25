@@ -291,6 +291,29 @@ typename std::enable_if<is_vector<VectorType>::value, VectorType>::type zeros_li
 
 
 template <class VectorType>
+std::enable_if_t<is_vector<VectorType>::value, typename VectorAbstraction<VectorType>::R>
+sup_norm(const VectorType& vector)
+{
+  typename VectorAbstraction<VectorType>::R result(0);
+  for (size_t ii = 0; ii < vector.size(); ++ii)
+    result = std::max(result, std::abs(vector[ii]));
+  return result;
+}
+
+template <class F>
+typename FieldTraits<F>::real_type sup_norm(const DynamicVector<F>& vector)
+{
+  return vector.infinity_norm();
+}
+
+template <class F, int SIZE>
+typename FieldTraits<F>::real_type sup_norm(const FieldVector<F, SIZE>& vector)
+{
+  return vector.infinity_norm();
+}
+
+
+template <class VectorType>
 typename std::enable_if<is_vector<VectorType>::value, typename VectorAbstraction<VectorType>::ScalarType*>::type
 data(VectorType& source)
 {
