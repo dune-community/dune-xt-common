@@ -359,6 +359,39 @@ typename std::enable_if<is_matrix<MatrixType>::value, MatrixType>::type zeros_li
 }
 
 
+template <class MatrixType, class SourceVectorType, class TargetVectorType>
+std::enable_if_t<is_matrix<MatrixType>::value && is_vector<SourceVectorType>::value
+                     && is_vector<TargetVectorType>::value,
+                 void>
+mv(const MatrixType& A, const SourceVectorType& x, TargetVectorType& b)
+{
+  using M = MatrixAbstraction<MatrixType>;
+  const size_t rows = M::rows(A);
+  const size_t cols = M::rows(A);
+  DUNE_THROW_IF(
+      x.size() != cols, Exceptions::shapes_do_not_match, "A.cols() = " << cols << "\n x.size() = " << x.size());
+  DUNE_THROW_IF(
+      b.size() != rows, Exceptions::shapes_do_not_match, "A.rows() = " << rows << "\n b.size() = " << b.size());
+  for (size_t ii = 0; ii < rows; ++ii)
+    b[ii] = 0;
+  for (size_t ii = 0; ii < rows; ++ii)
+    for (size_t jj = 0; jj < cols; ++jj)
+      b[ii] += M::get_entry(A, ii, jj) * x[jj];
+} // ... mv(...)
+
+template <class F>
+void mv(const DynamicMatrix<F>& A, const DynamicVector<F>& x, DynamicVector<F>& b)
+{
+  A.mv(x, b);
+}
+
+template <class F, int ROWS, int COLS>
+void mv(const FieldMatrix<F, ROWS, COLS>& A, const FieldVector<F, COLS>& x, FieldVector<F, ROWS>& b)
+{
+  A.mv(x, b);
+}
+
+
 template <class MatrixType>
 typename std::enable_if<is_matrix<MatrixType>::value, typename MatrixAbstraction<MatrixType>::ScalarType*>::type
 data(MatrixType& source)
