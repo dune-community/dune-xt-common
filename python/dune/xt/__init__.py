@@ -10,4 +10,10 @@
 #   René Fritze     (2016, 2018)
 # ~~~
 
+# Note: This import makes sure that metis is imported before python bindings from dune-xt. Importing dune-xt python bindings at any point before metis will cause a segfault due to misscommunication between libmetis5 and libscotchmetis. 
+try:
+	import metis
+except ImportError:
+	pass
+
 __import__('pkg_resources').declare_namespace(__name__)
