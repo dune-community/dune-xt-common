@@ -56,14 +56,6 @@
 #cmakedefine01 HAVE_MATEXP
 #endif
 
-#ifndef HAVE_FEKETE
-#cmakedefine01 HAVE_FEKETE
-#endif
-
-#ifndef HAVE_LEBEDEVDATA
-#cmakedefine01 HAVE_LEBEDEVDATA
-#endif
-
 #ifndef HAVE_TBB
 #cmakedefine01 HAVE_TBB
 #endif
