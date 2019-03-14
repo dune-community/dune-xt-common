@@ -140,14 +140,14 @@ struct Helper<unsigned int, anything>
   {
     try {
       return XT::Common::numeric_cast<unsigned int>(std::stoul(ss));
-    } catch (const std::exception& ee) {
-      DUNE_THROW(Exceptions::conversion_error,
-                 "in stl when converting '" << ss << "' to '" << Typename<unsigned long>::value()
-                                            << "': " << ee.what());
     } catch (const XT::Common::Exceptions::external_error& ee) {
       DUNE_THROW(Exceptions::conversion_error,
                  "in XT::Common::numeric_cast when converting '" << ss << "' to '" << Typename<unsigned int>::value()
                                                                  << "': " << ee.what());
+    } catch (const std::exception& ee) {
+      DUNE_THROW(Exceptions::conversion_error,
+                 "in stl when converting '" << ss << "' to '" << Typename<unsigned long>::value()
+                                            << "': " << ee.what());
     }
   }
 };
