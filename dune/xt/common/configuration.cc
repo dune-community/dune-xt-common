@@ -8,7 +8,7 @@
 //   Felix Schindler (2013 - 2018)
 //   René Fritze     (2013 - 2018)
 //   Sven Kaulmann   (2013)
-//   Tobias Leibner  (2014, 2018)
+//   Tobias Leibner  (2014, 2018 - 2019)
 
 #include "config.h"
 

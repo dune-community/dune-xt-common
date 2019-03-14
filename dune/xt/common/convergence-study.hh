@@ -5,7 +5,7 @@
 //      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
-//   Felix Schindler (2013 - 2014, 2016 - 2018)
+//   Felix Schindler (2013 - 2014, 2016 - 2019)
 //   René Fritze     (2014 - 2016, 2018)
 
 #ifndef DUNE_XT_COMMON_CONVERGENCE_STUDY_HH

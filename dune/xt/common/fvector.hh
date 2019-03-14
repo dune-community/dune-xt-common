@@ -8,7 +8,7 @@
 //   Felix Schindler (2014 - 2017)
 //   René Fritze     (2014 - 2018)
 //   TiKeil          (2018)
-//   Tobias Leibner  (2014, 2016 - 2018)
+//   Tobias Leibner  (2014, 2016 - 2019)
 
 #ifndef DUNE_XT_COMMON_FVECTOR_HH
 #define DUNE_XT_COMMON_FVECTOR_HH

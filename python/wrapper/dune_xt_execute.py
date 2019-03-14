@@ -9,7 +9,7 @@
 #          with "runtime exception" (http://www.dune-project.org/license.html)
 # Authors:
 #   Felix Schindler (2016 - 2017)
-#   René Fritze     (2016, 2018)
+#   René Fritze     (2016, 2018 - 2019)
 #   Tobias Leibner  (2015)
 #
 # This is a modified version of dune_execute.py from dune-testtools.

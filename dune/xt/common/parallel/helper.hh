@@ -7,7 +7,7 @@
 // Authors:
 //   Felix Schindler (2014, 2016 - 2017)
 //   René Fritze     (2014 - 2016, 2018)
-//   Tobias Leibner  (2014)
+//   Tobias Leibner  (2014, 2019)
 
 #ifndef DUNE_XT_COMMON_PARALLEL_HELPER_HH
 #define DUNE_XT_COMMON_PARALLEL_HELPER_HH
