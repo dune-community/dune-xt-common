@@ -99,10 +99,9 @@ public:
     }
   } // FieldMatrix(std::initializer_list<std::initializer_list<K>> list_of_rows)
 
-  FieldMatrix(const ThisType& other) = default;
-
-  FieldMatrix(const BaseType& other)
-    : BaseType(other)
+  template <class T, typename = std::enable_if_t<HasDenseMatrixAssigner<FieldMatrix, T>::value>>
+  FieldMatrix(const T& rhs)
+    : BaseType(rhs)
   {}
 
   Dune::XT::Common::FieldMatrix<K, COLS, ROWS> transpose() const
