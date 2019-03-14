@@ -98,8 +98,10 @@ public:
   } // FieldVector(...)
 
   template <class C>
-  FieldVector(const DenseVector<C>& x,
-              typename std::enable_if<IsFieldVectorSizeCorrect<C, SIZE>::value>::type* dummy = 0)
+  FieldVector(
+      const DenseVector<C>& x,
+      typename std::enable_if<IsFieldVectorSizeCorrect<C, SIZE>::value
+                              && std::is_convertible<typename DenseVector<C>::value_type, K>::value>::type* dummy = 0)
     : BaseType(x, dummy)
   {}
 
