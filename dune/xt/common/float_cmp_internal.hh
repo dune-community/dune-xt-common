@@ -8,6 +8,7 @@
 //   Barbara Verfürth (2015)
 //   Felix Schindler  (2016 - 2017)
 //   René Fritze      (2015 - 2018)
+//   Tim Keil         (2018)
 //   Tobias Leibner   (2017 - 2018)
 
 #ifndef DUNE_XT_COMMON_FLOAT_CMP_INTERNAL_HH

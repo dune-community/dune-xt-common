@@ -5,7 +5,7 @@
 //      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
-//   Tobias Leibner  (2018)
+//   Tobias Leibner (2018)
 
 #ifndef DUNE_XT_COMMON_VECTOR_LESS_HH
 #define DUNE_XT_COMMON_VECTOR_LESS_HH

@@ -7,6 +7,7 @@
 // Authors:
 //   Felix Schindler (2015 - 2017)
 //   René Fritze     (2015 - 2018)
+//   Tim Keil        (2018)
 //   Tobias Leibner  (2016 - 2018)
 
 #define DUNE_XT_COMMON_TEST_MAIN_CATCH_EXCEPTIONS 1

@@ -7,7 +7,7 @@
 // Authors:
 //   Felix Schindler (2013 - 2018)
 //   René Fritze     (2013 - 2018)
-//   Tobias Leibner  (2014, 2016 - 2018)
+//   Tobias Leibner  (2014, 2016 - 2019)
 
 /* begin dune-xt-common */
 // NEVER delete/alter above comment, dune's cmake relies on it

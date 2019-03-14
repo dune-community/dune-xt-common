@@ -9,7 +9,7 @@
 #          with "runtime exception" (http://www.dune-project.org/license.html)
 # Authors:
 #   Felix Schindler (2017)
-#   René Fritze     (2017 - 2018)
+#   René Fritze     (2017 - 2019)
 # ~~~
 """Run a speedup series benchmark of a given executable on a node with libnuma
 

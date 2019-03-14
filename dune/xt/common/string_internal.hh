@@ -9,7 +9,7 @@
 //   Felix Schindler (2009, 2012 - 2018)
 //   René Fritze     (2009 - 2016, 2018)
 //   Sven Kaulmann   (2011 - 2012)
-//   Tobias Leibner  (2014 - 2015, 2017 - 2018)
+//   Tobias Leibner  (2014 - 2015, 2017 - 2019)
 
 #ifndef DUNE_XT_COMMON_STRING_INTERNAL_HH
 #define DUNE_XT_COMMON_STRING_INTERNAL_HH

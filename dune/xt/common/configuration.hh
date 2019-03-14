@@ -9,7 +9,7 @@
 //   René Fritze     (2012 - 2018)
 //   Sven Kaulmann   (2013)
 //   TiKeil          (2018)
-//   Tobias Leibner  (2014, 2016, 2018)
+//   Tobias Leibner  (2014, 2016, 2018 - 2019)
 
 #ifndef DUNE_XT_COMMON_CONFIGURATION_HH
 #define DUNE_XT_COMMON_CONFIGURATION_HH

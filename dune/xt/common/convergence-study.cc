@@ -5,7 +5,7 @@
 //      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
 //          with "runtime exception" (http://www.dune-project.org/license.html)
 // Authors:
-//   Felix Schindler (2014 - 2018)
+//   Felix Schindler (2014 - 2019)
 //   René Fritze     (2015 - 2016, 2018)
 
 #include "config.h"

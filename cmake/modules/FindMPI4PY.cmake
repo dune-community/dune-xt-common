@@ -6,7 +6,8 @@
 #      or  GPL-2.0+ (http://opensource.org/licenses/gpl-license)
 #          with "runtime exception" (http://www.dune-project.org/license.html)
 # Authors:
-#   René Fritze (2018)
+#   René Fritze    (2018)
+#   Tobias Leibner (2018)
 #
 # * FindMPI4PY Find mpi4py includes and library This module defines: MPI4PY_INCLUDE_DIR, where to find mpi4py.h, etc.
 #   MPI4PY_FOUND
