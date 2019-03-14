@@ -97,6 +97,12 @@ public:
       this->operator[](ii++) = element;
   } // FieldVector(...)
 
+  template <class C>
+  FieldVector(const DenseVector<C>& x,
+              typename std::enable_if<IsFieldVectorSizeCorrect<C, SIZE>::value>::type* dummy = 0)
+    : BaseType(x, dummy)
+  {}
+
   operator std::vector<K>() const
   {
     std::vector<K> ret(SIZE);
