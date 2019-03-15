@@ -404,7 +404,7 @@ protected:
 
 
 template <typename T>
-struct merge_container
+struct concatenate_container
 {
   T operator()(const T& a, const T& b)
   {
@@ -412,7 +412,7 @@ struct merge_container
     result.insert(b.begin(), b.end());
     return result;
   }
-}; // struct merge_container
+}; // struct concatenate_container
 
 
 } // namespace Common
