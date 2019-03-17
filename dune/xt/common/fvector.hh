@@ -101,8 +101,9 @@ public:
   FieldVector(
       const DenseVector<C>& x,
       typename std::enable_if<IsFieldVectorSizeCorrect<C, SIZE>::value
-                              && std::is_convertible<typename DenseVector<C>::value_type, K>::value>::type* dummy = 0)
-    : BaseType(x, dummy)
+                              && std::is_convertible<typename DenseVector<C>::value_type, K>::value>::type* /*dummy*/
+      = nullptr)
+    : BaseType(x)
   {}
 
   operator std::vector<K>() const
@@ -182,6 +183,7 @@ public:
   static constexpr size_t block_size = size_block;
   static constexpr size_t static_size = num_blocks * block_size;
   using VectorType = Dune::FieldVector<K, static_size>;
+  using XtVectorType = FieldVector<K, static_size>;
   using BlockType = FieldVector<K, block_size>;
 
   BlockedFieldVector(const K& val = K(0.))
@@ -283,9 +285,9 @@ public:
     return ret;
   }
 
-  operator VectorType() const
+  operator XtVectorType() const
   {
-    VectorType ret(0.);
+    XtVectorType ret(0.);
     for (size_t jj = 0; jj < num_blocks; ++jj)
       for (size_t ii = 0; ii < block_size; ++ii)
         ret[jj * block_size + ii] = backend_[jj][ii];
