@@ -1,0 +1,24 @@
+
+pool:
+  vmImage: 'Ubuntu-16.04'
+
+variables:
+  DOCKER_TAG: debian-unstable_gcc_full
+  TRAVIS_BRANCH: $(Build.SourceBranchName)
+  TRAVIS_COMMIT: $(Build.SourceVersion)
+
+steps:
+- script: |
+    export MY_MODULE=dune-xt-common
+    export BASEIMAGE="${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_BRANCH/\//_}"
+    export IMAGE="dunecommunity/ci_${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_COMMIT}"
+    # get image with fallback to master branch of the super repo# get image with fallback to master branch of the super repo
+    docker pull dunecommunity/${BASEIMAGE} || export BASEIMAGE="${MY_MODULE}-testing_${DOCKER_TAG}:master" ; docker pull dunecommunity/${BASEIMAGE}
+    docker build --build-arg BASE=${BASEIMAGE} -t ${IMAGE} -f .ci/docker/Dockerfile .
+
+    export ENV_FILE=${HOME}/env
+    python3 ./.travis.make_env_file.py
+    docker inspect ${IMAGE}
+    export DOCKER_RUN="docker run --env-file ${ENV_FILE} ${IMAGE}"
+    ${DOCKER_RUN} /home/dune-ci/src/dune-xt-common/.travis.script.bash
+  displayName: 'docker build'
