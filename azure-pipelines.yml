@@ -6,6 +6,7 @@ variables:
   DOCKER_TAG: debian-unstable_gcc_full
   TRAVIS_BRANCH: $(Build.SourceBranchName)
   TRAVIS_COMMIT: $(Build.SourceVersion)
+  CODECOV_TOKEN: $(codecov.token)
 
 steps:
 - script: |
