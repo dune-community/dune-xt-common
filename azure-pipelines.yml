@@ -6,11 +6,21 @@ variables:
   DOCKER_TAG: debian-unstable_gcc_full
   TRAVIS_BRANCH: $(Build.SourceBranchName)
   TRAVIS_COMMIT: $(Build.SourceVersion)
-  CODECOV_TOKEN: $(codecov.token)
+  MY_MODULE: dune-xt-common
 
 steps:
+- checkout: self
+  submodules: true
+
+- task: Docker@1
+  displayName: Container registry login
+  inputs:
+    command: login
+    containerregistrytype: Container Registry
+    dockerRegistryEndpoint: dockerhub
+
 - script: |
-    export MY_MODULE=dune-xt-common
+
     export BASEIMAGE="${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_BRANCH/\//_}"
     export IMAGE="dunecommunity/ci_${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_COMMIT}"
     # get image with fallback to master branch of the super repo# get image with fallback to master branch of the super repo
@@ -22,4 +32,12 @@ steps:
     docker inspect ${IMAGE}
     export DOCKER_RUN="docker run --env-file ${ENV_FILE} ${IMAGE}"
     ${DOCKER_RUN} /home/dune-ci/src/dune-xt-common/.travis.script.bash
-  displayName: 'docker build'
+  displayName: 'test'
+  env:
+    CODECOV_TOKEN: $(codecov.token)
+- script: |
+    export BASEIMAGE="${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_BRANCH/\//_}"
+    export IMAGE="dunecommunity/ci_${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_COMMIT}"
+    docker push ${IMAGE}
+  displayName: 'docker push'
+  condition: failed()
