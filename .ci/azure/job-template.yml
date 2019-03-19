@@ -35,7 +35,7 @@ jobs:
       echo "##vso[task.setvariable variable=docker.baseimage]$BASEIMAGE"
       echo "##vso[task.setvariable variable=docker.image]$IMAGE"
       echo "##vso[task.setvariable variable=docker.envfile]${HOME}/env"
-      ENV_FILE=$(docker.envfile) python3 ./.travis.make_env_file.py
+      ENV_FILE=$(docker.envfile) python3 ./.ci/shared/make_env_file.py
       DOCKER_RUN="docker run --env-file $(docker.envfile) $(docker.baseimage)"
       echo "##vso[task.setvariable variable=docker.run]${DOCKER_RUN}"
     displayName: 'env setup'
@@ -47,13 +47,13 @@ jobs:
 
   - script: |
       docker inspect $(docker.baseimage)
-      echo $(docker.run) /home/dune-ci/src/dune-xt-common/.travis.script.bash
+      echo $(docker.run) /home/dune-ci/src/dune-xt-common/.ci/shared/test_cpp.bash
     displayName: 'test cpp'
     env:
       CODECOV_TOKEN: $(codecov.token)
 
   - script: |
-      echo $(docker.run) /home/dune-ci/src/dune-xt-common/.travis.python.bash
+      echo $(docker.run) /home/dune-ci/src/dune-xt-common/.ci/shared/test_python.bash
     displayName: 'test python'
     env:
       CODECOV_TOKEN: $(codecov.token)
