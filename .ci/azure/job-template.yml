@@ -1,0 +1,64 @@
+# kate: indent-width 2;
+
+parameters:
+  dockerimage: ''  # defaults for any parameters that aren't specified
+  module: ''
+  jobname: ''
+
+jobs:
+- job: ${{ parameters.jobname }}
+  pool:
+    vmImage: 'Ubuntu-16.04'
+
+  variables:
+    DOCKER_TAG: ${{ parameters.dockerimage }}
+    TRAVIS_BRANCH: $(Build.SourceBranchName)
+    TRAVIS_COMMIT: $(Build.SourceVersion)
+    MY_MODULE: ${{ parameters.module }}
+
+  steps:
+  - checkout: self
+    submodules: true
+
+  - task: Docker@1
+    displayName: Container registry login
+    inputs:
+      command: login
+      containerregistrytype: Container Registry
+      dockerRegistryEndpoint: dockerhub
+
+  - script: |
+      BASEIMAGE="${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_BRANCH/\//_}"
+      IMAGE="dunecommunity/ci_${MY_MODULE}-testing_${DOCKER_TAG}:${TRAVIS_COMMIT}"
+      # get image with fallback to master branch of the super repo
+      docker pull dunecommunity/${BASEIMAGE} || export BASEIMAGE="${MY_MODULE}-testing_${DOCKER_TAG}:master" ; docker pull dunecommunity/${BASEIMAGE}
+      echo "##vso[task.setvariable variable=docker.baseimage]$BASEIMAGE"
+      echo "##vso[task.setvariable variable=docker.image]$IMAGE"
+      echo "##vso[task.setvariable variable=docker.envfile]${HOME}/env"
+      ENV_FILE=$(docker.envfile) python3 ./.travis.make_env_file.py
+      DOCKER_RUN="docker run --env-file $(docker.envfile) $(docker.baseimage)"
+      echo "##vso[task.setvariable variable=docker.run]${DOCKER_RUN}"
+    displayName: 'env setup'
+
+  - script: |
+      docker build --build-arg BASE=$(docker.baseimage) -t $(docker.baseimage) -f .ci/docker/Dockerfile .
+      docker inspect $(docker.baseimage)
+    displayName: 'build image'
+
+  - script: |
+      docker inspect $(docker.baseimage)
+      echo $(docker.run) /home/dune-ci/src/dune-xt-common/.travis.script.bash
+    displayName: 'test cpp'
+    env:
+      CODECOV_TOKEN: $(codecov.token)
+
+  - script: |
+      echo $(docker.run) /home/dune-ci/src/dune-xt-common/.travis.python.bash
+    displayName: 'test python'
+    env:
+      CODECOV_TOKEN: $(codecov.token)
+
+  - script: |
+      docker push $(docker.image)
+    displayName: 'docker push'
+    condition: failed()
