@@ -281,7 +281,8 @@ macro(dxt_add_python_tests)
                     "${CMAKE_BINARY_DIR}/run-in-dune-env"
                     "py.test"
                     "${CMAKE_BINARY_DIR}/python"
-                    "--cov" "${CMAKE_CURRENT_SOURCE_DIR}/"
+                    "--cov"
+                    "${CMAKE_CURRENT_SOURCE_DIR}/"
                     "--junitxml=pytest_results.xml"
                     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/python"
                     DEPENDS bindings
