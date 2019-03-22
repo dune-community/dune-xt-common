@@ -136,7 +136,7 @@ protected:
 
   void update_keys()
   {
-    keys_ = std::vector<std::string>(dict_.size());
+    keys_.resize(dict_.size());
     size_t ii = 0;
     for (const auto& key_value_pair : dict_) {
       keys_[ii] = key_value_pair.first;
