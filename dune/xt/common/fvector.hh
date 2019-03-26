@@ -190,7 +190,9 @@ public:
     : backend_(BlockType(val))
   {}
 
-  BlockedFieldVector(const VectorType& other)
+  template <class OtherVectorType>
+  BlockedFieldVector(const OtherVectorType& other,
+                     std::enable_if_t<is_vector<OtherVectorType>::value, int> /*dummy*/ = 0)
   {
     *this = other;
   }
@@ -211,8 +213,10 @@ public:
     }
   }
 
-  ThisType& operator=(const VectorType& other)
+  template <class OtherVectorType>
+  std::enable_if_t<is_vector<OtherVectorType>::value, ThisType>& operator=(const OtherVectorType& other)
   {
+    assert(other.size() == static_size);
     for (size_t jj = 0; jj < num_blocks; ++jj)
       for (size_t ii = 0; ii < block_size; ++ii)
         backend_[jj][ii] = other[jj * block_size + ii];
