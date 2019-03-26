@@ -30,8 +30,8 @@ namespace Common {
 double find_largest_by_bisection(const double& left,
                                  const double& right,
                                  std::function<bool(const double&)> condition,
-                                 const double rel_error = 1e-16,
-                                 const double abs_error = 1e-16)
+                                 const double rel_error = FloatCmp::DefaultEpsilon<double>::value(),
+                                 const double abs_error = FloatCmp::DefaultEpsilon<double>::value())
 {
   double ll = (left < right) ? left : right;
   double rr = (left < right) ? right : left;

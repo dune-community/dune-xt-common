@@ -10,6 +10,7 @@
 
 #include <dune/xt/common/test/main.hxx> // <- Has to come first, includes the config.h!
 #include <dune/xt/common/bisect.hh>
+#include <dune/xt/common/test/float_cmp.hh>
 
 using namespace Dune::XT::Common;
 
@@ -17,14 +18,14 @@ GTEST_TEST(find_largest_by_bisection_test, works_for_left_smaller_right)
 {
   const auto result =
       find_largest_by_bisection(/*left=*/0, /*right=*/1, /*condition=*/[&](const auto& x) { return x < 0.5; });
-  EXPECT_DOUBLE_EQ(0.5, result);
+  DXTC_EXPECT_FLOAT_EQ(0.5, result);
 }
 
 GTEST_TEST(find_largest_by_bisection_test, works_for_right_smaller_left)
 {
   const auto result =
       find_largest_by_bisection(/*left=*/1, /*right=*/0, /*condition=*/[&](const auto& x) { return x < 0.5; });
-  EXPECT_DOUBLE_EQ(0.5, result);
+  DXTC_EXPECT_FLOAT_EQ(0.5, result);
 }
 
 GTEST_TEST(find_largest_by_bisection_test, breaks_for_broken_condition)
