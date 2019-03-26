@@ -22,7 +22,7 @@ namespace Common {
 
 /**
  * \brief Finds the largest number x between left and right, where condition(x) is true, but condition(y) is false for
- *        any y < x.
+ *        any y > x.
  *
  * \note Presumes that: if condition(x_1) == condition(x_2) == value,
  *                      then there does not exist a x_1 < y < x_2, s.t. condition(y) == !value;
@@ -30,7 +30,8 @@ namespace Common {
 double find_largest_by_bisection(const double& left,
                                  const double& right,
                                  std::function<bool(const double&)> condition,
-                                 const double rel_error = 1e-15)
+                                 const double rel_error = 1e-16,
+                                 const double abs_error = 1e-16)
 {
   double ll = (left < right) ? left : right;
   double rr = (left < right) ? right : left;
@@ -38,7 +39,7 @@ double find_largest_by_bisection(const double& left,
     return rr;
   DUNE_THROW_IF(!condition(ll), Exceptions::bisection_error, "");
   // no we know that ll is good, rr is bad
-  while (FloatCmp::gt(rr, ll, rel_error)) {
+  while (FloatCmp::gt(rr, ll, rel_error, abs_error)) {
     const double middle = 0.5 * (ll + rr);
     if (condition(middle))
       ll = middle;
