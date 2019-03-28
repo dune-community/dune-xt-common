@@ -162,26 +162,27 @@ struct VectorAbstraction
 };
 
 
-template <class T>
-struct VectorAbstraction<std::vector<T>>
-  : public internal::VectorAbstractionBase<std::vector<T>, T>
-  , public internal::HasSubscriptOperatorForVectorAbstraction<std::vector<T>, typename Dune::FieldTraits<T>::field_type>
+template <class T, class Allocator>
+struct VectorAbstraction<std::vector<T, Allocator>>
+  : public internal::VectorAbstractionBase<std::vector<T, Allocator>, T>
+  , public internal::HasSubscriptOperatorForVectorAbstraction<std::vector<T, Allocator>,
+                                                              typename Dune::FieldTraits<T>::field_type>
 {
   static const constexpr bool is_contiguous = true;
   static const constexpr bool static_size = std::numeric_limits<size_t>::max();
 
   template <size_t SIZE = static_size>
-  static inline std::vector<T> create(const size_t sz, const T& val = T(0))
+  static inline std::vector<T, Allocator> create(const size_t sz, const T& val = T(0))
   {
-    return std::vector<T>(sz, val);
+    return std::vector<T, Allocator>(sz, val);
   }
 
-  static inline T* data(std::vector<T>& vec)
+  static inline T* data(std::vector<T, Allocator>& vec)
   {
     return vec.data();
   }
 
-  static inline const T* data(const std::vector<T>& vec)
+  static inline const T* data(const std::vector<T, Allocator>& vec)
   {
     return vec.data();
   }

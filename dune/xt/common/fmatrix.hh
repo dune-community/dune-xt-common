@@ -534,6 +534,25 @@ public:
     assert(rows == num_rows && cols == num_cols && "Requested shape has to match static shape!");
   }
 
+  template <class OtherMatrixType>
+  BlockedFieldMatrix(const OtherMatrixType& other,
+                     std::enable_if_t<is_matrix<OtherMatrixType>::value, int> /*dummy*/ = 0)
+  {
+    *this = other;
+  }
+
+  template <class OtherMatrixType>
+  std::enable_if_t<is_matrix<OtherMatrixType>::value, ThisType>& operator=(const OtherMatrixType& other)
+  {
+    for (size_t jj = 0; jj < num_blocks; ++jj)
+      for (size_t ll = 0; ll < block_rows; ++ll)
+        for (size_t mm = 0; mm < block_cols; ++mm)
+          backend_[jj][ll][mm] =
+              MatrixAbstraction<OtherMatrixType>::get_entry(other, jj * block_rows + ll, jj * block_cols + mm);
+    return *this;
+  }
+
+
   BlockedFieldMatrix(const MatrixType& other)
   {
     *this = other;
@@ -542,15 +561,6 @@ public:
   BlockedFieldMatrix(const BlockType& block)
     : backend_(block)
   {}
-
-  ThisType& operator=(const MatrixType& other)
-  {
-    for (size_t jj = 0; jj < num_blocks; ++jj)
-      for (size_t ll = 0; ll < block_rows; ++ll)
-        for (size_t mm = 0; mm < block_cols; ++mm)
-          backend_[jj][ll][mm] = other[jj * block_rows + ll][jj * block_cols + mm];
-    return *this;
-  }
 
   bool operator==(const ThisType& other) const
   {
