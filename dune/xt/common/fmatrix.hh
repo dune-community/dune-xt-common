@@ -99,10 +99,20 @@ public:
     }
   } // FieldMatrix(std::initializer_list<std::initializer_list<K>> list_of_rows)
 
-  template <class T, typename = std::enable_if_t<HasDenseMatrixAssigner<FieldMatrix, T>::value>>
-  FieldMatrix(const T& rhs)
-    : BaseType(rhs)
-  {}
+  template <class OtherMatrixType>
+  FieldMatrix(const OtherMatrixType& other, std::enable_if_t<is_matrix<OtherMatrixType>::value, int> /*dummy*/ = 0)
+  {
+    *this = other;
+  }
+
+  template <class OtherMatrixType>
+  std::enable_if_t<is_matrix<OtherMatrixType>::value, ThisType>& operator=(const OtherMatrixType& other)
+  {
+    for (size_t rr = 0; rr < ROWS; ++rr)
+      for (size_t cc = 0; cc < COLS; ++cc)
+        (*this)[rr][cc] = MatrixAbstraction<OtherMatrixType>::get_entry(other, rr, cc);
+    return *this;
+  }
 
   Dune::XT::Common::FieldMatrix<K, COLS, ROWS> transpose() const
   {
