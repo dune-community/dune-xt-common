@@ -20,6 +20,7 @@
 #  pragma clang diagnostic ignored "-Wdelete-non-virtual-dtor"
 #  pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 #  pragma GCC diagnostic ignored "-Wdeprecated-register"
+#  pragma GCC diagnostic ignored "-Wdisabled-macro-expansion"
 #  pragma GCC diagnostic ignored "-Wextra"
 #  pragma GCC diagnostic ignored "-Wfloat-equal"
 #  pragma GCC diagnostic ignored "-Wignored-qualifiers"
