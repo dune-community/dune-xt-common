@@ -29,7 +29,7 @@ namespace Common {
 /** Converts from (x, y, z) to (theta, phi) on the unit sphere s.t.
  * (x, y, z) = (sin(theta) cos(phi), sin(theta) sin(phi), cos(theta))
  * with 0 \leq \theta \leq \pi and 0 \leq \varphi < 2\pi. **/
-template <class DomainFieldType>
+template<class DomainFieldType>
 class CoordinateConverter
 {
   typedef typename boost::geometry::model::point<DomainFieldType, 3, typename boost::geometry::cs::cartesian>

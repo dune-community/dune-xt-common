@@ -26,10 +26,10 @@ namespace XT {
 namespace Common {
 
 //! custom iterator for \ref FixedMap
-template <class FixedMapType>
-class FixedMapIterator : public boost::iterator_facade<FixedMapIterator<FixedMapType>,
-                                                       typename FixedMapType::value_type,
-                                                       boost::forward_traversal_tag>
+template<class FixedMapType>
+class FixedMapIterator
+  : public boost::
+        iterator_facade<FixedMapIterator<FixedMapType>, typename FixedMapType::value_type, boost::forward_traversal_tag>
 {
   typedef FixedMapIterator<FixedMapType> ThisType;
 
@@ -37,14 +37,12 @@ public:
   FixedMapIterator()
     : index_(FixedMapType::N)
     , map_(nullptr)
-  {
-  }
+  {}
 
   explicit FixedMapIterator(FixedMapType* map, std::size_t i)
     : index_(i)
     , map_(map)
-  {
-  }
+  {}
 
 private:
   friend class boost::iterator_core_access;
@@ -69,10 +67,11 @@ private:
 };
 
 //! custom const iterator for \ref FixedMap
-template <class FixedMapType>
-class ConstFixedMapIterator : public boost::iterator_facade<ConstFixedMapIterator<FixedMapType>,
-                                                            const typename FixedMapType::value_type,
-                                                            boost::forward_traversal_tag>
+template<class FixedMapType>
+class ConstFixedMapIterator
+  : public boost::iterator_facade<ConstFixedMapIterator<FixedMapType>,
+                                  const typename FixedMapType::value_type,
+                                  boost::forward_traversal_tag>
 {
   typedef ConstFixedMapIterator<FixedMapType> ThisType;
 
@@ -80,14 +79,12 @@ public:
   ConstFixedMapIterator()
     : index_(FixedMapType::N)
     , map_(nullptr)
-  {
-  }
+  {}
 
   explicit ConstFixedMapIterator(const FixedMapType* const map, std::size_t i)
     : index_(i)
     , map_(map)
-  {
-  }
+  {}
 
 private:
   friend class boost::iterator_core_access;
@@ -112,7 +109,7 @@ private:
 };
 
 //! a std::map like container that prevents map size change
-template <class key_imp, class T, std::size_t nin>
+template<class key_imp, class T, std::size_t nin>
 class FixedMap
 {
 public:
@@ -122,14 +119,14 @@ public:
 private:
   typedef boost::array<value_type, nin> MapType;
 
-  template <class R>
+  template<class R>
   friend class FixedMapIterator;
-  template <class R>
+  template<class R>
   friend class ConstFixedMapIterator;
 
   typedef FixedMap<key_imp, T, nin> ThisType;
 
-  template <class K> // for sfinae to work this needs to be a template although the type is already fixed
+  template<class K> // for sfinae to work this needs to be a template although the type is already fixed
   typename std::enable_if<std::is_convertible<K, std::string>::value, std::string>::type
   range_error_message(K key) const
   {
@@ -138,7 +135,7 @@ private:
     return ss.str();
   }
 
-  template <class K>
+  template<class K>
   typename std::enable_if<std::is_convertible<K, int>::value, std::string>::type range_error_message(K key) const
   {
     std::stringstream ss;
@@ -146,7 +143,7 @@ private:
     return ss.str();
   }
 
-  template <class K>
+  template<class K>
   typename std::enable_if<!(std::is_convertible<K, int>::value || std::is_convertible<K, std::string>::value),
                           std::string>::type range_error_message(K /*key*/) const
   {
@@ -159,9 +156,7 @@ public:
   typedef FixedMapIterator<ThisType> iterator;
   typedef ConstFixedMapIterator<ThisType> const_iterator;
 
-  FixedMap()
-  {
-  }
+  FixedMap() {}
   /** inserts key-value value pairs from  initializer list
    * if list.size() > N only the first N elements are considered
    * if list.size() < N the Map is padded with default constructed elements
@@ -170,13 +165,11 @@ public:
     : map_(boost::assign::list_of<value_type>(*list.begin())
                .range(list.begin() + 1, list.end() - (N > list.size() ? size_t(0) : (list.size() - N)))
                .repeat(N > list.size() ? N - list.size() : size_t(0), std::make_pair(key_type(), T())))
-  {
-  }
+  {}
 
   FixedMap(const MapType& map)
     : map_(map)
-  {
-  }
+  {}
 
   std::size_t get_idx(const key_type& key) const
   {
@@ -250,7 +243,7 @@ private:
   MapType map_;
 };
 
-template <class K, class T, std::size_t nin>
+template<class K, class T, std::size_t nin>
 const std::size_t FixedMap<K, T, nin>::N = nin;
 
 } // namespace Common
@@ -258,7 +251,7 @@ const std::size_t FixedMap<K, T, nin>::N = nin;
 } // namespace Dune
 
 namespace std {
-template <class key_imp, class T, std::size_t nin>
+template<class key_imp, class T, std::size_t nin>
 inline ostream& operator<<(ostream& out, const Dune::XT::Common::FixedMap<key_imp, T, nin>& map)
 {
   map.print(out);

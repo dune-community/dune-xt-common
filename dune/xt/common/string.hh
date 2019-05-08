@@ -45,7 +45,7 @@ namespace Common {
  *                    token_compress_on --> empty tokens are discarded
  * \return all tokens in a vector, if msg contains no separators, this'll contain msg as its only element
  **/
-template <class T = std::string>
+template<class T = std::string>
 inline std::vector<T>
 tokenize(const std::string& msg,
          const std::string& separators,
@@ -72,7 +72,7 @@ static constexpr const std::size_t default_to_string_precision = 6u;
  * \param cols Determines the number of columns of the returning matrix if T is a matrix type (0 means automatic;
  *             ignored if T is a vector or scalar type).
  */
-template <class T>
+template<class T>
 static inline T from_string(std::string ss, const size_t size = 0, const size_t cols = 0)
 {
   return internal::convert_from_string<T>(ss, size, cols);
@@ -82,7 +82,7 @@ static inline T from_string(std::string ss, const size_t size = 0, const size_t 
  * \brief Converts an object to string.
  * \sa    internal::convert_to_string for implementations
  */
-template <class T>
+template<class T>
 static inline std::string to_string(const T& ss, const size_t precision = default_to_string_precision)
 {
   return internal::convert_to_string(ss, precision);
@@ -119,7 +119,7 @@ std::string to_camel_case(const std::string& ss);
   \param[in]  whitespace char, optional argument, defines entries of return string
   \return     A string of lengths t' whitespace (or whitespace chars).
   **/
-template <class T>
+template<class T>
 std::string whitespaceify(const T& t, const char whitespace = ' ')
 {
   const std::string s = to_string(t);
@@ -131,7 +131,7 @@ std::string whitespaceify(const T& t, const char whitespace = ' ')
   return ret;
 } // ... whitespaceify(...)
 
-template <class T>
+template<class T>
 inline std::vector<T>
 tokenize(const std::string& msg, const std::string& separators, const boost::algorithm::token_compress_mode_type mode)
 {
@@ -145,7 +145,7 @@ tokenize(const std::string& msg, const std::string& separators, const boost::alg
   return ret;
 } // ... tokenize(...)
 
-template <>
+template<>
 inline std::vector<std::string>
 tokenize(const std::string& msg, const std::string& separators, const boost::algorithm::token_compress_mode_type mode)
 {
@@ -168,7 +168,7 @@ inline std::string stringFromTime(time_t cur_time = time(NULL))
 
 //! helper struct for lexical cast
 // see http://stackoverflow.com/a/2079728
-template <typename ElemT>
+template<typename ElemT>
 struct HexToString
 {
   ElemT value;

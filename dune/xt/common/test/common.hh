@@ -26,19 +26,19 @@
 #include <dune/xt/common/compiler.hh>
 #include <dune/xt/common/vector.hh>
 
-template <template <class> class Test>
+template<template<class> class Test>
 struct TestRunner
 {
   struct Visitor
   {
-    template <class T>
+    template<class T>
     void visit(const T&)
     {
       Test<T>().run();
     }
   };
 
-  template <class Tuple>
+  template<class Tuple>
   static void run()
   {
     Tuple t;
@@ -48,7 +48,7 @@ struct TestRunner
   }
 }; // struct TestRunner
 
-template <int i>
+template<int i>
 struct Int
 {
   static const int value = i;
@@ -89,14 +89,14 @@ void print_collected_eoc_study_results(const std::map<std::string, std::vector<d
 // returns unsigned int on purpose, see GridProvider
 unsigned int grid_elements();
 
-template <typename T>
+template<typename T>
 static typename std::enable_if<Common::is_vector<T>::value, T>::type
 init_bound(typename Common::VectorAbstraction<T>::S val)
 {
   const auto size = Common::VectorAbstraction<T>::has_static_size ? Common::VectorAbstraction<T>::static_size : 3u;
   return Common::VectorAbstraction<T>::create(size, val);
 }
-template <typename T>
+template<typename T>
 static typename std::enable_if<!Common::is_vector<T>::value, T>::type
 init_bound(typename Common::VectorAbstraction<T>::S val)
 {
@@ -108,7 +108,7 @@ init_bound(typename Common::VectorAbstraction<T>::S val)
 namespace std {
 
 
-template <class T>
+template<class T>
 ostream& operator<<(ostream& out, const vector<T>& results)
 {
   if (results.size() == 0)
@@ -127,7 +127,7 @@ ostream& operator<<(ostream& out, const vector<T>& results)
   return out;
 }
 
-template <class T>
+template<class T>
 ostream& operator<<(ostream& out, const set<T>& results)
 {
   if (results.size() == 0)
@@ -146,14 +146,14 @@ ostream& operator<<(ostream& out, const set<T>& results)
   return out;
 }
 
-template <class L, class R>
+template<class L, class R>
 ostream& operator<<(ostream& out, const pair<L, R>& results)
 {
   out << "{" << results.first << ", " << results.second << "}";
   return out;
 }
 
-template <class F, class S>
+template<class F, class S>
 ostream& operator<<(ostream& out, const map<F, S>& results)
 {
   if (results.size() == 0)

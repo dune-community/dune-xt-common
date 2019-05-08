@@ -156,31 +156,31 @@ typedef testing::Types<CreateByOperator,
 
 constexpr const auto SEED = std::random_device::result_type(0);
 
-template <class T>
+template<class T>
 static DefaultRNG<T> rng_setup()
 {
   return DefaultRNG<T>(std::numeric_limits<T>::min(), std::numeric_limits<T>::max(), T(SEED));
 }
 
-template <>
+template<>
 DefaultRNG<std::string> rng_setup()
 {
   return DefaultRNG<std::string>(12, SEED);
 }
 
-template <>
+template<>
 DefaultRNG<std::complex<double>> rng_setup()
 {
   return DefaultRNG<std::complex<double>>(-2, 2, SEED);
 }
 
-template <>
+template<>
 DefaultRNG<double> rng_setup()
 {
   return DefaultRNG<double>(-2, 2, SEED);
 }
 
-template <class T>
+template<class T>
 static void val_compare_eq(const T& aa, const T& bb)
 {
   DXTC_EXPECT_FLOAT_EQ(aa, bb);
@@ -191,7 +191,7 @@ static void val_compare_eq(const std::string& aa, const std::string& bb)
   EXPECT_EQ(aa, bb);
 }
 
-template <class T>
+template<class T>
 struct ConfigTest : public testing::Test
 {
   static const int count = 2;
@@ -206,12 +206,9 @@ struct ConfigTest : public testing::Test
     , key_gen(8)
     , values(boost::assign::list_of<T>().repeat_fun(values.size() - 1, rng))
     , keys(boost::assign::list_of<std::string>().repeat_fun(values.size() - 1, key_gen))
-  {
-  }
+  {}
 
-  virtual ~ConfigTest()
-  {
-  }
+  virtual ~ConfigTest() {}
 
   void get()
   {
@@ -285,7 +282,7 @@ struct StaticCheck
 {
   typedef boost::mpl::vector<Int<1>, Int<2>> Ints;
 
-  template <class MatrixType>
+  template<class MatrixType>
   static void check_matrix_static_size(const Configuration& config)
   {
     typedef MatrixAbstraction<MatrixType> MT;
@@ -306,7 +303,7 @@ struct StaticCheck
     check(config.get<MatrixType>("matrix"));
   }
 
-  template <class U, class V>
+  template<class U, class V>
   static void run(const Configuration& config)
   {
     const auto rows = U::value;
@@ -316,10 +313,10 @@ struct StaticCheck
   }
 };
 
-template <class ConfigurationCreator>
+template<class ConfigurationCreator>
 struct ConfigurationTest : public ::testing::Test
 {
-  template <class VectorType>
+  template<class VectorType>
   static void check_vector(const Configuration& config)
   {
     VectorType vec = config.get("vector", VectorType(), 1);
@@ -342,7 +339,7 @@ struct ConfigurationTest : public ::testing::Test
       EXPECT_FLOAT_EQ(ii, vec[ii]);
   } // ... check_vector< ... >(...)
 
-  template <class K, int d>
+  template<class K, int d>
   static void check_field_vector(const Configuration& config)
   {
     typedef FieldVector<K, d> VectorType;
@@ -364,7 +361,7 @@ struct ConfigurationTest : public ::testing::Test
       EXPECT_TRUE(FloatCmp::eq(vec[ii], double(ii)));
   } // ... check_field_vector< ... >(...)
 
-  template <class MatrixType>
+  template<class MatrixType>
   static void check_matrix(const Configuration& config)
   {
     MatrixType mat = config.get("matrix", MatrixType(), 1, 1);

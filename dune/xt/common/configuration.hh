@@ -43,7 +43,7 @@ struct ConfigurationDefaults
 };
 
 namespace internal {
-template <class T>
+template<class T>
 struct Typer
 {
   typedef typename std::conditional<std::is_same<T, const char*>::value, std::string, T>::type type;
@@ -87,7 +87,7 @@ some_function_which_expects_a_config({{"type", "custom"}, {"tolerance", "1e-10"}
   //! read ParameterTree from given arguments and call Configuration(const ParameterTree& tree)
   Configuration(int argc, char** argv, ConfigurationDefaults defaults = ConfigurationDefaults());
 
-  template <class T>
+  template<class T>
   Configuration(const std::vector<std::string> keys,
                 const std::initializer_list<T> values_in,
                 ConfigurationDefaults defaults = ConfigurationDefaults())
@@ -141,7 +141,7 @@ some_function_which_expects_a_config({{"type", "custom"}, {"tolerance", "1e-10"}
    */
 
   //! const get without default value, with validation
-  template <class T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
+  template<class T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
   typename internal::Typer<T>::type
   get(std::string key,
       const size_t size,
@@ -151,14 +151,13 @@ some_function_which_expects_a_config({{"type", "custom"}, {"tolerance", "1e-10"}
     if (!has_key(key))
       DUNE_THROW(Exceptions::configuration_error,
                  "This Configuration (see below) does not contain the key '"
-                     << key
-                     << "' and there was no default value provided!\n======================\n"
+                     << key << "' and there was no default value provided!\n======================\n"
                      << report_string());
     return get_valid_value(key, T(), validator, size, cols);
   } // ... get(...)
 
   //! const get without default value, with validation
-  template <class T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
+  template<class T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
   typename internal::Typer<T>::type
   get(std::string key,
       const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator =
@@ -167,14 +166,13 @@ some_function_which_expects_a_config({{"type", "custom"}, {"tolerance", "1e-10"}
     if (!has_key(key))
       DUNE_THROW(Exceptions::configuration_error,
                  "This Configuration (see below) does not contain the key '"
-                     << key
-                     << "' and there was no default value provided!\n======================\n"
+                     << key << "' and there was no default value provided!\n======================\n"
                      << report_string());
     return get_valid_value(key, T(), validator, 0, 0);
   } // ... get(...)
 
   //! get variation with default value, validation
-  template <typename T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
+  template<typename T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
   typename internal::Typer<T>::type
   get(std::string key,
       T def,
@@ -187,7 +185,7 @@ some_function_which_expects_a_config({{"type", "custom"}, {"tolerance", "1e-10"}
   } // ... get(...)
 
   //! get variation with default value, validation
-  template <typename T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
+  template<typename T, class Validator = ValidateAny<typename internal::Typer<T>::type>>
   typename internal::Typer<T>::type
   get(std::string key,
       T def,
@@ -203,7 +201,7 @@ some_function_which_expects_a_config({{"type", "custom"}, {"tolerance", "1e-10"}
    */
 
   //! set value to key in Configuration
-  template <class T>
+  template<class T>
   void set(std::string key, const T& value, const bool overwrite = false)
   {
     if (has_key(key) && !overwrite)
@@ -273,7 +271,7 @@ private:
   void add_tree_(const Configuration& other, const std::string sub_id, const bool overwrite);
 
   //! get value from tree and validate with validator
-  template <typename T, class Validator>
+  template<typename T, class Validator>
   T get_valid_value(const std::string& key,
                     T def,
                     const ValidatorInterface<typename internal::Typer<T>::type, Validator>& validator,
@@ -286,22 +284,14 @@ private:
       val = from_string<T>(valstring, size, cols);
     } catch (boost::bad_lexical_cast& e) {
       DUNE_THROW(Exceptions::external_error,
-                 "Error in boost while converting the string '" << valstring << "' to type '" << Typename<T>::value()
-                                                                << "':\n"
-                                                                << e.what()
-                                                                << "\non accessing key "
-                                                                << key
-                                                                << " with default "
-                                                                << to_string(def));
+                 "Error in boost while converting the string '"
+                     << valstring << "' to type '" << Typename<T>::value() << "':\n"
+                     << e.what() << "\non accessing key " << key << " with default " << to_string(def));
     } catch (std::exception& e) {
       DUNE_THROW(Exceptions::external_error,
-                 "Error in the stl while converting the string '" << valstring << "' to type '" << Typename<T>::value()
-                                                                  << "':\n"
-                                                                  << e.what()
-                                                                  << "\non accessing key "
-                                                                  << key
-                                                                  << " with default "
-                                                                  << to_string(def));
+                 "Error in the stl while converting the string '"
+                     << valstring << "' to type '" << Typename<T>::value() << "':\n"
+                     << e.what() << "\non accessing key " << key << " with default " << to_string(def));
     }
     if (validator(val))
       return val;
@@ -322,7 +312,7 @@ private:
    *  \return value associated to key in Configuration (interpreted as type T),
    *  def if key does not exist in Configuration
    */
-  template <typename T, class Validator>
+  template<typename T, class Validator>
   typename internal::Typer<T>::type get_(const std::string& key,
                                          typename internal::Typer<T>::type def,
                                          const ValidatorInterface<T, Validator>& validator,
@@ -384,7 +374,7 @@ bool operator!=(const ParameterTree& left, const ParameterTree& right);
 } // namespace Dune
 namespace std {
 
-template <>
+template<>
 struct less<Dune::ParameterTree>
 {
   typedef bool result_type;
@@ -394,7 +384,7 @@ struct less<Dune::ParameterTree>
   bool operator()(const Dune::ParameterTree& lhs, const Dune::ParameterTree& rhs) const;
 }; // struct less< ParameterTree >
 
-template <>
+template<>
 struct less<Dune::XT::Common::Configuration>
 {
   typedef bool result_type;
@@ -408,13 +398,13 @@ struct less<Dune::XT::Common::Configuration>
 
 #define DXTC_CONFIG Dune::XT::Common::Config()
 
-template <typename T>
+template<typename T>
 static auto DXTC_CONFIG_GET(std::string key, T def) -> decltype(DXTC_CONFIG.get(key, def))
 {
   return DXTC_CONFIG.get(key, def);
 }
 
-template <typename T, class V>
+template<typename T, class V>
 static auto
 DXTC_CONFIG_GETV(std::string key,
                  T def,

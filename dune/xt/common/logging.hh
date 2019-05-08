@@ -66,7 +66,7 @@ public:
   /** \name forwarded Log functions
    * \{
    */
-  template <class T>
+  template<class T>
   void log(T c, int streamID)
   {
     get_stream(streamID) << c;

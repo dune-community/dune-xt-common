@@ -94,8 +94,7 @@ public:
   OstreamBuffer(int loglevel, int& logflags, std::ostream& out)
     : SuspendableStrBuffer(loglevel, logflags)
     , out_(out)
-  {
-  }
+  {}
 
 private:
   std::ostream& out_;
@@ -134,8 +133,7 @@ class EmptyBuffer : public SuspendableStrBuffer
 public:
   EmptyBuffer(int loglevel, int& logflags)
     : SuspendableStrBuffer(loglevel, logflags)
-  {
-  }
+  {}
 
 protected:
   virtual int sync();
@@ -167,7 +165,9 @@ private:
   std::mutex mutex_;
 }; // class TimedPrefixedStreamBuffer
 
-class LogStream : StorageProvider<SuspendableStrBuffer>, public std::basic_ostream<char, std::char_traits<char>>
+class LogStream
+  : StorageProvider<SuspendableStrBuffer>
+  , public std::basic_ostream<char, std::char_traits<char>>
 {
   typedef StorageProvider<SuspendableStrBuffer> StorageBaseType;
   typedef std::basic_ostream<char, std::char_traits<char>> BaseType;
@@ -179,8 +179,7 @@ public:
   explicit LogStream(SuspendableStrBuffer*&& buffer)
     : StorageBaseType(std::move(buffer))
     , BaseType(&this->access())
-  {
-  }
+  {}
 
   virtual ~LogStream()
   {
@@ -231,8 +230,9 @@ out << "\n" << 3 << "\n\nend" << std::endl;
  *
  * \note This class is intended to be used by TimedLogManager.
  */
-class TimedPrefixedLogStream : StorageProvider<TimedPrefixedStreamBuffer>,
-                               public std::basic_ostream<char, std::char_traits<char>>
+class TimedPrefixedLogStream
+  : StorageProvider<TimedPrefixedStreamBuffer>
+  , public std::basic_ostream<char, std::char_traits<char>>
 {
   typedef StorageProvider<TimedPrefixedStreamBuffer> StorageBaseType;
   typedef std::basic_ostream<char, std::char_traits<char>> OstreamBaseType;

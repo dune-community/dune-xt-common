@@ -24,8 +24,7 @@ namespace Common {
 
 ConvergenceStudy::ConvergenceStudy(const std::vector<std::string> only_these_norms)
   : only_these_norms_(only_these_norms)
-{
-}
+{}
 
 std::vector<std::string> ConvergenceStudy::used_norms() const
 {

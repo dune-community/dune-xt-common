@@ -18,7 +18,7 @@
 namespace Dune {
 
 
-template <class S, class V>
+template<class S, class V>
 typename std::enable_if<Dune::XT::Common::is_arithmetic<S>::value || Dune::XT::Common::is_complex<S>::value,
                         typename DenseVector<V>::derived_type>::type
 operator*(const S& alpha, const DenseVector<V>& vec)
@@ -29,7 +29,7 @@ operator*(const S& alpha, const DenseVector<V>& vec)
 }
 
 
-template <class V, class S>
+template<class V, class S>
 typename std::enable_if<Dune::XT::Common::is_arithmetic<S>::value || Dune::XT::Common::is_complex<S>::value,
                         typename DenseVector<V>::derived_type>::type
 operator*(const DenseVector<V>& vec, const S& alpha)
@@ -40,7 +40,7 @@ operator*(const DenseVector<V>& vec, const S& alpha)
 }
 
 
-template <class V, class S>
+template<class V, class S>
 typename std::enable_if<Dune::XT::Common::is_arithmetic<S>::value || Dune::XT::Common::is_complex<S>::value,
                         typename DenseVector<V>::derived_type>::type
 operator/(const DenseVector<V>& vec, const S& alpha)

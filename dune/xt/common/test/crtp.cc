@@ -12,7 +12,7 @@
 
 #include <dune/xt/common/crtp.hh>
 
-template <class Traits>
+template<class Traits>
 class TestInterface;
 
 struct FailTraits
@@ -29,7 +29,7 @@ struct ImpTraits
   using derived_type = TestImp;
 };
 
-template <class Traits>
+template<class Traits>
 class TestInterface : public Dune::XT::Common::CRTPInterface<TestInterface<Traits>, Traits>
 {
 public:

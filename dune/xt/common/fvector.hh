@@ -40,7 +40,7 @@ namespace Common {
 /**
  * \todo We need to implement all operators from the base which return the base, to rather return ourselfes!
  */
-template <class K, int SIZE>
+template<class K, int SIZE>
 class FieldVector : public Dune::FieldVector<K, SIZE>
 {
   static_assert(SIZE >= 0, "Really?");
@@ -51,25 +51,22 @@ class FieldVector : public Dune::FieldVector<K, SIZE>
 public:
   FieldVector(const K& kk = suitable_default<K>::value())
     : BaseType(kk)
-  {
-  }
+  {}
 
   FieldVector(const ThisType& other) = default;
 
   FieldVector(const BaseType& other)
     : BaseType(other)
-  {
-  }
+  {}
 
   /* FieldMatrix< K, 1, 1 > is convertible to K, which in turn is convertible to FieldVector< K, 1 >. Without the
    * following constructor, this leads to an "ambiguous constructor" error (candidates are copy constructor and
    * constructor taking a K) */
-  template <class Type = K>
+  template<class Type = K>
   FieldVector(const typename std::enable_if<SIZE == 1 && std::is_same<K, Type>::value,
                                             typename Dune::FieldMatrix<K, 1, 1>>::type& mat)
     : BaseType(mat[0][0])
-  {
-  }
+  {}
 
   FieldVector(const std::vector<K>& vec)
     : BaseType()
@@ -79,8 +76,7 @@ public:
       DUNE_THROW(Exceptions::wrong_input_given,
                  "You are trying to construct a FieldVector< ..., " << SIZE << " > (of "
                                                                     << "static size) from a vector of size "
-                                                                    << vec.size()
-                                                                    << "!");
+                                                                    << vec.size() << "!");
 #endif // NDEBUG
     for (size_t ii = 0; ii < SIZE; ++ii)
       this->operator[](ii) = vec[ii];
@@ -94,8 +90,7 @@ public:
       DUNE_THROW(Exceptions::wrong_input_given,
                  "You are trying to construct a FieldVector< ..., " << SIZE << " > (of "
                                                                     << "static size) from a list of size "
-                                                                    << list.size()
-                                                                    << "!");
+                                                                    << list.size() << "!");
 #endif // NDEBUG
     size_t ii = 0;
     for (auto element : list)
@@ -117,7 +112,7 @@ public:
     return ret;
   }
 
-  template <int S = SIZE>
+  template<int S = SIZE>
   operator typename std::enable_if<(S == SIZE) && (SIZE != 1), Dune::FieldMatrix<K, S, 1>>::type() const
   {
     Dune::FieldMatrix<K, SIZE, 1> ret;
@@ -134,7 +129,7 @@ public:
     return ret;
   }
 
-  template <class K_Other>
+  template<class K_Other>
   typename multiplication_promotion<K, K_Other>::type operator*(const Dune::FieldVector<K_Other, SIZE>& other) const
   {
     typename multiplication_promotion<K, K_Other>::type result(0.);
@@ -143,7 +138,7 @@ public:
     return result;
   }
 
-  template <int R>
+  template<int R>
   typename std::enable_if<SIZE != 1 && R == SIZE, K>::type operator*(const Dune::FieldMatrix<K, R, 1>& mat) const
   {
     K ret = 0;
@@ -169,7 +164,7 @@ public:
 }; // class FieldVector
 
 
-template <class K, size_t block_num, size_t size_block>
+template<class K, size_t block_num, size_t size_block>
 class BlockedFieldVector
 {
   using ThisType = BlockedFieldVector;
@@ -183,8 +178,7 @@ public:
 
   BlockedFieldVector(const K& val = K(0.))
     : backend_(BlockType(val))
-  {
-  }
+  {}
 
   BlockedFieldVector(const VectorType& other)
   {
@@ -193,8 +187,7 @@ public:
 
   BlockedFieldVector(const BlockType& block)
     : backend_(block)
-  {
-  }
+  {}
 
   BlockedFieldVector(const std::initializer_list<K>& init_list)
   {
@@ -372,7 +365,7 @@ private:
 
 
 //! this allows to set the init value of the FieldVector at compile time
-template <class K, int SIZE, K value>
+template<class K, int SIZE, K value>
 class ValueInitFieldVector : public Dune::XT::Common::FieldVector<K, SIZE>
 {
   typedef Dune::XT::Common::FieldVector<K, SIZE> BaseType;
@@ -380,15 +373,14 @@ class ValueInitFieldVector : public Dune::XT::Common::FieldVector<K, SIZE>
 public:
   ValueInitFieldVector()
     : BaseType(value)
-  {
-  }
+  {}
 }; // class ValueInitFieldVector
 
 
 //! struct to be used as comparison function e.g. in a std::map<FieldVector<...>, ..., FieldVectorLess>
 struct FieldVectorLess
 {
-  template <class FieldType, int dimDomain>
+  template<class FieldType, int dimDomain>
   bool operator()(const Dune::FieldVector<FieldType, dimDomain>& a,
                   const Dune::FieldVector<FieldType, dimDomain>& b) const
   {
@@ -404,7 +396,7 @@ struct FieldVectorLess
 
 struct FieldVectorFloatLess
 {
-  template <class FieldType, int dimDomain>
+  template<class FieldType, int dimDomain>
   bool operator()(const Dune::FieldVector<FieldType, dimDomain>& a,
                   const Dune::FieldVector<FieldType, dimDomain>& b) const
   {
@@ -420,66 +412,62 @@ struct FieldVectorFloatLess
 
 
 //! Specialization of VectorAbstraction for Dune::XT::Common::FieldVector
-template <class K, int SIZE>
+template<class K, int SIZE>
 struct VectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>>
-    : public internal::VectorAbstractionBase<Dune::XT::Common::FieldVector<K, SIZE>, K>,
-      public internal::HasSubscriptOperatorForVectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>,
-                                                                typename Dune::FieldTraits<K>::field_type>
+  : public internal::VectorAbstractionBase<Dune::XT::Common::FieldVector<K, SIZE>, K>
+  , public internal::HasSubscriptOperatorForVectorAbstraction<Dune::XT::Common::FieldVector<K, SIZE>,
+                                                              typename Dune::FieldTraits<K>::field_type>
 {
   static const bool has_static_size = true;
   static const size_t static_size = SIZE;
   static const bool is_contiguous = true;
 
-  template <size_t SZ = SIZE, class Field = K>
+  template<size_t SZ = SIZE, class Field = K>
   using VectorTypeTemplate = Dune::XT::Common::FieldVector<Field, SZ>;
 
-  template <size_t SZ = SIZE>
+  template<size_t SZ = SIZE>
   static inline VectorTypeTemplate<SZ> create(const size_t sz, const K& val = suitable_default<K>::value())
   {
     if (sz != SZ)
       DUNE_THROW(Exceptions::wrong_input_given,
                  "You are trying to construct a FieldVector< ..., " << SZ << " > (of "
-                                                                    << "static size) with "
-                                                                    << sz
-                                                                    << " elements!");
+                                                                    << "static size) with " << sz << " elements!");
     return VectorTypeTemplate<SZ>(val);
   }
 };
 
 
 //! Specialization of VectorAbstraction for Dune::XT::Common::BlockedFieldVector
-template <class K, size_t num_blocks, size_t block_size>
+template<class K, size_t num_blocks, size_t block_size>
 struct VectorAbstraction<Dune::XT::Common::BlockedFieldVector<K, num_blocks, block_size>>
-    : public internal::VectorAbstractionBase<Dune::XT::Common::BlockedFieldVector<K, num_blocks, block_size>, K>,
-      public internal::
-          HasSubscriptOperatorForVectorAbstraction<Dune::XT::Common::BlockedFieldVector<K, num_blocks, block_size>,
-                                                   typename Dune::FieldTraits<K>::field_type>
+  : public internal::VectorAbstractionBase<Dune::XT::Common::BlockedFieldVector<K, num_blocks, block_size>, K>
+  , public internal::HasSubscriptOperatorForVectorAbstraction<
+        Dune::XT::Common::BlockedFieldVector<K, num_blocks, block_size>,
+        typename Dune::FieldTraits<K>::field_type>
 {
   using VectorType = Dune::XT::Common::BlockedFieldVector<K, num_blocks, block_size>;
   static constexpr bool has_static_size = true;
   static constexpr size_t static_size = VectorType::static_size;
   static constexpr bool is_contiguous = true;
 
-  template <size_t SZ = static_size>
+  template<size_t SZ = static_size>
   static inline VectorType create(const size_t sz, const K& val = suitable_default<K>::value())
   {
     static_assert(SZ == static_size, "Creation of Vector with different size not implemented!");
     if (sz != SZ)
       DUNE_THROW(Exceptions::wrong_input_given,
                  "You are trying to construct a FieldVector< ..., " << SZ << " > (of "
-                                                                    << "static size) with "
-                                                                    << sz
-                                                                    << " elements!");
+                                                                    << "static size) with " << sz << " elements!");
     return VectorType(val);
   }
 };
 
 
-template <class V>
-typename std::
-    enable_if<is_vector<V>::value && VectorAbstraction<V>::has_static_size,
-              std::unique_ptr<FieldVector<typename VectorAbstraction<V>::S, VectorAbstraction<V>::static_size>>>::type
-    make_field_container_ptr(const V& vec)
+template<class V>
+typename std::enable_if<
+    is_vector<V>::value && VectorAbstraction<V>::has_static_size,
+    std::unique_ptr<FieldVector<typename VectorAbstraction<V>::S, VectorAbstraction<V>::static_size>>>::type
+make_field_container_ptr(const V& vec)
 {
   auto ret = std::make_unique<FieldVector<typename VectorAbstraction<V>::S, VectorAbstraction<V>::static_size>>;
   for (size_t ii = 0; ii < ret->size(); ++ii)
@@ -488,7 +476,7 @@ typename std::
 }
 
 
-template <class V>
+template<class V>
 typename std::enable_if<is_vector<V>::value && VectorAbstraction<V>::has_static_size,
                         FieldVector<typename VectorAbstraction<V>::S, VectorAbstraction<V>::static_size>>::type
 make_field_container(const V& vec)
@@ -500,20 +488,20 @@ make_field_container(const V& vec)
 }
 
 
-template <class K, int SIZE>
+template<class K, int SIZE>
 FieldVector<K, SIZE> make_field_container(Dune::FieldVector<K, SIZE>&& vec)
 {
   return std::move(vec);
 }
 
 
-template <class K, int SIZE>
+template<class K, int SIZE>
 FieldVector<K, SIZE> make_field_container(FieldVector<K, SIZE>&& vec)
 {
   return std::move(vec);
 }
 
-template <class K>
+template<class K>
 FieldVector<K, 3> cross_product(const FieldVector<K, 3>& u, const FieldVector<K, 3>& v)
 {
   FieldVector<K, 3> ret;
@@ -530,153 +518,142 @@ namespace internal {
 /**
  * Most likely, you do not want to use this class directly, but \sa hstack instead.
  */
-template <class K>
+template<class K>
 struct hstack_decay
 {
   static_assert(is_arithmetic<K>::value, "");
   using type = K;
 };
 
-template <class K, int SIZE>
+template<class K, int SIZE>
 struct hstack_decay<Dune::FieldVector<K, SIZE>>
 {
   using type = Dune::XT::Common::FieldVector<K, SIZE>;
 };
 
-template <class K, int SIZE>
+template<class K, int SIZE>
 struct hstack_decay<const Dune::FieldVector<K, SIZE>&> : public hstack_decay<Dune::FieldVector<K, SIZE>>
-{
-};
+{};
 
-template <class K, int SIZE>
+template<class K, int SIZE>
 struct hstack_decay<Dune::XT::Common::FieldVector<K, SIZE>> : public hstack_decay<Dune::FieldVector<K, SIZE>>
-{
-};
+{};
 
-template <class K, int SIZE>
+template<class K, int SIZE>
 struct hstack_decay<const Dune::XT::Common::FieldVector<K, SIZE>&> : public hstack_decay<Dune::FieldVector<K, SIZE>>
-{
-};
+{};
 
 
 /**
  * Most likely, you do not want to use this, but \sa hstack instead.
  */
-template <class T>
+template<class T>
 using hstack_decay_t = typename hstack_decay<T>::type;
 
 
 /**
  * Most likely, you do not want to use this class directly, but \sa hstack instead.
  */
-template <class... Vectors>
+template<class... Vectors>
 struct hstack_helper;
 
-template <class L, class R, class... Vectors>
+template<class L, class R, class... Vectors>
 struct hstack_helper<L, R, Vectors...>
 {
   using type =
       typename hstack_helper<typename hstack_helper<hstack_decay_t<L>, hstack_decay_t<R>>::type, Vectors...>::type;
 };
 
-template <class K, int SIZE>
+template<class K, int SIZE>
 struct hstack_helper<Dune::FieldVector<K, SIZE>>
 {
   using type = hstack_decay_t<Dune::FieldVector<K, SIZE>>;
 };
 
-template <class K, int SIZE>
+template<class K, int SIZE>
 struct hstack_helper<Dune::XT::Common::FieldVector<K, SIZE>> : public hstack_helper<Dune::FieldVector<K, SIZE>>
-{
-};
+{};
 
-template <class KL, class KR, int r>
+template<class KL, class KR, int r>
 struct hstack_helper<KL, Dune::FieldVector<KR, r>>
 {
   using type = hstack_decay_t<Dune::FieldVector<typename PromotionTraits<KL, KR>::PromotedType, 1 + r>>;
 };
 
-template <class KL, class KR, int r>
+template<class KL, class KR, int r>
 struct hstack_helper<KL, Dune::XT::Common::FieldVector<KR, r>> : public hstack_helper<KL, Dune::FieldVector<KR, r>>
-{
-};
+{};
 
-template <class KL, int l, class KR>
+template<class KL, int l, class KR>
 struct hstack_helper<Dune::FieldVector<KL, l>, KR>
 {
   using type = hstack_decay_t<Dune::FieldVector<typename PromotionTraits<KL, KR>::PromotedType, l + 1>>;
 };
 
-template <class KL, int l, class KR>
+template<class KL, int l, class KR>
 struct hstack_helper<Dune::XT::Common::FieldVector<KL, l>, KR> : public hstack_helper<Dune::FieldVector<KL, l>, KR>
-{
-};
+{};
 
-template <class KL, int l, class KR, int r>
+template<class KL, int l, class KR, int r>
 struct hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
 {
   using type = hstack_decay_t<Dune::FieldVector<typename PromotionTraits<KL, KR>::PromotedType, l + r>>;
 };
 
-template <class KL, int l, class KR, int r>
+template<class KL, int l, class KR, int r>
 struct hstack_helper<Dune::XT::Common::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
-    : public hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
-{
-};
+  : public hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
+{};
 
-template <class KL, int l, class KR, int r>
+template<class KL, int l, class KR, int r>
 struct hstack_helper<Dune::FieldVector<KL, l>, Dune::XT::Common::FieldVector<KR, r>>
-    : public hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
-{
-};
+  : public hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
+{};
 
-template <class KL, int l, class KR, int r>
+template<class KL, int l, class KR, int r>
 struct hstack_helper<Dune::XT::Common::FieldVector<KL, l>, Dune::XT::Common::FieldVector<KR, r>>
-    : public hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
-{
-};
+  : public hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
+{};
 
 // not sure why this is required, would've hoped the decay above would take care of it
-template <class KL, int l, class KR, int r>
+template<class KL, int l, class KR, int r>
 struct hstack_helper<Dune::FieldVector<KL, l>, const Dune::FieldVector<KR, r>&>
-    : public hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
-{
-};
+  : public hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
+{};
 
 // not sure why this is required, would've hoped the decay above would take care of it
-template <class KL, int l, class KR, int r>
+template<class KL, int l, class KR, int r>
 struct hstack_helper<Dune::FieldVector<KL, l>, const Dune::XT::Common::FieldVector<KR, r>&>
-    : public hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
-{
-};
+  : public hstack_helper<Dune::FieldVector<KL, l>, Dune::FieldVector<KR, r>>
+{};
 
 
 } // namespace internal
 
 
 /// \brief Specialization of \sa hstack to stop the recursion.
-template <class K, int SIZE>
+template<class K, int SIZE>
 Dune::XT::Common::FieldVector<K, SIZE> hstack(Dune::FieldVector<K, SIZE>&& vec)
 {
   return std::move(vec);
 }
 
 /// \brief Specialization of \sa hstack to stop the recursion.
-template <class K, int SIZE>
+template<class K, int SIZE>
 Dune::XT::Common::FieldVector<K, SIZE> hstack(Dune::XT::Common::FieldVector<K, SIZE>&& vec)
 {
   return std::move(vec);
 }
 
 /// \brief Specialization of \sa hstack to stop the recursion.
-template <class K, int SIZE>
+template<class K, int SIZE>
 Dune::XT::Common::FieldVector<K, SIZE> hstack(const Dune::FieldVector<K, SIZE>& vec)
 {
   return vec;
 }
 
 /// \brief Specialization of \sa hstack to stop the recursion.
-template <class K, int SIZE>
+template<class K, int SIZE>
 Dune::XT::Common::FieldVector<K, SIZE> hstack(const Dune::XT::Common::FieldVector<K, SIZE>& vec)
 {
   return vec;
@@ -684,12 +661,12 @@ Dune::XT::Common::FieldVector<K, SIZE> hstack(const Dune::XT::Common::FieldVecto
 
 
 /// \brief Specialization of \sa hstack for two arguments.
-template <class KL, class KR, int r>
-typename std::enable_if<is_arithmetic<KL>::value && !is_field_vector<KL>::value,
-                        typename internal::hstack_helper<internal::hstack_decay_t<KL>,
-                                                         internal::hstack_decay_t<Dune::FieldVector<KR, r>>>::type>::
-    type
-    hstack(const KL& left, const Dune::FieldVector<KR, r>& right)
+template<class KL, class KR, int r>
+typename std::enable_if<
+    is_arithmetic<KL>::value && !is_field_vector<KL>::value,
+    typename internal::hstack_helper<internal::hstack_decay_t<KL>,
+                                     internal::hstack_decay_t<Dune::FieldVector<KR, r>>>::type>::type
+hstack(const KL& left, const Dune::FieldVector<KR, r>& right)
 {
   typename internal::hstack_helper<internal::hstack_decay_t<KL>,
                                    internal::hstack_decay_t<Dune::FieldVector<KR, r>>>::type ret;
@@ -700,18 +677,18 @@ typename std::enable_if<is_arithmetic<KL>::value && !is_field_vector<KL>::value,
 } // ... hstack<1, r>(...)
 
 /// \brief Specialization of \sa hstack for two arguments.
-template <class KL, class KR, int r>
-typename std::enable_if<is_arithmetic<KL>::value && !is_field_vector<KL>::value,
-                        typename internal::hstack_helper<internal::hstack_decay_t<KL>,
-                                                         internal::hstack_decay_t<Dune::FieldVector<KR, r>>>::type>::
-    type
-    hstack(const KL& left, const Dune::XT::Common::FieldVector<KR, r>& right)
+template<class KL, class KR, int r>
+typename std::enable_if<
+    is_arithmetic<KL>::value && !is_field_vector<KL>::value,
+    typename internal::hstack_helper<internal::hstack_decay_t<KL>,
+                                     internal::hstack_decay_t<Dune::FieldVector<KR, r>>>::type>::type
+hstack(const KL& left, const Dune::XT::Common::FieldVector<KR, r>& right)
 {
   return hstack(left, static_cast<const Dune::FieldVector<KR, r>&>(right));
 }
 
 /// \brief Specialization of \sa hstack for two arguments.
-template <class KL, int l, class KR>
+template<class KL, int l, class KR>
 typename std::enable_if<is_arithmetic<KR>::value && !is_field_vector<KR>::value,
                         typename internal::hstack_helper<internal::hstack_decay_t<Dune::FieldVector<KL, l>>,
                                                          internal::hstack_decay_t<KR>>::type>::type
@@ -726,7 +703,7 @@ hstack(const Dune::FieldVector<KL, l>& left, const KR& right)
 } // ... hstack<l, 1>(...)
 
 /// \brief Specialization of \sa hstack for two arguments.
-template <class KL, int l, class KR>
+template<class KL, int l, class KR>
 typename std::enable_if<is_arithmetic<KR>::value && !is_field_vector<KR>::value,
                         typename internal::hstack_helper<internal::hstack_decay_t<Dune::FieldVector<KL, l>>,
                                                          internal::hstack_decay_t<KR>>::type>::type
@@ -736,7 +713,7 @@ hstack(const Dune::XT::Common::FieldVector<KL, l>& left, const KR& right)
 }
 
 /// \brief Specialization of \sa hstack for two arguments.
-template <class KL, int l, class KR, int r>
+template<class KL, int l, class KR, int r>
 typename internal::hstack_helper<internal::hstack_decay_t<Dune::FieldVector<KL, l>>,
                                  internal::hstack_decay_t<Dune::FieldVector<KR, r>>>::type
 hstack(const Dune::FieldVector<KL, l>& left, const Dune::FieldVector<KR, r>& right)
@@ -752,7 +729,7 @@ hstack(const Dune::FieldVector<KL, l>& left, const Dune::FieldVector<KR, r>& rig
 } // ... hstack<l, r>(...)
 
 /// \brief Specialization of \sa hstack for two arguments.
-template <class KL, int l, class KR, int r>
+template<class KL, int l, class KR, int r>
 typename internal::hstack_helper<internal::hstack_decay_t<Dune::FieldVector<KL, l>>,
                                  internal::hstack_decay_t<Dune::FieldVector<KR, r>>>::type
 hstack(const Dune::XT::Common::FieldVector<KL, l>& left, const Dune::FieldVector<KR, r>& right)
@@ -761,7 +738,7 @@ hstack(const Dune::XT::Common::FieldVector<KL, l>& left, const Dune::FieldVector
 }
 
 /// \brief Specialization of \sa hstack for two arguments.
-template <class KL, int l, class KR, int r>
+template<class KL, int l, class KR, int r>
 typename internal::hstack_helper<internal::hstack_decay_t<Dune::FieldVector<KL, l>>,
                                  internal::hstack_decay_t<Dune::FieldVector<KR, r>>>::type
 hstack(const Dune::FieldVector<KL, l>& left, const Dune::XT::Common::FieldVector<KR, r>& right)
@@ -770,7 +747,7 @@ hstack(const Dune::FieldVector<KL, l>& left, const Dune::XT::Common::FieldVector
 }
 
 /// \brief Specialization of \sa hstack for two arguments.
-template <class KL, int l, class KR, int r>
+template<class KL, int l, class KR, int r>
 typename internal::hstack_helper<internal::hstack_decay_t<Dune::FieldVector<KL, l>>,
                                  internal::hstack_decay_t<Dune::FieldVector<KR, r>>>::type
 hstack(const Dune::XT::Common::FieldVector<KL, l>& left, const Dune::XT::Common::FieldVector<KR, r>& right)
@@ -784,11 +761,10 @@ hstack(const Dune::XT::Common::FieldVector<KL, l>& left, const Dune::XT::Common:
  * \brief Stacks an arbitrary number of numbers and FieldVectors horizontally into one appropriate FieldVector.
  * \note  At least one argument must be a FieldVector!
  */
-template <class L, class R, class... Vectors>
-typename std::enable_if<is_field_vector<L>::value || is_field_vector<R>::value,
-                        typename internal::hstack_helper<internal::hstack_decay_t<L>,
-                                                         internal::hstack_decay_t<R>,
-                                                         Vectors...>::type>::type
+template<class L, class R, class... Vectors>
+typename std::enable_if<
+    is_field_vector<L>::value || is_field_vector<R>::value,
+    typename internal::hstack_helper<internal::hstack_decay_t<L>, internal::hstack_decay_t<R>, Vectors...>::type>::type
 hstack(const L& left, const R& right, Vectors&&... vectors)
 {
   return hstack(hstack(left, right), std::forward<Vectors>(vectors)...);
@@ -799,7 +775,7 @@ hstack(const L& left, const R& right, Vectors&&... vectors)
 } // namespace XT
 
 
-template <class K, int SIZE>
+template<class K, int SIZE>
 typename std::enable_if<SIZE != 1, K>::type operator*(const Dune::FieldVector<K, SIZE>& vec,
                                                       const Dune::FieldMatrix<K, SIZE, 1>& mat)
 {
@@ -809,7 +785,7 @@ typename std::enable_if<SIZE != 1, K>::type operator*(const Dune::FieldVector<K,
   return ret;
 }
 
-template <class K, int SIZE>
+template<class K, int SIZE>
 struct FieldTraits<XT::Common::FieldVector<K, SIZE>>
 {
   typedef typename FieldTraits<K>::field_type field_type;
@@ -825,7 +801,7 @@ namespace std {
  * \sa http://en.cppreference.com/w/cpp/utility/hash
  * \sa http://www.boost.org/doc/libs/1_55_0/doc/html/hash/combine.html
  */
-template <class K, int SIZE>
+template<class K, int SIZE>
 struct hash<Dune::FieldVector<K, SIZE>>
 {
   typedef Dune::FieldVector<K, SIZE> argument_type;
@@ -845,7 +821,7 @@ struct hash<Dune::FieldVector<K, SIZE>>
  * \sa http://en.cppreference.com/w/cpp/utility/hash
  * \sa http://www.boost.org/doc/libs/1_55_0/doc/html/hash/combine.html
  */
-template <class K, int SIZE>
+template<class K, int SIZE>
 struct hash<Dune::XT::Common::FieldVector<K, SIZE>>
 {
   typedef Dune::XT::Common::FieldVector<K, SIZE> argument_type;

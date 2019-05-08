@@ -32,7 +32,7 @@ namespace Common {
 /**
  * \todo We need to implement all operators from the base which return the base, to rather return ourselfes!
  */
-template <class K, int ROWS, int COLS>
+template<class K, int ROWS, int COLS>
 class FieldMatrix : public Dune::FieldMatrix<K, ROWS, COLS>
 {
   typedef Dune::FieldMatrix<K, ROWS, COLS> BaseType;
@@ -62,10 +62,7 @@ public:
     if (rr != ROWS || cc != COLS)
       DUNE_THROW(Exceptions::wrong_input_given,
                  "You are trying to construct a FieldMatrix< ..., " << ROWS << ", " << COLS << " > (of "
-                                                                    << "static size) with "
-                                                                    << rr
-                                                                    << " rows and "
-                                                                    << cc
+                                                                    << "static size) with " << rr << " rows and " << cc
                                                                     << " columns!");
 #endif // NDEBUG
     // This is required because BaseType(kk) does not work for std::string
@@ -81,23 +78,19 @@ public:
   {
 #ifndef NDEBUG
     if (list_of_rows.size() != ROWS)
-      DUNE_THROW(
-          Exceptions::wrong_input_given,
-          "You are trying to construct a FieldMatrix< ..., " << ROWS << ", " << COLS << " > (of "
-                                                             << "static size) from a list modeling a matrix with "
-                                                             << list_of_rows.size()
-                                                             << " rows!");
+      DUNE_THROW(Exceptions::wrong_input_given,
+                 "You are trying to construct a FieldMatrix< ..., "
+                     << ROWS << ", " << COLS << " > (of "
+                     << "static size) from a list modeling a matrix with " << list_of_rows.size() << " rows!");
 #endif // NDEBUG
     size_t rr = 0;
     for (auto row : list_of_rows) {
 #ifndef NDEBUG
       if (row.size() != COLS)
-        DUNE_THROW(
-            Exceptions::wrong_input_given,
-            "You are trying to construct a FieldMatrix< ..., " << ROWS << ", " << COLS << " > (of "
-                                                               << "static size) from a list with a row of length "
-                                                               << row.size()
-                                                               << "!");
+        DUNE_THROW(Exceptions::wrong_input_given,
+                   "You are trying to construct a FieldMatrix< ..., "
+                       << ROWS << ", " << COLS << " > (of "
+                       << "static size) from a list with a row of length " << row.size() << "!");
 #endif // NDEBUG
       size_t cc = 0;
       for (auto entry : row)
@@ -110,8 +103,7 @@ public:
 
   FieldMatrix(const BaseType& other)
     : BaseType(other)
-  {
-  }
+  {}
 
   Dune::XT::Common::FieldMatrix<K, COLS, ROWS> transpose() const
   {
@@ -139,12 +131,12 @@ public:
 
   field_type determinant() const;
 
-  template <class Func>
+  template<class Func>
   void luDecomposition(ThisType& A, Func func) const;
 
   void invert();
 
-  template <class V, class W>
+  template<class V, class W>
   void solve(V& x, const W& b) const;
 
 private:
@@ -164,21 +156,19 @@ private:
       pivot_[i] = j;
     }
 
-    template <typename T>
+    template<typename T>
     void operator()(const T&, int, int)
-    {
-    }
+    {}
 
     std::vector<size_type>& pivot_;
   }; // struct ElimPivot
 
-  template <typename V>
+  template<typename V>
   struct Elim
   {
     Elim(V& rhs)
       : rhs_(&rhs)
-    {
-    }
+    {}
 
     void swap(int i, int j)
     {
@@ -206,9 +196,7 @@ private:
       sign_ *= -1;
     }
 
-    void operator()(const field_type&, int, int)
-    {
-    }
+    void operator()(const field_type&, int, int) {}
 
     field_type& sign_;
   };
@@ -221,8 +209,8 @@ private:
 // version fails due to stability issues.
 // TODO: Fixed in dune-common master (see MR !449 in dune-common's gitlab), remove this copy once we depend on a
 // suitable version of dune-common (probably 2.7).
-template <class K, int ROWS, int COLS>
-template <typename Func>
+template<class K, int ROWS, int COLS>
+template<typename Func>
 inline void FieldMatrix<K, ROWS, COLS>::luDecomposition(FieldMatrix<K, ROWS, COLS>& A, Func func) const
 {
   typedef typename FieldTraits<value_type>::real_type real_type;
@@ -271,7 +259,7 @@ inline void FieldMatrix<K, ROWS, COLS>::luDecomposition(FieldMatrix<K, ROWS, COL
 // The only (functional) change is the replacement of the luDecomposition of DenseMatrix by our own version.
 // TODO: Fixed in dune-common master (see MR !449 in dune-common's gitlab), remove this copy once we depend on a
 // suitable version of dune-common (probably 2.7).
-template <class K, int ROWS, int COLS>
+template<class K, int ROWS, int COLS>
 inline void FieldMatrix<K, ROWS, COLS>::invert()
 {
   // never mind those ifs, because they get optimized away
@@ -321,7 +309,7 @@ inline void FieldMatrix<K, ROWS, COLS>::invert()
 // The only (functional) change is the replacement of the luDecomposition of DenseMatrix by our own version.
 // TODO: Fixed in dune-common master (see MR !449 in dune-common's gitlab), remove this copy once we depend on a
 // suitable version of dune-common (probably 2.7).
-template <class K, int ROWS, int COLS>
+template<class K, int ROWS, int COLS>
 inline typename FieldMatrix<K, ROWS, COLS>::field_type FieldMatrix<K, ROWS, COLS>::determinant() const
 {
   // never mind those ifs, because they get optimized away
@@ -364,8 +352,8 @@ inline typename FieldMatrix<K, ROWS, COLS>::field_type FieldMatrix<K, ROWS, COLS
 // The only (functional) change is the replacement of the luDecomposition of DenseMatrix by our own version.
 // TODO: Fixed in dune-common master (see MR !449 in dune-common's gitlab), remove this copy once we depend on a
 // suitable version of dune-common (probably 2.7).
-template <class K, int ROWS, int COLS>
-template <class V, class W>
+template<class K, int ROWS, int COLS>
+template<class V, class W>
 inline void FieldMatrix<K, ROWS, COLS>::solve(V& x, const W& b) const
 {
   // never mind those ifs, because they get optimized away
@@ -401,24 +389,18 @@ inline void FieldMatrix<K, ROWS, COLS>::solve(V& x, const W& b) const
 #endif
 
     x[0] = (b[0] * (*this)[1][1] * (*this)[2][2] - b[0] * (*this)[2][1] * (*this)[1][2]
-            - b[1] * (*this)[0][1] * (*this)[2][2]
-            + b[1] * (*this)[2][1] * (*this)[0][2]
-            + b[2] * (*this)[0][1] * (*this)[1][2]
-            - b[2] * (*this)[1][1] * (*this)[0][2])
+            - b[1] * (*this)[0][1] * (*this)[2][2] + b[1] * (*this)[2][1] * (*this)[0][2]
+            + b[2] * (*this)[0][1] * (*this)[1][2] - b[2] * (*this)[1][1] * (*this)[0][2])
            / d;
 
     x[1] = ((*this)[0][0] * b[1] * (*this)[2][2] - (*this)[0][0] * b[2] * (*this)[1][2]
-            - (*this)[1][0] * b[0] * (*this)[2][2]
-            + (*this)[1][0] * b[2] * (*this)[0][2]
-            + (*this)[2][0] * b[0] * (*this)[1][2]
-            - (*this)[2][0] * b[1] * (*this)[0][2])
+            - (*this)[1][0] * b[0] * (*this)[2][2] + (*this)[1][0] * b[2] * (*this)[0][2]
+            + (*this)[2][0] * b[0] * (*this)[1][2] - (*this)[2][0] * b[1] * (*this)[0][2])
            / d;
 
     x[2] = ((*this)[0][0] * (*this)[1][1] * b[2] - (*this)[0][0] * (*this)[2][1] * b[1]
-            - (*this)[1][0] * (*this)[0][1] * b[2]
-            + (*this)[1][0] * (*this)[2][1] * b[0]
-            + (*this)[2][0] * (*this)[0][1] * b[1]
-            - (*this)[2][0] * (*this)[1][1] * b[0])
+            - (*this)[1][0] * (*this)[0][1] * b[2] + (*this)[1][0] * (*this)[2][1] * b[0]
+            + (*this)[2][0] * (*this)[0][1] * b[1] - (*this)[2][0] * (*this)[1][1] * b[0])
            / d;
 
   } else {
@@ -443,7 +425,7 @@ inline void FieldMatrix<K, ROWS, COLS>::solve(V& x, const W& b) const
 /**
  * \todo We need to implement all operators from the base which return the base, to rather return ourselfes!
  */
-template <class K>
+template<class K>
 class FieldMatrix<K, 1, 1> : public Dune::FieldMatrix<K, 1, 1>
 {
   static const int ROWS = 1;
@@ -465,18 +447,14 @@ public:
     if (list_of_rows.size() != ROWS)
       DUNE_THROW(Exceptions::wrong_input_given,
                  "You are trying to construct a FieldMatrix< ..., 1, 1 > (of "
-                     << "static size) from a list modeling a matrix with "
-                     << list_of_rows.size()
-                     << " rows!");
+                     << "static size) from a list modeling a matrix with " << list_of_rows.size() << " rows!");
 #endif // NDEBUG
     for (auto row : list_of_rows) {
 #ifndef NDEBUG
       if (row.size() != COLS)
         DUNE_THROW(Exceptions::wrong_input_given,
                    "You are trying to construct a FieldMatrix< ..., 1, 1 > (of "
-                       << "static size) from a list with a row of length "
-                       << row.size()
-                       << "!");
+                       << "static size) from a list with a row of length " << row.size() << "!");
 #endif // NDEBUG
       for (auto entry : row)
         (*this)[0][0] = entry;
@@ -492,10 +470,7 @@ public:
     if (rr != ROWS || cc != COLS)
       DUNE_THROW(Exceptions::wrong_input_given,
                  "You are trying to construct a FieldMatrix< ..., " << ROWS << ", " << COLS << " > (of "
-                                                                    << "static size) with "
-                                                                    << rr
-                                                                    << " rows and "
-                                                                    << cc
+                                                                    << "static size) with " << rr << " rows and " << cc
                                                                     << " columns!");
 #endif // NDEBUG
     (*this)[0][0] = kk;
@@ -503,8 +478,7 @@ public:
 
   FieldMatrix(const BaseType& other)
     : BaseType(other)
-  {
-  }
+  {}
 
   FieldMatrix(const Dune::XT::Common::FieldVector<K, 1>& other)
     : BaseType()
@@ -540,7 +514,7 @@ public:
 }; // class FieldMatrix
 
 
-template <class K, size_t num_blocks, size_t block_rows, size_t block_cols = block_rows>
+template<class K, size_t num_blocks, size_t block_rows, size_t block_cols = block_rows>
 class BlockedFieldMatrix
 {
   using ThisType = BlockedFieldMatrix;
@@ -553,8 +527,7 @@ public:
 
   BlockedFieldMatrix(const K& val = K(0.))
     : backend_(BlockType(val))
-  {
-  }
+  {}
 
   BlockedFieldMatrix(const size_t DXTC_DEBUG_ONLY(rows), const size_t DXTC_DEBUG_ONLY(cols), const K& val = K(0.))
     : backend_(BlockType(val))
@@ -569,8 +542,7 @@ public:
 
   BlockedFieldMatrix(const BlockType& block)
     : backend_(block)
-  {
-  }
+  {}
 
   ThisType& operator=(const MatrixType& other)
   {
@@ -688,7 +660,7 @@ public:
       backend_[jj].mtv(x.block(jj), ret.block(jj));
   } // void mv(...)
 
-  template <size_t br, size_t bc>
+  template<size_t br, size_t bc>
   ThisType& rightmultiply(const BlockedFieldMatrix<K, num_blocks, br, bc>& other)
   {
     assert((this != &other) && "Multiplying a matrix by itself gives wrong results, please copy before!");
@@ -772,7 +744,7 @@ public:
     return ret;
   }
 
-  template <class CharType, class CharTraits>
+  template<class CharType, class CharTraits>
   friend std::basic_ostream<CharType, CharTraits>& operator<<(std::basic_ostream<CharType, CharTraits>& out,
                                                               const ThisType& mat)
   {
@@ -784,7 +756,7 @@ private:
 };
 
 
-template <class K, int N, int M>
+template<class K, int N, int M>
 struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
 {
   typedef Dune::XT::Common::FieldMatrix<K, N, M> MatrixType;
@@ -792,7 +764,7 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
   typedef typename Dune::FieldTraits<K>::real_type RealType;
   typedef ScalarType S;
   typedef RealType R;
-  template <size_t rows = N, size_t cols = M, class FieldType = K>
+  template<size_t rows = N, size_t cols = M, class FieldType = K>
   using MatrixTypeTemplate = Dune::XT::Common::FieldMatrix<FieldType, rows, cols>;
 
   static const bool is_matrix = true;
@@ -807,7 +779,7 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
 
   static constexpr bool has_ostream = true;
 
-  template <class SparsityPatternType = FullPattern>
+  template<class SparsityPatternType = FullPattern>
   static inline MatrixType create(const size_t rows,
                                   const size_t cols,
                                   const ScalarType& val = suitable_default<ScalarType>::value(),
@@ -816,7 +788,7 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
     return MatrixType(rows, cols, val);
   }
 
-  template <class SparsityPatternType = FullPattern>
+  template<class SparsityPatternType = FullPattern>
   static inline std::unique_ptr<MatrixType> make_unique(const size_t rows,
                                                         const size_t cols,
                                                         const ScalarType& val = suitable_default<ScalarType>::value(),
@@ -862,7 +834,7 @@ struct MatrixAbstraction<Dune::XT::Common::FieldMatrix<K, N, M>>
   }
 };
 
-template <class K, size_t num_blocks, size_t block_rows, size_t block_cols>
+template<class K, size_t num_blocks, size_t block_rows, size_t block_cols>
 struct MatrixAbstraction<Dune::XT::Common::BlockedFieldMatrix<K, num_blocks, block_rows, block_cols>>
 {
   typedef Dune::XT::Common::BlockedFieldMatrix<K, num_blocks, block_rows, block_cols> MatrixType;
@@ -879,14 +851,14 @@ struct MatrixAbstraction<Dune::XT::Common::BlockedFieldMatrix<K, num_blocks, blo
 
   static const size_t static_cols = MatrixType::num_cols;
 
-  template <size_t rows = static_rows, size_t cols = static_cols, class FieldType = K>
+  template<size_t rows = static_rows, size_t cols = static_cols, class FieldType = K>
   using MatrixTypeTemplate = Dune::XT::Common::BlockedFieldMatrix<FieldType, rows / block_rows, block_rows, block_cols>;
 
   static const constexpr StorageLayout storage_layout = StorageLayout::other;
 
   static constexpr bool has_ostream = true;
 
-  template <class SparsityPatternType = FullPattern>
+  template<class SparsityPatternType = FullPattern>
   static inline MatrixType create(const size_t rows,
                                   const size_t cols,
                                   const ScalarType& val = suitable_default<ScalarType>::value(),
@@ -895,7 +867,7 @@ struct MatrixAbstraction<Dune::XT::Common::BlockedFieldMatrix<K, num_blocks, blo
     return MatrixType(rows, cols, val);
   }
 
-  template <class SparsityPatternType = FullPattern>
+  template<class SparsityPatternType = FullPattern>
   static inline std::unique_ptr<MatrixType> make_unique(const size_t rows,
                                                         const size_t cols,
                                                         const ScalarType& val = suitable_default<ScalarType>::value(),
@@ -943,7 +915,7 @@ struct MatrixAbstraction<Dune::XT::Common::BlockedFieldMatrix<K, num_blocks, blo
 };
 
 
-template <class M>
+template<class M>
 typename std::enable_if<is_matrix<M>::value && MatrixAbstraction<M>::has_static_size,
                         std::unique_ptr<FieldMatrix<typename MatrixAbstraction<M>::S,
                                                     MatrixAbstraction<M>::static_rows,
@@ -960,7 +932,7 @@ make_field_container_ptr(const M& mat)
 }
 
 
-template <class M>
+template<class M>
 typename std::enable_if<is_matrix<M>::value && MatrixAbstraction<M>::has_static_size,
                         FieldMatrix<typename MatrixAbstraction<M>::S,
                                     MatrixAbstraction<M>::static_rows,
@@ -977,49 +949,49 @@ make_field_container(const M& mat)
 }
 
 
-template <class K, int ROWS, int COLS>
+template<class K, int ROWS, int COLS>
 FieldMatrix<K, ROWS, COLS> make_field_container(Dune::FieldMatrix<K, ROWS, COLS>&& vec)
 {
   return std::move(vec);
 }
 
 
-template <class K, int ROWS, int COLS>
+template<class K, int ROWS, int COLS>
 FieldMatrix<K, ROWS, COLS> make_field_container(FieldMatrix<K, ROWS, COLS>&& vec)
 {
   return std::move(vec);
 }
 
 
-template <class K, int ROWS, int COLS>
+template<class K, int ROWS, int COLS>
 typename std::enable_if<is_arithmetic<K>::value && !is_complex<K>::value, FieldMatrix<K, ROWS, COLS>>::type
 real(const Dune::FieldMatrix<K, ROWS, COLS>& real_mat)
 {
   return real_mat;
 }
 
-template <class K, int ROWS, int COLS>
+template<class K, int ROWS, int COLS>
 typename std::enable_if<is_arithmetic<K>::value && !is_complex<K>::value, FieldMatrix<K, ROWS, COLS>>::type
 real(const FieldMatrix<K, ROWS, COLS>& real_mat)
 {
   return real_mat;
 }
 
-template <class K, int ROWS, int COLS>
+template<class K, int ROWS, int COLS>
 typename std::enable_if<is_arithmetic<K>::value && !is_complex<K>::value, FieldMatrix<K, ROWS, COLS>>::type
 real(Dune::FieldMatrix<K, ROWS, COLS>&& real_mat)
 {
   return std::move(real_mat);
 }
 
-template <class K, int ROWS, int COLS>
+template<class K, int ROWS, int COLS>
 typename std::enable_if<is_arithmetic<K>::value && !is_complex<K>::value, FieldMatrix<K, ROWS, COLS>>::type
 real(FieldMatrix<K, ROWS, COLS>&& real_mat)
 {
   return std::move(real_mat);
 }
 
-template <class K, int ROWS, int COLS>
+template<class K, int ROWS, int COLS>
 typename std::enable_if<is_complex<K>::value, FieldMatrix<real_t<K>, ROWS, COLS>>::type
 real(const Dune::FieldMatrix<K, ROWS, COLS>& complex_mat)
 {
@@ -1030,7 +1002,7 @@ real(const Dune::FieldMatrix<K, ROWS, COLS>& complex_mat)
   return real_mat;
 }
 
-template <class K, int ROWS, int COLS>
+template<class K, int ROWS, int COLS>
 typename std::enable_if<is_complex<K>::value, FieldMatrix<real_t<K>, ROWS, COLS>>::type
 real(const FieldMatrix<K, ROWS, COLS>& complex_mat)
 {
@@ -1042,21 +1014,21 @@ real(const FieldMatrix<K, ROWS, COLS>& complex_mat)
 }
 
 
-template <class K, int ROWS, int COLS>
+template<class K, int ROWS, int COLS>
 typename std::enable_if<is_arithmetic<K>::value && !is_complex<K>::value, FieldMatrix<K, ROWS, COLS>>::type
 imag(const Dune::FieldMatrix<K, ROWS, COLS>& /*real_mat*/)
 {
   return FieldMatrix<K, ROWS, COLS>(0);
 }
 
-template <class K, int ROWS, int COLS>
+template<class K, int ROWS, int COLS>
 typename std::enable_if<is_arithmetic<K>::value && !is_complex<K>::value, FieldMatrix<K, ROWS, COLS>>::type
 imag(const FieldMatrix<K, ROWS, COLS>& /*real_mat*/)
 {
   return FieldMatrix<K, ROWS, COLS>(0);
 }
 
-template <class K, int ROWS, int COLS>
+template<class K, int ROWS, int COLS>
 typename std::enable_if<is_complex<K>::value, FieldMatrix<real_t<K>, ROWS, COLS>>::type
 imag(const Dune::FieldMatrix<K, ROWS, COLS>& complex_mat)
 {
@@ -1067,7 +1039,7 @@ imag(const Dune::FieldMatrix<K, ROWS, COLS>& complex_mat)
   return real_mat;
 }
 
-template <class K, int ROWS, int COLS>
+template<class K, int ROWS, int COLS>
 typename std::enable_if<is_complex<K>::value, FieldMatrix<real_t<K>, ROWS, COLS>>::type
 imag(const FieldMatrix<K, ROWS, COLS>& complex_mat)
 {
@@ -1083,7 +1055,7 @@ imag(const FieldMatrix<K, ROWS, COLS>& complex_mat)
 } // namespace XT
 
 
-template <class L, int ROWS, int COLS, class R>
+template<class L, int ROWS, int COLS, class R>
 Dune::XT::Common::FieldMatrix<typename PromotionTraits<L, R>::PromotedType, ROWS, COLS>
 operator-(const Dune::FieldMatrix<L, ROWS, COLS>& left, const Dune::FieldMatrix<R, ROWS, COLS>& right)
 {
@@ -1093,7 +1065,7 @@ operator-(const Dune::FieldMatrix<L, ROWS, COLS>& left, const Dune::FieldMatrix<
 }
 
 
-template <class L, int ROWS, int COLS, class R>
+template<class L, int ROWS, int COLS, class R>
 Dune::XT::Common::FieldMatrix<typename PromotionTraits<L, R>::PromotedType, ROWS, COLS>
 operator+(const Dune::FieldMatrix<L, ROWS, COLS>& left, const Dune::FieldMatrix<R, ROWS, COLS>& right)
 {
@@ -1103,7 +1075,7 @@ operator+(const Dune::FieldMatrix<L, ROWS, COLS>& left, const Dune::FieldMatrix<
 }
 
 
-template <class K, int L_ROWS, int L_COLS, int R_COLS>
+template<class K, int L_ROWS, int L_COLS, int R_COLS>
 Dune::XT::Common::FieldMatrix<K, L_ROWS, R_COLS> operator*(const Dune::FieldMatrix<K, L_ROWS, L_COLS>& left,
                                                            const Dune::FieldMatrix<K, L_COLS, R_COLS>& right)
 {
@@ -1112,7 +1084,7 @@ Dune::XT::Common::FieldMatrix<K, L_ROWS, R_COLS> operator*(const Dune::FieldMatr
 
 // we need this explicit overload to fix an ambiguous operator* error due to the automatic conversion from
 // FieldMatrix<K, 1, 1> to K
-template <class K, int L_ROWS>
+template<class K, int L_ROWS>
 Dune::XT::Common::FieldMatrix<K, L_ROWS, 1> operator*(const Dune::XT::Common::FieldMatrix<K, L_ROWS, 1>& left,
                                                       const Dune::FieldMatrix<K, 1, 1>& right)
 {
@@ -1120,7 +1092,7 @@ Dune::XT::Common::FieldMatrix<K, L_ROWS, 1> operator*(const Dune::XT::Common::Fi
 }
 
 
-template <class K, int L_ROWS, int L_COLS, int R_COLS>
+template<class K, int L_ROWS, int L_COLS, int R_COLS>
 void rightmultiply(Dune::FieldMatrix<K, L_ROWS, R_COLS>& ret,
                    const Dune::FieldMatrix<K, L_ROWS, L_COLS>& left,
                    const Dune::FieldMatrix<K, L_COLS, R_COLS>& right)
@@ -1134,11 +1106,11 @@ void rightmultiply(Dune::FieldMatrix<K, L_ROWS, R_COLS>& ret,
   }
 }
 
-template <class L, int L_ROWS, int L_COLS, class R, int R_COLS>
-typename std::enable_if<!std::is_same<L, R>::value,
-                        Dune::XT::Common::FieldMatrix<typename PromotionTraits<L, R>::PromotedType, L_ROWS, R_COLS>>::
-    type
-    operator*(const Dune::FieldMatrix<L, L_ROWS, L_COLS>& left, const Dune::FieldMatrix<R, L_COLS, R_COLS>& right)
+template<class L, int L_ROWS, int L_COLS, class R, int R_COLS>
+typename std::enable_if<
+    !std::is_same<L, R>::value,
+    Dune::XT::Common::FieldMatrix<typename PromotionTraits<L, R>::PromotedType, L_ROWS, R_COLS>>::type
+operator*(const Dune::FieldMatrix<L, L_ROWS, L_COLS>& left, const Dune::FieldMatrix<R, L_COLS, R_COLS>& right)
 {
   using Promoted = Dune::XT::Common::FieldMatrix<typename PromotionTraits<L, R>::PromotedType, L_ROWS, R_COLS>;
   using Dune::XT::Common::convert_to;
@@ -1146,7 +1118,7 @@ typename std::enable_if<!std::is_same<L, R>::value,
 }
 
 // versions that do not allocate matrices on the stack (for large matrices)
-template <class K, int L_ROWS, int L_COLS, int R_COLS>
+template<class K, int L_ROWS, int L_COLS, int R_COLS>
 std::unique_ptr<Dune::XT::Common::FieldMatrix<K, L_ROWS, R_COLS>>
 operator*(const std::unique_ptr<Dune::FieldMatrix<K, L_ROWS, L_COLS>>& left,
           const Dune::FieldMatrix<K, L_COLS, R_COLS>& right)
@@ -1156,7 +1128,7 @@ operator*(const std::unique_ptr<Dune::FieldMatrix<K, L_ROWS, L_COLS>>& left,
   return ret;
 }
 
-template <class K, int L_ROWS, int L_COLS, int R_COLS>
+template<class K, int L_ROWS, int L_COLS, int R_COLS>
 std::unique_ptr<Dune::XT::Common::FieldMatrix<K, L_ROWS, R_COLS>>
 operator*(const Dune::FieldMatrix<K, L_ROWS, L_COLS>& left,
           const std::unique_ptr<Dune::FieldMatrix<K, L_COLS, R_COLS>>& right)
@@ -1166,7 +1138,7 @@ operator*(const Dune::FieldMatrix<K, L_ROWS, L_COLS>& left,
   return ret;
 }
 
-template <class K, int L_ROWS, int L_COLS, int R_COLS>
+template<class K, int L_ROWS, int L_COLS, int R_COLS>
 std::unique_ptr<Dune::XT::Common::FieldMatrix<K, L_ROWS, R_COLS>>
 operator*(const std::unique_ptr<Dune::FieldMatrix<K, L_ROWS, L_COLS>>& left,
           const std::unique_ptr<Dune::FieldMatrix<K, L_COLS, R_COLS>>& right)

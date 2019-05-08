@@ -23,10 +23,9 @@ namespace XT {
 
 //! marker for sequential in MPI-enabled solver stuffs
 struct SequentialCommunication : public Dune::Amg::SequentialInformation
-{
-};
+{};
 
-template <class GridCommImp>
+template<class GridCommImp>
 struct UseParallelCommunication
 {
 #if HAVE_MPI

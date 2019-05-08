@@ -34,7 +34,7 @@ namespace internal {
 
 #if HAVE_TBB
 
-template <class ValueImp>
+template<class ValueImp>
 class EnumerableThreadSpecificWrapper
 {
   // enumerable_thread_specific does not compile with ConstValueType as template param
@@ -46,11 +46,10 @@ public:
   using iterator = typename BackendType::iterator;
   using const_iterator = typename BackendType::const_iterator;
 
-  template <class... InitTypes>
+  template<class... InitTypes>
   explicit EnumerableThreadSpecificWrapper(InitTypes&&... ctor_args)
     : values_(std::forward<InitTypes>(ctor_args)...)
-  {
-  }
+  {}
 
   ValueType& local()
   {
@@ -84,7 +83,7 @@ public:
     return values_.end();
   }
 
-  template <class BinaryOperation>
+  template<class BinaryOperation>
   ValueType combine(BinaryOperation op) const
   {
     return values_.combine(op);
@@ -96,7 +95,7 @@ private:
 
 #else // HAVE_TBB
 
-template <class ValueImp>
+template<class ValueImp>
 class EnumerableThreadSpecificWrapper
 {
   using BackendType = std::unique_ptr<std::remove_const_t<ValueImp>>;
@@ -110,15 +109,13 @@ public:
   //! Initialization by copy construction of ValueType
   explicit EnumerableThreadSpecificWrapper(ConstValueType& value)
     : values_(std::make_unique<std::remove_const_t<ValueType>>(value))
-  {
-  }
+  {}
 
   //! Initialization by in-place construction ValueType with \param ctor_args
-  template <class... InitTypes>
+  template<class... InitTypes>
   explicit EnumerableThreadSpecificWrapper(InitTypes&&... ctor_args)
     : values_(std::make_unique<std::remove_const_t<ValueType>>(std::forward<InitTypes>(ctor_args)...))
-  {
-  }
+  {}
 
   ValueType& local()
   {
@@ -150,7 +147,7 @@ public:
     return values_.get() + 1;
   }
 
-  template <class BinaryOperation>
+  template<class BinaryOperation>
   ValueType combine(BinaryOperation /*op*/) const
   {
     return *values_;
@@ -168,7 +165,7 @@ private:
 
 /** Automatic Storage of non-static, N thread-local values
  **/
-template <class ValueImp>
+template<class ValueImp>
 class PerThreadValue
 {
   using ContainerType = internal::EnumerableThreadSpecificWrapper<ValueImp>;
@@ -180,15 +177,13 @@ public:
   //! Initialization by copy construction of ValueType
   explicit PerThreadValue(ConstValueType& value)
     : values_(value)
-  {
-  }
+  {}
 
   //! Initialization by in-place construction ValueType with \param ctor_args
-  template <class... InitTypes>
+  template<class... InitTypes>
   explicit PerThreadValue(InitTypes&&... ctor_args)
     : values_(std::forward<InitTypes>(ctor_args)...)
-  {
-  }
+  {}
 
   operator ValueType() const
   {
@@ -215,7 +210,7 @@ public:
     return &values_.local();
   }
 
-  template <class BinaryOperation>
+  template<class BinaryOperation>
   ValueType accumulate(ValueType init, BinaryOperation op) const
   {
     return op(init, values_.combine(op));
@@ -261,7 +256,7 @@ private:
  * tbb::enumerable_thread_specific lazily initalizes the values in each thread.
  * \todo Either fix TimingData and remove this class or fix this class.
  **/
-template <class ValueImp>
+template<class ValueImp>
 class UnsafePerThreadValue : public boost::noncopyable
 {
 public:
@@ -281,7 +276,7 @@ public:
   }
 
   //! Initialization by in-place construction ValueType with \param ctor_args
-  template <class... InitTypes>
+  template<class... InitTypes>
   explicit UnsafePerThreadValue(InitTypes&&... ctor_args)
     : values_(threadManager().max_threads())
   {
@@ -325,7 +320,7 @@ public:
     return values_[threadManager().thread()];
   }
 
-  template <class BinaryOperation>
+  template<class BinaryOperation>
   ValueType accumulate(ValueType init, BinaryOperation op) const
   {
     typedef const typename ContainerType::value_type ptr;
@@ -361,15 +356,14 @@ private:
 }; // class UnsafePerThreadValue<...>
 
 
-template <class Imp, typename Result, class Reduction = std::plus<Result>>
+template<class Imp, typename Result, class Reduction = std::plus<Result>>
 class ThreadResultPropagator
 {
 public:
   ThreadResultPropagator(Imp* imp)
     : imp_(imp)
     , copies_({imp})
-  {
-  }
+  {}
 
   Imp* copy_imp()
   {

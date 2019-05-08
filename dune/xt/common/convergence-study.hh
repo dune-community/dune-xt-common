@@ -27,9 +27,7 @@ class ConvergenceStudy
 public:
   explicit ConvergenceStudy(const std::vector<std::string> only_these_norms = {});
 
-  virtual ~ConvergenceStudy()
-  {
-  }
+  virtual ~ConvergenceStudy() {}
 
   virtual std::string identifier() const = 0;
 

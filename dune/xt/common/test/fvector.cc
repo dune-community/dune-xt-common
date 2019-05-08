@@ -14,7 +14,7 @@
 #include <dune/xt/common/float_cmp.hh>
 
 // using this function to allow for {...} syntax below (would not work in the EXPECT_EQ macro directly).
-template <class A, int a, class B, int b>
+template<class A, int a, class B, int b>
 void check(const Dune::XT::Common::FieldVector<A, a>& expected_result, const Dune::FieldVector<B, b>& actual_result)
 {
   EXPECT_EQ(expected_result, actual_result);

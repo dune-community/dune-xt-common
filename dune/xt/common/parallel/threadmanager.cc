@@ -68,7 +68,7 @@ size_t Dune::XT::Common::ThreadManager::current_threads()
   return threads;
 }
 
-template <typename Key, typename T, typename MapType>
+template<typename Key, typename T, typename MapType>
 std::pair<typename MapType::iterator, bool> tbb_map_emplace(MapType& map_in, Key key, T value)
 {
 #if defined(BOOST_CLANG) && BOOST_CLANG
@@ -148,7 +148,6 @@ size_t Dune::XT::Common::ThreadManager::default_max_threads()
 
 Dune::XT::Common::ThreadManager::ThreadManager()
   : max_threads_(1)
-{
-}
+{}
 
 #endif // HAVE_TBB

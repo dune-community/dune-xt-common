@@ -29,14 +29,14 @@ using XT::Common::create;
 using XT::Common::FloatCmp::Style;
 
 // add operator+= for std::array and std::vector
-template <typename T, size_t N>
+template<typename T, size_t N>
 std::array<T, N>& operator+=(std::array<T, N>& arr, const std::array<T, N>& other)
 {
   std::transform(arr.begin(), arr.end(), other.begin(), arr.begin(), std::plus<T>());
   return arr;
 }
 
-template <typename T>
+template<typename T>
 std::vector<T>& operator+=(std::vector<T>& vec, const std::vector<T>& other)
 {
   DXT_ASSERT(vec.size() == other.size());
@@ -45,39 +45,39 @@ std::vector<T>& operator+=(std::vector<T>& vec, const std::vector<T>& other)
 }
 
 
-template <class T, class S>
+template<class T, class S>
 typename std::enable_if<XT::Common::is_arithmetic<T>::value, T>::type make_number(const S& number)
 {
   return T(number);
 }
 
-template <class T, class S>
+template<class T, class S>
 typename std::enable_if<XT::Common::is_complex<T>::value && !XT::Common::is_complex<S>::value, T>::type
 make_number(const S& number)
 {
   return T(number, number); // <- This has to match the DEFAULT_EPSILON below!
 }
 
-template <class T>
+template<class T>
 typename std::enable_if<XT::Common::is_complex<T>::value, T>::type make_number(const T& number)
 {
   return number;
 }
 
 
-template <class T>
+template<class T>
 typename std::enable_if<XT::Common::is_arithmetic<T>::value, T>::type make_type(const T& number)
 {
   return number;
 }
 
-template <class T>
+template<class T>
 typename std::enable_if<XT::Common::is_complex<T>::value, T>::type make_type(const T& number)
 {
   return number; // <- No special treatment here, already done above!
 }
 
-template <class T, class S>
+template<class T, class S>
 typename std::enable_if<XT::Common::is_vector<T>::value, T>::type make_type(const S& number)
 {
   using Vec = XT::Common::VectorAbstraction<T>;
@@ -87,7 +87,7 @@ typename std::enable_if<XT::Common::is_vector<T>::value, T>::type make_type(cons
     return Vec::create(VECSIZE, number);
 }
 
-template <class T, class S>
+template<class T, class S>
 typename std::enable_if<XT::Common::is_matrix<T>::value, T>::type make_type(const S& number)
 {
   using Mat = XT::Common::MatrixAbstraction<T>;
@@ -98,7 +98,7 @@ typename std::enable_if<XT::Common::is_matrix<T>::value, T>::type make_type(cons
 }
 
 
-template <class T>
+template<class T>
 struct FloatCmpTest : public testing::Test
 {
   typedef typename std::conditional<XT::Common::is_matrix<T>::value,

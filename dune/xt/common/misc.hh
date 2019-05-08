@@ -51,7 +51,7 @@ namespace XT {
 namespace Common {
 
 //! element-index-in-container search
-template <class StlSequence>
+template<class StlSequence>
 inline int get_idx(const StlSequence& ct, const typename StlSequence::value_type& val)
 {
   const auto result = std::find(ct.begin(), ct.end(), val);
@@ -63,7 +63,7 @@ inline int get_idx(const StlSequence& ct, const typename StlSequence::value_type
 /** this allows subscription indices to wrap around
  * \example N=4: WraparoundArray[4] == WraparoundArray[0] && WraparoundArray[-1] == WraparoundArray[3]
  **/
-template <class T, size_t N>
+template<class T, size_t N>
 struct WraparoundArray : public Dune::array<T, N>
 {
   typedef Dune::array<T, N> BaseType;
@@ -103,14 +103,14 @@ struct WraparoundArray : public Dune::array<T, N>
 };
 
 //! type safe (this will not compile for degraded-to-pointer arrays) way of getting array length
-template <class T, size_t N>
+template<class T, size_t N>
 size_t array_length(T (&/*array*/)[N])
 {
   return N;
 }
 
 //! get a non-zero initialised array
-template <class T, size_t N>
+template<class T, size_t N>
 std::array<T, N> make_array(const T& v)
 {
   std::array<T, N> ret;
@@ -118,7 +118,7 @@ std::array<T, N> make_array(const T& v)
   return ret;
 }
 
-template <class T, size_t N>
+template<class T, size_t N>
 std::array<T, N> make_array(const std::vector<T>& v)
 {
   if (v.size() == 1) {
@@ -145,7 +145,7 @@ void dump_environment(boost::filesystem::ofstream& file, std::string csv_sep = "
  * but we only need this in an Intel MIC setup with weird lib versioning.
  * Normally we'd depend on the full gcc 4.8 stack atm and do not use the insert fallback
  **/
-template <typename Key, typename T, typename MapType>
+template<typename Key, typename T, typename MapType>
 std::pair<typename MapType::iterator, bool> map_emplace(MapType& map_in, Key key, T value)
 {
 #if HAVE_MAP_EMPLACE
@@ -156,7 +156,7 @@ std::pair<typename MapType::iterator, bool> map_emplace(MapType& map_in, Key key
 #endif
 }
 
-template <typename K, typename V, typename MapType>
+template<typename K, typename V, typename MapType>
 DXT_DEPRECATED_MSG("no longer needed with c++14 (2018/03/20)")
 std::pair<typename MapType::iterator, bool> map_emplace(MapType& map_in,
                                                         std::piecewise_construct_t pcw,
@@ -166,7 +166,7 @@ std::pair<typename MapType::iterator, bool> map_emplace(MapType& map_in,
   return map_in.emplace(pcw, keys, values);
 }
 
-template <typename T>
+template<typename T>
 struct remove_const_reference
 {
   typedef typename std::remove_reference<typename std::remove_const<T>::type>::type type;

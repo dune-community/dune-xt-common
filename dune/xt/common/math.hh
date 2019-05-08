@@ -50,32 +50,31 @@ namespace Common {
  * use this to get the minimum increment/difference for all basic types
  * (or add specializations as necessary ofc)
  **/
-template <class T, bool is_integral = std::is_integral<T>::value>
+template<class T, bool is_integral = std::is_integral<T>::value>
 struct Epsilon
-{
-};
+{};
 
-template <class T>
+template<class T>
 struct Epsilon<T, true>
 {
   static const T value;
 };
 
-template <class T>
+template<class T>
 struct Epsilon<T, false>
 {
   static const T value;
 };
 
-template <>
+template<>
 struct Epsilon<std::string, false>
 {
   static const std::string value;
 };
 
-template <class T>
+template<class T>
 const T Epsilon<T, true>::value = T(1);
-template <class T>
+template<class T>
 const T Epsilon<T, false>::value = std::numeric_limits<T>::epsilon();
 
 namespace internal {
@@ -83,7 +82,7 @@ namespace internal {
  *  Helper struct to compute absolute values of signed and unsigned values,
  *  std::abs is only defined for signed types.
  **/
-template <class T, bool isUnsigned = std::is_unsigned<T>::value>
+template<class T, bool isUnsigned = std::is_unsigned<T>::value>
 struct AbsoluteValue
 {
   static T result(const T& val)
@@ -92,7 +91,7 @@ struct AbsoluteValue
     return abs(val);
   }
 };
-template <class T>
+template<class T>
 struct AbsoluteValue<T, true>
 {
   static T result(const T& val)
@@ -101,13 +100,13 @@ struct AbsoluteValue<T, true>
   }
 };
 
-template <class T, bool is_enum = std::is_enum<T>::value>
+template<class T, bool is_enum = std::is_enum<T>::value>
 struct Absretval
 {
   typedef T type;
 };
 
-template <class T>
+template<class T>
 struct Absretval<T, true>
 {
   typedef typename underlying_type<T>::type type;
@@ -116,7 +115,7 @@ struct Absretval<T, true>
 } // namespace internal
 
 //! drop-in replacement for std::abs, that works for more types
-template <class T>
+template<class T>
 typename internal::Absretval<T>::type abs(const T& val)
 {
   typedef typename internal::Absretval<T>::type R;
@@ -124,14 +123,14 @@ typename internal::Absretval<T>::type abs(const T& val)
 }
 
 //! very simple, underrun-safe for unsigned types, difference method
-template <class T>
+template<class T>
 T absolute_difference(T a, T b)
 {
   return (a > b) ? a - b : b - a;
 }
 
 //! a vector wrapper for continiously updating min,max,avg of some element type vector
-template <class ElementType>
+template<class ElementType>
 class MinMaxAvg
 {
   static_assert(!is_complex<ElementType>::value, "complex accumulation not supported");
@@ -140,11 +139,9 @@ protected:
   typedef MinMaxAvg<ElementType> ThisType;
 
 public:
-  MinMaxAvg()
-  {
-  }
+  MinMaxAvg() {}
 
-  template <class stl_container_type>
+  template<class stl_container_type>
   MinMaxAvg(const stl_container_type& elements)
   {
     static_assert((boost::is_same<ElementType, typename stl_container_type::value_type>::value),
@@ -195,13 +192,13 @@ protected:
 };
 
 //! \return var bounded in [min, max]
-template <typename T>
+template<typename T>
 typename std::enable_if<!is_vector<T>::value, T>::type clamp(const T var, const T min, const T max)
 {
   return (var < min) ? min : (var > max) ? max : var;
 }
 
-template <typename T>
+template<typename T>
 typename std::enable_if<is_vector<T>::value, T>::type clamp(const T var, const T min, const T max)
 {
   auto result = var;
@@ -218,7 +215,7 @@ typename std::enable_if<is_vector<T>::value, T>::type clamp(const T var, const T
  *            0 iff val == 0
  *            1 iff val > 0
  */
-template <typename T>
+template<typename T>
 int signum(T val)
 {
   return (T(0) < val) - (val < T(0));
@@ -227,19 +224,17 @@ int signum(T val)
 /** enable us to use DXTC::numeric_limits for all types, even when no specialization is avaliable.
  * If there is one, it's used. Otherwise we default to numerical_limtis of double
  **/
-template <class T, typename = void>
+template<class T, typename = void>
 class numeric_limits : public std::numeric_limits<double>
-{
-};
+{};
 
-template <class T>
+template<class T>
 class numeric_limits<T, typename std::enable_if<std::numeric_limits<T>::is_specialized>::type>
-    : public std::numeric_limits<T>
-{
-};
+  : public std::numeric_limits<T>
+{};
 
 //! forward to std::isnan for general types, overload for complex below
-template <class T>
+template<class T>
 bool isnan(T val)
 {
   using std::isnan;
@@ -247,14 +242,14 @@ bool isnan(T val)
 }
 
 //! override isnan for complex here so it doesn't bleed into the std namespace
-template <class T>
+template<class T>
 bool isnan(std::complex<T> val)
 {
   return isnan(std::real(val)) || isnan(std::imag(val));
 }
 
 //! forward to std::isinf for general types, overload for complex below
-template <class T>
+template<class T>
 bool isinf(T val)
 {
   using std::isinf;
@@ -262,7 +257,7 @@ bool isinf(T val)
 }
 
 //! override isinf for complex here so it doesn't bleed into the std namespace
-template <class T>
+template<class T>
 bool isinf(std::complex<T> val)
 {
   return isinf(std::real(val)) || isinf(std::imag(val));
@@ -275,13 +270,13 @@ constexpr size_t factorial(size_t n)
 }
 
 //! calculates complex conjugate like std::conj, but returns T instead of complex<T>
-template <class T>
+template<class T>
 std::enable_if_t<std::is_arithmetic<T>::value, T> conj(T val)
 {
   return val;
 }
 
-template <class T>
+template<class T>
 std::complex<T> conj(std::complex<T> val)
 {
   return std::conj(val);
@@ -297,13 +292,13 @@ inline double binomial_coefficient(const double n, const size_t k)
 }
 
 
-template <class T>
+template<class T>
 T max(const T& left, const T& right)
 {
   return std::max(left, right);
 }
 
-template <class L, class R>
+template<class L, class R>
 typename PromotionTraits<L, R>::PromotedType max(const L& left, const R& right)
 {
   using T = typename PromotionTraits<L, R>::PromotedType;
@@ -311,13 +306,13 @@ typename PromotionTraits<L, R>::PromotedType max(const L& left, const R& right)
 }
 
 
-template <class T>
+template<class T>
 T min(const T& left, const T& right)
 {
   return std::min(left, right);
 }
 
-template <class L, class R>
+template<class L, class R>
 typename PromotionTraits<L, R>::PromotedType min(const L& left, const R& right)
 {
   using T = typename PromotionTraits<L, R>::PromotedType;
@@ -326,7 +321,7 @@ typename PromotionTraits<L, R>::PromotedType min(const L& left, const R& right)
 
 
 // avoid Wfloat-equal warning
-template <class FieldType>
+template<class FieldType>
 inline bool is_zero(const FieldType& val)
 {
   return std::equal_to<FieldType>()(val, FieldType(0));
@@ -356,39 +351,39 @@ long unsigned int abs(const long unsigned int& value);
 unsigned char abs(unsigned char value);
 
 
-template <int k>
+template<int k>
 Dune::bigunsignedint<k> abs(const Dune::bigunsignedint<k>& value)
 {
   return value;
 }
 
-template <int k>
+template<int k>
 inline Dune::bigunsignedint<k> pow(Dune::bigunsignedint<k> /*value*/, std::uintmax_t /*n*/)
 {
   DUNE_THROW(Dune::NotImplemented, "pow not implemented for bigunisgnedint");
   return Dune::bigunsignedint<k>();
 }
 
-template <int k>
+template<int k>
 inline Dune::bigunsignedint<k> sqrt(Dune::bigunsignedint<k> value)
 {
   DUNE_THROW(Dune::NotImplemented, "sqrt not implemented for bigunisgnedint");
   return Dune::bigunsignedint<k>(std::sqrt(value.todouble()));
 }
 
-template <int k>
+template<int k>
 inline Dune::bigunsignedint<k> conj(Dune::bigunsignedint<k> value)
 {
   return value;
 }
 
-template <int k>
+template<int k>
 inline bool isnan(Dune::bigunsignedint<k> /*value*/)
 {
   return false;
 }
 
-template <int k>
+template<int k>
 inline bool isinf(Dune::bigunsignedint<k> /*value*/)
 {
   return false;
@@ -398,7 +393,7 @@ inline bool isinf(Dune::bigunsignedint<k> /*value*/)
 } // namespace std
 
 
-template <class T>
+template<class T>
 inline std::ostream& operator<<(std::ostream& s, const Dune::XT::Common::MinMaxAvg<T>& d)
 {
   d.output(s);

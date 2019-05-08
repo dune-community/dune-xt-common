@@ -67,7 +67,7 @@ namespace XT {
 namespace Common {
 
 
-template <class InterfaceType, class TraitsImp>
+template<class InterfaceType, class TraitsImp>
 class CRTPInterface
 {
 public:
@@ -96,7 +96,7 @@ protected:
 
 
 #ifndef NDEBUG
-template <class I, class T>
+template<class I, class T>
 std::recursive_mutex CRTPInterface<I, T>::crtp_mutex_;
 #endif
 

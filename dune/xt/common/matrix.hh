@@ -31,8 +31,7 @@ namespace Common {
 
 // Sparsity pattern placeholder representing a dense matrix pattern.
 struct FullPattern
-{
-};
+{};
 
 /**
  * \brief Traits to uniformly handle matrices.
@@ -41,7 +40,7 @@ struct FullPattern
  *        specify a specialization of this class in your code with is_matrix defined to true and the appropriate
  *        static methods implemented and members defined (see the specializations below).
  */
-template <class MatType>
+template<class MatType>
 struct MatrixAbstraction
 {
   using M = std::conditional_t<std::is_same<MatType, void>::value, int, MatType>; // avoid reference to void
@@ -51,7 +50,7 @@ struct MatrixAbstraction
   typedef ScalarType S;
   typedef RealType R;
 
-  template <size_t rows = 0, size_t cols = 0, class FieldType = ScalarType>
+  template<size_t rows = 0, size_t cols = 0, class FieldType = ScalarType>
   using MatrixTypeTemplate = MatrixType;
 
   static const bool is_matrix = false;
@@ -66,7 +65,7 @@ struct MatrixAbstraction
 
   static const bool has_ostream = false;
 
-  template <class SparsityPatternType = FullPattern>
+  template<class SparsityPatternType = FullPattern>
   static inline /*MatrixType*/ void create(const size_t /*rows*/,
                                            const size_t /*cols*/,
                                            const ScalarType& /*val*/ = suitable_default<ScalarType>::value(),
@@ -75,7 +74,7 @@ struct MatrixAbstraction
     static_assert(AlwaysFalse<MatType>::value, "Do not call me if is_matrix is false!");
   }
 
-  template <class SparsityPatternType = FullPattern>
+  template<class SparsityPatternType = FullPattern>
   static inline /*std::unique_ptr<MatrixType>*/ void
   make_unique(const size_t /*rows*/,
               const size_t /*cols*/,
@@ -120,7 +119,7 @@ struct MatrixAbstraction
     return nullptr;
   }
 
-  template <bool is_mat = is_matrix>
+  template<bool is_mat = is_matrix>
   static inline const std::enable_if_t<is_mat, ScalarType>* data(std::add_const_t<MatrixType>& /*vec*/)
   {
     static_assert(AlwaysFalse<MatType>::value, "Do not call me if storage_layout is not dense!");
@@ -128,7 +127,7 @@ struct MatrixAbstraction
   }
 };
 
-template <class K>
+template<class K>
 struct MatrixAbstraction<Dune::DynamicMatrix<K>>
 {
   typedef Dune::DynamicMatrix<K> MatrixType;
@@ -136,7 +135,7 @@ struct MatrixAbstraction<Dune::DynamicMatrix<K>>
   typedef typename Dune::FieldTraits<K>::real_type RealType;
   typedef ScalarType S;
   typedef RealType R;
-  template <size_t rows = 0, size_t cols = 0, class FieldType = K>
+  template<size_t rows = 0, size_t cols = 0, class FieldType = K>
   using MatrixTypeTemplate = DynamicMatrix<K>;
 
   static const bool is_matrix = true;
@@ -151,7 +150,7 @@ struct MatrixAbstraction<Dune::DynamicMatrix<K>>
 
   static const bool has_ostream = true;
 
-  template <class SparsityPatternType = FullPattern>
+  template<class SparsityPatternType = FullPattern>
   static inline MatrixType create(const size_t rows,
                                   const size_t cols,
                                   const ScalarType& val = suitable_default<ScalarType>::value(),
@@ -160,7 +159,7 @@ struct MatrixAbstraction<Dune::DynamicMatrix<K>>
     return MatrixType(rows, cols, val);
   }
 
-  template <class SparsityPatternType = FullPattern>
+  template<class SparsityPatternType = FullPattern>
   static inline std::unique_ptr<MatrixType> make_unique(const size_t rows,
                                                         const size_t cols,
                                                         const ScalarType& val = suitable_default<ScalarType>::value(),
@@ -206,7 +205,7 @@ struct MatrixAbstraction<Dune::DynamicMatrix<K>>
   }
 };
 
-template <class K, int N, int M>
+template<class K, int N, int M>
 struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
 {
   typedef Dune::FieldMatrix<K, N, M> MatrixType;
@@ -214,7 +213,7 @@ struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
   typedef typename Dune::FieldTraits<K>::real_type RealType;
   typedef ScalarType S;
   typedef RealType R;
-  template <size_t rows = N, size_t cols = M, class FieldType = K>
+  template<size_t rows = N, size_t cols = M, class FieldType = K>
   using MatrixTypeTemplate = Dune::FieldMatrix<FieldType, rows, cols>;
 
   static const bool is_matrix = true;
@@ -229,7 +228,7 @@ struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
 
   static const bool has_ostream = true;
 
-  template <class SparsityPatternType = FullPattern>
+  template<class SparsityPatternType = FullPattern>
   static inline MatrixType create(const size_t rows,
                                   const size_t cols,
                                   const ScalarType& val = suitable_default<ScalarType>::value(),
@@ -242,7 +241,7 @@ struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
     return MatrixType(val);
   }
 
-  template <class SparsityPatternType = FullPattern>
+  template<class SparsityPatternType = FullPattern>
   static inline std::unique_ptr<MatrixType> make_unique(const size_t rows,
                                                         const size_t cols,
                                                         const ScalarType& val = suitable_default<ScalarType>::value(),
@@ -292,21 +291,21 @@ struct MatrixAbstraction<Dune::FieldMatrix<K, N, M>>
 };
 
 
-template <class MatrixType>
+template<class MatrixType>
 typename std::enable_if<is_matrix<MatrixType>::value, size_t>::type get_matrix_rows(const MatrixType& matrix)
 {
   return MatrixAbstraction<MatrixType>::rows(matrix);
 }
 
 
-template <class MatrixType>
+template<class MatrixType>
 typename std::enable_if<is_matrix<MatrixType>::value, size_t>::type get_matrix_cols(const MatrixType& matrix)
 {
   return MatrixAbstraction<MatrixType>::cols(matrix);
 }
 
 
-template <class MatrixType>
+template<class MatrixType>
 typename std::enable_if<is_matrix<MatrixType>::value, typename MatrixAbstraction<MatrixType>::S>::type
 get_matrix_entry(const MatrixType& matrix, const size_t ii, const size_t jj)
 {
@@ -314,7 +313,7 @@ get_matrix_entry(const MatrixType& matrix, const size_t ii, const size_t jj)
 }
 
 
-template <class MatrixType, class S>
+template<class MatrixType, class S>
 typename std::enable_if<is_matrix<MatrixType>::value, void>::type
 set_matrix_entry(MatrixType& matrix, const size_t ii, const size_t jj, const S& value)
 {
@@ -322,18 +321,18 @@ set_matrix_entry(MatrixType& matrix, const size_t ii, const size_t jj, const S& 
 }
 
 
-template <class MatrixType,
-          size_t ROWS = MatrixAbstraction<MatrixType>::static_rows,
-          size_t COLS = MatrixAbstraction<MatrixType>::static_cols,
-          class FieldType = typename MatrixAbstraction<MatrixType>::S,
-          class SparsityPatternType = FullPattern>
-typename std::enable_if<is_matrix<MatrixType>::value,
-                        typename MatrixAbstraction<MatrixType>::template MatrixTypeTemplate<ROWS, COLS, FieldType>>::
-    type
-    create(const size_t rows,
-           const size_t cols,
-           const FieldType& val = 0,
-           const SparsityPatternType& pattern = SparsityPatternType())
+template<class MatrixType,
+         size_t ROWS = MatrixAbstraction<MatrixType>::static_rows,
+         size_t COLS = MatrixAbstraction<MatrixType>::static_cols,
+         class FieldType = typename MatrixAbstraction<MatrixType>::S,
+         class SparsityPatternType = FullPattern>
+typename std::enable_if<
+    is_matrix<MatrixType>::value,
+    typename MatrixAbstraction<MatrixType>::template MatrixTypeTemplate<ROWS, COLS, FieldType>>::type
+create(const size_t rows,
+       const size_t cols,
+       const FieldType& val = 0,
+       const SparsityPatternType& pattern = SparsityPatternType())
 {
   return MatrixAbstraction<
       typename MatrixAbstraction<MatrixType>::template MatrixTypeTemplate<ROWS, COLS, FieldType>>::create(rows,
@@ -343,7 +342,7 @@ typename std::enable_if<is_matrix<MatrixType>::value,
 }
 
 
-template <class TargetMatrixType, class SourceMatrixType>
+template<class TargetMatrixType, class SourceMatrixType>
 typename std::enable_if<is_matrix<TargetMatrixType>::value && is_matrix<SourceMatrixType>::value,
                         TargetMatrixType>::type
 zeros_like(const SourceMatrixType& source)
@@ -353,14 +352,14 @@ zeros_like(const SourceMatrixType& source)
 }
 
 
-template <class MatrixType>
+template<class MatrixType>
 typename std::enable_if<is_matrix<MatrixType>::value, MatrixType>::type zeros_like(const MatrixType& source)
 {
   return zeros_like<MatrixType, MatrixType>(source);
 }
 
 
-template <class MatrixType>
+template<class MatrixType>
 typename std::enable_if<is_matrix<MatrixType>::value, typename MatrixAbstraction<MatrixType>::ScalarType*>::type
 data(MatrixType& source)
 {
@@ -368,7 +367,7 @@ data(MatrixType& source)
 }
 
 
-template <class MatrixType>
+template<class MatrixType>
 typename std::enable_if<is_matrix<MatrixType>::value, typename MatrixAbstraction<MatrixType>::ScalarType*>::type
 data(const MatrixType& source)
 {
@@ -376,7 +375,7 @@ data(const MatrixType& source)
 }
 
 
-template <class T, class M>
+template<class T, class M>
 typename std::enable_if<is_matrix<M>::value && is_arithmetic<T>::value, std::unique_ptr<T[]>>::type
 serialize_rowwise(const M& mat)
 {
@@ -396,7 +395,7 @@ serialize_rowwise(const M& mat)
 } // ... serialize_rowwise(...)
 
 
-template <class M>
+template<class M>
 typename std::enable_if<is_matrix<M>::value, std::unique_ptr<typename MatrixAbstraction<M>::S[]>>::type
 serialize_rowwise(const M& mat)
 {
@@ -404,7 +403,7 @@ serialize_rowwise(const M& mat)
 }
 
 
-template <class T, class M>
+template<class T, class M>
 typename std::enable_if<is_matrix<M>::value && is_arithmetic<T>::value, std::unique_ptr<T[]>>::type
 serialize_colwise(const M& mat)
 {
@@ -424,7 +423,7 @@ serialize_colwise(const M& mat)
 } // ... serialize_colwise(...)
 
 
-template <class M>
+template<class M>
 typename std::enable_if<is_matrix<M>::value, std::unique_ptr<typename MatrixAbstraction<M>::S[]>>::type
 serialize_colwise(const M& mat)
 {
@@ -432,7 +431,7 @@ serialize_colwise(const M& mat)
 }
 
 
-template <class RangeType, class SourceType>
+template<class RangeType, class SourceType>
 typename std::enable_if<is_matrix<SourceType>::value && is_matrix<RangeType>::value, RangeType>::type
 convert_to(const SourceType& source)
 {
@@ -451,12 +450,12 @@ convert_to(const SourceType& source)
 #ifndef DXT_DISABLE_CHECKS
                                )
 #endif
-                           );
+      );
   return ret;
 } // ... convert_to(...)
 
 
-template <class MatrixType, class M = MatrixAbstraction<MatrixType>>
+template<class MatrixType, class M = MatrixAbstraction<MatrixType>>
 typename std::enable_if<is_matrix<MatrixType>::value,
                         typename M::template MatrixTypeTemplate<M::static_cols, M::static_rows>>::type
 transposed(const MatrixType& mat)
@@ -469,7 +468,7 @@ transposed(const MatrixType& mat)
 }
 
 
-template <class M, class CharType, class CharTraits>
+template<class M, class CharType, class CharTraits>
 std::basic_ostream<CharType, CharTraits>& output_matrix(std::basic_ostream<CharType, CharTraits>& out, const M& mat)
 {
   using Matrix = Dune::XT::Common::MatrixAbstraction<M>;
@@ -492,7 +491,7 @@ std::basic_ostream<CharType, CharTraits>& output_matrix(std::basic_ostream<CharT
 } // namespace XT
 
 
-template <class K>
+template<class K>
 Dune::DynamicMatrix<K> operator*(const Dune::DynamicMatrix<K>& lhs, const Dune::DynamicMatrix<K>& rhs)
 {
   Dune::DynamicMatrix<K> ret(lhs.rows(), rhs.cols(), 0.);
@@ -506,7 +505,7 @@ Dune::DynamicMatrix<K> operator*(const Dune::DynamicMatrix<K>& lhs, const Dune::
   return ret;
 }
 
-template <class K>
+template<class K>
 Dune::DynamicMatrix<K> operator+(const Dune::DynamicMatrix<K>& lhs, const Dune::DynamicMatrix<K>& rhs)
 {
   Dune::DynamicMatrix<K> ret(lhs);
@@ -514,7 +513,7 @@ Dune::DynamicMatrix<K> operator+(const Dune::DynamicMatrix<K>& lhs, const Dune::
   return ret;
 }
 
-template <class K>
+template<class K>
 Dune::DynamicMatrix<K> operator-(const Dune::DynamicMatrix<K>& lhs, const Dune::DynamicMatrix<K>& rhs)
 {
   Dune::DynamicMatrix<K> ret(lhs);

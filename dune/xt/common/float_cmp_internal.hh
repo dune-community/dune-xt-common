@@ -24,7 +24,7 @@
 
 namespace Dune {
 namespace FloatCmp {
-template <class T>
+template<class T>
 struct EpsilonType<std::complex<T>>
 {
   //! The epsilon type corresponding to value type std::complex<T>
@@ -35,10 +35,10 @@ namespace XT {
 namespace Common {
 
 // forward, include is below
-template <class VecType>
+template<class VecType>
 struct VectorAbstraction;
 
-template <class MatType>
+template<class MatType>
 struct MatrixAbstraction;
 
 namespace FloatCmp {
@@ -48,14 +48,14 @@ namespace internal {
  * Taken from http://docs.pymor.org/en/latest/_modules/pymor/tools/floatcmp.html#float_cmp,
  *            https://github.com/numpy/numpy/blob/v1.9.1/numpy/core/numeric.py#L2238
  */
-template <class T>
+template<class T>
 typename std::enable_if<is_arithmetic<T>::value, bool>::type
 float_cmp_eq(const T& xx, const T& yy, const T& rtol, const T& atol)
 {
   return absolute_difference(xx, yy) <= atol + Dune::XT::Common::abs(yy) * rtol;
 }
 
-template <class T>
+template<class T>
 typename std::enable_if<is_complex<T>::value, bool>::type
 float_cmp_eq(const T& xx, const T& yy, const T& rtol, const T& atol)
 {
@@ -64,7 +64,7 @@ float_cmp_eq(const T& xx, const T& yy, const T& rtol, const T& atol)
           && float_cmp_eq(imag(xx), imag(yy), imag(rtol), imag(atol)));
 }
 
-template <class XType, class YType, class TolType>
+template<class XType, class YType, class TolType>
 typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value
                             && std::is_same<typename VectorAbstraction<XType>::S, TolType>::value
                             && std::is_same<typename VectorAbstraction<YType>::S, TolType>::value,
@@ -81,7 +81,7 @@ float_cmp_eq(const XType& xx, const YType& yy, const TolType& rtol, const TolTyp
   return true;
 } // ... float_cmp(...)
 
-template <class XType, class YType, class TolType>
+template<class XType, class YType, class TolType>
 typename std::enable_if<is_matrix<XType>::value && is_matrix<YType>::value
                             && std::is_same<typename MatrixAbstraction<XType>::S, TolType>::value
                             && std::is_same<typename MatrixAbstraction<YType>::S, TolType>::value,
@@ -102,13 +102,13 @@ float_cmp_eq(const XType& xx, const YType& yy, const TolType& rtol, const TolTyp
   return true;
 } // ... float_cmp(...)
 
-template <Dune::FloatCmp::CmpStyle style, class T>
+template<Dune::FloatCmp::CmpStyle style, class T>
 typename std::enable_if<is_arithmetic<T>::value, bool>::type dune_float_cmp_eq(const T& xx, const T& yy, const T& eps)
 {
   return Dune::FloatCmp::eq<T, style>(xx, yy, eps);
 }
 
-template <Dune::FloatCmp::CmpStyle style, class T>
+template<Dune::FloatCmp::CmpStyle style, class T>
 typename std::enable_if<is_complex<T>::value, bool>::type dune_float_cmp_eq(const T& xx, const T& yy, const T& eps)
 {
   using namespace std;
@@ -116,7 +116,7 @@ typename std::enable_if<is_complex<T>::value, bool>::type dune_float_cmp_eq(cons
          && Dune::FloatCmp::eq<typename T::value_type, style>(imag(xx), imag(yy), imag(eps));
 }
 
-template <Dune::FloatCmp::CmpStyle style, class XType, class YType, class EpsType>
+template<Dune::FloatCmp::CmpStyle style, class XType, class YType, class EpsType>
 typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value
                             && std::is_same<typename VectorAbstraction<XType>::S, EpsType>::value
                             && std::is_same<typename VectorAbstraction<YType>::S, EpsType>::value,
@@ -132,7 +132,7 @@ dune_float_cmp_eq(const XType& xx, const YType& yy, const EpsType& eps)
   return true;
 } // ... dune_float_cmp(...)
 
-template <Dune::FloatCmp::CmpStyle style, class XType, class YType, class EpsType>
+template<Dune::FloatCmp::CmpStyle style, class XType, class YType, class EpsType>
 typename std::enable_if<is_matrix<XType>::value && is_matrix<YType>::value
                             && std::is_same<typename MatrixAbstraction<XType>::S, EpsType>::value
                             && std::is_same<typename MatrixAbstraction<YType>::S, EpsType>::value,
@@ -151,24 +151,24 @@ dune_float_cmp_eq(const XType& xx, const YType& yy, const EpsType& eps)
   return true;
 } // ... float_cmp(...){
 
-template <class T>
+template<class T>
 typename std::enable_if<is_arithmetic<T>::value, bool>::type cmp_gt(const T& xx, const T& yy)
 {
   return std::greater<T>()(xx, yy);
 }
 
-template <class T>
+template<class T>
 bool cmp_gt(const std::complex<T>& xx, const std::complex<T>& yy)
 {
   using namespace std;
   return cmp_gt(real(xx), real(yy)) && cmp_gt(imag(xx), imag(yy));
 }
 
-template <class XType, class YType>
-typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value
-                            && std::is_same<typename VectorAbstraction<XType>::S,
-                                            typename VectorAbstraction<YType>::S>::value,
-                        bool>::type
+template<class XType, class YType>
+typename std::enable_if<
+    is_vector<XType>::value && is_vector<YType>::value
+        && std::is_same<typename VectorAbstraction<XType>::S, typename VectorAbstraction<YType>::S>::value,
+    bool>::type
 cmp_gt(const XType& xx, const YType& yy)
 {
   const auto sz = xx.size();
@@ -180,11 +180,11 @@ cmp_gt(const XType& xx, const YType& yy)
   return true;
 } // ... cmp_gt(...)
 
-template <class XType, class YType>
-typename std::enable_if<is_matrix<XType>::value && is_matrix<YType>::value
-                            && std::is_same<typename MatrixAbstraction<XType>::S,
-                                            typename MatrixAbstraction<YType>::S>::value,
-                        bool>::type
+template<class XType, class YType>
+typename std::enable_if<
+    is_matrix<XType>::value && is_matrix<YType>::value
+        && std::is_same<typename MatrixAbstraction<XType>::S, typename MatrixAbstraction<YType>::S>::value,
+    bool>::type
 cmp_gt(const XType& xx, const YType& yy)
 {
   const auto rows = MatrixAbstraction<XType>::rows(xx);
@@ -198,24 +198,24 @@ cmp_gt(const XType& xx, const YType& yy)
   return true;
 } // ... cmp_gt(...)
 
-template <class T>
+template<class T>
 typename std::enable_if<is_arithmetic<T>::value, bool>::type cmp_lt(const T& xx, const T& yy)
 {
   return std::less<T>()(xx, yy);
 }
 
-template <class T>
+template<class T>
 bool cmp_lt(const std::complex<T>& xx, const std::complex<T>& yy)
 {
   using namespace std;
   return cmp_lt(real(xx), real(yy)) && cmp_lt(imag(xx), imag(yy));
 }
 
-template <class XType, class YType>
-typename std::enable_if<is_vector<XType>::value && is_vector<YType>::value
-                            && std::is_same<typename VectorAbstraction<XType>::S,
-                                            typename VectorAbstraction<YType>::S>::value,
-                        bool>::type
+template<class XType, class YType>
+typename std::enable_if<
+    is_vector<XType>::value && is_vector<YType>::value
+        && std::is_same<typename VectorAbstraction<XType>::S, typename VectorAbstraction<YType>::S>::value,
+    bool>::type
 cmp_lt(const XType& xx, const YType& yy)
 {
   const auto sz = xx.size();
@@ -227,11 +227,11 @@ cmp_lt(const XType& xx, const YType& yy)
   return true;
 } // ... cmp_lt(...)
 
-template <class XType, class YType>
-typename std::enable_if<is_matrix<XType>::value && is_matrix<YType>::value
-                            && std::is_same<typename MatrixAbstraction<XType>::S,
-                                            typename MatrixAbstraction<YType>::S>::value,
-                        bool>::type
+template<class XType, class YType>
+typename std::enable_if<
+    is_matrix<XType>::value && is_matrix<YType>::value
+        && std::is_same<typename MatrixAbstraction<XType>::S, typename MatrixAbstraction<YType>::S>::value,
+    bool>::type
 cmp_lt(const XType& xx, const YType& yy)
 {
   const auto rows = MatrixAbstraction<XType>::rows(xx);
@@ -246,7 +246,7 @@ cmp_lt(const XType& xx, const YType& yy)
 } // ... cmp_gt(...)
 
 
-template <class FirstType, class SecondType, class ToleranceType, Style style>
+template<class FirstType, class SecondType, class ToleranceType, Style style>
 struct Call
 {
   static bool eq(const FirstType& first, const SecondType& second, const ToleranceType& rtol, const ToleranceType& /**/)
@@ -280,7 +280,7 @@ struct Call
   }
 };
 
-template <class FirstType, class SecondType, class ToleranceType>
+template<class FirstType, class SecondType, class ToleranceType>
 struct Call<FirstType, SecondType, ToleranceType, Style::numpy>
 {
   static bool eq(const FirstType& first, const SecondType& second, const ToleranceType& rtol, const ToleranceType& atol)
@@ -314,7 +314,7 @@ struct Call<FirstType, SecondType, ToleranceType, Style::numpy>
   }
 };
 
-template <class FirstType, class SecondType, class ToleranceType>
+template<class FirstType, class SecondType, class ToleranceType>
 struct cmp_type_check
 {
   static constexpr bool is_ok_scalar =

@@ -25,7 +25,7 @@ namespace Common {
 
 //! make_unique implementation via herb sutter: http://herbsutter.com/gotw/_102/
 //! \TODO this can be delegated to stdlib with c++14
-template <typename T, typename... Args>
+template<typename T, typename... Args>
 std::unique_ptr<T> make_unique(Args&&... args)
 {
   return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
@@ -45,7 +45,7 @@ struct nonmoveable
 namespace internal {
 
 
-template <class T>
+template<class T>
 class ConstAccessInterface
 {
 public:
@@ -60,14 +60,13 @@ public:
 }; // class ConstAccessInterface
 
 
-template <class T>
+template<class T>
 class ConstAccessByReference : public ConstAccessInterface<T>
 {
 public:
   explicit ConstAccessByReference(const T& tt)
     : tt_(tt)
-  {
-  }
+  {}
 
   const T& access() const override final
   {
@@ -84,7 +83,7 @@ private:
 }; // class ConstAccessByReference
 
 
-template <class T>
+template<class T>
 class ConstAccessByPointer : public ConstAccessInterface<T>
 {
 public:
@@ -93,18 +92,15 @@ public:
    */
   explicit ConstAccessByPointer(const T*&& tt)
     : tt_(tt)
-  {
-  }
+  {}
 
   explicit ConstAccessByPointer(std::unique_ptr<const T>&& tt)
     : tt_(tt)
-  {
-  }
+  {}
 
   explicit ConstAccessByPointer(std::shared_ptr<const T> tt)
     : tt_(tt)
-  {
-  }
+  {}
 
   const T& access() const override final
   {
@@ -121,7 +117,7 @@ private:
 }; // class ConstAccessByPointer
 
 
-template <class T>
+template<class T>
 class AccessInterface
 {
 public:
@@ -138,14 +134,13 @@ public:
 }; // class AccessInterface
 
 
-template <class T>
+template<class T>
 class AccessByReference : public AccessInterface<T>
 {
 public:
   explicit AccessByReference(T& tt)
     : tt_(tt)
-  {
-  }
+  {}
 
   T& access() override final
   {
@@ -167,7 +162,7 @@ private:
 }; // class AccessByReference
 
 
-template <class T>
+template<class T>
 class AccessByPointer : public AccessInterface<T>
 {
 public:
@@ -176,18 +171,15 @@ public:
    */
   explicit AccessByPointer(T*&& tt)
     : tt_(tt)
-  {
-  }
+  {}
 
   explicit AccessByPointer(std::unique_ptr<T>&& tt)
     : tt_(tt)
-  {
-  }
+  {}
 
   explicit AccessByPointer(std::shared_ptr<T> tt)
     : tt_(tt)
-  {
-  }
+  {}
 
   T& access() override final
   {
@@ -269,60 +261,51 @@ const T* tt = new T();
 }
 const T& derefed_tt = *tt;
  */
-template <class T>
+template<class T>
 class ConstStorageProvider
 {
 public:
   explicit ConstStorageProvider(const T& tt)
     : storage_(new internal::ConstAccessByReference<T>(tt))
-  {
-  }
+  {}
 
   explicit ConstStorageProvider(T& tt)
     : storage_(new internal::ConstAccessByReference<T>(tt))
-  {
-  }
+  {}
 
   /**
    * \attention This ctor transfers ownership to ConstStorageProvider, do not delete tt manually!
    */
   explicit ConstStorageProvider(const T*&& tt)
     : storage_(new internal::ConstAccessByPointer<T>(std::move(tt)))
-  {
-  }
+  {}
 
   /**
    * \attention This ctor transfers ownership to ConstStorageProvider, do not delete tt manually!
    */
   explicit ConstStorageProvider(T*&& tt)
     : storage_(new internal::ConstAccessByPointer<T>(std::move(tt)))
-  {
-  }
+  {}
 
   explicit ConstStorageProvider(std::shared_ptr<const T> tt)
     : storage_(new internal::ConstAccessByPointer<T>(tt))
-  {
-  }
+  {}
 
   explicit ConstStorageProvider(std::shared_ptr<T> tt)
     : storage_(new internal::ConstAccessByPointer<T>(tt))
-  {
-  }
+  {}
 
   explicit ConstStorageProvider(std::unique_ptr<const T>&& tt)
     : storage_(tt)
-  {
-  }
+  {}
 
   explicit ConstStorageProvider(std::unique_ptr<T>&& tt)
     : storage_(tt)
-  {
-  }
+  {}
 
   ConstStorageProvider(const ConstStorageProvider<T>& other)
     : storage_(other.storage_->copy())
-  {
-  }
+  {}
 
   ConstStorageProvider(ConstStorageProvider<T>&& source) = default;
 
@@ -341,7 +324,7 @@ public:
     return storage_->access();
   }
 
-  template <typename... Args>
+  template<typename... Args>
   static ConstStorageProvider<T> make(Args&&... args)
   {
     return ConstStorageProvider<T>(new T(std::forward<Args>(args)...));
@@ -352,7 +335,7 @@ private:
 }; // class ConstStorageProvider
 
 
-template <typename T, typename... Args>
+template<typename T, typename... Args>
 ConstStorageProvider<T> make_const_storage(Args&&... args)
 {
   return ConstStorageProvider<T>::make(std::forward<Args>(args)...);
@@ -363,34 +346,30 @@ ConstStorageProvider<T> make_const_storage(Args&&... args)
  * \brief Provides generic access to objects of different origins.
  * \sa ConstStorageProvider
  */
-template <class T>
+template<class T>
 class StorageProvider
 {
 public:
   explicit StorageProvider(T& tt)
     : storage_(new internal::AccessByReference<T>(tt))
-  {
-  }
+  {}
 
   /**
    * \attention This ctor transfers ownership to StorageProvider, do not delete it manually!
    */
   explicit StorageProvider(T*&& tt)
     : storage_(new internal::AccessByPointer<T>(std::move(tt)))
-  {
-  }
+  {}
 
   explicit StorageProvider(std::shared_ptr<T> tt)
     : storage_(new internal::AccessByPointer<T>(tt))
-  {
-  }
+  {}
 
   StorageProvider(const StorageProvider<T>& other) = delete;
 
   StorageProvider(StorageProvider<T>& other)
     : storage_(other.storage_->copy())
-  {
-  }
+  {}
 
   StorageProvider(StorageProvider<T>&& source) = default;
 
@@ -417,7 +396,7 @@ public:
     return storage_->access();
   }
 
-  template <typename... Args>
+  template<typename... Args>
   static StorageProvider<T> make(Args&&... args)
   {
     return StorageProvider<T>(new T(std::forward<Args>(args)...));
@@ -428,7 +407,7 @@ private:
 }; // class StorageProvider
 
 
-template <typename T, typename... Args>
+template<typename T, typename... Args>
 StorageProvider<T> make_storage(Args&&... args)
 {
   return StorageProvider<T>::make(std::forward<Args>(args)...);
@@ -440,7 +419,7 @@ StorageProvider<T> make_storage(Args&&... args)
  *
  * \sa ConstStorageProvider
  */
-template <class T>
+template<class T>
 class ConstSharedStorageProvider
 {
 public:
@@ -449,36 +428,30 @@ public:
    */
   explicit ConstSharedStorageProvider(const T*&& tt)
     : storage_(std::move(tt))
-  {
-  }
+  {}
 
   /**
    * \attention This ctor transfers ownership to ConstSharedStorageProvider, do not delete tt manually!
    */
   explicit ConstSharedStorageProvider(T*&& tt)
     : storage_(std::move(tt))
-  {
-  }
+  {}
 
   explicit ConstSharedStorageProvider(std::shared_ptr<const T> tt)
     : storage_(tt)
-  {
-  }
+  {}
 
   explicit ConstSharedStorageProvider(std::shared_ptr<T> tt)
     : storage_(tt)
-  {
-  }
+  {}
 
   explicit ConstSharedStorageProvider(std::unique_ptr<const T>&& tt)
     : storage_(tt.release())
-  {
-  }
+  {}
 
   explicit ConstSharedStorageProvider(std::unique_ptr<T>&& tt)
     : storage_(tt.release())
-  {
-  }
+  {}
 
   ConstSharedStorageProvider(const ConstSharedStorageProvider<T>& other) = default;
   ConstSharedStorageProvider(ConstSharedStorageProvider<T>&& source) = default;
@@ -492,7 +465,7 @@ public:
     return storage_;
   }
 
-  template <typename... Args>
+  template<typename... Args>
   static ConstSharedStorageProvider<T> make(Args&&... args)
   {
     return ConstSharedStorageProvider<T>(new T(std::forward<Args>(args)...));
@@ -503,7 +476,7 @@ private:
 }; // class ConstSharedStorageProvider
 
 
-template <typename T, typename... Args>
+template<typename T, typename... Args>
 ConstSharedStorageProvider<T> make_const_shared_storage(Args&&... args)
 {
   return ConstSharedStorageProvider<T>::make(std::forward<Args>(args)...);

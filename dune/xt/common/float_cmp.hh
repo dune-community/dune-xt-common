@@ -30,7 +30,7 @@ namespace Common {
 namespace FloatCmp {
 
 
-template <class T, Style style = Style::defaultStyle, bool = std::is_integral<T>::value>
+template<class T, Style style = Style::defaultStyle, bool = std::is_integral<T>::value>
 struct DefaultEpsilon
 {
   typedef typename Dune::FloatCmp::EpsilonType<T>::Type Type;
@@ -40,7 +40,7 @@ struct DefaultEpsilon
   }
 };
 
-template <class T, Style style>
+template<class T, Style style>
 struct DefaultEpsilon<std::complex<T>, style, false>
 {
   typedef typename Dune::FloatCmp::EpsilonType<std::complex<T>>::Type Type;
@@ -51,7 +51,7 @@ struct DefaultEpsilon<std::complex<T>, style, false>
   }
 };
 
-template <class T>
+template<class T>
 struct DefaultEpsilon<T, Style::numpy, false>
 {
   typedef typename Dune::FloatCmp::EpsilonType<T>::Type Type;
@@ -62,7 +62,7 @@ struct DefaultEpsilon<T, Style::numpy, false>
 };
 
 //! necessary to avoid ambig. partial specialization
-template <class T>
+template<class T>
 struct DefaultEpsilon<std::complex<T>, Style::numpy, false>
 {
   typedef typename Dune::FloatCmp::EpsilonType<std::complex<T>>::Type Type;
@@ -75,7 +75,7 @@ struct DefaultEpsilon<std::complex<T>, Style::numpy, false>
 
 //! these integral specialisations are only necessary because dune-common's DefaultEpsilon
 //! tries to instantiate invalid code for integers
-template <class T, Style style>
+template<class T, Style style>
 struct DefaultEpsilon<T, style, true>
 {
   typedef T Type;
@@ -85,7 +85,7 @@ struct DefaultEpsilon<T, style, true>
   }
 };
 
-template <class T>
+template<class T>
 struct DefaultEpsilon<T, Style::numpy, true>
 {
   typedef T Type;
@@ -95,7 +95,7 @@ struct DefaultEpsilon<T, Style::numpy, true>
   }
 };
 
-template <class V>
+template<class V>
 struct MT
 {
   typedef typename std::conditional<Dune::XT::Common::is_matrix<V>::value,

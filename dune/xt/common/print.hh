@@ -24,7 +24,7 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
-template <class V>
+template<class V>
 typename std::enable_if<is_vector<V>::value, void>::type
 print(const V& vec, const std::string name, std::ostream& out, const std::string prefix = "")
 {
@@ -41,7 +41,7 @@ print(const V& vec, const std::string name, std::ostream& out, const std::string
   }
 } // ... print(...)
 
-template <class M>
+template<class M>
 typename std::enable_if<is_matrix<M>::value, void>::type
 print(const M& mat, const std::string name, std::ostream& out, const std::string prefix = "")
 {
@@ -78,7 +78,7 @@ print(const M& mat, const std::string name, std::ostream& out, const std::string
 } // ... print(...)
 
 //! useful for visualizing sparsity patterns of matrices
-template <class Matrix>
+template<class Matrix>
 void matrix_to_gnuplot_stream(const Matrix& matrix, std::ostream& stream)
 {
   unsigned long nz = 0;
@@ -110,7 +110,7 @@ inline std::string dim_to_axis_name(const size_t dim, const bool capitalize = fa
  * \see http://codereview.stackexchange.com/questions/30132/comma-formatted-stl-vectors/30181#30181
  * \example std::copy(strings.begin(), strings.end(), PrefixOutputIterator<string>(ostream, ","));
  **/
-template <typename T>
+template<typename T>
 class PrefixOutputIterator
 {
   std::ostream& ostream;
@@ -128,8 +128,7 @@ public:
     : ostream(o)
     , prefix(p)
     , first(true)
-  {
-  }
+  {}
 
   PrefixOutputIterator& operator*()
   {

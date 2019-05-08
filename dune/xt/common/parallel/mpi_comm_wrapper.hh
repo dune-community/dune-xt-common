@@ -38,7 +38,7 @@ private:
 namespace pybind11 {
 namespace detail {
 
-template <>
+template<>
 class type_caster<Dune::XT::Common::MPI_Comm_Wrapper>
 {
 public:

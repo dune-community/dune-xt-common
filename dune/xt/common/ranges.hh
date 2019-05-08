@@ -26,7 +26,7 @@ namespace XT {
 namespace Common {
 
 //! get a vector with values in [start : increment : end)
-template <class T, class sequence = std::vector<T>>
+template<class T, class sequence = std::vector<T>>
 typename std::enable_if<!std::is_enum<T>::value, sequence>::type
 value_range(const T start, const T end, const T increment = Epsilon<T>::value)
 {
@@ -42,7 +42,7 @@ value_range(const T start, const T end, const T increment = Epsilon<T>::value)
 }
 
 //! signature for enumeration Types T
-template <class T, class sequence = std::vector<typename internal::Absretval<T>::type>>
+template<class T, class sequence = std::vector<typename internal::Absretval<T>::type>>
 typename std::enable_if<std::is_enum<T>::value, sequence>::type value_range(
     const T start,
     const T end,
@@ -53,14 +53,14 @@ typename std::enable_if<std::is_enum<T>::value, sequence>::type value_range(
 }
 
 //! get a vector with values in [0 : Epsilon<T> : end)
-template <class T, class sequence = std::vector<T>>
+template<class T, class sequence = std::vector<T>>
 typename std::enable_if<!std::is_enum<T>::value, sequence>::type value_range(const T end)
 {
   return value_range(T(0), end);
 }
 
 //! get a vector with values in [0 : Epsilon<T> : end)
-template <class T, class sequence = std::vector<typename internal::Absretval<T>::type>>
+template<class T, class sequence = std::vector<typename internal::Absretval<T>::type>>
 typename std::enable_if<std::is_enum<T>::value, sequence>::type value_range(const T end)
 {
   return value_range(T(0), end);

@@ -42,38 +42,31 @@ template class SimpleDict<std::vector<double>>;
 // =========================
 ParameterType::ParameterType()
   : BaseType()
-{
-}
+{}
 
 ParameterType::ParameterType(const std::string& key)
   : BaseType(key, 1)
-{
-}
+{}
 
 ParameterType::ParameterType(const std::string& key, const size_t& sz)
   : BaseType(key, sz)
-{
-}
+{}
 
 ParameterType::ParameterType(const std::pair<std::string, size_t>& key_size_pair)
   : BaseType(key_size_pair.first, key_size_pair.second)
-{
-}
+{}
 
 ParameterType::ParameterType(const std::pair<const char*, int>& key_size_pair)
   : BaseType(std::string(key_size_pair.first), numeric_cast<size_t>(key_size_pair.second))
-{
-}
+{}
 
 ParameterType::ParameterType(const std::vector<std::pair<std::string, size_t>>& key_size_pairs)
   : BaseType(key_size_pairs)
-{
-}
+{}
 
 ParameterType::ParameterType(BaseType&& source)
   : BaseType(std::move(source))
-{
-}
+{}
 
 ParameterType ParameterType::operator+(const ParameterType& other) const
 {
@@ -149,38 +142,31 @@ std::ostream& operator<<(std::ostream& out, const ParameterType& param_type)
 // =====================
 Parameter::Parameter(const double& value)
   : BaseType("__unspecified__", {value})
-{
-}
+{}
 
 Parameter::Parameter(const std::vector<double>& value)
   : BaseType("__unspecified__", value)
-{
-}
+{}
 
 Parameter::Parameter(const std::string& key, const double& value)
   : BaseType(key, {value})
-{
-}
+{}
 
 Parameter::Parameter(const std::string& key, const ValueType& value)
   : BaseType(key, value)
-{
-}
+{}
 
 Parameter::Parameter(const std::vector<std::pair<std::string, ValueType>>& key_value_pairs)
   : BaseType(key_value_pairs)
-{
-}
+{}
 
 Parameter::Parameter(const std::initializer_list<std::pair<std::string, ValueType>>& key_value_pairs)
   : BaseType(key_value_pairs)
-{
-}
+{}
 
 Parameter::Parameter(BaseType&& source)
   : BaseType(std::move(source))
-{
-}
+{}
 
 Parameter Parameter::operator+(const Parameter& other) const
 {
@@ -229,8 +215,7 @@ std::ostream& operator<<(std::ostream& out, const Parameter& mu)
 // ===============================
 ParametricInterface::ParametricInterface(const ParameterType& param_type)
   : parameter_type_(param_type)
-{
-}
+{}
 
 bool ParametricInterface::is_parametric() const
 {
@@ -260,16 +245,14 @@ Parameter ParametricInterface::parse_parameter(const Parameter& mu) const
     // both have only one key, but the keys don't match and neither is '__unspecified__'
     DUNE_THROW(Exceptions::parameter_error,
                "this->parameter_type() = " << this_type << "\n   "
-                                           << "mu.type() = "
-                                           << mus_type);
+                                           << "mu.type() = " << mus_type);
   }
   // one of them has more than one key, so '__unspecified__' does not play a role here
   if (this_type <= mus_type)
     return mu;
   DUNE_THROW(Exceptions::parameter_error,
              "this->parameter_type() = " << this_type << "\n   "
-                                         << "mu.type() = "
-                                         << mus_type);
+                                         << "mu.type() = " << mus_type);
   return Parameter();
 } // ... parse_parameter(...)
 

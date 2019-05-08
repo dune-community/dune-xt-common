@@ -8,7 +8,7 @@
 //   Felix Schindler (2017)
 //   Rene Milk       (2016, 2018)
 
-template <Style style, class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
+template<Style style, class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
 typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool>::type
 eq(const FirstType& first,
    const SecondType& second,
@@ -21,7 +21,7 @@ eq(const FirstType& first,
       first, second, rtol, atol);
 }
 
-template <class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
+template<class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
 typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool>::type
 eq(const FirstType& first,
    const SecondType& second,
@@ -33,7 +33,7 @@ eq(const FirstType& first,
   return eq<Style::defaultStyle>(first, second, rtol, atol);
 }
 
-template <Style style, class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
+template<Style style, class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
 typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool>::type
 ne(const FirstType& first,
    const SecondType& second,
@@ -46,7 +46,7 @@ ne(const FirstType& first,
       first, second, rtol, atol);
 }
 
-template <class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
+template<class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
 typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool>::type
 ne(const FirstType& first,
    const SecondType& second,
@@ -58,7 +58,7 @@ ne(const FirstType& first,
   return ne<Style::defaultStyle>(first, second, rtol, atol);
 }
 
-template <Style style, class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
+template<Style style, class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
 typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool>::type
 gt(const FirstType& first,
    const SecondType& second,
@@ -71,7 +71,7 @@ gt(const FirstType& first,
       first, second, rtol, atol);
 }
 
-template <class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
+template<class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
 typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool>::type
 gt(const FirstType& first,
    const SecondType& second,
@@ -83,7 +83,7 @@ gt(const FirstType& first,
   return gt<Style::defaultStyle>(first, second, rtol, atol);
 }
 
-template <Style style, class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
+template<Style style, class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
 typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool>::type
 lt(const FirstType& first,
    const SecondType& second,
@@ -96,7 +96,7 @@ lt(const FirstType& first,
       first, second, rtol, atol);
 }
 
-template <class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
+template<class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
 typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool>::type
 lt(const FirstType& first,
    const SecondType& second,
@@ -108,7 +108,7 @@ lt(const FirstType& first,
   return lt<Style::defaultStyle>(first, second, rtol, atol);
 }
 
-template <Style style, class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
+template<Style style, class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
 typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool>::type
 ge(const FirstType& first,
    const SecondType& second,
@@ -121,7 +121,7 @@ ge(const FirstType& first,
       first, second, rtol, atol);
 }
 
-template <class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
+template<class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
 typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool>::type
 ge(const FirstType& first,
    const SecondType& second,
@@ -133,7 +133,7 @@ ge(const FirstType& first,
   return ge<Style::defaultStyle>(first, second, rtol, atol);
 }
 
-template <Style style, class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
+template<Style style, class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
 typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool>::type
 le(const FirstType& first,
    const SecondType& second,
@@ -146,7 +146,7 @@ le(const FirstType& first,
       first, second, rtol, atol);
 }
 
-template <class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
+template<class FirstType, class SecondType, class ToleranceType = typename MT<FirstType>::Eps>
 typename std::enable_if<internal::cmp_type_check<FirstType, SecondType, ToleranceType>::value, bool>::type
 le(const FirstType& first,
    const SecondType& second,
