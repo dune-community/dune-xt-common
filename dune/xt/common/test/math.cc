@@ -118,6 +118,18 @@ GTEST_TEST(OtherMath, AbsoluteValue)
   EXPECT_EQ(abs(std::complex<double>(-1)), 1);
 }
 
+GTEST_TEST(OtherMath, MinAndMax)
+{
+  EXPECT_EQ(max(1., -1.), 1.);
+  EXPECT_EQ(min(1., -1.), -1.);
+  EXPECT_EQ(minmod(2., -1.), 0.);
+  EXPECT_EQ(maxmod(2., -1.), 0.);
+  EXPECT_EQ(minmod(2., 1.), 1.);
+  EXPECT_EQ(maxmod(2., 1.), 2.);
+  EXPECT_EQ(minmod(-2., -1.), -1.);
+  EXPECT_EQ(maxmod(-2., -1.), -2.);
+}
+
 GTEST_TEST(OtherMath, FloatCmp)
 {
   std::vector<double> ones{1., 1.};

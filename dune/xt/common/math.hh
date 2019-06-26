@@ -329,6 +329,25 @@ T min(const T& left, const T& right)
   return std::min(left, right);
 }
 
+
+template <class T>
+std::enable_if_t<std::is_arithmetic<T>::value, T> minmod(const T left, const T right)
+{
+  if (std::signbit(left) != std::signbit(right))
+    return T(0);
+  return std::abs(left) < std::abs(right) ? left : right;
+}
+
+
+template <class T>
+std::enable_if_t<std::is_arithmetic<T>::value, T> maxmod(const T left, const T right)
+{
+  if (std::signbit(left) != std::signbit(right))
+    return T(0);
+  return std::abs(left) > std::abs(right) ? left : right;
+}
+
+
 template <class L, class R>
 typename PromotionTraits<L, R>::PromotedType min(const L& left, const R& right)
 {
