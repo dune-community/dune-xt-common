@@ -57,7 +57,7 @@ struct type_caster<Dune::XT::Common::Configuration>
     return d.release();
   } // ...handle(...)
 
-  PYBIND11_TYPE_CASTER(type, _("Dict[") + key_conv::name() + _(", ") + value_conv::name() + _("]"));
+  PYBIND11_TYPE_CASTER(type, _("Dict[") + key_conv::name + _(", ") + value_conv::name + _("]"));
 }; // struct type_caster<Dune::XT::Common::Configuration>
 
 
