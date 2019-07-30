@@ -452,6 +452,26 @@ int dpocon(int DXTC_LAPACKE_ONLY(matrix_layout),
 }
 
 
+int dsygv(int DXTC_LAPACKE_ONLY(matrix_layout),
+          int DXTC_LAPACKE_ONLY(itype),
+          char DXTC_LAPACKE_ONLY(jobz),
+          char DXTC_LAPACKE_ONLY(uplo),
+          int DXTC_LAPACKE_ONLY(n),
+          double* DXTC_LAPACKE_ONLY(a),
+          int DXTC_LAPACKE_ONLY(lda),
+          double* DXTC_LAPACKE_ONLY(b),
+          int DXTC_LAPACKE_ONLY(ldb),
+          double* DXTC_LAPACKE_ONLY(w))
+{
+#if HAVE_MKL || HAVE_LAPACKE
+  return LAPACKE_dsygv(matrix_layout, itype, jobz, uplo, n, a, lda, b, ldb, w);
+#else
+  DUNE_THROW(Exceptions::dependency_missing, "You are missing lapacke or the intel mkl, check available() first!");
+  return 1;
+#endif
+}
+
+
 int dtrcon(int DXTC_LAPACKE_ONLY(matrix_layout),
            char DXTC_LAPACKE_ONLY(norm),
            char DXTC_LAPACKE_ONLY(uplo),

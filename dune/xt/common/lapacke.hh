@@ -255,6 +255,15 @@ int dpocon(int matrix_layout, char uplo, int n, const double* a, int lda, double
 
 
 /**
+ * \brief Wrapper around LAPACKE_dsygv
+ *
+ * \sa    LAPACKE_dsygv
+ * \sa    https://software.intel.com/en-us/mkl-developer-reference-c-sygv
+ */
+int dsygv(int matrix_layout, int itype, char jobz, char uplo, int n, double* a, int lda, double* b, int ldb, double* w);
+
+
+/**
  * \brief Wrapper around LAPACKE_dtrcon
  * \sa    LAPACKE_dtrcon
  */
