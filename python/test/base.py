@@ -19,7 +19,7 @@ def test_load_all():
 
 
 def test_empty():
-    from dune.xt.empty import Dog, Pet, Terrier
+    from dune.xt.common._empty import Dog, Pet, Terrier
 
     dog = Dog('Susi')
     pet = Pet('Bello')
