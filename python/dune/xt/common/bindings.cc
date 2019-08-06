@@ -103,7 +103,7 @@ PYBIND11_MODULE(_common, m)
   addbind_exceptions(m);
   addbind_mpistuff(m);
 
-  Dune::XT::Common::bindings::add_initialization(m, "dune.xt.common");
+  Dune::XT::Common::bindings::add_initialization(m, "dune.xt.common", "_common");
 
   m.def("_is_debug", []() {
 #ifndef NDEBUG
