@@ -47,8 +47,11 @@ void add_initialization(pybind11::module& m, std::string logger_name)
            const std::string& info_color,
            const std::string& debug_color,
            const std::string& warning_color) {
+        try {
           Dune::XT::Common::TimedLogger().create(
               max_info_level, max_debug_level, enable_warnings, enable_colors, info_color, debug_color, warning_color);
+        } catch (Dune::XT::Common::Exceptions::logger_error&) {
+        }
         },
         "max_info_level"_a = std::numeric_limits<ssize_t>::max(),
         "max_debug_level"_a = std::numeric_limits<ssize_t>::max(),

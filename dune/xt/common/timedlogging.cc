@@ -95,8 +95,7 @@ void TimedLogging::create(const ssize_t max_info_level,
                           const std::string warning_color)
 {
   DUNE_UNUSED std::lock_guard<std::mutex> guard(mutex_);
-  if (created_)
-    DUNE_THROW(Exceptions::you_are_using_this_wrong, "Do not call create() more than once!");
+  DUNE_THROW_IF(created_, Exceptions::logger_error, "Do not call create() more than once!");
   max_info_level_ = max_info_level;
   max_debug_level_ = max_debug_level;
   enable_warnings_ = enable_warnings;
