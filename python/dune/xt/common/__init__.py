@@ -20,3 +20,6 @@ for mod_name in (
     ):
     guarded_import(globals(), 'dune.xt.common', mod_name)
 
+# make sure the singleton exists
+timings()
+

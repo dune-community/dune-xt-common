@@ -45,5 +45,5 @@ PYBIND11_MODULE(_timings, m)
       .def("output_all_measures",
            [](Timings& self) { self.output_all_measures(); },
            "outputs per rank and global averages of all measures");
-  m.def("instance", &timings, py::return_value_policy::reference);
+  m.def("timings", &timings, py::return_value_policy::reference);
 }
