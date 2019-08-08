@@ -24,6 +24,7 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
+
 TimedLogManager::TimedLogManager(const Timer& timer,
                                  const std::string info_prefix,
                                  const std::string debug_prefix,
@@ -68,6 +69,7 @@ std::ostream& TimedLogManager::warn()
 {
   return *warn_;
 }
+
 
 TimedLogging::TimedLogging()
   : max_info_level_(default_max_info_level)
@@ -149,11 +151,6 @@ void TimedLogging::update_colors()
   }
 } // ... update_colors(...)
 
-DUNE_EXPORT TimedLogging& TimedLogger()
-{
-  static TimedLogging timed_logger;
-  return timed_logger;
-}
 
 } // namespace Common
 } // namespace XT

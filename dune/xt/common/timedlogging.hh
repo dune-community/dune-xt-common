@@ -43,6 +43,7 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
+
 /**
  * \brief A logging manager that provides info, debug and warning streams
  *
@@ -78,6 +79,7 @@ private:
   std::shared_ptr<std::ostream> debug_;
   std::shared_ptr<std::ostream> warn_;
 }; // class TimedLogManager
+
 
 /**
  * \brief A logger that provides colored and prefixed streams.
@@ -143,6 +145,7 @@ private:
   Timer timer_;
   std::mutex mutex_;
 }; // class TimedLogging
+
 
 /**
  * \brief Global instance of the timed logger.
@@ -229,7 +232,11 @@ int main()
  * \note Debug logging is only enabled if DUNE_XT_COMMON_TIMEDLOGGING_ENABLE_DEBUG is true (which is by default the case
  *       if NDEBUG is not defined) but you might still want to guard calls to logger.debug() for performance reasons.
  */
-DUNE_EXPORT TimedLogging& TimedLogger();
+DUNE_EXPORT inline TimedLogging& TimedLogger()
+{
+  static TimedLogging timed_logger;
+  return timed_logger;
+}
 
 
 /**
