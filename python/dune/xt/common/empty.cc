@@ -61,7 +61,7 @@ PYBIND11_MODULE(_empty, m)
   namespace py = pybind11;
   using namespace pybind11::literals;
 
-  Dune::XT::Common::bindings::add_initialization(m, "dune.xt.empty");
+  Dune::XT::Common::bindings::add_initialization(m, "dune.xt.common", "_empty");
 
   py::class_<Pet>(m, "Pet")
       .def(py::init<const std::string&>())

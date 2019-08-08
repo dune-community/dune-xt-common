@@ -22,13 +22,13 @@
 #include <python/dune/xt/common/exceptions.bindings.hh>
 
 
-PYBIND11_MODULE(_logging, m)
+PYBIND11_MODULE(logging, m)
 {
   namespace py = pybind11;
   using namespace pybind11::literals;
   using namespace Dune::XT::Common;
 
-  Dune::XT::Common::bindings::add_initialization(m, "dune.xt.logging");
+  Dune::XT::Common::bindings::add_initialization(m, "dune.xt.common", "logging");
 
   m.def("create",
         [](int logflags, const std::string logfile, const std::string datadir, const std::string _logdir) {

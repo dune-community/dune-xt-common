@@ -10,15 +10,11 @@
 #   René Fritze     (2018)
 # ~~~
 
-from importlib import import_module
+from dune.xt import guarded_import
 
-try:
-    from mpi4py import MPI
-except ImportError:
-    pass
 
-import dune.xt
-from dune.xt._common import *
-init_logger = dune.xt._common._init_logger
-test_logger = dune.xt._common._test_logger
-init_mpi = dune.xt._common._init_mpi
+for mod_name in (
+    '_common',
+    ):
+    guarded_import(globals(), 'dune.xt.common', mod_name)
+

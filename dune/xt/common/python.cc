@@ -26,7 +26,8 @@ namespace XT {
 namespace Common {
 namespace bindings {
 
-void add_initialization(pybind11::module& m, std::string logger_name)
+
+void add_initialization(pybind11::module& m, std::string logger_name, std::string so_name)
 {
   namespace py = pybind11;
   using namespace pybind11::literals;
@@ -39,39 +40,44 @@ void add_initialization(pybind11::module& m, std::string logger_name)
         },
         "args"_a = std::vector<std::string>());
 
-  m.def("_init_logger",
-        [](const ssize_t max_info_level,
-           const ssize_t max_debug_level,
-           const bool enable_warnings,
-           const bool enable_colors,
-           const std::string& info_color,
-           const std::string& debug_color,
-           const std::string& warning_color) {
+  m.def(
+      "_init_logger",
+      [](const ssize_t max_info_level,
+         const ssize_t max_debug_level,
+         const bool enable_warnings,
+         const bool enable_colors,
+         const std::string& info_color,
+         const std::string& debug_color,
+         const std::string& warning_color) {
+        try {
           Dune::XT::Common::TimedLogger().create(
               max_info_level, max_debug_level, enable_warnings, enable_colors, info_color, debug_color, warning_color);
-        },
-        "max_info_level"_a = std::numeric_limits<ssize_t>::max(),
-        "max_debug_level"_a = std::numeric_limits<ssize_t>::max(),
-        "enable_warnings"_a = true,
-        "enable_colors"_a = true,
-        "info_color"_a = "blue",
-        "debug_color"_a = "darkgray",
-        "warning_color"_a = "red");
+        } catch (Dune::XT::Common::Exceptions::logger_error&) {
+        }
+      },
+      "max_info_level"_a = std::numeric_limits<ssize_t>::max(),
+      "max_debug_level"_a = std::numeric_limits<ssize_t>::max(),
+      "enable_warnings"_a = true,
+      "enable_colors"_a = true,
+      "info_color"_a = "blue",
+      "debug_color"_a = "darkgray",
+      "warning_color"_a = "red");
 
   m.def("_test_logger",
         [=](const bool info, const bool debug, const bool warning) {
           auto logger = Dune::XT::Common::TimedLogger().get(logger_name);
+          auto prefix = so_name.empty() ? "" : "(from " + so_name + ".so) ";
           if (info)
-            logger.info() << "info logging works!" << std::endl;
+            logger.info() << prefix << "info logging works!" << std::endl;
           if (debug)
-            logger.debug() << "debug logging works!" << std::endl;
+            logger.debug() << prefix << "debug logging works!" << std::endl;
           if (warning)
-            logger.warn() << "warning logging works!" << std::endl;
+            logger.warn() << prefix << "warning logging works!" << std::endl;
         },
         "info"_a = true,
         "debug"_a = true,
         "warning"_a = true);
-}
+} // ... add_initialization(...)
 
 
 void try_register(pybind11::module& m, const std::function<void(pybind11::module&)>& registrar)
@@ -96,7 +102,8 @@ void try_register(pybind11::module& m, const std::function<void(pybind11::module
     type = what.substr(left + 1, right - left - 1);
     DXTC_LOG_DEBUG << "try_register: added type " << type << std::endl;
   }
-}
+} // ... try_register(...)
+
 
 } // namespace bindings
 } // namespace Common

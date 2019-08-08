@@ -9,6 +9,9 @@
 #   René Fritze (2018)
 # ~~~
 
-from dune.xt._timings import *
+from dune.xt import guarded_import
 
-timings = instance()
+guarded_import(globals(), 'dune.xt.common', '_timings')
+
+instance()
+

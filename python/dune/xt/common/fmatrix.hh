@@ -69,7 +69,7 @@ struct FieldMatrix_type_caster
   } // ... cast(...)
 
   PYBIND11_TYPE_CASTER(type,
-                       _("List[List[") + value_conv::name() + _("[") + _<COLS>() + _("]]") + _("[") + _<ROWS>()
+                       _("List[List[") + value_conv::name + _("[") + _<COLS>() + _("]]") + _("[") + _<ROWS>()
                            + _("]]"));
 }; // struct FieldMatrix_type_caster
 
@@ -115,7 +115,7 @@ struct type_caster<Dune::XT::Common::FieldMatrix<K, N, M>>
   } // ... load(...)
 
   PYBIND11_TYPE_CASTER(type,
-                       _("List[List[") + value_conv::name() + _("[") + _<COLS>() + _("]]") + _("[") + _<ROWS>()
+                       _("List[List[") + value_conv::name + _("[") + _<COLS>() + _("]]") + _("[") + _<ROWS>()
                            + _("]]"));
 };
 

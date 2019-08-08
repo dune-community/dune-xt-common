@@ -19,7 +19,7 @@ def test_load_all():
 
 
 def test_empty():
-    from dune.xt.empty import Dog, Pet, Terrier
+    from dune.xt.common._empty import Dog, Pet, Terrier
 
     dog = Dog('Susi')
     pet = Pet('Bello')
@@ -39,7 +39,8 @@ def test_logging():
 
 
 def test_timings():
-    from dune.xt.common.timings import timings
+    from dune.xt.common.timings import instance
+    timings = instance()
     timings.reset()
     timings.start("foo.bar")
     timings.stop()

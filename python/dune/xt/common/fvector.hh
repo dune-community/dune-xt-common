@@ -63,7 +63,7 @@ struct FieldVector_type_caster
     return l.release();
   } // ... cast(...)
 
-  PYBIND11_TYPE_CASTER(type, _("List[") + value_conv::name() + _("[") + _<SZ>() + _("]]"));
+  PYBIND11_TYPE_CASTER(type, _("List[") + value_conv::name + _("[") + _<SZ>() + _("]]"));
 }; // struct FieldVector_type_caster
 
 /**
@@ -110,7 +110,7 @@ struct FieldVector_type_caster<FieldVectorImp, false>
     return l.release();
   } // ... cast(...)
 
-  PYBIND11_TYPE_CASTER(type, _("List[") + value_conv::name() + _("[") + _<SZ>() + _("]]"));
+  PYBIND11_TYPE_CASTER(type, _("List[") + value_conv::name + _("[") + _<SZ>() + _("]]"));
 }; // struct FieldVector_type_caster
 
 

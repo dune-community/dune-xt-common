@@ -24,6 +24,7 @@ namespace Dune {
 namespace XT {
 namespace Common {
 
+
 TimedLogManager::TimedLogManager(const Timer& timer,
                                  const std::string info_prefix,
                                  const std::string debug_prefix,
@@ -69,6 +70,7 @@ std::ostream& TimedLogManager::warn()
   return *warn_;
 }
 
+
 TimedLogging::TimedLogging()
   : max_info_level_(default_max_info_level)
   , max_debug_level_(default_max_debug_level)
@@ -95,8 +97,7 @@ void TimedLogging::create(const ssize_t max_info_level,
                           const std::string warning_color)
 {
   DUNE_UNUSED std::lock_guard<std::mutex> guard(mutex_);
-  if (created_)
-    DUNE_THROW(Exceptions::you_are_using_this_wrong, "Do not call create() more than once!");
+  DUNE_THROW_IF(created_, Exceptions::logger_error, "Do not call create() more than once!");
   max_info_level_ = max_info_level;
   max_debug_level_ = max_debug_level;
   enable_warnings_ = enable_warnings;
@@ -150,11 +151,6 @@ void TimedLogging::update_colors()
   }
 } // ... update_colors(...)
 
-DUNE_EXPORT TimedLogging& TimedLogger()
-{
-  static TimedLogging timed_logger;
-  return timed_logger;
-}
 
 } // namespace Common
 } // namespace XT

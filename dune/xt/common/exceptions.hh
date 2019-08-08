@@ -148,6 +148,9 @@ class dependency_missing : public Dune::Exception
 class this_should_not_happen : public Dune::InvalidStateException
 {};
 
+class logger_error : public Dune::Exception
+{};
+
 
 } // namespace Exceptions
 

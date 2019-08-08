@@ -15,16 +15,24 @@
 #include <functional>
 
 namespace pybind11 {
-class module;
-}
 
+
+class module;
+
+
+} // namespace pybind11
 namespace Dune {
 namespace XT {
 namespace Common {
 namespace bindings {
 
-void add_initialization(pybind11::module& m, std::string logger_name);
+
+void add_initialization(pybind11::module& m, std::string logger_name, std::string so_name = "");
+
+
+/// \TODO: Simplify to try_register(const std::function<void()>& registrar)!
 void try_register(pybind11::module& m, const std::function<void(pybind11::module&)>& registrar);
+
 
 } // namespace bindings
 } // namespace Common
