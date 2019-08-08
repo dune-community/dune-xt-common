@@ -14,37 +14,38 @@
 
 #include <string>
 #include <vector>
-#include <boost/exception/all.hpp>
 
-#if HAVE_TBB
-#  include <tbb/tbb_exception.h>
-#endif
+#include <dune/common/parallel/mpihelper.hh>
+
+#include <dune/istl/owneroverlapcopy.hh>
 
 #include <dune/pybindxi/pybind11.h>
+#include <dune/pybindxi/stl.h>
 
 #include <python/dune/xt/common/exceptions.bindings.hh>
 #include <python/dune/xt/common/fvector.hh>
 #include <python/dune/xt/common/fmatrix.hh>
 #include <python/dune/xt/common/configuration.hh>
 #include <dune/xt/common/parallel/mpi_comm_wrapper.hh>
+#include <dune/xt/common/parallel/helper.hh>
 #include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/numeric_cast.hh>
 #include <dune/xt/common/string.hh>
-#include <dune/xt/common/timedlogging.hh>
 
-#include <dune/common/parallel/mpihelper.hh>
-#include <dune/istl/owneroverlapcopy.hh>
 
-#include <dune/pybindxi/pybind11.h>
-#include <dune/pybindxi/stl.h>
-#include <dune/xt/common/numeric_cast.hh>
-#include <dune/xt/common/timedlogging.hh>
-#include <dune/xt/common/parallel/helper.hh>
-
-void addbind_mpistuff(pybind11::module& m)
+PYBIND11_MODULE(_mpi, m)
 {
   namespace py = pybind11;
   using pybind11::operator""_a;
+
+  m.def("init_mpi",
+        [](const std::vector<std::string>& args) {
+          int argc = Dune::XT::Common::numeric_cast<int>(args.size());
+          char** argv = Dune::XT::Common::vector_to_main_args(args);
+          Dune::MPIHelper::instance(argc, argv);
+        },
+        "args"_a = std::vector<std::string>());
+
   typedef Dune::CollectiveCommunication<Dune::MPIHelper::MPICommunicator> Comm;
   py::class_<Comm> cls(m, "CollectiveCommunication", "CollectiveCommunication");
   cls.def(py::init([](Dune::XT::Common::MPI_Comm_Wrapper comm) { return std::make_unique<Comm>(comm.get()); }),
@@ -66,50 +67,6 @@ void addbind_mpistuff(pybind11::module& m)
   using ParaComm = Dune::OwnerOverlapCopyCommunication<unsigned long, int>;
   py::class_<ParaComm> paracomm(m, "OwnerOverlapCopyCommunication", "OwnerOverlapCopyCommunication");
 #endif
+
   m.def("abort_all_mpi_processes", &Dune::XT::abort_all_mpi_processes);
-}
-
-void addbind_exceptions(pybind11::module& m)
-{
-  namespace py = pybind11;
-
-#if HAVE_TBB
-  static py::exception<tbb::tbb_exception> tbb_exc(m, "TbbError");
-#endif
-  static py::exception<boost::exception> boost_exc(m, "BoostError");
-  static py::exception<Dune::Exception> dune_exc(m, "DuneError");
-
-  py::register_exception_translator([](std::exception_ptr p) {
-    try {
-      if (p)
-        std::rethrow_exception(p);
-    } catch (const boost::exception& e) {
-      boost_exc(boost::diagnostic_information_what(e));
-    } catch (const Dune::Exception& e) {
-      dune_exc(e.what());
-#if HAVE_TBB
-    } catch (const tbb::tbb_exception& e) {
-      tbb_exc((std::string(e.name()) + ": " + e.what()).c_str());
-#endif
-    }
-  });
-} // ... addbind_exceptions(...)
-
-PYBIND11_MODULE(_common, m)
-{
-  namespace py = pybind11;
-  using namespace pybind11::literals;
-
-  addbind_exceptions(m);
-  addbind_mpistuff(m);
-
-  Dune::XT::Common::bindings::add_initialization(m, "dune.xt.common", "_common");
-
-  m.def("_is_debug", []() {
-#ifndef NDEBUG
-    return true;
-#else
-    return false;
-#endif
-  });
 }

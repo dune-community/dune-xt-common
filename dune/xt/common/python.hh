@@ -14,23 +14,24 @@
 
 #include <functional>
 
-namespace pybind11 {
+#include <dune/pybindxi/pybind11.h>
 
+#include <dune/xt/common/deprecated.hh>
 
-class module;
-
-
-} // namespace pybind11
 namespace Dune {
 namespace XT {
 namespace Common {
 namespace bindings {
 
 
-void add_initialization(pybind11::module& m, std::string logger_name, std::string so_name = "");
+void guarded_bind(const std::function<void()>& registrar);
 
 
-/// \TODO: Simplify to try_register(const std::function<void()>& registrar)!
+DXT_DEPRECATED_MSG("This is not required any more (08.08.2019)!")
+void add_initialization(pybind11::module& /*m*/, std::string /*logger_name*/, std::string /*so_name*/ = "");
+
+
+DXT_DEPRECATED_MSG("use guarded_bind() instead (08.08.2019)!")
 void try_register(pybind11::module& m, const std::function<void(pybind11::module&)>& registrar);
 
 
