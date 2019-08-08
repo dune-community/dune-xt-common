@@ -295,10 +295,6 @@ public:
     : storage_(new internal::ConstAccessByPointer<T>(tt))
   {}
 
-  explicit ConstStorageProvider(std::shared_ptr<T> tt)
-    : storage_(new internal::ConstAccessByPointer<T>(tt))
-  {}
-
   explicit ConstStorageProvider(std::unique_ptr<const T>&& tt)
     : storage_(tt)
   {}
