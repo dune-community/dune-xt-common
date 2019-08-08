@@ -29,21 +29,23 @@ PYBIND11_MODULE(_timings, m)
   using namespace pybind11::literals;
   using namespace Dune::XT::Common;
 
-  Dune::XT::Common::bindings::add_initialization(m, "dune.xt.common", "_timings");
+  bindings::add_initialization(m, "dune.xt.common", "_timings");
 
-  py::class_<Timings>(m, "Timings")
-      .def("start", &Timings::start, "set this to begin a named section")
-      .def("reset", py::overload_cast<std::string>(&Timings::reset), "set elapsed time back to 0 for section_name")
-      .def("reset", py::overload_cast<>(&Timings::reset), "set elapsed time back to 0 for section_name")
-      .def("stop", py::overload_cast<std::string>(&Timings::stop), "stop all timer for given section only")
-      .def("stop", py::overload_cast<>(&Timings::stop), "stop all running timers")
-      .def("walltime", &Timings::walltime, "get runtime of section in milliseconds")
-      //! TODO this actually accepts an ostream
-      .def("output_simple", [](Timings& self) { self.output_simple(); }, "outputs per-rank csv-file")
-      .def("output_per_rank", &Timings::output_per_rank, "outputs walltime only")
-      //! TODO this actually accepts an MPICOMM and an ostream too
-      .def("output_all_measures",
-           [](Timings& self) { self.output_all_measures(); },
-           "outputs per rank and global averages of all measures");
-  m.def("timings", &timings, py::return_value_policy::reference);
+  bindings::try_register(m, [](auto& m_) {
+    py::class_<Timings>(m_, "Timings")
+        .def("start", &Timings::start, "set this to begin a named section")
+        .def("reset", py::overload_cast<std::string>(&Timings::reset), "set elapsed time back to 0 for section_name")
+        .def("reset", py::overload_cast<>(&Timings::reset), "set elapsed time back to 0 for section_name")
+        .def("stop", py::overload_cast<std::string>(&Timings::stop), "stop all timer for given section only")
+        .def("stop", py::overload_cast<>(&Timings::stop), "stop all running timers")
+        .def("walltime", &Timings::walltime, "get runtime of section in milliseconds")
+        //! TODO this actually accepts an ostream
+        .def("output_simple", [](Timings& self) { self.output_simple(); }, "outputs per-rank csv-file")
+        .def("output_per_rank", &Timings::output_per_rank, "outputs walltime only")
+        //! TODO this actually accepts an MPICOMM and an ostream too
+        .def("output_all_measures",
+             [](Timings& self) { self.output_all_measures(); },
+             "outputs per rank and global averages of all measures");
+    m_.def("instance", &timings, py::return_value_policy::reference);
+  });
 }

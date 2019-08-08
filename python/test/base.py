@@ -39,7 +39,8 @@ def test_logging():
 
 
 def test_timings():
-    from dune.xt.common.timings import timings
+    from dune.xt.common.timings import instance
+    timings = instance()
     timings.reset()
     timings.start("foo.bar")
     timings.stop()

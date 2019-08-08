@@ -11,6 +11,6 @@
 
 dune_pybindxi_add_module(_common EXCLUDE_FROM_ALL bindings.cc)
 dune_pybindxi_add_module(_empty EXCLUDE_FROM_ALL empty.cc)
-dune_pybindxi_add_module(_logging EXCLUDE_FROM_ALL logging.cc)
+dune_pybindxi_add_module(logging EXCLUDE_FROM_ALL logging.cc)
 dune_pybindxi_add_module(_timings EXCLUDE_FROM_ALL timings.cc)
 

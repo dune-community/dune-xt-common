@@ -15,11 +15,6 @@ from dune.xt import guarded_import
 
 for mod_name in (
     '_common',
-    '_logging',
-    '_timings',
     ):
     guarded_import(globals(), 'dune.xt.common', mod_name)
-
-# make sure the singleton exists
-timings()
 
