@@ -28,19 +28,6 @@ import os
 import logging
 
 
-def _register_special_funcs(mod, base_name=''):
-    if isinstance(mod, dict):
-        mod_dict = mod
-    else:
-        mod_dict = import_module('.{}'.format(mod), base_name).__dict__
-    if '_init_mpi' in mod_dict:
-        _init_mpi_calls.add(mod_dict['_init_mpi'])
-    if '_init_logger' in mod_dict:
-        _init_logger_calls.add(mod_dict['_init_logger'])
-    if '_test_logger' in mod_dict:
-        _test_logger_calls.add(mod_dict['_test_logger'])
-
-
 def guarded_import(globs, base_name, mod_name):
     # see https://stackoverflow.com/questions/43059267/how-to-do-from-module-import-using-importlib
     try:
@@ -49,8 +36,6 @@ def guarded_import(globs, base_name, mod_name):
             names = mod.__dict__["__all__"]
         else:
             names = [x for x in mod.__dict__ if not x.startswith("_")]
-        # import special init functions which should be present in every module
-        _register_special_funcs(mod.__dict__)
         # check the rest for duplicity
         for nm in names:
             if nm in globs:
