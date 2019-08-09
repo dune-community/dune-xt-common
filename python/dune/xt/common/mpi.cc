@@ -35,38 +35,45 @@
 
 PYBIND11_MODULE(_mpi, m)
 {
+  using namespace Dune;
   namespace py = pybind11;
   using pybind11::operator""_a;
 
   m.def("init_mpi",
         [](const std::vector<std::string>& args) {
-          int argc = Dune::XT::Common::numeric_cast<int>(args.size());
-          char** argv = Dune::XT::Common::vector_to_main_args(args);
-          Dune::MPIHelper::instance(argc, argv);
+          int argc = XT::Common::numeric_cast<int>(args.size());
+          char** argv = XT::Common::vector_to_main_args(args);
+          MPIHelper::instance(argc, argv);
         },
         "args"_a = std::vector<std::string>());
 
-  typedef Dune::CollectiveCommunication<Dune::MPIHelper::MPICommunicator> Comm;
-  py::class_<Comm> cls(m, "CollectiveCommunication", "CollectiveCommunication");
-  cls.def(py::init([](Dune::XT::Common::MPI_Comm_Wrapper comm) { return std::make_unique<Comm>(comm.get()); }),
-          "comm"_a = Dune::XT::Common::MPI_Comm_Wrapper());
+  XT::Common::bindings::guarded_bind([&]() {
+    using Comm = CollectiveCommunication<MPIHelper::MPICommunicator>;
+    py::class_<Comm> cls(m, "CollectiveCommunication", "CollectiveCommunication");
+    cls.def(py::init([](XT::Common::MPI_Comm_Wrapper comm) { return std::make_unique<Comm>(comm.get()); }),
+            "comm"_a = XT::Common::MPI_Comm_Wrapper());
 
-  cls.def_property_readonly("rank", &Comm::rank);
-  cls.def_property_readonly("size", &Comm::size);
+    cls.def_property_readonly("rank", &Comm::rank);
+    cls.def_property_readonly("size", &Comm::size);
 
-  cls.def("barrier", &Comm::barrier);
+    cls.def("barrier", &Comm::barrier);
 
-  cls.def("min", [](const Comm& self, double x) { return self.min(x); }, "x"_a);
-  cls.def("max", [](const Comm& self, double x) { return self.max(x); }, "x"_a);
-  cls.def("sum", [](const Comm& self, double x) { return self.sum(x); }, "x"_a);
+    cls.def("min", [](const Comm& self, double x) { return self.min(x); }, "x"_a);
+    cls.def("max", [](const Comm& self, double x) { return self.max(x); }, "x"_a);
+    cls.def("sum", [](const Comm& self, double x) { return self.sum(x); }, "x"_a);
+  });
 
-  using SeqComm = Dune::XT::SequentialCommunication;
-  py::class_<SeqComm> seqcomm(m, "SequentialCommunication", "SequentialCommunication");
-  seqcomm.def(py::init());
+  XT::Common::bindings::guarded_bind([&]() {
+    py::class_<XT::SequentialCommunication> seqcomm(m, "SequentialCommunication", "SequentialCommunication");
+    seqcomm.def(py::init());
+  });
+
 #if HAVE_MPI
-  using ParaComm = Dune::OwnerOverlapCopyCommunication<unsigned long, int>;
-  py::class_<ParaComm> paracomm(m, "OwnerOverlapCopyCommunication", "OwnerOverlapCopyCommunication");
+  XT::Common::bindings::guarded_bind([&]() {
+    py::class_<OwnerOverlapCopyCommunication<unsigned long, int>>(
+        m, "OwnerOverlapCopyCommunication", "OwnerOverlapCopyCommunication");
+  });
 #endif
 
-  m.def("abort_all_mpi_processes", &Dune::XT::abort_all_mpi_processes);
+  m.def("abort_all_mpi_processes", &XT::abort_all_mpi_processes);
 }
