@@ -273,10 +273,6 @@ public:
     : storage_(new internal::ConstAccessByReference<T>(tt))
   {}
 
-  explicit ConstStorageProvider(T& tt)
-    : storage_(new internal::ConstAccessByReference<T>(tt))
-  {}
-
   /**
    * \attention This ctor transfers ownership to ConstStorageProvider, do not delete tt manually!
    */
@@ -296,10 +292,6 @@ public:
   {}
 
   explicit ConstStorageProvider(std::unique_ptr<const T>&& tt)
-    : storage_(tt)
-  {}
-
-  explicit ConstStorageProvider(std::unique_ptr<T>&& tt)
     : storage_(tt)
   {}
 
