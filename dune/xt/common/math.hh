@@ -202,24 +202,14 @@ protected:
 
 //! \return var bounded in [min, max]
 template <typename T>
-typename std::enable_if<!is_vector<T>::value, T>::type clamp(const T var, const T min, const T max)
+constexpr const T& clamp(const T& var, const T& min, const T& max)
 {
+#if __cplusplus >= 201703L
+  return std::clamp(var, min, max);
+#else
   return (var < min) ? min : (var > max) ? max : var;
+#endif
 }
-
-
-template <typename T>
-typename std::enable_if<is_vector<T>::value, T>::type clamp(const T var, const T min, const T max)
-{
-  auto result = var;
-  std::size_t idx = 0;
-  for (auto&& element : var) {
-    result[idx] = clamp(element, min[idx], max[idx]);
-    ++idx;
-  }
-  return result;
-}
-
 
 /**
  * \returns: -1 iff val < 0
