@@ -14,4 +14,3 @@ from dune.xt import guarded_import
 guarded_import(globals(), 'dune.xt.common', '_timings')
 
 instance()
-

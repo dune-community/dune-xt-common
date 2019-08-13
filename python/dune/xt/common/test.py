@@ -15,6 +15,7 @@ import logging
 import pprint
 from loguru import logger
 
+
 def load_all_submodule(module):
     ignore_playground = True
     fails = []
