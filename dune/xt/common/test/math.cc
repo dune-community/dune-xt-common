@@ -20,7 +20,6 @@
 
 using namespace Dune::XT::Common;
 using namespace Dune::XT::Test;
-typedef testing::Types<double, int, Dune::FieldVector<double, 3>, std::vector<double>> ClampTestTypes;
 typedef testing::Types<double, int> TestTypes;
 typedef testing::Types<std::complex<double>, double, int> ComplexTestTypes;
 
@@ -31,17 +30,18 @@ struct ClampTest : public testing::Test
   const T lower;
   const T upper;
   ClampTest()
-    : lower(init_bound<T>(-1))
-    , upper(init_bound<T>(1))
+    : lower(-1)
+    , upper(1)
   {}
 };
 
-TYPED_TEST_CASE(ClampTest, ClampTestTypes);
+TYPED_TEST_CASE(ClampTest, TestTypes);
 TYPED_TEST(ClampTest, All)
 {
-  EXPECT_EQ(clamp(init_bound<TypeParam>(-2), this->lower, this->upper), this->lower);
-  EXPECT_EQ(clamp(init_bound<TypeParam>(2), this->lower, this->upper), this->upper);
-  EXPECT_EQ(clamp(init_bound<TypeParam>(0), this->lower, this->upper), init_bound<TypeParam>(0));
+  using T = TypeParam;
+  EXPECT_EQ(Dune::XT::Common::clamp(T(-2), this->lower, this->upper), this->lower);
+  EXPECT_EQ(Dune::XT::Common::clamp(T(2), this->lower, this->upper), this->upper);
+  EXPECT_EQ(Dune::XT::Common::clamp(T(0), this->lower, this->upper), T(0));
 }
 
 template <class T>
