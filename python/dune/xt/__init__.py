@@ -15,18 +15,15 @@
 # libscotchmetis.
 
 try:
-	import metis
+    import metis
 except ImportError:
-	pass
-
+    pass
 
 __import__('pkg_resources').declare_namespace(__name__)
-
 
 from importlib import import_module
 import os
 import logging
-
 
 _init_mpi_calls = set()
 _init_logger_calls = set()
@@ -60,8 +57,8 @@ def guarded_import(globs, base_name, mod_name):
         for nm in names:
             if nm in globs:
                 logging.error(
-                        '{}: overwriting existing name \'{}\' when importing from \'{}\' (continuing anyway)!'.format(
-                            base_name, nm, mod_name))
+                    '{}: overwriting existing name \'{}\' when importing from \'{}\' (continuing anyway)!'.format(
+                        base_name, nm, mod_name))
         # and finally import
         globs.update({k: getattr(mod, k) for k in names})
     except ImportError as e:
@@ -89,4 +86,3 @@ def init_logger(max_info_level=999,
 def test_logger(info=True, debug=True, warning=True):
     for call in _test_logger_calls:
         call(info, debug, warning)
-
