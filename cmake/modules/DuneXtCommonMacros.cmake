@@ -19,7 +19,7 @@ include(XtCompilerSupport)
 include(XtTooling)
 
 # library checks  #########################################################################
-set(DS_REQUIRED_BOOST_LIBS system thread filesystem date_time timer chrono)
+set(DS_REQUIRED_BOOST_LIBS atomic chrono date_time filesystem system thread timer)
 find_package(PkgConfig)
 find_package(Boost 1.48.0 COMPONENTS ${DS_REQUIRED_BOOST_LIBS} REQUIRED)
 dune_register_package_flags(INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
