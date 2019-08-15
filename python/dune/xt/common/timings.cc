@@ -29,8 +29,6 @@ PYBIND11_MODULE(_timings, m)
   using namespace pybind11::literals;
   using namespace Dune::XT::Common;
 
-  bindings::add_initialization(m, "dune.xt.common", "_timings");
-
   bindings::try_register(m, [](auto& m_) {
     py::class_<Timings>(m_, "Timings")
         .def("start", &Timings::start, "set this to begin a named section")

@@ -28,8 +28,6 @@ PYBIND11_MODULE(logging, m)
   using namespace pybind11::literals;
   using namespace Dune::XT::Common;
 
-  Dune::XT::Common::bindings::add_initialization(m, "dune.xt.common", "logging");
-
   m.def("create",
         [](int logflags, const std::string logfile, const std::string datadir, const std::string _logdir) {
           Logger().create(logflags, logfile, datadir, _logdir);

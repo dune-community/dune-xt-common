@@ -12,8 +12,6 @@
 #ifndef DUNE_XT_COMMON_BINDINGS_HH
 #define DUNE_XT_COMMON_BINDINGS_HH
 
-
 #include <dune/xt/common/python.hh>
-
 
 #endif // DUNE_XT_COMMON_BINDINGS_HH

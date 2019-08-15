@@ -25,23 +25,6 @@ from importlib import import_module
 import os
 import logging
 
-_init_mpi_calls = set()
-_init_logger_calls = set()
-_test_logger_calls = set()
-
-
-def _register_special_funcs(mod, base_name=''):
-    if isinstance(mod, dict):
-        mod_dict = mod
-    else:
-        mod_dict = import_module('.{}'.format(mod), base_name).__dict__
-    if '_init_mpi' in mod_dict:
-        _init_mpi_calls.add(mod_dict['_init_mpi'])
-    if '_init_logger' in mod_dict:
-        _init_logger_calls.add(mod_dict['_init_logger'])
-    if '_test_logger' in mod_dict:
-        _test_logger_calls.add(mod_dict['_test_logger'])
-
 
 def guarded_import(globs, base_name, mod_name):
     # see https://stackoverflow.com/questions/43059267/how-to-do-from-module-import-using-importlib
@@ -51,8 +34,6 @@ def guarded_import(globs, base_name, mod_name):
             names = mod.__dict__["__all__"]
         else:
             names = [x for x in mod.__dict__ if not x.startswith("_")]
-        # import special init functions which should be present in every module
-        _register_special_funcs(mod.__dict__)
         # check the rest for duplicity
         for nm in names:
             if nm in globs:
@@ -65,24 +46,3 @@ def guarded_import(globs, base_name, mod_name):
         logging.error('{}: could not import module \'{}\' (continuing anyway)!'.format(base_name, mod_name))
         if os.environ.get('DXT_PYTHON_DEBUG', False):
             raise e
-
-
-def init_mpi(args=list()):
-    for call in _init_mpi_calls:
-        call(args)
-
-
-def init_logger(max_info_level=999,
-                max_debug_level=999,
-                enable_warnings=True,
-                enable_colors=True,
-                info_color='blue',
-                debug_color='darkgray',
-                warning_color='red'):
-    for call in _init_logger_calls:
-        call(max_info_level, max_debug_level, enable_warnings, enable_colors, info_color, debug_color, warning_color)
-
-
-def test_logger(info=True, debug=True, warning=True):
-    for call in _test_logger_calls:
-        call(info, debug, warning)
