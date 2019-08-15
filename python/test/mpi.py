@@ -10,6 +10,7 @@
 import pytest
 from dune.xt.common.test import load_all_submodule
 
+
 def test_mpi4py():
     try:
         from mpi4py import MPI
@@ -35,7 +36,6 @@ def test_wrapper():
         return
 
     mpi_comm = MPI.COMM_WORLD
-
 
 
 if __name__ == '__main__':

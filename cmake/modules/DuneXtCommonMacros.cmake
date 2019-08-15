@@ -19,7 +19,7 @@ include(XtCompilerSupport)
 include(XtTooling)
 
 # library checks  #########################################################################
-set(DS_REQUIRED_BOOST_LIBS system thread filesystem date_time timer chrono)
+set(DS_REQUIRED_BOOST_LIBS atomic chrono date_time filesystem system thread timer)
 find_package(PkgConfig)
 find_package(Boost 1.48.0 COMPONENTS ${DS_REQUIRED_BOOST_LIBS} REQUIRED)
 dune_register_package_flags(INCLUDE_DIRS ${Boost_INCLUDE_DIRS})
@@ -27,6 +27,9 @@ foreach(_boost_lib ${DS_REQUIRED_BOOST_LIBS})
   set(_BOOST_LIB "")
   string(TOUPPER "${_boost_lib}" _BOOST_LIB)
   dune_register_package_flags(LIBRARIES ${Boost_${_BOOST_LIB}_LIBRARY})
+  if(TARGET Boost::${_boost_lib})
+    dune_register_package_flags(LIBRARIES Boost::${_boost_lib})
+  endif()
 endforeach(_boost_lib ${DS_REQUIRED_BOOST_LIBS})
 
 find_package(Eigen3 3.2.0)

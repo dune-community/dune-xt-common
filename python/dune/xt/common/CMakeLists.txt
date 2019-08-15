@@ -16,4 +16,3 @@ dune_pybindxi_add_module(_empty EXCLUDE_FROM_ALL empty.cc)
 dune_pybindxi_add_module(_exceptions EXCLUDE_FROM_ALL exceptions.cc)
 dune_pybindxi_add_module(_mpi EXCLUDE_FROM_ALL mpi.cc)
 dune_pybindxi_add_module(_timings EXCLUDE_FROM_ALL timings.cc)
-
