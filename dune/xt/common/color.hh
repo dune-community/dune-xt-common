@@ -33,7 +33,7 @@ namespace Common {
  * @brief namespace to define color constants that can be
  * used to print colored text in an output stream.
  *
- * * \todo this could go size_to libdunextcommon
+ * * \todo this could go size_to libdunext
  * @warning Some color codes might be unsupported by your terminal.
  */
 struct Colors

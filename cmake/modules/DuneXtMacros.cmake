@@ -59,7 +59,7 @@ if(HAVE_MPI)
   if(MPI4PY_FOUND)
     # this only works in dependent modules
     dune_register_package_flags(INCLUDE_DIRS "${MPI4PY_INCLUDE_DIR}")
-    # this only works in dune-xt-common itself
+    # this only works in dune-xt itself
     include_directories("${MPI4PY_INCLUDE_DIR}")
   else()
     message(FATAL_ERROR "MPI enabled builds need mpi4py too")
@@ -71,7 +71,7 @@ endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS "ON")
 set(DS_MAX_MIC_THREADS CACHE INTEGER 120)
-set(DUNE_XT_COMMON_TEST_DIR ${dune-xt-common_SOURCE_DIR}/dune/xt/common/test)
+set(DUNE_XT_COMMON_TEST_DIR ${dune-xt_SOURCE_DIR}/dune/xt/common/test)
 set(ENABLE_PERFMON 0 CACHE STRING "enable likwid performance monitoring API usage")
 if(NOT DS_HEADERCHECK_DISABLE)
   set(ENABLE_HEADERCHECK 1)

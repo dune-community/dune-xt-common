@@ -9,19 +9,19 @@
 //   René Fritze     (2013 - 2018)
 //   Tobias Leibner  (2014, 2016 - 2019)
 
-/* begin dune-xt-common */
+/* begin dune-xt */
 // NEVER delete/alter above comment, dune's cmake relies on it
 
-/* Define to the version of dune-xt-common */
+/* Define to the version of dune-xt */
 #define DUNE_XT_COMMON_VERSION ${DUNE_XT_COMMON_VERSION}
 
-/* Define to the major version of dune-xt-common */
+/* Define to the major version of dune-xt */
 #define DUNE_XT_COMMON_VERSION_MAJOR ${DUNE_XT_COMMON_VERSION_MAJOR}
 
-/* Define to the minor version of dune-xt-common */
+/* Define to the minor version of dune-xt */
 #define DUNE_XT_COMMON_VERSION_MINOR ${DUNE_XT_COMMON_VERSION_MINOR}
 
-/* Define to the revision of dune-xt-common */
+/* Define to the revision of dune-xt */
 #define DUNE_XT_COMMON_VERSION_REVISION ${DUNE_XT_COMMON_VERSION_REVISION}
 
 #ifndef HAVE_CBLAS
@@ -206,5 +206,5 @@
 // This is an unfortunate hack, see the header for an explanation.
 #include <dune/xt/common/fix-ambiguous-std-math-overloads.hh>
 
-/* end dune-xt-common */
+/* end dune-xt */
 // NEVER delete/alter above comment, dune's cmake relies on it

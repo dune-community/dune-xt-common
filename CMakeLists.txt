@@ -12,7 +12,7 @@
 #   Tobias Leibner  (2016, 2018)
 # ~~~
 
-project("dune-xt-common" CXX)
+project("dune-xt" CXX)
 
 # local environment
 set(ENV{PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../local/bin:$ENV{PATH}")
@@ -46,7 +46,7 @@ include(DuneMacros)
 # start a dune project with information from dune.module
 dune_project()
 
-# dune-xt-common cmake includes
+# dune-xt cmake includes
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
 
 # ----------------------------------------------------------------------------------------------------
@@ -58,9 +58,9 @@ execute_process(COMMAND ${CMAKE_SOURCE_DIR}/getRevision.sh
                 OUTPUT_STRIP_TRAILING_WHITESPACE)
 
 dune_enable_all_packages(INCLUDE_DIRS
-                         ${dune-xt-common_SOURCE_DIR}/dune
+                         ${dune-xt_SOURCE_DIR}/dune
                          MODULE_LIBRARIES
-                         dunextcommon
+                         dunext
                          gtest_dune_xt_common)
 
 include(DuneXtInstallPythonPackage)

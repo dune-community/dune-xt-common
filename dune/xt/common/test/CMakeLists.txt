@@ -13,8 +13,8 @@
 
 enable_testing()
 
-dependencycheck(${xtcommon})
+dependencycheck(${xt})
 
-begin_testcases(dunextcommon)
+begin_testcases(dunext)
 
 end_testcases()

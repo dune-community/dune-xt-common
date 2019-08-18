@@ -25,16 +25,16 @@ function(TO_LIST_SPACES _LIST_NAME OUTPUT_VAR)
   set(${OUTPUT_VAR} "${NEW_LIST_SPACE}" PARENT_SCOPE)
 endfunction()
 
-if(DEFINED dune-xt-common_DIR)
-  set(dune-xt-common-path ${dune-xt-common_DIR})
-else(DEFINED dune-xt-common_DIR)
-  set(dune-xt-common-path ${dune-xt-common_SOURCE_DIR})
-endif(DEFINED dune-xt-common_DIR)
-if(DEFINED dune-xt-common_MODULE_PATH) # dependent modules
-  set(dune-xt-common-module-path ${dune-xt-common_MODULE_PATH})
-else(DEFINED dune-xt-common_MODULE_PATH) # xt-common itself
-  set(dune-xt-common-module-path ${PROJECT_SOURCE_DIR}/cmake/modules)
-endif(DEFINED dune-xt-common_MODULE_PATH)
+if(DEFINED dune-xt_DIR)
+  set(dune-xt-path ${dune-xt_DIR})
+else(DEFINED dune-xt_DIR)
+  set(dune-xt-path ${dune-xt_SOURCE_DIR})
+endif(DEFINED dune-xt_DIR)
+if(DEFINED dune-xt_MODULE_PATH) # dependent modules
+  set(dune-xt-module-path ${dune-xt_MODULE_PATH})
+else(DEFINED dune-xt_MODULE_PATH) # xt itself
+  set(dune-xt-module-path ${PROJECT_SOURCE_DIR}/cmake/modules)
+endif(DEFINED dune-xt_MODULE_PATH)
 
 enable_testing()
 
@@ -52,8 +52,8 @@ endif(MKL_FOUND)
 include(DuneXTTesting)
 
 macro(add_header_listing) # header
-  file(GLOB_RECURSE xtcommon "${CMAKE_CURRENT_SOURCE_DIR}/dune/*.hh" "${CMAKE_CURRENT_SOURCE_DIR}/dune/*.pbh")
-  set(COMMON_HEADER ${xtcommon} ${DUNE_HEADERS})
+  file(GLOB_RECURSE xt "${CMAKE_CURRENT_SOURCE_DIR}/dune/*.hh" "${CMAKE_CURRENT_SOURCE_DIR}/dune/*.pbh")
+  set(COMMON_HEADER ${xt} ${DUNE_HEADERS})
 
   # add header of dependent modules for header listing
   foreach(_mod ${ALL_DEPENDENCIES})

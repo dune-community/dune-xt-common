@@ -15,7 +15,7 @@
 If you are experiencing problems or would like to get help, open up a new
 [issue](https://github.com/dune-community/dune-xt/issues/new) and tag it accordingly
 or ask for help on the [mailinglist](https://listserv.uni-muenster.de/mailman/listinfo/dune-xt-dev).
-Please note that dune-xt-common is not one of the core DUNE modules. Thus, you will not get
+Please note that dune-xt is not one of the core DUNE modules. Thus, you will not get
 any support from the official channels (such as the DUNE mailinglist, the DUNE bugtracker,
 etc...).
 When submitting bugs, please read these
@@ -120,7 +120,7 @@ Sort the groups by
   * stl
   * other external dependency
   * dune core modules
-  * dune-xt-common
+  * dune-xt
   * local header within the same (sub)folder
 
 For example:

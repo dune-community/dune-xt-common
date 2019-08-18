@@ -24,5 +24,5 @@ Version: @VERSION@
 Description: DUNE eXTensions (common)
 URL: https://github.com/dune-community/dune-xt
 Requires: ${DEPENDENCIES}
-Libs: -L${libdir} -ldunextcommon
+Libs: -L${libdir} -ldunext
 Cflags: -I${includedir}

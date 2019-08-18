@@ -127,7 +127,7 @@ macro(DEPENDENCYCHECK)
     set(XARGS ${TEST_NAME_FLAGS} -DHAVE_CONFIG_H -H -c ${HEADER} -w)
     add_custom_target(${TEST_NAME}
                       +
-                      ${dune-xt-common_SOURCE_DIR}/cmake/dependencyinfo.py
+                      ${dune-xt_SOURCE_DIR}/cmake/dependencyinfo.py
                       ${CMAKE_CXX_COMPILER}
                       ${XARGS}
                       ${CMAKE_CURRENT_SOURCE_DIR}

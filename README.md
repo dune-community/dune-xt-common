@@ -10,9 +10,9 @@
 #   Rene Milk       (2009, 2015)
 ```
 
-[![Build Status](https://travis-ci.org/dune-community/dune-xt-common.svg?branch=master)](https://travis-ci.org/dune-community/dune-xt-common)
+[![Build Status](https://travis-ci.org/dune-community/dune-xt.svg?branch=master)](https://travis-ci.org/dune-community/dune-xt)
 
-dune-xt-common is an eXTensions module for DUNE (http://www.dune-project.org),
+dune-xt is an eXTensions module for DUNE (http://www.dune-project.org),
 which is often used together with [dune-xt-grid](https://github.com/dune-community/dune-xt-grid),
 [dune-xt-functions](https://github.com/dune-community/dune-xt-functions) and
 [dune-xt-la](https://github.com/dune-community/dune-xt-la) in the context of
