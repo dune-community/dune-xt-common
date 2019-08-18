@@ -9,7 +9,7 @@
 
 #include "config.h"
 
-#include <dune/pybindxi/pybind11.h>
+#include <python/pybindxi/pybind11.h>
 
 #include <dune/xt/common/exceptions.hh>
 #include <dune/xt/common/timedlogging.hh>

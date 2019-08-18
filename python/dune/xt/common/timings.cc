@@ -12,9 +12,9 @@
 #include <string>
 #include <vector>
 
-#include <dune/pybindxi/pybind11.h>
-#include <dune/pybindxi/stl.h>
-#include <dune/pybindxi/iostream.h>
+#include <python/pybindxi/pybind11.h>
+#include <python/pybindxi/stl.h>
+#include <python/pybindxi/iostream.h>
 
 #include <python/dune/xt/common/bindings.hh>
 #include <dune/xt/common/python.hh>

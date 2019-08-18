@@ -19,8 +19,8 @@
 
 #include <dune/common/exceptions.hh>
 
-#include <dune/pybindxi/pybind11.h>
-#include <dune/pybindxi/stl.h>
+#include <python/pybindxi/pybind11.h>
+#include <python/pybindxi/stl.h>
 
 
 PYBIND11_MODULE(_exceptions, m)

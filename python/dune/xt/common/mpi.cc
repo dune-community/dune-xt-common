@@ -19,8 +19,8 @@
 
 #include <dune/istl/owneroverlapcopy.hh>
 
-#include <dune/pybindxi/pybind11.h>
-#include <dune/pybindxi/stl.h>
+#include <python/pybindxi/pybind11.h>
+#include <python/pybindxi/stl.h>
 
 #include <python/dune/xt/common/exceptions.bindings.hh>
 #include <python/dune/xt/common/fvector.hh>

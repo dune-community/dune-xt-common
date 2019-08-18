@@ -63,7 +63,7 @@ dune_enable_all_packages(INCLUDE_DIRS
                          dunextcommon
                          gtest_dune_xt_common)
 
-include(DunePybindxiInstallPythonPackage)
+include(DuneXtInstallPythonPackage)
 # this symlinks all files in python/ to the binary dir and install into the virtualenv from there thereby making the
 # compiled extensions directly usable from the venv
 dune_pybindxi_install_python_package(PATH python)

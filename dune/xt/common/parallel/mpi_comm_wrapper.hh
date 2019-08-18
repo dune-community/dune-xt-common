@@ -17,8 +17,8 @@
 #  include <mpi.h>
 #  include <mpi4py/mpi4py.h>
 // while not strictly HAVE_MPI, only then are they needed
-#  include <dune/pybindxi/pybind11.h>
-#  include <dune/pybindxi/stl.h>
+#  include <python/pybindxi/pybind11.h>
+#  include <python/pybindxi/stl.h>
 #endif
 
 namespace Dune {
