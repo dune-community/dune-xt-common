@@ -13,7 +13,7 @@
 # ~~~
 
 include(CheckCXXSourceCompiles)
-include(DuneXtCommonMacros)
+include(DuneXtMacros)
 include(CTest)
 include(DuneXtInstallPythonPackage)
 
