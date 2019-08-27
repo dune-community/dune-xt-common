@@ -12,6 +12,7 @@
 # ~~~
 
 set(lib_dune_xt_common_sources
+    cblas.cc
     color.cc
     configuration.cc
     convergence-study.cc
@@ -25,9 +26,10 @@ set(lib_dune_xt_common_sources
     math.cc
     memory.cc
     misc.cc
+    mkl.cc
     parallel/helper.cc
-    parallel/threadmanager.cc
     parallel/mpi_comm_wrapper.cc
+    parallel/threadmanager.cc
     parameter.cc
     python.cc
     signals.cc
