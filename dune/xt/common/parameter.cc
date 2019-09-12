@@ -257,6 +257,16 @@ Parameter ParametricInterface::parse_parameter(const Parameter& mu) const
 } // ... parse_parameter(...)
 
 
+void ParametricInterface::extend_parameter_type(const ParameterType& additional_parameter_type)
+{
+  try {
+    this->parameter_type_ = this->parameter_type() + additional_parameter_type;
+  } catch (Exceptions::parameter_error& ee) {
+    DUNE_THROW(Exceptions::parameter_error, "Error extending parameter type:\n   " << ee.what());
+  }
+} // ... extend_parameter_type(...)
+
+
 } // namespace Common
 } // namespace XT
 } // namespace Dune

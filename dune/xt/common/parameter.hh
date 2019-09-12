@@ -31,6 +31,8 @@ template <class ValueType>
 class SimpleDict
 {
 public:
+  using ThisType = SimpleDict<ValueType>;
+
   SimpleDict() {}
 
   SimpleDict(const std::string& key, const ValueType& value)
@@ -45,6 +47,12 @@ public:
       dict_.emplace(key_value_pair);
     update_keys();
   }
+
+  SimpleDict(const ThisType& other) = default;
+  SimpleDict(ThisType&& source) = default;
+
+  ThisType& operator=(const ThisType& other) = default;
+  ThisType& operator=(ThisType&& source) = default;
 
   const std::vector<std::string>& keys() const
   {
@@ -178,6 +186,12 @@ private:
   ParameterType(BaseType&& source);
 
 public:
+  ParameterType(const ParameterType& other) = default;
+  ParameterType(ParameterType&& source) = default;
+
+  ParameterType& operator=(const ParameterType& other) = default;
+  ParameterType& operator=(ParameterType&& source) = default;
+
   ParameterType operator+(const ParameterType& other) const;
 
   /**
@@ -229,8 +243,14 @@ private:
   Parameter(BaseType&& source);
 
 public:
+  Parameter(const Parameter& other) = default;
+  Parameter(Parameter&& source) = default;
+
   /// \note this is somehow necessary to make clang 3.8 happy (and cannot be defaulted)
   ~Parameter() {}
+
+  Parameter& operator=(const Parameter& other) = default;
+  Parameter& operator=(Parameter&& source) = default;
 
   Parameter operator+(const Parameter& other) const;
 
@@ -257,6 +277,9 @@ public:
   virtual const ParameterType& parameter_type() const;
 
   Parameter parse_parameter(const Parameter& mu) const;
+
+protected:
+  void extend_parameter_type(const ParameterType& additional_parameter_type);
 
 private:
   ParameterType parameter_type_;
